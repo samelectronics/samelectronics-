@@ -1,0 +1,491 @@
+# Design inventory
+
+`project/` holds only what `Sam Electronics Home v3.dc.html` loads (traced recursively through dc-imports, script/iframe/img sources and dynamic imports), plus its two reference notes. Everything else from the Claude Design bundle is in `_archive/` at the same relative path. Nothing was deleted or edited.
+
+The specification is `docs/Round4_Directors_Edition.pdf` (52 pages, 12 Oct 2026). Where it disagrees with these files, the PDF wins. Real texts come from `docs/Sam_Electronics_Company_Facts.pdf`.
+
+## In use (project/)
+
+| File | Loaded by |
+|---|---|
+| Sam Electronics Home v3.dc.html | root page |
+| SE Teardown.dc.html · SE What We Offer.dc.html · SE Live Board.dc.html · SE Bench Test.dc.html · SE Home Models.dc.html · SE Home Deals.dc.html · SE Repair Sequence.dc.html · SE Wholesale Truck.dc.html · SE Home Samsoom.dc.html · SE Finale.dc.html | Home v3 sections |
+| SE Part.dc.html · SE Brand Logo.dc.html · SE Samsoom.dc.html · SE Launcher.dc.html · SE FMP Menu.dc.html | Home v3 shared components |
+| SE World Map.html | Home v3 iframe (Worldwide) |
+| assets/se-logo.png | Home v3 |
+| support.js | dc runtime used by every .dc.html |
+| se-data.js · se-globe-data.js · se-parts-lib.js · image-slot.js | Home v3 scripts |
+| se-teardown-3d.js | SE Teardown, SE What We Offer, se-parts-lib.js |
+| se-td-ad.js | SE Teardown (final-call ad) |
+| se-3d.js | SE Finale, SE Home Models |
+| CLAUDE.md · Teardown frame map.md | reference notes (copy of CLAUDE.md also in docs/) |
+
+## Archived (_archive/)
+
+- **Old pages / versions:** Sam Electronics Home.dc.html, Sam Electronics Home v2.dc.html, Sam Electronics Hero Directions.dc.html, SE What We Offer v1.dc.html, SE What We Offer v2.dc.html
+- **Separate preview / ad pages:** every `Preview *.dc.html`, Canvas*.dc.html, SE Globe.html (only used by What We Offer v1/v2), SE Branch Map.html (not loaded by v3)
+- **Unused scripts:** se-phone-ad.js (only Preview Phone Ads; teardown uses se-td-ad.js), se-bus.js (referenced only inside disabled code in Home v3)
+- **Unused assets / duplicates:** assets/board.png, _ds/ (Modernist design system, ignored per CLAUDE.md; _ds/support.js duplicates support.js), .thumbnail
+- **All older spec copies:** every Round 4 Director's Edition / Correction Order PDF and text extract in uploads/ (the final one is docs/Round4_Directors_Edition.pdf)
+- **Briefs, brand references, screenshots:** the rest of uploads/ (older briefs, posters, business cards, review-us cards, client screenshots) and screenshots/ (389 capture frames)
+
+<details><summary>Full list of archived files (456)</summary>
+
+- .thumbnail
+- Canvas-2.dc.html
+- Canvas-3.dc.html
+- Canvas-4.dc.html
+- Canvas.dc.html
+- Preview Brands.dc.html
+- Preview Hero.dc.html
+- Preview Launcher.dc.html
+- Preview Parts Library.dc.html
+- Preview Phone Ads.dc.html
+- Preview Teardown Frame.dc.html
+- Preview Teardown Mobile.dc.html
+- Preview Teardown Scroll.dc.html
+- Preview Teardown.dc.html
+- Preview What We Offer.dc.html
+- SE Branch Map.html
+- SE Globe.html
+- SE What We Offer v1.dc.html
+- SE What We Offer v2.dc.html
+- Sam Electronics Hero Directions.dc.html
+- Sam Electronics Home v2.dc.html
+- Sam Electronics Home.dc.html
+- _ds/modernist-cf9009e6-65ae-4cc3-81bb-0a0e3ffc9a69/_ds_bundle.js
+- _ds/modernist-cf9009e6-65ae-4cc3-81bb-0a0e3ffc9a69/styles.css
+- _ds/support.js
+- assets/board.png
+- screenshots/01-1B-c.jpg
+- screenshots/01-1B-card.jpg
+- screenshots/01-1B-repair.jpg
+- screenshots/01-1B-x.jpg
+- screenshots/01-1C.jpg
+- screenshots/01-B-fin.jpg
+- screenshots/01-B-open2.jpg
+- screenshots/01-B-steps.jpg
+- screenshots/01-C-back.jpg
+- screenshots/01-C-back2.jpg
+- screenshots/01-C-fin.jpg
+- screenshots/01-D-ad-scenes.jpg
+- screenshots/01-D-td.jpg
+- screenshots/01-D-td2.jpg
+- screenshots/01-D-td3.jpg
+- screenshots/01-H-frames.jpg
+- screenshots/01-R5-B-1.jpg
+- screenshots/01-R5-B-2.jpg
+- screenshots/01-R5-op-auto.jpg
+- screenshots/01-R5-op-dbg.jpg
+- screenshots/01-R5-op-live.jpg
+- screenshots/01-R5-op-live2.jpg
+- screenshots/01-R5-op.jpg
+- screenshots/01-R5-open.jpg
+- screenshots/01-R6-ad-b.jpg
+- screenshots/01-R6-ad.jpg
+- screenshots/01-R6-f.jpg
+- screenshots/01-R6-fin.jpg
+- screenshots/01-R6-fin2.jpg
+- screenshots/01-R6-hover.jpg
+- screenshots/01-R6-live.jpg
+- screenshots/01-R6-op.jpg
+- screenshots/01-R6-state.jpg
+- screenshots/01-R6-steps.jpg
+- screenshots/01-R6-t4.jpg
+- screenshots/01-R6-tmp.jpg
+- screenshots/01-R6-toss.jpg
+- screenshots/01-R6-toss2.jpg
+- screenshots/01-T1.jpg
+- screenshots/01-T2.jpg
+- screenshots/01-T3-ad.jpg
+- screenshots/01-W1.jpg
+- screenshots/01-W2.jpg
+- screenshots/01-W3.jpg
+- screenshots/01-W4.jpg
+- screenshots/01-b1-reel.jpg
+- screenshots/01-b1-reelfix.jpg
+- screenshots/01-check.jpg
+- screenshots/01-i1-end.jpg
+- screenshots/01-i1-final.jpg
+- screenshots/01-i1-open.jpg
+- screenshots/01-i1-steps.jpg
+- screenshots/01-m2.jpg
+- screenshots/01-r10-1440.jpg
+- screenshots/01-r12.jpg
+- screenshots/01-r12b.jpg
+- screenshots/01-r12c.jpg
+- screenshots/01-r4-mobile.jpg
+- screenshots/01-r4-teardown.jpg
+- screenshots/01-r5-offer.jpg
+- screenshots/01-r5-teardown.jpg
+- screenshots/01-r7.jpg
+- screenshots/01-r7b.jpg
+- screenshots/01-r9-1440.jpg
+- screenshots/01-rA-td.jpg
+- screenshots/01-s1.jpg
+- screenshots/01-s2.jpg
+- screenshots/01-t6.jpg
+- screenshots/01-td-mob.jpg
+- screenshots/01-td-test.jpg
+- screenshots/01-td2-a.jpg
+- screenshots/01-td2-b.jpg
+- screenshots/01-td2-c.jpg
+- screenshots/01-td2.jpg
+- screenshots/01-td3.jpg
+- screenshots/01-td4.jpg
+- screenshots/01-td8-1366.jpg
+- screenshots/01-td8-a.jpg
+- screenshots/01-td8-b.jpg
+- screenshots/01-td8-c.jpg
+- screenshots/01-td8-mob.jpg
+- screenshots/01-td8-mob2.jpg
+- screenshots/01-td9-a.jpg
+- screenshots/01-td9-ad.jpg
+- screenshots/01-teardown-final.jpg
+- screenshots/01-wwo.jpg
+- screenshots/02-1B-c.jpg
+- screenshots/02-1B-card.jpg
+- screenshots/02-1B-repair.jpg
+- screenshots/02-1B-x.jpg
+- screenshots/02-1C.jpg
+- screenshots/02-B-fin.jpg
+- screenshots/02-B-open2.jpg
+- screenshots/02-B-steps.jpg
+- screenshots/02-C-back.jpg
+- screenshots/02-C-back2.jpg
+- screenshots/02-C-fin.jpg
+- screenshots/02-D-ad-scenes.jpg
+- screenshots/02-D-td.jpg
+- screenshots/02-D-td2.jpg
+- screenshots/02-D-td3.jpg
+- screenshots/02-H-frames.jpg
+- screenshots/02-R5-B-1.jpg
+- screenshots/02-R5-B-2.jpg
+- screenshots/02-R5-op-auto.jpg
+- screenshots/02-R5-op-dbg.jpg
+- screenshots/02-R5-op-live.jpg
+- screenshots/02-R5-op-live2.jpg
+- screenshots/02-R5-op.jpg
+- screenshots/02-R5-open.jpg
+- screenshots/02-R6-ad-b.jpg
+- screenshots/02-R6-ad.jpg
+- screenshots/02-R6-f.jpg
+- screenshots/02-R6-fin.jpg
+- screenshots/02-R6-fin2.jpg
+- screenshots/02-R6-hover.jpg
+- screenshots/02-R6-live.jpg
+- screenshots/02-R6-op.jpg
+- screenshots/02-R6-state.jpg
+- screenshots/02-R6-steps.jpg
+- screenshots/02-R6-t4.jpg
+- screenshots/02-R6-tmp.jpg
+- screenshots/02-R6-toss.jpg
+- screenshots/02-R6-toss2.jpg
+- screenshots/02-T1.jpg
+- screenshots/02-T2.jpg
+- screenshots/02-T3-ad.jpg
+- screenshots/02-W1.jpg
+- screenshots/02-W2.jpg
+- screenshots/02-W3.jpg
+- screenshots/02-W4.jpg
+- screenshots/02-b1-reel.jpg
+- screenshots/02-b1-reelfix.jpg
+- screenshots/02-check.jpg
+- screenshots/02-i1-end.jpg
+- screenshots/02-i1-final.jpg
+- screenshots/02-i1-open.jpg
+- screenshots/02-i1-steps.jpg
+- screenshots/02-m2.jpg
+- screenshots/02-r10-1440.jpg
+- screenshots/02-r12.jpg
+- screenshots/02-r12b.jpg
+- screenshots/02-r12c.jpg
+- screenshots/02-r4-mobile.jpg
+- screenshots/02-r4-teardown.jpg
+- screenshots/02-r5-offer.jpg
+- screenshots/02-r5-teardown.jpg
+- screenshots/02-r7.jpg
+- screenshots/02-r7b.jpg
+- screenshots/02-r9-1440.jpg
+- screenshots/02-rA-td.jpg
+- screenshots/02-s1.jpg
+- screenshots/02-s2.jpg
+- screenshots/02-t6.jpg
+- screenshots/02-td-mob.jpg
+- screenshots/02-td-test.jpg
+- screenshots/02-td2-a.jpg
+- screenshots/02-td2-b.jpg
+- screenshots/02-td2-c.jpg
+- screenshots/02-td2.jpg
+- screenshots/02-td3.jpg
+- screenshots/02-td4.jpg
+- screenshots/02-td8-1366.jpg
+- screenshots/02-td8-a.jpg
+- screenshots/02-td8-b.jpg
+- screenshots/02-td8-c.jpg
+- screenshots/02-td8-mob.jpg
+- screenshots/02-td8-mob2.jpg
+- screenshots/02-td9-a.jpg
+- screenshots/02-td9-ad.jpg
+- screenshots/02-teardown-final.jpg
+- screenshots/02-wwo.jpg
+- screenshots/03-1B-c.jpg
+- screenshots/03-1B-card.jpg
+- screenshots/03-1B-repair.jpg
+- screenshots/03-1C.jpg
+- screenshots/03-B-fin.jpg
+- screenshots/03-B-steps.jpg
+- screenshots/03-D-ad-scenes.jpg
+- screenshots/03-D-td.jpg
+- screenshots/03-D-td2.jpg
+- screenshots/03-D-td3.jpg
+- screenshots/03-H-frames.jpg
+- screenshots/03-R5-op-auto.jpg
+- screenshots/03-R5-op-dbg.jpg
+- screenshots/03-R5-op-live.jpg
+- screenshots/03-R5-op-live2.jpg
+- screenshots/03-R5-op.jpg
+- screenshots/03-R5-open.jpg
+- screenshots/03-R6-f.jpg
+- screenshots/03-R6-fin2.jpg
+- screenshots/03-R6-live.jpg
+- screenshots/03-R6-op.jpg
+- screenshots/03-R6-state.jpg
+- screenshots/03-R6-steps.jpg
+- screenshots/03-R6-toss.jpg
+- screenshots/03-R6-toss2.jpg
+- screenshots/03-T1.jpg
+- screenshots/03-T2.jpg
+- screenshots/03-W2.jpg
+- screenshots/03-W3.jpg
+- screenshots/03-W4.jpg
+- screenshots/03-b1-reel.jpg
+- screenshots/03-b1-reelfix.jpg
+- screenshots/03-i1-end.jpg
+- screenshots/03-i1-open.jpg
+- screenshots/03-i1-steps.jpg
+- screenshots/03-m2.jpg
+- screenshots/03-r10-1440.jpg
+- screenshots/03-r12.jpg
+- screenshots/03-r12b.jpg
+- screenshots/03-r12c.jpg
+- screenshots/03-r4-teardown.jpg
+- screenshots/03-r5-offer.jpg
+- screenshots/03-r5-teardown.jpg
+- screenshots/03-r7b.jpg
+- screenshots/03-r9-1440.jpg
+- screenshots/03-rA-td.jpg
+- screenshots/03-s1.jpg
+- screenshots/03-s2.jpg
+- screenshots/03-t6.jpg
+- screenshots/03-td-mob.jpg
+- screenshots/03-td-test.jpg
+- screenshots/03-td2-a.jpg
+- screenshots/03-td2-b.jpg
+- screenshots/03-td2-c.jpg
+- screenshots/03-td2.jpg
+- screenshots/03-td3.jpg
+- screenshots/03-td4.jpg
+- screenshots/03-td8-1366.jpg
+- screenshots/03-td8-a.jpg
+- screenshots/03-td8-b.jpg
+- screenshots/03-td8-c.jpg
+- screenshots/03-td8-mob.jpg
+- screenshots/03-td8-mob2.jpg
+- screenshots/03-td9-a.jpg
+- screenshots/03-td9-ad.jpg
+- screenshots/03-teardown-final.jpg
+- screenshots/03-wwo.jpg
+- screenshots/04-1B-c.jpg
+- screenshots/04-1B-card.jpg
+- screenshots/04-1B-repair.jpg
+- screenshots/04-1C.jpg
+- screenshots/04-B-steps.jpg
+- screenshots/04-D-td2.jpg
+- screenshots/04-D-td3.jpg
+- screenshots/04-H-frames.jpg
+- screenshots/04-R5-op-auto.jpg
+- screenshots/04-R5-op-live.jpg
+- screenshots/04-R5-op-live2.jpg
+- screenshots/04-R5-open.jpg
+- screenshots/04-R6-f.jpg
+- screenshots/04-R6-live.jpg
+- screenshots/04-R6-op.jpg
+- screenshots/04-R6-steps.jpg
+- screenshots/04-R6-toss.jpg
+- screenshots/04-R6-toss2.jpg
+- screenshots/04-T1.jpg
+- screenshots/04-T2.jpg
+- screenshots/04-W4.jpg
+- screenshots/04-b1-reel.jpg
+- screenshots/04-b1-reelfix.jpg
+- screenshots/04-i1-end.jpg
+- screenshots/04-i1-open.jpg
+- screenshots/04-i1-steps.jpg
+- screenshots/04-r10-1440.jpg
+- screenshots/04-r12.jpg
+- screenshots/04-r4-teardown.jpg
+- screenshots/04-r5-offer.jpg
+- screenshots/04-r5-teardown.jpg
+- screenshots/04-r9-1440.jpg
+- screenshots/04-rA-td.jpg
+- screenshots/04-s1.jpg
+- screenshots/04-s2.jpg
+- screenshots/04-t6.jpg
+- screenshots/04-td-mob.jpg
+- screenshots/04-td2-a.jpg
+- screenshots/04-td2-b.jpg
+- screenshots/04-td2-c.jpg
+- screenshots/04-td3.jpg
+- screenshots/04-td4.jpg
+- screenshots/04-td8-b.jpg
+- screenshots/04-td9-a.jpg
+- screenshots/04-teardown-final.jpg
+- screenshots/05-1B-c.jpg
+- screenshots/05-1B-card.jpg
+- screenshots/05-1C.jpg
+- screenshots/05-R5-op-live.jpg
+- screenshots/05-R5-op-live2.jpg
+- screenshots/05-R5-open.jpg
+- screenshots/05-R6-live.jpg
+- screenshots/05-R6-op.jpg
+- screenshots/05-R6-steps.jpg
+- screenshots/05-R6-toss2.jpg
+- screenshots/05-T1.jpg
+- screenshots/05-T2.jpg
+- screenshots/05-b1-reelfix.jpg
+- screenshots/05-i1-open.jpg
+- screenshots/05-r10-1440.jpg
+- screenshots/05-r9-1440.jpg
+- screenshots/05-rA-td.jpg
+- screenshots/05-td4.jpg
+- screenshots/05-teardown-final.jpg
+- screenshots/06-1B-c.jpg
+- screenshots/06-1B-card.jpg
+- screenshots/06-1C.jpg
+- screenshots/06-R5-op-live.jpg
+- screenshots/06-R6-live.jpg
+- screenshots/06-T1.jpg
+- screenshots/06-T2.jpg
+- screenshots/06-r9-1440.jpg
+- screenshots/06-teardown-final.jpg
+- screenshots/07-1B-c.jpg
+- screenshots/07-1B-card.jpg
+- screenshots/07-1C.jpg
+- screenshots/07-R5-op-live.jpg
+- screenshots/07-R6-live.jpg
+- screenshots/07-T1.jpg
+- screenshots/07-T2.jpg
+- screenshots/08-1B-c.jpg
+- screenshots/08-1B-card.jpg
+- screenshots/08-1C.jpg
+- screenshots/08-R5-op-live.jpg
+- screenshots/08-T2.jpg
+- screenshots/09-1B-c.jpg
+- screenshots/09-1B-card.jpg
+- screenshots/09-T2.jpg
+- screenshots/10-1B-c.jpg
+- screenshots/10-1B-card.jpg
+- screenshots/10-T2.jpg
+- screenshots/11-1B-c.jpg
+- screenshots/11-T2.jpg
+- screenshots/12-1B-c.jpg
+- screenshots/12-T2.jpg
+- screenshots/13-1B-c.jpg
+- screenshots/14-1B-c.jpg
+- screenshots/1B-full.jpg
+- screenshots/1B-ipad.png
+- screenshots/1B-screenpart.jpg
+- screenshots/1B-sheet.png
+- screenshots/1C-island.png
+- screenshots/1C-sheet.png
+- screenshots/1b.jpg
+- screenshots/A1-parts-library.jpg
+- screenshots/A1-parts-thumbs.jpg
+- screenshots/B-ad.jpg
+- screenshots/B-ad2.jpg
+- screenshots/B-ad3.jpg
+- screenshots/B-open.jpg
+- screenshots/C-ad.jpg
+- screenshots/C-ad2.jpg
+- screenshots/D-ad.jpg
+- screenshots/D-hero.jpg
+- screenshots/D-hero2.jpg
+- screenshots/H-check.jpg
+- screenshots/H-fit.jpg
+- screenshots/H-ipad.jpg
+- screenshots/H-parts.jpg
+- screenshots/H-screenpart.jpg
+- screenshots/H-tmp.jpg
+- screenshots/R5-ads-1.jpg
+- screenshots/R5-op-dbg.jpg
+- screenshots/R5-op-dbg2.jpg
+- screenshots/R5-op-dbg3.jpg
+- screenshots/R6-g.jpg
+- screenshots/R6-tmp.jpg
+- screenshots/T1-sheet.png
+- screenshots/T2-sheet.png
+- screenshots/T4-ad.jpg
+- screenshots/W0.jpg
+- screenshots/W1b.jpg
+- screenshots/W1dbg.jpg
+- screenshots/b1-a.jpg
+- screenshots/dbg.jpg
+- screenshots/globe.jpg
+- screenshots/hero-reel.jpg
+- screenshots/map.jpg
+- screenshots/parts2.jpg
+- screenshots/r12d.jpg
+- screenshots/r4-teardown-finale.jpg
+- screenshots/r7-finale.jpg
+- screenshots/t1.jpg
+- screenshots/t4.jpg
+- screenshots/t5.jpg
+- screenshots/t6.jpg
+- screenshots/td-dbg.jpg
+- screenshots/td.jpg
+- screenshots/td3.jpg
+- screenshots/tmp-mask.jpg
+- se-bus.js
+- se-phone-ad.js
+- uploads/FINAL DRAFT.png
+- uploads/Google Maps Review Us Business Cards.pdf
+- uploads/Patty Passport - Full Design & Structure Report.pdf
+- uploads/Sam Electronics Business Card.pdf
+- uploads/Sam Electronics Enterance Poster.png
+- uploads/Sam Electronics Repairing Poster.png
+- uploads/Sam_Electronics_Round4_Correction_Order-afb0f116.pdf
+- uploads/Sam_Electronics_Round4_Correction_Order.pdf
+- uploads/Sam_Electronics_Round4_Directors_Edition (2).pdf
+- uploads/Sam_Electronics_Round4_Directors_Edition (3).pdf
+- uploads/Sam_Electronics_Round4_Directors_Edition (5)-cdd391a1.pdf
+- uploads/Sam_Electronics_Round4_Directors_Edition (5).pdf
+- uploads/Screenshot 2026-10-04 003527.png
+- uploads/Screenshot 2026-10-04 003540.png
+- uploads/Screenshot 2026-10-04 003554.png
+- uploads/Screenshot 2026-10-04 003604.png
+- uploads/Screenshot 2026-10-04 003718.png
+- uploads/Screenshot 2026-10-04 003839.png
+- uploads/Screenshot 2026-10-04 003912.png
+- uploads/Screenshot 2026-10-04 003944.png
+- uploads/Screenshot 2026-10-04 004004.png
+- uploads/Screenshot 2026-10-04 004118.png
+- uploads/Screenshot 2026-10-04 004141.png
+- uploads/WhatsApp Image 2026-10-03 at 12.22.50 (1).jpeg
+- uploads/WhatsApp Image 2026-10-03 at 12.22.50.jpeg
+- uploads/_Google Maps Review Us Stand.pdf
+- uploads/de5.pdf
+- uploads/patty_passport_master_brief.md
+- uploads/round4_correction_order.txt
+- uploads/round4_directors.pdf
+- uploads/round4_directors.txt
+- uploads/sam_electronics_brief_v4_round2.md
+- uploads/sam_electronics_fixes_round3 (1).md
+- uploads/sam_electronics_fixes_round3 (2).md
+- uploads/sam_electronics_fixes_round4.md
+- uploads/sam_electronics_master_brief.md
+- uploads/sam_electronics_master_brief_v2.md
+- uploads/sam_electronics_master_brief_v3.md
+- uploads/sam_electronics_round3_PART2_DETAILED.md
+- uploads/sam_electronics_round3_home_fixes_DETAILED.md
+</details>
