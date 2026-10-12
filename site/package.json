@@ -1,0 +1,28 @@
+{
+  "name": "sam-electronics-site",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dc:build": "node scripts/dc-codegen.mjs",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit",
+    "dc:check": "node scripts/dc-codegen.mjs --check"
+  },
+  "dependencies": {
+    "next": "^16.4.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "acorn": "^8.19.0",
+    "acorn-walk": "^8.3.5",
+    "htmlparser2": "^12.0.0",
+    "prettier": "^3.9.10",
+    "typescript": "5.9"
+  }
+}

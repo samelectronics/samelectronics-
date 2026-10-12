@@ -1,0 +1,40 @@
+/* Base rules the design runtime (design/project/support.js) injected on every page. */
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+#dc-root,
+#dc-root > .sc-host {
+  height: 100%;
+}
+.sc-host.sc-has-error {
+  position: relative;
+}
+@media print {
+  @page {
+    margin: 0.5cm;
+  }
+  figure,
+  table {
+    break-inside: avoid;
+  }
+  #dc-root,
+  #dc-root > .sc-host {
+    height: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    animation-delay: -99s !important;
+    animation-duration: 0.001s !important;
+    animation-iteration-count: 1 !important;
+    animation-fill-mode: both !important;
+    animation-play-state: running !important;
+    transition-duration: 0s !important;
+  }
+}
