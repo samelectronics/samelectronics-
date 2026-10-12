@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<script src="./se-parts-lib.js"></script>
+<style>body{margin:0;background:#26282B}a{color:#F7C032}a:hover{color:#FFDB6E}</style>
+</helmet>
+<div style="min-height:100vh;background:radial-gradient(120% 70% at 50% 0%,#3D3E3F 0%,#26282B 60%,#1F2023 100%);color:#F2F3F4;font-family:Inter,sans-serif;padding:56px clamp(20px,5vw,72px);box-sizing:border-box;display:flex;flex-direction:column;gap:40px">
+  <div style="display:flex;flex-direction:column;gap:10px;max-width:760px">
+    <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:#F7C032">G15 · PARTS LIBRARY · SINGLE SOURCE</div>
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:44px;line-height:1.05;letter-spacing:-.01em">The teardown's own parts, rendered once.</div>
+    <div style="font-size:16px;line-height:1.55;color:#C9CBCE;text-wrap:pretty">Same models and studio lighting as the teardown. Fixed 3/4 angle. Every part thumbnail on the site uses these images. Status: {{ status }}</div>
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:#9A9DA2">LARGE · 640PX</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:20px">
+    <sc-for list="{{ items }}" as="it" hint-placeholder-count="9">
+      <div style="display:flex;flex-direction:column;gap:12px;padding:20px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1px solid rgba(255,255,255,.08)">
+        <div style="position:relative;aspect-ratio:1/1;display:grid;place-items:center">
+          <div style="position:absolute;left:18%;right:18%;bottom:6%;height:9%;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.55),rgba(0,0,0,0))"></div>
+          <img src="{{ it.large }}" alt="{{ it.name }}" style="position:relative;width:100%;height:100%;object-fit:contain;display:{{ it.show }}">
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+          <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:18px">{{ it.name }}</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:#9A9DA2">{{ it.kind }} · #{{ it.i }}</div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:#9A9DA2">THUMBNAILS · 192PX SOURCE · SHOWN AT 96 / 64 / 40</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px">
+    <sc-for list="{{ items }}" as="it" hint-placeholder-count="9">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 10px;border-radius:10px;background:#F2F3F4;color:#26282B">
+        <div style="display:flex;align-items:flex-end;gap:10px">
+          <img src="{{ it.thumb }}" alt="" style="width:96px;height:96px;object-fit:contain;filter:drop-shadow(0 6px 8px rgba(80,70,60,.25));display:{{ it.show }}">
+          <img src="{{ it.thumb }}" alt="" style="width:64px;height:64px;object-fit:contain;filter:drop-shadow(0 4px 6px rgba(80,70,60,.25));display:{{ it.show }}">
+          <img src="{{ it.thumb }}" alt="" style="width:40px;height:40px;object-fit:contain;filter:drop-shadow(0 3px 4px rgba(80,70,60,.25));display:{{ it.show }}">
+        </div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px">{{ it.name }}</div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { lib: null, status: 'rendering…' };
+  componentDidMount() {
+    const go = () => { if (!window.seParts) return setTimeout(go, 100); const f = /force/.test(location.search); window.seParts.get(f).then((lib) => this.setState({ lib, status: 'ready · ' + lib.large.length + ' renders' }), (e) => this.setState({ status: 'failed: ' + (e && e.message) })); };
+    go();
+  }
+  renderVals() {
+    const lib = this.state.lib, K = ['scr', 'frm', 'flx', 'board', 'bat', 'cam', 'sml', 'bcv', 'phone'];
+    const N = ['Screen', 'Frame', 'Flex cables', 'Logic board', 'Battery', 'Cameras', 'Small parts', 'Back glass', 'Assembled phone'];
+    return { status: this.state.status, items: N.map((name, i) => ({ name, i, kind: K[i], large: lib ? lib.large[i] : '', thumb: lib ? lib.thumb[i] : '', show: lib ? 'block' : 'none' })) };
+  }
+}
+</script>
+</body>
+</html>

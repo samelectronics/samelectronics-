@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap">
+<style>body{margin:0;background:#F2F3F4}</style>
+</helmet>
+<div style="position:relative;min-height:100vh;background:linear-gradient(180deg,#F2F3F4,#E4E6E8);padding:24px;box-sizing:border-box">
+  <div style="display:flex;flex-wrap:wrap;gap:16px">
+    <sc-for list="{{ moods }}" as="m" hint-placeholder-count="6">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px;border-radius:16px;background:radial-gradient(circle at 40% 30%,#FFE58F,#F7C032 65%,#E0A61E)">
+        <dc-import name="SE Samsoom" mood="{{ m }}" size="130" hint-size="130px,163px"></dc-import>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#1A1B1D">{{ m }}</span>
+      </div>
+    </sc-for>
+  </div>
+  <dc-import name="SE Launcher" m0="Ask Samsoom" m1="Open till 22:00" m2="Need a screen? We have every grade in stock today" m3="Trade prices? Ask me" hint-size="56px,56px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() { return { moods: ['idle', 'wave', 'blink', 'happy', 'dabke', 'kiss'] }; }
+}
+</script>
+</body>
+</html>

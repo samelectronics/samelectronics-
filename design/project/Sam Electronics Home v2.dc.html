@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800&family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@500;600&display=swap">
+<title>Sam Electronics · Every part. Every model. Every grade.</title>
+<script src="se-data.js"></script>
+<style>
+html,body{margin:0;background:#F2F3F4}
+body{font-family:'Inter',sans-serif;color:#1A1B1D;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+a:hover{color:inherit}
+::selection{background:#F7C032;color:#1A1B1D}
+@keyframes sePulse{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+@keyframes sePulseRev{from{stroke-dashoffset:0}to{stroke-dashoffset:1000}}
+@keyframes sePing{0%{transform:scale(1);opacity:.7}100%{transform:scale(2.6);opacity:0}}
+@keyframes seSheen{0%{transform:translateX(-120%)}55%,100%{transform:translateX(260%)}}
+@keyframes seGlassShine{0%,68%{transform:translateX(-160%) skewX(-14deg)}100%{transform:translateX(420%) skewX(-14deg)}}
+@keyframes seEdgeGlow{0%,100%{opacity:.7}50%{opacity:1}}
+@keyframes seRail{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes seRailCurrent{from{transform:translateX(-30%)}to{transform:translateX(130%)}}
+@keyframes seSearchGlow{0%,30%{box-shadow:0 0 0 2px rgba(247,192,50,.4),0 0 30px rgba(247,192,50,.18)}42%{box-shadow:0 0 0 2px #FFDB6E,0 0 70px rgba(247,192,50,.6)}60%,100%{box-shadow:0 0 0 2px rgba(247,192,50,.4),0 0 30px rgba(247,192,50,.18)}}
+@keyframes seBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes seTilt{0%,100%{transform:rotate(-10deg)}50%{transform:rotate(14deg)}}
+@keyframes seBreathe{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+@keyframes seBlinkDot{0%,60%{opacity:1}61%,100%{opacity:.25}}
+@keyframes seFill{0%{transform:scaleY(.2)}80%,100%{transform:scaleY(1)}}
+@keyframes seWave{0%,100%{transform:rotate(-18deg) translateY(0)}50%{transform:rotate(-12deg) translateY(-6px)}}
+@keyframes seSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes seDash{from{stroke-dashoffset:0}to{stroke-dashoffset:-60}}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}}
+</style>
+</helmet>
+
+<header style="position:fixed;left:0;right:0;top:0;z-index:50;background:rgba(26,27,29,.62);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.08);color:#FFFFFF">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:24px;height:76px;padding:0 clamp(20px,3.3vw,48px)">
+    <a href="#top" style="display:flex;align-items:center;gap:14px;flex:none">
+      <span style="width:46px;height:46px;border-radius:50%;overflow:hidden;background:#FFFFFF;box-shadow:0 0 0 2px #F7C032,0 0 22px rgba(247,192,50,.55)"><img src="assets/se-logo.png" alt="Sam Electronics" style="width:100%;height:100%;display:block"></span>
+      <span style="display:flex;flex-direction:column;gap:6px"><span style="font-family:'Unbounded',sans-serif;font-weight:800;font-size:17px;letter-spacing:.01em;line-height:1;white-space:nowrap">SAM ELECTRONICS</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.16em;color:#F7C032;line-height:1;white-space:nowrap">QUALITY · WARRANTY · PRICE</span></span>
+    </a>
+    <nav style="display:{{ navDisp }};gap:clamp(18px,2.4vw,34px);font-size:15px;font-weight:500"><sc-for list="{{ links }}" as="l" hint-placeholder-count="5"><a href="{{ l.href }}" style="color:{{ l.c }};transition:color .2s" style-hover="color:#F7C032">{{ l.label }}</a></sc-for></nav>
+    <div style="display:flex;align-items:center;gap:18px;flex:none">
+      <span style="display:flex;align-items:center;gap:9px;white-space:nowrap;height:34px;box-sizing:border-box;padding:0 13px;border-radius:10px;background:{{ pill.bg }};border:1px solid {{ pill.bd }};font-size:14px;font-weight:600;color:#FFFFFF"><span style="position:relative;width:9px;height:9px"><span style="position:absolute;inset:0;border-radius:50%;background:{{ pill.dot }};box-shadow:0 0 8px {{ pill.dot }}"></span><span style="position:absolute;inset:0;border-radius:50%;background:{{ pill.dot }};animation:sePing 1.8s ease-out infinite"></span></span>{{ navStatus }}</span>
+      <span style="display:flex;gap:2px;padding:3px;border-radius:10px;background:rgba(255,255,255,.08);font-size:13px"><span style="padding:4px 10px;border-radius:7px;background:#FFFFFF;color:#1A1B1D;font-weight:600">EN</span><span style="padding:4px 10px;font-family:'IBM Plex Sans Arabic',sans-serif;color:#F2F3F4;cursor:pointer">عربي</span></span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.6"><circle cx="12" cy="8" r="4"></circle><path d="M4 21a8 8 0 0 1 16 0"></path></svg>
+      <span style="position:relative;display:flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="1.6"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg><span style="position:absolute;top:-6px;right:-8px;min-width:18px;height:18px;border-radius:9px;background:#F7C032;color:#1A1B1D;font-size:11px;font-weight:700;display:grid;place-items:center">{{ cart }}</span></span>
+    </div>
+  </div>
+  <div style="position:relative;height:2px;background:rgba(255,255,255,.08)"><div style="position:absolute;left:0;top:0;bottom:0;width:{{ progW }};background:linear-gradient(90deg,rgba(247,192,50,.25),#F7C032);box-shadow:0 0 12px #F7C032"></div><div style="position:absolute;left:{{ progW }};top:-3px;width:8px;height:8px;border-radius:50%;background:#FFDB6E;box-shadow:0 0 14px 4px rgba(247,192,50,.7);transform:translateX(-50%)"></div></div>
+</header>
+
+<div id="top" data-screen-label="01 Hero" style="position:relative;width:100%;height:{{ heroH }}px;overflow:hidden;background:#F2F3F4">
+  <div ref="{{ heroRef }}" style="position:absolute;left:0;top:0;width:1440px;height:1350px;transform:scale({{ z }});transform-origin:0 0;color:#FFFFFF">
+    <div style="position:absolute;left:0;top:0;width:1440px;height:860px;overflow:hidden">
+      <div style="position:absolute;inset:0;background:linear-gradient(135deg,#3D3E3F 0%,#26282B 48%,#1A1B1D 100%)"></div>
+      <div style="position:absolute;inset:0;opacity:.6;background-image:linear-gradient(45deg,rgba(255,255,255,.03) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.03) 75%),linear-gradient(45deg,rgba(255,255,255,.03) 25%,transparent 25%,transparent 75%,rgba(255,255,255,.03) 75%);background-size:6px 6px;background-position:0 0,3px 3px;-webkit-mask-image:linear-gradient(90deg,#000,transparent 55%);mask-image:linear-gradient(90deg,#000,transparent 55%)"></div>
+      <div style="position:absolute;left:360px;top:-260px;width:240px;height:1400px;transform:rotate(28deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.05),transparent);pointer-events:none"></div>
+      <div style="position:absolute;left:520px;top:180px;width:520px;height:620px;border-radius:50%;background:radial-gradient(closest-side,rgba(247,192,50,.2),rgba(247,192,50,0));pointer-events:none"></div>
+      <div style="position:absolute;inset:0;clip-path:polygon(960px 0,1440px 0,1440px 860px,660px 860px);background:#F7C032">
+        <div style="position:absolute;left:760px;top:60px;width:760px;height:720px;border-radius:50%;background:radial-gradient(closest-side,#FFE58F 0%,rgba(255,219,110,.85) 35%,rgba(255,219,110,0) 100%)"></div>
+        <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.09) 0 1px,transparent 1px 4px)"></div>
+        <div style="position:absolute;left:0;top:722px;width:1440px;height:138px;background:linear-gradient(180deg,rgba(255,255,255,.22) 0%,rgba(255,255,255,0) 70%)"></div>
+      </div>
+
+      <svg viewBox="0 0 1440 860" width="1440" height="860" style="position:absolute;left:0;top:0;pointer-events:none;-webkit-mask-image:radial-gradient(ellipse 420px 340px at 330px 380px,rgba(0,0,0,.1) 30%,#000 100%);mask-image:radial-gradient(ellipse 420px 340px at 330px 380px,rgba(0,0,0,.1) 30%,#000 100%)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <g stroke="rgba(247,192,50,.5)" stroke-width="3"><path d="M71 78 V112 L44 139 V522 L66 544 H80"></path><path d="M660 544 H736 L784 496 H896"></path></g>
+        <g stroke="rgba(247,192,50,.3)">
+          <path d="M736 544 V640 L764 668 H896" stroke-width="2"></path>
+          <path d="M700 96 V150 L740 190 H820 L860 230 V300 L880 320 H896" stroke-width="2"></path>
+          <path d="M560 120 H640 L670 150 V250 L700 280 H780" stroke-width="1.5"></path>
+          <path d="M600 420 H680 L720 380 H800 L830 350" stroke-width="1"></path>
+          <path d="M0 800 H140 L170 770 H430 L460 800 H620 L650 770 H720" stroke-width="2.5"></path>
+          <path d="M0 812 H136 L166 782 H300" stroke-width="1"></path>
+          <path d="M260 860 V826 L280 806" stroke-width="1"></path>
+          <path d="M540 860 V830 L560 810 H600" stroke-width="1"></path>
+          <path d="M0 250 H18 L30 262 V440" stroke-width="1.5"></path>
+          <path d="M0 470 H12 V690 L30 708 V740" stroke-width="1"></path>
+          <path d="M780 120 H880 L920 80 V78" stroke-width="4" stroke="rgba(247,192,50,.16)"></path>
+        </g>
+        <g stroke="rgba(26,27,29,.3)">
+          <path d="M1440 120 H1340 L1300 160 H1160 L1120 200 V240" stroke-width="2.5"></path>
+          <path d="M1440 170 H1390 L1360 200 V310" stroke-width="2"></path>
+          <path d="M1440 182 H1394 L1372 204 V310" stroke-width="1"></path>
+          <path d="M1440 400 H1416 L1400 416 V470 H1384" stroke-width="2"></path>
+          <path d="M1066 724 V760 L1040 786 V860" stroke-width="2.5"></path>
+          <path d="M1276 726 V770 L1300 794 V860" stroke-width="2.5"></path>
+          <path d="M1440 620 H1420 L1404 636 V700" stroke-width="1"></path>
+          <path d="M1020 0 V40 L1050 70 H1240" stroke-width="1.5"></path>
+          <path d="M1440 60 H1300 L1270 90 H1100" stroke-width="1"></path>
+          <path d="M1440 760 H1380 L1360 780 V860" stroke-width="4" stroke="rgba(26,27,29,.14)"></path>
+        </g>
+        <line x1="960" y1="0" x2="660" y2="860" stroke="#FFDB6E" stroke-width="3" style="filter:drop-shadow(0 0 8px #FFDB6E) drop-shadow(0 0 20px rgba(247,192,50,.8));animation:seEdgeGlow 4s ease-in-out infinite"></line>
+        <g stroke="#FFDB6E" stroke-width="3.5" stroke-dasharray="70 930" style="filter:drop-shadow(0 0 5px #F7C032) drop-shadow(0 0 12px rgba(247,192,50,.8))">
+          <path pathLength="1000" d="M71 78 V112 L44 139 V522 L66 544 H80" style="animation:sePulse 3.2s linear infinite"></path>
+          <path pathLength="1000" d="M660 544 H736 L784 496 H896" style="animation:sePulse 2.2s .9s linear infinite"></path>
+          <path pathLength="1000" d="M736 544 V640 L764 668 H896" stroke-width="2.5" style="animation:sePulse 4.1s 1.4s linear infinite"></path>
+          <path pathLength="1000" d="M700 96 V150 L740 190 H820 L860 230 V300 L880 320 H896" stroke-width="2.5" style="animation:sePulse 2.7s .3s linear infinite"></path>
+          <path pathLength="1000" d="M560 120 H640 L670 150 V250 L700 280 H780" stroke-width="2" style="animation:sePulse 4.8s 2s linear infinite"></path>
+          <path pathLength="1000" d="M0 800 H140 L170 770 H430 L460 800 H620 L650 770 H720" stroke-width="3" style="animation:sePulse 5.2s .6s linear infinite"></path>
+          <path pathLength="1000" d="M0 250 H18 L30 262 V440" stroke-width="2" style="animation:sePulse 3.6s 1.1s linear infinite"></path>
+        </g>
+        <g stroke="#FFFFFF" stroke-width="3" stroke-dasharray="80 920" style="filter:drop-shadow(0 0 4px #FFFFFF) drop-shadow(0 0 10px rgba(255,255,255,.9))">
+          <path pathLength="1000" d="M1440 120 H1340 L1300 160 H1160 L1120 200 V240" style="animation:sePulse 2.9s .2s linear infinite"></path>
+          <path pathLength="1000" d="M1440 170 H1390 L1360 200 V310" style="animation:sePulse 3.4s 1s linear infinite"></path>
+          <path pathLength="1000" d="M1440 400 H1416 L1400 416 V470 H1384" style="animation:sePulse 4.4s 1.8s linear infinite"></path>
+          <path pathLength="1000" d="M1066 724 V760 L1040 786 V860" style="animation:sePulseRev 3.1s linear infinite"></path>
+          <path pathLength="1000" d="M1276 726 V770 L1300 794 V860" style="animation:sePulseRev 2.6s .7s linear infinite"></path>
+          <path pathLength="1000" d="M1020 0 V40 L1050 70 H1240" stroke-width="2" style="animation:sePulse 3.9s 2.4s linear infinite"></path>
+        </g>
+        <g fill="#26282B" stroke="#F7C032" stroke-width="2">
+          <circle cx="44" cy="139" r="5"></circle><circle cx="44" cy="522" r="5"></circle><circle cx="736" cy="544" r="5"></circle><circle cx="784" cy="496" r="4"></circle><circle cx="764" cy="668" r="4"></circle><circle cx="700" cy="96" r="4"></circle><circle cx="740" cy="190" r="3.5"></circle><circle cx="860" cy="230" r="4"></circle><circle cx="780" cy="280" r="4"></circle><circle cx="560" cy="120" r="3.5"></circle><circle cx="600" cy="420" r="3.5"></circle><circle cx="830" cy="350" r="3.5"></circle><circle cx="170" cy="770" r="4"></circle><circle cx="460" cy="800" r="4"></circle><circle cx="720" cy="770" r="5"></circle><circle cx="300" cy="782" r="3"></circle><circle cx="280" cy="806" r="3"></circle><circle cx="600" cy="810" r="3"></circle><circle cx="30" cy="262" r="3.5"></circle><circle cx="30" cy="440" r="4"></circle><circle cx="30" cy="740" r="3.5"></circle>
+        </g>
+        <g fill="#F7C032" stroke="#1A1B1D" stroke-width="2">
+          <circle cx="1300" cy="160" r="4.5"></circle><circle cx="1360" cy="200" r="4"></circle><circle cx="1400" cy="416" r="4"></circle><circle cx="1040" cy="786" r="4.5"></circle><circle cx="1300" cy="794" r="4.5"></circle><circle cx="1404" cy="636" r="3.5"></circle><circle cx="1404" cy="700" r="3.5"></circle><circle cx="1050" cy="70" r="3.5"></circle><circle cx="1240" cy="70" r="3.5"></circle><circle cx="1270" cy="90" r="3"></circle><circle cx="1100" cy="90" r="3"></circle><circle cx="1360" cy="780" r="3.5"></circle>
+        </g>
+      </svg>
+
+      <div style="position:absolute;left:850px;top:690px;width:430px;height:70px;border-radius:50%;background:radial-gradient(closest-side,rgba(26,27,29,.22),rgba(26,27,29,0))"></div>
+      <div style="position:absolute;left:896px;top:712px;width:356px;height:18px;border-radius:50%;background:radial-gradient(closest-side,rgba(26,27,29,.55),rgba(26,27,29,0));filter:blur(2px)"></div>
+      <div style="position:absolute;left:1176px;top:718px;width:214px;height:16px;border-radius:50%;background:radial-gradient(closest-side,rgba(26,27,29,.6),rgba(26,27,29,0));filter:blur(2px)"></div>
+
+      <div style="position:absolute;left:880px;top:196px;width:372px;height:520px;z-index:3;perspective:1100px">
+        <div style="position:absolute;inset:0;transform-style:preserve-3d;transform:rotateY(18deg) rotateX(3deg) rotateZ(-1.5deg)">
+          <div style="position:absolute;inset:0;border-radius:34px;background:linear-gradient(90deg,#5E6064,#8C9096 40%,#B9BCC0);transform:translateZ(-12px) translateX(-10px);box-shadow:0 30px 50px rgba(26,27,29,.3)"></div>
+          <div style="position:absolute;inset:0;border-radius:34px;background:linear-gradient(105deg,#FFFFFF 0%,#C9CBCE 6%,#8C9096 30%,#D5D7DA 62%,#9A9DA2 100%);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.95),inset 1.5px 0 0 rgba(255,255,255,.8),inset 0 -1.5px 0 rgba(26,27,29,.35),0 0 0 1px rgba(26,27,29,.25),0 14px 24px rgba(26,27,29,.22)">
+            <span style="position:absolute;right:60px;top:-2px;width:44px;height:3px;border-radius:2px;background:#8C9096"></span>
+            <div style="position:absolute;inset:4px;border-radius:30px;background:#0B0C0D;overflow:hidden">
+              <div style="position:absolute;inset:14px;border-radius:18px;background:#F2F3F4;overflow:hidden;color:#1A1B1D;font-family:'Inter',sans-serif">
+                <div style="display:flex;justify-content:space-between;align-items:center;height:22px;padding:0 14px;font-size:11px;font-weight:600"><span>{{ clock }}</span><span style="display:flex;align-items:center;gap:6px"><span style="display:flex;align-items:flex-end;gap:1.5px"><span style="width:3px;height:4px;background:#1A1B1D"></span><span style="width:3px;height:6px;background:#1A1B1D"></span><span style="width:3px;height:8px;background:#1A1B1D"></span><span style="width:3px;height:10px;background:#1A1B1D"></span></span><span style="width:20px;height:9px;border-radius:3px;border:1.5px solid #1A1B1D;box-sizing:border-box;padding:1px"><span style="display:block;width:80%;height:100%;border-radius:1px;background:#1A1B1D"></span></span></span></div>
+                <div style="display:flex;align-items:center;gap:10px;height:46px;padding:0 12px;background:#FFFFFF;border-bottom:1px solid rgba(26,27,29,.06)">
+                  <span style="width:26px;height:26px;border-radius:50%;overflow:hidden;flex:none;box-shadow:0 0 0 1.5px #F7C032"><img src="assets/se-logo.png" alt="" style="width:100%;height:100%;display:block"></span>
+                  <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px">Shop</span>
+                  <span style="flex:1;display:flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:10px;background:#F2F3F4;font-size:11px;color:#8C9096"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#5E6064" stroke-width="2.4"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>Search parts</span>
+                  <span style="position:relative;display:flex"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A1B1D" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><path d="M3 6h18"></path><path d="M16 10a4 4 0 0 1-8 0"></path></svg><span style="position:absolute;top:-6px;right:-7px;min-width:15px;height:15px;border-radius:8px;background:#F7C032;font-size:9px;font-weight:700;display:grid;place-items:center">{{ ipCart }}</span></span>
+                </div>
+                <div style="display:flex;gap:6px;padding:10px 12px 8px"><sc-for list="{{ chips }}" as="c" hint-placeholder-count="5"><span style="padding:5px 9px;border-radius:8px;background:{{ c.bg }};color:{{ c.ink }};font-size:11px;font-weight:600;box-shadow:0 0 0 1px rgba(26,27,29,.08);transition:background .3s,color .3s;white-space:nowrap">{{ c.c }}</span></sc-for></div>
+                <div style="position:absolute;left:0;right:0;top:110px;bottom:0;overflow:hidden;padding:0 12px">
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;transform:translateY({{ ipY }}px);transition:{{ ipTrans }}">
+                    <sc-for list="{{ cards }}" as="p" hint-placeholder-count="6">
+                      <div style="height:150px;box-sizing:border-box;display:flex;flex-direction:column;gap:6px;padding:7px;border-radius:12px;background:#FFFFFF;box-shadow:{{ p.ring }};transition:box-shadow .3s">
+                        <div style="position:relative;height:70px;border-radius:8px;background:radial-gradient(80% 90% at 50% 40%,#FFFFFF,#E9EAEC);display:grid;place-items:center;overflow:hidden">
+                          <sc-if value="{{ p.isScr }}" hint-placeholder-val="{{ true }}"><span style="position:relative;width:30px;height:56px;border-radius:7px;background:linear-gradient(160deg,#3D3E3F,#0B0C0D 70%);box-shadow:0 0 0 1.5px #9A9DA2,0 6px 10px rgba(0,0,0,.18);overflow:hidden"><span style="position:absolute;left:10px;top:3px;width:10px;height:3px;border-radius:2px;background:#000000"></span><span style="position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,.25),transparent 45%)"></span></span></sc-if>
+                          <sc-if value="{{ p.isBat }}" hint-placeholder-val="{{ false }}"><span style="position:relative;width:30px;height:52px;border-radius:4px;background:#26282B;box-shadow:0 6px 10px rgba(0,0,0,.18)"><span style="position:absolute;left:4px;right:4px;top:10px;bottom:8px;border-radius:2px;background:#F7C032"></span><span style="position:absolute;left:11px;top:-3px;width:8px;height:4px;border-radius:1px;background:#C98A1A"></span></span></sc-if>
+                          <sc-if value="{{ p.isBcv }}" hint-placeholder-val="{{ false }}"><span style="position:relative;width:32px;height:56px;border-radius:8px;background:linear-gradient(150deg,#F2F3F4,#B9BCC0 45%,#8C9096);box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 6px 10px rgba(0,0,0,.18)"><span style="position:absolute;left:4px;top:4px;width:13px;height:13px;border-radius:4px;background:#1A1B1D"></span></span></sc-if>
+                          <sc-if value="{{ p.isCam }}" hint-placeholder-val="{{ false }}"><span style="display:grid;grid-template-columns:1fr 1fr;gap:3px;padding:4px;width:38px;height:38px;box-sizing:border-box;border-radius:10px;background:#1A1B1D;box-shadow:0 6px 10px rgba(0,0,0,.2)"><span style="border-radius:50%;background:radial-gradient(circle at 40% 40%,#5E6064 0 20%,#0B0C0D 60%);box-shadow:0 0 0 1.5px #5E6064"></span><span style="border-radius:50%;background:radial-gradient(circle at 40% 40%,#5E6064 0 20%,#0B0C0D 60%);box-shadow:0 0 0 1.5px #5E6064"></span><span style="border-radius:50%;background:radial-gradient(circle at 40% 40%,#5E6064 0 20%,#0B0C0D 60%);box-shadow:0 0 0 1.5px #5E6064"></span></span></sc-if>
+                          <span style="position:absolute;left:5px;top:5px;padding:2px 5px;border-radius:5px;background:#1A1B1D;color:#F7C032;font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:600">{{ p.code }}</span>
+                        </div>
+                        <span style="font-size:11px;font-weight:600;line-height:1.25;height:28px;overflow:hidden">{{ p.title }}</span>
+                        <span style="display:flex;justify-content:space-between;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600">{{ p.price }}</span><span style="display:flex;align-items:flex-end;gap:1.5px"><sc-for list="{{ p.bars }}" as="b" hint-placeholder-count="4"><span style="width:3px;height:{{ b.h }}px;border-radius:1px;background:{{ b.c }}"></span></sc-for></span></span>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="position:absolute;left:12px;right:12px;bottom:12px;display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:10px;background:#1A1B1D;color:#FFFFFF;font-size:11px;box-shadow:0 10px 24px rgba(0,0,0,.25);opacity:{{ toastOp }};transform:translateY({{ toastY }}px);transition:opacity .3s,transform .3s">
+                    <span style="display:grid;place-items:center;width:18px;height:18px;flex:none;border-radius:50%;background:#F7C032"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#1A1B1D" stroke-width="3.4"><path d="M5 12l5 5L20 7"></path></svg></span>
+                    <span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Added · {{ toastTitle }}</span>
+                  </div>
+                </div>
+              </div>
+              <div style="position:absolute;inset:0;background:linear-gradient(118deg,rgba(255,255,255,.2) 0%,rgba(255,255,255,.04) 28%,rgba(255,255,255,0) 29%);pointer-events:none"></div>
+              <span style="position:absolute;left:50%;top:5px;width:6px;height:6px;margin-left:-3px;border-radius:50%;background:#26282B;box-shadow:inset 0 0 0 1.5px #3D3E3F"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="position:absolute;left:1176px;top:290px;width:212px;height:432px;z-index:4;perspective:900px">
+        <div style="position:absolute;inset:0;transform-style:preserve-3d;transform:rotateY(-20deg) rotateX(3deg) rotateZ(2.5deg)">
+          <div style="position:absolute;inset:0;border-radius:38px;background:linear-gradient(90deg,#B9BCC0,#8C9096 60%,#5E6064);transform:translateZ(-10px) translateX(8px);box-shadow:0 26px 44px rgba(26,27,29,.32)"></div>
+          <div style="position:absolute;inset:0;border-radius:38px;background:linear-gradient(255deg,#FFFFFF 0%,#C9CBCE 7%,#7D8086 34%,#D5D7DA 66%,#8C9096 100%);box-shadow:inset 0 1.5px 0 rgba(255,255,255,.95),inset -1.5px 0 0 rgba(255,255,255,.8),inset 0 -1.5px 0 rgba(26,27,29,.35),0 0 0 1px rgba(26,27,29,.25),0 12px 22px rgba(26,27,29,.24),0 0 70px rgba(255,219,110,.5)">
+            <span style="position:absolute;right:-2px;top:110px;width:3px;height:56px;border-radius:2px;background:#8C9096"></span>
+            <span style="position:absolute;left:-2px;top:96px;width:3px;height:30px;border-radius:2px;background:#8C9096"></span>
+            <div style="position:absolute;inset:3px;border-radius:35px;background:#0B0C0D;overflow:hidden">
+              <div style="position:absolute;inset:7px;border-radius:29px;overflow:hidden;background:#1A1B1D">
+                <div style="display:flex;flex-direction:column;transform:translateY({{ reelY }}px);transition:{{ reelTrans }}">
+                  <sc-for list="{{ reel }}" as="a" hint-placeholder-count="1">
+                    <div style="height:412px;flex:none;box-sizing:border-box;display:flex;flex-direction:column;gap:10px;padding:52px 18px 20px;background:{{ a.bg }};color:{{ a.ink }}">
+                      <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.12em;color:{{ a.kick }}">{{ a.k }}</span>
+                      <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;line-height:1.1;letter-spacing:-.02em;white-space:pre-line">{{ a.t }}</span>
+                      <div style="flex:1;display:grid;place-items:center">
+                        <sc-if value="{{ a.isScr }}" hint-placeholder-val="{{ true }}"><span style="position:relative;width:76px;height:136px;border-radius:16px;background:#0B0C0D;box-shadow:0 0 0 2px #8C9096,0 0 40px rgba(247,192,50,.45),0 16px 30px rgba(0,0,0,.4);overflow:hidden"><span style="position:absolute;inset:4px;border-radius:12px;background:linear-gradient(160deg,#FFDB6E 0%,#F7C032 40%,#3D3E3F 100%)"></span><span style="position:absolute;left:28px;top:7px;width:20px;height:6px;border-radius:3px;background:#000000"></span><span style="position:absolute;top:0;bottom:0;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.4),transparent);animation:seSheen 2.6s ease-in-out infinite"></span></span></sc-if>
+                        <sc-if value="{{ a.isBat }}" hint-placeholder-val="{{ false }}"><span style="position:relative;width:66px;height:116px;border-radius:10px;background:#1A1B1D;box-shadow:0 16px 30px rgba(26,27,29,.35);display:flex;flex-direction:column;justify-content:flex-end;padding:6px;box-sizing:border-box"><span style="position:absolute;left:23px;top:-6px;width:20px;height:8px;border-radius:2px;background:#1A1B1D"></span><span style="height:84%;border-radius:6px;background:linear-gradient(180deg,#FFDB6E,#F7C032);display:grid;place-items:center;font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:#1A1B1D;animation:seBreathe 2.4s ease-in-out infinite">100%</span></span></sc-if>
+                        <sc-if value="{{ a.isBcv }}" hint-placeholder-val="{{ false }}"><span style="position:relative;width:78px;height:138px;border-radius:18px;background:linear-gradient(150deg,#F7F8F9,#BFC2C6 40%,#7D8086);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),0 16px 30px rgba(26,27,29,.3);transform:rotate(-8deg)"><span style="position:absolute;left:8px;top:8px;width:32px;height:32px;border-radius:10px;background:#1A1B1D"></span><span style="position:absolute;left:14px;top:14px;width:9px;height:9px;border-radius:50%;background:#3D3E3F;box-shadow:12px 0 0 #3D3E3F,0 12px 0 #3D3E3F"></span></span></sc-if>
+                        <sc-if value="{{ a.isRep }}" hint-placeholder-val="{{ false }}"><span style="display:grid;place-items:center;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.06);box-shadow:0 0 0 1px rgba(247,192,50,.5),0 0 40px rgba(247,192,50,.3)"><svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#F7C032" stroke-width="1.8" style="animation:seTilt 2.2s ease-in-out infinite"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.940-7.94l-3.76 3.76z"></path></svg></span></sc-if>
+                        <sc-if value="{{ a.isWhs }}" hint-placeholder-val="{{ false }}"><span style="display:grid;grid-template-columns:52px 52px;gap:6px"><span style="grid-column:span 2;justify-self:center;position:relative;width:52px;height:40px;border-radius:6px;background:#1A1B1D;animation:seBob 1.8s ease-in-out infinite"><span style="position:absolute;left:21px;top:0;bottom:0;width:10px;background:#FFDB6E"></span></span><span style="position:relative;height:40px;border-radius:6px;background:#1A1B1D"><span style="position:absolute;left:21px;top:0;bottom:0;width:10px;background:#FFDB6E"></span></span><span style="position:relative;height:40px;border-radius:6px;background:#1A1B1D"><span style="position:absolute;left:21px;top:0;bottom:0;width:10px;background:#FFDB6E"></span></span></span></sc-if>
+                        <sc-if value="{{ a.isWld }}" hint-placeholder-val="{{ false }}"><span style="position:relative;width:110px;height:110px;border-radius:50%;box-shadow:inset 0 0 0 2px #1A1B1D;background:radial-gradient(circle at 35% 30%,#FFFFFF,#E4E5E7)"><span style="position:absolute;left:30px;right:30px;top:0;bottom:0;border-radius:50%;box-shadow:inset 0 0 0 1.5px rgba(26,27,29,.5)"></span><span style="position:absolute;left:0;right:0;top:54px;height:1.5px;background:rgba(26,27,29,.5)"></span><span style="position:absolute;left:66px;top:40px;width:10px;height:10px;border-radius:50%;background:#F7C032;box-shadow:0 0 0 2px #1A1B1D"></span><span style="position:absolute;left:66px;top:40px;width:10px;height:10px;border-radius:50%;background:#F7C032;animation:sePing 1.8s ease-out infinite"></span></span></sc-if>
+                      </div>
+                      <span style="font-size:13px;line-height:1.4;color:{{ a.sub }};text-wrap:balance">{{ a.d }}</span>
+                      <span style="display:flex;align-items:center;justify-content:space-between;height:40px;padding:0 14px;border-radius:10px;background:{{ a.cta }};color:{{ a.ctaInk }};font-size:13px;font-weight:600">{{ a.c }}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+                    </div>
+                  </sc-for>
+                </div>
+                <span style="position:absolute;left:50%;top:9px;width:64px;height:18px;margin-left:-32px;border-radius:9px;background:#000000"></span>
+                <div style="position:absolute;left:18px;top:36px;display:flex;gap:4px"><sc-for list="{{ segs }}" as="g" hint-placeholder-count="6"><span style="width:{{ g.w }}px;height:4px;border-radius:2px;background:{{ g.c }};transition:width .4s,background .4s"></span></sc-for></div>
+                <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none"><span style="position:absolute;top:-10%;bottom:-10%;left:0;width:42%;background:linear-gradient(100deg,rgba(255,255,255,0),rgba(255,255,255,.45),rgba(255,255,255,0));animation:seGlassShine 5s ease-in-out infinite"></span></div>
+                <div style="position:absolute;inset:0;background:linear-gradient(125deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,0) 32%);pointer-events:none"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="position:absolute;left:80px;top:150px;width:600px;z-index:4;display:flex;flex-direction:column;gap:24px">
+      <span style="align-self:flex-start;white-space:nowrap;display:flex;align-items:center;gap:10px;padding:6px 14px 6px 6px;border-radius:10px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);font-size:14px;color:#F2F3F4"><span style="padding:3px 8px;border-radius:6px;background:#F7C032;color:#1A1B1D;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600">SINCE 2003</span>Al Murar, Deira · wholesale &amp; retail</span>
+      <h1 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:64px;line-height:1.04;letter-spacing:-.035em;white-space:nowrap">Every part. Every model.<br><span style="color:#F7C032;text-shadow:0 0 34px rgba(247,192,50,.5),0 0 80px rgba(255,219,110,.25)">Every grade.</span></h1>
+      <p style="margin:0;font-size:18px;line-height:1.55;color:#D5D7DA;max-width:520px">Genuine, tested mobile phone parts for repair shops, traders and everyday customers. Packed in Deira, shipped worldwide.</p>
+      <div style="width:580px;display:flex;align-items:center;gap:12px;height:64px;box-sizing:border-box;padding:0 7px 0 20px;border-radius:10px;background:#FFFFFF;color:#1A1B1D;animation:seSearchGlow 3.2s linear infinite">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A1B1D" stroke-width="2"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+        <span style="flex:1;font-size:16px;color:#5E6064">Model, model number or part…</span>
+        <span style="display:flex;align-items:center;gap:10px;height:50px;padding:0 20px;border-radius:10px;background:#1A1B1D;color:#FFFFFF;font-weight:600;font-size:15px;cursor:pointer" style-hover="background:#3D3E3F">Search<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F7C032" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.1em;color:#9A9DA2;margin-right:4px">TRENDING</span><sc-for list="{{ trending }}" as="t" hint-placeholder-count="3"><span style="white-space:nowrap;padding:7px 12px;border-radius:10px;border:1px solid rgba(255,255,255,.18);font-size:14px;color:#F2F3F4;cursor:pointer;transition:border-color .2s,background .2s" style-hover="border-color:#F7C032;background:rgba(247,192,50,.08)">{{ t }}</span></sc-for></div>
+      <a href="#offer" style="align-self:flex-start;display:flex;align-items:center;justify-content:space-between;gap:28px;min-width:200px;height:54px;box-sizing:border-box;padding:0 20px;border-radius:10px;background:#F7C032;color:#1A1B1D;font-weight:600;font-size:16px;box-shadow:0 0 30px rgba(247,192,50,.3);transition:transform .2s,box-shadow .2s" style-hover="transform:translateY(-2px);box-shadow:0 0 44px rgba(255,219,110,.6);color:#1A1B1D">Shop parts<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+    </div>
+
+    <div ref="{{ boardRef }}" style="position:absolute;left:0;top:860px;width:1440px;height:170px;z-index:5;display:grid;grid-template-columns:290px minmax(0,1fr) 400px;background:linear-gradient(180deg,#3D3E3F 0%,#26282B 100%);box-shadow:inset 0 1px 0 rgba(255,255,255,.1)">
+      <div style="position:absolute;left:0;right:0;top:0;height:2px;overflow:hidden"><div style="width:40%;height:100%;background:linear-gradient(90deg,transparent,#F7C032,#FFDB6E,transparent);animation:seRailCurrent 3.5s linear infinite"></div></div>
+      <div style="display:flex;flex-direction:column;justify-content:center;gap:8px;padding:0 28px 0 48px;border-right:1px solid rgba(255,255,255,.08)">
+        <span style="display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:#F7C032"><span style="width:7px;height:7px;border-radius:50%;background:#F7C032;animation:seBlinkDot 1.2s steps(1) infinite"></span>LIVE STOCK</span>
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:20px;line-height:1.2">Parts for every brand you fix.</span>
+        <span style="font-size:14px;color:#C9CBCE">Hover a brand for details</span>
+      </div>
+      <div style="overflow:hidden;min-width:0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)">
+        <div style="display:flex;width:max-content;height:100%;animation:seRail 50s linear infinite;animation-play-state:{{ railPlay }}">
+          <sc-for list="{{ rail }}" as="b" hint-placeholder-count="10">
+            <div onMouseEnter="{{ b.enter }}" onMouseLeave="{{ b.leave }}" style="display:flex;flex-direction:column;justify-content:center;gap:16px;padding:0 36px;border-right:1px solid rgba(255,255,255,.08);cursor:pointer">
+              <div style="height:24px;display:flex;align-items:center;gap:9px;color:#FFFFFF;filter:{{ b.glow }};transform:translateY({{ b.lift }}px);transition:transform .2s,filter .2s">
+                <sc-if value="{{ b.hasMark }}" hint-placeholder-val="{{ false }}"><span style="display:block;width:22px;height:22px;flex:none;background:#FFFFFF;-webkit-mask:{{ b.markMask }};mask:{{ b.markMask }}"></span></sc-if>
+                <sc-if value="{{ b.hasWord }}" hint-placeholder-val="{{ false }}"><span style="display:block;height:24px;width:{{ b.ww }}px;overflow:hidden"><span style="display:block;width:{{ b.ww }}px;height:{{ b.ww }}px;margin-top:{{ b.wmt }}px;background:#FFFFFF;-webkit-mask:{{ b.wordMask }};mask:{{ b.wordMask }}"></span></span></sc-if>
+                <sc-if value="{{ b.hasName }}" hint-placeholder-val="{{ true }}"><span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:22px;line-height:24px;letter-spacing:-.01em;white-space:nowrap">{{ b.name }}</span></sc-if>
+              </div>
+              <span style="display:flex;align-items:center;gap:10px;white-space:nowrap"><span style="display:flex;align-items:flex-end;gap:2px"><sc-for list="{{ b.bars }}" as="x" hint-placeholder-count="4"><span style="width:4px;height:{{ x.h }}px;border-radius:1px;background:{{ x.c }}"></span></sc-for></span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#E4E5E7">{{ b.count }} in stock</span></span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;justify-content:center;gap:14px;padding:0 48px 0 32px;border-left:1px solid rgba(255,255,255,.08)">
+        <span style="display:flex;align-items:baseline;gap:12px;white-space:nowrap"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:40px;letter-spacing:-.03em;line-height:1;color:#F7C032;text-shadow:0 0 24px rgba(247,192,50,.4)">{{ total }}</span><span style="font-size:14px;color:#E4E5E7">parts · {{ brandCount }} brands<br>ready to ship</span></span>
+        <a href="#offer" style="align-self:flex-start;display:flex;align-items:center;gap:10px;height:44px;box-sizing:border-box;padding:0 16px;border-radius:10px;border:1.5px solid rgba(255,255,255,.45);font-size:14px;font-weight:600;white-space:nowrap;color:#FFFFFF;transition:border-color .2s,transform .2s" style-hover="border-color:#F7C032;transform:translateY(-2px);color:#FFFFFF">View all brands<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F7C032" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+      </div>
+    </div>
+
+    <sc-if value="{{ hasHover }}" hint-placeholder-val="{{ false }}">
+      <div onMouseEnter="{{ panelEnter }}" onMouseLeave="{{ panelLeave }}" style="position:absolute;left:{{ panel.x }}px;top:606px;width:320px;box-sizing:border-box;z-index:7;display:flex;flex-direction:column;gap:12px;padding:18px;border-radius:16px;background:rgba(26,27,29,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(247,192,50,.6);box-shadow:0 0 40px rgba(247,192,50,.25),0 24px 48px rgba(0,0,0,.45)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;white-space:nowrap">{{ panel.name }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#F7C032;white-space:nowrap">{{ panel.stock }} in stock</span></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px"><span style="display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.06)"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#9A9DA2">MODELS</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px">{{ panel.models }}</span></span><span style="display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,.06)"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;color:#9A9DA2">PART LINES</span><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:18px">{{ panel.skus }}</span></span></div>
+        <div style="display:flex;flex-direction:column;gap:4px"><sc-for list="{{ panel.top }}" as="t" hint-placeholder-count="3"><span style="display:flex;justify-content:space-between;font-size:13px;color:#D5D7DA"><span>{{ t.name }}</span><span style="font-family:'JetBrains Mono',monospace">{{ t.n }}</span></span></sc-for></div>
+        <span style="display:flex;justify-content:space-between;align-items:center;height:40px;padding:0 14px;border-radius:10px;background:#F7C032;color:#1A1B1D;font-weight:600;font-size:14px"><span>Shop {{ panel.name }} parts</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+      </div>
+    </sc-if>
+
+    <div style="position:absolute;left:0;top:1030px;width:1440px;height:320px;box-sizing:border-box;padding:30px 48px 36px;background:linear-gradient(180deg,#FFFFFF 0%,#F2F3F4 100%);color:#1A1B1D;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px">
+      <sc-for list="{{ tiles }}" as="c" hint-placeholder-count="4">
+        <a href="#offer" onMouseEnter="{{ c.enter }}" onMouseLeave="{{ c.leave }}" style="display:flex;flex-direction:column;border-radius:16px;background:#FFFFFF;border:1px solid rgba(26,27,29,.07);box-shadow:0 1px 2px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.06);overflow:hidden;color:#1A1B1D;transition:transform .3s cubic-bezier(.2,.8,.2,1),box-shadow .3s,border-color .3s" style-hover="transform:translateY(-4px);border-color:#F7C032;box-shadow:0 8px 24px rgba(0,0,0,.10),0 0 0 1px #F7C032,0 0 30px rgba(247,192,50,.25);color:#1A1B1D">
+          <div style="position:relative;height:128px;display:grid;place-items:center;background:radial-gradient(60% 80% at 50% 70%,#FFF4D1 0%,#F2F3F4 70%);overflow:hidden">
+            <div style="position:absolute;left:50%;bottom:14px;width:120px;height:14px;margin-left:-60px;border-radius:50%;background:radial-gradient(closest-side,rgba(26,27,29,.22),rgba(26,27,29,0))"></div>
+            <div style="transform:{{ c.rt }};transition:transform .5s cubic-bezier(.2,.8,.2,1)">
+              <sc-if value="{{ c.isScr }}" hint-placeholder-val="{{ false }}"><span style="position:relative;display:block;width:56px;height:104px;border-radius:13px;background:#0B0C0D;box-shadow:0 0 0 1.5px #8C9096,0 12px 20px rgba(26,27,29,.28);overflow:hidden;transform:rotate(-6deg)"><span style="position:absolute;inset:3px;border-radius:10px;background:linear-gradient(160deg,#3D3E3F 0%,#0B0C0D 60%)"></span><span style="position:absolute;left:20px;top:6px;width:16px;height:5px;border-radius:3px;background:#000000"></span><span style="position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,.3),rgba(255,255,255,0) 40%)"></span><span style="position:absolute;top:0;bottom:0;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.25),transparent);animation:seSheen 3s ease-in-out infinite"></span></span></sc-if>
+              <sc-if value="{{ c.isBat }}" hint-placeholder-val="{{ false }}"><span style="position:relative;display:block;width:52px;height:92px;border-radius:7px;background:linear-gradient(90deg,#26282B,#3D3E3F 50%,#26282B);box-shadow:0 12px 20px rgba(26,27,29,.28)"><span style="position:absolute;left:5px;right:5px;top:14px;bottom:6px;border-radius:4px;background:#3D3E3F;overflow:hidden"><span style="position:absolute;inset:0;background:linear-gradient(180deg,#FFDB6E,#F7C032);transform-origin:50% 100%;animation:seFill 2.4s cubic-bezier(.2,.8,.2,1) infinite"></span></span><span style="position:absolute;left:16px;top:-6px;width:20px;height:9px;border-radius:2px;background:#C98A1A"></span><span style="position:absolute;left:18px;top:-11px;width:16px;height:6px;border-radius:1px;background:#1A1B1D"></span></span></sc-if>
+              <sc-if value="{{ c.isFlx }}" hint-placeholder-val="{{ false }}"><span style="position:relative;display:block;width:110px;height:90px;animation:seBob 2.4s ease-in-out infinite"><span style="position:absolute;left:20px;top:6px;width:14px;height:70px;border-radius:3px;background:linear-gradient(90deg,#B8781A,#E8A83A,#B8781A)"></span><span style="position:absolute;left:20px;top:64px;width:80px;height:14px;border-radius:3px;background:linear-gradient(180deg,#B8781A,#E8A83A,#B8781A)"></span><span style="position:absolute;left:14px;top:0;width:26px;height:14px;border-radius:3px;background:#1A1B1D"></span><span style="position:absolute;left:86px;top:58px;width:22px;height:26px;border-radius:4px;background:linear-gradient(180deg,#D5D7DA,#8C9096);box-shadow:inset 0 0 0 1px rgba(26,27,29,.3)"><span style="position:absolute;left:5px;right:5px;top:9px;height:8px;border-radius:4px;background:#1A1B1D"></span></span></span></sc-if>
+              <sc-if value="{{ c.isBcv }}" hint-placeholder-val="{{ false }}"><span style="position:relative;display:block;width:58px;height:106px;border-radius:14px;background:linear-gradient(150deg,#F7F8F9,#BFC2C6 40%,#7D8086);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),0 12px 20px rgba(26,27,29,.28);transform:rotate(-8deg)"><span style="position:absolute;inset:0;border-radius:14px;background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.14) 0 1px,transparent 1px 3px)"></span><span style="position:absolute;left:6px;top:6px;width:24px;height:24px;border-radius:7px;background:#1A1B1D"></span><span style="position:absolute;left:10px;top:10px;width:7px;height:7px;border-radius:50%;background:#3D3E3F;box-shadow:9px 0 0 #3D3E3F,0 9px 0 #3D3E3F"></span></span></sc-if>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;padding:16px 20px 18px">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:20px;letter-spacing:-.01em">{{ c.name }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5E6064;white-space:nowrap">{{ c.from }}</span></div>
+            <span style="display:flex;align-items:baseline;gap:8px"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;letter-spacing:-.03em;line-height:1">{{ c.v }}</span><span style="font-size:14px;color:#5E6064">in stock · {{ c.meta }}</span></span>
+            <span style="margin-top:6px;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600"><span style="border-bottom:2px solid #F7C032;padding-bottom:2px">{{ c.link }}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+</div>
+
+<section ref="{{ tdRef }}" id="teardown" data-screen-label="02 Teardown" style="position:relative;height:440vh;background:radial-gradient(70% 60% at 70% 50%,#FFFFFF 0%,#F2F3F4 70%)">
+  <div style="position:sticky;top:0;height:100vh;overflow:hidden;box-sizing:border-box;padding:{{ tdl.padT }}px clamp(20px,4vw,64px) 24px">
+    <div style="position:absolute;inset:0;background-image:radial-gradient(rgba(61,62,63,.14) 1px,transparent 1.2px);background-size:24px 24px;-webkit-mask-image:radial-gradient(50% 60% at 70% 52%,#000,transparent);mask-image:radial-gradient(50% 60% at 70% 52%,#000,transparent);pointer-events:none"></div>
+    <div style="position:relative;max-width:1312px;height:100%;margin:0 auto;display:grid;grid-template-columns:{{ tdl.cols }};grid-template-rows:{{ tdl.rows }};gap:{{ tdl.gap }}px;align-items:center">
+      <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+        <sc-if value="{{ tdl.compact }}" hint-placeholder-val="{{ false }}">
+          <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:#5E6064">TEARDOWN · {{ td.step }}</span>
+          <h2 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;line-height:1.1;letter-spacing:-.03em;text-wrap:balance">We stock every layer.</h2>
+        </sc-if>
+        <sc-if value="{{ tdl.full }}" hint-placeholder-val="{{ true }}">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:#5E6064">TEARDOWN · {{ td.step }}</span>
+        <h2 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(34px,3.4vw,48px);line-height:1.08;letter-spacing:-.03em;text-wrap:balance">Take any phone apart. <span style="background:linear-gradient(transparent 62%,#FFDB6E 62%,#FFDB6E 92%,transparent 92%)">We stock every layer.</span></h2>
+        <p style="margin:0;font-size:17px;line-height:1.55;color:#3D3E3F;max-width:460px;text-wrap:pretty">Scroll to open it up. Every layer is a part we sell, for every major brand.</p>
+        <div style="display:flex;flex-direction:column;gap:4px;margin-top:4px">
+          <sc-for list="{{ td.items }}" as="it" hint-placeholder-count="7">
+            <a href="#offer" style="display:grid;grid-template-columns:34px minmax(0,1fr) auto;align-items:center;gap:14px;padding:8px 12px;border-radius:12px;background:{{ it.bg }};box-shadow:{{ it.sh }};color:#1A1B1D;transition:background .3s,box-shadow .3s" style-hover="background:#FFFFFF;color:#1A1B1D">
+              <span style="display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:{{ it.chip }};font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;transition:background .3s">{{ it.n }}</span>
+              <span style="display:flex;flex-direction:column;gap:1px;min-width:0"><span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:17px;color:{{ it.ink }};transition:color .3s">{{ it.name }}</span><span style="font-size:13px;color:#5E6064;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.meta }}</span></span>
+              <span style="display:flex;align-items:center;gap:6px;font-size:14px;font-weight:600;white-space:nowrap;opacity:{{ it.lop }};transition:opacity .3s">{{ it.link }}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+            </a>
+          </sc-for>
+        </div>
+        </sc-if>
+      </div>
+      <div style="position:relative;height:100%;min-height:0;min-width:0;display:grid;place-items:center">
+        <div style="position:absolute;left:50%;top:50%;width:520px;height:520px;margin:-260px 0 0 -260px;border-radius:50%;background:radial-gradient(closest-side,rgba(247,192,50,.42),rgba(255,219,110,.12) 60%,rgba(247,192,50,0));opacity:{{ td.glow }};transform:scale({{ tdl.sc }})"></div>
+        <div style="position:relative;width:{{ tdl.sw }}px;height:{{ tdl.sh }}px">
+        <div style="position:absolute;left:0;top:0;width:520px;height:600px;perspective:2200px;transform:scale({{ tdl.sc }});transform-origin:0 0">
+          <div style="position:absolute;left:140px;top:60px;width:240px;height:480px;transform-style:preserve-3d;transform:rotateX({{ td.rx }}deg) rotateZ({{ td.rz }}deg) scale({{ td.sc }})">
+            <div style="position:absolute;inset:0;transform:translateZ({{ td.L.back.z }}px) translateX({{ td.L.back.x }}px);opacity:{{ td.L.back.o }};filter:{{ td.L.back.f }};transition:transform .25s ease-out,opacity .3s,filter .3s">
+              <div style="position:absolute;inset:0;border-radius:36px;background:linear-gradient(145deg,#F7F8F9,#BFC2C6 35%,#8C9096 70%,#6E7176);box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.7),0 24px 50px rgba(26,27,29,.25)"><div style="position:absolute;inset:0;border-radius:36px;background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.12) 0 1px,transparent 1px 3px)"></div><span style="position:absolute;left:88px;top:300px;width:64px;height:64px;border-radius:50%;overflow:hidden;opacity:.9"><img src="assets/se-logo.png" alt="" style="width:100%;height:100%;display:block"></span></div>
+            </div>
+            <div style="position:absolute;inset:0;transform:translateZ({{ td.L.cam.z }}px) translateX({{ td.L.cam.x }}px);opacity:{{ td.L.cam.o }};filter:{{ td.L.cam.f }};transition:transform .25s ease-out,opacity .3s,filter .3s">
+              <div style="position:absolute;left:18px;top:18px;width:100px;height:100px;box-sizing:border-box;border-radius:28px;background:#1A1B1D;display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px;box-shadow:0 0 0 2px #5E6064"><span style="border-radius:50%;background:radial-gradient(circle at 38% 38%,#FFDB6E 0 8%,#3D3E3F 14%,#0B0C0D 60%);box-shadow:0 0 0 3px #5E6064"></span><span style="border-radius:50%;background:radial-gradient(circle at 38% 38%,#FFDB6E 0 8%,#3D3E3F 14%,#0B0C0D 60%);box-shadow:0 0 0 3px #5E6064"></span><span style="border-radius:50%;background:radial-gradient(circle at 38% 38%,#FFDB6E 0 8%,#3D3E3F 14%,#0B0C0D 60%);box-shadow:0 0 0 3px #5E6064"></span><span style="justify-self:center;align-self:center;width:12px;height:12px;border-radius:50%;background:#FFF4D1"></span></div>
+              <div style="position:absolute;left:150px;top:22px;width:22px;height:22px;border-radius:50%;background:radial-gradient(circle,#3D3E3F 30%,#0B0C0D 70%);box-shadow:0 0 0 2px #5E6064"></div>
+            </div>
+            <div style="position:absolute;inset:0;transform:translateZ({{ td.L.board.z }}px) translateX({{ td.L.board.x }}px);opacity:{{ td.L.board.o }};filter:{{ td.L.board.f }};transition:transform .25s ease-out,opacity .3s,filter .3s">
+              <div style="position:absolute;left:16px;right:16px;top:16px;height:184px;border-radius:14px;background-color:#26282B;background-image:repeating-linear-gradient(90deg,rgba(247,192,50,.32) 0 2px,transparent 2px 18px),repeating-linear-gradient(0deg,rgba(247,192,50,.22) 0 2px,transparent 2px 22px);box-shadow:0 0 0 2px #3D3E3F">
+                <span style="position:absolute;left:112px;top:56px;width:64px;height:64px;border-radius:6px;background:#1A1B1D;box-shadow:0 0 0 2px #8C9096"></span>
+                <span style="position:absolute;left:24px;top:132px;width:44px;height:28px;border-radius:4px;background:#1A1B1D;box-shadow:0 0 0 1.5px #5E6064"></span>
+                <span style="position:absolute;left:150px;top:140px;width:40px;height:20px;border-radius:4px;background:#1A1B1D;box-shadow:0 0 0 1.5px #5E6064"></span>
+              </div>
+            </div>
+            <div style="position:absolute;inset:0;transform:translateZ({{ td.L.bat.z }}px) translateX({{ td.L.bat.x }}px);opacity:{{ td.L.bat.o }};filter:{{ td.L.bat.f }};transition:transform .25s ease-out,opacity .3s,filter .3s">
+              <div style="position:absolute;left:28px;right:28px;top:214px;bottom:36px;border-radius:12px;background:linear-gradient(90deg,#26282B,#3D3E3F 50%,#26282B);box-shadow:0 20px 40px rgba(0,0,0,.18);padding:10px;box-sizing:border-box"><div style="height:100%;border-radius:8px;background:linear-gradient(160deg,#FFDB6E,#F7C032 60%);display:flex;flex-direction:column;justify-content:flex-end;gap:4px;padding:14px;box-sizing:border-box;color:#1A1B1D"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;line-height:1">Li-ion</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600">3.88V · TESTED</span></div></div>
+            </div>
+            <div style="position:absolute;inset:0;transform:translateZ({{ td.L.flex.z }}px) translateX({{ td.L.flex.x }}px);opacity:{{ td.L.flex.o }};filter:{{ td.L.flex.f }};transition:transform .25s ease-out,opacity .3s,filter .3s">
+              <span style="position:absolute;left:190px;top:80px;width:18px;height:340px;border-radius:4px;background:linear-gradient(90deg,#B8781A,#E8A83A,#B8781A)"></span>
+              <span style="position:absolute;left:184px;top:70px;width:30px;height:18px;border-radius:3px;background:#1A1B1D"></span>
+              <span style="position:absolute;left:40px;top:150px;width:150px;height:14px;border-radius:4px;background:linear-gradient(180deg,#B8781A,#E8A83A,#B8781A)"></span>
+              <span style="position:absolute;left:30px;top:144px;width:24px;height:26px;border-radius:3px;background:#1A1B1D"></span>
+              <span style="position:absolute;left:44px;right:44px;bottom:12px;height:30px;border-radius:6px;background:linear-gradient(180deg,#B8781A,#E8A83A,#B8781A)"><span style="position:absolute;left:50%;top:6px;width:44px;height:18px;margin-left:-22px;border-radius:9px;background:linear-gradient(180deg,#D5D7DA,#8C9096)"><span style="position:absolute;left:8px;right:8px;top:5px;height:8px;border-radius:4px;background:#1A1B1D"></span></span></span>
+            </div>
+            <div style="position:absolute;inset:0;transform:translateZ({{ td.L.frame.z }}px) translateX({{ td.L.frame.x }}px);opacity:{{ td.L.frame.o }};filter:{{ td.L.frame.f }};transition:transform .25s ease-out,opacity .3s,filter .3s">
+              <div style="position:absolute;inset:0;border-radius:36px;border:12px solid #A7AAAE;box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),0 0 0 1px rgba(26,27,29,.25),0 20px 40px rgba(0,0,0,.12)"></div>
+              <span style="position:absolute;right:-4px;top:120px;width:5px;height:60px;border-radius:3px;background:#8C9096"></span>
+              <span style="position:absolute;left:-4px;top:110px;width:5px;height:36px;border-radius:3px;background:#8C9096"></span>
+            </div>
+            <div style="position:absolute;inset:0;transform:translateZ({{ td.L.screen.z }}px) translateX({{ td.L.screen.x }}px);opacity:{{ td.L.screen.o }};filter:{{ td.L.screen.f }};transition:transform .25s ease-out,opacity .3s,filter .3s">
+              <div style="position:absolute;inset:0;border-radius:36px;background:#0B0C0D;box-shadow:0 0 0 2px #8C9096,0 30px 60px rgba(0,0,0,.22);overflow:hidden">
+                <div style="position:absolute;inset:8px;border-radius:30px;background:radial-gradient(120% 70% at 50% 0%,#3D3E3F 0%,#1A1B1D 65%);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px">
+                  <span style="width:84px;height:84px;border-radius:50%;overflow:hidden;background:#FFFFFF;box-shadow:0 0 0 3px #F7C032,0 0 40px rgba(247,192,50,.5)"><img src="assets/se-logo.png" alt="" style="width:100%;height:100%;display:block"></span>
+                  <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;color:#F7C032;opacity:{{ td.hint }}">SCROLL TO OPEN</span>
+                </div>
+                <span style="position:absolute;left:72px;top:16px;width:96px;height:24px;border-radius:12px;background:#000000"></span>
+                <div style="position:absolute;inset:0;background:linear-gradient(130deg,rgba(255,255,255,.22) 0%,rgba(255,255,255,0) 36%)"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        <sc-if value="{{ td.hasAct }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;right:0;bottom:{{ tdl.cardB }}px;width:{{ tdl.cardW }}px;box-sizing:border-box;display:flex;flex-direction:column;gap:8px;padding:16px 18px;border-radius:16px;background:#1A1B1D;color:#FFFFFF;box-shadow:0 8px 24px rgba(0,0,0,.10),0 24px 64px rgba(0,0,0,.18)">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.12em;color:#F7C032">{{ td.cur.n }} / 07 · {{ td.cur.kick }}</span>
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px">{{ td.cur.name }}</span>
+            <span style="font-size:14px;color:#D5D7DA">{{ td.cur.meta }}</span>
+            <a href="#offer" style="margin-top:4px;display:flex;align-items:center;justify-content:space-between;height:42px;padding:0 14px;border-radius:10px;background:#F7C032;color:#1A1B1D;font-size:14px;font-weight:600" style-hover="color:#1A1B1D;box-shadow:0 0 30px rgba(255,219,110,.55)">{{ td.cur.link }}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+          </div>
+        </sc-if>
+        <div style="position:absolute;left:50%;bottom:0;transform:translateX(-50%);display:flex;gap:6px"><sc-for list="{{ td.segs }}" as="g" hint-placeholder-count="7"><span style="width:{{ g.w }}px;height:4px;border-radius:2px;background:{{ g.c }};transition:width .3s,background .3s"></span></sc-for></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section ref="{{ offerRef }}" id="offer" data-screen-label="03 Everything we offer" style="background:#FFFFFF;padding:clamp(64px,7vw,112px) clamp(20px,4vw,64px)">
+  <div style="max-width:1312px;margin:0 auto;display:flex;flex-direction:column;gap:40px">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px">
+      <div style="display:flex;flex-direction:column;gap:14px;max-width:640px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:#5E6064">EVERYTHING WE OFFER</span>
+        <h2 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(34px,3.4vw,48px);line-height:1.08;letter-spacing:-.03em;text-wrap:balance">Every part and every service, under one roof.</h2>
+      </div>
+      <a href="#offer" style="display:flex;align-items:center;gap:10px;height:50px;padding:0 18px;border-radius:10px;border:1.5px solid #1A1B1D;font-size:15px;font-weight:600;color:#1A1B1D;transition:transform .2s,background .2s" style-hover="transform:translateY(-2px);background:#1A1B1D;color:#FFFFFF">Browse all products<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));grid-auto-flow:dense;gap:20px">
+      <a href="#offer" onMouseEnter="{{ big.enter }}" onMouseLeave="{{ big.leave }}" style="grid-column:span 2;grid-row:span 2;position:relative;display:flex;flex-direction:column;justify-content:flex-end;gap:10px;min-height:520px;padding:32px;box-sizing:border-box;border-radius:24px;overflow:hidden;background:linear-gradient(140deg,#3D3E3F 0%,#26282B 55%,#1A1B1D 100%);color:#FFFFFF;opacity:{{ big.op }};transform:translateY({{ big.ty }}px);transition:opacity .6s cubic-bezier(.2,.8,.2,1),transform .6s cubic-bezier(.2,.8,.2,1),box-shadow .3s" style-hover="box-shadow:0 0 0 1px #F7C032,0 24px 64px rgba(26,27,29,.25),0 0 60px rgba(247,192,50,.25);color:#FFFFFF">
+        <div style="position:absolute;left:30%;top:-10%;width:180px;height:140%;transform:rotate(24deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.06),transparent)"></div>
+        <div style="position:absolute;right:-40px;top:-40px;width:460px;height:460px;border-radius:50%;background:radial-gradient(closest-side,rgba(247,192,50,.45),rgba(247,192,50,0))"></div>
+        <svg viewBox="0 0 600 520" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" fill="none" stroke-linecap="round"><path d="M0 120 H120 L160 80 H300" stroke="rgba(247,192,50,.3)" stroke-width="2"></path><path pathLength="1000" d="M0 120 H120 L160 80 H300" stroke="#FFDB6E" stroke-width="3" stroke-dasharray="70 930" style="animation:sePulse 3s linear infinite;filter:drop-shadow(0 0 6px #F7C032)"></path><circle cx="300" cy="80" r="5" fill="#26282B" stroke="#F7C032" stroke-width="2"></circle></svg>
+        <div style="position:absolute;right:56px;top:48px;transform:{{ big.rt }};transition:transform .6s cubic-bezier(.2,.8,.2,1)">
+          <span style="position:relative;display:block;width:150px;height:300px;border-radius:30px;background:#0B0C0D;box-shadow:0 0 0 2px #8C9096,0 0 80px rgba(247,192,50,.4),0 30px 60px rgba(0,0,0,.45);overflow:hidden;transform:rotate(8deg)"><span style="position:absolute;inset:6px;border-radius:25px;background:linear-gradient(160deg,#FFDB6E 0%,#F7C032 34%,#3D3E3F 72%,#1A1B1D 100%)"></span><span style="position:absolute;left:52px;top:14px;width:46px;height:14px;border-radius:7px;background:#000000"></span><span style="position:absolute;top:0;bottom:0;width:40%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);animation:seSheen 3.2s ease-in-out infinite"></span></span>
+        </div>
+        <span style="position:relative;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:#F7C032">SCREENS · {{ big.grades }}</span>
+        <span style="position:relative;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:40px;line-height:1.05;letter-spacing:-.03em;max-width:340px">LCD &amp; OLED screens</span>
+        <span style="position:relative;font-size:16px;line-height:1.5;color:#D5D7DA;max-width:360px;text-wrap:pretty">Original, Service Pack, OLED and Incell for every model we stock. Tested before they leave Deira.</span>
+        <span style="position:relative;display:flex;align-items:center;gap:16px;margin-top:8px;flex-wrap:wrap"><span style="display:flex;align-items:center;gap:10px;height:48px;padding:0 18px;border-radius:10px;background:#F7C032;color:#1A1B1D;font-size:15px;font-weight:600">Shop screens<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:#E4E5E7">{{ big.meta }}</span></span>
+      </a>
+
+      <sc-for list="{{ parts }}" as="c" hint-placeholder-count="6">
+        <a href="#offer" onMouseEnter="{{ c.enter }}" onMouseLeave="{{ c.leave }}" style="grid-column:{{ c.span }};display:flex;flex-direction:column;border-radius:16px;background:#F2F3F4;overflow:hidden;color:#1A1B1D;opacity:{{ c.op }};transform:translateY({{ c.ty }}px);transition:opacity .6s cubic-bezier(.2,.8,.2,1) {{ c.delay }},transform .6s cubic-bezier(.2,.8,.2,1) {{ c.delay }},box-shadow .3s,background .3s" style-hover="background:#FFFFFF;box-shadow:0 0 0 1px #F7C032,0 8px 24px rgba(0,0,0,.10),0 0 30px rgba(247,192,50,.22);color:#1A1B1D">
+          <div style="position:relative;height:150px;display:grid;place-items:center;background:radial-gradient(50% 70% at 50% 75%,#FFF4D1 0%,rgba(255,244,209,0) 100%);overflow:hidden">
+            <div style="position:absolute;left:50%;bottom:18px;width:130px;height:14px;margin-left:-65px;border-radius:50%;background:radial-gradient(closest-side,rgba(26,27,29,.2),rgba(26,27,29,0))"></div>
+            <div style="transform:{{ c.rt }};transition:transform .5s cubic-bezier(.2,.8,.2,1)">
+              <sc-if value="{{ c.isBat }}" hint-placeholder-val="{{ false }}"><span style="position:relative;display:block;width:56px;height:100px;border-radius:7px;background:linear-gradient(90deg,#26282B,#3D3E3F 50%,#26282B);box-shadow:0 12px 20px rgba(26,27,29,.28)"><span style="position:absolute;left:5px;right:5px;top:14px;bottom:6px;border-radius:4px;background:#3D3E3F;overflow:hidden"><span style="position:absolute;inset:0;background:linear-gradient(180deg,#FFDB6E,#F7C032);transform-origin:50% 100%;animation:seFill 2.4s cubic-bezier(.2,.8,.2,1) infinite"></span></span><span style="position:absolute;left:18px;top:-6px;width:20px;height:9px;border-radius:2px;background:#C98A1A"></span></span></sc-if>
+              <sc-if value="{{ c.isFlx }}" hint-placeholder-val="{{ false }}"><span style="position:relative;display:block;width:110px;height:90px;animation:seBob 2.4s ease-in-out infinite"><span style="position:absolute;left:20px;top:6px;width:14px;height:70px;border-radius:3px;background:linear-gradient(90deg,#B8781A,#E8A83A,#B8781A)"></span><span style="position:absolute;left:20px;top:64px;width:80px;height:14px;border-radius:3px;background:linear-gradient(180deg,#B8781A,#E8A83A,#B8781A)"></span><span style="position:absolute;left:14px;top:0;width:26px;height:14px;border-radius:3px;background:#1A1B1D"></span><span style="position:absolute;left:86px;top:58px;width:22px;height:26px;border-radius:4px;background:linear-gradient(180deg,#D5D7DA,#8C9096)"><span style="position:absolute;left:5px;right:5px;top:9px;height:8px;border-radius:4px;background:#1A1B1D"></span></span></span></sc-if>
+              <sc-if value="{{ c.isBcv }}" hint-placeholder-val="{{ false }}"><span style="position:relative;display:block;width:60px;height:110px;border-radius:14px;background:linear-gradient(150deg,#F7F8F9,#BFC2C6 40%,#7D8086);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),0 12px 20px rgba(26,27,29,.28);transform:rotate(-8deg)"><span style="position:absolute;left:6px;top:6px;width:24px;height:24px;border-radius:7px;background:#1A1B1D"></span><span style="position:absolute;left:10px;top:10px;width:7px;height:7px;border-radius:50%;background:#3D3E3F;box-shadow:9px 0 0 #3D3E3F,0 9px 0 #3D3E3F"></span></span></sc-if>
+              <sc-if value="{{ c.isFrm }}" hint-placeholder-val="{{ false }}"><span style="position:relative;display:block;width:60px;height:110px;box-sizing:border-box;border-radius:14px;border:6px solid #A7AAAE;box-shadow:inset 0 0 0 1px rgba(26,27,29,.2),0 0 0 1px rgba(255,255,255,.8),0 12px 20px rgba(26,27,29,.2);transform:rotate(6deg)"><span style="position:absolute;right:-9px;top:26px;width:3px;height:22px;border-radius:2px;background:#8C9096"></span></span></sc-if>
+              <sc-if value="{{ c.isCam }}" hint-placeholder-val="{{ false }}"><span style="display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:9px;width:84px;height:84px;box-sizing:border-box;border-radius:22px;background:#1A1B1D;box-shadow:0 0 0 2px #5E6064,0 12px 20px rgba(26,27,29,.3)"><span style="border-radius:50%;background:radial-gradient(circle at 38% 38%,#FFDB6E 0 8%,#3D3E3F 14%,#0B0C0D 60%);box-shadow:0 0 0 2px #5E6064"></span><span style="border-radius:50%;background:radial-gradient(circle at 38% 38%,#FFDB6E 0 8%,#3D3E3F 14%,#0B0C0D 60%);box-shadow:0 0 0 2px #5E6064"></span><span style="border-radius:50%;background:radial-gradient(circle at 38% 38%,#FFDB6E 0 8%,#3D3E3F 14%,#0B0C0D 60%);box-shadow:0 0 0 2px #5E6064"></span><span style="justify-self:center;align-self:center;width:10px;height:10px;border-radius:50%;background:#FFF4D1;animation:seBlinkDot 2s steps(1) infinite"></span></span></sc-if>
+              <sc-if value="{{ c.isSml }}" hint-placeholder-val="{{ false }}"><span style="position:relative;display:block;width:170px;height:96px"><span style="position:absolute;left:0;top:10px;width:88px;height:20px;border-radius:10px;background:linear-gradient(180deg,#E4E5E7,#9A9DA2);box-shadow:0 6px 12px rgba(26,27,29,.2);transform:rotate(-8deg)"><span style="position:absolute;right:8px;top:6px;width:8px;height:8px;border-radius:50%;background:#5E6064"></span><span style="position:absolute;left:14px;top:5px;width:40px;height:10px;border-radius:3px;background:#C9CBCE"></span></span><span style="position:absolute;left:104px;top:4px;width:56px;height:16px;border-radius:8px;background-color:#26282B;background-image:radial-gradient(#8C9096 1px,transparent 1.4px);background-size:5px 5px"></span><span style="position:absolute;left:8px;top:56px;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#F2F3F4,#6E7176);box-shadow:20px 6px 0 -1px #9A9DA2,40px -2px 0 0 #A7AAAE"></span><span style="position:absolute;left:84px;top:44px;width:44px;height:16px;border-radius:8px;background:linear-gradient(180deg,#D5D7DA,#8C9096)"><span style="position:absolute;left:8px;right:8px;top:4px;height:8px;border-radius:4px;background:#1A1B1D"></span></span><span style="position:absolute;left:138px;top:40px;width:26px;height:26px;border-radius:50%;background:radial-gradient(circle,#3D3E3F 30%,#0B0C0D 70%);box-shadow:0 0 0 2px #8C9096"></span><span style="position:absolute;left:62px;top:74px;width:60px;height:10px;border-radius:3px;background:linear-gradient(90deg,#B8781A,#E8A83A,#B8781A)"></span></span></sc-if>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;padding:4px 22px 22px">
+            <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:21px;letter-spacing:-.01em">{{ c.name }}</span>
+            <span style="font-size:15px;line-height:1.45;color:#3D3E3F;text-wrap:pretty">{{ c.d }}</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5E6064">{{ c.meta }}</span>
+            <span style="margin-top:6px;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600"><span style="border-bottom:2px solid #F7C032;padding-bottom:2px">{{ c.link }}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:20px;opacity:{{ svc.op }};transform:translateY({{ svc.ty }}px);transition:opacity .6s cubic-bezier(.2,.8,.2,1) .4s,transform .6s cubic-bezier(.2,.8,.2,1) .4s">
+      <a href="#offer" style="position:relative;display:flex;flex-direction:column;gap:12px;min-height:280px;padding:28px;box-sizing:border-box;border-radius:24px;overflow:hidden;background:linear-gradient(140deg,#3D3E3F,#1A1B1D);color:#FFFFFF;transition:transform .3s,box-shadow .3s" style-hover="transform:translateY(-4px);box-shadow:0 0 0 1px #F7C032,0 24px 48px rgba(26,27,29,.25);color:#FFFFFF">
+        <div style="position:absolute;right:-60px;top:-60px;width:260px;height:260px;border-radius:50%;background:radial-gradient(closest-side,rgba(247,192,50,.35),rgba(247,192,50,0))"></div>
+        <div style="position:relative;display:flex;align-items:center;justify-content:space-between"><span style="display:grid;place-items:center;width:56px;height:56px;border-radius:16px;background:rgba(247,192,50,.14);box-shadow:inset 0 0 0 1px rgba(247,192,50,.4)"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F7C032" stroke-width="1.8" style="animation:seTilt 2.4s ease-in-out infinite"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg></span><span style="display:flex;align-items:center;gap:8px;height:32px;padding:0 12px;border-radius:10px;background:{{ pill.bg }};border:1px solid {{ pill.bd }};font-size:13px;font-weight:600;white-space:nowrap"><span style="width:8px;height:8px;border-radius:50%;background:{{ pill.dot }};box-shadow:0 0 8px {{ pill.dot }}"></span>{{ repStatus }}</span></div>
+        <span style="position:relative;margin-top:auto;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:#F7C032">REPAIRS</span>
+        <span style="position:relative;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;line-height:1.1;letter-spacing:-.02em;text-wrap:balance">Cracked, tired or dead? We fix it.</span>
+        <span style="position:relative;font-size:15px;line-height:1.45;color:#D5D7DA">Screens, batteries and charging ports, at our bench in Deira.</span>
+        <span style="position:relative;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600"><span style="border-bottom:2px solid #F7C032;padding-bottom:2px">Book a repair</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+      </a>
+      <a href="#offer" style="position:relative;display:flex;flex-direction:column;gap:12px;min-height:280px;padding:28px;box-sizing:border-box;border-radius:24px;overflow:hidden;background:#F7C032;color:#1A1B1D;transition:transform .3s,box-shadow .3s" style-hover="transform:translateY(-4px);box-shadow:0 24px 48px rgba(247,192,50,.35),0 0 60px rgba(255,219,110,.5);color:#1A1B1D">
+        <div style="position:absolute;inset:0;background:radial-gradient(70% 70% at 80% 10%,#FFDB6E 0%,rgba(255,219,110,0) 70%)"></div>
+        <div style="position:relative;display:flex;align-items:flex-end;gap:6px;height:56px"><span style="position:relative;width:46px;height:36px;border-radius:6px;background:#1A1B1D"><span style="position:absolute;left:18px;top:0;bottom:0;width:10px;background:#F7C032"></span></span><span style="position:relative;width:46px;height:52px;border-radius:6px;background:#1A1B1D;animation:seBob 1.8s ease-in-out infinite"><span style="position:absolute;left:18px;top:0;bottom:0;width:10px;background:#F7C032"></span></span><span style="position:relative;width:46px;height:28px;border-radius:6px;background:#1A1B1D"><span style="position:absolute;left:18px;top:0;bottom:0;width:10px;background:#F7C032"></span></span></div>
+        <span style="position:relative;margin-top:auto;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em">WHOLESALE</span>
+        <span style="position:relative;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;line-height:1.1;letter-spacing:-.02em;text-wrap:balance">Trade prices, bulk ready.</span>
+        <span style="position:relative;font-size:15px;line-height:1.45;color:#26282B">Approved trade accounts see wholesale prices on {{ svc.lines }} part lines.</span>
+        <span style="position:relative;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600"><span style="border-bottom:2px solid #1A1B1D;padding-bottom:2px">Apply for a trade account</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+      </a>
+      <a href="#offer" style="position:relative;display:flex;flex-direction:column;gap:12px;min-height:280px;padding:28px;box-sizing:border-box;border-radius:24px;overflow:hidden;background:#F2F3F4;color:#1A1B1D;transition:transform .3s,box-shadow .3s" style-hover="transform:translateY(-4px);box-shadow:0 0 0 1px #F7C032,0 24px 48px rgba(26,27,29,.12);color:#1A1B1D">
+        <svg viewBox="0 0 300 80" width="100%" height="72" style="position:relative;display:block" fill="none" stroke-linecap="round"><path d="M40 60 Q 110 0 180 30" stroke="rgba(26,27,29,.25)" stroke-width="2" stroke-dasharray="4 6"></path><path d="M40 60 Q 150 -20 270 20" stroke="rgba(26,27,29,.25)" stroke-width="2" stroke-dasharray="4 6"></path><path d="M40 60 Q 120 80 230 64" stroke="rgba(26,27,29,.25)" stroke-width="2" stroke-dasharray="4 6"></path><path d="M40 60 Q 110 0 180 30" stroke="#F7C032" stroke-width="3" stroke-dasharray="14 46" style="animation:seDash 1.6s linear infinite"></path><path d="M40 60 Q 150 -20 270 20" stroke="#F7C032" stroke-width="3" stroke-dasharray="14 46" style="animation:seDash 2.2s linear infinite"></path><path d="M40 60 Q 120 80 230 64" stroke="#F7C032" stroke-width="3" stroke-dasharray="14 46" style="animation:seDash 1.9s linear infinite"></path><circle cx="40" cy="60" r="7" fill="#F7C032" stroke="#1A1B1D" stroke-width="2"></circle><circle cx="180" cy="30" r="4" fill="#1A1B1D"></circle><circle cx="270" cy="20" r="4" fill="#1A1B1D"></circle><circle cx="230" cy="64" r="4" fill="#1A1B1D"></circle></svg>
+        <span style="position:relative;margin-top:auto;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:#3D3E3F">WORLDWIDE SHIPPING</span>
+        <span style="position:relative;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;line-height:1.1;letter-spacing:-.02em;text-wrap:balance">From Deira to the world.</span>
+        <span style="position:relative;font-size:15px;line-height:1.45;color:#3D3E3F">Tracked and securely packed, to the Middle East, Africa, Europe and Asia.</span>
+        <span style="position:relative;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600"><span style="border-bottom:2px solid #F7C032;padding-bottom:2px">Shipping details</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section ref="{{ gradeRef }}" id="grades" data-screen-label="04 Grade picker" style="position:relative;overflow:hidden;background:linear-gradient(135deg,#3D3E3F 0%,#26282B 50%,#1A1B1D 100%);color:#FFFFFF;padding:clamp(64px,7vw,112px) clamp(20px,4vw,64px)">
+  <div style="position:absolute;left:40%;top:-30%;width:220px;height:170%;transform:rotate(26deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.05),transparent);pointer-events:none"></div>
+  <div style="position:absolute;right:5%;top:10%;width:640px;height:640px;border-radius:50%;background:radial-gradient(closest-side,rgba(247,192,50,.28),rgba(247,192,50,0));pointer-events:none"></div>
+  <svg viewBox="0 0 1440 700" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.8" fill="none" stroke-linecap="round"><path d="M0 560 H200 L240 600 H520" stroke="rgba(247,192,50,.22)" stroke-width="2"></path><path pathLength="1000" d="M0 560 H200 L240 600 H520" stroke="#FFDB6E" stroke-width="3" stroke-dasharray="60 940" style="animation:sePulse 4s linear infinite"></path><path d="M1440 90 H1280 L1240 130 H1100" stroke="rgba(247,192,50,.22)" stroke-width="2"></path><path pathLength="1000" d="M1440 90 H1280 L1240 130 H1100" stroke="#FFDB6E" stroke-width="3" stroke-dasharray="60 940" style="animation:sePulse 3.4s 1s linear infinite"></path><circle cx="520" cy="600" r="5" fill="#26282B" stroke="#F7C032" stroke-width="2"></circle><circle cx="1100" cy="130" r="5" fill="#26282B" stroke="#F7C032" stroke-width="2"></circle></svg>
+  <div style="position:relative;max-width:1312px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:56px;align-items:center">
+    <div style="display:flex;flex-direction:column;gap:18px;max-width:520px">
+      <span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:#F7C032">GRADES</span>
+      <h2 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(34px,3.4vw,48px);line-height:1.08;letter-spacing:-.03em;text-wrap:balance">Same part. The grade that fits the job.</h2>
+      <p style="margin:0;font-size:17px;line-height:1.55;color:#D5D7DA;text-wrap:pretty">Original, Service Pack, OLED, Incell or High Copy. Every grade is honestly labelled, so you choose by budget and by job, not by guesswork.</p>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px"><sc-for list="{{ gradeLegend }}" as="g" hint-placeholder-count="5"><span style="display:flex;align-items:center;gap:12px;font-size:15px;color:#E4E5E7"><span style="display:grid;place-items:center;width:36px;height:24px;border-radius:6px;background:rgba(247,192,50,.14);color:#F7C032;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600">{{ g.code }}</span><span style="font-weight:600;color:#FFFFFF;min-width:110px">{{ g.name }}</span><span style="color:#C9CBCE">{{ g.desc }}</span></span></sc-for></div>
+    </div>
+    <div style="justify-self:center;width:100%;max-width:500px;display:flex;flex-direction:column;border-radius:24px;background:#FFFFFF;color:#1A1B1D;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.4),0 0 80px rgba(247,192,50,.18);opacity:{{ gr.op }};transform:translateY({{ gr.ty }}px);transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)">
+      <div style="position:relative;height:200px;background:radial-gradient(60% 80% at 50% 90%,#FFF4D1 0%,#F2F3F4 70%);overflow:hidden">
+        <div style="position:absolute;left:50%;top:30px;width:110px;height:220px;margin-left:-55px;border-radius:22px;background:#0B0C0D;box-shadow:0 0 0 2px #8C9096,0 20px 40px rgba(26,27,29,.3);overflow:hidden"><span style="position:absolute;inset:5px;border-radius:18px;background:{{ gr.screen }};transition:background .5s"></span><span style="position:absolute;left:38px;top:10px;width:34px;height:10px;border-radius:5px;background:#000000"></span><span style="position:absolute;left:0;right:0;height:2px;background:#F7C032;box-shadow:0 0 16px 3px rgba(247,192,50,.7);top:{{ gr.scan }}%;transition:top .6s cubic-bezier(.2,.8,.2,1)"></span></div>
+        <span style="position:absolute;left:18px;top:16px;padding:5px 10px;border-radius:8px;background:#1A1B1D;color:#F7C032;font-family:'JetBrains Mono',monospace;font-size:12px">{{ gr.code }}</span>
+        <span style="position:absolute;right:18px;top:16px;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600"><span style="display:flex;align-items:flex-end;gap:2px"><sc-for list="{{ gr.bars }}" as="b" hint-placeholder-count="4"><span style="width:4px;height:{{ b.h }}px;border-radius:1px;background:{{ b.c }}"></span></sc-for></span>{{ gr.stock }}</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:14px;padding:22px 24px 24px">
+        <div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ gr.models }}" as="m" hint-placeholder-count="3"><span onClick="{{ m.pick }}" style="padding:7px 12px;border-radius:10px;background:{{ m.bg }};color:{{ m.ink }};box-shadow:0 0 0 1px rgba(26,27,29,.12);font-size:13px;font-weight:600;cursor:pointer;transition:background .2s,color .2s">{{ m.label }}</span></sc-for></div>
+        <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px"><span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px">{{ gr.title }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#5E6064;white-space:nowrap">PICK A GRADE</span></div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ gr.rows }}" as="g" hint-placeholder-count="3">
+            <div onClick="{{ g.pick }}" style="display:grid;grid-template-columns:40px minmax(0,1fr) 80px 84px;align-items:center;gap:12px;padding:11px 12px;border-radius:12px;background:{{ g.bg }};box-shadow:0 0 0 1.5px {{ g.bd }};cursor:pointer;transition:background .2s,box-shadow .2s">
+              <span style="display:grid;place-items:center;height:26px;border-radius:7px;background:#1A1B1D;color:#F7C032;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600">{{ g.code }}</span>
+              <span style="display:flex;flex-direction:column;gap:1px;min-width:0"><span style="font-size:15px;font-weight:600">{{ g.name }}</span><span style="font-size:12px;color:#5E6064;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ g.desc }}</span></span>
+              <span style="height:6px;border-radius:3px;background:#E4E5E7"><span style="display:block;height:100%;width:{{ g.w }};border-radius:3px;background:linear-gradient(90deg,#F7C032,#FFDB6E)"></span></span>
+              <span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;text-align:right">{{ g.price }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <span style="display:flex;justify-content:space-between;align-items:center;height:52px;padding:0 18px;border-radius:10px;background:#F7C032;color:#1A1B1D;font-weight:600;font-size:15px;cursor:pointer;box-shadow:0 0 24px rgba(247,192,50,.3);transition:box-shadow .2s,transform .2s" style-hover="transform:translateY(-2px);box-shadow:0 0 40px rgba(255,219,110,.6)">{{ gr.cta }}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"></path></svg></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section ref="{{ bandRef }}" id="promise" data-screen-label="05 Quality Warranty Price" style="position:relative;overflow:hidden;background:#F7C032;color:#1A1B1D;padding:clamp(64px,7vw,104px) clamp(20px,4vw,64px)">
+  <div style="position:absolute;inset:0;background:radial-gradient(50% 80% at 20% 0%,#FFDB6E 0%,rgba(255,219,110,0) 70%),radial-gradient(40% 70% at 90% 100%,#FFDB6E 0%,rgba(255,219,110,0) 70%);pointer-events:none"></div>
+  <div style="position:relative;max-width:1312px;margin:0 auto;display:flex;flex-direction:column;gap:48px">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:24px">
+      <h2 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(40px,4.4vw,64px);line-height:1.02;letter-spacing:-.04em">Quality. Warranty. Price.</h2>
+      <a href="#offer" style="display:flex;align-items:center;gap:12px;height:54px;padding:0 22px;border-radius:10px;background:#1A1B1D;color:#FFFFFF;font-weight:600;font-size:16px;box-shadow:0 12px 30px rgba(26,27,29,.25);transition:transform .2s" style-hover="transform:translateY(-2px);color:#FFFFFF">Shop parts<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F7C032" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+    </div>
+    <div style="position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px">
+      <sc-for list="{{ promise }}" as="p" hint-placeholder-count="3">
+        <div style="display:flex;flex-direction:column;gap:14px;padding:28px;border-radius:24px;background:rgba(255,255,255,.42);box-shadow:inset 0 0 0 1px rgba(255,255,255,.6),0 8px 24px rgba(26,27,29,.06);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);opacity:{{ p.op }};transform:translateY({{ p.ty }}px);transition:opacity .6s cubic-bezier(.2,.8,.2,1) {{ p.delay }},transform .6s cubic-bezier(.2,.8,.2,1) {{ p.delay }}">
+          <span style="display:grid;place-items:center;width:56px;height:56px;border-radius:16px;background:#1A1B1D">
+            <sc-if value="{{ p.isQ }}" hint-placeholder-val="{{ false }}"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F7C032" stroke-width="1.8" style="animation:seBreathe 2.4s ease-in-out infinite"><path d="M12 2l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 15.4 6.8 18.1l1-5.8L3.5 8.2l5.9-.9z"></path></svg></sc-if>
+            <sc-if value="{{ p.isW }}" hint-placeholder-val="{{ false }}"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F7C032" stroke-width="1.8" style="animation:seBob 2s ease-in-out infinite"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg></sc-if>
+            <sc-if value="{{ p.isP }}" hint-placeholder-val="{{ false }}"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F7C032" stroke-width="1.8" style="animation:seTilt 2.6s ease-in-out infinite"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"></path><circle cx="7.5" cy="7.5" r="1.5"></circle></svg></sc-if>
+          </span>
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:28px;letter-spacing:-.02em">{{ p.t }}</span>
+          <span style="font-size:16px;line-height:1.5;color:#26282B;text-wrap:pretty">{{ p.d }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<footer data-screen-label="06 Footer" style="position:relative;background:linear-gradient(180deg,#26282B,#1A1B1D);color:#FFFFFF;padding:56px clamp(20px,4vw,64px) 32px">
+  <div style="position:absolute;left:0;right:0;top:0;height:2px;background:linear-gradient(90deg,transparent,#F7C032 30%,#FFDB6E 50%,#F7C032 70%,transparent)"></div>
+  <div style="max-width:1312px;margin:0 auto;display:flex;flex-direction:column;gap:40px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:32px">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <span style="display:flex;align-items:center;gap:12px"><span style="width:52px;height:52px;border-radius:50%;overflow:hidden;background:#FFFFFF;box-shadow:0 0 0 2px #F7C032"><img src="assets/se-logo.png" alt="Sam Electronics" style="width:100%;height:100%;display:block"></span><span style="font-family:'Unbounded',sans-serif;font-weight:800;font-size:16px">SAM ELECTRONICS</span></span>
+        <span style="font-size:15px;line-height:1.5;color:#C9CBCE;max-width:300px">Same management, new name. Your trusted electronics partner since 2003.</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:15px;color:#E4E5E7"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:#F7C032">VISIT</span><span>{{ contact.address }}</span><span>Plus code {{ contact.plus }}</span><span style="display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:50%;background:{{ pill.dot }}"></span>{{ status }}</span></div>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:15px;color:#E4E5E7"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:#F7C032">CONTACT</span><span>{{ contact.phone }}</span><span>WhatsApp {{ contact.mobile }}</span><span>{{ contact.email }}</span><span>{{ contact.social }}</span></div>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:15px;color:#E4E5E7"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:#F7C032">SHOP</span><span>Screens</span><span>Batteries</span><span>Flex cables</span><span>Back covers</span><span>Repair · Wholesale</span></div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:16px;padding-top:20px;border-top:1px solid rgba(255,255,255,.1);font-size:13px;color:#9A9DA2"><span>© 2026 Sam Electronics L.L.C · Privacy · Terms · Warranty · Staff login</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px">SAMPLE DATA · COUNTS COMPUTED FROM THE SHOP DATA</span></div>
+  </div>
+</footer>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { data: window.SE_DATA || null, now: Date.now(), k: 0, ipStep: 0, ipJump: false, ipToast: false, ipCart: 2, reel: 0, reelJump: false, hover: null, z: 1, prog: 0, tp: 0, seen: {}, gm: 'IP15P', gs: null, th: -1, oh: -1, bh: false };
+  heroRef = React.createRef(); boardRef = React.createRef(); tdRef = React.createRef(); offerRef = React.createRef(); gradeRef = React.createRef(); bandRef = React.createRef();
+  componentDidMount() {
+    if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 60);
+    this.t = setInterval(() => this.setState({ now: Date.now() }), 30000);
+    this.ipIv = setInterval(() => this.ipNext(), 2800);
+    this.reelIv = setInterval(() => this.reelNext(), 3400);
+    this.onScroll = () => { if (this.raf) return; this.raf = requestAnimationFrame(() => { this.raf = 0; this.measure(); }); };
+    window.addEventListener('scroll', this.onScroll, { passive: true }); window.addEventListener('resize', this.onScroll);
+    this.measure();
+    this.io = new IntersectionObserver((es) => es.forEach((e) => {
+      if (!e.isIntersecting) return; const key = e.target.getAttribute('data-k'); if (!key || this.state.seen[key]) return;
+      this.setState((s) => ({ seen: { ...s.seen, [key]: true } })); if (key === 'board') this.count();
+    }), { threshold: 0.15 });
+    this.observe(); this.obT = setTimeout(() => { this.observe(); this.measure(); }, 700);
+  }
+  observe() { [['board', this.boardRef], ['offer', this.offerRef], ['grade', this.gradeRef], ['band', this.bandRef]].forEach(([k, r]) => { if (r.current && !r.current.getAttribute('data-k')) { r.current.setAttribute('data-k', k); this.io.observe(r.current); } }); }
+  componentWillUnmount() { this.dead = true; [this.dIv, this.t, this.ipIv, this.reelIv].forEach(clearInterval); [this.obT, this.toastT, this.ipJT, this.reJT, this.hideT].forEach(clearTimeout); window.removeEventListener('scroll', this.onScroll); window.removeEventListener('resize', this.onScroll); this.io && this.io.disconnect(); }
+  measure() {
+    const de = document.documentElement, w = de.clientWidth || window.innerWidth, z = Math.max(0.4, w / 1440), vh = window.innerHeight;
+    const prog = Math.min(1, Math.max(0, window.scrollY / Math.max(1, de.scrollHeight - vh)));
+    let tp = this.state.tp; const el = this.tdRef.current;
+    if (el) { const r = el.getBoundingClientRect(); tp = Math.min(1, Math.max(0, -r.top / Math.max(1, r.height - vh))); }
+    const s = this.state;
+    if (Math.abs(s.z - z) > 0.001 || Math.abs(s.prog - prog) > 0.002 || Math.abs(s.tp - tp) > 0.0015 || s.vw !== w || s.vh !== vh) this.setState({ z, prog, tp, vw: w, vh });
+  }
+  count() { const t0 = performance.now(); const f = (t) => { const k = Math.min(1, (t - t0) / 1800); this.setState({ k: 1 - Math.pow(1 - k, 3) }); if (k < 1 && !this.dead) requestAnimationFrame(f); }; requestAnimationFrame(f); }
+  ipNext() {
+    clearTimeout(this.toastT); clearTimeout(this.ipJT);
+    if (this.state.ipStep >= 12) { this.setState({ ipStep: 0, ipJump: true, ipToast: false }); this.ipJT = setTimeout(() => this.setState({ ipJump: false, ipStep: 1 }), 60); }
+    else this.setState((s) => ({ ipStep: s.ipStep + 1, ipToast: false }));
+    this.toastT = setTimeout(() => this.setState((s) => ({ ipToast: true, ipCart: s.ipCart >= 9 ? 2 : s.ipCart + 1 })), 1100);
+  }
+  reelNext() {
+    clearTimeout(this.reJT);
+    if (this.state.reel >= 6) { this.setState({ reel: 0, reelJump: true }); this.reJT = setTimeout(() => this.setState({ reelJump: false, reel: 1 }), 60); }
+    else this.setState((s) => ({ reel: s.reel + 1 }));
+  }
+  hours() {
+    const d = new Date(this.state.now), g = new Date(d.getTime() + d.getTimezoneOffset() * 6e4 + 4 * 36e5), day = g.getDay(), m = g.getHours() * 60 + g.getMinutes();
+    const sh = day === 0 ? [] : day === 5 ? [[630, 720], [960, 1320]] : [[630, 840], [960, 1320]];
+    const hm = (x) => String(Math.floor(x / 60)).padStart(2, '0') + ':' + String(x % 60).padStart(2, '0');
+    return { day, hm, clock: hm(m), cur: sh.find(([a, b]) => m >= a && m < b), nxt: sh.find(([a]) => a > m) };
+  }
+  hoverBrand(e, id) {
+    clearTimeout(this.hideT); const h = this.heroRef.current; if (!h) return;
+    const hr = h.getBoundingClientRect(), r = e.currentTarget.getBoundingClientRect(), sc = hr.width / h.offsetWidth || 1;
+    this.setState({ hover: { id, x: (r.left - hr.left + r.width / 2) / sc } });
+  }
+  hideSoon() { clearTimeout(this.hideT); this.hideT = setTimeout(() => this.setState({ hover: null }), 220); }
+  ipList(D) {
+    if (this._ip) return this._ip;
+    let sd = 11; const r = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+    const pool = D.products.filter((p) => ['SCR', 'BAT', 'BCV', 'CAM'].includes(p.category) && p.stock_qty > 0);
+    for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+    return (this._ip = pool.slice(0, 24));
+  }
+  renderVals() {
+    const s = this.state, D = s.data, P = D ? D.products : [], k = s.k, fmt = (n) => Math.round(n).toLocaleString('en-US'), cl = (x) => Math.min(1, Math.max(0, x)), pad = (n) => String(n).padStart(2, '0');
+    const H = this.hours(), open = !!H.cur;
+    const nextOpen = H.nxt ? H.hm(H.nxt[0]) : H.day === 6 || H.day === 0 ? 'Mon 10:30' : '10:30';
+    const status = open ? 'Open now · closes ' + H.hm(H.cur[1]) : 'Closed · opens ' + nextOpen;
+    const pill = open ? { bg: 'rgba(43,182,115,.2)', bd: 'rgba(61,220,142,.6)', dot: '#3DDC8E' } : { bg: 'rgba(247,192,50,.16)', bd: 'rgba(247,192,50,.65)', dot: '#F7C032' };
+    const mb = {}; if (D) D.models.forEach((m) => (mb[m.id] = m.brand_id));
+    const cs = (cat) => { const ps = P.filter((p) => p.category === cat); return { stock: ps.reduce((a, p) => a + p.stock_qty, 0), brands: new Set(ps.map((p) => mb[p.model_id])).size, models: new Set(ps.map((p) => p.model_id)).size, min: ps.length ? Math.min(...ps.map((p) => p.retail_price)) : 0, grades: [...new Set(ps.map((p) => p.grade))].length }; };
+    const stats = D ? D.brands.map((b) => {
+      const ids = new Set(D.models.filter((m) => m.brand_id === b.id).map((m) => m.id)), ps = P.filter((p) => ids.has(p.model_id)), cats = {};
+      ps.forEach((p) => (cats[p.category] = (cats[p.category] || 0) + p.stock_qty));
+      const top = Object.entries(cats).sort((a, c) => c[1] - a[1]).slice(0, 3).map(([c, n]) => ({ name: D.categories.find((x) => x.id === c).name, n: fmt(n) }));
+      return { id: b.id, name: b.name, models: ids.size, skus: ps.length, stock: ps.reduce((a, p) => a + p.stock_qty, 0), top };
+    }) : [];
+    const maxS = Math.max(1, ...stats.map((b) => b.stock)), total = stats.reduce((a, b) => a + b.stock, 0);
+    const icon = (id) => 'url(https://cdn.simpleicons.org/' + id + '/FFFFFF) center / contain no-repeat';
+    const LK = { apple: { mark: 1 }, huawei: { mark: 1 }, google: { mark: 1 }, samsung: { word: 104 }, sony: { word: 90 }, oppo: { word: 86 } };
+    const rail = [...stats, ...stats].map((b) => {
+      const lk = LK[b.id] || {}, hov = s.hover && s.hover.id === b.id, l = Math.max(1, Math.round((b.stock / maxS) * 4));
+      return { name: b.id === 'realme' ? 'realme' : b.name, hasMark: !!lk.mark, hasWord: !!lk.word, hasName: !lk.word, markMask: lk.mark ? icon(b.id) : 'none', wordMask: lk.word ? icon(b.id) : 'none', ww: lk.word || 0, wmt: lk.word ? (24 - lk.word) / 2 : 0,
+        count: fmt(b.stock * k), glow: hov ? 'drop-shadow(0 0 10px rgba(255,219,110,.95))' : 'none', lift: hov ? -3 : 0,
+        bars: [0, 1, 2, 3].map((i) => ({ h: 5 + i * 4, c: i < l ? '#F7C032' : 'rgba(255,255,255,.2)' })), enter: (e) => this.hoverBrand(e, b.id), leave: () => this.hideSoon() };
+    });
+    const hb = s.hover && stats.find((b) => b.id === s.hover.id);
+    const GN = {}; if (D) D.grades.forEach((g) => (GN[g.code] = g));
+    const base = D ? this.ipList(D) : [], tap = s.ipStep * 2 + 2 + (s.ipStep % 2);
+    const cards = [...base, ...base.slice(0, 6)].map((p, i) => { const lv = p.stock_qty >= 10 ? 4 : p.stock_qty >= 4 ? 3 : 1; return {
+      title: p.title, code: p.grade, price: 'AED ' + fmt(p.retail_price),
+      bars: [0, 1, 2, 3].map((j) => ({ h: 4 + j * 3, c: j < lv ? (lv === 1 ? '#E5484D' : '#1A1B1D') : '#D5D7DA' })),
+      isScr: p.category === 'SCR', isBat: p.category === 'BAT', isBcv: p.category === 'BCV', isCam: p.category === 'CAM',
+      ring: i === tap && s.ipToast ? '0 0 0 2px #F7C032,0 8px 22px rgba(247,192,50,.45)' : '0 1px 2px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.05)' }; });
+    const tapped = cards[tap] || { title: '' };
+    const TH = {
+      dark: { bg: 'radial-gradient(120% 80% at 50% 0%,#3D3E3F 0%,#1A1B1D 78%)', ink: '#FFFFFF', sub: '#D5D7DA', kick: '#F7C032', cta: '#F7C032', ctaInk: '#1A1B1D', line: 'rgba(255,255,255,.35)' },
+      yel: { bg: 'radial-gradient(120% 80% at 50% 10%,#FFDB6E 0%,#F7C032 62%)', ink: '#1A1B1D', sub: '#26282B', kick: '#1A1B1D', cta: '#1A1B1D', ctaInk: '#FFFFFF', line: 'rgba(26,27,29,.35)' },
+      light: { bg: 'linear-gradient(180deg,#FFFFFF,#F2F3F4)', ink: '#1A1B1D', sub: '#3D3E3F', kick: '#3D3E3F', cta: '#F7C032', ctaInk: '#1A1B1D', line: 'rgba(26,27,29,.3)' }
+    };
+    const scr = cs('SCR'), bat = cs('BAT');
+    const ads = [
+      { kind: 'scr', th: 'dark', k: 'SCREENS', t: 'Bright like\nday one.', d: 'OLED, Incell and Service Pack for every major brand.', c: 'From AED ' + scr.min },
+      { kind: 'bat', th: 'yel', k: 'BATTERIES', t: 'Full power,\nfully tested.', d: 'Genuine cells, checked before they ship.', c: 'From AED ' + bat.min },
+      { kind: 'bcv', th: 'light', k: 'BACK COVERS', t: 'Back to\nlike new.', d: 'Every colour, exact fit.', c: 'Shop covers' },
+      { kind: 'rep', th: 'dark', k: 'REPAIR', t: 'Cracked?\nWe fix it.', d: 'Screens, batteries and ports, fixed in Deira.', c: 'Book a repair' },
+      { kind: 'whs', th: 'yel', k: 'WHOLESALE', t: 'Trade prices,\nbulk ready.', d: 'Approved trade accounts see wholesale prices.', c: 'Apply now' },
+      { kind: 'wld', th: 'light', k: 'WORLDWIDE', t: 'From Deira\nto the world.', d: 'Tracked to the Middle East, Africa, Europe and Asia.', c: 'Shipping info' }
+    ];
+    const reel = [...ads, ads[0]].map((a) => ({ ...a, ...TH[a.th], isScr: a.kind === 'scr', isBat: a.kind === 'bat', isBcv: a.kind === 'bcv', isRep: a.kind === 'rep', isWhs: a.kind === 'whs', isWld: a.kind === 'wld' }));
+    const act = s.reel % 6, ct = TH[ads[act].th];
+    const hov = (key, i) => ({ enter: () => this.setState({ [key]: i }), leave: () => this.setState({ [key]: -1 }) });
+    const tiles = [['SCR', 'LCD screens', 'Shop screens', 'scr'], ['BAT', 'Batteries', 'Shop batteries', 'bat'], ['CHG', 'Flex cables', 'Shop flex cables', 'flx'], ['BCV', 'Back covers', 'Shop back covers', 'bcv']].map(([c, name, link, kind], i) => {
+      const st = cs(c); return { name, link, v: fmt(st.stock * k), meta: st.brands + ' brands', from: 'from AED ' + st.min, rt: s.th === i ? 'translateY(-6px) rotate(-5deg) scale(1.06)' : 'none', isScr: kind === 'scr', isBat: kind === 'bat', isFlx: kind === 'flx', isBcv: kind === 'bcv', ...hov('th', i) };
+    });
+    // teardown
+    const e0 = cl(s.tp / 0.26), e = e0 * e0 * (3 - 2 * e0);
+    const ta = s.tp < 0.3 ? -1 : Math.min(6, Math.floor(((s.tp - 0.3) / 0.66) * 7));
+    const SEQ = [
+      { key: 'screen', name: 'Screen', cat: 'SCR', link: 'Shop screens', kick: 'GLASS & DISPLAY' },
+      { key: 'frame', name: 'Frame', cat: 'FRM', link: 'Shop frames', kick: 'HOUSING' },
+      { key: 'bat', name: 'Battery', cat: 'BAT', link: 'Shop batteries', kick: 'POWER' },
+      { key: 'flex', name: 'Flex cables', cat: 'CHG', link: 'Shop flex cables', kick: 'CHARGING & FLEX' },
+      { key: 'cam', name: 'Cameras', cat: 'CAM', link: 'Shop cameras', kick: 'FRONT & REAR' },
+      { key: 'board', name: 'Logic board', cat: null, link: 'Book a board repair', kick: 'REPAIR LAB', meta: 'Board-level fault repair at our bench' },
+      { key: 'back', name: 'Back cover', cat: 'BCV', link: 'Shop back covers', kick: 'BACK GLASS' }
+    ];
+    const ORDER = ['back', 'cam', 'board', 'bat', 'flex', 'frame', 'screen'], L = {};
+    ORDER.forEach((key, i) => { const on = ta >= 0 && SEQ[ta].key === key; L[key] = { z: Math.round(i * 72 * e + (on ? 40 : 0)), x: on ? -50 : 0, o: ta < 0 || on ? 1 : 0.38, f: on ? 'drop-shadow(0 0 3px #F7C032) drop-shadow(0 0 22px rgba(247,192,50,.85))' : 'none' }; });
+    const items = SEQ.map((it, i) => { const st = it.cat ? cs(it.cat) : null, on = i === ta; return {
+      n: pad(i + 1), name: it.name, link: it.link, kick: it.kick, meta: st ? fmt(st.stock) + ' in stock · ' + st.brands + ' brands' : it.meta,
+      bg: on ? '#FFFFFF' : 'transparent', sh: on ? '0 0 0 1px #F7C032,0 8px 24px rgba(0,0,0,.08)' : 'none', chip: on ? '#F7C032' : '#E4E5E7', ink: on ? '#1A1B1D' : '#3D3E3F', lop: on ? 1 : 0 }; });
+    const td = { L, items, rx: (56 * e).toFixed(2), rz: (-34 * e).toFixed(2), sc: (1 - 0.06 * e).toFixed(3), hint: (1 - e).toFixed(2), glow: (0.5 + 0.5 * e).toFixed(2),
+      hasAct: ta >= 0, cur: ta >= 0 ? items[ta] : { n: '', name: '', meta: '', link: '', kick: '' }, step: ta >= 0 ? pad(ta + 1) + ' / 07' : 'SCROLL',
+      segs: SEQ.map((_, i) => ({ w: i === ta ? 28 : 10, c: i <= ta ? '#F7C032' : 'rgba(26,27,29,.15)' })) };
+    // offer
+    const so = !!s.seen.offer;
+    const parts = [
+      ['bat', 'BAT', 'Batteries', 'Genuine cells, tested before they ship.', 'Shop batteries', 'span 1'],
+      ['flx', 'CHG', 'Flex cables', 'Charging, power and button flex.', 'Shop flex cables', 'span 1'],
+      ['bcv', 'BCV', 'Back covers', 'Every colour, exact fit.', 'Shop back covers', 'span 1'],
+      ['frm', 'FRM', 'Frames & housings', 'Mid-frames and housings, OEM fit.', 'Shop frames', 'span 1'],
+      ['cam', 'CAM', 'Cameras', 'Front and rear modules, focus tested.', 'Shop cameras', 'span 2'],
+      ['sml', 'SML', 'Small parts', 'Screws, SIM trays, speaker meshes and ports.', 'Browse small parts', 'span 2']
+    ].map(([kind, cat, name, d, link, span], i) => { const st = cs(cat); return {
+      name, d, link, span, meta: st.stock ? fmt(st.stock) + ' in stock · from AED ' + st.min : 'Ask us for any small part',
+      op: so ? 1 : 0, ty: so ? 0 : 28, delay: (i + 1) * 60 + 'ms', rt: s.oh === i ? 'translateY(-8px) rotate(-6deg) scale(1.08)' : 'none',
+      isBat: kind === 'bat', isFlx: kind === 'flx', isBcv: kind === 'bcv', isFrm: kind === 'frm', isCam: kind === 'cam', isSml: kind === 'sml', ...hov('oh', i) }; });
+    const big = { op: so ? 1 : 0, ty: so ? 0 : 28, rt: s.bh ? 'translateY(-10px) rotate(-4deg) scale(1.04)' : 'none', grades: scr.grades + ' GRADES', meta: fmt(scr.stock) + ' in stock · from AED ' + scr.min, enter: () => this.setState({ bh: true }), leave: () => this.setState({ bh: false }) };
+    // grades
+    const GM = [{ code: 'IP15P', label: 'iPhone 15 Pro' }, { code: 'S24U', label: 'Galaxy S24 Ultra' }, { code: 'PX8P', label: 'Pixel 8 Pro' }];
+    const gmM = D && D.models.find((m) => m.code === s.gm), gps = gmM ? P.filter((p) => p.model_id === gmM.id && p.category === 'SCR') : [];
+    const sel = gps.find((p) => p.grade === s.gs) || gps[0], sg = sel ? GN[sel.grade] : null, slv = sel ? (sel.stock_qty >= 10 ? 4 : sel.stock_qty >= 4 ? 3 : sel.stock_qty ? 1 : 0) : 0, sgo = !!s.seen.grade;
+    const SCREENS = { OR: 'linear-gradient(160deg,#FFDB6E,#F7C032 40%,#3D3E3F)', SP: 'linear-gradient(160deg,#FFDB6E,#F7C032 40%,#3D3E3F)', OL: 'linear-gradient(160deg,#F2F3F4,#8C9096 50%,#26282B)', IN: 'linear-gradient(160deg,#C9CBCE,#5E6064 50%,#1A1B1D)', HQ: 'linear-gradient(160deg,#E4E5E7,#7D8086 50%,#26282B)' };
+    const gr = {
+      op: sgo ? 1 : 0, ty: sgo ? 0 : 30, title: gmM ? gmM.name + ' screen' : '', code: sel ? sel.id : '', screen: sel ? SCREENS[sel.grade] : '#26282B', scan: sg ? 100 - sg.rank * 16 : 50,
+      stock: sel ? (sel.stock_qty >= 4 ? 'In stock · ' + sel.stock_qty : sel.stock_qty ? 'Only ' + sel.stock_qty + ' left' : 'Restocking') : '',
+      bars: [0, 1, 2, 3].map((i) => ({ h: 5 + i * 3, c: i < slv ? (slv === 1 ? '#E5484D' : '#1A1B1D') : '#D5D7DA' })),
+      cta: sel && sg ? 'Add ' + sg.name + ' · AED ' + fmt(sel.retail_price) : '',
+      models: GM.map((m) => ({ label: m.label, bg: m.code === s.gm ? '#1A1B1D' : '#FFFFFF', ink: m.code === s.gm ? '#FFFFFF' : '#1A1B1D', pick: () => this.setState({ gm: m.code, gs: null }) })),
+      rows: gps.map((p) => { const g = GN[p.grade], on = p === sel; return { code: p.grade, name: g.name, desc: g.desc, w: (g.rank / 5) * 100 + '%', price: 'AED ' + fmt(p.retail_price), bg: on ? '#FFF4D1' : '#FFFFFF', bd: on ? '#F7C032' : 'rgba(26,27,29,.08)', pick: () => this.setState({ gs: p.grade }) }; })
+    };
+    const sb = !!s.seen.band;
+    const promise = [
+      { t: 'Quality', d: 'Genuine and tested parts, checked before they leave Deira.', q: 1 },
+      { t: 'Warranty', d: 'A clear warranty on every grade, explained before you buy.', w: 1 },
+      { t: 'Price', d: 'Fair retail prices and sharper trade prices for approved accounts.', p: 1 }
+    ].map((x, i) => ({ ...x, isQ: !!x.q, isW: !!x.w, isP: !!x.p, op: sb ? 1 : 0, ty: sb ? 0 : 24, delay: i * 90 + 'ms' }));
+    return {
+      heroRef: this.heroRef, boardRef: this.boardRef, tdRef: this.tdRef, offerRef: this.offerRef, gradeRef: this.gradeRef, bandRef: this.bandRef,
+      navDisp: (s.vw || 1440) < 1180 ? 'none' : 'flex', navStatus: (s.vw || 1440) < 1180 ? (open ? 'Open now' : 'Closed') : status,
+      tdl: (() => {
+        const w = s.vw || 1440, vh = s.vh || 900, stack = w < 1000, compact = stack || vh < 720, padX = Math.min(64, Math.max(20, w * 0.04)), inner = Math.min(1312, w - 2 * padX), padT = 96, gap = stack ? 12 : 32;
+        const colW = stack ? inner : (inner - 32) * 1.15 / 2.15, availH = vh - padT - 24 - (stack ? 96 : 0);
+        const sc = Math.max(0.3, Math.min(1, colW / 520, availH / 600));
+        return { cols: stack ? 'minmax(0,1fr)' : 'minmax(0,1fr) minmax(0,1.15fr)', rows: stack ? 'auto minmax(0,1fr)' : 'minmax(0,1fr)', gap, padT, compact: stack, full: !stack, sc: sc.toFixed(3), sw: Math.round(520 * sc), sh: Math.round(600 * sc), cardW: Math.min(280, Math.round(colW * 0.6)), cardB: stack ? 12 : 24 };
+      })(),
+      z: s.z.toFixed(4), heroH: Math.round(1350 * s.z), progW: (s.prog * 100).toFixed(2) + '%',
+      links: [['Shop', '#offer'], ['Repair', '#offer'], ['Wholesale', '#offer'], ['About', '#promise'], ['Contact', '#promise']].map(([label, href], i) => ({ label, href, c: i === 0 ? '#F7C032' : '#F2F3F4' })),
+      status, pill, cart: 2, clock: H.clock, repStatus: open ? 'Open now' : 'Opens ' + nextOpen,
+      trending: ['iPhone 15 Pro screen', 'Galaxy A54 battery', 'Redmi Note 13 LCD'],
+      rail, railPlay: s.hover ? 'paused' : 'running', hasHover: !!hb,
+      panel: hb ? { x: Math.min(1100, Math.max(20, s.hover.x - 160)), name: hb.name, models: hb.models, skus: hb.skus, stock: fmt(hb.stock), top: hb.top } : { x: 0, name: '', models: 0, skus: 0, stock: '0', top: [] },
+      panelEnter: () => clearTimeout(this.hideT), panelLeave: () => this.hideSoon(),
+      total: fmt(total * k), brandCount: stats.length,
+      cards, ipY: -s.ipStep * 160, ipTrans: s.ipJump ? 'none' : 'transform .9s cubic-bezier(.2,.8,.2,1)', ipCart: s.ipCart,
+      toastOp: s.ipToast ? 1 : 0, toastY: s.ipToast ? 0 : 12, toastTitle: tapped.title,
+      chips: ['All', 'Screens', 'Batteries', 'Covers', 'Cameras'].map((c, i) => { const on = i === Math.floor(s.ipStep / 3) % 5; return { c, bg: on ? '#1A1B1D' : '#FFFFFF', ink: on ? '#FFFFFF' : '#3D3E3F' }; }),
+      reel, reelY: -s.reel * 412, reelTrans: s.reelJump ? 'none' : 'transform .8s cubic-bezier(.2,.8,.2,1)',
+      segs: ads.map((_, i) => ({ c: i === act ? ct.ink : ct.line, w: i === act ? 22 : 8 })),
+      tiles, td, parts, big, svc: { op: so ? 1 : 0, ty: so ? 0 : 28, lines: fmt(P.length) }, gr,
+      gradeLegend: D ? D.grades.map((g) => ({ code: g.code, name: g.name, desc: g.desc })) : [],
+      promise, contact: D ? D.contact : { address: '', plus: '', phone: '', mobile: '', email: '', social: '' }
+    };
+  }
+}
+</script>
+</body>
+</html>

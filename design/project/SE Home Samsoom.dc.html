@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@keyframes msIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+@keyframes msDot{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+@keyframes msSweep{0%,100%{transform:translateX(-30%) skewX(-16deg)}50%{transform:translateX(380%) skewX(-16deg)}}
+@keyframes msRing{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+@keyframes msNod{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg) translateY(2px)}75%{transform:rotate(3deg) translateY(2px)}}
+@keyframes msBub{from{transform:translateY(0)}to{transform:translateY(-1100px)}}
+@keyframes msChip{0%,100%{box-shadow:inset 0 0 0 1px rgba(38,40,43,.1)}50%{box-shadow:inset 0 0 0 1.5px #F7C032,0 0 14px rgba(247,192,50,.55)}}
+@keyframes msPulse{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+</style>
+</helmet>
+<section id="samsoom" ref="{{ secRef }}" data-tone="light" data-screen-label="15 Meet Samsoom" onMouseMove="{{ move }}" style="position:relative;overflow:hidden;background:radial-gradient(60% 70% at 26% 50%,#FFFFFF 0%,#F2F3F4 45%,#E4E6E9 100%);color:#1A1B1D;padding:120px clamp(20px,4vw,64px)">
+  <div style="position:absolute;left:4%;top:8%;width:760px;height:760px;border-radius:50%;background:radial-gradient(closest-side,rgba(247,192,50,.28),rgba(247,192,50,0));pointer-events:none"></div>
+  
+  
+  <div style="position:absolute;left:0;top:-20%;width:24%;height:140%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.75),rgba(255,255,255,0));animation:msSweep 12s cubic-bezier(.45,0,.55,1) infinite;pointer-events:none"></div>
+  <svg viewBox="0 0 1440 760" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none" fill="none" stroke-linecap="round"><g stroke="rgba(61,62,63,.16)" stroke-width="2"><path d="M0 700 H120 L150 670 H260"></path><path d="M1440 60 H1340 L1310 90 H1240"></path></g><g stroke="#C9921A" stroke-width="3" stroke-dasharray="60 940"><path pathLength="1000" d="M0 700 H120 L150 670 H260" style="animation:msPulse 3.2s cubic-bezier(.45,0,.55,1) infinite"></path><path pathLength="1000" d="M1440 60 H1340 L1310 90 H1240" style="animation:msPulse 3.8s .8s cubic-bezier(.45,0,.55,1) infinite"></path></g><g fill="#F7C032" stroke="#3D3E3F" stroke-width="1.5"><circle cx="260" cy="670" r="4"></circle><circle cx="1240" cy="90" r="4"></circle></g></svg>
+  <div style="position:relative;max-width:1312px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(32px,4vw,64px);align-items:center">
+    <div style="display:flex;flex-wrap:wrap;gap:28px 36px;align-items:center;justify-content:center">
+      <div style="position:relative;width:340px;height:400px;flex:none;display:grid;place-items:center">
+        <svg viewBox="0 0 340 340" width="340" height="340" style="position:absolute;left:0;top:20px;animation:msRing 40s linear infinite" fill="none"><circle cx="170" cy="170" r="160" stroke="rgba(61,62,63,.22)" stroke-width="1.5" stroke-dasharray="2 10"></circle></svg>
+        <span style="position:absolute;left:30px;top:50px;width:280px;height:280px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,255,255,.95),rgba(255,255,255,0))"></span>
+        <span style="position:absolute;left:50%;bottom:34px;width:220px;height:34px;margin-left:-110px;border-radius:50%;background:linear-gradient(180deg,#F4F5F6,#B9BDC2);box-shadow:0 14px 26px rgba(38,40,43,.25),inset 0 1px 0 #FFFFFF"></span>
+        <span style="position:absolute;left:50%;bottom:44px;width:160px;height:6px;margin-left:-80px;border-radius:50%;background:#F7C032;box-shadow:0 0 18px 4px rgba(247,192,50,.55)"></span>
+        <div style="position:relative;margin-top:-30px;transform-origin:50% 90%;animation:{{ nodAnim }}"><dc-import name="SE Samsoom" mood="{{ mood }}" size="240" look-x="{{ lx }}" look-y="{{ ly }}" hold="{{ hold }}" raise="{{ raise }}" hint-size="240px,300px"></dc-import></div>
+      </div>
+      <div style="flex:1 1 260px;display:flex;flex-direction:column;gap:16px;min-width:260px">
+        <span style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:#3D3E3F"><span style="width:28px;height:2px;background:#26282B"></span>MEET SAMSOOM · PARTS ASSISTANT</span>
+        <h2 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(34px,3.2vw,48px);line-height:1.04;letter-spacing:-.035em;text-wrap:balance">Ask at 3 a.m. Samsoom already knows the shelf.</h2>
+        <p style="margin:0;font-size:17px;line-height:1.55;color:#3D3E3F">Samsoom knows our catalogue, grades, hours and shipping. It finds the part, explains the grade, and hands you to a person on WhatsApp the second you need one.</p>
+        <span style="display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:12px;color:#3D3E3F"><span style="width:8px;height:8px;border-radius:50%;background:#2BB673;box-shadow:0 0 0 3px rgba(43,182,115,.18)"></span>{{ status }}</span>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;border-radius:24px;overflow:hidden;background:rgba(255,255,255,.62);box-shadow:inset 0 0 0 1px rgba(255,255,255,.9),0 30px 70px rgba(38,40,43,.18);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)">
+      <div style="display:flex;align-items:center;gap:12px;height:62px;padding:0 18px;border-bottom:1px solid rgba(38,40,43,.08)">
+        <span style="display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:linear-gradient(160deg,#3D3E3F,#26282B);overflow:hidden"><span style="margin-top:6px"><dc-import name="SE Samsoom" mood="{{ mood }}" size="30" still="{{ true }}" hint-size="30px,38px"></dc-import></span></span>
+        <span style="display:flex;flex-direction:column;gap:2px"><span style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:16px">Samsoom</span><span style="font-size:12px;color:#1F7A4F">Online · live demo</span></span>
+        <span style="margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:11px;color:#3D3E3F">{{ sceneLbl }}</span>
+      </div>
+      <div style="display:flex;flex-direction:column;justify-content:flex-start;gap:10px;height:320px;padding:16px 18px;overflow:hidden">
+        <sc-for list="{{ msgs }}" as="m" hint-placeholder-count="3">
+          <div style="display:flex;align-items:flex-end;gap:8px;flex-direction:{{ m.dir }};opacity:{{ m.o }};transition:opacity .5s"><span style="flex:none;display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:{{ m.avBg }};overflow:hidden;box-shadow:0 0 0 1.5px {{ m.avRing }}"><sc-if value="{{ m.bot }}" hint-placeholder-val="{{ false }}"><span style="margin-top:6px"><dc-import name="SE Samsoom" mood="happy" size="20" still="{{ true }}" hint-size="20px,25px"></dc-import></span></sc-if><sc-if value="{{ m.user }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 24 24" width="18" height="18" fill="#8C9096"><circle cx="12" cy="9" r="4"></circle><path d="M4 22c0-4.4 3.6-7 8-7s8 2.6 8 7z"></path></svg></sc-if></span><span style="max-width:78%;padding:10px 14px;border-radius:16px;background:{{ m.bg }};color:{{ m.ink }};font-size:14px;line-height:1.45;white-space:pre-line;box-shadow:0 2px 6px rgba(38,40,43,.1);animation:msIn .45s cubic-bezier(.2,.8,.2,1) both">{{ m.t }}</span></div>
+        </sc-for>
+        <sc-if value="{{ typing }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:4px;align-self:flex-start;padding:12px 14px;border-radius:16px;background:#FFFFFF;box-shadow:0 2px 6px rgba(38,40,43,.1)"><span style="width:7px;height:7px;border-radius:50%;background:#3D3E3F;animation:msDot .9s infinite"></span><span style="width:7px;height:7px;border-radius:50%;background:#3D3E3F;animation:msDot .9s .15s infinite"></span><span style="width:7px;height:7px;border-radius:50%;background:#3D3E3F;animation:msDot .9s .3s infinite"></span></div></sc-if>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;padding:12px 18px;border-top:1px solid rgba(38,40,43,.08)"><sc-for list="{{ chips }}" as="c" hint-placeholder-count="5"><button onClick="{{ c.play }}" onMouseEnter="{{ c.over }}" onMouseLeave="{{ c.out }}" style="animation:{{ c.glow }};height:36px;padding:0 12px;border-radius:10px;border:none;background:{{ c.bg }};color:#1A1B1D;box-shadow:inset 0 0 0 1px rgba(38,40,43,.1);font-size:13px;font-weight:600;cursor:pointer;transition:background .3s cubic-bezier(.2,.8,.2,1)">{{ c.q }}</button></sc-for></div>
+      <button onClick="{{ ask }}" style="display:flex;align-items:center;justify-content:space-between;height:52px;padding:0 18px;border:none;background:#26282B;color:#FFFFFF;font-size:15px;font-weight:600;cursor:pointer">Ask Samsoom your own question<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F7C032" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></button>
+    </div>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:800}}">
+class Component extends DCLogic {
+  state = { scene: 0, t: 0, inView: false, lx: 0, ly: 0, data: window.SE_DATA || null };
+  secRef = React.createRef();
+  componentDidMount() {
+    if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 80);
+    this.io = new IntersectionObserver(([e]) => this.setState(e.isIntersecting ? { inView: true, scene: 0, t: 0 } : { inView: false }), { threshold: 0.25 });
+    setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
+    this.iv = setInterval(() => { if (!this.state.inView || document.hidden) return; this.setState((s) => (s.t >= 6 ? { t: 0, scene: (s.scene + 1) % 5 } : { t: s.t + 1 })); }, 1300);
+  }
+  componentWillUnmount() { clearInterval(this.iv); clearInterval(this.dIv); this.io && this.io.disconnect(); }
+  scenes() {
+    const D = this.state.data, P = D ? D.products : [], GN = { OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' };
+    const m13 = D && D.models.find((m) => /iphone 13$/i.test(m.name)), ps = m13 ? P.filter((p) => p.model_id === m13.id && p.category === 'SCR' && p.stock_qty > 0).sort((a, b) => b.retail_price - a.retail_price) : [];
+    const pad = (n) => String(n).padStart(2, '0'), hm = (x) => pad(Math.floor(x / 60)) + ':' + pad(x % 60), H = D ? D.hours : {}, day = (d) => (H[d] || []).map(([a, b]) => hm(a) + '–' + hm(b)).join(' and ') || 'closed';
+    const bat = P.find((p) => p.id === 'SE-A54-BAT-OR');
+    return [
+      { q: 'Galaxy A54 battery', u: 'Do you have a Galaxy A54 battery?', a: bat ? 'Yes. Original grade, in stock in Deira · AED ' + bat.retail_price + ' (sample). Want me to add it to your cart?' : 'Checking stock…', hold: 'bat', land: 'found' },
+      { q: 'Which grade?', u: 'Which grade should I pick?', a: 'Original or Service Pack for the best result. OLED is great value. Incell when budget comes first. Every grade is labelled on your order.', hold: '', land: 'happy' },
+      { q: 'Are you open?', u: 'Are you open now?', a: 'Sat–Thu ' + day(1) + '.\nFriday ' + day(5) + '.\nSunday we rest.', hold: '', land: 'wave' },
+      { q: 'Trade prices', u: 'Can I get trade prices?', a: 'Open a trade account. Once approved, trade prices show on every part, and bulk lists are quoted the same day.', hold: '', land: 'wave' },
+      { q: 'Do you ship to my country?', u: 'Do you ship to Nigeria?', a: 'Yes. We ship every day to the Middle East, Africa, Europe and Asia. Tracked, packed by hand, quoted with your order.', hold: '', land: 'kiss' }
+    ];
+  }
+  renderVals() {
+    const s = this.state, SC = this.scenes(), sc = SC[s.scene], prev = SC[(s.scene + SC.length - 1) % SC.length], t = s.t;
+    const mood = s.hov != null ? 'idle' : t === 0 ? 'idle' : t === 1 ? 'think' : t === 2 ? (sc.land === 'found' ? 'found' : 'happy') : sc.land;
+    const msgs = [];
+    const U = (x, o) => ({ t: x, dir: 'row-reverse', bg: '#26282B', ink: '#FFFFFF', o, user: true, bot: false, avBg: '#3D3E3F', avRing: 'rgba(38,40,43,.2)' }), B = (x, o) => ({ t: x, dir: 'row', bg: '#FFFFFF', ink: '#1A1B1D', o, user: false, bot: true, avBg: '#F7C032', avRing: '#26282B' });
+    if (s.scene > 0 || t === 0) { msgs.push(U(prev.u, 0.55)); msgs.push(B(prev.a, 0.55)); }
+    if (t >= 1) msgs.push(U(sc.u, 1));
+    if (t >= 2) msgs.push(B(sc.a, 1));
+    const shown = msgs.slice(-3);
+    return {
+      secRef: this.secRef, mood, hold: t >= 2 ? sc.hold : '', lx: (s.hov != null ? 0.9 : s.lx).toFixed(2), ly: (s.hov != null ? 0.8 : s.ly).toFixed(2), typing: t === 1, nodAnim: t === 1 ? 'msNod .9s cubic-bezier(.45,0,.55,1) infinite' : 'none', msgs: shown,
+      status: t === 1 ? 'Samsoom is typing…' : t >= 2 ? 'Answered in under a second' : 'Ready when you are', sceneLbl: String(s.scene + 1).padStart(2, '0') + ' / 0' + SC.length,
+      chips: SC.map((x, i) => ({ q: x.q, bg: i === s.scene ? '#F7C032' : 'rgba(255,255,255,.7)', glow: i === (s.scene + 1) % SC.length ? 'msChip 1.6s cubic-bezier(.45,0,.55,1) infinite' : 'none', play: () => this.setState({ scene: i, t: 1 }), over: () => this.setState({ hov: i }), out: () => this.setState({ hov: null }) })),
+      raise: s.hov != null, bubbles: Array.from({ length: 8 }, (_, i) => ({ x: (i * 13 + 4) % 96, w: 60 + (i * 23) % 70, h: 28 + (i % 3) * 8, o: (0.08 + (i % 3) * 0.02).toFixed(2), dur: 22 + (i * 7) % 14, d: -(i * 3.3).toFixed(1) })),
+      ask: () => window.dispatchEvent(new CustomEvent('se:chat', { detail: {} })),
+      move: (ev) => { if (this._mt && Date.now() - this._mt < 80) return; this._mt = Date.now(); const r = ev.currentTarget.getBoundingClientRect(); this.setState({ lx: Math.max(-1, Math.min(1, ((ev.clientX - r.left) / r.width - 0.18) * 2.2)), ly: Math.max(-1, Math.min(1, ((ev.clientY - r.top) / r.height - 0.45) * 2.2)) }); }
+    };
+  }
+}
+</script>
+</body>
+</html>

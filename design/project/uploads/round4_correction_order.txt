@@ -1,0 +1,1163 @@
+SAM ELECTRONICS L.L.C · DEIRA · DUBAI · SINCE 2003
+ROUND 4
+Mandatory Correction Order
+Home page · 18 issues · global rules · send order
+The home hero is the only finished section.
+Everything else gets rebuilt to that level.
+To: Claude Design
+From: the owner, Sam Electronics
+Date: 08 October 2026
+Read this entire document before you touch a single pixel.
+Every instruction here is a requirement, not a suggestion.
+
+-- 1 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 2
+SECTION 0 · READ THIS FIRST
+Why this document exists
+I have reviewed the entire home page from top to bottom. I am going to be direct, because polite
+feedback has not worked: the home hero is the only section that is finished. It is realistic, alive,
+lit, branded and rich. Almost everything after it is not. Sections are white, flat, empty, cartoonish,
+static, or look like generic AI output. Several of my earlier instructions were half-applied, applied in
+the wrong section, or replaced with ideas I never asked for.
+This document lists 18 numbered issues, each with what is wrong, exactly what you must do, what
+you must not do, and a Done when checklist. A section is only finished when every box in its
+checklist is true. Not most. Every one.
+Non-negotiable: do not "interpret" these instructions into something easier. Do not swap my
+ideas for your own without asking. Do not skip a line because it is hard. If something is technically
+impossible in the design tool, say so explicitly and propose the closest equivalent, then
+wait. Silently delivering less is not acceptable.
+0.1 The benchmark: the home hero
+Every single section must reach the level of the home hero. Before you show me any section, put it
+next to the hero and ask:
+1. Does it look as realistic as the iPad and phone in the hero?
+2. Is it as alive? Is something always moving, even when I am not touching anything?
+3. Is it as rich? Is there something worth looking at in every part of the screen, with no dead empty
+areas?
+4. Is it as branded? Does it feel like Sam Electronics, not like a template?
+5. Is it as polished? No clipped text, no overlaps, no leftover placeholders, no cheap shapes?
+If the answer to any of these is no, the section is not done. Do not show it to me as done.
+0.2 How we work this round (strictly)
+1. Step 1: read the whole document. Then reply with a short summary of the Global Rules (Section
+G) and the Environment Map (Section E) in your own words, so I know you understood. Do not
+design anything yet.
+2. Step 2: apply the Global Rules to the whole page (circuits, status dots, launcher, backgrounds,
+leftovers).
+3. Step 3: work through the issues in batches of 2 to 3, in page order (Section S lists the
+batches). After each batch, stop and show me.
+4. Step 4: for every animated section, show me a recording or a sequence of step screenshots
+(start, middle, end of the animation). A single still image of an animated section will be rejected.
+5. Step 5: for every section, confirm each Done-when box by name ("Box 1: done. Box 2: done…").
+Why batches: you missed things in earlier rounds because too much was sent at once. Small
+batches, fully finished, are faster than big batches done halfway.
+0.3 Things I will reject immediately
+• Any section that is plain white or plain flat yellow with nothing designed in it.
+• Any part, phone or product drawn as a flat rectangle, a cartoon shape, a bar, a stick or a blob.
+• Any circuit line, node or trace that touches or crosses text, buttons, cards or images.
+
+-- 2 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 3
+• Any visible leftover: "browse files", "No reviews yet", "Perk · coming soon" repeated, blank grey
+shapes, clipped words.
+• Any section where nothing moves.
+• Any colour outside the palette (no random greens, blues, browns, reds in decorative elements).
+• Any airport, travel, passport or boarding theme. Never.
+• Any "cut-off floor": dark ellipses, half-circles or black boxes under objects.
+• A still screenshot presented as proof of an animation.
+
+-- 3 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 4
+SECTION G · GLOBAL RULES · APPLY EVERYWHERE, ALWAYS
+Global rules
+These apply to every section, every page, every state. They override anything in older briefs that
+contradicts them. Read them twice.
+G1. Realism
+• Every object (phones, parts, tools, cartons, batteries, boards, devices) must look like a studio
+product photograph: real proportions, rounded corners where real objects are rounded, real
+materials (glass, brushed metal, PCB, foil, cardboard), key light, rim light, soft shadow, reflections.
+• No flat CSS rectangles pretending to be phones. No cartoon parts. No grey slabs.
+• Where real 3D is needed, use real 3D (Three.js with rounded/bevelled geometry, physical
+materials, environment lighting). Where you cannot reach realism, say so and structure the
+section so a real image or image sequence can replace the drawing later without changing the
+layout.
+• Real assets will come at the build stage (product photos, 3D renders, shop photos, team photos,
+Google reviews). Until then use high-quality placeholders, never cartoons.
+G2. Motion: three layers, every section
+• Idle motion: something always moves on its own (flowing current, breathing glow, drifting light,
+rotating object, ticking numbers).
+• Scroll motion: reveals, pinned scenes, count-ups, draw-ins. Every animation replays when
+scrolling back.
+• Interaction motion: hover, click, drag, tap. Every interactive element reacts.
+• Motion has weight: ease in and out, slight overshoot, settle. Nothing stops dead. Nothing freezes.
+• Performance: animate transform and opacity only, target 60fps. Respect reduced-motion (static
+fallbacks).
+G3. Circuits (corrected rule, read carefully)
+• Keep the circuits. They are part of our identity, exactly like the home hero uses them.
+• Keep the progress line in the top nav bar. Do not remove it.
+• There is no single continuous bus forced down the whole home page. Each section may
+have its own decorative circuits where they fit, and some sections may have one long circuit
+running through empty space.
+• Current moves as soft flowing light streaks (long gradient dashes), not tiny dots.
+• Background circuits are subtle: no busy grids, no stripe textures, no tiled patterns behind
+content.
+• Circuits never touch or cross text, buttons, cards, images or icons. Minimum clearance: 24px.
+No exceptions.
+G4. Palette discipline
+Colour Value Role
+Signal Yellow #F7C032 Energy, highlights, primary buttons, current, active states. Used as
+a field only where a section's environment says so.
+Graphite #26282B / #3D3E3F Dark environments, cards, text on light. Never flat black.
+White #FFFFFF Cards, text on dark, clean surfaces.
+Fog #F2F3F4 Light environments, always with grain and light, never flat.
+Status green light green, pulsing ONLY for the Open status dot.
+
+-- 4 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 5
+Colour Value Role
+Status amber / red amber / red ONLY for Closing soon / Closed status dots and error states.
+• No other colours in decorative elements. Anything off-palette must be removed (examples found
+this round: a green tick, a blue/green globe, bright brown cartoon cartons, red stamps, blue sketch
+lines).
+• Never flood a whole section in flat yellow with nothing designed in it (Issue 13 is what happens
+when you do).
+G5. Typography
+• Space Grotesk headings (medium/semibold, never heavy), Inter body, JetBrains Mono data, IBM
+Plex Sans Arabic.
+• Headlines are big and confident and enter with motion (word by word, blur to sharp), never just
+appear.
+• No tiny squeezed titles under the nav. No clipped words anywhere.
+G6. No leftovers, ever
+• No "browse files", no upload widgets visible to the public.
+• No "No reviews yet". If there are no reviews, hide the rating element.
+• No repeated "Perk · coming soon" lists.
+• No blank grey rounded rectangles (found at the top of the Samsoom and Social sections).
+• No clipped chips, tickers or labels. Use fade masks on empty space instead.
+• No outdated sample data (example: iPhone 17 Pro and Galaxy S25 Ultra as "pre-order" are already
+released).
+• No contradictory data (example: a parcel at the start of its route labelled "98% of the way").
+G7. Status indicator (everywhere it appears)
+• Light green, softly pulsing = Open.
+• Amber = Closing within 30 minutes.
+• Red = Closed.
+• Never grey, never black. Applies to the nav pill, the Visit-us card, the footer and any other place.
+G8. Floating "Ask Samsoom" launcher (every page)
+• Replace the plain circle with a pill launcher: Samsoom's face + the words "Ask Samsoom".
+• Cycle: collapsed circle where Samsoom waves and smiles → pill extends "Ask Samsoom" →
+collapses, Samsoom blinks → extends again with a different message matched to page and
+time ("Need a screen?", "Open till 22:00", "Trade prices? Ask me", "Track my order") → repeat.
+• Every 15–20 seconds. Stops extending after a few cycles if ignored. Green online dot. Static pill
+under reduced motion.
+• It must never cover buttons or content.
+G9. Language and themes
+• One language per view. EN shows only English, the Arabic view shows only Arabic with full
+right-to-left.
+• No airport, travel, passport, boarding, ticket or terminal themes. This is an electronics parts
+business.
+G10. Mobile
+• Every section must have a designed mobile version (390px). Heavy pinned scenes become lighter
+step-by-step reveals. Show me mobile for every section you finish.
+
+-- 5 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 6
+SECTION E · ENVIRONMENT MAP
+Every section gets its own environment
+Rule: no plain white sections, and never the same environment twice in a row. Use this map.
+If you want to change one line of it, propose the change and wait for my approval.
+# Section Environment Issue
+1 Hero + brand rail Graphite + yellow slab (KEEP, approved) 1B
+2 Teardown Deep graphite stage, top spotlight, reflective floor 1
+3 Parts Cabinet Light brushed-metal workshop wall, warm light 2
+4 Live Parts Board Clean living graphite 3
+5 Bench Test Full yellow, studio vignette, bench surface 5
+6 The Showcase (ads) Warm fog studio; ads inside are graphite | yellow split 6
+7 Deals & arrivals Graphite with soft yellow light 7
+8 Repair Lab Clean light lab (per Part 1 spec, not reviewed this round) —
+9 Wholesale / Trade Floor Yellow with branded tape and depth 8
+10 Worldwide Dark dot-matrix map, graphite 9
+11 Story & branches Warm fog with yellow light and grain 10
+12 Team (Staff Badges) Graphite wall with one spotlight 11
+13 Who are you? (lanes) Warm fog, light shifts with active lane 12
+14 Sam Circuit (Charging
+Station)
+Graphite studio, yellow only as energy 13
+15 Meet Samsoom Warm yellow studio 14
+16 The Feed (social) Graphite studio 15
+17 Reviews White with soft yellow light 15
+18 Request console + Visit us Yellow; console graphite, visit card white 16
+19 Finale (Power-Up) Deep graphite stage, spotlight, light particles 17
+20 Footer Unchanged structure, same on every page —
+
+-- 6 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 7
+ISSUE 01 · FULL REBUILD
+Teardown: the phone opening scene
+What is wrong
+• The headline "Take any phone apart." sits on top of the phone. Text and phone overlap.
+Forbidden.
+• The phone is a flat grey slab with a black rectangle for a notch and a yellow rectangle as a
+camera island.
+• A big dark ellipse floor cuts across the scene.
+• In the exploded view the parts are primitive shapes: a gold bar battery, a green plate with
+cubes, orange sticks, a grey slab back.
+• The parts are scattered left to right at different sizes instead of stacked on one axis like a
+real exploded diagram.
+• Two big yellow glow blobs sit on the floor.
+• The info panel disappears during the explosion.
+• There is no reveal: everything is visible at once, with none of the drama of an Apple product
+introduction.
+• What is good and must be kept: the LED rail on the left and the single info panel layout.
+What you must do
+1. Intro sequence (pinned, scroll-driven):
+– Dark graphite stage. The headline "Take any phone apart." appears word by word, each word
+going from blur to sharp (60ms stagger), centred, with nothing behind it.
+– The headline then moves up and docks top-left. Only then the phone rises from below into a soft
+top spotlight.
+– The screen powers on: deep black OLED, our logo, a light sweep across the glass. "We stock every
+layer." appears in yellow.
+– The phone turns slowly to a ¾ view. Text and phone never overlap at any moment of the
+scroll.
+3. The phone: a proper generic modern smartphone (not an iPhone copy, no Apple logo): thin even
+bezels, rounded corners (~12% of width), curved satin metal frame, side buttons, a realistic
+camera island with 3 glass lenses (dark glass, reflections, metal rings). Real 3D with physical
+materials.
+4. The exploded view: 8 layers separate along one single depth axis from the ¾ view, all the
+same outline and size, evenly spaced, perfectly aligned.
+– Front glass: transparent with reflections.
+– Display: black panel with a flex tail.
+– Frame: satin metal mid-frame with antenna lines and screw holes.
+– Flex cables: thin amber ribbons with connectors, following the layout.
+– Logic board: dark green PCB with metal shields, chips, connectors.
+– Battery: black pouch with a white printed label and a connector.
+– Cameras: the module with real lenses.
+– Back glass: frosted, with the camera cut-out.
+6. Lighting: key light top-left, rim light on every edge, soft shadows between layers. Floor: subtle
+reflection fading to dark. No ellipse. No glow blobs.
+7. Keep the LED rail: each LED switches on as its layer separates, current flows to the next LED,
+the active layer's edges glow yellow, earlier layers dim to 70%.
+8. Keep the single info panel visible during the whole explosion and update it per layer:
+number (03 / 08), name, stock rolling, grade chips, "From AED X", "Shop [part] →". Text types in.
+
+-- 7 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 8
+9. Finale: all LEDs lit, layers fan out in a neat row, then slide down and drop into the Parts Cabinet
+drawers (Issue 2).
+10. Reverse fully on scroll up: LEDs off, layers rejoin, phone turns back, headline returns.
+11. Build-stage structure: keep the scene, timeline, LED rail and panel independent from the
+phone visual, so the drawn phone can later be replaced by a pre-rendered image sequence
+(150–300 frames on a canvas, like Apple's product pages). Write down the scroll/frame range for
+each of the 8 layers.
+12. Mobile: no heavy pin; layers reveal one by one with the same LEDs and panel.
+DO NOT
+5 Do not let any text overlap the phone.
+5 Do not draw parts as bars, plates, sticks or slabs.
+5 Do not scatter layers or use different sizes.
+5 Do not use glow blobs, ellipse floors or inner boxes.
+5 Do not hide the info panel at any point.
+5 Do not copy the iPhone design or show the Apple logo.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] The intro plays as a sequence: words → dock → phone rises → screen powers on → ¾ turn.
+[ ] No overlap between text and phone in any frame (show me 5 frames).
+[ ] The phone looks like a real modern smartphone.
+[ ] All 8 layers are real-looking, same outline, aligned on one axis.
+[ ] No floor ellipse, no glow blobs.
+[ ] LED rail lights one by one with flowing current.
+[ ] Info panel is visible and updates through the entire explosion.
+[ ] Finale drops the layers into the cabinet. Reverse works.
+[ ] Layer frame ranges are written down for the build stage.
+[ ] Mobile version shown.
+
+-- 8 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 9
+ISSUE 01B · SMALL FIXES · STILL OPEN FROM LAST ROUND
+Hero devices: phone ad reel and iPad cart
+The hero is the benchmark and stays as it is, except these two fixes, which were already
+requested and are still not done.
+Phone ad reel: repair card
+• It shows a random, unidentifiable component. Replace it with a realistic phone with a cracked
+screen: the cracks glow yellow, seal line by line (~1.2s), the screen boots with our logo, text
+"Cracked screen? Fixed, tested, guaranteed." + "Book a repair →".
+• Check every card in the reel: each must show a correct, recognisable product (screen, battery,
+back cover, frame, flex, camera, small parts) or service visual (repair, wholesale pallet, worldwide
+globe).
+iPad: add-to-cart
+• The cart currently turns into a plain yellow box with no animation. Replace it with a proper
+sequence (~1.4s):
+– finger-tap ripple on the "+" button;
+– a small copy of the product image flies in an arc to the iPad's cart icon, shrinking (600ms);
+– the cart icon bounces (1 → 1.2 → 1) and its badge number rolls +1;
+– a slim graphite toast slides up from the bottom of the iPad screen: "✓ Added · [product]", stays 1.5s,
+slides down.
+• The toast stays within the bottom 12% of the iPad screen and never covers the product grid.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Every phone ad card shows a correct, realistic visual.
+[ ] The repair card shows a cracked screen healing.
+[ ] The iPad cart has fly, bounce, badge roll and toast. No yellow box.
+
+-- 9 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 10
+ISSUE 02 · REBUILD
+Everything we offer: Parts Cabinet +
+services
+What is wrong
+• The drawers do not work properly: the hover panel ("Screens · 2,211 · Shop screens") covers
+the neighbouring drawer and hides its number.
+• The open drawer looks broken: a black box with a tiny phone cut off at the edge, and the
+handle sits on top of the part.
+• Closed drawers are empty grey striped plates. Nothing is visible; users have to hover
+blindly.
+• They are huge: 8 tall drawers take two full screens of scrolling for very little information.
+• The round logo node at the top of the cabinet and the yellow circuit traces branching
+to every drawer look cheap and cluttered.
+• Service cards: the idea is good but the quality is not:
+– Repair: the cracks are good, but the phone is generic and flat.
+– Wholesale: the boxes are flat orange squares with no texture, tape or label. The tag shows retail
+only; the trade price never arrives.
+– Worldwide: the globe is good, but the "DXB → Istanbul" pill overlaps the globe.
+• Big empty gap under the service cards.
+What you must do
+1. Remove the logo node and all circuit traces on and behind the cabinet. The cabinet is
+clean: brushed metal frame, screws, drawers. Each drawer's own LED is the only live signal.
+Optional: a small, barely visible engraved metal nameplate "PARTS · DEIRA" on the top rail. No
+logo, no glow.
+2. Smaller, tighter cabinet: 2 rows of 4, about half the current height, so the whole wall fits in
+one screen.
+3. On scroll the drawers open one by one and stay open (stagger ~150ms, soft mechanical
+ease, tiny bounce). The user sees the whole wall of parts at once.
+4. Inside each open drawer: black foam insert with the real-looking part in its cut-out, lit from
+above. Label tray stays on the drawer front (code, name, signal, stock).
+5. Hover: the part lifts out of the foam, tilts slowly, casts a shadow; the drawer LED brightens;
+info (stock, from-price, grades, "Shop →") appears inside that drawer's own area, under the
+part. Never cover a neighbouring drawer.
+6. Drop-in from the teardown: each layer drops into its drawer and that drawer's LED lights up
+(no node, no traces).
+7. Brand chips: keep. Counts roll; drawers with zero stock close and dim.
+8. Scroll back up: drawers close in reverse and reopen on the way down.
+9. Service cards, higher quality:
+– Repair Lab: the realistic phone from Issue 1; cracks glow and seal line by line; screen boots; a test
+checklist ticks in (Touch ✓ · Display ✓ · Face ID ✓ · Speaker ✓); "TESTED" seal stamps.
+– Wholesale: realistic corrugated cartons with tape, a printed Sam Electronics label and a barcode,
+dropping onto a wooden pallet with weight (squash and settle); shrink-wrap sweeps with a plastic
+shine; tag flips Retail AED 125 → Trade AED 98 with a "−22%" badge; unit counter rolls 10 → 50
+→ 100.
+– Worldwide: globe rotates; a glowing arc draws from Dubai to the destination with a parcel on it;
+status steps light (Packed → In transit → Delivered); the pill sits below the globe, never on it.
+
+-- 10 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 11
+11. Fill the gap under the cards with a stat strip per card (Same-day repairs · Trade prices from X
+units · Shipping to X+ countries; real numbers to be confirmed by the owner).
+12. Mobile: horizontal swipe of open drawers; services stacked with their animations.
+DO NOT
+5 Do not let any hover panel cover another drawer.
+5 Do not show the logo node or cabinet circuits.
+5 Do not leave drawers closed and empty.
+5 Do not use flat or cartoon cartons.
+5 Do not put the status pill on the globe.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Cabinet fits in one screen.
+[ ] Drawers open on scroll and stay open, parts visible.
+[ ] Hover lifts the part; info stays inside its own drawer.
+[ ] No logo node, no cabinet circuits.
+[ ] Repair / Wholesale / Worldwide scenes upgraded as listed.
+[ ] Trade price arrives on the tag.
+[ ] No overlaps anywhere.
+[ ] Gap under the cards filled.
+[ ] Mobile shown.
+
+-- 11 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 12
+ISSUE 03 · REBUILD LAYOUT
+Live Parts Board: "What's moving on our
+shelves"
+What is wrong
+• The circuits are a mess: traces cut diagonally through the body text (through "Deira"), straight
+across the Low stock tile, cross each other, and leave from random corners.
+• Counter tiles are weak: tiny dull icons (Just landed is an empty grey box), thin sparklines with
+no fill, no sense of change.
+• Trending chips are cut off at the right edge ("iPhone 15 Pro OLED 1…").
+• The board feels unfinished: tall empty rows, plain text, no visuals, values floating far from
+items, a footer that is just a sentence.
+• Unbalanced layout: left column and board have different heights, the button hangs at the
+bottom, dead space remains.
+• Background: vertical stripe texture plus a visible circuit grid. Too busy.
+What you must do
+1. New layout:
+– Top row: eyebrow + headline left, body text right. Nothing crosses it.
+– Main row: [4 counter tiles stacked vertically] → [wiring channel ~96px] → [the board]. Each
+tile lines up with its own lane.
+– Bottom: "Trending right now" as a full-width ticker, then the button aligned left under it.
+3. Wiring: each counter connects to the board with one straight horizontal trace inside the
+wiring channel. Traces never cross text, tiles or each other. When a row lands on the board, a
+pulse travels from that row → channel → matching lane → its counter. The counter flashes, the
+number rolls up, a "+1" floats up and fades.
+4. Counters alive: bigger animated icons (box dropping on a shelf; battery draining and blinking
+red; tag swinging down; truck driving off); sparkline with gradient fill and a pulsing dot on the
+latest point; delta line "+3 in the last hour"; active filter tile glows yellow.
+5. Board polished: compact rows (~56px); columns time · status pill · small part thumbnail or
+country flag · item · value (values right next to content); new rows slide in and type in; newest row
+glows 1.2s; filter tabs in the header (All · Landed · Low · Drops · Shipped); footer = rolling "42
+events today" + a tiny live activity bar.
+6. Trending ticker: full width, continuously scrolling, fade masks on both edges, counts roll.
+7. Background: remove stripes and grid. Clean living graphite with fine grain. Only the functional
+wiring channel and subtle decoration in empty space.
+8. Mobile: counters 2×2 above the board, wiring hidden, counters still flash on matching rows.
+DO NOT
+5 Do not route any trace through text or tiles.
+5 Do not clip chips.
+5 Do not use stripe or grid backgrounds.
+5 Do not leave the button floating with a dead gap.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Zero crossings: every trace is straight and inside the channel.
+[ ] Pulse travels row → counter and the number ticks.
+[ ] Icons animated, sparklines filled, deltas shown.
+[ ] Board rows compact with thumbnails/flags and filter tabs.
+
+-- 12 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 13
+[ ] Ticker never clips words.
+[ ] Clean background.
+[ ] Mobile shown.
+
+-- 13 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 14
+ISSUE 04 · GLOBAL FIX · APPLY EVERYWHERE
+Global: circuits, nav progress line and
+backgrounds
+Correction of an earlier message: do not remove the circuits and do not remove the nav
+progress line. An earlier version of my notes said to remove them. That was wrong. Follow this
+page.
+What is wrong
+• The continuous bus down the page edges is forced through sections where it does not fit and cuts
+through content (deal cards, Add-to-cart buttons, cartons, "Quality").
+• Current is drawn as small dots, which does not feel like electricity.
+• Several backgrounds are messy: visible grids, stripe textures, tiled tiles, random traces.
+What you must do
+1. Keep the nav progress line exactly as a feature of the top bar.
+2. Keep circuits as decoration, in the same spirit as the home hero.
+3. Remove the idea of one bus forced down the entire home page. Each section designs its
+own circuits where they fit; some sections may have one long circuit through empty space.
+4. Current = soft flowing light streaks (80–160px gradient dashes), several at once, slightly
+different speeds; a brighter surge when something happens nearby (add to cart, new board row,
+drawer opening).
+5. 24px minimum clearance from every text, button, card, image and icon. Audit every section
+and reroute anything that touches.
+6. Background circuits at 8–12% opacity, only in empty areas. No grids, stripes or tiles behind
+content.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Nav progress line still present.
+[ ] Circuits present and decorative per section.
+[ ] Zero circuits touching or crossing content anywhere on the page (audit list provided to me).
+[ ] Current flows as light streaks.
+[ ] No busy background textures left.
+
+-- 14 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 15
+ISSUE 05 · FULL REBUILD
+Bench Test: "Nothing leaves Deira until it
+passes the rig"
+What is wrong
+• Background: moving waves, blurred traces and yellow blotches that match nothing else on the
+site.
+• No story, no stop: it scrolls past like a normal section. Nothing gets tested while the user
+watches.
+• Quality / Warranty / Price are dead: empty outline circles, grey text, static; descriptions far to
+the right, disconnected.
+• The rig looks cheap: the probe arm overlaps the screen awkwardly, readout tiles are basic
+(Battery tile empty), cut-off engraved text, a random black bar, a cable dangling off the page.
+• The log is a plain terminal box; "Parts tested" card is cut off.
+• Unbalanced: left column twice as tall as the rig; big empty space under the rig.
+What you must do
+1. Pinned scene: the section holds for ~300vh and scrolling drives the test forward and backward
+(scrubbed, eased). Everything fits in one screen.
+2. Layout: left = eyebrow, headline, the three words big (~72px); right = the rig, larger, full
+height, with a printed work order feeding out of it at the bottom.
+3. Timeline:
+Scroll What happens
+0.00–0.10 Phone slides into the rig; clamps close with a click and bounce; status LEDs go green; rig powers
+on.
+0.10–0.30 Check 1 Display: scan beam sweeps down the screen; pixel grid fills; tile flips to PASS ✓.
+0.30–0.45 Check 2 Touch: probe taps grid points; touch trace draws; PASS ✓; the word "Quality" fills.
+0.45–0.65 Check 3 True Tone: screen shifts warm to cool; sensor reads; gauge settles; PASS ✓; "Warranty"
+fills as a warranty sticker is applied.
+0.65–0.85 Check 4 Battery: health gauge charges to 98%; PASS ✓; "Price" fills as a price tag drops in.
+0.85–1.00 Thermal work order feeds out (grade · warranty · price · unit #); "PASSED" stamp lands; counter
+1,293 → 1,294; page releases.
+1. The three words: start as graphite outlines, fill like a charging bar left to right when their
+checks pass; the circle draws into a ✓; a short description types in directly under the word.
+• Replace the terminal log with the printed work order. "Parts tested today" moves to a digital
+counter in the rig's top bar.
+• Realistic rig: anodised aluminium plate, machined clamps with knurled knobs, spring-loaded
+probe on a rail that never covers screen content, real LEDs, cable plugged in with a connector
+running neatly off the bottom. No cut-off text, no black bar.
+• Background: remove waves and blotches. Clean full yellow with a soft studio vignette and the
+rig's real shadow on a subtle bench surface.
+• Reverse on scroll up. Mobile: no pin; checks play step by step with words filling.
+DO NOT
+5 Do not keep the waves or blotches.
+5 Do not let the probe cover the screen.
+5 Do not leave empty space under the rig.
+
+-- 15 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 16
+5 Do not show a terminal box as the log.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Section pins and the four checks play in order, scrubbed both ways.
+[ ] Words fill like charging bars with ✓.
+[ ] Work order prints and stamps; counter ticks.
+[ ] Rig realistic, full height, no defects.
+[ ] Background clean yellow.
+[ ] Recording shown.
+[ ] Mobile shown.
+
+-- 16 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 17
+ISSUE 06 · REPLACE SECTION
+Model File → replaced by "The Showcase"
+(screen ads)
+What is wrong
+• It looks like bathroom tiles: grey grid background + grid technician's mat + tiled cards.
+• The customer gets confused: search bar, brand chips, model chips, file card, mat, grades panel
+and "your pick" all at once, with no first step.
+• Cut-off rows ("realm…", model chips off the edge).
+• Fake phone: a giant flat beige rectangle with three black circles on a dark ellipse floor.
+• Unbalanced and empty: huge selected tile with a tiny phone, uneven cards, one grade in a big
+empty white panel.
+• It is not attractive and it does not sell anything.
+What you must do
+1. Remove the Model File from the home page. Browsing by model lives in Find My Part (nav
+and hero) and on the Brands & models page.
+2. Build "The Showcase": a full-width ad stage in the style of the owner's own banner (graphite
+side with big bold typography, yellow side with a real product photo, a feature checklist, one clear
+button). Use the uploaded banner as the reference and placeholder.
+3. The ads are mainly about screens, one ad per screen grade:
+– Service Pack (lead ad): the Samsung service box slides in, the flap lifts, the screen with its frame
+slides out and turns, the seal stamps, the checklist ticks (Genuine · Factory sealed · Warranty).
+"Shop Service Pack →"
+– Original screens: real part photo, checklist (Original panel · Tested · Warranty). "Shop Original →"
+– OLED screens: real part photo, benefits as text. "Shop OLED →"
+– Incell screens: real part photo, "Best value", benefits as text. "Shop Incell →"
+– High Copy screens: real part photo, "Budget-friendly and tested". "Shop High Copy →"
+– Optional last 1–2: Batteries (health gauge charges, capacity counts up) and Repair (cracked screen
+seals and boots).
+5. Motion at hero level: headline word by word; product enters with depth and weight (overshoot,
+settle); subtle slow drifting smoke/light behind the product; "from" price badge stamps in.
+6. Controls: story-style progress bars (one per ad, ~7s), auto-advance, pause on hover, arrows and
+swipe; current product exits with depth, next enters.
+7. Environment: warm fog studio around the ad stage. No grids, no tiles.
+8. Mobile: product on top, text below, swipe between ads.
+DO NOT
+5 Do not simulate colour or quality differences between grades on screen (no OLED vs Incell colour
+slider). Differences are explained in text only.
+5 Do not add a back-cover colour-changing ad.
+5 Do not keep any grid or tile background.
+5 Do not use the Samsung logo as our own branding; it only appears on the genuine product
+packaging.
+Assets: the owner designed the banner and has the source photos (Service Pack box, screens).
+They will be supplied for the build. Note: the banner slogan has a typo, "PRIORETY" must be
+"PRIORITY" if reused.
+
+-- 17 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 18
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Model File removed from home.
+[ ] Showcase built in the banner's style.
+[ ] 5 screen-grade ads with entrance animations.
+[ ] No simulated colour comparisons.
+[ ] Progress bars, pause, arrows, swipe work.
+[ ] Recording shown.
+[ ] Mobile shown.
+
+-- 18 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 19
+ISSUE 07 · STRONG IMPROVEMENT
+Deals & arrivals: "Prices drop. Clocks
+tick."
+What is wrong
+• Circuits cut through the deal cards, with a node over "Add to cart" (fix per Issue 4: reroute, do not
+delete).
+• Broken carousel edges: first and last cards half-faded with clipped text ("i Note 13 Screen",
+"148").
+• Repetitive, fake-looking cards: same drawn renders, cryptic badges ("OR", "OL"), all identical,
+static countdowns.
+• Shipment card: a circuit line runs along the bottom near the text; the parcel sits at the start of
+the route while the label says "98% of the way" and the countdown says 3 days. The data
+contradicts itself. Empty bottom-left, tiny parcel.
+• Pre-orders card: bright white block clashing with the dark section; outdated models (iPhone
+17 Pro, Galaxy S25 Ultra are already released).
+• Dead space above the headline.
+What you must do
+1. "Deal of the day" spotlight (new, large, left): real product photo, flip-clock countdown with
+live seconds, stock bar draining ("32 of 50 left"), old price struck through by a drawn line,
+new price rolls down to its value.
+2. Carousel (right): real photos, grade in full words (Original · OLED · Incell · Service Pack · High
+Copy), discount badge, stock signal, flipping countdown digits, auto-drift + drag + arrows, fade
+masks only on empty space; active first/last cards fully readable.
+3. Filter tabs: All · Screens · Batteries · Ending soon · New arrivals.
+4. Card motion: hover lifts the card and turns the product slightly; Add to cart uses the same
+fly-to-cart animation as the hero iPad (to the nav cart, bounce, badge roll).
+5. Incoming shipment: faint real world map, Shenzhen → Dubai air route, a plane positioned to
+match the progress; 5 stages (Packed · Departed Shenzhen · In flight · Customs Dubai · Arrived
+Deira); flip-clock countdown and a progress bar that agree; "Notify me when it lands"; no circuit
+line inside the card.
+6. Pre-orders: graphite (or yellow) card matching the section; phone silhouettes (no fake
+renders); part types; "Reserve" per row; waiting counter ("126 shops waiting", sample). Models
+are next-generation and editable from the Control Room, never already-released ones.
+7. Spacing: cut the dead space; headline and "See every deal" on one aligned row.
+8. Mobile: spotlight on top, swipe carousel, shipment and pre-orders stacked.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] No circuit touches any card or button.
+[ ] No clipped text in the carousel.
+[ ] Spotlight deal with flip clock and price-drop animation.
+[ ] Grades in full words.
+[ ] Fly-to-cart works.
+[ ] Shipment data consistent (position = % = countdown).
+[ ] Pre-orders card matches, models current.
+[ ] Mobile shown.
+
+-- 19 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 20
+ISSUE 08 · FULL REBUILD · STRONG BRANDING
+Wholesale & trade: "Stock up. Cost down."
+What is wrong
+• Nothing says wholesale. No cartons, pallets, stockroom or trade tiers.
+• Empty: a big plain yellow area above the headline; the left side is only text and three ticks.
+• The calculator is acceptable, but the scene under it is a grey box with a tiny pallet and a roller
+door.
+• The carton conveyor is childish, and circuits run through the cartons (a node sits on the
+Baghdad box).
+• Trade ticker clipped at both ends.
+• "Partner with us" is a bright white block that does not match.
+• No branding: nothing says this is the Sam Electronics trade floor.
+What you must do: "The Trade Floor"
+1. Branded tape divider: a strip of yellow packing tape printed "SAM ELECTRONICS · WHOLESALE ·
+TRADE" runs across the top edge and presses on as you scroll in.
+2. Headline block: a "TRADE ONLY" stamp lands beside the headline; a numbers band with
+count-ups (Since 2003 · X+ countries · Same-day quotes · Min. order X units; owner confirms
+numbers).
+3. Pallet Builder (replaces calculator + grey box): pick a part, drag the quantity; realistic cartons
+(corrugated texture, yellow Sam Electronics tape, shipping labels) stack with weight; a price tier
+ladder (10+ · 50+ · 100+ · 500+) glows on the active tier and the unit price steps down; retail vs
+trade total and "You keep AED X" roll; when full, shrink-wrap sweeps and a label prints "SE-2611 ·
+Ready to ship from Deira."
+4. Who we supply (new): 4 compact cards (Repair shops · Traders · Exporters · Bulk buyers),
+animated icon + one benefit each.
+5. How trade works (new): Apply → Get approved → Order at trade prices, lighting in order, ending
+in "Apply for a trade account".
+6. Remove the conveyor. Trade ticker: full width, continuous, fade masks, flags and quantities.
+7. Partner with us: graphite card with a world-map texture.
+8. Circuits: subtle, empty space only, never across cartons, cards or text.
+9. Mobile: pallet builder, then tier ladder; Who we supply as swipe; steps stacked.
+DO NOT
+5 Do not use cartoon cartons or a conveyor.
+5 Do not leave flat empty yellow.
+5 Do not clip the ticker.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Section reads as wholesale at first glance.
+[ ] Tape divider and TRADE ONLY stamp present.
+[ ] Pallet builder with tier ladder works.
+[ ] Who we supply + How trade works added.
+[ ] No conveyor, no circuits through objects.
+[ ] Mobile shown.
+
+-- 20 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 21
+ISSUE 09 · COLOUR FIX
+Worldwide: map + the four boxes
+What is wrong
+• The map is strong (dot-matrix, routes, live list). Keep it.
+• The four boxes (Tracked · Packed · Quoted · Regions) and their continuous animations are
+liked and must stay, but their mini-animations use off-palette colours: a green tick, a
+blue/green 3D globe, a bright brown cartoon carton. Next to the serious map they look
+unprofessional.
+• The animations are tiny thumbnails cramped in the corner of each box.
+What you must do
+1. Keep the four boxes and their continuous animations.
+2. Recolour every mini-animation using only our palette, the same way the three service cards did:
+yellow for active/moving elements, white/soft grey for lines and text, graphite for surfaces.
+– Green tick → yellow tick.
+– Blue/green globe → graphite globe with yellow and white continents.
+– Bright brown carton → toned-down muted kraft/graphite carton with yellow tape.
+4. Make the animations larger inside each box.
+5. Optional (only if it looks good): a thin dashed route line linking the four boxes in the map's style; a
+"Where are you?" country search that lights the country on the map.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Four boxes and animations kept.
+[ ] Zero off-palette colours.
+[ ] Animations larger.
+[ ] Map untouched.
+
+-- 21 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 22
+ISSUE 10 · REBUILD
+Our story & branches: "More than 20
+years in Deira"
+What is wrong
+• It is all white: white cards on a pale background; nothing to look at; a big empty area beside the
+headline.
+• No images: the story of real shops told in text only.
+• Dubai map uses the default Google style (clashes with the brand) and shows a big "Use ctrl +
+scroll to zoom the map" overlay.
+• Madrid card is the worst part: a hand-drawn building sketch on graph paper with a red
+"COMING SOON" stamp. Amateur.
+• Empty space below the branch cards.
+What you must do
+1. Photos on the timeline: each version card gets a photo frame (Syria Tell 2003, current shop
+2011, market branch, Sam Electronics today). Placeholder until the owner supplies photos: a
+tasteful blurred photo frame, never a blank card.
+2. Motion: timeline line draws v1.0 → v4.0 on scroll; cards lift in; each photo develops like an
+instant photo; a big year counter rolls 2003 → today; v3.0 "RUNNING" pulses; v4.0 "INSTALLING"
+shows a loading bar.
+3. Environment: warm fog with soft yellow light and grain; cards with depth (shadow, slight glass).
+4. Remove the Madrid blueprint sketch. Madrid gets a temporary map of the Plaza Mayor
+area, same layout as the Dubai card, with a pulsing "Opening soon" area circle (not an exact
+pin) and "Tell me when it opens".
+5. Both maps brand-styled (graphite/fog streets, yellow pin). No ctrl+scroll overlay: static until
+clicked, plus "Open in Maps".
+6. Fill the space below with a stats strip: Since 2003 · 2 cities · X countries served (count-ups).
+7. Mobile: vertical timeline, maps stacked.
+DO NOT
+5 Do not keep the sketch or the red stamp.
+5 Do not use default Google map styling.
+5 Do not leave white empty areas.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Photo frames on all timeline cards.
+[ ] Timeline draw + photo develop + year counter.
+[ ] Madrid map card matches Dubai.
+[ ] Both maps branded, no overlay.
+[ ] Stats strip fills the gap.
+[ ] Mobile shown.
+
+-- 22 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 23
+ISSUE 11 · REPLACE WITH NEW IDEA
+The team: "Five roles. Every order passes
+through all of us."
+What is wrong
+• Looks AI-generated and dry: blurry striped background, five identical cards with circuit corner
+nodes, a decorative circuit line with nodes under the cards.
+• Leaked upload UI: every card shows "Photo coming soon · or browse files".
+• Empty stars "No reviews yet" on every card.
+• The flip card is a plain text panel. Nothing moves.
+What you must do: "Staff Badges"
+1. Five Sam Electronics staff ID badges hanging from yellow lanyards printed "SAM
+ELECTRONICS", from a rail at the top of the section.
+2. Always moving: badges sway gently with real physics (each slightly differently); the mouse
+nudges nearby badges.
+3. Badge front: photo, or until photos arrive a clean monogram of the role initials (never
+"browse files"); role code T01–T05, title, name, years with us; a small hologram strip that
+shimmers as the badge sways.
+4. Click: the badge swings up and flips like a real card (3D with weight); back shows "What I can
+help with", short bio, "Ask [name] →".
+5. "Every order passes through all of us": an order ticket slides along the lanyard rail, pausing
+at each badge, which lights up: Parts Advisor → Parts Flow Controller → Bench Engineer → Finance
+& Checkout → Founder.
+6. Founder badge T05 (Tarek Alchoumari): slightly larger, gold edge, "Leading since 2003".
+7. Reviews: hidden until real reviews exist.
+8. Background: clean graphite wall, one soft spotlight. No stripes, no circuit line under the badges.
+9. Mobile: horizontal swipe of badges that still sway; tap to flip.
+Alternative only if the owner asks for it: "The Board" (each member as a chip on a realistic logic
+board, an order packet travelling chip to chip). Default is Staff Badges.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Five badges on lanyards, swaying.
+[ ] No "browse files", no empty stars.
+[ ] Flip works with weight.
+[ ] Order ticket travels and lights badges in order.
+[ ] Founder badge distinct.
+[ ] Clean graphite background.
+[ ] Mobile shown.
+
+-- 23 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 24
+ISSUE 12 · FULL REBUILD
+Open to everyone: "One phone or one
+container"
+What is wrong
+• Cheap: plain white everywhere, no colour, no depth, no design idea.
+• Lots of empty space above the headline and around the hub.
+• Remove the logo hub and its thin grey connector lines (same problem as Issue 2).
+• Animations are cheap and illustrate nothing: blank white phone + cart icon, phone on a green
+mat, grey blob with a dashed line, flat cartons.
+• Four identical white cards with identical black buttons. Nothing tailored.
+What you must do: "Who are you?"
+1. Layout: left = eyebrow + headline (no dead space above) + 4 large selector tabs (Retail
+customer · Repair shop · Trader & exporter · Bulk buyer), each with icon + one line. Right = one
+large cinematic stage that changes with the selected tab. Samsoom peeks in by the tabs asking
+"Who are you?"
+2. Each lane has its own environment and real scene (palette used the way the service cards
+used it):
+– Retail (fog/white with yellow light): a hand holding a cracked phone; Find My Part types the
+model; the matching screen slides in with grade chips and price; "Collect in Deira or get it delivered"
+with a pin dropping. "Find my part".
+– Repair shop (graphite workbench): realistic top-down bench; a parts tray slides in; grades line
+up side by side; a padlock opens to reveal trade prices. "Open a trade account".
+– Trader & exporter (dark dot-matrix map, Worldwide style): a bulk list document gets
+scanned; "QUOTED" stamp; route arc draws from Dubai. "Plan my shipment".
+– Bulk buyer (full yellow): branded cartons stack on a pallet (Pallet Builder quality), shrink-wrap,
+"Incoming shipments first" badge. "Request a bulk quote".
+4. Motion: auto-cycle ~6s per lane with a progress bar on the active tab; pause on hover; click to
+jump; exits with depth, entries with weight; the 3 benefits type in beside the scene.
+5. Background: warm fog with grain and soft light that shifts colour to match the active lane.
+6. Consistency: scenes reuse the style of Repair Lab, Worldwide and Wholesale, simplified.
+7. Mobile: tabs as a chip row on top, stage below, swipe between lanes.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] No logo hub, no grey connector lines.
+[ ] Tabs + one stage, no four-card grid.
+[ ] Four real scenes with their environments.
+[ ] Auto-cycle with progress bar.
+[ ] No white emptiness.
+[ ] Mobile shown.
+
+-- 24 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 25
+ISSUE 13 · FULL REBUILD
+Sam Circuit membership: "Every order
+charges you up"
+What is wrong
+• Everything is yellow: background, cells, pills, and a busy yellow circuit wallpaper. Nothing
+stands out.
+• The battery contradicts the data: all 4 cells full while the label says "You · 62%".
+• 12 identical "Perk · coming soon" pills.
+• No interactivity. The "Preview · logged in" card is flat and disconnected.
+What you must do: "The Charging Station"
+1. Environment: graphite studio; yellow only as energy (charge, current, unlocked). Remove the
+yellow circuit wallpaper.
+2. Battery (centrepiece, realistic): large cell, graphite casing, glass window, 4 tier marks
+(Connected · Charged · Supercharged · Fully Charged); a glowing liquid-light fill that matches
+the real level (62% = 62%) with a surface shimmer; a cable with current constantly flowing in.
+3. Charge simulator: buttons for sample orders (+ Screen · AED 200, + Battery · AED 80, + Bulk
+order · AED 2,000); each tap sends a pulse down the cable and the fill rises; crossing a tier mark
+flashes the battery, pops the tier badge and flips that tier's reward card from locked to
+unlocked; "Reset" empties it with a power-down animation.
+4. Reward ladder: one row per tier with animated icon (plug → bolt → double bolt → full battery),
+name, requirement, status chip (Unlocked / AED X to go); current tier highlighted; next tier
+progress bar.
+5. Replace the 12 pills: 1–2 example perks per tier + one blurred "more perks revealed at launch"
+teaser. Examples to confirm with the owner: free delivery in Dubai, priority reservation on
+incoming shipments, extended warranty, early access to deals, a dedicated parts advisor.
+6. Member card: digital Sam Circuit card (graphite, holographic edge) with name, tier, charge %,
+tilting with the mouse and a light sweep.
+7. Optional: Retail · Trade toggle that switches thresholds.
+8. Buttons: "Create account ⚡" (primary) and "Log in".
+9. Mobile: battery, simulator buttons, ladder stacked, member card last.
+DO NOT
+5 Do not flood the section in yellow.
+5 Do not show a battery that contradicts the percentage.
+5 Do not repeat "Perk · coming soon".
+5 No passport, stamp or travel themes.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Graphite environment, yellow only as energy.
+[ ] Fill matches the real level.
+[ ] Simulator works and flips tier cards.
+[ ] Ladder shows Unlocked / X to go.
+[ ] Member card tilts.
+[ ] Mobile shown.
+
+-- 25 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 26
+ISSUE 14 · REBUILD
+Meet Samsoom: "Ask at 3 a.m."
+What is wrong
+• White page, white chat panel with a big empty area under two messages.
+• Blank grey rounded rectangles float in the background and at the top edge.
+• Samsoom looks childish: flat cartoon yellow phone, googly eyes, cable arms, plastic pedestal.
+• Broken layout: the headline sits below the character, pushed off-screen.
+• The demo plays 2 messages and stops.
+What you must do
+1. Premium Samsoom (same character, better build): realistic phone body (graphite metal
+frame, glass reflections, hero-level lighting); face on the screen as glowing yellow pixel-LED
+eyes and mouth on a deep black OLED; sleek metallic arms; no pedestal; he floats with a soft
+shadow.
+2. Always alive: eyes follow the cursor, blinks, breathing bob; emotes in sync with the chat
+(thinking = loading dots, found it = ✓ ✓, happy = smile, waving on arrival).
+3. Layout: eyebrow + headline top-left, Samsoom below on the left, chat on the right. All visible in
+one screen.
+4. Chat demo loops through 5 conversations (A54 battery? · Which grade? · Are you open? ·
+Trade prices? · Ship to Iraq?) with typing indicators and rich answer cards (product mini-card
+with photo, grade, price, Add to cart; hours card; shipping card). No empty chat area.
+5. Background: remove all blank shapes; warm yellow studio; real questions drift faintly and one
+occasionally flies into the chat as the next message.
+6. Chat panel: graphite glass, not white.
+7. Global launcher: implement G8 (pill "Ask Samsoom" with the wave → extend → blink → new
+message cycle).
+DONE WHEN (every box must be true, or the section is not done)
+[ ] No blank shapes.
+[ ] Samsoom realistic with on-screen LED face and emotes.
+[ ] Headline above, layout in one screen.
+[ ] 5 conversations loop with rich cards.
+[ ] Graphite chat panel.
+[ ] Launcher pill works on every page.
+[ ] Mobile shown.
+
+-- 26 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 27
+ISSUE 15 · SPLIT AND REBUILD
+Social wall + reviews
+What is wrong
+• White again, with the same blank grey shapes at the top.
+• Dry: three static post cards with drawn renders and three plain buttons.
+• Reviews card says "No reviews yet / Be the first review": bad social proof before contact.
+• Crowded: posts, reviews, Google, tabs and QR all side by side with no hierarchy.
+What you must do: two clear moments
+1. "The Feed" (graphite studio): three realistic phones (hero quality) fanned at angles, each
+playing a live feed (Instagram, TikTok, Facebook): posts auto-scroll, reels play muted, hearts
+float up with like counters; hover brings a phone forward and straightens it; follower counts roll
+(real numbers from the owner); "Scan to follow" QR with a sweeping scan line. Placeholders: the
+owner's banner and product photos.
+2. "What customers say" (separate band below, white with yellow light): never "No reviews
+yet"; a big Google rating card (stars + number of reviews counting up); two rows of real
+review cards scrolling in opposite directions with fade masks; "Review us on Google" + "Write a
+review". Real Google reviews are connected at the build stage.
+3. Mobile: one phone at a time (swipe between platforms), QR replaced by follow buttons; reviews
+as one scrolling row.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] No blank shapes, no "No reviews yet".
+[ ] Three live-feed phones.
+[ ] Reviews band separate with Google card and two rows.
+[ ] Mobile shown.
+
+-- 27 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 28
+ISSUE 16 · IMPROVE
+Request console + Visit us
+What is good
+The idea is strong (tabs + printed work order). Keep it.
+What is wrong
+• Plain form fields; the work order is a static tilted slip.
+• The "Open now" dot is grey/black.
+• Hours are plain text; empty gap between the address and the buttons.
+• A circuit node sits right under the console's edge.
+What you must do
+1. Live printing: as the customer types, each field prints onto the work order like a thermal printer;
+the slip feeds down a little; a "3 of 4 fields" progress line.
+2. Switching tabs: fields morph smoothly; the work order header reprints (TYPE: Bulk quote…).
+3. Sending: the slip tears along its perforation, "SENT" stamps, the slip flies into the WhatsApp or
+email icon; Samsoom gives a thumbs-up.
+4. Status dot: per G7 (light green pulsing / amber / red). Never grey.
+5. Visit us richer: live clock with seconds; "Closes in 3h 59m" countdown; a day timeline bar for
+today with the two shifts as yellow segments and a moving "now" marker; today's row
+highlighted; fill the gap with a brand-styled mini map or a photo of the shop front + "Get
+directions"; buttons with WhatsApp and phone icons.
+6. Circuits: reroute away from the console edge (24px).
+7. Environment: per the map, the section background is yellow, console graphite, visit card white.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Typing prints live onto the slip.
+[ ] Tear-and-send animation works.
+[ ] Status dot coloured correctly.
+[ ] Day timeline bar with now marker.
+[ ] Gap filled.
+[ ] No circuit near the console.
+[ ] Mobile shown.
+
+-- 28 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 29
+ISSUE 17 · FULL REBUILD · PREMIUM
+Finale: "A phone on your bench? We have
+the part."
+What is wrong
+• The broken phone: grey slab, black rectangle notch, a white diagonal bar slashed across it,
+a small logo circle. It looks broken and cheap.
+• A black cut-off "floor" box under it and a dead grey band above.
+• A circuit line runs through the word "Quality", making it look crossed out.
+• Headline, buttons and stats are good but appear with no impact.
+What you must do: "Power-Up"
+1. Remove the phone, slash bar, floor box and grey band.
+2. Centrepiece: the Sam Electronics logo rebuilt as a large premium emblem (machined metal
+and glass, thick glowing yellow edge, studio reflections), about 40% of screen height, rotating
+slowly in 3D with light sweeping across it. The logo design itself stays exactly the owner's logo.
+3. Power-up sequence on scroll-in: circuits from both sides (hero style) carry current to the
+emblem; on arrival the two phones inside the logo light up, a ring of light shockwaves outward,
+the circuits glow fully; then "Quality · Warranty · Price" switch on one by one like neon
+signs (flicker, then steady); circuits frame the words but never cross them; headline reveals
+word by word; buttons rise in; stats count up.
+4. Stage: deep graphite, one strong spotlight on the emblem, tiny light particles rising slowly, soft
+reflection under the emblem fading to dark. No floor box.
+5. Idle: emblem keeps rotating, current keeps flowing, neon words breathe softly.
+6. Mobile: smaller emblem, same sequence, stacked.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] No phone, no slash, no floor box, no grey band.
+[ ] Emblem large, premium, rotating.
+[ ] Power-up sequence plays in order.
+[ ] No circuit crosses any word.
+[ ] Idle motion continues.
+[ ] Recording shown.
+[ ] Mobile shown.
+
+-- 29 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 30
+ISSUE 18 · REDESIGN · PREMIUM
+Find My Part (the quick finder,
+everywhere)
+This is the owner's most important feature: the fastest path from "I need a part" to the exact product.
+Right now it works, but it looks grey, flat and unfinished.
+What is wrong
+• Grey on grey: grey tiles on a grey panel on a dimmed grey page. Nothing feels premium or
+inviting.
+• Brand tiles are plain text in mixed styles (some spaced capitals, some regular). They look
+inconsistent, not designed.
+• Identical, empty tiles: a name and "12 models" with a lot of dead space inside each tile.
+• Unbalanced grid: 14 brands in rows of 6 leave a broken last row with two lonely tiles and empty
+space.
+• Model step is text only: model name + code, no picture, so customers cannot recognise their
+phone at a glance.
+• The step indicator is small and weak (tiny grey chips); progress does not feel like progress.
+• No motion between steps; no stock, price or popularity information to guide the choice.
+What you must do
+1. Panel: clean premium surface. Graphite glass with real depth (soft inner light, fine grain, a thin
+yellow top edge), generous spacing, and a calmer dimmed page behind with blur. It must feel like
+the hero, not like a settings dialog.
+2. Step indicator as a circuit with LEDs (same language as the teardown LED rail): Brand · Model
+· Part · Grade. Completed steps light yellow with current flowing to the next; each completed step
+shows the choice ("Apple ✓") and is clickable to go back.
+3. Step 1 · Brand:
+– Brand tiles with monochrome logos in one consistent style (logo slot; text wordmark fallback in
+one font weight), only to show compatibility.
+– Inside each tile: models count, parts in stock and a small stock signal. No dead space.
+– Balanced grid: 14 brands as 7 × 2 on desktop (or a layout with no orphan row).
+– "Popular" row on top (e.g. Apple, Samsung, Xiaomi) slightly larger.
+– Hover: tile lifts, yellow edge glows, logo lights up.
+5. Step 2 · Model:
+– Yes, model images: every model tile gets an image slot showing the phone (front view,
+consistent angle, same size and neutral background). Until real images exist, use a clean outline
+silhouette of that model's shape, never a cartoon.
+– Series tabs (iPhone 16 · 15 · 14 · 13 · 12 · 11 …) above the grid; search with instant filtering that
+matches name or model number (A3084).
+– Each tile: image, model name, model number, parts available. "Recently viewed" and "Most
+searched" chips.
+7. Step 3 · Part: part cards with the same realistic part renders as the Parts Cabinet (screen,
+battery, back cover, frame, flex, camera, small parts), stock and "from" price. Out-of-stock parts
+dimmed with "Notify me".
+8. Step 4 · Grade: grade cards side by side (Original · Service Pack · OLED · Incell · High Copy):
+price, stock signal, warranty, one-line "best for" note, and Add to cart directly (with the
+fly-to-cart animation). Wholesale price shown only to approved trade accounts.
+9. Motion: steps slide horizontally with depth (the chosen tile flies into the step indicator); tiles
+stagger in; numbers roll. Everything smooth and quick: the finder must feel fast.
+
+-- 30 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 31
+10. Footer: live summary ("Apple · iPhone 16 Pro · Screen") + "Open in Shop with these filters →" +
+result count rolling.
+11. Two ways to open it (both): click Find My Part to open this full finder; hover the nav button for a
+compact mega-dropdown (brands → models) that does not leave the page.
+12. Mobile: full-screen sheet sliding up, one step per screen, large tap targets, images kept.
+13. Show me all 4 steps, the hover dropdown, and mobile.
+DO NOT
+5 Do not use grey-on-grey tiles.
+5 Do not mix brand text styles.
+5 Do not leave orphan rows or empty tile space.
+5 Do not show models without an image slot.
+5 Do not slow the finder down with long animations (each step transition under 400ms).
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Premium panel, not grey-on-grey.
+[ ] LED circuit step indicator with clickable completed steps.
+[ ] Consistent brand logos, balanced grid, stock info in tiles.
+[ ] Model tiles with image slots, series tabs, instant search.
+[ ] Part cards with realistic renders; grade cards with Add to cart.
+[ ] Hover mega-dropdown works.
+[ ] Recording of all 4 steps + mobile.
+
+-- 31 of 32 --
+
+SAM ELECTRONICS · ROUND 4 · MANDATORY CORRECTION ORDER THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 08/10/2026 Page 32
+SECTION S · SEND ORDER AND FINAL CHECK
+The order you work in
+Batch What Show me
+0 Read everything. Summarise Global Rules G1–G10 and the
+Environment Map back to me.
+Text summary only
+1 Global: Issue 4 (circuits audit), G6 leftovers, G7 status dots, G8
+launcher.
+List of every rerouted circuit +
+screenshots
+2 Issue 1B (hero devices) + Issue 1 (teardown) + Issue 18 (Find My
+Part).
+Recordings + 5 frames + mobile
+3 Issue 2 (cabinet) + Issue 3 (live board). Recordings + mobile
+4 Issue 5 (bench test) + Issue 6 (showcase). Recordings + mobile
+5 Issue 7 (deals) + Issue 8 (trade floor). Recordings + mobile
+6 Issue 9 (worldwide) + Issue 10 (story & branches). Screens + recordings + mobile
+7 Issue 11 (badges) + Issue 12 (who are you). Recordings + mobile
+8 Issue 13 (charging station) + Issue 14 (Samsoom). Recordings + mobile
+9 Issue 15 (feed + reviews) + Issue 16 (request) + Issue 17 (finale). Recordings + mobile
+10 Full home page top to bottom, desktop and mobile, with the hero
+side by side.
+Full-page recording
+Before you send any batch, confirm all of this
+[ ] I compared every section in this batch with the home hero and it is at the same level.
+[ ] Every object looks real. No flat shapes, no cartoons, no slabs.
+[ ] Something moves in every section, idle, on scroll and on interaction. Everything replays on scroll
+back.
+[ ] No circuit touches or crosses any content (24px).
+[ ] No off-palette colours.
+[ ] No leftovers: no browse files, no empty reviews, no repeated coming-soon, no blank shapes, no
+clipped text, no outdated data.
+[ ] The environment matches the Environment Map and no two neighbours share a background.
+[ ] Every Done-when box for this batch is confirmed by name.
+[ ] Mobile version included.
+[ ] Recordings included for every animated section.
+Final word from the owner. I know what this website can be, because the hero already proves
+it. I am not asking for small polish. I am asking for every section to be rebuilt to the hero's
+standard: realistic, alive, rich, branded and clean. Follow this document exactly, batch by batch. If
+anything is unclear or impossible, ask me before you build, not after.
+
+-- 32 of 32 --
+

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&amp;family=Inter:wght@400;500;600&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet">
+<script src="./se-data.js"></script>
+<style>body{margin:0;background:#1A1B1D}</style>
+</helmet>
+<header style="position:fixed;left:0;right:0;top:0;height:72px;z-index:60;background:rgba(38,40,43,.72);backdrop-filter:blur(18px);display:flex;align-items:center;padding:0 32px;color:#FFFFFF;font-family:'Space Grotesk',sans-serif;font-weight:600;letter-spacing:.16em;font-size:15px">SAM ELECTRONICS · NAV</header>
+<div style="height:1000px;display:grid;place-items:center;background:#1A1B1D;color:#5E6064;font-family:'JetBrains Mono',monospace;font-size:13px">HERO STAND-IN · scroll down</div>
+<dc-import name="SE Teardown" hint-size="100%,780vh"></dc-import>
+<div style="height:1400px;display:grid;place-items:center;background:#F2F3F4;color:#5E6064;font-family:'JetBrains Mono',monospace;font-size:13px">NEXT SECTION STAND-IN</div>
+<div ref="{{ dbgRef }}" style="position:fixed;left:8px;bottom:8px;z-index:9999;background:#000000;color:#5FD49A;font-family:'JetBrains Mono',monospace;font-size:12px;padding:6px 8px;white-space:pre;display:{{ dbgShow }}"></div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  dbgRef = React.createRef();
+  componentDidMount() {
+    window.__rafN = 0; const f = () => { window.__rafN++; if (!this.dead) requestAnimationFrame(f); }; requestAnimationFrame(f);
+    window.__opLog = []; const ow = console.warn, oi = console.info; console.warn = (...a) => { window.__opLog.push('W ' + a.join(' ')); ow.apply(console, a); }; console.info = (...a) => { window.__opLog.push('I ' + a.join(' ')); oi.apply(console, a); };
+    this.iv = setInterval(() => { const d = this.dbgRef.current; if (!d) return; const s = document.getElementById('teardown'), p = s && s.firstElementChild; d.textContent = 'raf ' + window.__rafN + ' | pinTop ' + (p ? Math.round(p.getBoundingClientRect().top) : '-') + ' | oT ' + (window.__td && window.__td.oT != null ? (+window.__td.oT).toFixed(2) : 'null') + ' | y ' + Math.round(scrollY) + (window.__opLog.length ? '\n' + window.__opLog.slice(-3).join('\n') : ''); }, 100);
+    window.seCustomerScroll = () => { clearInterval(this.sc); this.sc = setInterval(() => { const s = document.getElementById('teardown'), p = s && s.firstElementChild; if (!p) return; const t = p.getBoundingClientRect().top; if (t <= 0) { clearInterval(this.sc); return; } window.scrollBy(0, Math.max(1, Math.min(90, t))); }, 40); };
+    if (/auto/.test(location.search)) this.autoTest();
+  }
+  // ?auto: wait for the 3D, park half-scrolled, then scroll in like a customer; status box drawn inside the stage
+  autoTest() {
+    const box = () => { const s = document.getElementById('teardown'), p = s && s.firstElementChild; if (!p) return null; let d = document.getElementById('dbg3'); if (!d) { d = document.createElement('div'); d.id = 'dbg3'; d.style.cssText = 'position:absolute;right:12px;bottom:12px;z-index:9999;background:rgba(0,0,0,.82);color:#5FD49A;font:11px monospace;padding:6px 8px;white-space:pre'; p.appendChild(d); } return { d, p }; };
+    this.t0 = performance.now(); this.pinAt = null;
+    this.aiv = setInterval(() => { const b = box(), c = window.__tdc; if (!b || !c) return; const top = Math.round(b.p.getBoundingClientRect().top); if (top <= 0 && this.pinAt == null && this.phase === 2) this.pinAt = performance.now();
+      b.d.textContent = 'phase ' + (this.phase || 0) + ' | pinTop ' + top + ' | oT ' + (c.state.oT == null ? '-' : (+c.state.oT).toFixed(2)) + ' | since pin ' + (this.pinAt ? ((performance.now() - this.pinAt) / 1000).toFixed(2) + 's' : '-') + '\n' + (window.__opLog || []).slice(-2).join('\n');
+      if (!this.phase && c.ready3d) { this.phase = 1; window.scrollTo(0, 1000 - Math.round(innerHeight * 0.5)); }
+      if (window.__td && window.__td.renderNow) window.__td.renderNow(); }, 50);
+    window.seGo = () => { this.phase = 2; window.seCustomerScroll(); };
+  }
+  componentWillUnmount() { clearInterval(this.aiv); this.dead = true; clearInterval(this.iv); clearInterval(this.sc); }
+  renderVals() { return { dbgRef: this.dbgRef, dbgShow: /nodbg/.test(location.search) ? 'none' : 'block' }; }
+}
+</script>
+</body>
+</html>

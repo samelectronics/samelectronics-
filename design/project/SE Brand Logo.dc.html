@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syncopate:wght@700&amp;family=Nunito:wght@800&amp;family=Poppins:wght@700&amp;family=Rubik:wght@900&amp;family=Comfortaa:wght@700&amp;family=Varela+Round&amp;family=Quicksand:wght@700&amp;family=Montserrat:wght@600&amp;family=Josefin+Sans:wght@600&amp;family=Outfit:wght@500&amp;family=DM+Serif+Display&amp;family=Exo+2:ital,wght@1,800&amp;family=Audiowide&amp;family=Inter:wght@600&amp;display=swap">
+</helmet>
+<sc-if value="{{ hasLogo }}" hint-placeholder-val="{{ false }}"><span role="img" aria-label="{{ label }}" style="display:inline-block;flex:none;height:{{ boxH }}px;width:{{ logoW }}px;background:{{ color }};-webkit-mask:{{ mask }};mask:{{ mask }};transition:background .25s"></span></sc-if>
+<sc-if value="{{ noLogo }}" hint-placeholder-val="{{ true }}"><span role="img" aria-label="{{ label }}" style="position:relative;display:inline-block;height:{{ boxH }}px;flex:none;white-space:nowrap;overflow:visible"><span style="display:block;font-family:{{ wm.f }};font-weight:{{ wm.w }};font-style:{{ wm.st }};font-size:{{ wm.fs }}px;letter-spacing:{{ wm.ls }};line-height:{{ boxH }}px;transform:translateY({{ wm.dy }}px);color:{{ color }};transition:color .25s">{{ wm.t }}</span></span></sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:200,&quot;height&quot;:60},&quot;brand&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;apple&quot;,&quot;samsung&quot;,&quot;xiaomi&quot;,&quot;redmi&quot;,&quot;poco&quot;,&quot;realme&quot;,&quot;oppo&quot;,&quot;vivo&quot;,&quot;huawei&quot;,&quot;honor&quot;,&quot;google&quot;,&quot;sony&quot;,&quot;tecno&quot;,&quot;infinix&quot;],&quot;default&quot;:&quot;apple&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;color&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#FFFFFF&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;h&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:26,&quot;tsType&quot;:&quot;number&quot;}}">
+// Logo slot: drop a monochrome SVG at assets/brands/<brand>.svg (it is re-coloured to `color`).
+// Until official files arrive, each brand is a typographic stand-in approximating its own wordmark
+// (one colour, normalised to the same cap/x-height so all sit at the same visual size and baseline).
+const WM = {
+  apple: { t: 'Apple', f: "'Inter',sans-serif", w: 600, fs: 0.9, ls: '-.02em' },
+  samsung: { t: 'SAMSUNG', f: "'Syncopate',sans-serif", w: 700, fs: 0.74, ls: '.06em' },
+  xiaomi: { t: 'Xiaomi', f: "'Nunito',sans-serif", w: 800, fs: 0.92, ls: '-.01em' },
+  redmi: { t: 'Redmi', f: "'Poppins',sans-serif", w: 700, fs: 0.86, ls: '-.02em' },
+  poco: { t: 'POCO', f: "'Rubik',sans-serif", w: 900, fs: 0.84, ls: '.01em' },
+  realme: { t: 'realme', f: "'Comfortaa',sans-serif", w: 700, fs: 1.06, ls: '-.01em' },
+  oppo: { t: 'oppo', f: "'Varela Round',sans-serif", w: 400, fs: 1.12, ls: '.03em' },
+  vivo: { t: 'vivo', f: "'Quicksand',sans-serif", w: 700, fs: 1.14, ls: '.01em' },
+  huawei: { t: 'HUAWEI', f: "'Montserrat',sans-serif", w: 600, fs: 0.8, ls: '.1em' },
+  honor: { t: 'HONOR', f: "'Josefin Sans',sans-serif", w: 600, fs: 0.86, ls: '.2em', dy: 0.06 },
+  google: { t: 'Google', f: "'Outfit',sans-serif", w: 500, fs: 0.92, ls: '-.01em' },
+  sony: { t: 'SONY', f: "'DM Serif Display',serif", w: 400, fs: 0.9, ls: '.05em' },
+  tecno: { t: 'TECNO', f: "'Exo 2',sans-serif", w: 800, fs: 0.84, ls: '.03em', st: 'italic' },
+  infinix: { t: 'Infinix', f: "'Audiowide',sans-serif", w: 400, fs: 0.82, ls: '.01em' }
+};
+class Component extends DCLogic {
+  state = { ok: null, ar: 3.2 };
+  componentDidMount() { this.check(); }
+  componentDidUpdate(pp) { if (pp.brand !== this.props.brand) this.check(); }
+  check() {
+    const b = this.props.brand || 'apple', C = (window.__seLogo = window.__seLogo || {});
+    const url = 'assets/brands/' + b + '.svg';
+    if (!C[b]) C[b] = fetch(url).then((r) => (r.ok ? r.text() : null)).then((t) => { if (!t || !/<svg/i.test(t)) return null; const m = t.match(/viewBox="[\d.\-]+\s+[\d.\-]+\s+([\d.]+)\s+([\d.]+)"/); return { ar: m ? Number(m[1]) / Number(m[2]) : 3.2 }; }).catch(() => null);
+    C[b].then((v) => { if (this.props.brand === b || !this.props.brand) this.setState({ ok: !!v, ar: v ? v.ar : 3.2 }); });
+  }
+  renderVals() {
+    const b = this.props.brand || 'apple', h = Number(this.props.h) || 26, ok = !!this.state.ok, d = WM[b] || { t: b, f: "'Space Grotesk',sans-serif", w: 600, fs: 0.8, ls: '.04em' };
+    const wm = { t: d.t, f: d.f, w: d.w, st: d.st || 'normal', ls: d.ls, fs: Math.round(h * d.fs * 0.82 * 10) / 10, dy: Math.round(h * (d.dy || 0) * 10) / 10 };
+    return { boxH: h, label: d.t, color: this.props.color || '#FFFFFF', hasLogo: ok, noLogo: !ok, wm, logoW: Math.round(h * this.state.ar), mask: "url('assets/brands/" + b + ".svg') left center / contain no-repeat" };
+  }
+}
+
+</script>
+</body>
+</html>

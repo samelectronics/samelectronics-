@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sam Electronics · Globe</title>
+<script src="https://unpkg.com/d3@7.9.0/dist/d3.min.js" integrity="sha384-CjloA8y00+1SDAUkjs099PVfnY2KmDC2BZnws9kh8D/lX1s46w6EPhpXdqMfjK6i" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/topojson-client@3.1.0/dist/topojson-client.min.js" integrity="sha384-Ukv1p/xTma6P4/2bY5KzWBw+ydSpXmhCMtyciIQVDJ1RmOxtCYNMF1uXT9T63H67" crossorigin="anonymous"></script>
+<script src="se-data.js"></script>
+<style>html,body{margin:0;height:100%;background:transparent;overflow:hidden}canvas{display:block;width:100%;height:100%}</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+(async function () {
+  const Q = new URLSearchParams(location.search), dots = Q.get('style') === 'dots', theme = Q.get('theme') || 'dark', spin = Number(Q.get('spin') || 6), tilt = Number(Q.get('tilt') || -18);
+  const T = theme === 'light'
+    ? { ocean0: '#FFFFFF', ocean1: '#D5D7DA', land: '#3D3E3F', landHi: '#5E6064', grid: 'rgba(26,27,29,.10)', rim: 'rgba(26,27,29,.35)', route: 'rgba(26,27,29,.35)', pkt: '#F7C032', hub: '#F7C032' }
+    : { ocean0: '#3D3E3F', ocean1: '#1A1B1D', land: '#8C9096', landHi: '#C9CBCE', grid: 'rgba(255,255,255,.07)', rim: 'rgba(247,192,50,.35)', route: 'rgba(247,192,50,.35)', pkt: '#FFDB6E', hub: '#F7C032' };
+  const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+  let W = 0, H = 0, R = 0, dpr = Math.min(2, window.devicePixelRatio || 1);
+  const size = () => { W = cv.clientWidth; H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr; R = Math.min(W, H) / 2 - 3; };
+  size(); window.addEventListener('resize', size);
+  const topo = await (await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json')).json();
+  const land = topojson.feature(topo, topo.objects.countries);
+  const D = window.SE_DATA, served = new Set((D ? D.countries : []).map((c) => c.geo));
+  const dubai = [55.3, 25.27];
+  const dests = land.features.filter((f) => served.has(f.properties.name) && f.properties.name !== 'United Arab Emirates').map((f) => ({ ll: d3.geoCentroid(f), r: (D.countries.find((c) => c.geo === f.properties.name) || {}).region }));
+  let region = Q.get('region') || 'all', rot = [-55, tilt], target = null;
+  // dot-matrix land (sampled once from an equirectangular raster)
+  let DOTS = [];
+  if (dots) { const ec = document.createElement('canvas'); ec.width = 720; ec.height = 360; const ex = ec.getContext('2d'); const ep = d3.geoEquirectangular().scale(720 / (2 * Math.PI)).translate([360, 180]); ex.fillStyle = '#000'; ex.beginPath(); d3.geoPath(ep, ex)(land); ex.fill(); const im = ex.getImageData(0, 0, 720, 360).data; for (let lat = -58; lat <= 80; lat += 2.2) { const st = 2.2 / Math.max(0.25, Math.cos(lat * Math.PI / 180)); for (let lon = -180; lon < 180; lon += st) { const [x, y] = ep([lon, lat]); if (im[(Math.round(y) * 720 + Math.round(x)) * 4 + 3] > 100) DOTS.push([lon, lat]); } } }
+  let dest = null, destT = 0;
+  window.addEventListener('message', (e) => { if (e.data && e.data.type === 'se-dest') { dest = { ll: e.data.ll, ip: d3.geoInterpolate(dubai, e.data.ll) }; destT = performance.now(); const mid = d3.geoInterpolate(dubai, e.data.ll)(0.5); target = [-mid[0], Math.max(-35, Math.min(-8, -mid[1]))]; } });
+  const regionCenter = { me: [-45, -22], af: [-20, -2], eu: [-15, -40], as: [-95, -25], all: null };
+  window.addEventListener('message', (e) => { if (e.data && e.data.type === 'se-region') { region = e.data.region; target = regionCenter[region] || null; } });
+  const proj = d3.geoOrthographic().clipAngle(90), path = d3.geoPath(proj, ctx), grat = d3.geoGraticule10();
+  const interp = dests.map((d) => d3.geoInterpolate(dubai, d.ll));
+  let visible = true; document.addEventListener('visibilitychange', () => (visible = !document.hidden));
+  let last = performance.now();
+  const onScreen = () => { try { const fe = window.frameElement; if (!fe) return true; const r = fe.getBoundingClientRect(), vh = fe.ownerDocument.defaultView.innerHeight; return r.bottom > -50 && r.top < vh + 50 && getComputedStyle(fe).visibility !== 'hidden'; } catch (e) { return true; } };
+  function frame(t) { try { frame0(t); } catch (e) { document.body.setAttribute('data-err', e.message); } }
+  function frame0(t) {
+    if (!visible || !onScreen()) { last = t; requestAnimationFrame(frame); return; }
+    const dt = Math.min(64, t - last); last = t;
+    if (target) { rot[0] += (target[0] - rot[0]) * 0.05; rot[1] += (target[1] - rot[1]) * 0.05; if (Math.abs(target[0] - rot[0]) < 0.2) target = null; }
+    else rot[0] += (spin * dt) / 1000;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    proj.translate([W / 2, H / 2]).scale(R).rotate([rot[0], rot[1]]);
+    const g = ctx.createRadialGradient(W / 2 - R * 0.35, H / 2 - R * 0.4, R * 0.1, W / 2, H / 2, R);
+    if (dots) { g.addColorStop(0, 'rgba(255,255,255,.9)'); g.addColorStop(1, 'rgba(201,203,206,.55)'); } else { g.addColorStop(0, T.ocean0); g.addColorStop(1, T.ocean1); }
+    ctx.beginPath(); path({ type: 'Sphere' }); ctx.fillStyle = g; ctx.fill();
+    if (dots) {
+      const cen = [-rot[0], -rot[1]], dr = Math.max(1, R * 0.0085); ctx.fillStyle = T.land;
+      for (let i = 0; i < DOTS.length; i++) { const ll = DOTS[i], dd = d3.geoDistance(ll, cen); if (dd > 1.5) continue; const q = proj(ll); ctx.globalAlpha = 0.25 + 0.75 * Math.cos(dd); ctx.beginPath(); ctx.arc(q[0], q[1], dr, 0, 7); ctx.fill(); }
+      ctx.globalAlpha = 1;
+      if (dest) {
+        const e = (t - destT) / 1000, draw = Math.min(1, e / 1.0), travel = Math.min(1, Math.max(0, (e - 1.0) / 2.4)), fade = 1 - Math.min(1, Math.max(0, (e - 4.4) / 0.5));
+        ctx.globalAlpha = fade; const pts = d3.range(0, draw + 0.0001, 0.02).map(dest.ip);
+        ctx.beginPath(); path({ type: 'LineString', coordinates: pts }); ctx.strokeStyle = '#F7C032'; ctx.lineWidth = 2.4; ctx.shadowColor = '#F7C032'; ctx.shadowBlur = 10; ctx.stroke(); ctx.shadowBlur = 0;
+        if (e > 1.0 && travel < 1) { const q = proj(dest.ip(travel)); if (q) { ctx.fillStyle = '#26282B'; ctx.fillRect(q[0] - 6, q[1] - 5, 12, 10); ctx.fillStyle = '#F7C032'; ctx.fillRect(q[0] - 6, q[1] - 1, 12, 2); ctx.strokeStyle = '#FFDB6E'; ctx.lineWidth = 1; ctx.strokeRect(q[0] - 6, q[1] - 5, 12, 10); } }
+        const dq = proj(dest.ll); if (dq && travel >= 1) { const pr = ((t - destT) / 900) % 1; ctx.beginPath(); ctx.arc(dq[0], dq[1], 4 + pr * 16, 0, 7); ctx.strokeStyle = 'rgba(95,212,154,' + (1 - pr) + ')'; ctx.lineWidth = 2; ctx.stroke(); ctx.beginPath(); ctx.arc(dq[0], dq[1], 4.5, 0, 7); ctx.fillStyle = '#5FD49A'; ctx.fill(); }
+        ctx.globalAlpha = 1;
+      }
+    } else {
+    ctx.beginPath(); path(grat); ctx.strokeStyle = T.grid; ctx.lineWidth = 0.6; ctx.stroke();
+    ctx.beginPath(); path(land); ctx.fillStyle = T.land; ctx.fill();
+    ctx.beginPath(); path({ type: 'FeatureCollection', features: land.features.filter((f) => served.has(f.properties.name)) }); ctx.fillStyle = T.landHi; ctx.fill();
+    }
+    const ph = (t / 1000) % 1;
+    if (!dots) dests.forEach((d, i) => {
+      const on = region === 'all' || d.r === region; if (!on) return;
+      const ip = interp[i], pts = d3.range(0, 1.0001, 0.04).map(ip);
+      ctx.beginPath(); path({ type: 'LineString', coordinates: pts }); ctx.strokeStyle = T.route; ctx.lineWidth = 1; ctx.stroke();
+      const k = (ph + i * 0.137) % 1, seg = d3.range(Math.max(0, k - 0.14), k + 0.0001, 0.02).map(ip);
+      ctx.beginPath(); path({ type: 'LineString', coordinates: seg }); ctx.strokeStyle = T.pkt; ctx.lineWidth = 2; ctx.shadowColor = '#F7C032'; ctx.shadowBlur = 6; ctx.stroke(); ctx.shadowBlur = 0;
+      const p = proj(d.ll), vis = d3.geoDistance(d.ll, [-rot[0], -rot[1]]) < Math.PI / 2;
+      if (p && vis) { ctx.beginPath(); ctx.arc(p[0], p[1], Math.max(1.6, R * 0.018), 0, 7); ctx.fillStyle = T.pkt; ctx.fill(); }
+    });
+    const hp = proj(dubai), hv = d3.geoDistance(dubai, [-rot[0], -rot[1]]) < Math.PI / 2;
+    if (hp && hv) { const pr = (t / 1600) % 1; ctx.beginPath(); ctx.arc(hp[0], hp[1], R * 0.04 + pr * R * 0.12, 0, 7); ctx.strokeStyle = 'rgba(247,192,50,' + (1 - pr) + ')'; ctx.lineWidth = 1.5; ctx.stroke(); ctx.beginPath(); ctx.arc(hp[0], hp[1], Math.max(2.5, R * 0.035), 0, 7); ctx.fillStyle = T.hub; ctx.fill(); ctx.lineWidth = 1.5; ctx.strokeStyle = '#1A1B1D'; ctx.stroke(); }
+    const sh = ctx.createRadialGradient(W / 2 - R * 0.4, H / 2 - R * 0.45, 0, W / 2, H / 2, R * 1.02);
+    sh.addColorStop(0, 'rgba(255,255,255,.18)'); sh.addColorStop(0.5, 'rgba(255,255,255,0)'); sh.addColorStop(1, dots ? 'rgba(61,62,63,.18)' : 'rgba(0,0,0,.35)');
+    ctx.beginPath(); path({ type: 'Sphere' }); ctx.fillStyle = sh; ctx.fill(); ctx.strokeStyle = T.rim; ctx.lineWidth = 1; ctx.stroke();
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})().catch((e) => document.body.setAttribute('data-err', 'init ' + e.message));
+</script>
+</body>
+</html>

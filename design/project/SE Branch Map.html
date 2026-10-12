@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sam Electronics · Dubai branch map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha384-sHL9NAb7lN7rfvG5lfHpm643Xkcjzp4jFvuavGOndn6pjVqS6ny56CAt3nsEVT4H" crossorigin="anonymous">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha384-cxOPjt7s7Iz04uaHJceBmS+qpjv2JkIHNVcuOrM+YHwZOmJGBXI00mdUXEq65HTH" crossorigin="anonymous"></script>
+<style>
+html,body,#m{margin:0;height:100%;background:#1A1B1D}
+.leaflet-tile-pane{filter:grayscale(1) invert(.9) contrast(.85) brightness(.95)}
+.leaflet-control-attribution{background:rgba(26,27,29,.75)!important;color:#C9CBCE!important;font:11px system-ui}
+.leaflet-control-attribution a{color:#F7C032!important}
+.leaflet-control-zoom a{background:#26282B!important;color:#FFFFFF!important;border-color:#3D3E3F!important}
+.se-pin{position:relative;width:22px;height:22px}
+.se-pin i{position:absolute;inset:0;border-radius:50%;background:#F7C032;border:3px solid #1A1B1D;box-sizing:border-box}
+.se-pin b{position:absolute;inset:-10px;border-radius:50%;border:2px solid #F7C032;animation:p 2s ease-out infinite}
+@keyframes p{0%{transform:scale(.5);opacity:1}100%{transform:scale(1.6);opacity:0}}
+</style>
+</head>
+<body>
+<div id="m"></div>
+<script>
+const ll = [25.27515, 55.30638]; // Plus Code 78G4+3H2, Al Murar, Deira
+const map = L.map('m', { scrollWheelZoom: false, zoomControl: true }).setView(ll, 16);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', { attribution: '© OpenStreetMap · © CARTO', subdomains: 'abcd', maxZoom: 19 }).addTo(map);
+L.marker(ll, { icon: L.divIcon({ className: '', html: '<div class="se-pin"><b></b><i></i></div>', iconSize: [22, 22], iconAnchor: [11, 11] }) }).addTo(map);
+</script>
+</body>
+</html>

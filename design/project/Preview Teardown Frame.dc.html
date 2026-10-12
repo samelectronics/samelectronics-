@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<script src="./se-data.js"></script>
+<style>body{margin:0;background:#0E0F10;overflow:hidden}</style>
+</helmet>
+<div style="width:{{ w }}px;height:{{ h }}px;transform:scale({{ k }});transform-origin:0 0;overflow:hidden;position:relative">
+  <dc-import name="SE Teardown" fw="{{ w }}" fh="{{ h }}" hint-size="100%,100%"></dc-import>
+  <div style="position:absolute;left:0;right:0;top:0;height:72px;background:rgba(38,40,43,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);box-shadow:0 1px 0 rgba(255,255,255,.08);display:flex;align-items:center;padding:0 48px;font-family:'Space Grotesk',sans-serif;font-weight:600;letter-spacing:.16em;color:#FFFFFF;font-size:15px;z-index:5">SAM ELECTRONICS · NAV 72px</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { k: 1 };
+  componentDidMount() { this.fit = () => this.setState({ k: Math.min(1, innerWidth / this.dims()[0], innerHeight / this.dims()[1]) }); addEventListener('resize', this.fit); this.fit(); }
+  dims() { const q = new URLSearchParams(location.search); return [Number(q.get('w')) || Number(window.__fw) || 1440, Number(q.get('h')) || Number(window.__fh) || 900]; }
+  renderVals() { const [w, h] = this.dims(); return { w, h, k: this.state.k }; }
+}
+</script>
+</body>
+</html>

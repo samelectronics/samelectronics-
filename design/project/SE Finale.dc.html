@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@keyframes fnBeam{0%,100%{opacity:.8}50%{opacity:1}}
+@keyframes fnWord{0%{color:#5E6064;text-shadow:none}100%{color:#F7C032;text-shadow:0 0 18px rgba(247,192,50,.6)}}
+@keyframes fnRise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+@keyframes fnPop{0%{opacity:0;transform:scale(.5) translateY(20px)}70%{opacity:1;transform:scale(1.05)}100%{opacity:1;transform:none}}
+@keyframes fnRace{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+@keyframes fnTrace{0%{opacity:0}100%{opacity:1}}
+@keyframes fnSpin{to{transform:rotate(360deg)}}
+</style>
+</helmet>
+<section id="cta" ref="{{ secRef }}" data-tone="dark" data-screen-label="19 Finale" style="position:relative;overflow:hidden;background:linear-gradient(180deg,#3D3E3F 0%,#2E3033 55%,#1F2022 100%);color:#FFFFFF;padding:120px clamp(20px,4vw,64px)">
+  <div style="position:absolute;left:50%;top:-12%;width:1100px;height:1000px;margin-left:-550px;background:conic-gradient(from 160deg at 50% 0%,rgba(255,255,255,0) 0deg,rgba(255,255,255,.11) 20deg,rgba(255,255,255,0) 40deg);-webkit-mask-image:linear-gradient(180deg,#000,transparent 85%);mask-image:linear-gradient(180deg,#000,transparent 85%);animation:fnBeam 5s cubic-bezier(.45,0,.55,1) infinite;pointer-events:none"></div>
+  <sc-if value="{{ on }}" hint-placeholder-val="{{ false }}">
+    <svg viewBox="0 0 1440 900" preserveAspectRatio="none" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;animation:fnTrace .4s 3.5s both" fill="none" stroke-linecap="round">
+      <g stroke="rgba(247,192,50,.3)" stroke-width="2"><path d="M0 380 H420 L460 340 H600"></path><path d="M1440 380 H1020 L980 340 H840"></path><path d="M0 560 H360 L400 520 H600"></path><path d="M1440 560 H1080 L1040 520 H840"></path></g>
+      <g stroke="#FFDB6E" stroke-width="3" stroke-dasharray="120 880" style="filter:drop-shadow(0 0 5px #F7C032)"><path pathLength="1000" d="M0 380 H420 L460 340 H600" style="animation:fnRace 1s 3.5s cubic-bezier(.45,0,.55,1) both, fnRace 3s 4.5s linear infinite"></path><path pathLength="1000" d="M1440 380 H1020 L980 340 H840" style="animation:fnRace 1s 3.6s cubic-bezier(.45,0,.55,1) both, fnRace 3.4s 4.6s linear infinite"></path><path pathLength="1000" d="M0 560 H360 L400 520 H600" style="animation:fnRace 1s 3.7s cubic-bezier(.45,0,.55,1) both, fnRace 3.8s 4.7s linear infinite"></path><path pathLength="1000" d="M1440 560 H1080 L1040 520 H840" style="animation:fnRace 1s 3.8s cubic-bezier(.45,0,.55,1) both, fnRace 3.2s 4.8s linear infinite"></path></g>
+    </svg>
+  </sc-if>
+  <div style="position:relative;max-width:1312px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:24px;text-align:center">
+    <div style="position:relative;width:min(560px,100%);height:440px">
+      <div ref="{{ hostRef }}" style="position:absolute;inset:0"><canvas style="position:absolute;inset:0;width:100%;height:100%;display:block"></canvas></div>
+      <sc-if value="{{ loading }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;left:50%;top:50%;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;box-shadow:inset 0 0 0 2px rgba(255,255,255,.12);border-top:2px solid #F7C032;box-sizing:border-box;animation:fnSpin 1s linear infinite"></span></sc-if>
+      <sc-if value="{{ on }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;right:-20px;bottom:40px;animation:fnPop .6s 6.4s cubic-bezier(.2,.8,.2,1) both"><dc-import name="SE Samsoom" mood="wave" size="120" hint-size="120px,150px"></dc-import></span></sc-if>
+    </div>
+    <sc-if value="{{ on }}" hint-placeholder-val="{{ false }}">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:22px">
+        <span style="display:flex;gap:18px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(22px,2.2vw,30px);letter-spacing:.04em"><span style="color:#5E6064;animation:fnWord .4s 4.5s both">Quality</span><span style="color:#5E6064">·</span><span style="color:#5E6064;animation:fnWord .4s 5.0s both">Warranty</span><span style="color:#5E6064">·</span><span style="color:#5E6064;animation:fnWord .4s 5.5s both">Price</span></span>
+        <h2 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(44px,5vw,76px);line-height:1;letter-spacing:-.045em;text-wrap:balance;max-width:900px;animation:fnRise .7s 6.0s cubic-bezier(.2,.8,.2,1) both">A phone on your bench? We have the part.</h2>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;animation:fnRise .7s 6.4s cubic-bezier(.2,.8,.2,1) both">
+          <a href="#offer" onClick="{{ browse }}" style="display:flex;align-items:center;gap:10px;height:52px;padding:0 22px;border-radius:10px;background:#F7C032;color:#1A1B1D;font-size:16px;font-weight:600;text-decoration:none;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s" style-hover="color:#1A1B1D;transform:translateY(-2px);box-shadow:0 0 34px rgba(255,219,110,.55)">Browse all parts<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+          <a href="{{ wa }}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;height:52px;padding:0 22px;border-radius:10px;border:1.5px solid rgba(255,255,255,.5);color:#FFFFFF;font-size:16px;font-weight:600;text-decoration:none" style-hover="color:#FFFFFF;border-color:#F7C032">WhatsApp us</a>
+          <a href="{{ dir }}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:10px;height:52px;padding:0 22px;border-radius:10px;border:1.5px solid rgba(255,255,255,.5);color:#FFFFFF;font-size:16px;font-weight:600;text-decoration:none" style-hover="color:#FFFFFF;border-color:#F7C032">Visit Deira</a>
+        </div>
+        <span style="display:flex;gap:28px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#C9CBCE;animation:fnRise .7s 6.8s cubic-bezier(.2,.8,.2,1) both"><span><span data-fn="20" style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;color:#FFFFFF">20</span>+ years</span><span><span data-fn="14" style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;color:#FFFFFF">14</span> brands</span><span><span data-fn="9000" style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:22px;color:#FFFFFF">9,000</span>+ parts · sample</span></span>
+      </div>
+    </sc-if>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:1100}}">
+class Component extends DCLogic {
+  state = { on: false, loading: true };
+  secRef = React.createRef(); hostRef = React.createRef(); fs = { start: 0 };
+  componentDidMount() {
+    this.io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { this.fs.start = performance.now(); this.setState({ on: true }); clearTimeout(this.cT); this.cT = setTimeout(() => this.count(), 6900); } else { this.fs.start = 0; this.setState({ on: false }); } }, { threshold: 0.3 });
+    setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
+    setTimeout(() => { const h = this.hostRef.current; if (!h) return; import(new URL('./se-3d.js', document.baseURI).href).then((m) => m.mountFinale(h, this.fs)).then((d) => { this.dispose = d; this.setState({ loading: false }); }).catch((e) => { console.warn('finale', e && e.message); this.setState({ loading: false }); }); }, 4500);
+  }
+  componentWillUnmount() { clearTimeout(this.cT); this.io && this.io.disconnect(); this.dispose && this.dispose(); }
+  count() { const r = this.secRef.current; if (!r) return; const els = [...r.querySelectorAll('[data-fn]')], t0 = performance.now(); const f = (t) => { const k = Math.min(1, (t - t0) / 1400), e = 1 - Math.pow(1 - k, 3); els.forEach((el) => (el.textContent = Math.round(Number(el.getAttribute('data-fn')) * e).toLocaleString('en-US'))); if (k < 1) requestAnimationFrame(f); }; requestAnimationFrame(f); }
+  renderVals() {
+    const D = window.SE_DATA;
+    return { secRef: this.secRef, hostRef: this.hostRef, on: this.state.on, loading: this.state.loading,
+      wa: D ? 'https://wa.me/' + D.contact.wa + '?text=' + encodeURIComponent('Hi Sam Electronics, I found you on your website.') : '#',
+      dir: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('78G4+3H2 Dubai'),
+      browse: (ev) => { ev.preventDefault(); window.dispatchEvent(new CustomEvent('se:go', { detail: { id: 'offer' } })); } };
+  }
+}
+</script>
+</body>
+</html>

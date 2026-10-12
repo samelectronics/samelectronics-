@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@keyframes lbRow{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+@keyframes lbRow2{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+@keyframes lbNew2{0%{background:rgba(247,192,50,.16);box-shadow:inset 3px 0 0 #F7C032}70%{background:rgba(247,192,50,.10);box-shadow:inset 3px 0 0 #F7C032}100%{background:transparent;box-shadow:inset 3px 0 0 rgba(247,192,50,0)}}
+@keyframes lbType2{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes lbChipIn2{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+@keyframes lbType{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+@keyframes lbNew{0%{background:rgba(247,192,50,.16);box-shadow:inset 3px 0 0 #F7C032}70%{background:rgba(247,192,50,.10);box-shadow:inset 3px 0 0 #F7C032}100%{background:transparent;box-shadow:inset 3px 0 0 rgba(247,192,50,0)}}
+@keyframes lbFlashA{0%{box-shadow:inset 0 0 0 1.5px #F7C032,0 0 22px rgba(247,192,50,.55)}100%{box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 0 0 rgba(247,192,50,0)}}
+@keyframes lbFlashB{0%{box-shadow:inset 0 0 0 1.5px #F7C032,0 0 22px rgba(247,192,50,.55)}100%{box-shadow:inset 0 0 0 1px rgba(255,255,255,.1),0 0 0 rgba(247,192,50,0)}}
+@keyframes lbRollA{from{transform:translateY(60%);opacity:0}to{transform:none;opacity:1}}
+@keyframes lbRollB{from{transform:translateY(60%);opacity:0}to{transform:none;opacity:1}}
+@keyframes lbPulse{0%{offset-distance:0%;opacity:0}8%{opacity:1}92%{opacity:1}100%{offset-distance:100%;opacity:0}}
+@keyframes lbSpark{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}
+@keyframes lbBox{0%,15%{transform:translateY(-14px);opacity:0}45%{transform:translateY(1px);opacity:1}55%,85%{transform:none;opacity:1}100%{transform:none;opacity:0}}
+@keyframes lbDrain{0%,10%{transform:scaleX(1)}80%,100%{transform:scaleX(.15)}}
+@keyframes lbTag{0%,10%{transform:translateY(-12px) rotate(-20deg);opacity:0}45%{transform:translateY(2px) rotate(8deg);opacity:1}60%,85%{transform:rotate(0);opacity:1}100%{opacity:0}}
+@keyframes lbTruck{0%{transform:translateX(-26px)}100%{transform:translateX(26px)}}
+@keyframes lbChipIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+@keyframes lbBlink{0%,60%{opacity:1}61%,100%{opacity:.25}}
+@keyframes lbSweep{0%,100%{transform:translateX(-30%) rotate(20deg)}50%{transform:translateX(320%) rotate(20deg)}}
+</style>
+</helmet>
+<section id="board" ref="{{ secRef }}" data-tone="dark" data-screen-label="04 Live Parts Board" style="position:relative;overflow:hidden;background:linear-gradient(160deg,#4A4D52 0%,#3D3E3F 35%,#26282B 100%);color:#FFFFFF;padding:120px clamp(20px,4vw,64px)">
+  <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.02) 0 1px,transparent 1px 3px);pointer-events:none"></div>
+  <div style="position:absolute;left:-10%;top:-30%;width:20%;height:160%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.05),rgba(255,255,255,0));animation:lbSweep 14s cubic-bezier(.45,0,.55,1) infinite;pointer-events:none"></div>
+  <div ref="{{ gridRef }}" style="position:relative;max-width:1312px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr));gap:clamp(32px,5vw,96px);align-items:center">
+    <div style="display:flex;flex-direction:column;gap:20px;min-width:0">
+      <span style="display:flex;align-items:center;gap:10px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.14em;color:#F7C032"><span style="width:8px;height:8px;border-radius:50%;background:#2BB673;animation:lbBlink 1.2s steps(1) infinite"></span>LIVE PARTS BOARD · SAMPLE FEED</span>
+      <h2 style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(34px,3.4vw,50px);line-height:1.04;letter-spacing:-.035em;text-wrap:balance">What's moving on our shelves, right now.</h2>
+      <p style="margin:0;font-size:17px;line-height:1.55;color:#D5D7DA;text-wrap:pretty">New stock landing, prices dropping, boxes leaving Deira. Every row on the board feeds the counters, live.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <sc-for list="{{ tiles }}" as="t" hint-placeholder-count="4">
+          <button data-tile="{{ t.id }}" onClick="{{ t.pick }}" style="position:relative;display:grid;grid-template-columns:36px minmax(0,1fr);grid-template-rows:auto auto auto;gap:4px 12px;padding:14px;border-radius:16px;border:none;text-align:left;cursor:pointer;color:#FFFFFF;background:{{ t.bg }};backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);animation:{{ t.flash }};transition:background .3s cubic-bezier(.2,.8,.2,1)">
+            <span style="grid-row:1 / span 2;position:relative;display:block;width:36px;height:36px;border-radius:10px;background:rgba(0,0,0,.25);overflow:hidden">
+              <sc-if value="{{ t.iBox }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:10px;top:12px;width:16px;height:13px;border-radius:2px;background:linear-gradient(160deg,#D9A866,#B98446);animation:lbBox 2.4s cubic-bezier(.2,.8,.2,1) infinite"><span style="position:absolute;left:6px;top:0;width:4px;height:13px;background:rgba(255,240,210,.6)"></span></span><span style="position:absolute;left:6px;right:6px;bottom:8px;height:2px;background:rgba(255,255,255,.3)"></span></sc-if>
+              <sc-if value="{{ t.iBat }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:7px;top:12px;width:19px;height:12px;border-radius:2px;box-shadow:inset 0 0 0 1.5px #FF8A8E"><span style="position:absolute;left:2.5px;top:2.5px;width:14px;height:7px;border-radius:1px;background:#E5484D;transform-origin:0 50%;animation:lbDrain 3s cubic-bezier(.45,0,.55,1) infinite"></span></span><span style="position:absolute;left:27px;top:16px;width:2px;height:4px;background:#FF8A8E"></span></sc-if>
+              <sc-if value="{{ t.iTag }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 24 24" width="20" height="20" style="position:absolute;left:8px;top:8px;animation:lbTag 2.6s cubic-bezier(.2,.8,.2,1) infinite" fill="#FFDB6E"><path d="M3 12V4h8l10 10-8 8z"></path><circle cx="7.5" cy="8" r="1.6" fill="#26282B"></circle></svg></sc-if>
+              <sc-if value="{{ t.iTruck }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:10px;top:12px;animation:lbTruck 2.2s linear infinite"><svg viewBox="0 0 24 16" width="18" height="12" fill="none"><rect x="1" y="2" width="13" height="9" rx="1" fill="#5FD49A"></rect><path d="M14 5h4l3 3v3h-7z" fill="#2BB673"></path><circle cx="5" cy="13" r="2" fill="#FFFFFF"></circle><circle cx="17" cy="13" r="2" fill="#FFFFFF"></circle></svg></span></sc-if>
+            </span>
+            <span style="display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;color:{{ t.c }}"><span style="width:7px;height:7px;border-radius:2px;background:{{ t.c }}"></span>{{ t.k }}</span>
+            <span style="height:32px;overflow:hidden;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:30px;letter-spacing:-.02em;line-height:32px"><span style="display:inline-block;animation:{{ t.roll }}">{{ t.v }}</span></span>
+            <svg viewBox="0 0 200 28" preserveAspectRatio="none" style="grid-column:1 / span 2;width:100%;height:28px;margin-top:4px" fill="none"><path d="{{ t.spark }}" pathLength="1" stroke="{{ t.c }}" stroke-width="1.6" stroke-linejoin="round" stroke-dasharray="1" vector-effect="non-scaling-stroke" style="animation:lbSpark 1s cubic-bezier(.2,.8,.2,1) both"></path></svg>
+          </button>
+        </sc-for>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;color:#C9CBCE">TRENDING RIGHT NOW</span>
+        <div style="display:flex;gap:8px;overflow:hidden;height:36px">
+          <sc-for list="{{ trend }}" as="c" hint-placeholder-count="3"><span style="flex:none;display:flex;align-items:center;gap:8px;height:36px;padding:0 12px;border-radius:10px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);font-size:13px;white-space:nowrap;animation:{{ c.anim }}">{{ c.t }}<span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#F7C032">{{ c.n }}</span></span></sc-for>
+        </div>
+      </div>
+      <a href="#deals" onClick="{{ goDeals }}" style="align-self:flex-start;margin-top:12px;display:flex;align-items:center;gap:10px;height:44px;padding:0 18px;border-radius:10px;background:#F7C032;color:#1A1B1D;font-size:15px;font-weight:600;text-decoration:none;transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s" style-hover="color:#1A1B1D;transform:translateY(-2px);box-shadow:0 0 30px rgba(255,219,110,.55)">See deals &amp; arrivals<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+    </div>
+    <div data-board="1" style="position:relative;border-radius:24px;padding:1.5px;background:linear-gradient(140deg,rgba(255,255,255,.35),rgba(255,255,255,.06) 40%,rgba(247,192,50,.45));box-shadow:0 30px 70px rgba(0,0,0,.35),0 0 60px rgba(247,192,50,.12)">
+      <div style="border-radius:23px;overflow:hidden;background:linear-gradient(180deg,#2E3033,#1F2022)">
+        <div style="display:flex;justify-content:space-between;align-items:center;height:48px;padding:0 20px;border-bottom:1px solid rgba(255,255,255,.07);font-family:'JetBrains Mono',monospace;font-size:12px;color:#C9CBCE">
+          <span style="display:flex;align-items:center;gap:10px"><span style="width:22px;height:22px;border-radius:50%;overflow:hidden;box-shadow:0 0 0 1.5px #F7C032"><img src="assets/se-logo.png" alt="" style="width:100%;height:100%;display:block"></span>se://deira/board</span>
+          <span style="display:flex;align-items:center;gap:14px"><span>{{ clock }} GST</span><span style="display:flex;align-items:center;gap:6px;color:#5FD49A"><span style="width:6px;height:6px;border-radius:50%;background:#2BB673;animation:lbBlink 1s steps(1) infinite"></span>LIVE</span></span>
+        </div>
+        <div style="display:flex;flex-direction:column;height:448px;overflow:hidden">
+          <sc-for list="{{ rows }}" as="f" hint-placeholder-count="7">
+            <div data-row="{{ f.first }}" style="display:grid;grid-template-columns:56px 118px minmax(0,1fr) auto;gap:12px;align-items:center;min-height:64px;flex:none;box-sizing:border-box;padding:8px 20px;border-bottom:1px solid rgba(255,255,255,.05);font-family:'JetBrains Mono',monospace;font-size:13px;opacity:{{ f.o }};animation:{{ f.anim }}">
+              <span style="color:#9DA1A6">{{ f.t }}</span>
+              <span style="justify-self:start;padding:4px 8px;border-radius:6px;background:{{ f.tagBg }};color:{{ f.tagInk }};font-size:11px;font-weight:600;letter-spacing:.06em;white-space:nowrap">{{ f.tag }}</span>
+              <span style="color:#F2F3F4;line-height:1.35;text-wrap:pretty"><span style="display:inline-block;animation:{{ f.type }}">{{ f.text }}</span></span>
+              <span style="color:{{ f.noteC }};white-space:nowrap">{{ f.note }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 20px;border-top:1px solid rgba(255,255,255,.07);font-family:'JetBrains Mono',monospace;font-size:12px;color:#C9CBCE"><span>{{ filterLbl }}</span><span>{{ total }} events today · sample</span></div>
+      </div>
+    </div>
+    <svg aria-hidden="true" style="position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible" fill="none">
+      <sc-for list="{{ traces }}" as="r" hint-placeholder-count="4"><path d="{{ r.d }}" stroke="rgba(247,192,50,.28)" stroke-width="1.6" stroke-linejoin="round"></path><circle cx="{{ r.x0 }}" cy="{{ r.y0 }}" r="3.5" fill="#26282B" stroke="#F7C032" stroke-width="1.5"></circle><circle cx="{{ r.x1 }}" cy="{{ r.y1 }}" r="3.5" fill="#26282B" stroke="#F7C032" stroke-width="1.5"></circle></sc-for>
+    </svg>
+    <sc-for list="{{ pulses }}" as="p" hint-placeholder-count="0"><span style="position:absolute;left:0;top:0;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:#FFF4D1;box-shadow:0 0 10px 4px rgba(247,192,50,.85);offset-path:path('{{ p.d }}');offset-rotate:0deg;pointer-events:none;animation:lbPulse .7s cubic-bezier(.45,0,.55,1) both"></span></sc-for>
+  </div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = { data: window.SE_DATA || null, i: 0, filt: 'all', counts: { arr: 5, low: 4, drop: 3, ship: 6 }, flash: {}, spark: { arr: [2, 3, 3, 4, 5], low: [4, 4, 3, 4, 4], drop: [1, 2, 2, 3, 3], ship: [2, 3, 4, 5, 6] }, pulses: [], tr: 0, traces: [], now: Date.now() };
+  secRef = React.createRef(); gridRef = React.createRef();
+  GN = { OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' };
+  MAP = { arrival: 'arr', restock: 'arr', low: 'low', drop: 'drop', shipped: 'ship' };
+  componentDidMount() {
+    if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 60);
+    this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting) this.measure(); }, { threshold: 0.2 }); setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
+    this.ro = new ResizeObserver(() => this.measure()); setTimeout(() => this.gridRef.current && this.ro.observe(this.gridRef.current), 60);
+    this.iv = setInterval(() => this.tick(), 3500); this.tv = setInterval(() => { if (this.vis && !document.hidden) this.setState((s) => ({ tr: s.tr + 1, now: Date.now() })); }, 3000);
+  }
+  componentWillUnmount() { [this.iv, this.tv, this.dIv].forEach(clearInterval); this.io && this.io.disconnect(); this.ro && this.ro.disconnect(); }
+  measure() {
+    const g = this.gridRef.current; if (!g) return; const gr = g.getBoundingClientRect(), bd = g.querySelector('[data-board]'); if (!bd) return; const br = bd.getBoundingClientRect();
+    if (gr.width < 900) return this.setState({ traces: [] });
+    const traces = ['arr', 'low', 'drop', 'ship'].map((id, k) => { const t = g.querySelector('[data-tile="' + id + '"]'); if (!t) return null; const r = t.getBoundingClientRect(); const x0 = r.right - gr.left + 2, y0 = r.top - gr.top + r.height * (k < 2 ? 0.3 : 0.7), x1 = br.left - gr.left - 2, y1 = br.top - gr.top + 80 + k * 70;
+      const mx = x0 + 24 + (k % 2 ? 0 : 20) + k * 6, dy = y1 - y0, sx = Math.min(Math.abs(dy), (x1 - mx - 20) * 0.6), sg = Math.sign(dy);
+      const d = 'M' + x0 + ' ' + y0 + ' H' + mx + ' L' + (mx + sx) + ' ' + (y0 + sg * sx) + ' V' + y1 + ' H' + x1;
+      return { id, d, rev: 'M' + x1 + ' ' + y1 + ' H' + (mx + sx) + ' V' + (y0 + sg * sx) + ' L' + mx + ' ' + y0 + ' H' + x0, x0, y0, x1, y1 }; }).filter(Boolean);
+    this.setState({ traces });
+  }
+  events() { const D = this.state.data; if (!D) return []; if (this._eD === D) return this._ev; this._eD = D; const P = D.products, by = (id) => P.find((p) => p.id === id);
+    this._ev = D.events.map((e) => { const p = e.pid && by(e.pid); const name = p ? p.title.replace(' Screen', ' screen').replace(' Battery', ' battery') + ' · ' + (this.GN[p.grade] || '') : ''; return { type: e.type, text: e.type === 'shipped' ? e.city + ', ' + e.country : name, note: e.type === 'low' && p ? 'only ' + p.stock_qty + ' left' : e.type === 'shipped' ? e.note : e.type === 'drop' ? e.note : p ? 'AED ' + p.retail_price : '' }; }).filter((e) => e.text);
+    return this._ev; }
+  tick() {
+    if (!this.vis || document.hidden) return; const E = this.events(); if (!E.length) return;
+    const i = this.state.i + 1, e = E[i % E.length], k = this.MAP[e.type], tr = this.state.traces.find((t) => t.id === k);
+    const pid = Date.now(); this.setState((s) => ({ i, pulses: tr ? [{ id: pid, d: tr.rev }] : [] }));
+    setTimeout(() => this.setState((s) => ({ counts: { ...s.counts, [k]: s.counts[k] + 1 }, flash: { ...s.flash, [k]: (s.flash[k] || 0) + 1 }, spark: { ...s.spark, [k]: [...s.spark[k], s.spark[k][s.spark[k].length - 1] + 1].slice(-12) }, pulses: [] })), tr ? 700 : 0);
+  }
+  renderVals() {
+    const s = this.state, E = this.events(), pad = (n) => String(n).padStart(2, '0');
+    const TAG = { arrival: ['JUST LANDED', '#F7C032', '#1A1B1D'], restock: ['BACK IN STOCK', 'rgba(255,255,255,.12)', '#F2F3F4'], low: ['LOW STOCK', 'rgba(229,72,77,.18)', '#FF8A8E'], drop: ['PRICE DROP', 'rgba(247,192,50,.16)', '#FFDB6E'], shipped: ['SHIPPED', 'rgba(43,182,115,.16)', '#5FD49A'] };
+    const g = new Date(s.now), gst = new Date(g.getTime() + g.getTimezoneOffset() * 6e4 + 4 * 36e5), base = gst.getHours() * 60 + gst.getMinutes();
+    const list = []; for (let j = 0; j < 7 && E.length; j++) { const idx = ((s.i - j) % E.length + E.length) % E.length, e = E[idx]; if (s.filt !== 'all' && this.MAP[e.type] !== s.filt) continue; list.push({ e, j }); }
+    const rows = list.slice(0, 7).map(({ e, j }, r) => { const tg = TAG[e.type], m = base - j * 3; const top = r === 0; return { key: s.i - j, first: top ? '1' : '0', t: pad(Math.floor(((m % 1440) + 1440) % 1440 / 60)) + ':' + pad(((m % 60) + 60) % 60), tag: tg[0], tagBg: tg[1], tagInk: tg[2], text: e.text, note: e.note, noteC: e.type === 'low' ? '#FF8A8E' : e.type === 'drop' ? '#F7C032' : '#C9CBCE', o: (1 - r * 0.09).toFixed(2), anim: top ? ((s.i % 2) ? 'lbRow .3s cubic-bezier(.2,.8,.2,1) both, lbNew 1.2s .3s both' : 'lbRow2 .3s cubic-bezier(.2,.8,.2,1) both, lbNew2 1.2s .3s both') : 'none', type: top ? ((s.i % 2) ? 'lbType' : 'lbType2') + ' .6s .2s steps(24) both' : 'none' }; });
+    const T = [['arr', 'JUST LANDED', '#F7C032', 'iBox'], ['low', 'LOW STOCK', '#FF8A8E', 'iBat'], ['drop', 'PRICE DROPS', '#FFDB6E', 'iTag'], ['ship', 'SHIPPED TODAY', '#5FD49A', 'iTruck']];
+    const sp = (a) => { const mx = Math.max(...a), mn = Math.min(...a), n = a.length - 1; return a.map((v, i) => (i ? 'L' : 'M') + (i / n * 200).toFixed(1) + ' ' + (24 - (v - mn) / Math.max(1, mx - mn) * 20).toFixed(1)).join(' '); };
+    const tiles = T.map(([id, k, c, ic]) => { const on = s.filt === id, f = s.flash[id] || 0; return { id, k, c, v: s.counts[id], [ic]: true, spark: sp(s.spark[id]), bg: on ? 'linear-gradient(180deg,rgba(247,192,50,.16),rgba(247,192,50,.05))' : 'rgba(255,255,255,.05)', flash: f ? (f % 2 ? 'lbFlashA' : 'lbFlashB') + ' .4s cubic-bezier(.2,.8,.2,1) both' : (on ? 'none' : 'none'), roll: f ? (f % 2 ? 'lbRollA' : 'lbRollB') + ' .35s cubic-bezier(.2,.8,.2,1) both' : 'none', pick: () => this.setState({ filt: on ? 'all' : id }) }; });
+    const TR = [['iPhone 13 screen', 24], ['A54 battery', 18], ['Redmi Note 13 LCD', 15], ['Pixel 8 Pro camera', 12], ['iPhone 15 Pro OLED', 21], ['S24 Ultra back glass', 9], ['Tecno Camon 30 LCD', 11]];
+    const trend = [0, 1, 2].map((j) => { const [t, n] = TR[(s.tr + j) % TR.length]; return { t, n: (n + (s.tr % 3)) + ' searches', anim: j === 2 ? ((s.tr % 2) ? 'lbChipIn' : 'lbChipIn2') + ' .45s cubic-bezier(.2,.8,.2,1) both' : 'none', key: s.tr + j }; });
+    return { secRef: this.secRef, gridRef: this.gridRef, rows, tiles, trend, traces: s.traces, pulses: s.pulses, clock: pad(gst.getHours()) + ':' + pad(gst.getMinutes()), total: Object.values(s.counts).reduce((a, b) => a + b, 0),
+      filterLbl: s.filt === 'all' ? 'Showing everything · tap a counter to filter' : 'Filtered · tap the counter again to clear',
+      goDeals: (ev) => { ev.preventDefault(); window.dispatchEvent(new CustomEvent('se:go', { detail: { id: 'deals' } })); } };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,1698 @@
+SAM ELECTRONICS L.L.C · DEIRA · DUBAI · SINCE 2003
+ROUND 4
+Director's Edition
+Every section written as a film:
+shot by shot · light · shadow · feeling
+The hero and the teardown are finished.
+Every other section gets built like them.
+To: Claude Design
+From: the owner, Sam Electronics
+Date: 11 October 2026 · replaces the 08 October version
+Read this entire document before you touch a single pixel.
+Every instruction here is a requirement, not a suggestion.
+
+-- 1 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 2
+SECTION 0 · READ THIS FIRST
+Why this edition exists
+This replaces the 08 October Round 4 order. The requirements are the same; what changed is how
+they are written.
+The teardown finally came out right, and the reason was simple: it was described like a film, shot by
+shot, with timings, camera moves, the exact light, the exact shadows, the materials, and how the
+moment should feel. Vague lines like "make it premium" produced generic work. Precise direction
+produced the best section on the site.
+So every section in this edition is written the same way. Read each one as a director's script. Build
+exactly what the script describes, frame by frame. When the script gives a time, a colour, an easing
+or a size, that is the value. When it describes a feeling, every visual decision you make on your own
+must serve that feeling.
+Non-negotiable: do not "interpret" a script into something easier. Do not skip a shot because it
+is hard. Do not replace a shot with your own idea without telling me. If something is technically
+impossible in the design tool, say so explicitly, propose the closest equivalent, and wait.
+Silently delivering less is not acceptable. If you improve something, tell me in one line what you
+changed and why.
+0.1 The benchmarks: the hero and the teardown
+The home hero is finished and approved, and the teardown's realism (its parts, lighting and
+studio) is approved; its motion is being upgraded in Issue 1. Together they are the bar. Before you
+show me any section, put it next to them and answer honestly:
+1. Does every object look like a studio product photograph, as real as the iPad and phone in the
+hero and the exploded phone in the teardown?
+2. Is it alive? Does something always move, even when nobody touches anything?
+3. Is it lit? Is there a key light, a rim light, soft shadows that follow the real shapes, and reflections?
+4. Is it rich? Is every part of the screen worth looking at, with no dead empty zones?
+5. Is it branded? Does it feel like Sam Electronics, not a template?
+6. Is it clean? No clipped text, no overlaps, no leftovers, no zeros, nothing under the nav bar?
+If any answer is no, the section is not done. Do not report it as done.
+0.2 How to read a script in this document
+Every issue page uses the same blocks, in this order:
+Block What it means
+STATUS What is approved, what is locked, what must be built.
+THE FEELING How the customer must feel in this section. Every decision serves this.
+WHAT IS WRONG
+NOW
+What I saw in the current version. Every point must be gone.
+THE SET The environment: background colour values, light positions, materials, shadows,
+atmosphere. This is the photograph before anything moves.
+THE FILM A shot list. Each row has a time (seconds for time-based scenes, scroll % or steps for
+scroll-driven scenes), a shot name and exactly what the customer sees.
+INTERACTION What happens on hover, click, drag.
+IDLE LIFE What keeps moving forever when nobody touches anything.
+
+-- 2 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 3
+Block What it means
+DO NOT Forbidden. Any one of these means the section is rejected.
+DONE WHEN Every box must be true. Confirm each by name.
+CAPTURE The exact frames I need to see.
+0.3 The motion vocabulary (so we mean the same thing)
+Word Meaning
+expo-out Fast start, long soft landing. Default for anything entering. CSS: cubic-bezier(0.16, 1, 0.3, 1).
+ease-in-out Soft start and soft end. For camera moves, glides and scroll travel.
+settle The object overshoots its final position by 2–6px or 2–4°, then comes back. Gives weight.
+Never more than one bounce.
+stagger Elements in a group start one after another with a fixed gap (e.g. 60ms).
+mask reveal Text rises from behind an invisible edge, as if cut out by a blade. No fade, no bounce.
+blur to sharp Starts at 8–12px blur, 0% opacity, 12–20px lower; arrives sharp. Like a camera racking focus.
+light sweep A soft diagonal band of light glides across glass or metal once. 20–30% white, soft edges,
+never a hard bar.
+camera push The whole scene scales up 2–4% slowly, as if the camera moves closer.
+hold Nothing new enters, but idle life continues. Never a frozen frame.
+0.4 How we work (strictly)
+1. One batch at a time, in the order of Section S. Start a new chat for each batch and read
+CLAUDE.md first.
+2. Build each section in its own preview page ("Preview [Section].dc.html"). Never work on the full
+home page until batch 10.
+3. Capture at 1440×900 and 1366×768. A still image of an animated section is never proof: send
+the frames named in CAPTURE.
+4. Finish every section you start. If you hit your limit, stop only at the end of a numbered issue
+and tell me exactly what is done and what is not started. Never leave a section half-built.
+5. For every section, answer each DONE WHEN box by name, yes or no, honestly.
+6. After a section is approved, write it into CLAUDE.md as LOCKED so no future round changes it.
+0.5 Things I will reject immediately
+• A plain white section, or plain flat yellow with nothing designed in it.
+• Any product drawn as a flat rectangle, a cartoon, a bar, a stick, a blob or a grey slab.
+• Any visible light shape: spotlight cones, triangles, trapezoids, hard bars of light, LED bars sliding
+up and down.
+• A hard horizon line where a floor meets a wall. Square or rectangular shadows. Black blocks under
+objects. Dark ellipse "floors".
+• Pitch-black stages. Our darks are graphite, never black.
+• Dot grids, stripe textures, tiled patterns or busy circuit wallpaper behind content.
+• Dust shaped like hair or fibres, dust outside the light, or big white dots.
+• Text inside a device screen that touches the screen's edges, or yellow glow blobs behind
+on-screen text or logos.
+• Any circuit touching or crossing text, buttons, cards or images (24px clearance).
+
+-- 3 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 4
+• Any leftover: "browse files", "No reviews yet", repeated "coming soon", blank shapes, clipped
+words, "0 in stock", "AED 0".
+• Anything sitting under the nav bar or cut off at the bottom of the screen.
+• Any section where nothing moves. Any airport, travel, passport or boarding theme.
+
+-- 4 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 5
+SECTION G · GLOBAL RULES · APPLY EVERYWHERE, ALWAYS
+Global rules
+These apply to every section, page and state, and override anything older that contradicts them.
+G11–G15 are new: they are the lessons that made the teardown work. Read them twice.
+G1. Realism
+• Every object (phones, parts, tools, cartons, boards, devices) is a studio product photograph:
+real proportions, real corner radii, real materials (glass, satin and brushed metal, PCB with solder
+mask, foil, corrugated cardboard, matte plastic), key light, rim light, contact shadow, reflections.
+• Real 3D where needed (Three.js, bevelled rounded geometry, physical materials, an environment
+map built in code, ACES tone mapping, full device pixel ratio).
+• Small parts are matte where real parts are matte. Shine only where real objects shine (glass,
+polished metal).
+• No real assets exist yet and none will be supplied for the design. Everything must look real by
+itself. Where a photo will come later (shop, team, Google reviews), build a tasteful placeholder
+frame, never a blank card or cartoon.
+G2. Motion: three layers in every section
+• Entrance: every section has an opening film when it enters the viewport (headline by mask
+reveal or blur to sharp, objects arriving with weight). No plain fades: every entrance combines at
+least two of movement, scale, blur, mask and light.
+• Idle life: something always moves on its own (current flowing, light breathing ±3% over 6s, an
+object turning on a slow turntable, numbers ticking, dust falling).
+• Interaction: every interactive element reacts on hover and click.
+• Everything replays when scrolling back. Nothing stops dead; nothing freezes. Animate transform
+and opacity; pause everything off-screen; target 60fps; static fallbacks for reduced motion.
+G3. Circuits
+• Keep the circuits as decoration, in the hero's spirit. Keep the nav progress line.
+• No single bus forced down the page. Each section designs its own circuits where they fit; some
+sections may carry one long circuit through empty space.
+• Current is soft flowing light streaks (80–160px gradient dashes at different speeds), never
+dots; a brighter surge when something happens nearby.
+• Background circuits at 8–12% opacity, empty space only. 24px clearance from all text, buttons,
+cards, images and icons. No exceptions.
+G4. Palette
+Colour Value Role
+Signal Yellow #F7C032 Energy, highlights, primary buttons, current, active states. A full
+field only where the Environment Map says so.
+Amber core #C98A12 Only inside warm light blooms (the centre of a glow fading out to
+Signal Yellow).
+Graphite #26282B /
+#3D3E3F
+Dark environments and cards. Stages range #2A2C2F (edges) to
+#3E4044 (lit centre). Never black.
+White #FFFFFF Cards, text on dark.
+Fog #F2F3F4 Light environments, always with grain and light, never flat.
+Status green / amber
+/ red
+ONLY for the open / closing soon / closed status dots and error
+states.
+
+-- 5 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 6
+• Nothing off-palette in decoration (no random green ticks, blue globes, brown cartoon cartons, red
+stamps, blue sketch lines).
+G5. Typography
+• Space Grotesk headings, Inter body, JetBrains Mono for data and eyebrows, IBM Plex Sans Arabic.
+• Every section uses the hero's exact type scale, buttons, cards, chips and pills. Copy the
+hero's components; do not invent new ones.
+• Headlines always enter with motion. Brand names appear each in its own wordmark style where
+they are shown as brands.
+G6. No leftovers
+• No upload widgets in public view, no "No reviews yet" (hide the rating instead), no repeated
+"coming soon" lists, no blank grey shapes, no clipped chips or tickers (fade masks on empty
+space), no outdated models, no data that contradicts itself.
+G7. Status dot (everywhere)
+• Light green softly pulsing = Open · Amber = closing within 30 minutes · Red = Closed. Never grey
+or black. Nav pill, Visit-us card, footer, everywhere.
+G8. The "Ask Samsoom" launcher (every page)
+• A pill launcher: Samsoom's face + text. The pill's width always fits its current message exactly (it
+animates its width), and the text is vertically and horizontally centred.
+• Cycle (every 15–20s): collapsed circle, Samsoom waves and smiles → the pill extends with "Ask
+Samsoom" → collapses, Samsoom blinks → extends with a different message for the page and
+time ("Need a screen?", "Open till 22:00", "Trade prices? Ask me", "Track my order") → repeat.
+After a few ignored cycles it rests.
+• Emotes between cycles, rarely and short (about 1.2s): a little dabke step, blowing a kiss, a wink, a
+thumbs-up.
+• The online dot is green and pulsing, sitting exactly on the circle's edge. It never covers buttons or
+content.
+G9. Language and themes
+• One language per view; the Arabic view is fully right-to-left. No airport, travel, passport, ticket or
+terminal themes. Ever.
+G10. Mobile (deferred)
+• Do not design or capture mobile in batches 1–10. Build every section so it can stack vertically (no
+layout that only works wide).
+• Mobile gets its own dedicated round (batch 11) after the whole desktop page is approved.
+G11. Light and shadow: the studio rulebook (new)
+• Every scene is lit like a real photo studio: a key light (large softbox, usually top-left) that shows
+as a big soft rectangular reflection on glass; a fill from the opposite side so shadows are never
+pure black; a warm rim light from behind that draws a thin bright edge around objects.
+• Light is never a visible shape. Where it lands on a surface it makes a soft elliptical pool (a circle
+in perspective), brightest under the object, falling off naturally and feathered over 30–40% of its
+radius.
+• Floors and walls meet with no visible horizon (a seamless cyclorama). The floor fades into the
+darkness behind.
+
+-- 6 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 7
+• Shadows: a contact shadow that follows the object's real outline, darkest where it touches, then
+a soft penumbra fading outward, falling away from the key light. Floating objects cast lighter,
+larger, blurrier shadows the higher they float. Never squares, never black blocks.
+• Reflections on polished floors: sharp at the contact point, blurring and fading out within about 25%
+of the object's height, at 30–40% strength.
+• Test every lit scene at full screen brightness and on a dark screen. It must read on both.
+G12. Atmosphere (new)
+• Dust, where used: tiny round soft specks (1–2px, a few 3px), soft white to warm white (#FFFFFF to
+#EDE6D8), 10–30% opacity, only inside the light zone, each drifting slowly in its own random
+direction (here and there) with a very slight downward drift, sometimes twinkling as it crosses the
+key light. Never fibres or hair, never in front of objects or text.
+• Bokeh, where used: a few large, very soft out-of-focus discs deep in the background, drifting
+slowly, 3–8% opacity.
+• Grain: a fine film grain (2–3%) on fog and yellow fields so they never look flat.
+G13. Data (new)
+• Zero tolerance: never "0 in stock", never "AED 0", never an empty value. Every sample number is
+believable and consistent across the page (the same part has the same stock and price wherever
+it appears).
+• Sample data is marked as sample where the owner still has to confirm it (same-day repairs,
+minimum trade units, countries shipped to, warranty periods).
+G14. Screens inside devices (new)
+• Anything playing on a phone or tablet screen is rendered at full device pixel ratio (at least
+1080×2340 for phones), razor sharp.
+• Safe margins: 12% left and right, 10% top and bottom. On-screen headlines about 9% of the
+screen width, never touching the edges.
+• No yellow glow blobs or LED light behind on-screen text or logos. Only a subtle glass reflection
+over the screen.
+• Screen adverts follow the hero's ad structure: mono eyebrow, bold 2-line headline, real lit part
+render, one line, a pill button with a price.
+G15. One parts library: the teardown parts, everywhere (new)
+The 3D parts in the teardown are the standard for every part on the whole website.
+They look like literal studio photographs: real proportions, real materials, real labels and
+connectors, lit with a softbox, a rim light and contact shadows. Every other place that shows a
+part must show these exact models at this exact quality. No new simpler drawings, no icons
+standing in for parts, no flat thumbnails.
+• Build one shared parts library from the teardown models: Screen, Frame, Flex cables, Logic
+board, Battery, Cameras, Small parts (side buttons, speaker, charging port, vibration motor, SIM
+tray, screws), Back glass. Write it into CLAUDE.md as the single source.
+• Use the library everywhere a part appears: the What we offer family cards and all three service
+ads, the Showcase screen ads, the teardown's final-call chips and phone advert, Find My Part part
+cards and thumbnails, deal cards, Live Board thumbnails, the hero phone-reel cards, hover tags,
+cart toasts, Samsoom's answer cards, the Bench Test phone, every icon-sized thumbnail.
+• Small sizes too: a 40px thumbnail is a real render of the same model at a fixed 3/4 angle with the
+same lighting, not a simplified icon.
+
+-- 7 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 8
+• Render every library part with the same studio lighting preset (softbox top-left, warm rim, fill
+right, contact shadow) so parts look like one photo shoot wherever they appear. On dark
+backgrounds the shadow is soft and the rim brighter; on fog, white or yellow backgrounds the
+shadow is a soft warm grey, never black.
+• The same standard applies to every other object: cartons (real corrugated flute texture, tape
+with a slight sheen and wrinkles, printed labels with barcodes, soft dents on edges), the Service
+Pack box (printed cardboard, a crisp fold, a satin seal), pallets (real wood grain), shrink-wrap (thin,
+glossy, wrinkled), price tags (card stock, punched hole, string), badges and lanyards (fabric
+weave, plastic sheen, metal clip), stamps (ink texture, slightly uneven). Studio photograph quality,
+never clip-art.
+• Any phone shown anywhere (hero, repair ad, Bench Test, Feed, Samsoom's body) uses the same
+assembled phone model as the teardown.
+
+-- 8 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 9
+SECTION E · ENVIRONMENT MAP
+Every section gets its own environment
+No plain white sections, and never the same environment twice in a row. If you want to change a
+line, propose it and wait.
+# Section Environment Issue
+1 Hero + brand rail Graphite + yellow slab (APPROVED, keep) 1B
+2 Teardown Graphite studio cyclorama, golden bloom and bokeh finale 1
+3 What we offer Warm fog studio for the 8 family cards, then three full-bleed
+ads: graphite Repair, yellow Wholesale, white Worldwide
+2
+4 Live Parts Board Clean living graphite 3
+5 Bench Test Full yellow, studio vignette, bench surface 5
+6 The Showcase (screen
+ads)
+Warm fog studio; ads inside are graphite | yellow split 6
+7 Deals & arrivals Graphite with soft warm light 7
+8 Repair Lab Clean light lab (Part 1 spec) —
+9 Wholesale / Trade Floor Yellow with branded tape and depth 8
+10 Worldwide Dark dot-matrix map, graphite 9
+11 Story & branches Warm fog with yellow light and grain 10
+12 Team (Staff Badges) Graphite wall, one spotlight 11
+13 Who are you? (lanes) Warm fog; light shifts with the active lane 12
+14 Sam Circuit (Charging
+Station)
+Graphite studio, yellow only as energy 13
+15 Meet Samsoom Warm yellow studio 14
+16 The Feed (social) Graphite studio 15
+17 Reviews White with soft yellow light 15
+18 Request console + Visit us Yellow; console graphite, visit card white 16
+19 Finale (Power-Up) Deep graphite stage, emblem spotlight 17
+20 Footer Same on every page —
+all Find My Part (overlay) Graphite glass over a blurred page 18
+Neighbour check: Teardown (graphite) → What we offer (fog) → its last ad (white Worldwide) →
+Live Board (graphite). Inside What we offer the three ads alternate graphite → yellow → white, so
+no two neighbours match.
+
+-- 9 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 10
+ISSUE 01 · FULL CINEMATIC TRANSFORMATION · KEEP THE CONCEPT
+Teardown: the trailer cut
+STATUS: Keep the concept and what is approved: the three-zone layout (title and part card left,
+phone centre, smart list right), the teardown parts library models, the studio set, the step-by-step
+scroll, the x-ray drawer hover, the final call layout and the warm golden bokeh in the final call
+(loved). Transform everything about how it moves, how it is revealed, and the advert. Work in
+Preview Teardown.dc.html. This issue is done before Batch 0.
+THE FEELING. A movie trailer. Not a web page that fades things in: a sequence that hits. Lights
+snap on, the title slams in, the phone appears as a silhouette and is revealed by light, then breaks
+open in a burst. Every step is a new camera angle. The climax is fast, loud (visually), and lands on
+a golden final shot. The customer should feel excited and want to keep scrolling, like watching a
+trailer for a product launch.
+What is wrong now
+• Weak animation: only "Take any phone apart." moves. Everything else just appears with a plain
+fade. Boring.
+• The phone flies too high and then drops aggressively: at step 02 a layer shoots above the
+stage and is cut off under the nav bar, then the stack falls back down hard. The motion is jumpy,
+not smooth.
+• Out of sync: the counter says 02 / 08 and the list highlights Frame, but the part card still shows
+01 Screen.
+• The leader line starts from a layer hidden under the nav and ends at the wrong row.
+• The dust is gone.
+• The advert is boring and empty: text arrives, stops, then the next thing arrives; big empty
+white areas; a small product; weak yellow-on-grey titles; the logo has no proper moment.
+• The final call chips are plain grey boxes on a grey background with tiny thumbnails.
+• The stats row (8 · 14 · 9,000+) is unevenly spaced: the numbers are not equally apart and the
+labels do not line up.
+Motion rules for this section (these override the defaults)
+• No plain fades. Every element that enters combines at least two of: movement, scale, blur,
+mask reveal, light. An element that only fades in is a defect.
+• Rhythm like a trailer: fast entrances (200–450ms, expo-out), short holds, then the next beat.
+Tension (slow) → impact (fast) → breath (slow) → impact.
+• Impact frames: on big moments (title words landing, the burst, each reassembly lock) the whole
+stage gets a micro camera shake (2–3px, 120ms) and a quick 2% scale punch that settles.
+• The stage box: the phone and every layer always stay inside a fixed box in the centre zone, from
+48px below the nav to 48px above the bottom of the screen. No layer may ever leave it, go under
+the nav, or be cut off. If the exploded stack is too tall, it is scaled to fit.
+• Smooth camera: all phone and stack movement between steps uses ease-in-out over
+800–1000ms along a smooth curve. No up-then-down, no drops, no overshoot above 6px.
+• Always in sync: the counter, the list's active row, the part card and the leader line change
+together in the same frame. Never out of step.
+THE SET (unchanged, plus the dust)
+THE SET: background, light, materials, shadows, atmosphere
+
+-- 10 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 11
+• Keep the graphite studio cyclorama, the elliptical light pool, the softbox reflections, the rim light,
+the contact shadows and the floor reflection (G11).
+• Dust is back, as tiny white dots: very small round specks (1–2px, a few 3px), soft white
+(#FFFFFF to warm white #EDE6D8), 10–30% opacity, only inside the light zone (the light pool
+and the haze above the phone), fading out at the light's edge.
+• They float here and there: each one drifts slowly in its own random direction (gentle, like dust
+hanging in a light beam), with a very slight overall downward drift. Some briefly twinkle brighter
+as they cross the key light. Never in front of the phone, the stack or text. About 60–90 specks.
+• Behind everything: a faint, very soft warm vignette, so the stage is never flat.
+THE FILM: opening (time-based, about 3.4s)
+Time Shot What the customer sees
+0.0–0.5s Lights on The section arrives on a dim graphite stage (never black). Like a studio light
+warming up, the light pool fades up with one soft flicker (100% → 70% → 100%
+in 150ms). The dust appears in the light as it comes on.
+0.4–1.3s Title slam "Take any phone apart." hits word by word (110ms apart): each word starts at
+118% scale and 10px blur and slams down to 100% sharp in 220ms. The last
+word lands with an impact frame. A light sheen runs across the line.
+1.2–2.0s Silhouette In the centre zone the phone appears only as a silhouette: completely dark,
+with just the rim light tracing its outline from the top down, like a car reveal in a
+dark showroom. It slowly turns on a turntable.
+2.0–2.8s Reveal The key light fades up across the phone from left to right: the softbox reflection
+slides over the glass, the metal frame catches the light, materials appear. Its
+shadow and floor reflection form. At the same time the title glides on a curve
+into the left zone and "We stock every layer." rises from a mask in yellow.
+2.6–3.4s Interface The UI builds, never fades: the card's border draws itself around its shape
+(300ms), then its content assembles (label types, name masks up, numbers
+scramble like a slot machine and land, chips pop in one by one, the button
+slides up). The right list's rail draws down and each row ticks in with its LED
+clicking on then off (50ms apart). The counter's digits roll in.
+3.4s → Ready Hold. The phone breathes on its turntable; the dust floats; a small "Scroll to
+take it apart" hint appears with an animated mouse.
+THE FILM: steps 01–08 (one scroll = one step, as now)
+Time Shot What the customer sees
+scroll 1 The burst Tension then release: the phone tilts to its 3/4 angle and "inhales" (shrinks 3%
+over 300ms). Then it bursts open: all 8 layers separate in a fast cascade (40ms
+apart, 450ms each, expo-out) into the exploded stack, with an impact frame. A
+soft ring of light passes over the floor. Everything stays inside the stage box.
+each step New angle The camera orbits to a new angle for each layer, alternating sides (about
+±12°), and pushes in slightly towards the active layer (smooth, ease-in-out,
+900ms). Rack focus: inactive layers blur slightly and dim to 70%; the active
+layer is sharp and lit.
+each step Spotlight The active layer lifts out 20px towards the camera and turns a few degrees; a
+light sweep crosses it once; its edge glows soft yellow; its own micro-animation
+plays (screen flickers on, rim sweep on the frame, current pulse on the flex,
+traces lighting on the board, charge bar on the battery, apertures on the
+cameras, screws turning on small parts, a gloss slide on the back glass).
+each step Data hit In the same frame: the counter rolls, the list's row LED clicks on, and the leader
+line draws from the active layer's visible edge to the active row (300ms). The
+part card swaps with a flip: the old content slides up and blurs out, the new
+content assembles in (name masks up, numbers scramble and land, chips pop,
+the Fits row types in).
+
+-- 11 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 12
+Time Shot What the customer sees
+each step Callouts 2–3 spec callouts draw out from the active part (the line draws first, then the
+label types in), on clean paths that never cross other layers.
+THE FILM: the climax into the final call
+Time Shot What the customer sees
+0.0–1.0s Climax After step 08, the next scroll triggers the climax. The tempo speeds up: the
+layers slam back together in reverse, rapid-fire (90ms apart), each lock with a
+spark on its seam and a small impact frame. The camera pushes in with each
+lock.
+1.0–1.2s Lock The final layer (Screen) locks with a bright white flash on the glass (120ms) and
+a stronger impact frame.
+1.2–2.2s Whip The camera whips (fast smooth rotation with slight motion blur) to face the
+phone head-on; the phone rises to its final-call size and position, standing.
+1.4–2.6s Dust to gold The transformation: the tiny white dust specks start to grow, warm up from
+white to amber and Signal Yellow, and defocus, turning into the large soft
+golden bokeh orbs of the final call. At the same time, the golden bloom rises
+from the floor behind the phone. The dust literally becomes the light.
+2.2–2.8s Power on The screen powers on with the logo intro of the advert (below).
+The final call: fixes and upgrades
+• Entrance (no fades): the live pill slides in from the left with its green dot pulsing; the headline
+lines slam in like the opening title (scale + blur, 120ms apart); "In stock in Deira." lands last in
+yellow with an impact frame and its sheen; the stats count up; the chips cascade in; the buttons
+slide up.
+• Stats row: three equal columns of exactly the same width, numbers the same size on one shared
+baseline, labels aligned on one line under them, thin vertical dividers between the columns.
+Numbers count up with a slot-machine roll, landing one after another (8 → 14 → 9,000+).
+• The 8 chips become mini product cards, not grey boxes:
+– a larger library render (about 56px) on a tiny lit pedestal, with its contact shadow;
+– name, then "2,211 in stock" and "from AED 70" on two short lines;
+– a thin stock bar along the bottom edge that fills on entrance;
+– glass surface that catches the golden bloom: the cards nearer the phone get a warm yellow
+reflection along their top edge, so they belong to the scene;
+– hover: the card lifts, its render turns, its stock bar glows, and the x-ray drawer pulls that layer out of
+the phone (keep the existing hover).
+• Keep the golden bokeh orbs in the background (they come from the dust, see the climax). They
+drift slowly; a few pass slowly in front of the bloom.
+• Buttons keep their shimmer and magnetic hover.
+The phone advert: a real cinematic commercial
+The current ad is slow, empty and boring. Rebuild it as a real commercial: fast but readable, full
+screen, constantly moving, with a proper cinematic logo at the start and the end. G14 applies (safe
+margins, sharp, no glow blobs). About 15s, infinite seamless loop, paused off-screen.
+• Every frame is full: the product is big (50–60% of the screen height); behind it a huge outlined
+word moves slowly sideways (graphite or white at 6–8%); soft light streaks and the product's
+shadow and reflection. No empty areas.
+• Text never stops dead: every line has in → hold → out. It enters fast (250ms), holds at least 0.7s
+so it can be read while drifting slowly, then exits fast (200ms). Words can come from different
+directions.
+
+-- 12 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 13
+• Strong contrast only: graphite on yellow, white on graphite, graphite on white. Yellow text only
+on graphite. Never yellow on grey.
+• Transitions with motion: whip pans with motion blur, zoom-throughs (the camera flies into an
+object and out into the next scene), diagonal colour wipes. Never a plain crossfade.
+THE FILM: the advert (about 15s, looping)
+Time Shot What the customer sees
+0.0–2.2s Logo open Black screen. A thin light sweep travels slowly across, revealing the logo as if
+light is gliding over polished metal. The logo scales slowly 92% → 100%. "SAM
+ELECTRONICS" fades in while its letter spacing closes from very wide to normal.
+"QUALITY · WARRANTY · PRICE" appears softly underneath. A slow, premium,
+confident open.
+2.2–2.5s Zoom-through The camera flies into the logo and out into yellow.
+2.5–4.2s Battery (yellow) The giant outline word "POWER" drifts behind. The battery flies in rotating and
+lands big with a shadow; a charge bar sweeps up its label. "Full day." slides in
+from the left, "Every day." from the right (graphite). The pill "From AED 35 →"
+pops in.
+4.2–4.4s Whip pan A fast horizontal whip with motion blur into graphite.
+4.4–6.0s Cameras
+(graphite)
+A macro push into the lens: the rings rotate and a glint crosses the glass.
+"Sharp" punches in (scale 120% → 100%), then "again." in yellow. The pill pops.
+6.0–6.3s Zoom-through The camera flies into the lens and out into white.
+6.3–7.9s Back glass
+(white)
+The back glass spins in a full turn and stops with a reflection sweeping across
+it. "Factory" / "finish." (graphite) masks up. The pill pops.
+7.9–8.1s Wipe A diagonal yellow wipe.
+8.1–9.7s Small parts
+(yellow)
+The small parts burst out from the centre and snap into a neat flat-lay grid,
+each landing with a tiny bounce. "The small parts" / "that matter." The pill
+pops.
+9.7–11.2s Montage A rapid montage: 5 cuts of 0.3s, each part full-screen with its price flashing, the
+tempo speeding up like a heartbeat, ending on a white flash.
+11.2–11.9s Statement "All in Deira." in huge white type on graphite, slamming in with an impact.
+11.9–15.0s Logo close The logo forms from tiny particles of light gathering together (like the dust),
+then a slow light sweep crosses it. "SAM ELECTRONICS" and "QUALITY ·
+WARRANTY · PRICE" settle beneath, then a yellow "Find My Part" pill (the real
+page button pulses once at this moment). Hold 1s, then a slow fade to black
+(0.6s) and the loop restarts with the logo open.
+More ideas you may add (only if they look premium)
+• A thin progress bar of 8 segments under the stage, filling with each step, as a timeline of the
+"trailer".
+• On the burst, a few tiny screws and clips spin out with the layers and float in the stack for a
+moment before settling into the Small parts tray.
+• A subtle chromatic edge on the white flash at the final lock (one frame), like a camera flash in a
+film.
+• Tell me in one line what you added and why.
+DO NOT
+5 No element enters with only a fade.
+5 No layer ever leaves the stage box or goes under the nav.
+5 No up-then-down or dropping motion.
+5 Counter, list, card and leader line never out of sync.
+
+-- 13 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 14
+5 No hair or fibre dust; no dust outside the light.
+5 No empty ad frames, no stopped text, no yellow on grey.
+5 No plain grey chip boxes; no uneven stats.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Opening plays: lights on → title slam → silhouette → reveal → the UI builds (no fades).
+[ ] The burst plays on the first scroll, inside the stage box.
+[ ] Each step: new camera angle, the lift and light sweep, the micro-animation, the data hit, all in
+sync.
+[ ] Phone motion smooth; nothing cut off; nothing under the nav.
+[ ] Tiny white dust back, only in the light, drifting here and there.
+[ ] Climax plays: rapid locks → white flash → whip → the dust turns into the golden bokeh.
+[ ] Stats evenly spaced on one baseline; chips are lit mini product cards catching the bloom.
+[ ] The advert plays the full film with the cinematic logo open and close, and loops.
+[ ] Any unfinished part listed honestly.
+CAPTURE BEFORE REPORTING
+Build a capture page that can freeze any moment, and send real frames: the opening at 0.3s, 0.9s,
+1.6s, 2.4s and 3.2s; the burst mid-cascade; step 02 and step 06; the climax mid-locks and mid
+dust-to-gold; the final call complete; the advert logo open, the battery scene, the montage and the
+logo close. Answer yes only for what you can see in a frame.
+
+-- 14 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 15
+ISSUE 01B · SMALL FIXES · STILL OPEN
+Hero devices: phone ad reel and iPad cart
+STATUS: The hero is approved and stays exactly as it is, except these two moments, which were
+requested before and are still not done.
+THE FEELING. Every tap and every card in the hero should feel like a real product working
+perfectly in your hand: crisp, satisfying, believable.
+Fix A: the repair card in the phone ad reel
+It currently shows a random, unidentifiable component. Replace it with this 4-second film, playing
+inside the phone screen (G14 applies):
+THE FILM (shot by shot)
+Time Shot What the customer sees
+0.0–0.6s Cracked A real phone screen in macro, cracked from the bottom-left corner: fine spider
+cracks with sharp edges catching the light, the display dim and broken
+underneath.
+0.6–1.8s Healing Each crack fills with a thin warm yellow light, then seals line by line from the
+impact point outward, the glass closing behind the light like a zip. The light
+fades as each line closes.
+1.8–2.4s Boot The repaired screen boots: black, then the Sam Electronics logo appears crisp
+in full colour, with one clean white light sweep across the glass.
+2.4–4.0s Message Eyebrow "REPAIRS · TESTED". Headline "Cracked screen?" / "Fixed, tested,
+guaranteed." by mask reveal. Yellow pill "Book a repair →" pops in with one
+small settle.
+• Check every other card in the reel: each must show a correct, recognisable product (screen,
+battery, back cover, frame, flex, camera, small parts) or service.
+Fix B: the iPad add-to-cart
+The cart currently turns into a plain yellow box. Replace it with this 1.4-second moment:
+THE FILM (shot by shot)
+Time Shot What the customer sees
+0.00–0.15s Tap A soft finger-tap ripple spreads from the "+" button (white at 30%, expo-out).
+0.15–0.75s Flight A small copy of the product image lifts off the card and flies in a smooth arc to
+the iPad's cart icon, shrinking to 20% and gaining a slight motion blur
+mid-flight.
+0.75–1.00s Land The cart icon bounces (1 → 1.2 → 1, one settle). The badge number rolls up by
+one like an odometer.
+1.00–2.50s Toast A slim graphite toast slides up from the bottom of the iPad screen: "✓ Added ·
+[product name]". It holds 1.5s and slides back down. It stays inside the bottom
+12% of the screen and never covers the grid.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Every phone-reel card shows a correct, realistic visual.
+[ ] The repair card plays crack → heal → boot → message.
+[ ] The iPad cart plays tap → flight → land → toast. No yellow box.
+
+-- 15 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 16
+[ ] Nothing else in the hero changed.
+CAPTURE BEFORE REPORTING
+Repair card: one frame mid-heal, one with the message. iPad: one frame mid-flight, one with the
+toast.
+
+-- 16 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 17
+ISSUE 02 · NEW SECTION · REPLACES THE PARTS CABINET
+What we offer: the 8 families and the 3
+service ads
+STATUS: The Parts Cabinet is cancelled completely: file deleted, never to be rebuilt. No
+drawers, no cabinet circuits, no logo node. This section replaces it and comes directly after the
+teardown. The teardown was the fun welcome; this is the formal overview of everything we sell
+and do.
+THE FEELING. Walking into a premium flagship store after the show: calm, bright, organised,
+expensive. First you see every product family laid out like jewellery under soft light. Then three
+big commercials hit one after another, each in its own colour, each confident and fast. The
+customer should think: "They have everything, and they do everything."
+Part A: The 8 product families
+THE SET: background, light, materials, shadows, atmosphere
+• Background: warm fog studio (#F2F3F4 lifting to #FAFAF8 in the centre), fine 2% grain, a very soft
+warm light from the top-left. It must feel like daylight after the teardown's dark studio.
+• Transition from the teardown: the teardown's graphite brightens into fog over the first 20% of this
+section's height, like a studio's lights coming up. No hard edge between the two sections.
+• Cards: white with a faint glass edge (1px white at 60% on the top edge), radius as the hero's
+cards, a soft shadow below (G11: following the card's shape, never a hard line).
+• Each card contains a small round pedestal (satin graphite) where the part stands, lit by its own
+tiny key light: soft rectangular reflection on glass parts, contact shadow on the pedestal.
+• Parts: the teardown parts library (G15), the exact same models at the same studio quality:
+Screen, Frame, Flex cables, Logic board, Battery, Cameras, Small parts, Back glass. The phone in
+the Repair ad is the teardown's assembled phone. The cartons, tape, labels, tag and pallet in the
+Wholesale ad follow the G15 object standard.
+LAYOUT (1440×900)
+• Top: eyebrow "WHAT WE OFFER" (mono, yellow-dark #8A6A10 on fog), headline "Every part.
+Every service." / "One shop in Deira." (second line in graphite at 60%), and a one-line intro on the
+right.
+• Below: 8 family cards in a 4 × 2 grid, about 300 × 340px each, 24px gaps. Everything (header +
+both rows) fits in one 900px screen.
+• Each card, top to bottom: the part on its pedestal (top 55% of the card) · family name (Space
+Grotesk 22px) · "2,211 in stock · 14 brands" (mono 13px) · grade chips (hero chip style) · "from
+AED 70" left and a "Shop →" link right, on one line.
+THE FILM: entrance (time-based, plays when the section enters)
+Time Shot What the customer sees
+0.0–0.8s Title The headline rises line by line by mask reveal (100ms apart). The eyebrow
+types in letter by letter.
+0.4–1.6s Wave The cards rise into place in a wave from top-left to bottom-right (60ms
+stagger), each from 24px lower and at 0% opacity, expo-out with a 3px settle.
+
+-- 17 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 18
+Time Shot What the customer sees
+0.8–2.2s Parts land In each card, the part drops onto its pedestal from 30px above, turning 40° as
+it falls, landing with a tiny settle. Its contact shadow forms the moment it
+touches.
+1.4–2.6s Numbers Stock numbers count up from 0 (mono digits rolling). Grade chips pop in one by
+one.
+INTERACTION
+• Hover a card: it lifts 6px (its shadow grows softer and larger), the part rotates smoothly to a 3/4
+angle over 500ms and a light sweep passes across it, the pedestal's rim glows faint yellow, "Shop
+→" arrow slides 4px right. Mouse out: everything returns in 400ms.
+• Click a card: opens the shop filtered to that family.
+IDLE LIFE (what keeps moving when nobody touches anything)
+• Every part turns very slowly on its pedestal (one turn per 30s), each card starting at a different
+angle so the row never moves in sync.
+• Every 8–10s, one soft light sweep passes across the whole row of parts from left to right, catching
+each part's glass or metal for a moment. A reflection, never a visible bar.
+Part B: The three service ads (full-bleed commercials)
+Three full-width ad bands, each about 85vh tall, stacked one after another: Repair (graphite) →
+Wholesale (yellow) → Worldwide (white). Each is a commercial with its own film, playing when
+the band reaches 40% into the viewport, then holding with idle life. The layout alternates: Repair =
+text left / scene right, Wholesale = scene left / text right, Worldwide = text left / scene right.
+• Transition between bands: the next band's colour sweeps in as a diagonal wipe (about 15°) as you
+scroll into it, tied to scroll position, so it feels like a cut in a commercial.
+• Each band uses the hero's components: mono eyebrow, big Space Grotesk headline (2 lines), one
+short paragraph, a stat strip of 3 count-ups, a primary and a secondary button.
+AD 1 · REPAIR · GRAPHITE
+THE SET: background, light, materials, shadows, atmosphere
+• Graphite studio (#2A2C2F edges to #3E4044 behind the phone), polished dark floor with a soft
+elliptical light pool, no horizon line (G11).
+• Key softbox top-left reflecting on the phone's glass; warm rim light behind; dust falling slowly in
+the light (G12).
+THE FILM (shot by shot)
+Time Shot What the customer sees
+0.0–0.8s The patient A realistic phone lies face-down on the floor in the light pool. It flips over with
+weight (rotates 180° and settles), revealing a cracked screen: sharp spider
+cracks catching the key light.
+0.8–2.0s The fix The cracks fill with warm yellow light and seal line by line from the impact point
+outward. A thin scan of light follows the last crack and the glass is whole.
+2.0–2.6s Boot The screen boots: the full-colour logo, one white light sweep, then a home
+screen.
+2.6–3.6s Tested Beside the phone, a test checklist ticks in one line at a time with a soft click
+each: Touch ✓ · Display ✓ · Face ID ✓ · Speaker ✓. A round "TESTED" seal
+stamps beside it with a small shake.
+0.4–2.4s Text Eyebrow "REPAIR LAB". Headline "Broken today." / "Fixed today." (second line
+yellow). Stats count up: same-day repairs* · warranty on every repair* · since
+2003. Buttons: "Book a repair" (yellow), "See repair prices" (outline).
+
+-- 18 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 19
+IDLE LIFE (what keeps moving when nobody touches anything)
+• The phone breathes on a slow turntable (±8°), the softbox reflection sliding over its glass; the
+dust falls; every 6s the checklist re-ticks quickly.
+AD 2 · WHOLESALE · SIGNAL YELLOW
+THE SET: background, light, materials, shadows, atmosphere
+• Full Signal Yellow field with 2% grain and a soft studio vignette (edges 8% darker). A light wooden
+pallet sits on a subtle bench-grey floor with a soft shadow.
+• Cartons: real corrugated cardboard (visible flute texture on the edges), muted kraft colour, yellow
+tape printed "SAM ELECTRONICS", a white shipping label with a barcode.
+THE FILM (shot by shot)
+Time Shot What the customer sees
+0.0–1.6s The drop Cartons drop onto the pallet one after another (6 cartons, 180ms apart), each
+landing with weight: a small squash on impact, a settle, a puff of dust at the
+base, its contact shadow snapping in.
+1.6–2.2s The wrap Shrink-wrap sweeps around the stack in one spiral motion with a moving plastic
+shine.
+2.2–3.0s The price A price tag swings in on a string beside the pallet: "Retail AED 125". It flips like
+a card to "Trade AED 98" and a "−22%" badge stamps on its corner.
+3.0–3.8s The count A unit counter rolls 10 → 50 → 100 units, with a carton added to the stack at
+each step.
+0.4–2.4s Text Eyebrow "WHOLESALE · TRADE". Headline "Stock up." / "Cost down."
+(graphite). Stats: trade prices from X units* · same-day quotes · since 2003.
+Buttons: "Apply for trade prices" (graphite button, white text), "How trade
+works" (outline graphite). Buttons must never be cut off.
+IDLE LIFE (what keeps moving when nobody touches anything)
+• The price tag swings gently on its string; a soft light sweep passes over the shrink-wrap every 7s.
+AD 3 · WORLDWIDE · WHITE
+THE SET: background, light, materials, shadows, atmosphere
+• White field with a very faint warm light from the top-right and fine grain, so it never looks flat.
+• A globe made of graphite and fog dots (dot-matrix style, matching the Worldwide section), on
+palette only: graphite dots, yellow for Dubai and the active route, white highlights. No blue, no
+green.
+THE FILM (shot by shot)
+Time Shot What the customer sees
+0.0–1.0s The world The dot globe fades in and rotates slowly to bring Dubai to the front. Dubai
+pulses yellow.
+1.0–2.4s The route A glowing yellow arc draws from Dubai to the destination (cycling: Baghdad,
+Istanbul, Lagos, Madrid). A small parcel travels along the arc and lands with a
+tiny bounce.
+2.4–3.4s The status Below the globe (never on it), a status pill steps through Packed → In transit →
+Delivered, each step lighting yellow with a check.
+0.4–2.4s Text Eyebrow "WORLDWIDE". Headline "From Deira" / "to the world." Stats: shipping
+to X+ countries* · tracked on every parcel · packed same day*. Buttons: "Get a
+shipping quote" (yellow), "Where we ship" (outline).
+
+-- 19 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 20
+IDLE LIFE (what keeps moving when nobody touches anything)
+• The globe keeps rotating slowly; a new route draws every 4s to the next destination; the parcel
+keeps travelling.
+* Sample values: the owner must confirm same-day repairs, warranty periods, minimum trade
+units and countries shipped to (G13).
+DO NOT
+5 Do not bring back drawers, a cabinet, a logo node or cabinet circuits.
+5 Do not use flat or cartoon cartons, flat phones or a blue/green globe.
+5 Do not let any button, pill or label be cut off or overlap the scene.
+5 Do not make the three ads the same layout or the same colour as their neighbours.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] 8 family cards in a 4 × 2 grid with realistic parts on pedestals, fitting in one screen.
+[ ] Entrance plays: title → card wave → parts land → numbers count.
+[ ] Hover lifts the card and turns the part with a light sweep.
+[ ] Three full-bleed ads: graphite Repair, yellow Wholesale, white Worldwide, with diagonal wipes
+between them.
+[ ] Each ad's film plays as scripted and then keeps its idle life.
+[ ] No zeros; sample values marked.
+[ ] Every surface lit per G11; nothing flat.
+CAPTURE BEFORE REPORTING
+Family grid after the entrance; hover on Battery; each ad mid-film (Repair healing, Wholesale tag flip,
+Worldwide parcel on the arc) and each ad complete.
+
+-- 20 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 21
+ISSUE 03 · REBUILD LAYOUT
+Live Parts Board: "What's moving on our
+shelves"
+THE FEELING. Standing in the control room of a busy warehouse at night. Screens glow,
+numbers tick, every second something lands, sells or ships. Calm and precise, but never still. The
+customer should feel the shop is alive right now.
+What is wrong now
+• Traces cut through text, cross the Low-stock tile and each other. Counter tiles are weak with tiny
+dull icons. Trending chips are clipped. Rows are tall and empty. Columns are unbalanced. Stripe
+texture and a circuit grid make the background busy.
+THE SET: background, light, materials, shadows, atmosphere
+• Clean living graphite (#2A2C2F to #34363A), fine grain, one soft cool-neutral light from the top so
+the board's glass has a faint top highlight.
+• The board is a dark glass panel (#1F2023 at 90%) with a 1px top edge highlight and soft inner
+shadow; rows separated by 1px lines at 6% white.
+• No stripes, no grid. Circuits only in the wiring channel (functional) and faint decoration in empty
+corners (8–12%).
+LAYOUT
+• Top row: eyebrow + headline left, body text right.
+• Main row: [4 counter tiles stacked] → [wiring channel ~96px] → [the board]. Each tile lines up with
+its own lane in the channel.
+• Bottom: "Trending right now" full-width ticker, then the button aligned left beneath it.
+THE FILM: entrance
+Time Shot What the customer sees
+0.0–0.8s Title Headline by mask reveal; body text fades up.
+0.3–1.2s Tiles The four counter tiles slide in from the left one by one (80ms stagger); numbers
+count up from 0.
+0.8–1.6s Wiring Each tile's single straight trace draws across the channel to the board (300ms
+each), a small node lighting where it meets the board.
+1.2–2.4s Board The board powers on: a soft light passes down the glass once, the header and
+filter tabs appear, then the first 6 rows type in from the top, 100ms apart.
+IDLE LIFE (what keeps moving when nobody touches anything)
+• Every 2.5–4s a new event lands: the row slides in at the top and types in; it glows yellow for 1.2s;
+a pulse runs from the row through its lane in the channel to its counter; the counter flashes, its
+number rolls up and a "+1" floats up and fades.
+• Counter icons are always gently animated: a box dropping onto a shelf (Just landed), a battery
+draining and blinking amber (Low stock), a tag swinging down (Price drops), a truck driving off
+(Shipped).
+• Sparklines have a gradient fill and a pulsing dot on the latest point; a delta line under each: "+3 in
+the last hour".
+• The trending ticker scrolls continuously with fade masks on both edges; counts roll.
+INTERACTION
+
+-- 21 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 22
+• Filter tabs (All · Landed · Low · Drops · Shipped): the board's rows shuffle and filter with a quick
+vertical slide; the matching counter tile glows yellow.
+• Hover a row: it lifts slightly with a thumbnail of the part enlarging; click opens the product.
+• Rows are compact (~56px): time · status pill · small part thumbnail or flag · item · value right next
+to it. Footer: rolling "42 events today" + a tiny live activity bar.
+DO NOT
+5 Do not route any trace through text or tiles.
+5 Do not clip chips or ticker items.
+5 Do not use stripes, grids or tiled backgrounds.
+5 No dead gap under the button.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Zero crossings: every trace straight and inside the channel.
+[ ] Live event → pulse → counter tick works continuously.
+[ ] Animated icons, filled sparklines, deltas.
+[ ] Compact rows with thumbnails and filter tabs.
+[ ] Ticker never clips.
+[ ] Clean lit graphite background.
+CAPTURE BEFORE REPORTING
+The section after the entrance; one frame mid-pulse (row → counter); the Low filter active.
+
+-- 22 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 23
+ISSUE 04 · GLOBAL FIX · APPLY EVERYWHERE
+Global: circuits, the nav progress line and
+backgrounds
+Do not remove the circuits. Do not remove the nav progress line. They are part of our identity,
+exactly as in the hero.
+THE FEELING. Electricity running quietly through the building's walls. You notice it in the empty
+spaces, flowing calmly, never in your way. When something happens on the page, the current
+answers with a small surge, like the shop reacting to you.
+What is wrong now
+• A bus forced down the page cuts through deal cards, buttons, cartons and the word "Quality".
+Current is drawn as dots. Several backgrounds have grids, stripes and tiles.
+What you must do
+1. Keep the nav progress line as a top-bar feature: a thin yellow line that fills with scroll, its head a
+small glowing node.
+2. Each section designs its own circuits where they fit (see each issue). Some sections may have one
+long circuit through empty space.
+3. Current: soft light streaks (80–160px gradient dashes, white-yellow core fading to transparent),
+several at once at slightly different speeds (60–120px/s). On events nearby (add to cart, a new
+board row, a card hover), one streak brightens and speeds up for 400ms: a surge.
+4. Nodes are small rings (6–8px) that glow softly when current passes through them.
+5. 24px clearance from every text, button, card, image and icon. Audit every section and reroute
+anything that touches.
+6. Background circuits at 8–12% opacity, empty areas only.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Nav progress line present.
+[ ] Circuits present and decorative per section.
+[ ] Zero circuits touching or crossing content (send me the audit list of every rerouted circuit).
+[ ] Current flows as streaks with surges on events.
+[ ] No busy background textures left.
+CAPTURE BEFORE REPORTING
+One frame per section showing its circuits, plus the audit list.
+
+-- 23 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 24
+ISSUE 05 · FULL REBUILD · PINNED SCENE
+Bench Test: "Nothing leaves Deira until it
+passes the rig"
+THE FEELING. Watching a precision machine test a part in a quality lab: clamps closing with a
+satisfying click, beams scanning, gauges settling, and the final stamp. Trust, built in front of your
+eyes. The customer should think: "Every part I buy here has been through this."
+What is wrong now
+• Waves, blurred traces and yellow blotches in the background. Nothing is tested while you watch.
+Quality / Warranty / Price are empty outlines. The probe arm covers the screen, the readouts are
+basic, there is cut-off engraved text, a random black bar, a dangling cable and a cut-off "Parts
+tested" card. Big empty space under the rig.
+THE SET: background, light, materials, shadows, atmosphere
+• Full Signal Yellow field, 2% grain, studio vignette (edges 8–10% darker), a subtle bench surface at
+the bottom with the rig's soft contact shadow.
+• The rig: anodised aluminium plate (fine brushed texture, soft specular highlight), machined
+clamps with knurled knobs, a spring-loaded probe on a rail, real LEDs with a soft bloom, a digital
+counter in the top bar, and a cable with a real connector running neatly off the bottom edge.
+• Key light top-left, so the plate has one long soft highlight and each knob a small bright point.
+LAYOUT
+• Pinned for about 300vh; scroll drives the test forward and backward (scrubbed, eased). Everything
+fits in one screen.
+• Left: eyebrow, headline, and the three words QUALITY · WARRANTY · PRICE at about 72px, each
+with a short line that types in beneath it when earned.
+• Right: the rig, full height, with the printed work order feeding out of its bottom.
+THE FILM: scroll-driven (reverses on scroll up)
+Time Shot What the customer sees
+0–10% Load The phone slides into the rig; the clamps close with a click (a 2px shake) and a
+settle; the status LEDs go green one by one; the rig's counter wakes up.
+10–30% Display A soft scan light sweeps down the screen; a pixel grid fills behind it; the Display
+tile flips to PASS ✓.
+30–45% Touch The probe taps grid points one by one (it never covers the screen's content); a
+touch trace draws; PASS ✓; the word QUALITY fills like a charging bar left to
+right and its circle draws into a ✓.
+45–65% True Tone The screen shifts warm to cool; a sensor reads; a gauge needle settles; PASS ✓;
+a warranty sticker is applied to the phone with a small press; WARRANTY fills.
+65–85% Battery A health gauge charges to 98%; PASS ✓; a price tag drops in on a string; PRICE
+fills.
+85–100% Passed A thermal work order feeds out of the rig (grade · warranty · price · unit #); a
+"PASSED" stamp lands on it with a shake; the counter rolls 1,293 → 1,294; the
+pin releases.
+IDLE LIFE (what keeps moving when nobody touches anything)
+• Rig LEDs breathe; the counter's last digit flickers occasionally; the work order sways slightly as if
+from airflow.
+
+-- 24 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 25
+DO NOT
+5 No waves or blotches.
+5 The probe never covers screen content.
+5 No terminal-style log box.
+5 No empty space under the rig.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Pinned and scrubbed both ways, four checks in order.
+[ ] Words fill like charging bars with ✓ and typed lines.
+[ ] Work order prints and stamps; counter ticks.
+[ ] Rig realistic, full height, no defects.
+[ ] Clean yellow studio background.
+CAPTURE BEFORE REPORTING
+Frames at 5%, 35%, 55%, 75% and 100% of the pin.
+
+-- 25 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 26
+ISSUE 06 · REPLACES THE MODEL FILE
+The Showcase: screen adverts
+THE FEELING. A run of premium phone-screen commercials in a quiet showroom: bold type, a
+perfect product, a beat, the next one. Like flipping through the best ads in a magazine, but
+moving. The customer should want a new screen even if theirs isn't broken.
+What is wrong now
+• The Model File looks like bathroom tiles, confuses with too many controls at once, clips rows,
+shows a flat beige phone on a dark ellipse, and sells nothing. Remove it from the home page:
+browsing by model lives in Find My Part and on the Brands & models page.
+THE SET: background, light, materials, shadows, atmosphere
+• Warm fog studio around the ad stage (fine grain, soft warm light from the top-left).
+• The ad stage: a wide card, graphite on the left half and Signal Yellow on the right half, with a soft
+shadow under the whole card, inspired by the owner's own banner style (big bold typography on
+graphite, the product on yellow, a feature checklist, one clear button).
+• Behind each product on the yellow side: a very slow, soft drifting light (like studio haze), never a
+shape.
+The ads are about screens, one per grade: Service Pack (lead) · Original · OLED · Incell · High
+Copy. Optional last two: Batteries and Repair.
+THE FILM: each ad (about 7s, auto-advancing)
+Time Shot What the customer sees
+0.0–0.6s Headline On graphite: the grade name in mono eyebrow, then a two-line headline word
+by word (blur to sharp, 60ms).
+0.3–1.4s Product On yellow: the product enters with depth: from 30% smaller and slightly
+turned, it comes forward and settles at full size with a 2° overshoot. Its contact
+shadow forms under it.
+1.0–2.0s Proof The checklist ticks in on graphite (e.g. Genuine · Factory sealed · Warranty),
+each with a click; a "from AED X" badge stamps onto the yellow side.
+2.0–7.0s Hold The product turns slowly (±10°), light sweeps over its glass every 3s, the haze
+drifts. The progress bar for this ad fills.
+7.0–7.5s Cut The product exits with depth (moves back and fades), the text lines slide up
+and out; the next ad begins.
+• The Service Pack ad (lead) has an extra moment: the sealed service box slides in, the flap lifts, the
+screen with its frame slides out and turns, and a seal stamps.
+• Controls: story-style progress bars (one per ad), pause on hover, arrows, swipe.
+DO NOT
+5 Do not simulate colour or quality differences between grades (no OLED vs Incell slider).
+Differences are explained in text only.
+5 No back-cover colour-changing ad.
+5 No grid or tile background.
+5 Do not use the Samsung logo as our branding; it appears only on genuine packaging.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Model File removed from home.
+[ ] Showcase built as a graphite | yellow stage in a warm fog studio.
+
+-- 26 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 27
+[ ] 5 screen-grade ads following the film, auto-advancing, with progress bars, pause, arrows and
+swipe.
+[ ] No simulated colour comparisons.
+CAPTURE BEFORE REPORTING
+Each ad at about 2s (fully entered), plus the Service Pack box opening.
+
+-- 27 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 28
+ISSUE 07 · STRONG IMPROVEMENT
+Deals & arrivals: "Prices drop. Clocks
+tick."
+THE FEELING. The energy of a flash sale in a premium store: a ticking clock, a price falling in
+front of you, stock running out. Urgent but classy, never a cheap discount banner. The customer
+should feel: "If I don't act now, someone else will."
+What is wrong now
+• Circuits cut through deal cards and sit on "Add to cart". First and last carousel cards are half-faded
+with clipped text. Cards are identical with cryptic badges ("OR", "OL") and static countdowns.
+• The shipment card contradicts itself (parcel at the start, "98% of the way", 3 days left). The
+pre-orders card is a bright white block with already-released models. Dead space above the
+headline.
+THE SET: background, light, materials, shadows, atmosphere
+• Graphite (#2A2C2F) with one soft warm light pooling from the top-left over the spotlight deal, as if
+a display light is aimed at it; fine grain.
+• Deal cards: dark glass cards (hero card style) with a faint top highlight; each product from the
+parts library (G15) standing on a soft contact shadow.
+• Flip-clock digits: real split-flap tiles (matte graphite, a thin hinge line across the middle, a soft
+shadow under the top flap).
+LAYOUT
+• Header row: eyebrow + headline left, "See every deal →" right, on one aligned line. No dead space
+above.
+• Left (40%): the Deal of the Day spotlight. Right (60%): filter tabs, then the carousel. Below:
+Incoming shipment and Pre-orders side by side.
+THE FILM: entrance
+Time Shot What the customer sees
+0.0–0.8s Title Headline by mask reveal; the tabs slide in.
+0.3–1.4s Spotlight The spotlight product rises into its light with a slow turn and settles; the flip
+clock flaps into the current time digit by digit (each tile flips 2–3 times before
+landing).
+1.0–2.0s The drop The old price appears, a drawn line strikes through it from left to right (300ms),
+and the new price rolls down digit by digit into place with a small settle. A
+"−22%" badge stamps on.
+1.2–2.2s Stock The stock bar fills to its level and then drains slightly: "32 of 50 left".
+0.6–1.8s Carousel Cards slide in from the right with a 70ms stagger, each product landing with a
+settle.
+IDLE LIFE (what keeps moving when nobody touches anything)
+• The flip clock flips every second (seconds tiles), with a soft click feel (tiny shadow flash under the
+flap).
+• Every 20–30s the stock bar drops by one with a soft pulse, and the number rolls.
+• The carousel drifts slowly to the left; the spotlight product turns slowly (±10°) with the softbox
+reflection sliding over it.
+
+-- 28 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 29
+INTERACTION
+• Hover a card: it lifts 6px, the product turns to 3/4 and catches a light sweep, the countdown digits
+brighten.
+• Add to cart: the same fly-to-cart moment as the hero iPad (tap ripple → arc flight to the nav cart →
+bounce → badge roll → toast).
+• Carousel: drag, arrows, auto-drift; fade masks only on empty space; the first and last visible cards
+are always fully readable.
+INCOMING SHIPMENT CARD
+• A faint real world map (graphite dots), Shenzhen → Dubai air route drawn as a soft yellow arc, a
+small plane on the arc positioned exactly at the progress %.
+• 5 stages beneath (Packed · Departed Shenzhen · In flight · Customs Dubai · Arrived Deira), lit up to
+the current one. The progress bar, plane position and flip-clock countdown all agree.
+• Idle: the plane moves along the arc very slowly; its little contrail fades behind it. "Notify me when
+it lands". No circuit inside the card.
+PRE-ORDERS CARD
+• Graphite card matching the section (never white). Phone silhouettes as soft lit shapes (no fake
+renders), with neutral next-generation names ("Next Galaxy Ultra", "Next iPhone Pro"), editable
+later from the Control Room. Part types, "Reserve" per row, and a waiting counter ("126 shops
+waiting", sample) that ticks up occasionally.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] No circuit touches any card or button.
+[ ] No clipped text anywhere in the carousel.
+[ ] Spotlight plays clock → strike → price roll → stock.
+[ ] Grades in full words (Original · OLED · Incell · Service Pack · High Copy).
+[ ] Fly-to-cart works.
+[ ] Shipment data consistent.
+[ ] Pre-orders graphite with neutral names.
+[ ] Products from the parts library.
+CAPTURE BEFORE REPORTING
+After the entrance; mid price-roll; hover on a carousel card; mid fly-to-cart.
+
+-- 29 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 30
+ISSUE 08 · FULL REBUILD · STRONG BRANDING
+Wholesale: "The Trade Floor"
+THE FEELING. Stepping onto a real trade floor in Deira: tape screeching, cartons stacking, prices
+getting better with every carton you add. Industrial, generous, confident. A shop owner should
+feel: "This is where I buy in bulk."
+What is wrong now
+• Nothing says wholesale. A big empty yellow area. The scene under the calculator is a grey box.
+The carton conveyor is childish and circuits run through cartons. The ticker is clipped. "Partner
+with us" is a bright white block. No branding.
+THE SET: background, light, materials, shadows, atmosphere
+• Signal Yellow field with 2% grain and a studio vignette; the floor area under the pallet builder is a
+subtle warm-grey concrete with a soft light pool.
+• Cartons, tape, labels, pallet and shrink-wrap at G15 object quality (corrugated flutes, tape sheen
+and wrinkles, barcoded labels, wood grain, glossy wrap).
+• Key light top-left gives every carton a lit top face, a mid-tone front and a soft contact shadow on
+the pallet.
+THE FILM: entrance
+Time Shot What the customer sees
+0.0–0.8s Tape A strip of yellow packing tape printed "SAM ELECTRONICS · WHOLESALE ·
+TRADE" unrolls across the top edge of the section and presses flat, with a light
+glint running along it.
+0.4–1.2s Title Headline by mask reveal; a "TRADE ONLY" stamp lands beside it with ink
+texture and a small shake.
+0.8–1.8s Numbers The numbers band counts up: Since 2003 · X+ countries* · same-day quotes ·
+min. order X units*.
+1.2–2.6s Pallet The Pallet Builder powers on: an empty pallet slides in with weight; the first 2
+cartons drop on it.
+THE PALLET BUILDER (the centrepiece)
+• Pick a part (chips with library thumbnails), drag the quantity slider. Each step adds cartons that
+drop onto the pallet with weight (squash, settle, dust puff, contact shadow).
+• A price tier ladder (10+ · 50+ · 100+ · 500+): the active tier glows; when you cross a tier, it
+flashes, the unit price steps down by rolling digits, and "You keep AED X" rolls up.
+• Retail total vs trade total side by side; the trade total in yellow on graphite.
+• When the pallet is full, shrink-wrap spirals around it with a moving shine and a label prints and
+sticks on: "SE-2611 · Ready to ship from Deira."
+• Who we supply: 4 compact cards (Repair shops · Traders · Exporters · Bulk buyers), each with a
+small animated scene in G15 quality and one benefit.
+• How trade works: Apply → Get approved → Order at trade prices, lighting in order like a circuit,
+ending at "Apply for a trade account".
+• Trade ticker: full width, continuous, flags and quantities, fade masks. Partner with us: a
+graphite card with a faint world-map texture.
+• Circuits subtle, empty space only, never across cartons, cards or text. No conveyor.
+IDLE LIFE (what keeps moving when nobody touches anything)
+
+-- 30 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 31
+• The shrink-wrap shine passes every 6s; the tape's glint runs every 10s; the ticker scrolls; the
+active tier breathes.
+DO NOT
+5 No cartoon cartons, no conveyor, no flat empty yellow, no clipped ticker, no white partner block.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Reads as wholesale at first glance.
+[ ] Tape and TRADE ONLY stamp play.
+[ ] Pallet builder with tier ladder and wrap works.
+[ ] Who we supply + How trade works added.
+[ ] All objects at G15 quality.
+[ ] No circuits through objects.
+CAPTURE BEFORE REPORTING
+After the entrance; pallet at 50+ tier; pallet full with the label.
+
+-- 31 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 32
+ISSUE 09 · COLOUR FIX · KEEP THE REST
+Worldwide: map + the four boxes
+STATUS: The dot-matrix map, the routes and the live list are strong: keep them. The four boxes
+(Tracked · Packed · Quoted · Regions) and their continuous animations are liked: keep them
+moving.
+THE FEELING. A calm global operations screen: serious, precise, quietly busy. Everything in one
+colour family, like one professional instrument.
+What you must do
+1. Recolour every mini-animation using only the palette, as the service cards do: yellow for active
+and moving elements, white and soft grey for lines and text, graphite for surfaces.
+– Green tick → yellow tick drawing itself.
+– Blue/green globe → a graphite dot globe with yellow and white continents.
+– Bright brown carton → a muted kraft carton (G15 quality) with yellow tape.
+3. Make each animation larger inside its box (about 45% of the box's height), centred, with a soft
+contact shadow under any object.
+4. Light: each box gets a faint top highlight and its animation a tiny key light, so the four boxes feel
+lit, not flat.
+5. Optional, only if it looks good: a thin dashed route line linking the four boxes in the map's style; a
+"Where are you?" search that lights the country on the map.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Four boxes and their motion kept.
+[ ] Zero off-palette colours.
+[ ] Animations larger and lit.
+[ ] Map untouched.
+CAPTURE BEFORE REPORTING
+The section with all four boxes mid-animation.
+
+-- 32 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 33
+ISSUE 10 · REBUILD
+Our story & branches: "More than 20
+years in Deira"
+THE FEELING. Opening a family photo album in warm afternoon light: honest, proud, human.
+Twenty years of real shops, real people, one street in Deira. Then a look forward: Madrid is
+coming. The customer should trust us the way you trust a family business.
+What is wrong now
+• All white with nothing to look at. No images. The Dubai map uses default Google styling with a
+"ctrl + scroll" overlay. The Madrid card is a hand-drawn sketch with a red stamp. Empty space
+below.
+THE SET: background, light, materials, shadows, atmosphere
+• Warm fog (#F2F3F4 warming to #F7F3EA where the light falls), fine grain, a soft warm light
+coming from the top-right like late-afternoon sun through a shop window.
+• Timeline cards: white with a soft shadow and a slight glass edge; each holds a photo frame (a
+white instant-photo border with a soft drop shadow, slightly rotated ±2°).
+• Until real photos exist: a tasteful, softly blurred warm placeholder inside the frame (never blank,
+never a cartoon).
+THE FILM: scroll-driven
+Time Shot What the customer sees
+0–15% The line The timeline line draws from left to right with the scroll, a yellow current streak
+at its tip.
+15–60% The years As the line reaches each version card (v1.0 Syria Tell 2003 → v2.0 current shop
+2011 → v3.0 market branch → v4.0 Sam Electronics today), the card lifts in, and
+its photo develops like an instant photo: from a flat warm grey, the image fades
+in over 1.2s, warm first, then true colour. A big year counter rolls with the line,
+2003 → today.
+60–75% Now v3.0 shows "RUNNING" with a softly pulsing green dot; v4.0 shows
+"INSTALLING" with a loading bar filling slowly.
+75–100% Branches The two map cards slide up side by side, then the stats strip counts up: Since
+2003 · 2 cities · X countries served*.
+• Both maps brand-styled: graphite and fog streets, a yellow pin with a soft pulse, no default Google
+colours, no ctrl+scroll overlay (static until clicked) + "Open in Maps".
+• Madrid: a temporary map of the Plaza Mayor area in the same style as Dubai, with a pulsing
+"Opening soon" area circle (not an exact pin) and "Tell me when it opens".
+IDLE LIFE (what keeps moving when nobody touches anything)
+• The light shifts very slowly across the section (like the sun moving); the map pins pulse; the
+INSTALLING bar keeps creeping.
+DO NOT
+5 No sketch, no red stamp, no default map styling, no empty white areas.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Photo frames on every card with develop animation.
+[ ] Line draw + year counter.
+
+-- 33 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 34
+[ ] Madrid map matches Dubai.
+[ ] Maps branded, no overlay.
+[ ] Stats strip fills the gap.
+CAPTURE BEFORE REPORTING
+At 30% (a photo developing), 70% (RUNNING / INSTALLING) and 100% (maps + stats).
+
+-- 34 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 35
+ISSUE 11 · REPLACE WITH NEW IDEA
+The team: "Staff Badges"
+THE FEELING. Walking past the staff wall of a real shop and seeing the people behind it. Badges
+swaying slightly on their lanyards, a little shine on the hologram. Personal, warm, real. The
+customer should feel there are real experts on the other side.
+What is wrong now
+• AI-looking cards on a blurry striped background, "Photo coming soon · or browse files" on every
+card, empty "No reviews yet" stars, a plain text flip panel, nothing moving.
+THE SET: background, light, materials, shadows, atmosphere
+• A clean graphite wall (#2A2C2F) with one soft spotlight from above making an elliptical pool of
+light on the wall behind the badges (G11, no visible cone).
+• A slim brushed-metal rail across the top. Yellow lanyards printed "SAM ELECTRONICS" (fabric
+weave texture, slight twist), metal clips with a small highlight.
+• Badges: real PVC cards with rounded corners, a slight gloss, a hologram strip; each casts a soft
+shadow on the wall that moves with its sway.
+THE FILM: entrance
+Time Shot What the customer sees
+0.0–0.8s Title "Five roles. Every order passes through all of us." by mask reveal.
+0.3–1.8s Drop in The five badges drop from above on their lanyards one by one (120ms
+stagger), bounce on the lanyard's stretch, and swing to rest with real pendulum
+physics.
+1.8–5.0s The order An order ticket slides along the rail and pauses at each badge, which lights up
+with a soft yellow edge as the ticket passes: Parts Advisor → Parts Flow
+Controller → Bench Engineer → Finance & Checkout → Founder.
+• Badge front: photo, or a clean monogram of the role initials until photos arrive (never "browse
+files"); role code T01–T05, title, name, years with us; the hologram strip.
+• Founder badge T05 (Tarek Alchoumari): slightly larger, gold edge, "Leading since 2003". Reviews
+hidden until real ones exist.
+INTERACTION
+• Mouse near a badge: it nudges away gently and swings back. Click: the badge swings up and flips
+like a real card (3D, with weight); the back shows "What I can help with", a short bio, "Ask [name]
+→".
+IDLE LIFE (what keeps moving when nobody touches anything)
+• Each badge sways slightly differently; the hologram shimmers with the sway; the order ticket
+repeats its journey every 12s.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Five badges on lanyards, swaying with physics.
+[ ] No browse files, no empty stars.
+[ ] Flip with weight.
+[ ] Order ticket lights badges in order.
+[ ] Founder badge distinct.
+[ ] Graphite wall with one light pool.
+
+-- 35 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 36
+CAPTURE BEFORE REPORTING
+After the drop-in; mid order-ticket journey; one badge flipped.
+
+-- 36 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 37
+ISSUE 12 · FULL REBUILD
+Open to everyone: "Who are you?"
+THE FEELING. A personal welcome. You tell us who you are and the whole stage changes for
+you, like the shop rearranging itself around your needs. A retail customer, a repair shop and an
+exporter should each feel: "This part of the site is for me."
+What is wrong now
+• Plain white, empty space, a logo hub with thin grey connector lines (remove), cheap animations
+that illustrate nothing, four identical cards with identical buttons.
+THE SET: background, light, materials, shadows, atmosphere
+• Warm fog with grain; the light colour behind the stage shifts smoothly (800ms) to match the
+active lane.
+• Left: eyebrow, headline, and 4 large selector tabs (Retail customer · Repair shop · Trader &
+exporter · Bulk buyer) with icon + one line. Samsoom peeks in beside the tabs asking "Who are
+you?"
+• Right: one large cinematic stage (about 60% width) that changes with the selected tab. All objects
+from the parts library and at G15 quality.
+Lane Environment The scene (about 6s)
+Retail Fog with warm yellow
+light
+A hand holds the teardown phone with a cracked screen. Find My Part
+types the model; the matching screen (library model) slides in with
+grade chips and a price; a pin drops on "Collect in Deira or get it
+delivered". Button: "Find my part".
+Repair shop Graphite workbench A realistic top-down bench (mat, tools, soft light pool). A parts tray slides
+in; grades line up side by side; a padlock opens with a click to reveal
+trade prices. Button: "Open a trade account".
+Trader &
+exporter
+Dark dot-matrix map A bulk list document is scanned by a soft light; "QUOTED" stamps on it; a
+route arc draws from Dubai. Button: "Plan my shipment".
+Bulk buyer Full yellow Branded cartons stack on a pallet (Pallet Builder quality), shrink-wrap
+spirals, an "Incoming shipments first" badge stamps. Button: "Request a
+bulk quote".
+• Motion: auto-cycles about 6s per lane with a progress bar on the active tab; pause on hover; click
+to jump. The leaving scene moves back and fades with depth; the new one arrives with weight.
+The lane's 3 benefits type in beside the scene.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] No logo hub, no grey connector lines.
+[ ] Tabs + one stage.
+[ ] Four real scenes in their environments.
+[ ] Auto-cycle with progress bar.
+[ ] No white emptiness.
+CAPTURE BEFORE REPORTING
+Each lane mid-scene.
+
+-- 37 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 38
+ISSUE 13 · FULL REBUILD
+Sam Circuit membership: "The Charging
+Station"
+THE FEELING. Plugging in a premium device and watching it charge: a satisfying glow rising, a
+click as a level unlocks, a little reward each time. Playful but premium. The customer should want
+to fill the battery.
+What is wrong now
+• Everything is yellow (field, cells, pills and a busy circuit wallpaper). The battery shows all cells full
+while the label says 62%. Twelve identical "Perk · coming soon" pills. No interactivity.
+THE SET: background, light, materials, shadows, atmosphere
+• Graphite studio (#2A2C2F to #3A3C40 behind the battery), polished floor with a light pool and the
+battery's reflection. Yellow appears only as energy.
+• The battery: a large cell with a graphite metal casing, a glass window (softbox reflection), 4 tier
+marks engraved on the side, a cable plugged into its top with a real connector.
+• The fill: a glowing liquid light (amber core #C98A12 to Signal Yellow at the surface) with a slow
+shimmer on its surface, exactly at the real level (62% = 62%).
+THE FILM: entrance
+Time Shot What the customer sees
+0.0–0.8s Title Headline by mask reveal.
+0.3–1.4s Battery The battery rises into the light with a slow turn and settles; its reflection forms
+on the floor.
+1.0–2.4s Charge Current streaks run down the cable; the fill rises from 0 to 62% with the surface
+shimmer; the tier marks it passes light up with a click.
+1.6–2.6s Ladder The reward ladder rows slide in; the current tier glows; the next tier shows
+"AED X to go" with a progress bar.
+INTERACTION
+• Simulator buttons (+ Screen · AED 200, + Battery · AED 80, + Bulk order · AED 2,000): each tap
+sends a bright pulse down the cable and the fill rises.
+• Crossing a tier mark: the battery flashes, a tier badge pops, and that tier's reward card flips from
+locked to unlocked with a light sweep.
+• Reset: the battery powers down (fill drains with a fade, cable current stops).
+• Member card (graphite, holographic edge, name, tier, charge %): tilts with the mouse with a
+moving light sweep.
+• Ladder rows: plug → bolt → double bolt → full battery icons, name, requirement, status chip
+(Unlocked / AED X to go).
+• Perks: 1–2 examples per tier + one blurred "more perks revealed at launch" teaser (owner
+confirms the examples). No repeated "coming soon". No passport or stamp themes.
+IDLE LIFE (what keeps moving when nobody touches anything)
+• Current keeps flowing into the cable; the fill's surface shimmers; the next tier mark breathes
+softly.
+DONE WHEN (every box must be true, or the section is not done)
+
+-- 38 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 39
+[ ] Graphite studio, yellow only as energy.
+[ ] Fill matches the real level.
+[ ] Simulator works and flips tier cards.
+[ ] Ladder statuses shown.
+[ ] Member card tilts.
+CAPTURE BEFORE REPORTING
+After the entrance; mid tier-crossing; the member card tilted.
+
+-- 39 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 40
+ISSUE 14 · REBUILD
+Meet Samsoom: "Ask at 3 a.m."
+THE FEELING. Meeting a friendly, clever assistant who is genuinely good at his job: he looks at
+you, reacts, finds the part in seconds. Charming but premium, like a character from a high-end
+tech commercial, never childish.
+What is wrong now
+• White page, a white chat with a big empty area, blank grey shapes, a childish flat cartoon
+Samsoom on a plastic pedestal, the headline pushed below the character, the demo stops after 2
+messages.
+THE SET: background, light, materials, shadows, atmosphere
+• Warm yellow studio: Signal Yellow with grain and a soft vignette, a warm light pool on the floor
+where Samsoom floats, his soft shadow below him growing lighter as he bobs up.
+• Samsoom: the teardown's assembled phone model as his body (graphite metal frame, glass
+reflections), his face on the screen as glowing yellow pixel-LED eyes and mouth on deep black
+OLED, sleek metallic arms. No pedestal.
+• The chat panel: graphite glass (not white), hero card style, with a soft shadow.
+THE FILM: entrance
+Time Shot What the customer sees
+0.0–0.8s Title Eyebrow + headline top-left by mask reveal.
+0.4–1.4s Arrival Samsoom flies in from the right, slows, settles into a float, and waves; his eyes
+blink once.
+1.2–2.0s Chat The chat panel slides in; the first question appears.
+• The demo loops 5 conversations (A54 battery? · Which grade? · Are you open? · Trade prices? ·
+Ship to Iraq?), each with a typing indicator and a rich answer card (product mini-card with a library
+part render, grade, price, Add to cart; an hours card; a shipping card). No empty chat area.
+• Samsoom emotes in sync: thinking (loading dots in his eyes), found it (✓ ✓), happy (smile), and
+rare short emotes: a dabke step, blowing a kiss, a wink.
+IDLE LIFE (what keeps moving when nobody touches anything)
+• Eyes follow the cursor; blinks; a breathing bob; faint real questions drift in the background and
+sometimes one flies into the chat as the next message.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] No blank shapes, no white panel.
+[ ] Samsoom built on the teardown phone with an LED face.
+[ ] Headline on top; all in one screen.
+[ ] 5 conversations loop with rich cards and emotes.
+[ ] Launcher pill per G8 on every page.
+CAPTURE BEFORE REPORTING
+After the arrival; mid-typing; a rich product card answer.
+
+-- 40 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 41
+ISSUE 15 · SPLIT AND REBUILD
+The Feed + What customers say
+THE FEELING. The Feed: three phones in a dark studio, each alive with our social channels, like a
+launch event display. Reviews: bright, open and honest, real voices scrolling past. Together the
+customer should feel: "Lots of people already trust them."
+What is wrong now
+• White again with blank grey shapes; three static post cards; "No reviews yet / Be the first review";
+posts, reviews, Google, tabs and QR crammed side by side.
+PART A · THE FEED (graphite studio)
+THE SET: background, light, materials, shadows, atmosphere
+• Graphite studio with a light pool on a polished floor; three teardown-model phones fanned at
+angles (−12°, 0°, +12°), each with a softbox reflection, rim light and a floor reflection.
+THE FILM: entrance
+Time Shot What the customer sees
+0.0–1.2s Fan out The three phones rise from the floor one by one and fan out into position, each
+settling with a small overshoot.
+1.0–2.0s Live Their screens power on, each playing a feed (Instagram, TikTok, Facebook)
+inside G14 safe margins: posts auto-scroll, reels play muted, hearts float up
+and like counters tick.
+INTERACTION
+• Hover a phone: it comes forward, straightens and brightens; the others step back slightly.
+• "Scan to follow" QR with a soft scan light sweeping over it; follower counts roll (real numbers from
+the owner).
+PART B · WHAT CUSTOMERS SAY (white with soft yellow light)
+• A big Google rating card: stars fill one by one, the number of reviews counts up.
+• Two rows of real review cards scrolling in opposite directions with fade masks; each card with a
+light shadow and a quote mark in yellow.
+• "Review us on Google" + "Write a review". Never "No reviews yet". Real Google reviews are
+connected at the build stage.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] No blank shapes, no "No reviews yet".
+[ ] Three live-feed phones with entrance and hover.
+[ ] Reviews band separate with the Google card and two rows.
+CAPTURE BEFORE REPORTING
+The Feed after the entrance; a phone hovered; the reviews band.
+
+-- 41 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 42
+ISSUE 16 · IMPROVE
+Request console + Visit us
+STATUS: The idea (tabs + a printed work order) is strong. Keep it.
+THE FEELING. Writing your request on a real machine that prints it as you type, then tearing off
+the slip and sending it. Tactile and satisfying. Beside it, the shop's front desk: a live clock, today's
+hours, the door that's open right now.
+What is wrong now
+• Plain fields, a static tilted slip, a grey "Open now" dot, plain-text hours, an empty gap, a circuit
+node under the console's edge.
+THE SET: background, light, materials, shadows, atmosphere
+• Yellow section with grain and a vignette; the console is graphite glass with a soft shadow; the visit
+card is white with a soft shadow.
+• The work order: thermal paper (very slightly warm white, a faint curl at the bottom, perforations, a
+soft shadow where it hangs from the printer slot).
+THE FILM: interaction-driven
+Time Shot What the customer sees
+typing Print As each field is filled, its line prints onto the slip with a fast line-by-line feed, the
+slip moving down a little; a "3 of 4 fields" progress line fills.
+tab switch Reprint Fields morph smoothly to the new set; the slip's header reprints (TYPE: Bulk
+quote…).
+send Tear The slip tears along its perforation with a slight jerk; "SENT" stamps on it with
+ink texture; the slip folds and flies into the WhatsApp or email icon; Samsoom
+gives a thumbs-up.
+• Status dot per G7. Visit us: a live clock with seconds; "Closes in 3h 59m"; a day-timeline bar with
+the two shifts as yellow segments and a moving "now" marker; today highlighted; a brand-styled
+mini map or shop-front frame fills the gap with "Get directions"; WhatsApp and phone icons on the
+buttons. Circuits 24px away from the console.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Live printing works.
+[ ] Tear-and-send works.
+[ ] Status dot correct.
+[ ] Day timeline with now marker.
+[ ] Gap filled.
+[ ] No circuit near the console.
+CAPTURE BEFORE REPORTING
+Mid-typing with printed lines; mid tear; the visit card.
+
+-- 42 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 43
+ISSUE 17 · FULL REBUILD · PREMIUM
+Finale: "A phone on your bench? We have
+the part."
+THE FEELING. The closing shot of a brand film: the lights go down, current runs in from both
+sides, the emblem powers up, and the three promises switch on like neon signs. Proud and
+unforgettable. The customer should leave remembering Quality · Warranty · Price.
+What is wrong now
+• A grey slab phone with a white slash across it, a black floor box, a dead grey band, and a circuit
+line crossing out the word "Quality".
+THE SET: background, light, materials, shadows, atmosphere
+• Deep graphite stage (#26282B edges to #34363A centre, never black), one strong soft key light
+on the emblem, a polished floor with the emblem's fading reflection, dust falling slowly in the light
+(G12). No floor box, no cone.
+• The emblem: the owner's exact logo rebuilt as a premium object, machined metal and glass, a
+thick yellow edge that glows, studio reflections; about 40% of the screen height.
+THE FILM: entrance
+Time Shot What the customer sees
+0.0–1.0s Current Circuits from both sides (hero style) carry current streaks towards the centre.
+1.0–1.6s Power The current reaches the emblem: the two phones inside the logo light up, a soft
+ring of light shockwaves outward across the floor, and the circuits glow fully for
+a moment.
+1.6–3.0s Neon QUALITY · WARRANTY · PRICE switch on one by one like neon signs: a flicker, a
+pause, then steady, with a soft glow on the floor beneath each. Circuits frame
+the words but never cross them.
+2.4–3.6s Message The headline reveals word by word; the buttons rise in; the stats count up.
+IDLE LIFE (what keeps moving when nobody touches anything)
+• The emblem rotates slowly in 3D with the key light sweeping across its metal; current keeps
+flowing; the neon words breathe softly (±5%).
+DONE WHEN (every box must be true, or the section is not done)
+[ ] No phone, slash, floor box or grey band.
+[ ] Emblem large, premium, rotating.
+[ ] Power-up plays in order.
+[ ] No circuit crosses any word.
+[ ] Idle continues.
+CAPTURE BEFORE REPORTING
+Mid-current; the power shockwave; the neon words on; complete.
+
+-- 43 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 44
+ISSUE 18 · REDESIGN · PREMIUM
+Find My Part (the quick finder,
+everywhere)
+THE FEELING. The fastest, most satisfying search you've ever used: you tap your brand, see
+your exact phone, see your part as a real studio photo, and add it, in seconds. Premium like the
+hero, quick like a light switch.
+What is wrong now
+• Grey on grey: grey tiles on a grey panel on a dimmed grey page. Brand names in mixed styles.
+Empty tiles. An orphan last row. Model step is text only. A weak step indicator. The "POPULAR"
+label collides with tiles. Image frames are inconsistent. The quick view does not lead clearly to the
+full list.
+THE SET: background, light, materials, shadows, atmosphere
+• The page behind blurs (16px) and dims to graphite at 60%.
+• The panel: graphite glass with real depth (soft inner light from the top, fine grain, a thin yellow top
+edge, a soft large shadow), generous padding. It must feel like the hero, not a settings dialog.
+• Tiles: dark glass with a faint top highlight; on hover a yellow edge glow.
+• Step indicator as a circuit with LEDs (the teardown's language): Brand · Model · Part · Grade.
+Completed steps light yellow with current flowing to the next and show the choice ("Apple ✓");
+click to go back.
+• Step 1 · Brand: each brand name in its own wordmark style; inside each tile the models
+count, parts in stock and a stock signal. 14 brands as 7 × 2 (no orphan row). A "Popular" label sits
+above the popular row with 16px clearance, never touching a tile.
+• Step 2 · Model: every model tile has an image frame of identical size, angle and lighting,
+showing the phone front (a clean lit silhouette of that model's shape until real images exist).
+Series tabs, instant search by name or model number, "Recently viewed" and "Most searched"
+chips.
+• Step 3 · Part: part cards with the parts library renders (G15), stock and "from" price;
+out-of-stock dimmed with "Notify me".
+• Step 4 · Grade: grade cards side by side (Original · Service Pack · OLED · Incell · High Copy):
+price, stock signal, warranty, "best for" line, Add to cart with the fly-to-cart moment.
+• Quick view → full list: the nav hover opens a compact mega-dropdown (brands → models, each
+with its image). At its bottom, a clear full-width "See all [brand] models →" button opens the full
+finder at step 2.
+THE FILM: opening and steps
+Time Shot What the customer sees
+0–250ms Open The page blurs and dims; the panel rises 24px and scales from 96% to 100%,
+expo-out.
+250–600ms Tiles Tiles stagger in (25ms apart), numbers rolling.
+on choice Advance The chosen tile flies into the step indicator (300ms); its LED lights and current
+flows to the next step; the next step slides in from the right with depth. Every
+step transition is under 400ms.
+• Footer: a live summary ("Apple · iPhone 16 Pro · Screen"), "Open in Shop with these filters →" and
+a rolling result count.
+
+-- 44 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 45
+DO NOT
+5 No grey-on-grey.
+5 No mixed brand styles beyond each brand's own wordmark.
+5 No orphan rows or empty tile space.
+5 No model without an image frame.
+5 Nothing colliding with the Popular label.
+5 No step transition over 400ms.
+DONE WHEN (every box must be true, or the section is not done)
+[ ] Premium panel.
+[ ] LED circuit step indicator.
+[ ] Brand wordmarks, balanced grid, Popular label clear.
+[ ] Model image frames consistent.
+[ ] Library part renders; grade cards with Add to cart.
+[ ] Hover dropdown with a clear path to the full list.
+CAPTURE BEFORE REPORTING
+All 4 steps; the hover dropdown; one frame mid-transition.
+
+-- 45 of 46 --
+
+SAM ELECTRONICS · ROUND 4 · DIRECTOR'S EDITION THE HERO IS THE STANDARD
+From the owner of Sam Electronics to Claude Design · 11/10/2026 Page 46
+SECTION S · SEND ORDER AND FINAL CHECK
+The order you work in
+One batch per chat. Read CLAUDE.md first. Build in preview pages. Stop after each batch and wait for
+my review.
+Batch What Show me
+0 Read everything. Summarise G1–G15 and the Environment Map back to me
+in your own words.
+Text only
+1 Global: G15 parts library set up in CLAUDE.md; Issue 4 circuit audit; G6
+leftovers; G7 status dots; G8 launcher.
+Audit list + frames
+2 Issue 1B (hero fixes) + Issue 18 (Find My Part). CAPTURE frames
+3 Issue 2 (What we offer). CAPTURE frames
+4 Issue 3 (Live Board) + Issue 5 (Bench Test). CAPTURE frames
+5 Issue 6 (Showcase) + Issue 7 (Deals). CAPTURE frames
+6 Issue 8 (Trade Floor) + Issue 9 (Worldwide). CAPTURE frames
+7 Issue 10 (Story) + Issue 11 (Badges). CAPTURE frames
+8 Issue 12 (Who are you) + Issue 13 (Charging Station). CAPTURE frames
+9 Issue 14 (Samsoom) + Issue 15 (Feed + reviews). CAPTURE frames
+10 Issue 16 (Request + Visit) + Issue 17 (Finale), then the full home page top
+to bottom next to the hero and teardown.
+Full-page frames
+11 Mobile round: every section at 390px. Mobile frames
+Issue 1 (the teardown trailer cut) is done first, in its own chat, before Batch 0. After it is approved
+it is written into CLAUDE.md as LOCKED.
+Before you send any batch, confirm all of this
+[ ] I compared every section in this batch with the hero and the teardown, and it is at the same level.
+[ ] I built every shot in THE FILM, in order, with the given timings.
+[ ] Every set is lit per G11: key, fill, rim, light pools, contact shadows, no visible light shapes, no
+horizon lines, no black stages.
+[ ] Every part shown is from the G15 parts library, at teardown quality. Every other object (cartons,
+boxes, tags, badges) is at studio quality.
+[ ] Something moves in every section: entrance, idle life and interaction. Everything replays on scroll
+back.
+[ ] No circuit touches any content (24px). No off-palette colours.
+[ ] No leftovers, no clipped text, no zeros, nothing under the nav.
+[ ] The environment matches the map; no two neighbours share a background.
+[ ] Every DONE WHEN box answered by name, honestly; any unfinished part listed.
+Final word from the owner. The hero and the teardown prove what this website can be. The
+teardown got there because it was built exactly as it was directed: every shot, every light, every
+shadow. Do the same for every section here. Build the film, not a summary of it. If anything is
+unclear or impossible, ask me before you build, not after.
+
+-- 46 of 46 --
+

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><style>body{margin:0;background:#1A1B1D}</style></helmet>
+<div style="display:flex;flex-direction:column;gap:0;font-family:'JetBrains Mono',monospace">
+  <div style="display:flex;flex-direction:column;gap:18px;padding:32px 40px;background:#26282B">
+    <span style="font-size:12px;letter-spacing:.14em;color:#F7C032">BRAND RAIL · WHITE ON DARK · 30px</span>
+    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:0"><sc-for list="{{ brands }}" as="b" hint-placeholder-count="14"><div style="display:flex;align-items:center;height:64px;padding:0 26px;box-shadow:inset -1px 0 0 rgba(255,255,255,.08)"><dc-import name="SE Brand Logo" brand="{{ b }}" color="#FFFFFF" h="30" hint-size="90px,30px"></dc-import></div></sc-for></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:18px;padding:32px 40px;background:#F2F3F4">
+    <span style="font-size:12px;letter-spacing:.14em;color:#3D3E3F">FILTER CHIPS · GRAPHITE ON LIGHT · 16px</span>
+    <div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ brands }}" as="b" hint-placeholder-count="14"><span style="display:flex;align-items:center;height:40px;padding:0 14px;border-radius:10px;background:#FFFFFF;box-shadow:inset 0 0 0 1px rgba(26,27,29,.12)"><dc-import name="SE Brand Logo" brand="{{ b }}" color="#26282B" h="16" hint-size="60px,16px"></dc-import></span></sc-for></div>
+  </div>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() { return { brands: ['apple', 'samsung', 'xiaomi', 'redmi', 'poco', 'realme', 'oppo', 'vivo', 'huawei', 'honor', 'google', 'sony', 'tecno', 'infinix'] }; }
+}
+
+</script>
+</body>
+</html>
