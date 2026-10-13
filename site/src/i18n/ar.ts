@@ -77,6 +77,11 @@ export const EXACT: Record<string, string> = {
   'Find My Part': 'ابحث عن قطعتي',
   'Find my part': 'ابحث عن قطعتي',
   'Scroll back': 'مرّر للخلف',
+  // Step 8 · Issue 2 service boxes
+  layers: 'طبقات',
+  'Screens, batteries, ports: fixed and tested in Deira.': 'شاشات وبطاريات ومنافذ: تُصلَّح وتُفحص في ديرة.',
+  'Trade prices for shops, quoted the same day.': 'أسعار جملة للمحلات، بعرض سعر في نفس اليوم.',
+  'Packed in Deira, tracked all the way to your counter.': 'نغلّفها في ديرة، ونتتبّعها حتى تصل إلى محلك.',
   // Step 6 · Issue 1B hero (poster, search, G17)
   'Previous ad': 'الإعلان السابق',
   'Next ad': 'الإعلان التالي',

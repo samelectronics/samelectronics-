@@ -294,3 +294,20 @@ body {
 /* Issue 1 · teardown scroll hint: three chevrons light up one after the other, going down */
 .td-chev { color: rgba(255, 255, 255, .22); animation: tdChev 1.5s cubic-bezier(.45, 0, .55, 1) infinite; }
 @keyframes tdChev { 0%, 55%, 100% { color: rgba(255, 255, 255, .22); filter: none; } 18%, 30% { color: #F7C032; filter: drop-shadow(0 0 4px rgba(247, 192, 50, .8)); } }
+
+/* Issue 2 · the three service BOXES inside What we offer (owner, 13 Oct): graphite Repair · yellow Wholesale · white
+   Worldwide, side by side under the 8 family cards. Each keeps its own scene and timings, scaled to the box. */
+.wwo-boxes { position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; width: 1272px; max-width: calc(100% - 48px); margin: 0 auto; padding: 56px 0 120px; }
+.wwo-boxes > [data-w='R'], .wwo-boxes > [data-w='W'], .wwo-boxes > [data-w='G'] { height: auto !important; min-height: 0 !important; border-radius: 24px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), 0 1px 2px rgba(38, 40, 43, .06), 0 24px 48px -18px rgba(38, 40, 43, .3); transition: transform .4s cubic-bezier(.2, .8, .2, 1), box-shadow .4s; isolation: isolate; }
+.wwo-boxes > [data-w]:hover { transform: translateY(-6px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .5), 0 2px 4px rgba(38, 40, 43, .06), 0 36px 64px -18px rgba(38, 40, 43, .36); }
+.wwo-boxes > [data-w] > div[style*='grid-template-columns'] { display: flex !important; flex-direction: column; width: 100% !important; max-width: none !important; height: auto !important; gap: 8px !important; padding: 0 26px 28px; box-sizing: border-box; }
+/* scene on top, text below */
+.wwo-boxes [data-w='Rscene'], .wwo-boxes [data-w='Wscene'], .wwo-boxes [data-w='Gscene'] { order: -1; zoom: .5; width: 712px; margin: 0 auto; flex: none; }
+.wwo-boxes [data-w='Gscene'] { height: 560px !important; }
+.wwo-boxes h3 { font-size: 34px !important; }
+.wwo-boxes [data-w='Rp'], .wwo-boxes [data-w='Wp'], .wwo-boxes [data-w='Gp'] { font-size: 14.5px !important; max-width: none !important; }
+.wwo-boxes [data-w='Rs'], .wwo-boxes [data-w='Ws'], .wwo-boxes [data-w='Gs'] { grid-template-columns: 1fr !important; padding-top: 12px !important; }
+.wwo-boxes [data-w='Rs'] > :not(:first-child), .wwo-boxes [data-w='Ws'] > :not(:first-child), .wwo-boxes [data-w='Gs'] > :not(:first-child) { display: none !important; }
+.wwo-boxes [data-w='Rb'] > :not(:first-child), .wwo-boxes [data-w='Wb'] > :not(:first-child), .wwo-boxes [data-w='Gb'] > :not(:first-child) { display: none !important; }
+.wwo-boxes [data-w='Rb'] > a, .wwo-boxes [data-w='Wb'] > a, .wwo-boxes [data-w='Gb'] > a { width: 100%; justify-content: space-between; white-space: nowrap; }
+@media (max-width: 1100px) { .wwo-boxes { grid-template-columns: 1fr; max-width: 560px; } }

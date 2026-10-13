@@ -41,7 +41,7 @@ class Component extends DCLogic {
   frame(T) {
     const R = this.root.current; if (!R) return; const dt = Math.min(0.05, Math.max(0, T - (this.lastT || T))); this.lastT = T; const vh = window.innerHeight;
     const cl = (x) => (x < 0 ? 0 : x > 1 ? 1 : x), ex = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * cl(x))), eo = (x) => 1 - Math.pow(1 - cl(x), 3), eio = (x) => { x = cl(x); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }, PI = Math.PI;
-    const clk = (b, frac) => { if (this.ov[b] != null) return this.ov[b]; const el = this.q(b); if (!el) return 0; const r = el.getBoundingClientRect(); if (r.bottom < 0 || r.top > vh) { this.ck[b] = null; return 0; } if (this.ck[b] == null && r.top < vh * frac) this.ck[b] = T; return this.ck[b] == null ? 0 : T - this.ck[b]; };
+    const clk = (b, frac) => { if (this.ov[b] != null) return this.ov[b]; const el = this.q(b); if (!el) return 0; const r = el.getBoundingClientRect(); if (r.bottom < 0 || r.top > vh) { this.ck[b] = null; return 0; } if (this.ck[b] == null && r.top < vh * frac) this.ck[b] = T; if (this.ck[b] != null && b.length === 1 && b !== 'A' && el.matches(':hover')) this.ck[b] -= dt * 0.3; /* Issue 2: a hovered box's scene runs a little faster */ return this.ck[b] == null ? 0 : T - this.ck[b]; };
     const set = (k, s) => { const e = this.q(k); if (e) Object.assign(e.style, s); return e; };
     const D = this.vals || {}; const items = [], hr = this.host.current ? this.host.current.getBoundingClientRect() : { left: 0, top: 0 };
     // ----- Part A -----
@@ -66,7 +66,7 @@ class Component extends DCLogic {
       items.push({ L, x: r.left - hr.left, y: r.top - hr.top + bot + dy + y * 0, w, h: hgt, ry: a, rx: -0.06, el: 0.16, k: kk, sw, sx });
     }
     // ----- band wipes + text films -----
-    const W0 = R.clientWidth; ['R', 'W', 'G'].forEach((b) => { const el = this.q(b), wp = this.q(b + 'wipe'); if (!el || !wp) return; const r = el.getBoundingClientRect(), H = r.height, k = this.ov[b] != null ? 1 : cl((vh - r.top) / (vh * 0.6)), o = H * 0.268, X = -o + k * (W0 + o * 2); wp.style.clipPath = k >= 1 ? 'none' : 'polygon(0 0,' + (X + o).toFixed(1) + 'px 0,' + X.toFixed(1) + 'px 100%,0 100%)'; });
+    const W0 = R.clientWidth; ['R', 'W', 'G'].forEach((b) => { const el = this.q(b), wp = this.q(b + 'wipe'); if (!el || !wp) return; const r = el.getBoundingClientRect(), H = r.height, k = this.ov[b] != null ? 1 : cl((vh - r.top) / (vh * 0.6)), o = H * 0.268, X = -o + k * (W0 + o * 2); wp.style.clipPath = 'none'; /* Issue 2: boxes, not full-width bands: no wipe across the page */ });
     const tR = clk('R', 0.6), tW = clk('W', 0.6), tG = clk('G', 0.6);
     const txt = (b, t) => { const k1 = ex((t - 0.4) / 0.5); set(b + 'eb', { transform: 'translateX(' + ((1 - k1) * -100).toFixed(1) + '%)' }); [0, 1].forEach((i) => set(b + 'h' + i, { transform: 'translateY(' + ((1 - ex((t - 0.55 - i * 0.1) / 0.6)) * 110).toFixed(2) + '%)' }));
       const pk = ex((t - 0.9) / 0.6); set(b + 'p', { opacity: pk.toFixed(3), transform: 'translateY(' + ((1 - pk) * 16).toFixed(1) + 'px)', filter: pk < 1 ? 'blur(' + ((1 - pk) * 6).toFixed(1) + 'px)' : 'none' });

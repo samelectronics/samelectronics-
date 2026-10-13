@@ -532,7 +532,8 @@ function render(v: Vals) {
           {'\n  '}
         </div>
         {'\n\n  '}
-        <div data-w="R" style={{ position: 'relative', height: '85vh', minHeight: '700px', color: '#FFFFFF', overflow: 'hidden' }}>
+        <div data-w="SV" className="wwo-boxes">
+<div data-w="R" style={{ position: 'relative', height: '85vh', minHeight: '700px', color: '#FFFFFF', overflow: 'hidden' }}>
           {'\n    '}
           <div style={{ position: 'absolute', inset: '0', background: '#F2F3F4' }}></div>
           {'\n    '}
@@ -682,7 +683,7 @@ function render(v: Vals) {
                 data-w="Rp"
                 style={{ margin: '0', maxWidth: '440px', fontSize: '17px', lineHeight: '1.5', color: '#D5D7DA', textWrap: 'pretty' }}
               >
-                Cracked screens, dead batteries, broken ports. Repaired on our bench in Deira and tested before you collect.
+                Screens, batteries, ports: fixed and tested in Deira.
               </p>
               {'\n        '}
               <div
@@ -789,7 +790,7 @@ function render(v: Vals) {
               {'\n      '}
             </div>
             {'\n      '}
-            <div style={{ position: 'relative', height: '560px' }}>
+            <div data-w="Rscene" style={{ position: 'relative', height: '560px' }}>
               {'\n        '}
               <div data-w="Rslot" style={{ position: 'absolute', left: '-20px', top: '60px', width: '480px', height: '480px' }}></div>
               {'\n        '}
@@ -961,7 +962,7 @@ function render(v: Vals) {
             }}
           >
             {'\n      '}
-            <div style={{ position: 'relative', height: '560px' }}>
+            <div data-w="Wscene" style={{ position: 'relative', height: '560px' }}>
               {'\n        '}
               <span
                 style={{
@@ -1592,7 +1593,7 @@ function render(v: Vals) {
                 data-w="Wp"
                 style={{ margin: '0', maxWidth: '440px', fontSize: '17px', lineHeight: '1.5', color: '#26282B', textWrap: 'pretty' }}
               >
-                Trade prices for repair shops and resellers. Every part family, every grade, packed and invoiced the same day.
+                Trade prices for shops, quoted the same day.
               </p>
               {'\n        '}
               <div
@@ -1814,7 +1815,7 @@ function render(v: Vals) {
                 data-w="Gp"
                 style={{ margin: '0', maxWidth: '440px', fontSize: '17px', lineHeight: '1.5', color: '#3D3E3F', textWrap: 'pretty' }}
               >
-                Parts packed in Deira and shipped to repair shops abroad, tracked from our counter to theirs.
+                Packed in Deira, tracked all the way to your counter.
               </p>
               {'\n        '}
               <div
@@ -1922,7 +1923,7 @@ function render(v: Vals) {
               {'\n      '}
             </div>
             {'\n      '}
-            <div style={{ position: 'relative', height: '600px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <div data-w="Gscene" style={{ position: 'relative', height: '600px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               {'\n        '}
               <span
                 style={{
@@ -2037,6 +2038,7 @@ function render(v: Vals) {
             * Sample values · to be confirmed by Sam Electronics
           </span>
           {'\n  '}
+        </div>
         </div>
       </section>
     </>

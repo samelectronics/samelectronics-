@@ -535,3 +535,55 @@ How it was run: this machine has no GPU (software WebGL draws about 1 frame per 
 - When there's no room to the right of a pulled-out part, its tag sits under the part as the PDF allows. On a 1440px screen it can touch the Samsoom launcher at the bottom right.
 
 **Live:** https://samelectronics.vercel.app
+
+---
+
+## Step 8 · Issue 2 What we offer
+
+Step 7's deploy was confirmed: Vercel reported success for `98c73d1`.
+
+**Reading I chose: what "delete the three separate pages" means**
+- Inside What we offer, the three services were full-width, full-screen bands, which the PDF now forbids. Those bands are what this step removes.
+- The PDF's environment map (Section E) keeps Repair Lab (8), Wholesale / Trade Floor (9) and Worldwide (10) as their own sections further down the page, each with its own issue (8 and 9). So those sections are kept.
+- The three bands are now **three boxes side by side** directly under the 8 family cards, inside the same section:
+  - Repair (graphite);
+  - Wholesale (Signal Yellow);
+  - Worldwide (white).
+- No two neighbours share a colour.
+
+**Each box**
+- Keeps its own scene and timings, scaled to the box:
+  - Repair: the phone, the checklist ticking and the TESTED seal;
+  - Wholesale: cartons on the pallet, shrink-wrap, the price tag flipping to Trade with −22%, the unit counter;
+  - Worldwide: the dot-matrix globe with routes from Dubai and the Packed → In transit → Delivered pill under it.
+- Has one mono eyebrow, the 2-line headline, one short line, one stat (marked * as a sample value) and the hero's button.
+  - The descriptions were shortened to one line so nothing is cut off. They are in Arabic too.
+- **Hover:** the box lifts 6px with a softer, larger shadow, and its scene runs 30% faster.
+- **Buttons:** they go to the Repair Lab, Wholesale and Worldwide sections.
+- The full-width colour wipe is removed, since these are boxes now.
+
+**Part A (the 8 family cards):** kept as built. That includes:
+- the 4 × 2 grid with parts on pedestals;
+- the entrance (title, card wave, parts landing, numbers counting up);
+- the hover (lift, the part turning to 3/4 with a light sweep);
+- the slow turntable and the row light sweep.
+
+A family card opens Find My Part on that family, until the shop page exists.
+
+**Checks**
+- What we offer runs at 60fps (3D blocked, as in Step 1).
+- Arabic: one new untranslated word ("layers", from the teardown card that now builds correctly) is now translated. The rest are the allowed brand labels.
+
+### DONE WHEN (Issue 2)
+
+| Item | Result |
+|---|---|
+| 8 family cards, 4 × 2, realistic parts on pedestals, one screen | Yes (kept) |
+| Entrance: title → card wave → parts land → numbers count | Yes (kept) |
+| Hover lifts the card and turns the part with a light sweep | Yes (kept) |
+| Three alive service boxes inside the section: graphite, yellow, white | Yes |
+| Each box's scene plays as scripted, then idles | Yes (same scenes and timings, scaled) |
+| No zeros; sample values marked | Yes (* Sample values note) |
+| Every surface lit per G11; nothing flat | Yes |
+
+**Live:** https://samelectronics.vercel.app
