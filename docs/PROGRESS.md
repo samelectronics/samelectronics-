@@ -693,3 +693,53 @@ Step 9's deploy was confirmed: Vercel reported success for `a6863fd`.
 | No busy background textures left | Yes |
 
 **Live:** https://samelectronics.vercel.app
+
+---
+
+## Step 11 · Issue 5 Bench Test
+
+Step 10's deploy was confirmed: Vercel reported success for `8c54a77`.
+
+The section was fully rebuilt as a **pinned scene of about 300vh**. Scrolling drives the test forward and backward (scrubbed and eased). Every element is a pure function of scroll progress, written straight to the page each frame, so scrolling up plays everything in reverse with no React re-render. The whole stage is a fixed 1440×828 design scaled to fit one screen.
+
+**Set**
+- A clean Signal Yellow studio: grain, vignette, a bench surface with the rig's soft contact shadow. No waves or blotches.
+- The rig:
+  - an anodised, brushed-aluminium plate with a key-light highlight;
+  - a dark top bar with 4 real-looking LEDs, the engraved "SE · TEST RIG 04 · DEIRA" and a green digital counter;
+  - machined clamps with knurled knobs;
+  - a probe carriage on a rail;
+  - a cable with a real connector running neatly off the bottom edge.
+
+**The film**
+
+| Progress | What happens |
+|---|---|
+| 0–10% | The phone slides in, the clamps close with a click and a 2px shake, the LEDs go green one by one, the counter wakes. |
+| 10–30% | A scan light sweeps down the screen and the pixel grid fills behind it. Display → PASS ✓ |
+| 30–45% | The probe taps 9 points one by one; its thin stylus never covers the screen. The touch trace draws, PASS ✓, and **QUALITY** charges left to right, its circle drawing into a ✓ with "Display and touch passed" typing in. |
+| 45–65% | The screen shifts warm → cool and the gauge needle settles. PASS ✓, a warranty sticker is pressed onto the phone, and **WARRANTY** fills. |
+| 65–85% | Battery health charges to 98%. PASS ✓, a price tag drops in on its string, and **PRICE** fills. |
+| 85–100% | The thermal work order feeds out of the rig's slot (part · grade · warranty · price · unit #), the PASSED stamp lands with a shake, and the counter rolls 1,293 → 1,294. |
+
+**Idle life:** the LEDs breathe, the counter's last digit flickers now and then, the work order and price tag sway.
+
+**Readouts:** four glass tiles (Display, Touch, True Tone, Battery), each showing queued → testing → PASS ✓, with a progress bar, a trace, a gauge and a health bar. The terminal-style log box is gone.
+
+**No prices or periods invented:** the price on the tag and work order is marked sample, and the warranty line reads "on every grade*".
+
+**Checks:** 60fps (3D blocked, as in Step 1). Arabic is fully translated.
+
+### DONE WHEN (Issue 5)
+
+| Item | Result |
+|---|---|
+| Pinned and scrubbed both ways, four checks in order | Yes |
+| Words fill like charging bars with ✓ and typed lines | Yes |
+| Work order prints and stamps; counter ticks | Yes |
+| Rig realistic, full height, no defects | Yes (no covering probe arm, no cut-off text, no stray bar, no dangling cable) |
+| Clean yellow studio background | Yes |
+
+**Frames checked:** 5% · 20% · 35% · 55% · 75% · 92% · 100% of the pin.
+
+**Live:** https://samelectronics.vercel.app

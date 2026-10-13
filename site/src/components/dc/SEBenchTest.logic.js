@@ -1,53 +1,90 @@
 // @ts-nocheck
 /* eslint-disable */
-// Logic class from design/project/SE Bench Test.dc.html, unchanged except for this header, the export
-// and webpackIgnore on runtime imports. Converted 12 Oct 2026; maintained by hand since.
+// Bench Test (Issue 5, rebuilt 13 Oct 2026): a pinned scene (~300vh) where the scroll drives the test rig
+// forward and backward (scrubbed, eased). Every element is a pure function of the progress p (0–1), written
+// straight to the DOM each frame (no React re-render while scrolling), so scrolling up plays it in reverse.
+//   0–10% load · 10–30% display · 30–45% touch (QUALITY) · 45–65% True Tone (WARRANTY) · 65–85% battery (PRICE) · 85–100% passed
 import React from 'react';
-import { DCLogic, StreamableLogic } from '@/dc/runtime';
+import { DCLogic } from '@/dc/runtime';
+
+const cl = (x) => (x < 0 ? 0 : x > 1 ? 1 : x), seg = (p, a, b) => cl((p - a) / (b - a));
+const eo = (x) => 1 - Math.pow(1 - cl(x), 3), eio = (x) => { x = cl(x); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
+const back = (x) => { x = cl(x); const c = 1.6, q = x - 1; return 1 + (c + 1) * q * q * q + c * q * q; };
+// the touch test: tap points on the phone screen (percent of the screen box)
+export const TAPS = [[22, 20], [50, 20], [78, 20], [22, 50], [50, 50], [78, 50], [22, 80], [50, 80], [78, 80]];
 
 class Component extends DCLogic {
-  state = { t: 0, vw: 1440, leftH: 640, data: window.SE_DATA || null, count: 1284, log: [], loops: 0 };
-  benchRef = React.createRef(); leftRef = React.createRef();
+  secRef = React.createRef();
+  state = { sc: 1 };
   componentDidMount() {
-    if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 60);
-    this.io = new IntersectionObserver(([e]) => { this.inView = e.isIntersecting; if (e.isIntersecting) { this.t0 = performance.now(); this.setState({ t: 0 }); } }, { threshold: 0.3 });
-    setTimeout(() => this.benchRef.current && this.io.observe(this.benchRef.current), 50);
-    this.ro = new ResizeObserver(() => { const l = this.leftRef.current; if (l) this.setState({ leftH: l.offsetHeight, vw: document.documentElement.clientWidth }); }); setTimeout(() => this.leftRef.current && this.ro.observe(this.leftRef.current), 60);
-    this.t0 = performance.now(); this.done = {};
-    this.iv = setInterval(() => { if (!this.inView || document.hidden) return; const T = ((performance.now() - this.t0) / 1000) % 14, loop = Math.floor((performance.now() - this.t0) / 14000); if (loop !== this.state.loops) { this.done = {}; this.setState((s) => ({ loops: loop, count: s.count + 1 })); } this.ev(T); const q = Math.round(T * 4) / 4; if (q !== this.state.t) this.setState({ t: q }); }, 250);
+    this.p = 0; this.tp = 0; this.alive = true;
+    const loop = () => { if (!this.alive) return; this.frame(); this.raf = requestAnimationFrame(loop); };
+    this.raf = requestAnimationFrame(loop);
+    this.onResize = () => { const vw = document.documentElement.clientWidth, vh = window.innerHeight, sc = Math.min(vw / 1440, (vh - 72) / 828); if (Math.abs(sc - this.state.sc) > 0.002) this.setState({ sc }); };
+    window.addEventListener('resize', this.onResize); this.onResize();
+    window.seBench = (p) => { this.ov = p; this.p = p; this.frame(true); };
   }
-  componentWillUnmount() { clearInterval(this.iv); clearInterval(this.dIv); this.io && this.io.disconnect(); this.ro && this.ro.disconnect(); }
-  ev(T) { const ENDS = [[3.8, 'Display ........'], [6.3, 'Touch ..........'], [8.3, 'True Tone ......'], [10.8, 'Battery 98% ....']]; ENDS.forEach(([e, name], i) => { if (T >= e && !this.done[i]) { this.done[i] = 1; const d = new Date(), p = (n) => String(n).padStart(2, '0'); const line = { time: p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds()), unit: 2632 + this.state.loops, test: name, id: Date.now() + i }; this.setState((s) => ({ log: [line, ...s.log].slice(0, 5) })); } }); }
-  renderVals() {
-    const s = this.state, T = s.t, D = s.data, P = D ? D.products : [], cl = (x) => Math.min(1, Math.max(0, x));
-    const GN = { OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' };
-    const RG = [[1.3, 3.8], [3.8, 6.3], [6.3, 8.3], [8.3, 10.8]];
-    const stepP = (i) => cl((T - RG[i][0]) / (RG[i][1] - RG[i][0])), cur = T < 3.8 ? 0 : T < 6.3 ? 1 : T < 8.3 ? 2 : 3, allDone = T >= 10.8, started = T >= 1.3;
-    const tk = cl((T - 10.8) / 1.5), stamp = T >= 12.1;
-    const PROBE = [[110, 150], [110, 260], [110, 90], [110, 400]], pr = allDone || T < 0.9 ? [250, 40] : PROBE[cur];
-    const px = (n) => Array.from({ length: 48 }, (_, i) => ({ c: i < Math.round(n * 48) ? (i % 7 === 3 ? '#FFFFFF' : '#F7C032') : 'rgba(255,255,255,.07)' }));
-    const val = ['100% pixels', '0 dead zones', Math.round(5000 + stepP(2) * 1500) + ' K', Math.round(stepP(3) * 98) + '%'];
-    const checks = ['Display', 'Touch', 'True Tone', 'Battery'].map((name, i) => { const p = stepP(i), done = p >= 1, run = p > 0 && !done;
-      return { name, v: done ? (i === 2 ? '6500 K' : i === 3 ? '98%' : val[i]) : run ? val[i] : 'queued', vc: done ? '#F7C032' : run ? '#FFFFFF' : '#8C9096', bd: run ? '#F7C032' : done ? 'rgba(247,192,50,.45)' : 'rgba(255,255,255,.06)', iconBg: done ? '#F7C032' : 'rgba(255,255,255,.1)', tickO: done ? 1 : 0,
-        isPix: i === 0, pix: px(p), isWave: i === 1, dash: run || done ? 'none' : '2 6', anim: run ? 'btWave 1.2s linear infinite' : 'none', isTone: i === 2, mk: Math.round(10 + p * 50) + '%', isCurve: i === 3, off: (100 - p * 100).toFixed(1) }; });
-    const bpid = P.find((p) => p.id === 'SE-IP15P-SCR-OL') || P.find((p) => p.category === 'SCR') || { title: 'iPhone 15 Pro Screen', grade: 'OL', retail_price: 0 };
-    const sc = Math.max(0.42, Math.min(1, s.leftH / 700, ((Math.min(1312, s.vw - 128) - 40) * 0.55) / 740));
-    const inPhone = T < 0.6 ? 260 : T > 13.0 ? -300 : 0, phO = T > 13.4 ? 0 : 1, clamp = T < 0.6 || T > 12.6 ? 18 : 0;
-    const q2 = [stepP(1) >= 1, stepP(2) >= 1, stepP(3) >= 1];
-    return { benchRef: this.benchRef, leftRef: this.leftRef, checks, sc: sc.toFixed(3), boxW: Math.round(740 * sc), boxH: Math.round(700 * sc),
-      cells: Array.from({ length: 66 }, (_, i) => ({ c: i < Math.round(stepP(1) * 66) ? '#F7C032' : 'rgba(255,255,255,.07)' })),
-      s0: cur === 0 && !allDone ? 1 : 0, s1: cur === 1 && !allDone ? 1 : 0, s2: cur === 2 && !allDone ? 1 : 0, s3: cur === 3 || allDone ? 1 : 0, toneMix: stepP(2).toFixed(2), toneT: val[2], batT: Math.round(stepP(3) * 98) + '%', scanO: started && !allDone ? 1 : 0,
-      armX: pr[0] - 60, armL: pr[1] + (allDone || T < 0.9 ? 0 : 20), tipO: started && !allDone ? 1 : 0, ledC: allDone ? '#2BB673' : started ? '#F7C032' : '#8C9096', devGlow: allDone ? 40 : 0,
-      phoneX: inPhone, phoneO: phO, clampOff: clamp,
-      pass: allDone ? 'ALL PASSED' : !started ? 'LOADING UNIT' : 'CHECK ' + (cur + 1) + ' / 4', stepLbl: allDone ? (stamp ? 'PASSED · PRINTED' : 'PRINTING WORK ORDER') : !started ? 'LOADING UNIT #' + (2632 + s.loops) : 'CHECK ' + (cur + 1) + ' OF 4',
-      screws: [[14, 14, 20], [672, 14, 70], [14, 442, 110], [672, 442, 40]].map(([x, y, r]) => ({ x, y, r })),
-      leds: [[36, 18], [654, 18], [36, 448], [654, 448]].map(([x, y], i) => ({ x, y, dl: (i * 0.4) + 's' })),
-      tickY: ((tk - 1) * 100).toFixed(1), stampS: stamp ? 1 : 2.2, stampO: stamp ? 1 : 0,
-      ticket: [['PART', bpid.title.replace(' Screen', '')], ['ITEM', 'Screen · ' + (GN[bpid.grade] || '')], ['CHECKS', '4 / 4 passed'], ['WARRANTY', 'By grade'], ['PRICE', 'AED ' + bpid.retail_price + ' · sample']].map(([k, v]) => ({ k, v })),
-      log: s.log.map((l, i) => ({ ...l, o: (1 - i * 0.17).toFixed(2), anim: i === 0 ? ((s.log.length % 2) ? 'btTypeA' : 'btTypeB') + ' .7s steps(30) both' : 'none' })),
-      count: s.count.toLocaleString('en-US'), cntAnim: (s.count % 2 ? 'btCntA' : 'btCntB') + ' .5s cubic-bezier(.2,.8,.2,1) both',
-      qwp: [['Quality', 'Display and touch passed', q2[0]], ['Warranty', 'True Tone passed, warranty printed', q2[1]], ['Price', 'Battery passed, the price you agreed', q2[2]]].map(([w, d, on]) => ({ w, d, o: on ? 1 : 0.45, dotBg: on ? '#F7C032' : 'transparent', dash: on ? 0 : 24 })) };
+  componentWillUnmount() { this.alive = false; cancelAnimationFrame(this.raf); window.removeEventListener('resize', this.onResize); }
+  q(k) { const R = this.secRef.current; if (!R) return null; this._q = this._q || {}; const c = this._q[k]; if (c && c.isConnected) return c; return (this._q[k] = R.querySelector('[data-b="' + k + '"]')); }
+  set(k, s) { const e = this.q(k); if (e) for (const n in s) { const v = s[n]; if (e.style[n] !== v) e.style[n] = v; } return e; }
+  frame(force) {
+    const R = this.secRef.current; if (!R) return; const r = R.getBoundingClientRect(), vh = window.innerHeight;
+    if (!force && (r.bottom < -50 || r.top > vh + 50)) return; // off-screen: nothing to do (G16)
+    const span = Math.max(1, r.height - vh); this.tp = this.ov != null ? this.ov : cl(-r.top / span);
+    if (!force) this.p += (this.tp - this.p) * 0.14; if (Math.abs(this.tp - this.p) < 0.0004) this.p = this.tp; // scrubbed, eased
+    const p = this.p, t = performance.now() / 1000;
+    // ---- load: phone slides in, clamps close with a click and a 2px shake, LEDs go green, the counter wakes
+    const lin = eo(seg(p, 0, 0.06)), clk = seg(p, 0.06, 0.08), shk = p > 0.08 && p < 0.1 ? Math.sin(seg(p, 0.08, 0.1) * Math.PI * 4) * 2 * (1 - seg(p, 0.08, 0.1)) : 0;
+    this.set('phone', { transform: 'translate(' + shk.toFixed(2) + 'px,' + ((1 - lin) * 120).toFixed(1) + '%)' });
+    this.set('clampL', { transform: 'translateX(' + (-(1 - eio(clk)) * 46).toFixed(1) + 'px)' });
+    this.set('clampR', { transform: 'translateX(' + ((1 - eio(clk)) * 46).toFixed(1) + 'px)' });
+    for (let i = 0; i < 4; i++) { const on = p >= 0.07 + i * 0.008; this.q('led' + i)?.classList.toggle('on', on); }
+    this.set('ctr', { opacity: (0.35 + 0.65 * seg(p, 0.08, 0.1)).toFixed(3) });
+    // ---- checks
+    const checks = [[0.27, 'd'], [0.43, 't'], [0.6, 'w'], [0.8, 'b']];
+    let n = 1; checks.forEach(([at], i) => { if (p >= at) n = Math.min(4, i + 2); });
+    const eb = this.q('step'); if (eb) { const s = String(p >= 0.85 ? 4 : n); if (eb.textContent !== s) eb.textContent = s; }
+    checks.forEach(([at, k]) => { const pass = p >= at; const tile = this.q('tile-' + k); if (tile) { tile.classList.toggle('pass', pass); tile.classList.toggle('run', !pass && p >= at - (k === 'd' ? 0.17 : k === 't' ? 0.13 : 0.15)); } });
+    // display: a scan light sweeps down; the pixel grid fills behind it
+    const dk = seg(p, 0.12, 0.26);
+    this.set('scan', { transform: 'translateY(' + (dk * 100).toFixed(2) + '%)', opacity: dk > 0 && dk < 1 ? '1' : '0' });
+    this.set('pix', { clipPath: 'inset(0 0 ' + ((1 - dk) * 100).toFixed(2) + '% 0)' });
+    this.set('dbar', { transform: 'scaleX(' + dk.toFixed(3) + ')' });
+    // touch: the probe taps the points one by one (its fine stylus never covers the screen content); a trace draws
+    const tk = seg(p, 0.3, 0.42), tn = TAPS.length, fi = tk * tn, ti = Math.min(tn - 1, Math.floor(fi)), tf = fi - ti;
+    const [px, py] = TAPS[ti], prev = TAPS[Math.max(0, ti - 1)], mv = eio(cl(tf / 0.5)), hx = prev[0] + (px - prev[0]) * mv, hy = prev[1] + (py - prev[1]) * mv;
+    const touching = tk > 0 && tk < 1, down = touching && tf > 0.5 && tf < 0.85;
+    this.set('probe', { transform: 'translate(' + hx.toFixed(2) + '%,' + hy.toFixed(2) + '%)', opacity: touching ? '1' : '0' });
+    this.set('tip', { transform: 'scale(' + (down ? 0.8 : 1) + ')' });
+    this.set('carriage', { left: (14 + hx * 0.72).toFixed(2) + '%' });
+    TAPS.forEach((_, i) => this.q('tap' + i)?.classList.toggle('on', p >= 0.3 && (i < ti || (i === ti && tf > 0.6) || tk >= 1)));
+    this.set('trace', { strokeDashoffset: (1 - cl((ti + (tf > 0.6 ? 1 : 0)) / tn) * (tk > 0 ? 1 : 0)).toFixed(3) });
+    this.set('tline', { strokeDashoffset: (1 - tk).toFixed(3) });
+    // True Tone: warm → cool, the needle settles
+    const wk = seg(p, 0.46, 0.58), nk = seg(p, 0.47, 0.6), needle = -60 + 120 * eo(nk) + (nk > 0 && nk < 1 ? Math.sin(nk * 18) * 6 * (1 - nk) : 0);
+    this.set('warm', { opacity: (p >= 0.45 && p < 0.66 ? 1 - wk : 0).toFixed(3) }); this.set('cool', { opacity: (p >= 0.45 && p < 0.66 ? wk : 0).toFixed(3) });
+    this.set('needle', { transform: 'rotate(' + needle.toFixed(1) + 'deg)' });
+    // warranty sticker pressed on the phone
+    const sk = seg(p, 0.6, 0.63); this.set('sticker', { opacity: sk > 0 ? '1' : '0', transform: 'scale(' + (sk < 1 ? 1.5 - 0.5 * eo(sk) : 1) + ') rotate(-8deg)' });
+    // battery: health charges to 98%
+    const bk = seg(p, 0.66, 0.79), pct = Math.round(98 * eo(bk));
+    this.set('bfill', { transform: 'scaleX(' + (0.98 * eo(bk)).toFixed(3) + ')' }); this.set('bscr', { opacity: p >= 0.65 && p < 0.86 ? '1' : '0' }); this.set('bscrf', { transform: 'scaleY(' + (0.98 * eo(bk)).toFixed(3) + ')' });
+    ['bpct', 'bpct2'].forEach((k) => { const e = this.q(k); if (e && e.textContent !== pct + '%') e.textContent = pct + '%'; });
+    // price tag drops in on its string
+    const pk = seg(p, 0.8, 0.84), sw = p >= 0.84 ? Math.sin(t * 1.4) * 3 : Math.sin(pk * Math.PI * 3) * 14 * (1 - pk);
+    this.set('ptag', { transform: 'translateY(' + (-(1 - back(pk)) * 50).toFixed(1) + 'px) rotate(' + sw.toFixed(2) + 'deg)', opacity: pk > 0 ? '1' : '0' });
+    // the three words charge like bars, the circle draws into a ✓ and a line types in
+    [[0.4, 0.45, 'q'], [0.6, 0.65, 'w'], [0.8, 0.85, 'p']].forEach(([a, b, k]) => { const f = seg(p, a, b);
+      this.set('fill-' + k, { clipPath: 'inset(0 ' + ((1 - f) * 100).toFixed(2) + '% 0 0)' });
+      this.set('ring-' + k, { strokeDashoffset: (1 - seg(p, a, a + 0.03)).toFixed(3) }); this.set('chk-' + k, { strokeDashoffset: (1 - seg(p, a + 0.025, b)).toFixed(3) });
+      this.set('line-' + k, { clipPath: 'inset(0 ' + ((1 - seg(p, a + 0.02, b + 0.02)) * 100).toFixed(2) + '% 0 0)' }); });
+    // passed: the work order feeds out, the PASSED stamp lands with a shake, the counter rolls 1,293 → 1,294
+    const ok = seg(p, 0.86, 0.94), st = seg(p, 0.94, 0.965), ssh = st > 0 && st < 1 ? Math.sin(st * Math.PI * 5) * 3 * (1 - st) : 0, sway = ok >= 1 ? Math.sin(t * 0.9) * 0.6 : 0;
+    this.set('order', { transform: 'translateY(' + (-(1 - eio(ok)) * 100).toFixed(2) + '%) rotate(' + sway.toFixed(2) + 'deg)' });
+    this.set('stamp', { opacity: st > 0 ? '1' : '0', transform: 'translate(' + ssh.toFixed(1) + 'px,0) scale(' + (st < 1 ? 1.6 - 0.6 * eo(st) : 1) + ') rotate(-12deg)' });
+    const cnt = p >= 0.965 ? '1,294' : '1,293', c = this.q('count'); if (c && c.dataset.v !== cnt) { c.dataset.v = cnt; c.textContent = cnt; c.classList.remove('roll'); void c.offsetWidth; if (p >= 0.965) c.classList.add('roll'); }
   }
+  renderVals() { return { secRef: this.secRef, sc: this.state.sc }; }
 }
 
 export default Component;

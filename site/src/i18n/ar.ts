@@ -77,6 +77,18 @@ export const EXACT: Record<string, string> = {
   'Find My Part': 'ابحث عن قطعتي',
   'Find my part': 'ابحث عن قطعتي',
   'Scroll back': 'مرّر للخلف',
+  // Step 11 · Issue 5 bench test
+  'Nothing leaves Deira': 'لا شيء يغادر ديرة',
+  'until it passes the rig.': 'قبل أن يجتاز جهاز الفحص.',
+  'Every part is clamped into our test rig and probed before it is packed.': 'كل قطعة تُثبَّت في جهاز الفحص وتُختبر قبل تغليفها.',
+  'True Tone passed, warranty sticker on': 'نجح True Tone، ووُضع ملصق الضمان',
+  'Every pixel, every colour': 'كل بكسل، كل لون',
+  '9 points, edge to edge': '9 نقاط، من حافة لحافة',
+  'Warm to cool, sensor read': 'من الدافئ إلى البارد، قراءة الحساس',
+  'Health': 'الصحة',
+  'on every grade*': 'على كل درجة*',
+  'searches': 'عمليات بحث',
+  'testing': 'قيد الفحص',
   // Step 9 · Issue 3 live board
   'What’s moving on our': 'ما يتحرك',
   'shelves, right now.': 'على رفوفنا الآن.',

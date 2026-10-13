@@ -7,6 +7,7 @@ import '@/styles/arabic.css';
 import '@/styles/dc-base.css';
 import '@/styles/dc.css';
 import '@/styles/live-board.css';
+import '@/styles/bench-test.css';
 
 export const metadata: Metadata = {
   title: DC_TITLE ?? 'Sam Electronics',
