@@ -290,3 +290,7 @@ body {
 .se-404 h1 { display: flex; flex-direction: column; margin: 0; font: 700 clamp(40px, 7vw, 86px)/1 'Space Grotesk', sans-serif; letter-spacing: -.04em; }
 .se-404 p { margin: 0; max-width: 520px; font: 400 18px/1.5 Inter, sans-serif; color: #D5D7DA; }
 .se-404 .se-soon-cta { align-self: flex-start; height: 52px; text-decoration: none; }
+
+/* Issue 1 · teardown scroll hint: three chevrons light up one after the other, going down */
+.td-chev { color: rgba(255, 255, 255, .22); animation: tdChev 1.5s cubic-bezier(.45, 0, .55, 1) infinite; }
+@keyframes tdChev { 0%, 55%, 100% { color: rgba(255, 255, 255, .22); filter: none; } 18%, 30% { color: #F7C032; filter: drop-shadow(0 0 4px rgba(247, 192, 50, .8)); } }

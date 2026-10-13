@@ -786,33 +786,7 @@ function render(v: Vals) {
                     `position:absolute;left:50%;bottom:28px;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;opacity:${s(v.hint?.o)};pointer-events:none;transition:opacity .2s`,
                   )}
                 >
-                  {'\n        '}
-                  <span
-                    style={{
-                      position: 'relative',
-                      display: 'block',
-                      width: '22px',
-                      height: '34px',
-                      boxSizing: 'border-box',
-                      borderRadius: '11px',
-                      boxShadow: 'inset 0 0 0 1.5px rgba(255,255,255,.75)',
-                    }}
-                  >
-                    <span
-                      style={{
-                        position: 'absolute',
-                        left: '50%',
-                        top: '7px',
-                        width: '3px',
-                        height: '7px',
-                        marginLeft: '-1.5px',
-                        borderRadius: '2px',
-                        background: '#F7C032',
-                        animation: 'tdWheel 1.6s cubic-bezier(.4,0,.2,1) infinite',
-                      }}
-                    ></span>
-                  </span>
-                  {'\n        '}
+                  {/* Issue 1: the scroll hint is our chevron motif: "SCROLL" with three chevrons lighting up going down */}
                   <span
                     style={{
                       fontFamily: "'JetBrains Mono',monospace",
@@ -823,6 +797,13 @@ function render(v: Vals) {
                     }}
                   >
                     SCROLL
+                  </span>
+                  <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: '-2px' }}>
+                    {[0, 1, 2].map((i) => (
+                      <svg key={i} className="td-chev" width="16" height="9" viewBox="0 0 16 9" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginTop: i ? '-1px' : 0, animationDelay: i * 0.18 + 's' }}>
+                        <path d="M2 1.5 8 7.5 14 1.5" />
+                      </svg>
+                    ))}
                   </span>
                   {'\n      '}
                 </div>

@@ -441,3 +441,97 @@ Step 5's deploy was confirmed: Vercel reported success for `5d83c71`.
 **Reading I chose:** the PDF allows up to ±2° of rotation while a product floats, but the owner's review says the products look tilted. I removed the rotation and kept only the ±3px float.
 
 **Live:** https://samelectronics.vercel.app
+
+---
+
+## Step 7 · Issue 1 teardown
+
+Step 6's deploy was confirmed: Vercel reported success for `c6997e0`.
+
+**The scroll engine was rebuilt (PDF section D)**
+
+The cause of "scroll is slow and buggy", "the screen appears instead of the back" and "a small scroll resets": the film's position was read straight from the page scroll.
+- A fast scroll landed past the pin. The toss safety-check then saw "already past the turn" and snapped the phone to its front.
+- A stray or momentum scroll moved the film between steps.
+
+The new engine (`SETeardown.logic.js`) is a strict step machine that drives the film itself.
+- **Steps:** 0 back reveal · 1 toss and interface · 2 burst (now its own step, as the PDF asks) · 3–10 layers 01–08 · 11 reassembly · 12 final call (automatic).
+- **Gestures:** one deliberate gesture (at least 40px, wheel, trackpad, arrow, PageUp/Down, space or swipe) = one step. A new gesture counts only after 250ms of quiet. Input during an animation is ignored, never queued. Up = exactly one step back, played in reverse.
+- **The two ends:** at the resting back reveal, scrolling up releases the page upward. At the final call, scrolling down continues to the next section.
+- **Entering:** from above it always starts at step 0, with the page held at the section top. From below it enters at the final call. If the 3D isn't ready at the pin, the empty lit studio holds. If the 3D fails, or isn't ready after 10s, the film continues without it instead of locking the page.
+- **The back is always shown first:** the phone faces its back until the toss turns it.
+
+**8 scroll tests: 8 / 8 passed.** The test script is `site/scripts/qa/teardown-tests.mjs`, so anyone can re-run it.
+1. Slow scroll from the hero → step 0.
+2. Fast scroll → step 0.
+3. Reload with the teardown half visible → step 0.
+4. 10px nudge up at step 03 → nothing.
+5. One scroll up at step 03 → exactly step 02.
+6. One hard trackpad swipe → exactly one step.
+7. Arrows pressed during an animation → ignored, then one step per press.
+8. From the final call, scroll down → the page continues.
+
+How it was run: this machine has no GPU (software WebGL draws about 1 frame per second), so input events arrive seconds apart there. The full run uses `--no3d`, which keeps the same step engine at real speed. Tests 1, 2, 4 and 5 also passed with the full 3D running.
+
+**Other bugs found and fixed**
+
+- **"The title sometimes doesn't appear"**
+  - The big title's glide target was measured against the tall scrolling wrapper, not the sticky stage it sits in. Whenever the page scroll moved during the toss, the title flew off the top.
+  - It is now measured against the stage. Checked: the title stays centred through the whole toss, then glides to the left zone after the landing.
+- **The toss timeline and the interface build (step 3b) stopped silently**
+  - A helper method and an animation handle shared the name `raf`, and the handle overwrote the method.
+  - Renamed. Step 3b builds again: the title glides, the card border draws, then the content, the list rail and the rows.
+- **The opening clock** now follows real time (capped at 100ms per frame), so slow devices no longer stretch the opening.
+
+**Look and behaviour**
+
+- **Scroll hint:** the mouse outline is replaced by our chevron motif: "SCROLL" with three chevrons lighting up one after the other, going down. It shows only at step 0 and fades when the title starts.
+- **Final-call hover**
+  - The phone no longer tilts or turns. The 25° hover turn and the ±7° automatic sway are removed; only the ±3° mouse parallax is left.
+  - Screen: only the screen, still playing the ad, slides out to the right.
+  - Any other part: the screen slides left and the part slides fully out to the right, behind the screen in depth, with its yellow edge glow and the tag beside or under it. Timing is 500ms out and 400ms back.
+- **Crystal screen:** a soft vertical band of light now sweeps across the phone's screen every ~6s.
+- **Dust:** each speck is now a pre-drawn sprite instead of a new gradient per speck per frame, which is much lighter. The look is the same: 190 round specks, 9 soft discs, brightest in the light, never in front of the phone. It turns into the golden bokeh in step 14.
+- **Kept as approved:**
+  - the three-zone layer view;
+  - the leader line;
+  - the callouts;
+  - the counter;
+  - the card swap;
+  - the final call (pill, stats, the 4×2 cards, buttons, golden bokeh);
+  - the back-glass sweep, lens glints and emblem gleam;
+  - the outline letters where the phone passes behind the title.
+- **Final-call ad:** checked frame by frame. It already matched section H:
+  - logo intro with the light sweep and the zoom-through;
+  - the locked template (same kicker, name, stock line and button positions on every scene);
+  - colour wipes, whip pans and zoom-throughs;
+  - the quick call (EVERY PART. / EVERY BRAND. / ALL IN DEIRA. / Get yours today.);
+  - round golden dots forming the logo;
+  - the yellow slogan;
+  - fade and loop.
+  - No change was needed.
+
+**Frames checked:** step 0 with the hint · step 1 title · step 2 mid-rise (the back, outline letters) · step 3 mid-turn (edge-on) · step 3 landed (logo on screen) · step 3b · step 06 · final call · hover Screen · hover Battery · ad scenes from E1 to E4.
+
+### DONE WHEN (Issue 1)
+
+| Item | Result |
+|---|---|
+| All 8 scroll tests pass | Yes (8/8) |
+| Step 0: empty lit studio, hint only now | Yes |
+| Step 1: masked title and its sheen | Yes |
+| Step 2: the BACK, light sweep, lens glints, emblem gleam, outline letters | Yes |
+| Step 3: toss and turn, hang, fall, wake | Yes (one continuous 180° turn on the toss clock) |
+| Step 3b: title moves, card and list build in | Yes (fixed) |
+| Steps 4–12: burst, then each layer in sync | Yes (burst is now its own step) |
+| Step 13: sparks, push-ins, shine; no shake, no box light | Kept as built |
+| Step 14: 360° turn, dust becoming bokeh, final call building | Kept as built |
+| Final call matches A2; hover opens the one real phone to the right, with the tag | Yes |
+| The ad: logo intro, locked template, quick call, dots logo, loop | Yes |
+| Always alive: light breathing, floating, mouse parallax, dust | Yes |
+
+**Honest notes**
+- I can't judge the 3D's smoothness on this machine (no GPU). The motion timings are as specified, but please look at the teardown on a real laptop.
+- When there's no room to the right of a pulled-out part, its tag sits under the part as the PDF allows. On a 1440px screen it can touch the Samsoom launcher at the bottom right.
+
+**Live:** https://samelectronics.vercel.app

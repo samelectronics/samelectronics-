@@ -17,7 +17,7 @@ class Component extends DCLogic {
   opFF() { /* opening is never skipped by scroll input: input is held until it finishes */ }
   opPlay(replay) { try { cancelAnimationFrame(this.oraf); clearTimeout(this.opWd); this.opRunning = true; this.opRun2 = false; this.opSp = 1; let last = performance.now(); this.td.op = 0; this.setState({ oT: 0 });
     const sched = (fn) => { let dn = false; this.oraf = requestAnimationFrame((x) => { if (!dn) { dn = true; fn(x); } }); setTimeout(() => { if (!dn) { dn = true; cancelAnimationFrame(this.oraf); fn(performance.now()); } }, 40); };
-    const f = (t) => { if (!this.opRunning) return; this.opRun2 = true; const dt = Math.min(0.05, (t - last) / 1000); last = t; const oT = Math.min(3.4, this.state.oT + dt * this.opSp); this.td.oT = oT; this.td.lt = this.lightAt(oT); this.setState({ oT }); if (oT < 3.4) sched(f); else { this.opDone = true; this.opRunning = false; this.td.oT = null; this.td.lt = 1; } };
+    const f = (t) => { if (!this.opRunning) return; this.opRun2 = true; const dt = Math.min(0.1, (t - last) / 1000); last = t; const oT = Math.min(3.4, this.state.oT + dt * this.opSp); this.td.oT = oT; this.td.lt = this.lightAt(oT); this.setState({ oT }); if (oT < 3.4) sched(f); else { this.opDone = true; this.opRunning = false; this.td.oT = null; this.td.lt = 1; } };
     sched(f); this.opWd = setTimeout(() => { if (this.state.oT < 3.4 && !this.opRun2) this.opShow('animation frames never ran'); }, 6000); } catch (e) { this.opShow('opPlay error: ' + (e && e.message)); } }
   raf(key, fn) { let dn = false; const go = (x) => { if (!dn) { dn = true; fn(x || performance.now()); } }; this[key] = requestAnimationFrame(go); setTimeout(go, 40); }
   tossStart(snap) { this.tossOn = true; this.revOn = false; cancelAnimationFrame(this.graf); if (snap) { this.td.tossAt = 9; this.setState({ gT: 1.1 }); return; } const t0 = performance.now(); let kicked = false; this.td.tossAt = 0;
@@ -30,53 +30,88 @@ class Component extends DCLogic {
   cardKick() { this.setState({ cT: 0, ck: (this.state.ck || 0) + 1 }); const t0 = performance.now(); cancelAnimationFrame(this.craf); const f = (t) => { const k = Math.min(1, (t - t0 - 120) / 700); this.setState({ cT: Math.max(0, k) }); if (k < 1) this.craf = requestAnimationFrame(f); }; this.craf = requestAnimationFrame(f); }
   // opening trigger: armed only when the section is fully below the viewport; plays when its top comes within 75% of the viewport (and only at the Intro step)
   // opening trigger: while the stage is not yet pinned only the empty lit studio shows; the opening starts the moment the stage is pinned (top at 0, i.e. under the nav) and the 3D is ready
-  opReset() { this.opArm = true; this.filmOn = false; this.opDone = false; this.opRunning = false; cancelAnimationFrame(this.oraf); this.revOn = false; this.tossOn = false; cancelAnimationFrame(this.graf); clearTimeout(this.autoT); this.td.tossAt = null; this.td.oT = 0; this.td.lt = 1; this.busyUntil = 0; this.setState({ oT: 0, gT: 0 }); }
-  opCheck() { try { if (this.isMob() || this.props.fw || this.opRunning) return; const pin = this.pin(), sec = this.secRef.current; if (!pin || !sec) return; const r = pin.getBoundingClientRect(), rs = sec.getBoundingClientRect(), vh = window.innerHeight;
-      const out = rs.top > vh - 1 || rs.bottom < 1, before = r.top > 1;
-      if (out && rs.bottom < 1) { this.fromBelow = true; return; }
-      if (this.fromBelow && !out) { this.fromBelow = false; if (!before) { this.opArm = false; this.filmOn = true; this.opShow(); this.td.tossAt = null; this.setState({ gT: 1.1 }); return; } }
-      if (this.opArm == null || out || (before && !this.filmOn)) { if (!this.opArm) this.opReset(); return; }
-      if (before || !this.opArm || !this.ready3d) return;
-      this.opArm = false; this.filmOn = true; const y0 = Math.round(window.scrollY + rs.top); if (Math.abs(window.scrollY - y0) > 1) window.scrollTo(0, y0);
-      console.info('[SE Teardown] opening started (stage pinned, 3D ready)'); this.opPlay(false);
+  opReset() { cancelAnimationFrame(this.twRaf); cancelAnimationFrame(this.sraf); this.anim = false; this.scrolling = false; this.idx = 0; this.waitOp = false; this.td.faceBack = true; this.opArm = true; this.filmOn = false; this.opDone = false; this.opRunning = false; cancelAnimationFrame(this.oraf); this.revOn = false; this.tossOn = false; cancelAnimationFrame(this.graf); clearTimeout(this.autoT); this.td.tossAt = null; this.td.oT = 0; this.td.lt = 1; this.busyUntil = 0; this.setState({ oT: 0, gT: 0 }); }
+  // Entry (Issue 1 · D): the film starts only when the stage is fully pinned under the nav. From above it always
+  // starts at step 0 (the page is held at the section top; the empty lit studio holds until the 3D is ready);
+  // from below it enters at the final call. While the film runs, the engine owns every scroll input.
+  opCheck() { try { if (this.isMob() || this.props.fw) return; const pin = this.pin(), sec = this.secRef.current; if (!pin || !sec) return; const r = pin.getBoundingClientRect(), rs = sec.getBoundingClientRect(), vh = window.innerHeight;
+      if (this.mode === 'film') { if (this.waitOp && !this.ready3d && (this.failed3d || performance.now() - this.waitAt > 10000)) { this.waitOp = false; this.opShow('3D not ready'); return; } if (this.waitOp && this.ready3d) { this.waitOp = false; console.info('[SE Teardown] opening started (stage pinned, 3D ready)'); this.opPlay(false); } return; }
+      if (rs.top > 1) { if (this.side !== 'above') { this.side = 'above'; this.opReset(); } return; }
+      if (rs.bottom < vh - 1) { this.side = 'below'; return; }
+      if (this.releasing && performance.now() - this.releasing < 900) return;
+      const pinned = r.top <= 1 && r.bottom >= vh - 1; if (!pinned) return;
+      if (this.side === 'below') { this.enterFilm(true); this.opShow(); this.td.tossAt = null; this.setState({ gT: 1.1 }); return; }
+      this.opReset(); this.enterFilm(false); window.scrollTo(0, this.yFor(0));
+      if (this.ready3d) { console.info('[SE Teardown] opening started (stage pinned, 3D ready)'); this.opPlay(false); } else if (this.failed3d) this.opShow('3D failed to load'); else { this.waitOp = true; this.waitAt = performance.now(); }
     } catch (e) { this.opShow('opCheck error: ' + (e && e.message)); } }
-  measureTitle() { const h = this.h2Ref.current, pin = this.pin(); if (!h || !pin) return; const r = h.getBoundingClientRect(), pr = pin.getBoundingClientRect(), l1 = h.firstElementChild; if (!l1) return; const tl = { l: r.left - pr.left, t: r.top - pr.top, w: l1.offsetWidth, h: l1.offsetHeight }; const o = this.tl; if (!o || Math.abs(o.l - tl.l) > 0.5 || Math.abs(o.t - tl.t) > 0.5 || Math.abs(o.w - tl.w) > 0.5) { this.tl = tl; this.forceUpdate(); } }
+  measureTitle() { const h = this.h2Ref.current, pin = this.pin(); if (!h || !pin) return; const l1 = h.firstElementChild; if (!l1) return; let st = this._stage; if (!st || !st.contains(h)) { st = h.parentElement; while (st && st !== pin && !/sticky|fixed/.test(getComputedStyle(st).position)) st = st.parentElement; this._stage = st = st || pin; } const r = h.getBoundingClientRect(), pr = st.getBoundingClientRect(); const tl = { l: r.left - pr.left, t: r.top - pr.top, w: l1.offsetWidth, h: l1.offsetHeight }; /* measured against the sticky stage the title lives in, not the tall scrolling wrapper: otherwise any page scroll during the toss threw the title off the top */ const o = this.tl; if (!o || Math.abs(o.l - tl.l) > 0.5 || Math.abs(o.t - tl.t) > 0.5 || Math.abs(o.w - tl.w) > 0.5) { this.tl = tl; this.forceUpdate(); } }
   isMob() { return !!this.props.mob || (this.props.fw || this.state.vw) < 768; }
   pin() { const el = this.secRef.current; return el && el.firstElementChild; }
   SH() { return Math.round(window.innerHeight * 0.6); }
   pFromF(f) { const S = this.S, i = Math.min(S.length - 2, Math.max(0, Math.floor(f))), k = Math.min(1, Math.max(0, f - i)); return S[i] + (S[i + 1] - S[i]) * k; }
   fNow() { const pin = this.pin(); if (!pin) return 0; return Math.min(this.S.length - 1, Math.max(0, -pin.getBoundingClientRect().top / this.SH())); }
   inside() { const pin = this.pin(); if (!pin) return false; const r = pin.getBoundingClientRect(); return r.top <= 2 && r.bottom >= window.innerHeight - 2; }
+  // ── Issue 1 · the scroll engine ─────────────────────────────────────────────────────────────────────
+  // A strict sequence of steps (FS, positions on the shared timeline p). The film is driven ONLY by this
+  // engine: p never follows the raw page scroll, so a fast scroll, a stray nudge or trackpad momentum can
+  // never jump, skip or reset it. One deliberate gesture (≥40px, after 250ms of quiet) = one step; input
+  // during an animation is ignored, never queued; up = exactly one step back, played in reverse.
+  //   FS: 0 back reveal (after the automatic opening) · 1 toss + interface · 2 burst · 3–10 layers 01–08 ·
+  //       11 reassembled · 12 final call (automatic from 11)
+  FS = [0.15, 0.185, 0.262, 0.32, 0.375, 0.43, 0.485, 0.54, 0.595, 0.65, 0.668, 0.85, 1];
+  yFor(i) { const pin = this.pin(); if (!pin) return window.scrollY; const top = window.scrollY + pin.parentElement.getBoundingClientRect().top; return Math.round(top + Math.min(i, this.S.length - 1) * this.SH() * ((this.S.length - 1) / (this.FS.length - 1))); }
   goTo(i, ms) {
-    i = Math.max(0, Math.min(this.S.length - 1, i)); const last = this.S.length - 1, dur = ms || (i === last || i === last - 1 ? 1200 : i === 1 ? 1100 : 900);
-    if (this.props.fw) { this.manual = true; this.tween(this.S[i], dur); return; }
-    const pin = this.pin(); if (!pin) return; const y0 = window.scrollY, y1 = window.scrollY + pin.getBoundingClientRect().top + i * this.SH(), t0 = performance.now();
-    this.anim = true; cancelAnimationFrame(this.sraf);
-    const f = (t) => { const k = Math.min(1, (t - t0) / dur), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; window.scrollTo(0, y0 + (y1 - y0) * e); if (k < 1) this.sraf = requestAnimationFrame(f); else { this.anim = false; } };
+    const F = this.FS, last = F.length - 1; i = Math.max(0, Math.min(last, i)); this.idx = i; this.td.faceBack = i === 0;
+    const dur = ms || 900; this.tween(F[i], dur);
+    if (this.props.fw) { this.manual = true; return; }
+    // keep the page scroll in step with the film (invisible while pinned) so the two ends release naturally
+    const y0 = window.scrollY, y1 = this.yFor(i), t0 = performance.now(); cancelAnimationFrame(this.sraf); this.scrolling = true;
+    const f = (t) => { const k = Math.min(1, (t - t0) / dur), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; window.scrollTo(0, y0 + (y1 - y0) * e); if (k < 1) this.sraf = requestAnimationFrame(f); else this.scrolling = false; };
     this.sraf = requestAnimationFrame(f);
   }
   busy() { return this.opBusy() || this.anim || performance.now() < (this.busyUntil || 0) || this.revOn; }
-  step(dir) { const f = this.props.fw ? this.state.si : this.fNow(), last = this.S.length - 1; let cur = Math.round(f); if (Math.abs(f - cur) > 0.04) cur = dir > 0 ? Math.floor(f) : Math.ceil(f); let nx = cur + dir; if (cur === last && dir < 0) nx = last - 2; if (nx < 0 || nx > last) return false;
-    const now = performance.now(), lo = Math.min(cur, nx);
-    if (cur === 0 && nx === 1) { this.busyUntil = now + 3300; this.tossStart(false); this.goTo(1, 1100); return true; }
-    if (cur === 1 && nx === 0) { this.busyUntil = now + 2700; this.tossRev(); this.goTo(0, 1300); return true; }
-    if (nx === last - 1 && dir > 0) { this.busyUntil = now + 3100; this.goTo(nx, 1200); clearTimeout(this.autoT); this.autoT = setTimeout(() => { if (Math.round(this.fNow()) === last - 1 || this.props.fw) { this.busyUntil = performance.now() + 1500; this.goTo(last, 1400); } }, 1250); return true; }
-    this.busyUntil = now + (lo === 1 ? 1300 : cur === last ? 1500 : 950); this.goTo(nx, cur === last ? 1400 : 900); return true; }
+  /** One deliberate gesture: a step, or at the two ends a release of the page. */
+  gesture(dir) {
+    const last = this.FS.length - 1, i = this.idx || 0;
+    if (dir < 0 && i === 0) return this.release(-1);
+    if (dir > 0 && i === last) return this.release(1);
+    return this.step(dir);
+  }
+  release(dir) {
+    const sec = this.secRef.current; if (!sec) return; this.mode = 'out'; this.releasing = performance.now();
+    const r = sec.getBoundingClientRect(), y = dir < 0 ? window.scrollY + r.top - Math.round(window.innerHeight * 0.55) : window.scrollY + r.bottom - 72;
+    window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+  }
+  step(dir) {
+    const F = this.FS, last = F.length - 1, cur = this.idx || 0, nx = cur + dir; if (nx < 0 || nx > last) return false;
+    const now = performance.now();
+    if (cur === 0 && nx === 1) { this.busyUntil = now + 3300; this.tossStart(false); this.goTo(1, 1100); return true; } // step 3 + 3b (automatic)
+    if (cur === 1 && nx === 0) { this.busyUntil = now + 2700; this.tossRev(); this.goTo(0, 1300); return true; } // the phone flips back to show its back
+    if (nx === last - 1 && dir > 0) { this.busyUntil = now + 2900; this.goTo(nx, 1200); clearTimeout(this.autoT); this.autoT = setTimeout(() => { if (this.idx === last - 1 && this.mode === 'film') { this.busyUntil = performance.now() + 1500; this.goTo(last, 1400); } }, 1300); return true; } // step 13, then 14 automatically
+    if (cur === last && dir < 0) { this.busyUntil = now + 1500; this.goTo(last - 1, 1400); return true; }
+    this.busyUntil = now + 950; this.goTo(nx, 900); return true;
+  }
+  /** Enter the film at step 0 (from above) or at the final call (from below). */
+  enterFilm(atEnd) { this.mode = 'film'; this.gUsed = true; this.lastW = performance.now(); if (atEnd) { const last = this.FS.length - 1; this.idx = last; this.td.faceBack = false; this.td.p = 1; this.td.snap = true; this.setState({ p: 1 }); window.scrollTo(0, this.yFor(last)); } else { this.idx = 0; this.td.faceBack = true; this.td.p = this.FS[0]; this.td.snap = true; this.setState({ p: this.FS[0] }); } }
   componentDidMount() {
     // G16: the teardown keeps its WebGL context for the whole visit; the budget counts it (src/dc/gl-budget.ts).
     this.unregGL = registerScene({ id: 'teardown', fixed: true, el: () => null, mount: async () => {} });
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 60);
-    this.on = () => { if (this.props.fw) { this.manual = true; return; } const vw = document.documentElement.clientWidth, vh = window.innerHeight; if (vw !== this.state.vw || vh !== this.state.vh) this.setState({ vw, vh }); if (this.isMob() || this.manual) return; const pin = this.pin(); if (!pin) return; const r = pin.getBoundingClientRect(); const p = this.pFromF(this.fNow()); this.td.p = p; const q = Math.round(p * 1000) / 1000, ent = Math.max(0, Math.min(1, r.top / vh)); if (q !== this.state.p || Math.abs(ent - this.state.ent) > 0.01) this.setState({ p: q, ent }); };
+    this.on = () => { if (this.props.fw) { this.manual = true; return; } const vw = document.documentElement.clientWidth, vh = window.innerHeight; if (vw !== this.state.vw || vh !== this.state.vh) this.setState({ vw, vh }); if (this.isMob() || this.manual) return; const pin = this.pin(), sec = this.secRef.current; if (!pin || !sec) return; const r = pin.getBoundingClientRect(), rs = sec.getBoundingClientRect(), ent = Math.max(0, Math.min(1, r.top / vh));
+      if (this.mode === 'film') { if (!this.inside() && !this.scrolling) { this.mode = 'out'; } else if (!this.scrolling && !this.anim) { const y = this.yFor(this.idx || 0); if (Math.abs(window.scrollY - y) > 2 && Math.abs(window.scrollY - y) < vh * 0.9) window.scrollTo(0, y); } }
+      if (this.mode !== 'film' && !this.opRunning) { const p = rs.bottom < vh * 0.98 && rs.top < 0 ? 1 : this.FS[0]; if (p !== this.td.p && !this.anim) { this.td.p = p; this.td.snap = true; this.td.faceBack = p < 1; } }
+      const q = Math.round(this.td.p * 1000) / 1000; if (q !== this.state.p || Math.abs(ent - this.state.ent) > 0.01) this.setState({ p: q, ent }); };
     // one gesture = one step; input while animating (and trackpad inertia) is swallowed; the two ends release the page
     this.gUsed = false; this.lastW = 0;
-    this.onWheel = (e) => { if (this.isMob() || this.props.fw || !e.deltaY) return; const now = performance.now(), quiet = now - (this.lastW || 0) >= 250; this.lastW = now; if (!this.inside()) { this.relG = false; return; }
-      const dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1); if (quiet) { this.gAcc = 0; this.gUsed = false; }
-      if (this.busy()) { this.gUsed = true; e.preventDefault(); return; } const dir = Math.sign(dy), f = this.fNow(), cur = Math.round(f), atEnd = Math.abs(f - cur) < 0.04 && (cur + dir < 0 || cur + dir > this.S.length - 1);
-      if (atEnd && (quiet || this.relG)) { this.relG = true; return; } this.relG = false; e.preventDefault(); if (this.gUsed) return;
-      if (Math.sign(this.gAcc || 0) !== dir) this.gAcc = 0; this.gAcc = (this.gAcc || 0) + dy; if (Math.abs(this.gAcc) < 40) return; this.gUsed = true; this.gAcc = 0; this.step(dir); };
-    this.onKey = (e) => { if (this.isMob() || this.props.fw || !this.inside()) return; const k = e.key, dir = k === 'ArrowDown' || k === 'PageDown' || (k === ' ' && !e.shiftKey) ? 1 : k === 'ArrowUp' || k === 'PageUp' || (k === ' ' && e.shiftKey) ? -1 : 0; if (!dir) return; const tg = e.target && e.target.tagName; if (tg === 'INPUT' || tg === 'TEXTAREA') return; if (this.busy() || e.repeat) { e.preventDefault(); return; } if (this.step(dir)) e.preventDefault(); };
+    this.onWheel = (e) => { if (this.isMob() || this.props.fw || !e.deltaY) return; if (this.mode !== 'film' || !this.inside()) return;
+      e.preventDefault(); const now = performance.now(), quiet = now - (this.lastW || 0) >= 250; this.lastW = now; if (quiet) { this.gAcc = 0; this.gUsed = false; }
+      if (this.busy()) { this.gUsed = true; return; } if (this.gUsed) return; // momentum of a gesture already used, or input during an animation
+      const dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1), dir = Math.sign(dy);
+      if (Math.sign(this.gAcc || 0) !== dir) this.gAcc = 0; this.gAcc = (this.gAcc || 0) + dy; if (Math.abs(this.gAcc) < 40) return; // tiny nudges never do anything
+      this.gUsed = true; this.gAcc = 0; this.gesture(dir); };
+    this.onKey = (e) => { if (this.isMob() || this.props.fw || this.mode !== 'film' || !this.inside()) return; const k = e.key, dir = k === 'ArrowDown' || k === 'PageDown' || (k === ' ' && !e.shiftKey) ? 1 : k === 'ArrowUp' || k === 'PageUp' || (k === ' ' && e.shiftKey) ? -1 : 0; if (!dir) return; const tg = e.target && e.target.tagName; if (tg === 'INPUT' || tg === 'TEXTAREA') return; e.preventDefault(); if (this.busy() || e.repeat) return; this.gesture(dir); };
     this.onTS = (e) => { this.ty = e.touches[0].clientY; this.tUsed = false; };
-    this.onTM = (e) => { if (this.isMob() || this.props.fw || !this.inside() || this.ty == null) return; if (this.busy()) { e.preventDefault(); return; } const dy = this.ty - e.touches[0].clientY, dir = Math.sign(dy), cur = Math.round(this.fNow()); if (!this.anim && (cur + dir < 0 || cur + dir > this.S.length - 1)) return; e.preventDefault(); if (!this.anim && !this.tUsed && Math.abs(dy) >= 40) { this.tUsed = true; this.step(dir); } };
+    this.onTM = (e) => { if (this.isMob() || this.props.fw || this.mode !== 'film' || !this.inside() || this.ty == null) return; e.preventDefault(); if (this.busy() || this.tUsed) return; const dy = this.ty - e.touches[0].clientY; if (Math.abs(dy) >= 40) { this.tUsed = true; this.gesture(Math.sign(dy)); } };
     window.addEventListener('scroll', this.on, { passive: true }); window.addEventListener('resize', this.on); window.addEventListener('wheel', this.onWheel, { passive: false }); window.addEventListener('keydown', this.onKey); window.addEventListener('touchstart', this.onTS, { passive: true }); window.addEventListener('touchmove', this.onTM, { passive: false }); this.on();
     this.onLogo = () => { const el = this.secRef.current, b = el && el.querySelector('[data-td-fmp]'); if (b && b.animate) b.animate([{ transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(247,192,50,.7)' }, { transform: 'scale(1.05)', boxShadow: '0 0 0 10px rgba(247,192,50,.28)', offset: 0.35 }, { transform: 'scale(1)', boxShadow: '0 0 0 22px rgba(247,192,50,0)' }], { duration: 900, easing: 'cubic-bezier(.2,.8,.2,1)' }); };
     window.addEventListener('se:td-logo', this.onLogo); this.onMM = () => { this.lastMM = performance.now(); }; window.addEventListener('mousemove', this.onMM, { passive: true });
@@ -88,7 +123,7 @@ class Component extends DCLogic {
     // capture: jump to an exact frame without animation (step i, finale text clock ft)
     window.__td = this.td; window.__tdc = this;
     window.seToss = (el) => { this.capToss = true; this.tossOn = true; cancelAnimationFrame(this.graf); this.td.tossAt = el; this.setState({ gT: Math.max(0, Math.min(1.1, el - 2.25)) }); const r = this.td.renderNow; if (r) for (let k = 0; k < 6; k++) r(); };
-    window.seJump = (i, ft) => { this.manual = true; this.tossOn = false; cancelAnimationFrame(this.raf); cancelAnimationFrame(this.fraf); this.anim = false; const p = this.S[i]; this.td.p = p; this.td.snap = true; this.td.op = 1; const fin = p >= 0.91; this.td.oT = null; this.td.lt = 1; this.setState({ p, si: i, ps: -1, cT: 1, oT: 3.4, gT: i >= 1 ? 1.1 : 0, fo: fin, ft: fin ? (ft == null ? 6 : ft) : 0 }); if (fin) this.td.adGo = true; const r = this.td.renderNow; if (r) for (let k = 0; k < 90; k++) r(); };
+    window.seJump = (i, ft) => { this.manual = true; this.tossOn = false; cancelAnimationFrame(this.twRaf); cancelAnimationFrame(this.fraf); this.anim = false; const p = this.S[i]; this.td.p = p; this.td.snap = true; this.td.op = 1; const fin = p >= 0.91; this.td.oT = null; this.td.lt = 1; this.setState({ p, si: i, ps: -1, cT: 1, oT: 3.4, gT: i >= 1 ? 1.1 : 0, fo: fin, ft: fin ? (ft == null ? 6 : ft) : 0 }); if (fin) this.td.adGo = true; const r = this.td.renderNow; if (r) for (let k = 0; k < 90; k++) r(); };
     window.seAdT = (t) => { this.td.adGo = true; this.td.adT = t; }; window.seAdShot = (t) => (this.td.adShot ? this.td.adShot(t) : '');
     window.seTdShot = () => { this.td.renderNow && this.td.renderNow(); const c = this.hostRef.current && this.hostRef.current.querySelector('canvas:last-of-type'); return c ? c.toDataURL() : ''; };
     if (!this.isMob()) { this.td.p = this.S[0]; this.setState({ p: this.S[0] }); }
@@ -99,20 +134,20 @@ class Component extends DCLogic {
     const mob = this.isMob(); this._mob = mob; this.td.mob = mob;
     this.dispose && this.dispose(); this.dispose = null; this.io && this.io.disconnect(); this.stopAuto();
     const tok = (this._tok = (this._tok || 0) + 1);
-    const boot = (n) => { const host = this.hostRef.current; if (tok !== this._tok) return; if (!host) { if (n < 80) setTimeout(() => boot(n + 1), 100); else { this.setState({ loading: false }); this.opShow('3D host never mounted'); } return; } import(/* webpackIgnore: true */ new URL('./se-teardown-3d.js', document.baseURI).href).then((m) => m.mount(host, this.td)).then((d) => { if (tok !== this._tok) { d(); return; } this.dispose = d; this.ready3d = true; this.setState({ loading: false }); setTimeout(() => this.opCheck(), 30); }).catch((e) => { this.setState({ loading: false }); this.opShow('3D failed to load: ' + (e && e.message)); }); }; setTimeout(() => boot(0), 60);
+    const boot = (n) => { const host = this.hostRef.current; if (tok !== this._tok) return; if (!host) { if (n < 80) setTimeout(() => boot(n + 1), 100); else { this.setState({ loading: false }); this.opShow('3D host never mounted'); } return; } import(/* webpackIgnore: true */ new URL('./se-teardown-3d.js', document.baseURI).href).then((m) => m.mount(host, this.td)).then((d) => { if (tok !== this._tok) { d(); return; } this.dispose = d; this.ready3d = true; this.setState({ loading: false }); setTimeout(() => this.opCheck(), 30); }).catch((e) => { this.failed3d = true; this.setState({ loading: false }); this.opShow('3D failed to load: ' + (e && e.message)); }); }; setTimeout(() => boot(0), 60);
     if (mob) { this.at(0.02); setTimeout(() => { const el = this.secRef.current; if (!el) return; this.io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { if (!this.played) { this.played = true; this.play(); } } else if (this.played && e.boundingClientRect.top > 0) { this.played = false; this.stopAuto(); this.at(0.02); } }, { threshold: 0.3 }); this.io.observe(el); }, 80); }
   }
-  stopAuto() { (this.tm || []).forEach(clearTimeout); this.tm = []; cancelAnimationFrame(this.raf); }
+  stopAuto() { (this.tm || []).forEach(clearTimeout); this.tm = []; cancelAnimationFrame(this.twRaf); }
   at(p) { this.td.p = p; this.setState({ p }); }
-  tween(to, ms) { cancelAnimationFrame(this.raf); const from = this.td.p, t0 = performance.now(); this.anim = true; const f = (t) => { const k = Math.min(1, (t - t0) / ms), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2, p = from + (to - from) * e; this.td.p = p; const q = Math.round(p * 1000) / 1000; if (q !== this.state.p) this.setState({ p: q }); if (k < 1) this.raf = requestAnimationFrame(f); else this.anim = false; }; this.raf = requestAnimationFrame(f); }
+  tween(to, ms) { cancelAnimationFrame(this.twRaf); const from = this.td.p, t0 = performance.now(); this.anim = true; const f = (t) => { const k = Math.min(1, (t - t0) / ms), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2, p = from + (to - from) * e; this.td.p = p; const q = Math.round(p * 1000) / 1000; if (q !== this.state.p) this.setState({ p: q }); if (k < 1) this.twRaf = requestAnimationFrame(f); else this.anim = false; }; this.twRaf = requestAnimationFrame(f); }
   stepP(k) { const T = this.T; return k < 0 ? 0.262 : k >= 7 ? 0.668 : T.l0 + k * T.ls + T.ld; }
   goStep(k) { this.stopAuto(); const to = this.stepP(k); this.tween(to, Math.max(500, Math.abs(to - this.td.p) * 9000)); }
   play() { this.stopAuto(); const q = [[0.12, 1800], [0.185, 1300], [0.262, 1400], [-1, 900]]; for (let k = 0; k < 8; k++) q.push([this.stepP(k), 750], [-1, 1500]); q.push([0.745, 1800], [-1, 400], [0.9, 3200], [1, 2600]); let t = 0; this.tm = []; q.forEach(([to, ms]) => { if (to >= 0) this.tm.push(setTimeout(() => this.tween(to, ms), t)); t += ms; }); }
   componentWillUnmount() { this.unregGL && this.unregGL(); clearInterval(this.opPoll); this.opRunning = false; cancelAnimationFrame(this.oraf); clearTimeout(this.opWd); window.removeEventListener('scroll', this.opScroll); cancelAnimationFrame(this.fraf); cancelAnimationFrame(this.craf); cancelAnimationFrame(this.sraf); clearTimeout(this.adTm); clearTimeout(this.psTm); clearInterval(this.dIv); this.stopAuto(); this.io && this.io.disconnect(); window.removeEventListener('scroll', this.on); window.removeEventListener('resize', this.on); window.removeEventListener('wheel', this.onWheel); window.removeEventListener('keydown', this.onKey); window.removeEventListener('touchstart', this.onTS); window.removeEventListener('touchmove', this.onTM); window.removeEventListener('se:td-logo', this.onLogo); window.removeEventListener('se:parts-lib', this.onLib); this.dispose && this.dispose(); }
-  tossCheck() { if (this.isMob() || this.anim || this.revOn || this.capToss) return; const p = this.state.p; if (!this.tossOn && p > 0.178) this.tossStart(true); else if (this.tossOn && p < 0.1505) this.tossEnd(); }
+  tossCheck() { if (this.isMob() || this.anim || this.revOn || this.capToss || this.mode === 'film' || this.manual) return; const p = this.state.p; if (!this.tossOn && p > 0.178) this.tossStart(true); else if (this.tossOn && p < 0.1505) this.tossEnd(); }
   componentDidUpdate() { this.tossCheck(); if (this.isMob() !== this._mob) { this.setState({ loading: true }); this.setup(); } this.measureCol(); this.measureTitle(); this.finTrig(); this.cardTrig(); }
   // part card: on a step change keep the old card for its exit and count the new numbers up
-  cardTrig() { if (this.isMob()) return; const S = this.S, p = this.state.p; let si = 0, bd = 9; S.forEach((v, i) => { const d = Math.abs(v - p); if (d < bd) { bd = d; si = i; } }); if (si === this.state.si) return; this.td.act = si >= 2 && si <= 9 ? si - 2 : -1; const cm = (i) => Math.max(0, i - 1); if (cm(si) === cm(this.state.si)) { this.setState({ si }); return; } this.setState({ ps: this.state.si, si, cT: 0 }); clearTimeout(this.psTm); this.psTm = setTimeout(() => this.setState({ ps: -1 }), 240); const t0 = performance.now(); cancelAnimationFrame(this.craf); const f = (t) => { const k = Math.min(1, (t - t0 - 180) / 700); this.setState({ cT: Math.max(0, k) }); if (k < 1) this.craf = requestAnimationFrame(f); }; this.craf = requestAnimationFrame(f); }
+  cardTrig() { if (this.isMob()) return; const S = this.S, p = this.state.p; let si = 0, bd = 9; S.forEach((v, i) => { const d = Math.abs(v - p); if (d < bd) { bd = d; si = i; } }); if (p > 0.16 && p < 0.29) si = 1; if (si === this.state.si) return; this.td.act = si >= 2 && si <= 9 ? si - 2 : -1; const cm = (i) => Math.max(0, i - 1); if (cm(si) === cm(this.state.si)) { this.setState({ si }); return; } this.setState({ ps: this.state.si, si, cT: 0 }); clearTimeout(this.psTm); this.psTm = setTimeout(() => this.setState({ ps: -1 }), 240); const t0 = performance.now(); cancelAnimationFrame(this.craf); const f = (t) => { const k = Math.min(1, (t - t0 - 180) / 700); this.setState({ cT: Math.max(0, k) }); if (k < 1) this.craf = requestAnimationFrame(f); }; this.craf = requestAnimationFrame(f); }
   finTrig() { const p = this.state.p; if (!this.state.fo && p >= 0.91) { this.setState({ fo: true, ft: 0 }); this.inkHit = false; const t0 = performance.now(); cancelAnimationFrame(this.fraf); const f = (t) => { const ft = (t - t0) / 1000; if (!this.inkHit && ft >= 0.62) { this.inkHit = true; this.td.impact && this.td.impact(2); } this.setState({ ft: Math.min(ft, 2.6) }); if (ft < 2.6) this.fraf = requestAnimationFrame(f); }; this.fraf = requestAnimationFrame(f); clearTimeout(this.adTm); this.adTm = setTimeout(() => { this.td.adGo = true; }, 550); } else if (this.state.fo && p < 0.9) { cancelAnimationFrame(this.fraf); clearTimeout(this.adTm); this.td.adGo = false; this.setState({ fo: false, ft: 0 }); } }
   renderVals() {
     const s = this.state, D = s.data, P = D ? D.products : [], p = s.p, T = this.T, cl = (x) => Math.min(1, Math.max(0, x)), sm = (x) => { x = cl(x); return x * x * (3 - 2 * x); }, lerp = (a, b, k) => a + (b - a) * k;
