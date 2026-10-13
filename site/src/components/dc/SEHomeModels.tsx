@@ -107,6 +107,7 @@ function render(v: Vals) {
               </label>
               {'\n        '}
               <div
+                data-hscroll
                 style={{
                   display: 'flex',
                   gap: '6px',

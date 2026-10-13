@@ -173,3 +173,51 @@ Step 1 deployed to production on Vercel: commit `8385538`, "Deployment has compl
 - **Arabic brand name:** the dictionary uses "سام للإلكترونيات" for Sam Electronics. The facts say to copy the exact Arabic spelling from the logo file, so this is TO CONFIRM by the owner.
 
 **Live:** https://samelectronics.vercel.app (press عربي in the nav)
+
+Step 2 deployed to production: `1cb859e`.
+
+---
+
+## Step 3 · G18 brand logos + G19 scrollbars (13 Oct)
+
+### What changed
+
+**Real logo files for all 14 brands** (`site/public/assets/brands/*.svg`, built by `site/scripts/brands/build-logos.mjs`).
+- One layout for every file, so all brands share the same visual height and line up: the symbol (when the brand has one) at full height, then the wordmark.
+- **Official artwork (Simple Icons / gilbarbara logos, CC0):**
+  - Samsung, OPPO, vivo, HONOR, SONY: official wordmarks.
+  - Google: official wordmark.
+  - Apple: symbol. Xiaomi: Mi symbol. Huawei: flower.
+- **TO CONFIRM (no official SVG could be obtained):** Redmi, POCO, realme, TECNO, Infinix, and the name wordmarks next to the Apple, Xiaomi and Huawei symbols. For these the build uses the cleanest available wordmark: the name outlined in the typeface closest to the brand's own wordmark (SIL OFL fonts), never our site font.
+- `public/assets/brands/SOURCES.md` lists each file's source and status. To swap in an owner-supplied official SVG, replace that brand's entry in the build script.
+
+**One shared component everywhere** (`SE Brand Logo`): hero brand rail, Find My Part (panel and nav menu), Model File, repair estimator.
+- New: the teardown part card's "FITS Apple · Samsung · Xiaomi · +11" line now shows the brand logos.
+- The component no longer falls back to typed names, because every file exists. Before this step the 14 files were missing (404s) and typed stand-ins were shown.
+
+**Footer line (G18):** "Brand names and logos belong to their owners and are used only to show compatibility." In Arabic too.
+
+**Scrollbars (G19):** site-wide thin rounded track with a graphite thumb that glows yellow on hover. Firefox gets the thin graphite version, since it can't style a hover state.
+
+**Arrows on horizontal lists (G19):**
+- Small round graphite arrows that turn yellow on hover, appear only when there is more to scroll that way, and work right-to-left.
+- Added to the Model File brand chips and the Find My Part series tabs. The Model File model row already had arrows.
+
+### DONE WHEN
+
+| Item | Result |
+|---|---|
+| Every brand shows a real logo, same visual height, aligned | Yes (9 official sources, 5 + 3 wordmarks TO CONFIRM as allowed by G18) |
+| One shared component everywhere brands appear | Yes |
+| Footer trademark line | Yes |
+| Custom scrollbars site-wide, yellow glow on hover | Yes |
+| Arrow buttons on horizontal lists | Yes |
+
+**Brand-logo 404s in the console:** 14 → 0.
+
+### Not finished
+
+- Official SVGs for Redmi, POCO, realme, TECNO and Infinix, and for the Apple, Xiaomi and Huawei name wordmarks. The owner should supply them, or confirm the stand-ins.
+- The Find My Part brand step's own scrollbar and arrows are part of Issue 18 (Step 24).
+
+**Live:** https://samelectronics.vercel.app

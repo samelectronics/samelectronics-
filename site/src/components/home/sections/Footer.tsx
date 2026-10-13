@@ -236,10 +236,14 @@ export default function Footer({ v }: { v: Vals }) {
           }}
         >
           {'\n      '}
-          <span>
-            {'© 2026 '}
-            {String(v.$facts?.legalName ?? '')}
-            {' · Stock and prices on this site are sample data.'}
+          <span style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+            <span>
+              {'© 2026 '}
+              {String(v.$facts?.legalName ?? '')}
+              {' · Stock and prices on this site are sample data.'}
+            </span>
+            {/* G18 */}
+            <span style={{ opacity: 0.75 }}>Brand names and logos belong to their owners and are used only to show compatibility.</span>
           </span>
           {'\n      '}
           <div style={{ display: 'flex', alignItems: 'center', gap: '18px', flexWrap: 'wrap' }}>

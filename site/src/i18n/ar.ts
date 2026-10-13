@@ -820,6 +820,7 @@ export const EXACT: Record<string, string> = {
   // ── footer ──
   'Mobile phone spare parts, wholesale and retail, from Al Murar, Deira since 2003. Formerly': 'قطع غيار الهواتف المتحركة، جملة وتجزئة، من المرر، ديرة منذ 2003. سابقاً',
   '· Stock and prices on this site are sample data.': '· المخزون والأسعار في هذا الموقع بيانات تجريبية.',
+  'Brand names and logos belong to their owners and are used only to show compatibility.': 'أسماء الماركات وشعاراتها ملك لأصحابها، وتُستخدم هنا فقط لبيان التوافق.',
   Privacy: 'الخصوصية',
   Terms: 'الشروط',
   '@samelectronics.uae': '@samelectronics.uae',

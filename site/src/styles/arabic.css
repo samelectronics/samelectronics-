@@ -47,7 +47,8 @@ html[dir='rtl'] .se-ltr {
 /* Arrows and chevrons point the reading direction (the path flips; hover slides on the icon still work). */
 html[dir='rtl'] path[d='M5 12h14M13 6l6 6-6 6'],
 html[dir='rtl'] path[d='m9 6 6 6-6 6'],
-html[dir='rtl'] path[d='M9 6l6 6-6 6'] {
+html[dir='rtl'] path[d='M9 6l6 6-6 6'],
+html[dir='rtl'] path[d='m15 6-6 6 6 6'] {
   transform: scaleX(-1);
   transform-box: fill-box;
   transform-origin: center;

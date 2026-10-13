@@ -4,6 +4,7 @@ import React from 'react';
 import { type Vals, createDC, cssToObj, cx, s, t } from '@/dc/runtime';
 import Logic from './SETeardown.logic.js';
 import SEPart from './SEPart';
+import SEBrandLogo from './SEBrandLogo';
 
 function render(v: Vals) {
   return (
@@ -374,7 +375,16 @@ function render(v: Vals) {
                                     textOverflow: 'ellipsis',
                                   }}
                                 >
-                                  {t(v.c?.fits)}
+                                  {v.c?.fitsLogos?.ids?.length ? (
+                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', verticalAlign: 'middle' }} aria-label={v.c?.fits}>
+                                      {v.c.fitsLogos.ids.map((id: string) => (
+                                        <SEBrandLogo key={id} brand={id} h="13" color="rgba(255,255,255,.75)" />
+                                      ))}
+                                      {v.c.fitsLogos.more ? <span>{v.c.fitsLogos.more}</span> : null}
+                                    </span>
+                                  ) : (
+                                    t(v.c?.fits)
+                                  )}
                                 </span>
                               </span>
                               {'\n              '}

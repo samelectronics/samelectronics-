@@ -341,7 +341,7 @@ export default function FindMyPartPanel({ v }: { v: Vals }) {
                         {'\n          '}
                       </div>
                       {'\n          '}
-                      <div style={{ display: 'flex', gap: '6px', overflowX: 'auto', scrollbarWidth: 'none' }}>
+                      <div data-hscroll style={{ display: 'flex', gap: '6px', overflowX: 'auto', scrollbarWidth: 'none' }}>
                         {(Array.isArray(v.fmp?.series) ? v.fmp?.series : []).map((__it: any, __i: number) => {
                           const v2 = { ...v, t: __it, $index: __i };
                           return ((v: Vals) => (

@@ -69,3 +69,78 @@ body {
 #dc-root {
   overflow-x: clip;
 }
+
+/* ── G19: our scrollbars, site-wide: a thin rounded track and a graphite thumb that glows yellow on hover ── */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(38, 40, 43, 0.08);
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #3d3e3f;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: #f7c032;
+  box-shadow: 0 0 10px rgba(247, 192, 50, 0.6);
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+/* Firefox has no hover styling for scrollbars: thin graphite thumb on a soft track.
+   (Chrome 121+ would ignore the styled scrollbar above if these were set for it too.) */
+@supports (-moz-appearance: none) {
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #3d3e3f rgba(38, 40, 43, 0.08);
+  }
+}
+
+/* G19: arrow buttons on horizontal lists (src/components/perf/HScrollArrows.tsx) */
+.se-hs-arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-top: -14px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: #26282b;
+  color: #ffffff;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 6px 14px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s, background-color 0.2s, color 0.2s;
+}
+.se-hs-arrow[data-on] {
+  opacity: 1;
+  pointer-events: auto;
+}
+.se-hs-arrow:hover {
+  background: #f7c032;
+  color: #1a1b1d;
+  box-shadow: 0 0 0 1px rgba(247, 192, 50, 0.6), 0 0 14px rgba(247, 192, 50, 0.45);
+}
+.se-hs-start {
+  inset-inline-start: -10px;
+}
+.se-hs-end {
+  inset-inline-end: -10px;
+}
+.se-hs-end svg,
+[dir='rtl'] .se-hs-start svg {
+  transform: scaleX(-1);
+}
+[dir='rtl'] .se-hs-end svg {
+  transform: none;
+}
