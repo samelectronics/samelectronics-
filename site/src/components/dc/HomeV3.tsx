@@ -17,12 +17,11 @@ import SERepairSequence from './SERepairSequence';
 import SESamsoom from './SESamsoom';
 import SETeardown from './SETeardown';
 import SEWhatWeOffer from './SEWhatWeOffer';
-import SEWholesaleTruck from './SEWholesaleTruck';
+import SEWholesale from './SEWholesale';
 import BootIntro from '../home/sections/BootIntro';
 import Nav from '../home/sections/Nav';
 import Hero from '../home/sections/Hero';
 import RepairLab from '../home/sections/RepairLab';
-import Wholesale from '../home/sections/Wholesale';
 import Worldwide from '../home/sections/Worldwide';
 import Story from '../home/sections/Story';
 import Team from '../home/sections/Team';
@@ -55,7 +54,7 @@ function render(v: Vals) {
             <SEShowcase />
             <SEHomeDeals />
             <RepairLab v={v} />
-            <Wholesale v={v} />
+            <SEWholesale />
             <Worldwide v={v} />
             <Story v={v} />
             <Team v={v} />

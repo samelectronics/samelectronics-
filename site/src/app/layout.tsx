@@ -10,6 +10,7 @@ import '@/styles/live-board.css';
 import '@/styles/bench-test.css';
 import '@/styles/showcase.css';
 import '@/styles/deals.css';
+import '@/styles/wholesale.css';
 
 export const metadata: Metadata = {
   title: DC_TITLE ?? 'Sam Electronics',

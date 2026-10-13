@@ -835,3 +835,64 @@ Rebuilt the Deals section from scratch (`SEHomeDeals.logic.js` / `.tsx`, styles 
 | Products from the parts library | Yes |
 
 **Captures checked:** after the entrance, mid price-roll, hovering a carousel card, mid fly-to-cart.
+
+## Step 14 · Issue 8 Wholesale, "The Trade Floor"
+
+Full rebuild as a new component (`SEWholesale.logic.js` / `.tsx`, styles in `src/styles/wholesale.css`). It replaces the old Wholesale section, the conveyor and the truck scene, which were deleted.
+
+**The set:** a Signal Yellow field with 2% grain and a studio vignette. The pallet builder stands on warm-grey concrete with a soft light pool.
+
+**The film**
+1. A strip of yellow packing tape printed "SAM ELECTRONICS · WHOLESALE · TRADE" unrolls across the top edge, presses flat, and a glint runs along it.
+2. The headline arrives by mask reveal, and a TRADE ONLY stamp lands with ink texture and a small shake.
+3. The numbers band counts up:
+   - Since 2003
+   - 24+ countries*
+   - Same-day quotes
+   - Min. order 10 units*
+
+   The starred figures are the sample `serviceStats` and are marked "to be confirmed".
+4. The pallet slides in with weight and the first 2 cartons drop.
+
+**Pallet Builder**
+- Part chips use parts-library thumbnails, and there is a quantity slider (10–500).
+- Each step adds cartons that drop with squash, settle, a dust puff and a contact shadow.
+  - Cartons have a lit top face, a mid-tone front and a darker side.
+  - They show corrugated flutes, tape with sheen and barcoded labels.
+- Tier ladder 10+ · 50+ · 100+ · 500+:
+  - the active tier glows and breathes, and flashes when you cross into it;
+  - the unit price rolls down;
+  - "You keep AED X" rolls up.
+- Retail total vs trade total sit side by side, with the trade total in yellow on graphite.
+- At 500 the pallet is full: shrink-wrap spirals up with a moving shine (every 6s), and a label prints and sticks: "SE-2611 · Ready to ship from Deira."
+- Tier prices are samples: 88 / 82 / 78 / 72% of retail.
+
+**Below the builder**
+- **Who we supply:** 4 graphite cards, each with a small animated scene and one benefit:
+  - Repair shops: a phone and driver;
+  - Traders: a swinging price tag that steps down;
+  - Exporters: a plane on an arc over a carton;
+  - Bulk buyers: a list that ticks itself.
+- **How trade works:** Apply → Get approved → Order at trade prices. The steps light in order like a circuit, ending at "Apply for a trade account". There is no Wholesale page yet, so this button opens the G17 card.
+- **Send a bulk list:** opens WhatsApp.
+- **Trade ticker:** full width and continuous, with flags, quantities and fade overlays. It pauses on hover.
+- **Partner with us:** a graphite card with a faint world-map texture from the offline globe dots. "Become a partner" opens the G17 card.
+
+**Circuits:** only two faint traces in the side gutters. None crosses a carton, card or text, and there is no conveyor.
+
+**Arabic:** every new string is added. The checker is back to its baseline.
+
+**Speed:** `#wholesale` runs at 60fps, with the same average as the sections next to it.
+
+### DONE WHEN (Issue 8)
+
+| Item | Result |
+|---|---|
+| Reads as wholesale at first glance | Yes: tape, TRADE ONLY stamp, pallet and cartons |
+| Tape and TRADE ONLY stamp play | Yes |
+| Pallet builder with tier ladder and wrap works | Yes (tested 50 → 500) |
+| Who we supply + How trade works added | Yes |
+| All objects at G15 quality | Cartons, tape, labels, pallet wood and wrap, all layered and lit from the top-left |
+| No circuits through objects | Yes (audit: no Wholesale hits) |
+
+**Captures checked:** after the entrance, the pallet at the 50+ tier, and the pallet full with its label.
