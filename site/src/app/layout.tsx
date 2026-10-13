@@ -9,6 +9,7 @@ import '@/styles/dc.css';
 import '@/styles/live-board.css';
 import '@/styles/bench-test.css';
 import '@/styles/showcase.css';
+import '@/styles/deals.css';
 
 export const metadata: Metadata = {
   title: DC_TITLE ?? 'Sam Electronics',

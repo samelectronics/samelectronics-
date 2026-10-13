@@ -795,3 +795,43 @@ Step 11's deploy was confirmed: Vercel reported success for `af30837`.
 **Frames checked:** each ad at about 2s; the Service Pack box at 0.8s, 1.4s, 2.2s and 3.2s.
 
 **Live:** https://samelectronics.vercel.app
+
+## Step 13 · Issue 7 Deals & arrivals
+
+Rebuilt the Deals section from scratch (`SEHomeDeals.logic.js` / `.tsx`, styles in `src/styles/deals.css`).
+
+**Layout**
+- Header: "Prices drop. Clocks tick." / "Grab it before the next shop does." (two lines that rise in), plus "See every deal". There is no Deals page yet, so that button shows the G17 Coming soon card.
+- Left, the spotlight (Deal of the Day). It is the deal with the biggest discount.
+  - Its entrance plays clock → strike → price roll → stock: split-flap clock tiles, the old price struck through, the new price digits rolling in, then the stock bar.
+  - The stock starts at 32 of 50 and drops by one every 20–30s.
+- Right: tabs (All · Screens · Batteries · Back covers · Cameras) and a carousel.
+  - Exactly 3 whole cards are visible and the drift moves one whole card every 4.5s, so a card is never clipped.
+  - The carousel pauses on hover; you can drag it or use the arrows.
+- Below:
+  - Incoming shipment SH-2611: a dotted world map projected from the offline globe data, with the Shenzhen → Dubai arc, a plane and a trail.
+    - The bar, the plane, the stages and the countdown all come from one 7-day transit clock, so they always agree.
+  - Pre-orders: a graphite card with neutral placeholder names from the data file ("Next Galaxy Ultra"…). "Reserve" shows the G17 card.
+- Every product and image comes from the parts library. Grades are written in full words.
+- Fly-to-cart: a ripple on the button, then the product image arcs to the nav cart, the cart bounces and its badge goes up (tested: 0 → 1).
+
+**Arabic:** added all the Deals strings. Also, the Showcase grade aria-labels and the "Shop … screens" line now translate (both were missed in Step 12). The checker is back to its baseline.
+
+**Checks:**
+- `#deals` runs at 60fps.
+- Circuit audit: no hits in Deals; the remaining 6 are the approved hero circuits.
+
+### DONE WHEN (Issue 7)
+
+| Item | Result |
+|---|---|
+| No circuit touches any card or button | Yes (audit) |
+| No clipped text anywhere in the carousel | Yes (3 whole cards fit; the drift moves whole cards) |
+| Spotlight plays clock → strike → price roll → stock | Yes |
+| Grades in full words | Yes |
+| Fly-to-cart works | Yes (badge 0 → 1) |
+| Shipment data consistent | Yes (one clock drives everything) |
+| Pre-orders graphite with neutral names | Yes |
+| Products from the parts library | Yes |
+
+**Captures checked:** after the entrance, mid price-roll, hovering a carousel card, mid fly-to-cart.

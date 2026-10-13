@@ -23,7 +23,7 @@ function render(v: Vals) {
         <div className="sc-stage" onMouseEnter={v.enter} onMouseLeave={v.leave} onTouchStart={v.ts} onTouchEnd={v.te}>
           <div className="sc-bars" role="tablist" aria-label="Screen adverts">
             {(v.ads || []).map((x: any, j: number) => (
-              <button key={j} type="button" role="tab" aria-selected={x.on} aria-label={x.k} onClick={x.go} data-no-i18n="">
+              <button key={j} type="button" role="tab" aria-selected={x.on} aria-label={v.tr(x.k)} onClick={x.go}>
                 <i data-s="bar" />
               </button>
             ))}

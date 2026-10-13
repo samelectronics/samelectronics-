@@ -1,680 +1,271 @@
-// Converted from design/project/SE Home Deals.dc.html (12 Oct 2026); maintained by hand since.
+// Deals & arrivals (Issue 7): rebuilt 13 Oct 2026. Styles in src/styles/deals.css.
 'use client';
 import React from 'react';
-import { type Vals, createDC, cssToObj, cx, s, t } from '@/dc/runtime';
+import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SEHomeDeals.logic.js';
-import SEPart from './SEPart';
 
-/** Issue 4: fine film grain instead of grids, stripes and tiles. */
-const GRAIN = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'160\' height=\'160\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'.9\' numOctaves=\'2\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")';
+/** Shipment map: the offline world dots (public/se-globe-data.js) projected onto the Shenzhen → Dubai region. */
+const MAP = { lon0: 38, lon1: 128, lat0: 6, lat1: 46, w: 520, h: 210 };
+const px = (lon: number, lat: number): [number, number] => [((lon - MAP.lon0) / (MAP.lon1 - MAP.lon0)) * MAP.w, ((MAP.lat1 - lat) / (MAP.lat1 - MAP.lat0)) * MAP.h];
+let dotsCache: [number, number][] | null = null;
+function dots() {
+  if (dotsCache) return dotsCache;
+  const G = (window as unknown as { SE_GLOBE?: { land: number[] } }).SE_GLOBE;
+  if (!G) return [];
+  const out: [number, number][] = [];
+  for (let i = 0; i < G.land.length; i += 2) {
+    const lon = G.land[i], lat = G.land[i + 1];
+    if (lon >= MAP.lon0 && lon <= MAP.lon1 && lat >= MAP.lat0 && lat <= MAP.lat1) out.push(px(lon, lat));
+  }
+  return (dotsCache = out);
+}
+const A = px(114.06, 22.54), B = px(55.3, 25.27), C: [number, number] = [(A[0] + B[0]) / 2, Math.min(A[1], B[1]) - 90];
+const bez = (t: number): [number, number] => [(1 - t) * (1 - t) * A[0] + 2 * (1 - t) * t * C[0] + t * t * B[0], (1 - t) * (1 - t) * A[1] + 2 * (1 - t) * t * C[1] + t * t * B[1]];
+
+function Tile({ d, k }: { d: string; k: string }) {
+  return (
+    <span className="dl-flap">
+      <span key={k} className="dl-flap-in">
+        {d}
+      </span>
+      <i />
+    </span>
+  );
+}
 
 function render(v: Vals) {
+  const spot = v.spot;
+  const ship = v.ship;
+  const prog = ship ? ship.prog : 0;
+  const [plx, ply] = bez(prog), [pnx, pny] = bez(Math.min(1, prog + 0.01));
+  const ang = (Math.atan2(pny - ply, pnx - plx) * 180) / Math.PI;
+  const trail = Array.from({ length: 24 }, (_, i) => bez((prog * i) / 23));
   return (
-    <>
-      <section
-        id="deals"
-        ref={v.secRef}
-        data-tone="dark"
-        data-screen-label="07 Deals and arrivals"
-        style={{
-          position: 'relative',
-          overflow: 'hidden',
-          background: 'radial-gradient(90% 90% at 20% 0%,#4A4D52 0%,#3D3E3F 35%,#26282B 80%)',
-          color: '#FFFFFF',
-          padding: 'clamp(80px,8vw,120px) clamp(20px,4vw,64px)',
-        }}
-      >
-        {'\n  '}
-        <div
-          style={{
-            position: 'absolute',
-            left: '10%',
-            top: '-30%',
-            width: '22%',
-            height: '160%',
-            background: 'linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.06),rgba(255,255,255,0))',
-            animation: 'dlBeam 10s ease-in-out infinite',
-            pointerEvents: 'none',
-          }}
-        ></div>
-        {'\n  '}
-        <div
-          style={{
-            position: 'absolute',
-            left: '60%',
-            top: '-30%',
-            width: '16%',
-            height: '160%',
-            background: 'linear-gradient(90deg,rgba(247,192,50,0),rgba(247,192,50,.08),rgba(247,192,50,0))',
-            animation: 'dlBeam 13s 3s ease-in-out infinite reverse',
-            pointerEvents: 'none',
-          }}
-        ></div>
-        {'\n  '}
-        <div
-          style={{
-            position: 'absolute',
-            inset: '0',
-            backgroundImage: GRAIN,
-            opacity: '.035',
-            pointerEvents: 'none',
-          }}
-        ></div>
-        {'\n  '}
-        <div style={{ position: 'relative', maxWidth: '1312px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '30px' }}>
-          {'\n    '}
-          <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '24px' }}>
-            {'\n      '}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', maxWidth: '680px' }}>
-              {'\n        '}
-              <span
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  fontFamily: "'JetBrains Mono',monospace",
-                  fontSize: '12px',
-                  letterSpacing: '.14em',
-                  color: '#F7C032',
-                }}
-              >
-                <span style={{ width: '28px', height: '2px', background: '#F7C032' }}></span>
-                {'DEALS & ARRIVALS · '}
-                {t(v.liveCount)}
-                {' LIVE · SAMPLE PRICES'}
+    <section id="deals" ref={v.secRef} className={'dl' + (v.seen ? ' dl-seen' : '')}>
+      <div className="dl-in">
+        <header className="dl-top">
+          <div>
+            <span className="dl-eb">
+              DEALS & ARRIVALS · {v.live} LIVE · SAMPLE PRICES
+            </span>
+            <h2 className="dl-h">
+              <span>
+                <span>Prices drop. Clocks tick.</span>
               </span>
-              {'\n        '}
-              <h2
-                style={{
-                  margin: '0',
-                  fontFamily: "'Space Grotesk',sans-serif",
-                  fontWeight: '700',
-                  fontSize: 'clamp(34px,3.4vw,50px)',
-                  lineHeight: '1.04',
-                  letterSpacing: '-.035em',
-                  textWrap: 'balance',
-                }}
-              >
-                Prices drop. Clocks tick. Grab it before the next shop does.
-              </h2>
-              {'\n      '}
-            </div>
-            {'\n      '}
-            <a
-              href="#deals"
-              onClick={v.all}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                height: '44px',
-                padding: '0 18px',
-                borderRadius: '10px',
-                background: '#F7C032',
-                color: '#1A1B1D',
-                fontSize: '15px',
-                fontWeight: '600',
-                textDecoration: 'none',
-              }}
-              className={cx(undefined, 'scp-c70f18f8')}
-            >
-              See every deal
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
-                <path d="M5 12h14M13 6l6 6-6 6"></path>
-              </svg>
-            </a>
-            {'\n    '}
-          </div>
-          {'\n    '}
-          <div
-            style={{
-              position: 'relative',
-              margin: '0 calc(-1 * clamp(20px,4vw,64px))',
-              WebkitMaskImage: 'linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)',
-              maskImage: 'linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)',
-            }}
-          >
-            {'\n      '}
-            <div
-              style={cssToObj(
-                `display:flex;gap:14px;width:max-content;padding:10px 0 24px;animation:dlTrack ${s(v.trackDur)} linear infinite`,
-              )}
-              className={cx(undefined, 'scp-facaa0da')}
-            >
-              {'\n        '}
-              {(Array.isArray(v.cards) ? v.cards : []).map((__it: any, __i: number) => {
-                const v2 = { ...v, d: __it, $index: __i };
-                return ((v: Vals) => (
-                  <React.Fragment key={__i}>
-                    {'\n          '}
-                    <div
-                      style={{
-                        position: 'relative',
-                        width: '280px',
-                        flex: 'none',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        borderRadius: '16px',
-                        overflow: 'hidden',
-                        background: 'linear-gradient(170deg,rgba(255,255,255,.11),rgba(255,255,255,.04))',
-                        boxShadow: 'inset 0 0 0 1px rgba(255,255,255,.12),0 20px 40px rgba(0,0,0,.25)',
-                        transition: 'transform .5s cubic-bezier(.2,.8,.2,1),box-shadow .5s',
-                      }}
-                      className={cx(undefined, 'scp-38895ad2')}
-                    >
-                      {'\n            '}
-                      <div
-                        style={{
-                          position: 'relative',
-                          height: '150px',
-                          display: 'grid',
-                          placeItems: 'center',
-                          background: 'radial-gradient(60% 80% at 50% 78%,rgba(247,192,50,.26),rgba(255,255,255,0) 70%)',
-                        }}
-                      >
-                        {'\n              '}
-                        <SEPart kind={v.d?.kind} size={130} tone="dark" />
-                        {'\n              '}
-                        <span
-                          style={{
-                            position: 'absolute',
-                            left: '12px',
-                            top: '12px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '5px',
-                            height: '26px',
-                            padding: '0 9px',
-                            borderRadius: '7px',
-                            background: '#F7C032',
-                            color: '#1A1B1D',
-                            fontFamily: "'JetBrains Mono',monospace",
-                            fontSize: '12px',
-                            fontWeight: '700',
-                          }}
-                        >
-                          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
-                            <path d="M12 5v14M5 12l7 7 7-7"></path>
-                          </svg>
-                          {t(v.d?.pct)}
-                        </span>
-                        {'\n              '}
-                        <span
-                          style={{
-                            position: 'absolute',
-                            right: '12px',
-                            top: '12px',
-                            padding: '4px 8px',
-                            borderRadius: '7px',
-                            background: '#26282B',
-                            color: '#F7C032',
-                            fontFamily: "'JetBrains Mono',monospace",
-                            fontSize: '11px',
-                            fontWeight: '600',
-                            boxShadow: 'inset 0 0 0 1px rgba(247,192,50,.4)',
-                          }}
-                        >
-                          {t(v.d?.grade)}
-                        </span>
-                        {'\n            '}
-                      </div>
-                      {'\n            '}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '9px', padding: '14px 16px 16px', flex: '1' }}>
-                        {'\n              '}
-                        <span style={{ fontWeight: '600', fontSize: '15px', lineHeight: '1.3', minHeight: '40px' }}>{t(v.d?.title)}</span>
-                        {'\n              '}
-                        <span style={{ position: 'relative', display: 'flex', alignItems: 'baseline', gap: '10px', height: '28px' }}>
-                          {'\n                '}
-                          <span
-                            style={cssToObj(
-                              `font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#F7C032;display:inline-block;animation:dlNew ${s(v.trackDur)} ${s(v.d?.dl)} infinite`,
-                            )}
-                          >
-                            {t(v.d?.price)}
-                          </span>
-                          {'\n                '}
-                          <span
-                            style={cssToObj(
-                              `font-family:'JetBrains Mono',monospace;font-size:13px;color:#C9CBCE;text-decoration:line-through;display:inline-block;animation:dlOld ${s(v.trackDur)} ${s(v.d?.dl)} infinite`,
-                            )}
-                          >
-                            {t(v.d?.old)}
-                          </span>
-                          {'\n              '}
-                        </span>
-                        {'\n              '}
-                        <span
-                          style={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                            gap: '8px',
-                            padding: '8px 10px',
-                            borderRadius: '9px',
-                            background: 'rgba(0,0,0,.22)',
-                            fontFamily: "'JetBrains Mono',monospace",
-                            fontSize: '12px',
-                          }}
-                        >
-                          <span style={{ color: '#C9CBCE' }}>ENDS IN</span>
-                          <span style={{ color: '#FFFFFF', fontWeight: '600' }}>{t(v.d?.left)}</span>
-                        </span>
-                        {'\n              '}
-                        <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#E4E5E7' }}>
-                          <span style={{ display: 'flex', alignItems: 'flex-end', gap: '1.5px' }}>
-                            {(Array.isArray(v.d?.bars) ? v.d?.bars : []).map((__it: any, __i: number) => {
-                              const v2 = { ...v, b: __it, $index: __i };
-                              return ((v: Vals) => (
-                                <React.Fragment key={__i}>
-                                  <span
-                                    style={cssToObj(`width:3px;height:${s(v.b?.h)}px;border-radius:1px;background:${s(v.b?.c)}`)}
-                                  ></span>
-                                </React.Fragment>
-                              ))(v2);
-                            })}
-                          </span>
-                          {t(v.d?.stock)}
-                        </span>
-                        {'\n              '}
-                        <button
-                          onClick={v.d?.add}
-                          style={{
-                            marginTop: 'auto',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            height: '36px',
-                            padding: '0 14px',
-                            borderRadius: '10px',
-                            border: '1.5px solid rgba(255,255,255,.4)',
-                            background: 'transparent',
-                            color: '#FFFFFF',
-                            fontSize: '14px',
-                            fontWeight: '600',
-                            cursor: 'pointer',
-                            transition: 'background .3s,color .3s,border-color .3s',
-                          }}
-                          className={cx(undefined, 'scp-7f19569c')}
-                        >
-                          Add to cart
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
-                            <path d="M12 5v14M5 12h14"></path>
-                          </svg>
-                        </button>
-                        {'\n            '}
-                      </div>
-                      {'\n          '}
-                    </div>
-                    {'\n        '}
-                  </React.Fragment>
-                ))(v2);
-              })}
-              {'\n      '}
-            </div>
-            {'\n    '}
-          </div>
-          {'\n    '}
-          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1.7fr) minmax(300px,1fr)', gap: '14px' }}>
-            {'\n      '}
-            <div
-              style={{
-                position: 'relative',
-                display: 'grid',
-                gridTemplateColumns: 'minmax(0,1fr) 300px',
-                gap: '20px',
-                padding: '24px',
-                borderRadius: '24px',
-                background: 'linear-gradient(150deg,#26282B,#1E2022)',
-                boxShadow: 'inset 0 0 0 1px rgba(247,192,50,.35),0 30px 60px rgba(0,0,0,.35)',
-                overflow: 'hidden',
-              }}
-            >
-              {'\n          '}
-              <svg
-                viewBox="0 0 800 260"
-                preserveAspectRatio="none"
-                style={{ position: 'absolute', inset: '0', width: '100%', height: '100%', pointerEvents: 'none' }}
-                fill="none"
-                strokeLinecap="round"
-              >
-                <g stroke="rgba(247,192,50,.12)" strokeWidth="1.2" vectorEffect="non-scaling-stroke">
-                  <path d="M0 248 H120 L140 232 H300"></path>
-                </g>
-                <g stroke="#FFDB6E" strokeWidth="2" strokeDasharray="40 960" vectorEffect="non-scaling-stroke">
-                  <path
-                    pathLength="1000"
-                    d="M0 248 H120 L140 232 H300"
-                    style={{ animation: 'dlCirc 3.6s cubic-bezier(.45,0,.55,1) infinite' }}
-                  ></path>
-                </g>
-              </svg>
-              {'\n        '}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', minWidth: '0' }}>
-                {'\n          '}
-                <span
-                  style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    fontFamily: "'JetBrains Mono',monospace",
-                    fontSize: '12px',
-                    letterSpacing: '.12em',
-                    color: '#F7C032',
-                  }}
-                >
-                  <span>
-                    {'INCOMING SHIPMENT · '}
-                    {t(v.ship?.id)} <span style={{ color: '#C9CBCE' }}>· SAMPLE</span>
-                  </span>
-                  <span style={{ color: '#FFFFFF' }}>
-                    {t(v.ship?.pct)}
-                    {' OF THE WAY'}
-                  </span>
-                </span>
-                {'\n          '}
-                <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: '600', fontSize: '19px' }}>{t(v.ship?.label)}</span>
-                {'\n          '}
-                <div style={{ position: 'relative', height: '140px', marginTop: '-6px', width: '440px', maxWidth: '100%' }}>
-                  {'\n            '}
-                  <svg
-                    viewBox="0 0 440 150"
-                    width="440"
-                    height="150"
-                    style={{ position: 'absolute', inset: '0', overflow: 'visible' }}
-                    fill="none"
-                  >
-                    {'\n              '}
-                    <path d="M20 110 C 120 10, 300 10, 420 92" stroke="rgba(255,255,255,.14)" strokeWidth="2"></path>
-                    {'\n              '}
-                    <path
-                      d="M20 110 C 120 10, 300 10, 420 92"
-                      stroke="#F7C032"
-                      strokeWidth="2.5"
-                      pathLength="100"
-                      strokeDasharray="100 100"
-                      style={{ animation: 'dlTrail 10s infinite' }}
-                    ></path>
-                    <path
-                      d="M20 110 C 120 10, 300 10, 420 92"
-                      stroke="rgba(247,192,50,.5)"
-                      strokeWidth="2"
-                      strokeDasharray="6 6"
-                      style={{ animation: 'dlDash 1s linear infinite' }}
-                    ></path>
-                    {'\n            '}
-                  </svg>
-                  {'\n            '}
-                  <span
-                    style={{
-                      position: 'absolute',
-                      left: '20px',
-                      top: '110px',
-                      width: '10px',
-                      height: '10px',
-                      margin: '-5px 0 0 -5px',
-                      borderRadius: '50%',
-                      background: '#FFFFFF',
-                    }}
-                  ></span>
-                  {'\n            '}
-                  <span
-                    style={{
-                      position: 'absolute',
-                      left: '420px',
-                      top: '92px',
-                      width: '12px',
-                      height: '12px',
-                      margin: '-6px 0 0 -6px',
-                      borderRadius: '50%',
-                      background: '#F7C032',
-                      boxShadow: '0 0 0 3px #26282B',
-                    }}
-                  ></span>
-                  {'\n            '}
-                  <span
-                    style={{
-                      position: 'absolute',
-                      left: '420px',
-                      top: '92px',
-                      width: '12px',
-                      height: '12px',
-                      margin: '-6px 0 0 -6px',
-                      borderRadius: '50%',
-                      background: '#F7C032',
-                      opacity: '0',
-                      animation: 'dlLand 10s infinite',
-                    }}
-                  ></span>
-                  {'\n            '}
-                  <span
-                    style={{
-                      position: 'absolute',
-                      left: '0',
-                      top: '124px',
-                      fontFamily: "'JetBrains Mono',monospace",
-                      fontSize: '11px',
-                      color: '#C9CBCE',
-                    }}
-                  >
-                    {t(v.ship?.origin)}
-                  </span>
-                  {'\n            '}
-                  <span
-                    style={{
-                      position: 'absolute',
-                      left: '330px',
-                      top: '108px',
-                      fontFamily: "'JetBrains Mono',monospace",
-                      fontSize: '11px',
-                      color: '#F7C032',
-                    }}
-                  >
-                    DUBAI · DEIRA
-                  </span>
-                  {'\n            '}
-                  <span
-                    style={{
-                      position: 'absolute',
-                      left: '0',
-                      top: '0',
-                      width: '34px',
-                      height: '26px',
-                      offsetPath: "path('M20 110 C 120 10, 300 10, 420 92')",
-                      offsetRotate: 'auto',
-                      offsetDistance: '0%',
-                      animation: 'dlShip 10s infinite',
-                    }}
-                  >
-                    <span
-                      style={{
-                        position: 'absolute',
-                        inset: '0',
-                        borderRadius: '4px',
-                        background: 'linear-gradient(160deg,#E0B060,#B9852F)',
-                        boxShadow: '0 6px 12px rgba(0,0,0,.45),inset 0 0 0 1px rgba(0,0,0,.15)',
-                      }}
-                    ></span>
-                    <span
-                      style={{
-                        position: 'absolute',
-                        left: '14px',
-                        top: '0',
-                        width: '6px',
-                        height: '26px',
-                        background: 'rgba(255,244,209,.6)',
-                      }}
-                    ></span>
-                    <span
-                      style={{
-                        position: 'absolute',
-                        left: '4px',
-                        bottom: '4px',
-                        width: '10px',
-                        height: '6px',
-                        background: '#26282B',
-                        borderRadius: '1px',
-                      }}
-                    ></span>
-                  </span>
-                  {'\n          '}
-                </div>
-                {'\n          \n        '}
-              </div>
-              {'\n        '}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {'\n          '}
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: '6px' }}>
-                  {'\n            '}
-                  {(Array.isArray(v.ship?.parts) ? v.ship?.parts : []).map((__it: any, __i: number) => {
-                    const v2 = { ...v, p: __it, $index: __i };
-                    return ((v: Vals) => (
-                      <React.Fragment key={__i}>
-                        <span
-                          style={{
-                            display: 'flex',
-                            flexDirection: 'column',
-                            alignItems: 'center',
-                            gap: '3px',
-                            padding: '12px 0',
-                            borderRadius: '10px',
-                            background: 'rgba(255,255,255,.06)',
-                            boxShadow: 'inset 0 0 0 1px rgba(255,255,255,.06)',
-                          }}
-                        >
-                          <span style={{ fontFamily: "'JetBrains Mono',monospace", fontWeight: '700', fontSize: '26px', lineHeight: '1' }}>
-                            {t(v.p?.v)}
-                          </span>
-                          <span
-                            style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '10px', letterSpacing: '.1em', color: '#C9CBCE' }}
-                          >
-                            {t(v.p?.u)}
-                          </span>
-                        </span>
-                      </React.Fragment>
-                    ))(v2);
-                  })}
-                  {'\n          '}
-                </div>
-                {'\n          '}
-                <span style={{ fontSize: '13px', lineHeight: '1.5', color: '#E4E5E7' }}>
-                  Pre-book from this box and your parts are reserved the moment it lands in Deira.
-                </span>
-                {'\n          '}
-                <button
-                  onClick={v.ship?.notify}
-                  style={{
-                    marginTop: 'auto',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    height: '44px',
-                    padding: '0 14px',
-                    borderRadius: '10px',
-                    border: 'none',
-                    background: '#F7C032',
-                    color: '#1A1B1D',
-                    fontSize: '14px',
-                    fontWeight: '600',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Notify me when it lands
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
-                    <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path>
-                    <path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path>
-                  </svg>
-                </button>
-                {'\n        '}
-              </div>
-              {'\n      '}
-            </div>
-            {'\n      '}
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '2px',
-                padding: '20px 22px',
-                borderRadius: '24px',
-                background: '#FFFFFF',
-                color: '#1A1B1D',
-                boxShadow: '0 20px 40px rgba(0,0,0,.25)',
-              }}
-            >
-              {'\n        '}
-              <span
-                style={{
-                  fontFamily: "'JetBrains Mono',monospace",
-                  fontSize: '12px',
-                  letterSpacing: '.12em',
-                  color: '#3D3E3F',
-                  marginBottom: '6px',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  gap: '8px',
-                }}
-              >
-                <span>PRE-ORDERS · NEW MODELS</span>
-                <span style={{ letterSpacing: '.06em', color: '#5E6064' }}>placeholders</span>
+              <span>
+                <span>Grab it before the next shop does.</span>
               </span>
-              {'\n        '}
-              {(Array.isArray(v.preorders) ? v.preorders : []).map((__it: any, __i: number) => {
-                const v2 = { ...v, p: __it, $index: __i };
-                return ((v: Vals) => (
-                  <React.Fragment key={__i}>
-                    <div
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: 'minmax(0,1fr) auto',
-                        gap: '4px 10px',
-                        padding: '11px 0',
-                        borderTop: '1px solid rgba(26,27,29,.08)',
-                      }}
-                    >
-                      <span style={{ fontWeight: '600', fontSize: '15px' }}>{t(v.p?.model)}</span>
-                      <span
-                        style={cssToObj(
-                          `justify-self:end;padding:3px 8px;border-radius:6px;background:${s(v.p?.bg)};font-size:12px;font-weight:600;white-space:nowrap`,
-                        )}
-                      >
-                        {t(v.p?.status)}
-                      </span>
-                      <span style={{ gridColumn: 'span 2', fontSize: '13px', color: '#3D3E3F' }}>{t(v.p?.parts)}</span>
-                    </div>
-                  </React.Fragment>
-                ))(v2);
-              })}
-              {'\n        '}
-              <button
-                onClick={v.preorder}
-                style={{
-                  marginTop: 'auto',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  height: '44px',
-                  padding: '0 14px',
-                  borderRadius: '10px',
-                  border: 'none',
-                  background: '#26282B',
-                  color: '#FFFFFF',
-                  fontSize: '14px',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                }}
-              >
-                Reserve a pre-order
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#F7C032" strokeWidth="2.4">
-                  <path d="M5 12h14M13 6l6 6-6 6"></path>
+            </h2>
+          </div>
+          <a href="#deals" className="dl-all" onClick={v.all}>
+            See every deal
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </a>
+        </header>
+
+        <div className="dl-main">
+          {spot ? (
+            <article className="dl-spot" data-deal="1">
+              <span className="dl-spot-k">DEAL OF THE DAY</span>
+              <div className="dl-spot-art">
+                <span className="dl-spot-light" aria-hidden="true" />
+                <span className="dl-spot-shadow" aria-hidden="true" />
+                {spot.img ? <img src={spot.img} alt="" /> : null}
+                <span className="dl-pct dl-stamp">{spot.pct}</span>
+              </div>
+              <div className="dl-spot-t">
+                <span className="dl-grade">{spot.grade}</span>
+                <h3 data-no-i18n="">{spot.title}</h3>
+              </div>
+              <div className="dl-price">
+                <span className="dl-old">
+                  {spot.old}
+                  <i />
+                </span>
+                <span className="dl-new">
+                  <em>AED</em>
+                  {spot.price.map((x: any) => (
+                    <span key={x.i} className="dl-digit" style={{ animationDelay: x.dl }}>
+                      {x.d}
+                    </span>
+                  ))}
+                </span>
+              </div>
+              <div className="dl-clock" aria-label="Ends in">
+                <span className="dl-clock-l">ENDS IN</span>
+                <span className="dl-flaps">
+                  {spot.clock.map((c: any, i: number) => (
+                    <React.Fragment key={i}>
+                      {i === 2 || i === 4 ? <b className="dl-colon">:</b> : null}
+                      <Tile d={c.d} k={c.k} />
+                    </React.Fragment>
+                  ))}
+                </span>
+              </div>
+              <div className="dl-stock">
+                <span className="dl-stock-bar">
+                  <i style={{ ['--k' as string]: spot.bar } as React.CSSProperties} key={spot.left} />
+                </span>
+                <span className="dl-stock-t">
+                  <b key={spot.left}>{spot.left}</b> of 50 left
+                </span>
+              </div>
+              <button type="button" className="dl-add big" onClick={spot.add}>
+                Add to cart
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+                  <path d="M12 5v14M5 12h14" />
                 </svg>
               </button>
-              {'\n      '}
+            </article>
+          ) : (
+            <div className="dl-spot" />
+          )}
+
+          <div className="dl-right">
+            <div className="dl-tabs" role="tablist">
+              {(v.tabs || []).map((t: any) => (
+                <button key={t.id} type="button" role="tab" aria-selected={t.on} className={t.on ? 'on' : ''} onClick={t.pick}>
+                  {t.t}
+                </button>
+              ))}
             </div>
-            {'\n    '}
+            <div className="dl-carwrap">
+              <div
+                className="dl-track"
+                ref={v.trackRef}
+                data-hscroll="1"
+                onMouseEnter={v.hold}
+                onMouseLeave={v.free}
+                onPointerDown={v.down}
+                onPointerMove={v.move}
+                onPointerUp={v.up}
+                onPointerCancel={v.up}
+              >
+                {(v.cards || []).map((c: any) => (
+                  <article key={c.key} className="dl-card" data-deal="1" data-card="deal" style={{ animationDelay: c.dl }}>
+                    <span className="dl-pct">{c.pct}</span>
+                    <div className="dl-card-art">
+                      <span className="dl-card-shadow" aria-hidden="true" />
+                      {c.img ? <img src={c.img} alt="" draggable={false} /> : null}
+                      <span className="dl-card-sheen" aria-hidden="true" />
+                    </div>
+                    <span className="dl-grade">{c.grade}</span>
+                    <h4 data-no-i18n="">{c.title}</h4>
+                    <div className="dl-card-p">
+                      <b>{c.price}</b>
+                      <s>{c.old}</s>
+                    </div>
+                    <div className="dl-ends">
+                      <span>ENDS IN</span>
+                      <b>{c.ends}</b>
+                    </div>
+                    <div className={'dl-card-st' + (c.low ? ' low' : '')}>{c.stock}</div>
+                    <button type="button" className="dl-add" onClick={c.add}>
+                      Add to cart
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+                        <path d="M12 5v14M5 12h14" />
+                      </svg>
+                    </button>
+                  </article>
+                ))}
+              </div>
+            </div>
           </div>
-          {'\n  '}
         </div>
-      </section>
-    </>
+
+        <div className="dl-below">
+          {ship ? (
+            <article className="dl-ship">
+              <div className="dl-ship-h">
+                <div>
+                  <span className="dl-k">
+                    INCOMING SHIPMENT · <span data-no-i18n="">{ship.id}</span> · SAMPLE
+                  </span>
+                  <h4>{ship.label}</h4>
+                </div>
+                <div className="dl-ship-clock">
+                  {ship.clock.map((c: any) => (
+                    <span key={c.u}>
+                      <b>{c.v}</b>
+                      <small>{c.u}</small>
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <svg className="dl-map" viewBox={`0 0 ${MAP.w} ${MAP.h}`} aria-hidden="true">
+                <defs>
+                  <linearGradient id="dlTrail" gradientUnits="userSpaceOnUse" x1={A[0]} y1={A[1]} x2={plx} y2={ply}>
+                    <stop offset="0" stopColor="#F7C032" stopOpacity="0" />
+                    <stop offset="1" stopColor="#FFDB6E" stopOpacity=".95" />
+                  </linearGradient>
+                </defs>
+                {dots().map(([x, y], i) => (
+                  <circle key={i} cx={x} cy={y} r="1.6" fill="rgba(255,255,255,.16)" />
+                ))}
+                <path d={`M${A[0]} ${A[1]} Q${C[0]} ${C[1]} ${B[0]} ${B[1]}`} fill="none" stroke="rgba(247,192,50,.28)" strokeWidth="1.5" strokeDasharray="3 5" />
+                <polyline points={trail.map(([x, y]) => x.toFixed(1) + ',' + y.toFixed(1)).join(' ')} fill="none" stroke="url(#dlTrail)" strokeWidth="2.5" strokeLinecap="round" />
+                <circle cx={A[0]} cy={A[1]} r="4" fill="#1F2023" stroke="#F7C032" strokeWidth="1.5" />
+                <circle cx={B[0]} cy={B[1]} r="5" fill="#F7C032" className="dl-dxb" />
+                <text x={A[0]} y={A[1] + 18} textAnchor="middle" className="dl-city">
+                  SHENZHEN
+                </text>
+                <text x={B[0]} y={B[1] + 20} textAnchor="middle" className="dl-city">
+                  DUBAI · DEIRA
+                </text>
+                <g transform={`translate(${plx.toFixed(1)} ${ply.toFixed(1)}) rotate(${ang.toFixed(1)})`}>
+                  <path d="M-9 0 L6 -1.6 L9 0 L6 1.6 Z M-2 0 L-6 -6 L-3 -6 L3 0 L-3 6 L-6 6 Z M-8 0 L-10 -3 L-8.5 -3 L-6 0 L-8.5 3 L-10 3 Z" fill="#FFFFFF" />
+                </g>
+              </svg>
+              <div className="dl-ship-bar">
+                <i style={{ transform: `scaleX(${prog.toFixed(3)})` }} />
+                <span>{ship.pct} of the way</span>
+              </div>
+              <ol className="dl-stages">
+                {ship.stages.map((st: any) => (
+                  <li key={st.t} className={(st.on ? 'on' : '') + (st.cur ? ' cur' : '')}>
+                    <i />
+                    {st.t}
+                  </li>
+                ))}
+              </ol>
+              <button type="button" className="dl-notify" onClick={ship.notify}>
+                Notify me when it lands
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                  <path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4" />
+                </svg>
+              </button>
+            </article>
+          ) : null}
+          <article className="dl-pre">
+            <div className="dl-ship-h">
+              <div>
+                <span className="dl-k">PRE-ORDERS · NEXT GENERATION · SAMPLE</span>
+                <h4>Reserve the parts before the phones land.</h4>
+              </div>
+              <span className="dl-wait">
+                <b key={v.waiting}>{v.waiting}</b> shops waiting
+              </span>
+            </div>
+            <ul>
+              {(v.pre || []).map((p: any) => (
+                <li key={p.k}>
+                  <span className="dl-sil" aria-hidden="true" />
+                  <span className="dl-pre-t">
+                    <b data-no-i18n="">{p.model}</b>
+                    <small>{p.parts}</small>
+                  </span>
+                  <button type="button" onClick={p.reserve}>
+                    Reserve
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
   );
 }
 

@@ -23,7 +23,7 @@ type Rule = [RegExp, (...m: string[]) => string];
 
 const RULES: Rule[] = [
   // Issue 6 showcase
-  [/^Shop (service pack|original|oled|incell|high copy) screens$/, (_, g) => `تسوّق شاشات ${({ 'service pack': 'Service Pack', original: 'Original', oled: 'OLED', incell: 'Incell', 'high copy': 'High Copy' } as Record<string, string>)[g]}`],
+  [/^Shop (service pack|original|oled|incell|high copy) screens$/, (_, g) => `تسوّق شاشات ${({ 'service pack': 'سيرفس باك', original: 'الأصلية', oled: 'OLED', incell: 'إنسل', 'high copy': 'هاي كوبي' } as Record<string, string>)[g]}`],
   // Issue 3 live board
   [/^\+(\d+) in the last hour$/, (_, n) => `+${n} خلال الساعة الأخيرة`],
   // G17 coming soon

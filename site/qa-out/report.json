@@ -1,0 +1,28 @@
+{
+  "url": "http://localhost:3100/",
+  "viewport": "1440x900",
+  "loadMs": 8379,
+  "loadBlockingMs": 875,
+  "sections": [
+    {
+      "section": "#deals",
+      "frames": 206,
+      "fps": 59.9,
+      "avgFps": 53.2,
+      "p95ms": 33.3,
+      "longTasks": 0,
+      "longMs": 0,
+      "liveWebGL": 0
+    }
+  ],
+  "webglCreated": 0,
+  "consoleErrors": [
+    "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+    "Failed to load resource: net::ERR_INVALID_URL",
+    "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+    "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+    "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+    "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+    "Failed to load resource: net::ERR_FAILED"
+  ]
+}
