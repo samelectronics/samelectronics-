@@ -32,7 +32,7 @@ class Component extends DCLogic {
     const i = this.state.i + 1, e = E[i % E.length], k = this.MAP[e.type];
     this.setState({ i, pulse: { k, id: i } }); // the row lands; the pulse leaves the board along lane k
     clearTimeout(this.pT); this.pT = setTimeout(() => this.setState((s) => ({ counts: { ...s.counts, [k]: s.counts[k] + 1 }, flash: { ...s.flash, [k]: (s.flash[k] || 0) + 1 }, spark: { ...s.spark, [k]: [...s.spark[k], s.spark[k][s.spark[k].length - 1] + 1].slice(-12) } })), 900);
-    window.dispatchEvent(new CustomEvent('se:surge', { detail: { from: 'board' } }));
+    window.dispatchEvent(new CustomEvent('se:surge', { detail: { el: this.secRef.current } }));
   }
   renderVals() {
     const s = this.state, E = this.events(), pad = (n) => String(n).padStart(2, '0'), lib = s.lib;

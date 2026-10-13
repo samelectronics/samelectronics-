@@ -111,6 +111,7 @@ class Component extends DCLogic {
     A.push(cp.animate(K, { duration: 600, delay: 150, easing: 'linear', fill: 'both' }));
     A.push(cart.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.2)', offset: 0.4 }, { transform: 'scale(.97)', offset: 0.75 }, { transform: 'scale(1)' }], { duration: 250, delay: 750, easing: 'cubic-bezier(.2,.8,.2,1)', fill: 'backwards' }));
     if (cap != null) { A.forEach((a) => { a.pause(); a.currentTime = cap * 1000; }); this.setState((st) => ({ ipBuys: cap >= 0.75 ? (this._capB = (this._capB == null ? st.ipBuys || 0 : this._capB)) + 1 : this._capB == null ? st.ipBuys || 0 : this._capB, ipToast: cap >= 1.0 && cap < 2.5, ipToastName: name })); return; }
+    window.dispatchEvent(new CustomEvent('se:surge', { detail: { el: ip } })); // Issue 4: the circuits answer the add-to-cart
     clearTimeout(this.ipT1); clearTimeout(this.ipT2); clearTimeout(this.ipTT);
     this.ipT1 = setTimeout(() => this.setState((st) => ({ ipBuys: (st.ipBuys || 0) + 1 })), 750);
     this.ipT2 = setTimeout(() => { els.forEach((e) => e.remove()); this.setState({ ipToast: true, ipToastName: name }); this.ipTT = setTimeout(() => this.setState({ ipToast: false }), 1500); }, 1000);

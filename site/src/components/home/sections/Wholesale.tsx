@@ -5,6 +5,9 @@ import React from 'react';
 import { type Vals, cssToObj, cx, s, t, val } from '@/dc/runtime';
 import SEWholesaleTruck from '../../dc/SEWholesaleTruck';
 
+/** Issue 4: fine film grain instead of grids, stripes and tiles. */
+const GRAIN = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'160\' height=\'160\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'.9\' numOctaves=\'2\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")';
+
 export default function Wholesale({ v }: { v: Vals }) {
   return (
     <section
@@ -162,7 +165,8 @@ export default function Wholesale({ v }: { v: Vals }) {
         style={{
           position: 'absolute',
           inset: '0',
-          backgroundImage: 'repeating-linear-gradient(0deg,rgba(255,255,255,.06) 0 1px,transparent 1px 4px)',
+          backgroundImage: GRAIN,
+          opacity: '.045',
           pointerEvents: 'none',
         }}
       ></div>
@@ -177,14 +181,14 @@ export default function Wholesale({ v }: { v: Vals }) {
       >
         {'\n    '}
         <g stroke="rgba(26,27,29,.16)">
-          <path d="M0 680 H160 L200 640 H420 L450 670 H560" strokeWidth="2.5"></path>
+          <path d="M0 746 H160 L196 716 H420 L450 746 H560" strokeWidth="2.5"></path>
           <path d="M1440 70 H1300 L1260 110 H1140" strokeWidth="2"></path>
           <path d="M1440 82 H1304 L1270 116" strokeWidth="1"></path>
           <path d="M900 760 V720 L930 690 H1060" strokeWidth="1.5"></path>
         </g>
         {'\n    '}
         <g stroke="rgba(26,27,29,.5)" strokeWidth="3" strokeDasharray="70 930">
-          <path pathLength="1000" d="M0 680 H160 L200 640 H420 L450 670 H560" style={{ animation: 'sePulse 3.6s linear infinite' }}></path>
+          <path pathLength="1000" d="M0 746 H160 L196 716 H420 L450 746 H560" style={{ animation: 'sePulse 3.6s linear infinite' }}></path>
           <path pathLength="1000" d="M1440 70 H1300 L1260 110 H1140" style={{ animation: 'sePulse 3s .6s linear infinite' }}></path>
         </g>
         {'\n    '}

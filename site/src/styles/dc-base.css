@@ -311,3 +311,6 @@ body {
 .wwo-boxes [data-w='Rb'] > :not(:first-child), .wwo-boxes [data-w='Wb'] > :not(:first-child), .wwo-boxes [data-w='Gb'] > :not(:first-child) { display: none !important; }
 .wwo-boxes [data-w='Rb'] > a, .wwo-boxes [data-w='Wb'] > a, .wwo-boxes [data-w='Gb'] > a { width: 100%; justify-content: space-between; white-space: nowrap; }
 @media (max-width: 1100px) { .wwo-boxes { grid-template-columns: 1fr; max-width: 560px; } }
+
+/* Issue 4 · a surge: one streak of current brightens for 400ms (src/components/perf/CircuitSurge.tsx) */
+.se-surge { stroke: #FFF4D1 !important; filter: drop-shadow(0 0 5px #FFDB6E) drop-shadow(0 0 12px rgba(247, 192, 50, .95)); }

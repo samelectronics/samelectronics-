@@ -656,3 +656,40 @@ The section was rebuilt to the PDF layout, with the same sample feed and texts.
 **Frames checked:** the section after the entrance · mid-pulse (row → counter, "+1") · the Low filter active.
 
 **Live:** https://samelectronics.vercel.app
+
+---
+
+## Step 10 · Issue 4 Global circuits, nav line, backgrounds
+
+Step 9's deploy was confirmed: Vercel reported success for `a6863fd`.
+
+**Nav progress line:** kept as built. It's present on every section: the thin yellow line fills with scroll and its head is a glowing node.
+
+**The audit**
+- A new script, `site/scripts/qa/circuit-audit.mjs`, checks that every visible point of every decorative circuit is at least 24px from text, buttons, images and cards. Points hidden behind something are skipped.
+- **The audit list the PDF asks for is in `docs/CIRCUIT_AUDIT.md`.**
+- First run: 31 paths too close. After the fixes, 9 remain, all intentional: the approved hero's circuits behind the devices, and a shipment route line in Deals.
+
+**Rerouted or removed**
+- Deals: the countdown-card trace was removed.
+- Wholesale: the floor bus was moved off the ticker label.
+- Who are you?: the hub connectors were rerouted.
+- Meet Samsoom: the floor trace was moved off the status line.
+
+**Current and surges**
+- Current runs as soft glowing streaks in the hero's style.
+- **Surges are new.** On an event, one visible streak nearby brightens and runs 2.4× faster for 400ms. The events are add to cart (including the iPad's automatic one), a new Live Board row, and hovering a card.
+
+**Backgrounds:** every section-wide grid, stripe and dot tile is now a fine film grain. That covers Repair Lab, Wholesale, Story, Team, Who are you?, Deals and Model File. Object textures are kept.
+
+### DONE WHEN (Issue 4)
+
+| Item | Result |
+|---|---|
+| Nav progress line present | Yes |
+| Circuits present and decorative per section | Yes |
+| Zero circuits touching or crossing content; audit list sent | Yes. The audit list is in `docs/CIRCUIT_AUDIT.md`; the 9 remaining hits are intentional, with reasons |
+| Current flows as streaks with surges on events | Yes |
+| No busy background textures left | Yes |
+
+**Live:** https://samelectronics.vercel.app

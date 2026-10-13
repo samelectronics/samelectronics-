@@ -4,6 +4,9 @@
 import React from 'react';
 import { type Vals, cx } from '@/dc/runtime';
 
+/** Issue 4: fine film grain instead of grids, stripes and tiles. */
+const GRAIN = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'160\' height=\'160\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'.9\' numOctaves=\'2\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")';
+
 export default function Team({ v }: { v: Vals }) {
   return (
     <section
@@ -24,7 +27,8 @@ export default function Team({ v }: { v: Vals }) {
         style={{
           position: 'absolute',
           inset: '0',
-          backgroundImage: 'repeating-linear-gradient(90deg,rgba(255,255,255,.025) 0 1px,transparent 1px 3px)',
+          backgroundImage: GRAIN,
+          opacity: '.035',
           pointerEvents: 'none',
         }}
       ></div>

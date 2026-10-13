@@ -5,6 +5,9 @@ import { type Vals, createDC, cssToObj, cx, s, t } from '@/dc/runtime';
 import Logic from './SEHomeDeals.logic.js';
 import SEPart from './SEPart';
 
+/** Issue 4: fine film grain instead of grids, stripes and tiles. */
+const GRAIN = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'160\' height=\'160\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'.9\' numOctaves=\'2\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")';
+
 function render(v: Vals) {
   return (
     <>
@@ -52,8 +55,8 @@ function render(v: Vals) {
           style={{
             position: 'absolute',
             inset: '0',
-            opacity: '.5',
-            backgroundImage: 'repeating-linear-gradient(90deg,rgba(255,255,255,.02) 0 1px,transparent 1px 3px)',
+            backgroundImage: GRAIN,
+            opacity: '.035',
             pointerEvents: 'none',
           }}
         ></div>
@@ -336,18 +339,12 @@ function render(v: Vals) {
               >
                 <g stroke="rgba(247,192,50,.12)" strokeWidth="1.2" vectorEffect="non-scaling-stroke">
                   <path d="M0 248 H120 L140 232 H300"></path>
-                  <path d="M800 12 H690 L670 28 H560"></path>
                 </g>
                 <g stroke="#FFDB6E" strokeWidth="2" strokeDasharray="40 960" vectorEffect="non-scaling-stroke">
                   <path
                     pathLength="1000"
                     d="M0 248 H120 L140 232 H300"
                     style={{ animation: 'dlCirc 3.6s cubic-bezier(.45,0,.55,1) infinite' }}
-                  ></path>
-                  <path
-                    pathLength="1000"
-                    d="M800 12 H690 L670 28 H560"
-                    style={{ animation: 'dlCirc 4.2s 1.2s cubic-bezier(.45,0,.55,1) infinite' }}
                   ></path>
                 </g>
               </svg>

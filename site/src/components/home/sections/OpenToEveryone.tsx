@@ -4,6 +4,9 @@
 import React from 'react';
 import { type Vals, cx } from '@/dc/runtime';
 
+/** Issue 4: fine film grain instead of grids, stripes and tiles. */
+const GRAIN = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'160\' height=\'160\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'.9\' numOctaves=\'2\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")';
+
 export default function OpenToEveryone({ v }: { v: Vals }) {
   return (
     <section
@@ -18,9 +21,8 @@ export default function OpenToEveryone({ v }: { v: Vals }) {
         style={{
           position: 'absolute',
           inset: '0',
-          backgroundImage:
-            'linear-gradient(rgba(58,90,140,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(58,90,140,.06) 1px,transparent 1px)',
-          backgroundSize: '48px 48px',
+          backgroundImage: GRAIN,
+          opacity: '.04',
           pointerEvents: 'none',
         }}
       ></div>
@@ -29,8 +31,7 @@ export default function OpenToEveryone({ v }: { v: Vals }) {
         style={{
           position: 'absolute',
           inset: '0',
-          opacity: '.35',
-          backgroundImage: 'repeating-radial-gradient(circle at 30% 40%,rgba(61,62,63,.05) 0 1px,transparent 1px 3px)',
+          opacity: '0',
           pointerEvents: 'none',
         }}
       ></div>
@@ -104,13 +105,13 @@ export default function OpenToEveryone({ v }: { v: Vals }) {
             fill="none"
           >
             <g stroke="rgba(61,62,63,.25)" strokeWidth="2" vectorEffect="non-scaling-stroke">
-              <path id="ln0" d="M500 70 V100 L470 120 H125 V150"></path>
-              <path d="M500 70 V100 L480 120 H375 V150"></path>
-              <path d="M500 70 V100 L520 120 H625 V150"></path>
-              <path d="M500 70 V100 L530 120 H875 V150"></path>
+              <path id="ln0" d="M500 128 V138 H125 V150"></path>
+              <path d="M500 128 V138 H375 V150"></path>
+              <path d="M500 128 V138 H625 V150"></path>
+              <path d="M500 128 V138 H875 V150"></path>
             </g>
             <path
-              d="M500 70 V100 L470 120 H125 V150"
+              d="M500 128 V138 H125 V150"
               pathLength="1000"
               stroke="#F7C032"
               strokeWidth="3"
@@ -119,7 +120,7 @@ export default function OpenToEveryone({ v }: { v: Vals }) {
               style={{ filter: 'drop-shadow(0 0 3px #F7C032)', animation: 'sePulse 4s 0s cubic-bezier(.45,0,.55,1) infinite' }}
             ></path>
             <path
-              d="M500 70 V100 L480 120 H375 V150"
+              d="M500 128 V138 H375 V150"
               pathLength="1000"
               stroke="#F7C032"
               strokeWidth="3"
@@ -128,7 +129,7 @@ export default function OpenToEveryone({ v }: { v: Vals }) {
               style={{ filter: 'drop-shadow(0 0 3px #F7C032)', animation: 'sePulse 4s 1s cubic-bezier(.45,0,.55,1) infinite' }}
             ></path>
             <path
-              d="M500 70 V100 L520 120 H625 V150"
+              d="M500 128 V138 H625 V150"
               pathLength="1000"
               stroke="#F7C032"
               strokeWidth="3"
@@ -137,7 +138,7 @@ export default function OpenToEveryone({ v }: { v: Vals }) {
               style={{ filter: 'drop-shadow(0 0 3px #F7C032)', animation: 'sePulse 4s 2s cubic-bezier(.45,0,.55,1) infinite' }}
             ></path>
             <path
-              d="M500 70 V100 L530 120 H875 V150"
+              d="M500 128 V138 H875 V150"
               pathLength="1000"
               stroke="#F7C032"
               strokeWidth="3"

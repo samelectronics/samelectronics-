@@ -57,13 +57,13 @@ function render(v: Vals) {
           strokeLinecap="round"
         >
           <g stroke="rgba(61,62,63,.16)" strokeWidth="2">
-            <path d="M0 700 H120 L150 670 H260"></path>
+            <path d="M0 746 H120 L150 722 H260"></path>
             <path d="M1440 60 H1340 L1310 90 H1240"></path>
           </g>
           <g stroke="#C9921A" strokeWidth="3" strokeDasharray="60 940">
             <path
               pathLength="1000"
-              d="M0 700 H120 L150 670 H260"
+              d="M0 746 H120 L150 722 H260"
               style={{ animation: 'msPulse 3.2s cubic-bezier(.45,0,.55,1) infinite' }}
             ></path>
             <path
