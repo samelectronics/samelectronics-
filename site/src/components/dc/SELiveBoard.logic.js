@@ -1,53 +1,58 @@
 // @ts-nocheck
 /* eslint-disable */
-// Logic class from design/project/SE Live Board.dc.html, unchanged except for this header, the export
-// and webpackIgnore on runtime imports. Converted 12 Oct 2026; maintained by hand since.
+// Live Parts Board (Issue 3, rebuilt 13 Oct 2026 from the design's SE Live Board; maintained by hand).
+// Layout: [4 counter tiles stacked] → [wiring channel, one straight lane per tile] → [the board].
+// Every 2.5–4s a new event lands on the board: the row types in and glows, a pulse runs back along its lane to
+// its counter, the counter flashes, rolls up and shows "+1". All data is the sample feed in public/se-data.js.
 import React from 'react';
 import { DCLogic, StreamableLogic } from '@/dc/runtime';
 
 class Component extends DCLogic {
-  state = { data: window.SE_DATA || null, i: 0, filt: 'all', counts: { arr: 5, low: 4, drop: 3, ship: 6 }, flash: {}, spark: { arr: [2, 3, 3, 4, 5], low: [4, 4, 3, 4, 4], drop: [1, 2, 2, 3, 3], ship: [2, 3, 4, 5, 6] }, pulses: [], tr: 0, traces: [], now: Date.now() };
-  secRef = React.createRef(); gridRef = React.createRef();
+  state = { data: window.SE_DATA || null, i: 0, filt: 'all', counts: { arr: 5, low: 4, drop: 3, ship: 6 }, flash: {}, spark: { arr: [2, 3, 3, 4, 5], low: [4, 4, 3, 4, 4], drop: [1, 2, 2, 3, 3], ship: [2, 3, 4, 5, 6] }, pulse: null, tr: 0, now: Date.now(), seen: false, lib: null, cu: 0 };
+  secRef = React.createRef();
   GN = { OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' };
   MAP = { arrival: 'arr', restock: 'arr', low: 'low', drop: 'drop', shipped: 'ship' };
+  ISO = { Nigeria: 'NG', Iraq: 'IQ', Romania: 'RO', Morocco: 'MA', Uganda: 'UG', Algeria: 'DZ', Tunisia: 'TN', Libya: 'LY', Egypt: 'EG', Sudan: 'SD', Eritrea: 'ER', Ethiopia: 'ET', 'Saudi Arabia': 'SA', Oman: 'OM', Yemen: 'YE', Syria: 'SY', Lebanon: 'LB', Iran: 'IR', 'Türkiye': 'TR', Turkey: 'TR', Azerbaijan: 'AZ', UK: 'GB', 'United Kingdom': 'GB', Spain: 'ES', Russia: 'RU', UAE: 'AE' };
+  LK = { SCR: 0, FRM: 1, FLX: 2, BAT: 4, CAM: 5, SML: 6, BCV: 7 };
   componentDidMount() {
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 60);
-    this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting) this.measure(); }, { threshold: 0.2 }); setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
-    this.ro = new ResizeObserver(() => this.measure()); setTimeout(() => this.gridRef.current && this.ro.observe(this.gridRef.current), 60);
-    this.iv = setInterval(() => this.tick(), 3500); this.tv = setInterval(() => { if (this.vis && !document.hidden) this.setState((s) => ({ tr: s.tr + 1, now: Date.now() })); }, 3000);
+    const sp = window.seParts; const pk = sp && sp.peek && sp.peek(); if (pk) this.setState({ lib: pk }); this.onLib = (e) => this.setState({ lib: e.detail }); window.addEventListener('se:parts-lib', this.onLib);
+    this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) { this.setState({ seen: true }); const t0 = performance.now() + 300; const f = (t) => { const k = Math.max(0, Math.min(1, (t - t0) / 900)); this.setState({ cu: 1 - Math.pow(1 - k, 3) }); if (k < 1) this.cuR = requestAnimationFrame(f); }; this.cuR = requestAnimationFrame(f); } }, { threshold: 0.25 });
+    setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
+    const next = () => { this.tm = setTimeout(() => { this.tick(); next(); }, 2500 + Math.random() * 1500); }; next(); // a new event every 2.5–4s
+    this.tv = setInterval(() => { if (this.vis && !document.hidden) this.setState((s) => ({ tr: s.tr + 1, now: Date.now() })); }, 3000);
   }
-  componentWillUnmount() { [this.iv, this.tv, this.dIv].forEach(clearInterval); this.io && this.io.disconnect(); this.ro && this.ro.disconnect(); }
-  measure() {
-    const g = this.gridRef.current; if (!g) return; const gr = g.getBoundingClientRect(), bd = g.querySelector('[data-board]'); if (!bd) return; const br = bd.getBoundingClientRect();
-    if (gr.width < 900) return this.setState({ traces: [] });
-    const traces = ['arr', 'low', 'drop', 'ship'].map((id, k) => { const t = g.querySelector('[data-tile="' + id + '"]'); if (!t) return null; const r = t.getBoundingClientRect(); const x0 = r.right - gr.left + 2, y0 = r.top - gr.top + r.height * (k < 2 ? 0.3 : 0.7), x1 = br.left - gr.left - 2, y1 = br.top - gr.top + 80 + k * 70;
-      const mx = x0 + 24 + (k % 2 ? 0 : 20) + k * 6, dy = y1 - y0, sx = Math.min(Math.abs(dy), (x1 - mx - 20) * 0.6), sg = Math.sign(dy);
-      const d = 'M' + x0 + ' ' + y0 + ' H' + mx + ' L' + (mx + sx) + ' ' + (y0 + sg * sx) + ' V' + y1 + ' H' + x1;
-      return { id, d, rev: 'M' + x1 + ' ' + y1 + ' H' + (mx + sx) + ' V' + (y0 + sg * sx) + ' L' + mx + ' ' + y0 + ' H' + x0, x0, y0, x1, y1 }; }).filter(Boolean);
-    this.setState({ traces });
-  }
+  componentWillUnmount() { cancelAnimationFrame(this.cuR); clearTimeout(this.tm); clearTimeout(this.pT); [this.tv, this.dIv].forEach(clearInterval); this.io && this.io.disconnect(); window.removeEventListener('se:parts-lib', this.onLib); }
   events() { const D = this.state.data; if (!D) return []; if (this._eD === D) return this._ev; this._eD = D; const P = D.products, by = (id) => P.find((p) => p.id === id);
-    this._ev = D.events.map((e) => { const p = e.pid && by(e.pid); const name = p ? p.title.replace(' Screen', ' screen').replace(' Battery', ' battery') + ' · ' + (this.GN[p.grade] || '') : ''; return { type: e.type, text: e.type === 'shipped' ? e.city + ', ' + e.country : name, note: e.type === 'low' && p ? 'only ' + p.stock_qty + ' left' : e.type === 'shipped' ? e.note : e.type === 'drop' ? e.note : p ? 'AED ' + p.retail_price : '' }; }).filter((e) => e.text);
+    this._ev = D.events.map((e) => { const p = e.pid && by(e.pid); const name = p ? p.title + ' · ' + (this.GN[p.grade] || '') : '';
+      return { type: e.type, p, cc: e.type === 'shipped' ? this.ISO[e.country] || (e.country || '').slice(0, 2).toUpperCase() : '', text: e.type === 'shipped' ? e.city + ', ' + e.country : name, note: e.type === 'low' && p ? 'only ' + p.stock_qty + ' left' : e.type === 'shipped' ? e.note : e.type === 'drop' ? e.note : p ? 'AED ' + p.retail_price : '' }; }).filter((e) => e.text);
     return this._ev; }
   tick() {
-    if (!this.vis || document.hidden) return; const E = this.events(); if (!E.length) return;
-    const i = this.state.i + 1, e = E[i % E.length], k = this.MAP[e.type], tr = this.state.traces.find((t) => t.id === k);
-    const pid = Date.now(); this.setState((s) => ({ i, pulses: tr ? [{ id: pid, d: tr.rev }] : [] }));
-    setTimeout(() => this.setState((s) => ({ counts: { ...s.counts, [k]: s.counts[k] + 1 }, flash: { ...s.flash, [k]: (s.flash[k] || 0) + 1 }, spark: { ...s.spark, [k]: [...s.spark[k], s.spark[k][s.spark[k].length - 1] + 1].slice(-12) }, pulses: [] })), tr ? 700 : 0);
+    if (!this.vis || document.hidden || !this.state.seen) return; const E = this.events(); if (!E.length) return;
+    const i = this.state.i + 1, e = E[i % E.length], k = this.MAP[e.type];
+    this.setState({ i, pulse: { k, id: i } }); // the row lands; the pulse leaves the board along lane k
+    clearTimeout(this.pT); this.pT = setTimeout(() => this.setState((s) => ({ counts: { ...s.counts, [k]: s.counts[k] + 1 }, flash: { ...s.flash, [k]: (s.flash[k] || 0) + 1 }, spark: { ...s.spark, [k]: [...s.spark[k], s.spark[k][s.spark[k].length - 1] + 1].slice(-12) } })), 900);
+    window.dispatchEvent(new CustomEvent('se:surge', { detail: { from: 'board' } }));
   }
   renderVals() {
-    const s = this.state, E = this.events(), pad = (n) => String(n).padStart(2, '0');
+    const s = this.state, E = this.events(), pad = (n) => String(n).padStart(2, '0'), lib = s.lib;
     const TAG = { arrival: ['JUST LANDED', '#F7C032', '#1A1B1D'], restock: ['BACK IN STOCK', 'rgba(255,255,255,.12)', '#F2F3F4'], low: ['LOW STOCK', 'rgba(229,72,77,.18)', '#FF8A8E'], drop: ['PRICE DROP', 'rgba(247,192,50,.16)', '#FFDB6E'], shipped: ['SHIPPED', 'rgba(43,182,115,.16)', '#5FD49A'] };
     const g = new Date(s.now), gst = new Date(g.getTime() + g.getTimezoneOffset() * 6e4 + 4 * 36e5), base = gst.getHours() * 60 + gst.getMinutes();
-    const list = []; for (let j = 0; j < 7 && E.length; j++) { const idx = ((s.i - j) % E.length + E.length) % E.length, e = E[idx]; if (s.filt !== 'all' && this.MAP[e.type] !== s.filt) continue; list.push({ e, j }); }
-    const rows = list.slice(0, 7).map(({ e, j }, r) => { const tg = TAG[e.type], m = base - j * 3; const top = r === 0; return { key: s.i - j, first: top ? '1' : '0', t: pad(Math.floor(((m % 1440) + 1440) % 1440 / 60)) + ':' + pad(((m % 60) + 60) % 60), tag: tg[0], tagBg: tg[1], tagInk: tg[2], text: e.text, note: e.note, noteC: e.type === 'low' ? '#FF8A8E' : e.type === 'drop' ? '#F7C032' : '#C9CBCE', o: (1 - r * 0.09).toFixed(2), anim: top ? ((s.i % 2) ? 'lbRow .3s cubic-bezier(.2,.8,.2,1) both, lbNew 1.2s .3s both' : 'lbRow2 .3s cubic-bezier(.2,.8,.2,1) both, lbNew2 1.2s .3s both') : 'none', type: top ? ((s.i % 2) ? 'lbType' : 'lbType2') + ' .6s .2s steps(24) both' : 'none' }; });
-    const T = [['arr', 'JUST LANDED', '#F7C032', 'iBox'], ['low', 'LOW STOCK', '#FF8A8E', 'iBat'], ['drop', 'PRICE DROPS', '#FFDB6E', 'iTag'], ['ship', 'SHIPPED TODAY', '#5FD49A', 'iTruck']];
-    const sp = (a) => { const mx = Math.max(...a), mn = Math.min(...a), n = a.length - 1; return a.map((v, i) => (i ? 'L' : 'M') + (i / n * 200).toFixed(1) + ' ' + (24 - (v - mn) / Math.max(1, mx - mn) * 20).toFixed(1)).join(' '); };
-    const tiles = T.map(([id, k, c, ic]) => { const on = s.filt === id, f = s.flash[id] || 0; return { id, k, c, v: s.counts[id], [ic]: true, spark: sp(s.spark[id]), bg: on ? 'linear-gradient(180deg,rgba(247,192,50,.16),rgba(247,192,50,.05))' : 'rgba(255,255,255,.05)', flash: f ? (f % 2 ? 'lbFlashA' : 'lbFlashB') + ' .4s cubic-bezier(.2,.8,.2,1) both' : (on ? 'none' : 'none'), roll: f ? (f % 2 ? 'lbRollA' : 'lbRollB') + ' .35s cubic-bezier(.2,.8,.2,1) both' : 'none', pick: () => this.setState({ filt: on ? 'all' : id }) }; });
-    const TR = [['iPhone 13 screen', 24], ['A54 battery', 18], ['Redmi Note 13 LCD', 15], ['Pixel 8 Pro camera', 12], ['iPhone 15 Pro OLED', 21], ['S24 Ultra back glass', 9], ['Tecno Camon 30 LCD', 11]];
-    const trend = [0, 1, 2].map((j) => { const [t, n] = TR[(s.tr + j) % TR.length]; return { t, n: (n + (s.tr % 3)) + ' searches', anim: j === 2 ? ((s.tr % 2) ? 'lbChipIn' : 'lbChipIn2') + ' .45s cubic-bezier(.2,.8,.2,1) both' : 'none', key: s.tr + j }; });
-    return { secRef: this.secRef, gridRef: this.gridRef, rows, tiles, trend, traces: s.traces, pulses: s.pulses, clock: pad(gst.getHours()) + ':' + pad(gst.getMinutes()), total: Object.values(s.counts).reduce((a, b) => a + b, 0),
-      filterLbl: s.filt === 'all' ? 'Showing everything · tap a counter to filter' : 'Filtered · tap the counter again to clear',
+    // the newest 6 matching events (the board shows the history, newest first)
+    const list = []; for (let j = 0; j < 40 && E.length && list.length < 6; j++) { const idx = ((s.i - j) % E.length + E.length) % E.length, e = E[idx]; if (s.filt !== 'all' && this.MAP[e.type] !== s.filt) continue; list.push({ e, j }); }
+    const rows = list.map(({ e, j }, r) => { const tg = TAG[e.type], m = base - j * 3, top = r === 0 && j === 0, li = e.p ? this.LK[e.p.category] : null, th = lib && lib.thumb && li != null ? lib.thumb[li] : '';
+      return { key: (s.i - j) + s.filt, t: pad(Math.floor(((m % 1440) + 1440) % 1440 / 60)) + ':' + pad(((m % 60) + 60) % 60), tag: tg[0], tagBg: tg[1], tagInk: tg[2], text: e.text, note: e.note, noteC: e.type === 'low' ? '#FF8A8E' : e.type === 'drop' ? '#F7C032' : '#C9CBCE',
+        th, hasTh: !!th, cc: e.cc, hasCc: !th && !!e.cc, isNew: top, d: (r * 0.1).toFixed(2) + 's',
+        go: () => { if (e.p) { const D = s.data, mo = D && D.models.find((x) => x.id === e.p.model_id); window.dispatchEvent(new CustomEvent('se:fmp', { detail: { b: mo && mo.brand_id, m: e.p.model_id, c: e.p.category } })); } else window.dispatchEvent(new CustomEvent('se:go', { detail: { id: 'network' } })); } }; });
+    const T = [['arr', 'JUST LANDED', '#F7C032', 'box'], ['low', 'LOW STOCK', '#FF8A8E', 'bat'], ['drop', 'PRICE DROPS', '#FFDB6E', 'tag'], ['ship', 'SHIPPED TODAY', '#5FD49A', 'truck']];
+    const sp = (a) => { const mx = Math.max(...a), mn = Math.min(...a), n = a.length - 1, pts = a.map((v, i) => [(i / n) * 120, 30 - ((v - mn) / Math.max(1, mx - mn)) * 24]); const line = pts.map((q, i) => (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join(' '); return { line, fill: line + ' L120 34 L0 34 Z', ex: pts[n][0].toFixed(1), ey: pts[n][1].toFixed(1) }; };
+    const tiles = T.map(([id, k, c, ic], n) => { const on = s.filt === id, f = s.flash[id] || 0, a = s.spark[id], spk = sp(a), dl = a[a.length - 1] - a[Math.max(0, a.length - 4)];
+      return { id, k, c, v: Math.round(s.counts[id] * s.cu), ic, spark: spk, grad: 'lbg' + id, delta: '+' + Math.max(1, dl) + ' in the last hour', on, f, d: (0.3 + n * 0.08).toFixed(2) + 's', pick: () => this.setState({ filt: on ? 'all' : id }) }; });
+    const tabs = [['all', 'All'], ['arr', 'Landed'], ['low', 'Low'], ['drop', 'Drops'], ['ship', 'Shipped']].map(([id, t]) => ({ id, t, on: s.filt === id, pick: () => this.setState({ filt: id }) }));
+    const TR = [['iPhone 13 screen', 24], ['A54 battery', 18], ['Redmi Note 13 LCD', 15], ['Pixel 8 Pro camera', 12], ['iPhone 15 Pro OLED', 21], ['S24 Ultra back glass', 9], ['Tecno Camon 30 LCD', 11], ['iPhone 11 battery', 14]];
+    const trend = TR.map(([t, n], j) => ({ t, n: n + ((s.tr + j) % 4) }));
+    const total = 20 + Object.values(s.counts).reduce((a, b) => a + b, 0);
+    return { secRef: this.secRef, rows, tiles, tabs, trend: trend.concat(trend), seen: s.seen, pulse: s.pulse, clock: pad(gst.getHours()) + ':' + pad(gst.getMinutes()), total, filt: s.filt,
       goDeals: (ev) => { ev.preventDefault(); window.dispatchEvent(new CustomEvent('se:go', { detail: { id: 'deals' } })); } };
   }
 }

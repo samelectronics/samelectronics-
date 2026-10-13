@@ -587,3 +587,72 @@ A family card opens Find My Part on that family, until the shop page exists.
 | Every surface lit per G11; nothing flat | Yes |
 
 **Live:** https://samelectronics.vercel.app
+
+---
+
+## Step 9 · Issue 3 Live Parts Board
+
+Step 8's deploy was confirmed: Vercel reported success for `2920ce4`.
+
+**What was wrong:**
+- traces cut through the text and the Low-stock tile;
+- tiles in a 2 × 2 grid with tiny dull icons;
+- clipped trending chips;
+- tall empty rows;
+- a striped background.
+
+The section was rebuilt to the PDF layout, with the same sample feed and texts.
+
+**Layout:** `[4 counter tiles stacked]` → `[96px wiring channel]` → `[the board]`.
+- **Background:** clean lit graphite (#2A2C2F → #34363A) with fine grain and a soft top light. No stripes, no grid.
+- **Lanes:** each tile has one straight lane across the channel to the board, lined up with the tile's centre. There are no other traces in the section, so nothing crosses text or a tile.
+
+**Tiles**
+- Always-alive icons:
+  - a box dropping onto a shelf;
+  - a battery draining and blinking amber;
+  - a tag swinging;
+  - a truck driving off.
+- Each icon's moving part is its own layer, so the icons never repaint.
+- Big numbers, sparklines with a gradient fill and a pulsing dot on the latest point, and "+N in the last hour".
+
+**Board**
+- Dark glass panel with a 1px top highlight and a soft inner shadow.
+- Header: `se://deira/board`, the GST clock and LIVE.
+- **Filter tabs:** All · Landed · Low · Drops · Shipped. The rows shuffle in with a quick vertical slide, and the matching tile glows yellow. The tiles also filter when clicked.
+- **Compact 56px rows:** time · status pill · part thumbnail (from the parts library), or the country code for a shipment · item · value.
+- **Row hover:** the row lifts and its thumbnail enlarges.
+- **Row click:** opens Find My Part on that model and part, or the Worldwide section for a shipment.
+- **Footer:** a rolling "N events today · sample" and a small live activity bar.
+
+**Live loop**
+- Every 2.5–4s a new event lands. Its row slides in at the top, types in and glows yellow for 1.2s.
+- A light pulse runs back along its lane to its counter. The counter flashes, rolls up and shows a floating "+1".
+
+**Entrance**
+1. The headline rises from a mask and the body text fades up.
+2. The tiles slide in one by one and their numbers count up from 0.
+3. Each lane draws across the channel, and a node lights where it meets the board.
+4. The board powers on with one light pass.
+5. The rows type in, 100ms apart.
+
+**Trending:** a full-width ticker that scrolls continuously, with fades on both edges and rolling counts; it pauses on hover. Then the button, aligned left beneath it.
+
+**Performance:** the first build ran at 47fps here. The ticker's edge mask and the SVG icons repainted every frame; both now animate as composited layers. The section now measures 60fps median (3D blocked, as in Step 1).
+
+**Arabic:** the tabs, the split headline and "+N in the last hour" are translated. Country codes and product names stay as they are.
+
+### DONE WHEN (Issue 3)
+
+| Item | Result |
+|---|---|
+| Zero crossings: every trace straight and inside the channel | Yes |
+| Live event → pulse → counter tick, continuously | Yes |
+| Animated icons, filled sparklines, deltas | Yes |
+| Compact rows with thumbnails and filter tabs | Yes |
+| Ticker never clips | Yes (0 clipped chips; edge fades) |
+| Clean lit graphite background | Yes |
+
+**Frames checked:** the section after the entrance · mid-pulse (row → counter, "+1") · the Low filter active.
+
+**Live:** https://samelectronics.vercel.app

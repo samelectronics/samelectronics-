@@ -77,6 +77,13 @@ export const EXACT: Record<string, string> = {
   'Find My Part': 'ابحث عن قطعتي',
   'Find my part': 'ابحث عن قطعتي',
   'Scroll back': 'مرّر للخلف',
+  // Step 9 · Issue 3 live board
+  'What’s moving on our': 'ما يتحرك',
+  'shelves, right now.': 'على رفوفنا الآن.',
+  'Landed': 'وصلت',
+  'Low': 'منخفض',
+  'Drops': 'تخفيضات',
+  'Shipped': 'شُحنت',
   // Step 8 · Issue 2 service boxes
   layers: 'طبقات',
   'Screens, batteries, ports: fixed and tested in Deira.': 'شاشات وبطاريات ومنافذ: تُصلَّح وتُفحص في ديرة.',

@@ -1,505 +1,209 @@
-// Converted from design/project/SE Live Board.dc.html (12 Oct 2026); maintained by hand since.
+// Live Parts Board (Issue 3): rebuilt layout, 13 Oct 2026. Styles in src/styles/live-board.css.
 'use client';
 import React from 'react';
-import { type Vals, createDC, cssToObj, cx, s, t } from '@/dc/runtime';
+import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SELiveBoard.logic.js';
 
-function render(v: Vals) {
+/** Small always-alive icons for the four counters (Issue 3 · idle life). Each moving part is its own small
+ *  layer animated with transform/opacity only, so the icons never repaint (G16). */
+function Icon({ k }: { k: string }) {
+  const L = (cls: string, el: React.ReactNode) => (
+    <svg className={'lb-icl ' + cls} viewBox="0 0 32 32" width="26" height="26" fill="none" aria-hidden="true">
+      {el}
+    </svg>
+  );
+  if (k === 'box')
+    return (
+      <span className="lb-icw">
+        {L('', <path d="M4 27h24" stroke="#8C9096" strokeWidth="1.6" strokeLinecap="round" />)}
+        {L('lb-ic-drop', <><path d="M9 13h14v12H9z" fill="#D9A55C" stroke="#F7C032" strokeWidth="1.4" strokeLinejoin="round" /><path d="M14.5 13v5l1.5-1 1.5 1v-5" fill="#F7C032" /></>)}
+      </span>
+    );
+  if (k === 'bat')
+    return (
+      <span className="lb-icw">
+        {L('', <><rect x="5" y="10" width="20" height="12" rx="2.5" stroke="#FF8A8E" strokeWidth="1.6" /><rect x="26" y="13.5" width="2.5" height="5" rx="1" fill="#FF8A8E" /></>)}
+        <i className="lb-ic-drain" />
+      </span>
+    );
+  if (k === 'tag')
+    return (
+      <span className="lb-icw">
+        {L('', <path d="M16 3v5" stroke="#8C9096" strokeWidth="1.2" />)}
+        {L('lb-ic-swing', <><path d="M9 12l7-5 7 5v13a2 2 0 0 1-2 2H11a2 2 0 0 1-2-2z" fill="rgba(255,219,110,.18)" stroke="#FFDB6E" strokeWidth="1.6" strokeLinejoin="round" /><circle cx="16" cy="11.5" r="1.6" fill="#FFDB6E" /><path d="M12.5 18h7M12.5 22h5" stroke="#FFDB6E" strokeWidth="1.6" strokeLinecap="round" /></>)}
+      </span>
+    );
   return (
-    <>
-      <section
-        id="board"
-        ref={v.secRef}
-        data-tone="dark"
-        data-screen-label="04 Live Parts Board"
-        style={{
-          position: 'relative',
-          overflow: 'hidden',
-          background: 'linear-gradient(160deg,#4A4D52 0%,#3D3E3F 35%,#26282B 100%)',
-          color: '#FFFFFF',
-          padding: '120px clamp(20px,4vw,64px)',
-        }}
-      >
-        {'\n  '}
-        <div
-          style={{
-            position: 'absolute',
-            inset: '0',
-            backgroundImage: 'repeating-linear-gradient(90deg,rgba(255,255,255,.02) 0 1px,transparent 1px 3px)',
-            pointerEvents: 'none',
-          }}
-        ></div>
-        {'\n  '}
-        <div
-          style={{
-            position: 'absolute',
-            left: '-10%',
-            top: '-30%',
-            width: '20%',
-            height: '160%',
-            background: 'linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.05),rgba(255,255,255,0))',
-            animation: 'lbSweep 14s cubic-bezier(.45,0,.55,1) infinite',
-            pointerEvents: 'none',
-          }}
-        ></div>
-        {'\n  '}
-        <div
-          ref={v.gridRef}
-          style={{
-            position: 'relative',
-            maxWidth: '1312px',
-            margin: '0 auto',
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,440px),1fr))',
-            gap: 'clamp(32px,5vw,96px)',
-            alignItems: 'center',
-          }}
-        >
-          {'\n    '}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '20px', minWidth: '0' }}>
-            {'\n      '}
-            <span
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                fontFamily: "'JetBrains Mono',monospace",
-                fontSize: '12px',
-                letterSpacing: '.14em',
-                color: '#F7C032',
-              }}
-            >
-              <span
-                style={{
-                  width: '8px',
-                  height: '8px',
-                  borderRadius: '50%',
-                  background: '#2BB673',
-                  animation: 'lbBlink 1.2s steps(1) infinite',
-                }}
-              ></span>
+    <span className="lb-icw">
+      {L('', <path d="M2 26h28" stroke="#8C9096" strokeWidth="1.2" strokeDasharray="3 3" />)}
+      {L('lb-ic-drive', <><path d="M4 10h14v12H4zM18 14h5l4 4v4h-9z" fill="rgba(95,212,154,.16)" stroke="#5FD49A" strokeWidth="1.6" strokeLinejoin="round" /><circle cx="9" cy="23" r="2.2" fill="#1F2023" stroke="#5FD49A" strokeWidth="1.5" /><circle cx="22" cy="23" r="2.2" fill="#1F2023" stroke="#5FD49A" strokeWidth="1.5" /></>)}
+    </span>
+  );
+}
+
+function render(v: Vals) {
+  const tiles: any[] = v.tiles || [];
+  const rows: any[] = v.rows || [];
+  const pulse = v.pulse;
+  return (
+    <section id="board" ref={v.secRef} className={'lb' + (v.seen ? ' lb-seen' : '')}>
+      <div className="lb-in">
+        <header className="lb-top">
+          <div>
+            <span className="lb-eb">
+              <i />
               LIVE PARTS BOARD · SAMPLE FEED
             </span>
-            {'\n      '}
-            <h2
-              style={{
-                margin: '0',
-                fontFamily: "'Space Grotesk',sans-serif",
-                fontWeight: '700',
-                fontSize: 'clamp(34px,3.4vw,50px)',
-                lineHeight: '1.04',
-                letterSpacing: '-.035em',
-                textWrap: 'balance',
-              }}
-            >
-              What's moving on our shelves, right now.
-            </h2>
-            {'\n      '}
-            <p style={{ margin: '0', fontSize: '17px', lineHeight: '1.55', color: '#D5D7DA', textWrap: 'pretty' }}>
-              New stock landing, prices dropping, boxes leaving Deira. Every row on the board feeds the counters, live.
-            </p>
-            {'\n      '}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-              {'\n        '}
-              {(Array.isArray(v.tiles) ? v.tiles : []).map((__it: any, __i: number) => {
-                const v2 = { ...v, t: __it, $index: __i };
-                return ((v: Vals) => (
-                  <React.Fragment key={__i}>
-                    {'\n          '}
-                    <button
-                      data-tile={v.t?.id}
-                      onClick={v.t?.pick}
-                      style={cssToObj(
-                        `position:relative;display:grid;grid-template-columns:36px minmax(0,1fr);grid-template-rows:auto auto auto;gap:4px 12px;padding:14px;border-radius:16px;border:none;text-align:left;cursor:pointer;color:#FFFFFF;background:${s(v.t?.bg)};backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);animation:${s(v.t?.flash)};transition:background .3s cubic-bezier(.2,.8,.2,1)`,
-                      )}
-                    >
-                      {'\n            '}
-                      <span
-                        style={{
-                          gridRow: '1 / span 2',
-                          position: 'relative',
-                          display: 'block',
-                          width: '36px',
-                          height: '36px',
-                          borderRadius: '10px',
-                          background: 'rgba(0,0,0,.25)',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        {'\n              '}
-                        {v.t?.iBox ? (
-                          <>
-                            <span
-                              style={{
-                                position: 'absolute',
-                                left: '10px',
-                                top: '12px',
-                                width: '16px',
-                                height: '13px',
-                                borderRadius: '2px',
-                                background: 'linear-gradient(160deg,#D9A866,#B98446)',
-                                animation: 'lbBox 2.4s cubic-bezier(.2,.8,.2,1) infinite',
-                              }}
-                            >
-                              <span
-                                style={{
-                                  position: 'absolute',
-                                  left: '6px',
-                                  top: '0',
-                                  width: '4px',
-                                  height: '13px',
-                                  background: 'rgba(255,240,210,.6)',
-                                }}
-                              ></span>
-                            </span>
-                            <span
-                              style={{
-                                position: 'absolute',
-                                left: '6px',
-                                right: '6px',
-                                bottom: '8px',
-                                height: '2px',
-                                background: 'rgba(255,255,255,.3)',
-                              }}
-                            ></span>
-                          </>
-                        ) : null}
-                        {'\n              '}
-                        {v.t?.iBat ? (
-                          <>
-                            <span
-                              style={{
-                                position: 'absolute',
-                                left: '7px',
-                                top: '12px',
-                                width: '19px',
-                                height: '12px',
-                                borderRadius: '2px',
-                                boxShadow: 'inset 0 0 0 1.5px #FF8A8E',
-                              }}
-                            >
-                              <span
-                                style={{
-                                  position: 'absolute',
-                                  left: '2.5px',
-                                  top: '2.5px',
-                                  width: '14px',
-                                  height: '7px',
-                                  borderRadius: '1px',
-                                  background: '#E5484D',
-                                  transformOrigin: '0 50%',
-                                  animation: 'lbDrain 3s cubic-bezier(.45,0,.55,1) infinite',
-                                }}
-                              ></span>
-                            </span>
-                            <span
-                              style={{
-                                position: 'absolute',
-                                left: '27px',
-                                top: '16px',
-                                width: '2px',
-                                height: '4px',
-                                background: '#FF8A8E',
-                              }}
-                            ></span>
-                          </>
-                        ) : null}
-                        {'\n              '}
-                        {v.t?.iTag ? (
-                          <>
-                            <svg
-                              viewBox="0 0 24 24"
-                              width="20"
-                              height="20"
-                              style={{
-                                position: 'absolute',
-                                left: '8px',
-                                top: '8px',
-                                animation: 'lbTag 2.6s cubic-bezier(.2,.8,.2,1) infinite',
-                              }}
-                              fill="#FFDB6E"
-                            >
-                              <path d="M3 12V4h8l10 10-8 8z"></path>
-                              <circle cx="7.5" cy="8" r="1.6" fill="#26282B"></circle>
-                            </svg>
-                          </>
-                        ) : null}
-                        {'\n              '}
-                        {v.t?.iTruck ? (
-                          <>
-                            <span style={{ position: 'absolute', left: '10px', top: '12px', animation: 'lbTruck 2.2s linear infinite' }}>
-                              <svg viewBox="0 0 24 16" width="18" height="12" fill="none">
-                                <rect x="1" y="2" width="13" height="9" rx="1" fill="#5FD49A"></rect>
-                                <path d="M14 5h4l3 3v3h-7z" fill="#2BB673"></path>
-                                <circle cx="5" cy="13" r="2" fill="#FFFFFF"></circle>
-                                <circle cx="17" cy="13" r="2" fill="#FFFFFF"></circle>
-                              </svg>
-                            </span>
-                          </>
-                        ) : null}
-                        {'\n            '}
-                      </span>
-                      {'\n            '}
-                      <span
-                        style={cssToObj(
-                          `display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;color:${s(v.t?.c)}`,
-                        )}
-                      >
-                        <span style={cssToObj(`width:7px;height:7px;border-radius:2px;background:${s(v.t?.c)}`)}></span>
-                        {t(v.t?.k)}
-                      </span>
-                      {'\n            '}
-                      <span
-                        style={{
-                          height: '32px',
-                          overflow: 'hidden',
-                          fontFamily: "'Space Grotesk',sans-serif",
-                          fontWeight: '700',
-                          fontSize: '30px',
-                          letterSpacing: '-.02em',
-                          lineHeight: '32px',
-                        }}
-                      >
-                        <span style={cssToObj(`display:inline-block;animation:${s(v.t?.roll)}`)}>{t(v.t?.v)}</span>
-                      </span>
-                      {'\n            '}
-                      <svg
-                        viewBox="0 0 200 28"
-                        preserveAspectRatio="none"
-                        style={{ gridColumn: '1 / span 2', width: '100%', height: '28px', marginTop: '4px' }}
-                        fill="none"
-                      >
-                        <path
-                          d={v.t?.spark}
-                          pathLength="1"
-                          stroke={v.t?.c}
-                          strokeWidth="1.6"
-                          strokeLinejoin="round"
-                          strokeDasharray="1"
-                          vectorEffect="non-scaling-stroke"
-                          style={{ animation: 'lbSpark 1s cubic-bezier(.2,.8,.2,1) both' }}
-                        ></path>
-                      </svg>
-                      {'\n          '}
-                    </button>
-                    {'\n        '}
-                  </React.Fragment>
-                ))(v2);
-              })}
-              {'\n      '}
-            </div>
-            {'\n      '}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              {'\n        '}
-              <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '11px', letterSpacing: '.14em', color: '#C9CBCE' }}>
-                TRENDING RIGHT NOW
+            <h2 className="lb-h">
+              <span>
+                <span>What’s moving on our</span>
               </span>
-              {'\n        '}
-              <div style={{ display: 'flex', gap: '8px', overflow: 'hidden', height: '36px' }}>
-                {'\n          '}
-                {(Array.isArray(v.trend) ? v.trend : []).map((__it: any, __i: number) => {
-                  const v2 = { ...v, c: __it, $index: __i };
-                  return ((v: Vals) => (
-                    <React.Fragment key={__i}>
-                      <span
-                        style={cssToObj(
-                          `flex:none;display:flex;align-items:center;gap:8px;height:36px;padding:0 12px;border-radius:10px;background:rgba(255,255,255,.06);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);font-size:13px;white-space:nowrap;animation:${s(v.c?.anim)}`,
-                        )}
-                      >
-                        {t(v.c?.t)}
-                        <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '12px', color: '#F7C032' }}>{t(v.c?.n)}</span>
+              <span>
+                <span>shelves, right now.</span>
+              </span>
+            </h2>
+          </div>
+          <p className="lb-p">New stock landing, prices dropping, boxes leaving Deira. Every row on the board feeds the counters, live.</p>
+        </header>
+
+        <div className="lb-main">
+          <div className="lb-tiles">
+            {tiles.map((x) => (
+              <button
+                key={x.id}
+                type="button"
+                className={'lb-tile' + (x.on ? ' on' : '') + (x.f ? ' f' + (x.f % 2) : '')}
+                style={{ animationDelay: x.d, ['--c' as string]: x.c } as React.CSSProperties}
+                onClick={x.pick}
+                aria-pressed={x.on}
+              >
+                <span className="lb-ic">
+                  <Icon k={x.ic} />
+                </span>
+                <span className="lb-tx">
+                  <span className="lb-k">
+                    <i />
+                    {x.k}
+                  </span>
+                  <span className="lb-v">
+                    <span key={x.f} className="lb-roll">
+                      {x.v}
+                    </span>
+                    {x.f ? (
+                      <span key={'p' + x.f} className="lb-plus">
+                        +1
                       </span>
-                    </React.Fragment>
-                  ))(v2);
-                })}
-                {'\n        '}
-              </div>
-              {'\n      '}
-            </div>
-            {'\n      '}
-            <a
-              href="#deals"
-              onClick={v.goDeals}
-              style={{
-                alignSelf: 'flex-start',
-                marginTop: '12px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                height: '44px',
-                padding: '0 18px',
-                borderRadius: '10px',
-                background: '#F7C032',
-                color: '#1A1B1D',
-                fontSize: '15px',
-                fontWeight: '600',
-                textDecoration: 'none',
-                transition: 'transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s',
-              }}
-              className={cx(undefined, 'scp-0ab9b9d5')}
-            >
-              See deals & arrivals
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
-                <path d="M5 12h14M13 6l6 6-6 6"></path>
-              </svg>
-            </a>
-            {'\n    '}
+                    ) : null}
+                  </span>
+                  <span className="lb-d">{x.delta}</span>
+                </span>
+                <svg className="lb-spark" viewBox="0 0 124 36" preserveAspectRatio="none" aria-hidden="true">
+                  <defs>
+                    <linearGradient id={x.grad} x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0" stopColor={x.c} stopOpacity=".32" />
+                      <stop offset="1" stopColor={x.c} stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
+                  <path d={x.spark.fill} fill={`url(#${x.grad})`} />
+                  <path d={x.spark.line} stroke={x.c} strokeWidth="1.6" fill="none" vectorEffect="non-scaling-stroke" />
+                  <circle cx={x.spark.ex} cy={x.spark.ey} r="2.6" fill={x.c} className="lb-dot" />
+                </svg>
+              </button>
+            ))}
           </div>
-          {'\n    '}
-          <div
-            data-board="1"
-            style={{
-              position: 'relative',
-              borderRadius: '24px',
-              padding: '1.5px',
-              background: 'linear-gradient(140deg,rgba(255,255,255,.35),rgba(255,255,255,.06) 40%,rgba(247,192,50,.45))',
-              boxShadow: '0 30px 70px rgba(0,0,0,.35),0 0 60px rgba(247,192,50,.12)',
-            }}
-          >
-            {'\n      '}
-            <div style={{ borderRadius: '23px', overflow: 'hidden', background: 'linear-gradient(180deg,#2E3033,#1F2022)' }}>
-              {'\n        '}
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  height: '48px',
-                  padding: '0 20px',
-                  borderBottom: '1px solid rgba(255,255,255,.07)',
-                  fontFamily: "'JetBrains Mono',monospace",
-                  fontSize: '12px',
-                  color: '#C9CBCE',
-                }}
-              >
-                {'\n          '}
-                <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <span
-                    style={{ width: '22px', height: '22px', borderRadius: '50%', overflow: 'hidden', boxShadow: '0 0 0 1.5px #F7C032' }}
-                  >
-                    <img src="assets/se-logo.png" alt="" style={{ width: '100%', height: '100%', display: 'block' }} />
-                  </span>
-                  se://deira/board
-                </span>
-                {'\n          '}
-                <span style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-                  <span>
-                    {t(v.clock)}
-                    {' GST'}
-                  </span>
-                  <span style={{ display: 'flex', alignItems: 'center', gap: '6px', color: '#5FD49A' }}>
-                    <span
-                      style={{
-                        width: '6px',
-                        height: '6px',
-                        borderRadius: '50%',
-                        background: '#2BB673',
-                        animation: 'lbBlink 1s steps(1) infinite',
-                      }}
-                    ></span>
-                    LIVE
-                  </span>
-                </span>
-                {'\n        '}
-              </div>
-              {'\n        '}
-              <div style={{ display: 'flex', flexDirection: 'column', height: '448px', overflow: 'hidden' }}>
-                {'\n          '}
-                {(Array.isArray(v.rows) ? v.rows : []).map((__it: any, __i: number) => {
-                  const v2 = { ...v, f: __it, $index: __i };
-                  return ((v: Vals) => (
-                    <React.Fragment key={__i}>
-                      {'\n            '}
-                      <div
-                        data-row={v.f?.first}
-                        style={cssToObj(
-                          `display:grid;grid-template-columns:56px 118px minmax(0,1fr) auto;gap:12px;align-items:center;min-height:64px;flex:none;box-sizing:border-box;padding:8px 20px;border-bottom:1px solid rgba(255,255,255,.05);font-family:'JetBrains Mono',monospace;font-size:13px;opacity:${s(v.f?.o)};animation:${s(v.f?.anim)}`,
-                        )}
-                      >
-                        {'\n              '}
-                        <span style={{ color: '#9DA1A6' }}>{t(v.f?.t)}</span>
-                        {'\n              '}
-                        <span
-                          style={cssToObj(
-                            `justify-self:start;padding:4px 8px;border-radius:6px;background:${s(v.f?.tagBg)};color:${s(v.f?.tagInk)};font-size:11px;font-weight:600;letter-spacing:.06em;white-space:nowrap`,
-                          )}
-                        >
-                          {t(v.f?.tag)}
-                        </span>
-                        {'\n              '}
-                        <span style={{ color: '#F2F3F4', lineHeight: '1.35', textWrap: 'pretty' }}>
-                          <span style={cssToObj(`display:inline-block;animation:${s(v.f?.type)}`)}>{t(v.f?.text)}</span>
-                        </span>
-                        {'\n              '}
-                        <span style={cssToObj(`color:${s(v.f?.noteC)};white-space:nowrap`)}>{t(v.f?.note)}</span>
-                        {'\n            '}
-                      </div>
-                      {'\n          '}
-                    </React.Fragment>
-                  ))(v2);
-                })}
-                {'\n        '}
-              </div>
-              {'\n        '}
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  gap: '12px',
-                  padding: '12px 20px',
-                  borderTop: '1px solid rgba(255,255,255,.07)',
-                  fontFamily: "'JetBrains Mono',monospace",
-                  fontSize: '12px',
-                  color: '#C9CBCE',
-                }}
-              >
-                <span>{t(v.filterLbl)}</span>
-                <span>
-                  {t(v.total)}
-                  {' events today · sample'}
-                </span>
-              </div>
-              {'\n      '}
-            </div>
-            {'\n    '}
-          </div>
-          {'\n    '}
-          <svg
-            aria-hidden="true"
-            style={{ position: 'absolute', left: '0', top: '0', width: '100%', height: '100%', pointerEvents: 'none', overflow: 'visible' }}
-            fill="none"
-          >
-            {'\n      '}
-            {(Array.isArray(v.traces) ? v.traces : []).map((__it: any, __i: number) => {
-              const v2 = { ...v, r: __it, $index: __i };
-              return ((v: Vals) => (
-                <React.Fragment key={__i}>
-                  <path d={v.r?.d} stroke="rgba(247,192,50,.28)" strokeWidth="1.6" strokeLinejoin="round"></path>
-                  <circle cx={v.r?.x0} cy={v.r?.y0} r="3.5" fill="#26282B" stroke="#F7C032" strokeWidth="1.5"></circle>
-                  <circle cx={v.r?.x1} cy={v.r?.y1} r="3.5" fill="#26282B" stroke="#F7C032" strokeWidth="1.5"></circle>
-                </React.Fragment>
-              ))(v2);
+
+          {/* the wiring channel: one straight lane per tile, never through text or tiles */}
+          <svg className="lb-chan" viewBox="0 0 96 464" preserveAspectRatio="none" aria-hidden="true">
+            {tiles.map((x, k) => {
+              const y = 52 + k * 120;
+              return (
+                <g key={x.id}>
+                  <path d={`M0 ${y} H96`} className="lb-lane" style={{ animationDelay: 0.8 + k * 0.1 + 's' }} pathLength={1} />
+                  <circle cx="92" cy={y} r="3.5" className="lb-node" style={{ animationDelay: 1.1 + k * 0.1 + 's' }} />
+                  {pulse && pulse.k === x.id ? <path key={pulse.id} d={`M96 ${y} H0`} className="lb-pulse" pathLength={1} /> : null}
+                </g>
+              );
             })}
-            {'\n    '}
           </svg>
-          {'\n    '}
-          {(Array.isArray(v.pulses) ? v.pulses : []).map((__it: any, __i: number) => {
-            const v2 = { ...v, p: __it, $index: __i };
-            return ((v: Vals) => (
-              <React.Fragment key={__i}>
-                <span
-                  style={cssToObj(
-                    `position:absolute;left:0;top:0;width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:#FFF4D1;box-shadow:0 0 10px 4px rgba(247,192,50,.85);offset-path:path('${s(v.p?.d)}');offset-rotate:0deg;pointer-events:none;animation:lbPulse .7s cubic-bezier(.45,0,.55,1) both`,
-                  )}
-                ></span>
-              </React.Fragment>
-            ))(v2);
-          })}
-          {'\n  '}
+
+          <div className="lb-board" data-board="1">
+            <div className="lb-bh">
+              <span className="lb-path">
+                <img src="/assets/se-logo.png" alt="" width="22" height="22" />
+                se://deira/board
+              </span>
+              <span className="lb-clock">
+                {v.clock} GST <b>● LIVE</b>
+              </span>
+            </div>
+            <div className="lb-tabs" role="tablist">
+              {(v.tabs || []).map((t: any) => (
+                <button key={t.id} type="button" role="tab" aria-selected={t.on} className={t.on ? 'on' : ''} onClick={t.pick}>
+                  {t.t}
+                </button>
+              ))}
+            </div>
+            <div className="lb-rows" key={v.filt}>
+              {rows.map((r, i) => (
+                <button key={r.key} type="button" className={'lb-row' + (r.isNew ? ' new' : '')} style={{ animationDelay: r.d }} onClick={r.go}>
+                  <span className="lb-t">{r.t}</span>
+                  <span className="lb-tag" style={{ background: r.tagBg, color: r.tagInk }}>
+                    {r.tag}
+                  </span>
+                  <span className="lb-th">{r.hasTh ? <img src={r.th} alt="" /> : r.hasCc ? <span className="lb-cc" data-no-i18n="">{r.cc}</span> : null}</span>
+                  <span className="lb-item" data-no-i18n={r.hasCc ? undefined : ''}>
+                    <span className="lb-type">{r.text}</span>
+                  </span>
+                  <span className="lb-note" style={{ color: r.noteC }}>
+                    {r.note}
+                  </span>
+                  {i === 0 ? null : null}
+                </button>
+              ))}
+            </div>
+            <div className="lb-foot">
+              <span>
+                <span key={v.total} className="lb-roll">
+                  {v.total}
+                </span>{' '}
+                events today · sample
+              </span>
+              <span className="lb-act" aria-hidden="true">
+                {Array.from({ length: 14 }, (_, k) => (
+                  <i key={k} style={{ animationDelay: -k * 0.21 + 's' }} />
+                ))}
+              </span>
+            </div>
+          </div>
         </div>
-      </section>
-    </>
+
+        <div className="lb-trend">
+          <span className="lb-tk">TRENDING RIGHT NOW</span>
+          <div className="lb-tick">
+            <div className="lb-tick-in">
+              {(v.trend || []).map((x: any, i: number) => (
+                <span key={i} className="lb-chip">
+                  <span data-no-i18n="">{x.t}</span>
+                  <b key={x.n}>{x.n} searches</b>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+        <a href="#deals" onClick={v.goDeals} className="lb-cta">
+          See deals & arrivals
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </a>
+      </div>
+      {/* faint decorative circuit in the empty top-right corner (Issue 4: empty areas only, 8–12%) */}
+      <svg className="lb-deco" viewBox="0 0 320 140" fill="none" aria-hidden="true">
+        <path d="M320 20 H210 L180 50 H120 L100 70 H0" stroke="#F7C032" strokeWidth="1.2" />
+        <circle cx="180" cy="50" r="3.5" stroke="#F7C032" strokeWidth="1.2" />
+        <circle cx="100" cy="70" r="3.5" stroke="#F7C032" strokeWidth="1.2" />
+      </svg>
+    </section>
   );
 }
 

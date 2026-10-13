@@ -6,6 +6,7 @@ import { PRE_PAINT } from '@/i18n/prepaint';
 import '@/styles/arabic.css';
 import '@/styles/dc-base.css';
 import '@/styles/dc.css';
+import '@/styles/live-board.css';
 
 export const metadata: Metadata = {
   title: DC_TITLE ?? 'Sam Electronics',
