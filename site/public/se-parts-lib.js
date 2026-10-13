@@ -2,7 +2,12 @@
 // Renders the teardown's own 3D part models (se-teardown-3d.js, same studio lighting) once at a fixed 3/4 angle,
 // caches them, and hands out data URLs. Index: 0 Screen · 1 Frame · 2 Flex cables · 3 Logic board · 4 Battery · 5 Cameras · 6 Small parts · 7 Back glass · 8 Assembled phone · 9 Phone front (screen off; lib.front = {ar, ph:[x,y,w,h] phone box, scr:[x,y,w,h] screen box as fractions of the phone box}).
 // Usage: const lib = await window.seParts.get(); lib.large[i] (640px) · lib.thumb[i] (192px). Kinds: window.seParts.KIND.
+// G16: the renders are made ONCE (scripts/qa/render-parts.mjs) and shipped as files in /parts/, so visitors never
+// build them and no WebGL context is spent on the library. The in-browser builder below stays as the fallback
+// (if the files fail to load) and is what the render script runs (window.seParts.build()).
 const KEY = 'se-parts-lib-v5';
+const PARTS_VERSION = 1; // bump after re-rendering /parts/ so browsers fetch the new files
+const PARTS_FRONT = {"ar":0.4946236559139785,"ph":[0.2724731182795699,0.04,0.45505376344086024,0.92],"scr":[0.043478260869565216,0.021505376344086023,0.9021739130434783,0.956989247311828]}; // phone-front boxes from the render (scripts/qa/render-parts.mjs writes public/parts/front.json)
 const KIND = { scr: 0, frm: 1, flx: 2, board: 3, bat: 4, cam: 5, sml: 6, bcv: 7, phone: 8, front: 9 };
 const NAMES = ['Screen', 'Frame', 'Flex cables', 'Logic board', 'Battery', 'Cameras', 'Small parts', 'Back glass', 'Assembled phone', 'Phone (front)'];
 let pending = null;
@@ -92,9 +97,23 @@ function cached() { if (memo) return memo; try { const j = JSON.parse(localStora
 // large renders live in IndexedDB (too big for localStorage); thumbs stay in localStorage for instant sync peek()
 const fromIdb = () => idbP || (idbP = idb('readonly', (st) => st.get(KEY)).then((j) => { if (full(j)) { memo = j; window.dispatchEvent(new CustomEvent('se:parts-lib', { detail: j })); return j; } return null; }));
 try { ['se-parts-lib-v1', 'se-parts-lib-v2', 'se-parts-lib-v3', 'se-parts-lib-v4'].forEach((k) => localStorage.removeItem(k)); } catch (e) {}
+const STATIC = (() => {
+  const u = (f) => new URL('/parts/' + f + '?v=' + PARTS_VERSION, location.origin).href;
+  return { v: 1, names: NAMES, large: NAMES.map((_, i) => u('large-' + i + '.webp')), thumb: NAMES.map((_, i) => u('thumb-' + i + '.webp')), front: PARTS_FRONT, static: true };
+})();
+let staticOk = PARTS_FRONT ? true : null; // null = unknown until the first file is checked
+// Shipped files first; if they can't be loaded, fall back to the cached or freshly built library.
+const checkStatic = () => new Promise((res) => { if (!PARTS_FRONT) return res(false); const im = new Image(); im.onload = () => res(true); im.onerror = () => res(false); im.src = STATIC.thumb[0]; });
 window.seParts = {
   KIND, NAMES, KEY,
-  peek: cached,
-  get(force) { const c = !force && cached(); if (full(c)) return Promise.resolve(c); if (!pending) pending = (force ? Promise.resolve(null) : fromIdb()).then((h) => h || build().then((l) => { window.dispatchEvent(new CustomEvent('se:parts-lib', { detail: l })); return l; })); return pending; },
+  peek: () => (staticOk ? STATIC : cached()),
+  get(force) {
+    if (force) { pending = build().then((l) => { window.dispatchEvent(new CustomEvent('se:parts-lib', { detail: l })); return l; }); return pending; }
+    if (staticOk) return Promise.resolve(STATIC);
+    const c = cached(); if (full(c)) return Promise.resolve(c);
+    if (!pending) pending = checkStatic().then((ok) => { if (ok) { staticOk = true; memo = STATIC; window.dispatchEvent(new CustomEvent('se:parts-lib', { detail: STATIC })); return STATIC; } staticOk = false; return fromIdb().then((h) => h || build().then((l) => { window.dispatchEvent(new CustomEvent('se:parts-lib', { detail: l })); return l; })); });
+    return pending;
+  },
+  build,
 };
-cached(); fromIdb();
+if (!PARTS_FRONT) { cached(); fromIdb(); }

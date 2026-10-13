@@ -1549,7 +1549,9 @@ export default function Hero({ v }: { v: Vals }) {
           {'\n      '}
           <button
             onClick={v.openSearch}
+            className="se-search-glow"
             style={{
+              position: 'relative',
               width: '620px',
               display: 'flex',
               alignItems: 'center',
@@ -1563,7 +1565,7 @@ export default function Hero({ v }: { v: Vals }) {
               color: '#1A1B1D',
               textAlign: 'left',
               cursor: 'text',
-              animation: 'seSearchGlow 3.2s linear infinite',
+              boxShadow: '0 0 0 2px rgba(247,192,50,.4),0 0 30px rgba(247,192,50,.18)',
             }}
           >
             {'\n        '}

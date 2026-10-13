@@ -2,6 +2,7 @@
 export const DC_TITLE = "Sam Electronics · Every part. Every model. Every grade.";
 /** Scripts the components expect on window, in load order (served from public/). */
 export const DC_SCRIPTS: string[] = [
+  "se-perf.js",
   "se-data.js",
   "image-slot.js",
   "se-parts-lib.js",

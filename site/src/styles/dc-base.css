@@ -38,3 +38,28 @@ body {
     transition-duration: 0s !important;
   }
 }
+
+/* G16: sections far off-screen pause their CSS animations (src/components/perf/OffscreenPause.tsx). */
+[data-se-off] *,
+[data-se-off] *::before,
+[data-se-off] *::after {
+  animation-play-state: paused !important;
+}
+
+/* G16: the hero search glow pulses by opacity on a pre-drawn layer (was an animated 70px box-shadow). */
+.se-search-glow::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: 0 0 0 2px #ffdb6e, 0 0 70px rgba(247, 192, 50, 0.55);
+  opacity: 0;
+  animation: seSearchGlowO 3.2s linear infinite;
+  will-change: opacity;
+}
+@keyframes seSearchGlowO {
+  0%, 30% { opacity: 0; }
+  42% { opacity: 1; }
+  60%, 100% { opacity: 0; }
+}

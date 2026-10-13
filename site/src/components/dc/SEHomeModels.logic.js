@@ -4,6 +4,7 @@
 // and webpackIgnore on runtime imports. Converted 12 Oct 2026; maintained by hand since.
 import React from 'react';
 import { DCLogic, StreamableLogic } from '@/dc/runtime';
+import { registerScene, freshStage } from '@/dc/gl-budget';
 
 class Component extends DCLogic {
   state = { data: window.SE_DATA || null, mi: 0, ci: 0, gen: 0, leaving: false, auto: true, q: '', grade: null, ttLoading: true, brandF: null };
@@ -16,9 +17,10 @@ class Component extends DCLogic {
     this.io = new IntersectionObserver(([e]) => { this.inView = e.isIntersecting; if (e.isIntersecting) this.setState((s) => ({ gen: s.gen + 1 })); }, { threshold: 0.3 });
     setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
     this.iv = setInterval(() => this.step(), 5000);
-    setTimeout(() => { const h = this.ttRef.current; if (!h) return; import(/* webpackIgnore: true */ new URL('./se-3d.js', document.baseURI).href).then((m) => m.mountTurntable(h, this.tt)).then((d) => { this.dispose = d; this.setState({ ttLoading: false }); }).catch((e) => { console.warn('turntable', e && e.message); this.setState({ ttLoading: false }); }); }, 2500);
+    // G16: the turntable holds a WebGL context only while it is near the viewport (src/dc/gl-budget.ts).
+    this.unreg = registerScene({ id: 'models-turntable', el: () => this.ttRef.current, mount: async () => { const h = this.ttRef.current; if (!h) return; const stg = freshStage(h); try { const m = await import(/* webpackIgnore: true */ new URL('./se-3d.js', document.baseURI).href); const d = await m.mountTurntable(stg.host, this.tt); this.setState({ ttLoading: false }); return () => { d && d(); stg.remove(); }; } catch (e) { console.warn('turntable', e && e.message); stg.remove(); this.setState({ ttLoading: false }); } } });
   }
-  componentWillUnmount() { clearInterval(this.iv); clearInterval(this.dIv); clearTimeout(this.rT); clearTimeout(this.oT); this.io && this.io.disconnect(); this.dispose && this.dispose(); }
+  componentWillUnmount() { clearInterval(this.iv); clearInterval(this.dIv); clearTimeout(this.rT); clearTimeout(this.oT); this.io && this.io.disconnect(); this.unreg && this.unreg(); }
   list() { const D = this.state.data; if (!D) return []; if (this._lD !== D) { this._lD = D; this._pop = D.models.map((m) => ({ m, n: D.products.filter((p) => p.model_id === m.id).length })).sort((a, b) => b.n - a.n).map((x) => x.m); } return this._pop; }
   cats(m) { const D = this.state.data; if (!D || !m) return []; const ps = D.products.filter((p) => p.model_id === m.id); return this.ORDER.filter((c) => ps.some((p) => p.category === c)); }
   shown() { const s = this.state, q = s.q.toLowerCase().replace(/[\s-]/g, ''); return this.list().filter((m) => (!s.brandF || m.brand_id === s.brandF) && (!q || (m.name + m.model_numbers.join('')).toLowerCase().replace(/[\s-]/g, '').includes(q))).slice(0, 12); }

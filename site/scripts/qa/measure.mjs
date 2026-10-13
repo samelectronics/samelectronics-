@@ -7,6 +7,7 @@
  * For each section it scrolls the section into view, records frames for a few seconds and reports
  * median fps, p95 frame time, long tasks (>50ms) and the number of live WebGL contexts. It also
  * reports the main-thread blocking time during load. --shots saves a 1440×900 screenshot per section.
+ * --block re1,re2 aborts matching requests (e.g. to measure a section without the 3D engines).
  * --cdn serves CDN files (unpkg, jsDelivr, esm.sh three) from a local node_modules folder, for
  * machines that cannot reach those CDNs.
  *
@@ -83,9 +84,12 @@ const main = async () => {
   page.on('console', (m) => m.type() === 'error' && errors.push(m.text().slice(0, 240)));
   page.on('pageerror', (e) => errors.push('pageerror: ' + String(e).slice(0, 240)));
   await page.addInitScript(INIT);
-  if (CDN) {
+  const BLOCK = args.block ? String(args.block).split(',').map((x) => new RegExp(x)) : [];
+  if (CDN || BLOCK.length) {
     await page.route('**/*', async (route) => {
       const url = route.request().url();
+      if (BLOCK.some((re) => re.test(url))) return route.abort();
+      if (!CDN) return route.continue();
       if (/^https?:\/\/(localhost|127\.0\.0\.1)/.test(url) || /fonts\.(googleapis|gstatic)\.com/.test(url) || !/^https?:/.test(url)) return route.continue();
       const l = cdnFile(url);
       if (l && fs.existsSync(l.file)) {

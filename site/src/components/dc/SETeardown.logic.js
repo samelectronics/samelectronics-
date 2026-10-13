@@ -4,6 +4,7 @@
 // and webpackIgnore on runtime imports. Converted 12 Oct 2026; maintained by hand since.
 import React from 'react';
 import { DCLogic, StreamableLogic } from '@/dc/runtime';
+import { registerScene } from '@/dc/gl-budget';
 
 class Component extends DCLogic {
   state = { p: 0, data: window.SE_DATA || null, loading: true, vw: document.documentElement.clientWidth || 1440, vh: window.innerHeight || 900, fs: 1, ft: 0, fo: false, si: 0, ps: -1, cT: 1, ent: 0, thumbs: null, oT: 3.4, ck: 0, mag: [0, 0], fmpH: false, shopH: false, hov: -1, lib: null };
@@ -62,6 +63,8 @@ class Component extends DCLogic {
     if (nx === last - 1 && dir > 0) { this.busyUntil = now + 3100; this.goTo(nx, 1200); clearTimeout(this.autoT); this.autoT = setTimeout(() => { if (Math.round(this.fNow()) === last - 1 || this.props.fw) { this.busyUntil = performance.now() + 1500; this.goTo(last, 1400); } }, 1250); return true; }
     this.busyUntil = now + (lo === 1 ? 1300 : cur === last ? 1500 : 950); this.goTo(nx, cur === last ? 1400 : 900); return true; }
   componentDidMount() {
+    // G16: the teardown keeps its WebGL context for the whole visit; the budget counts it (src/dc/gl-budget.ts).
+    this.unregGL = registerScene({ id: 'teardown', fixed: true, el: () => null, mount: async () => {} });
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 60);
     this.on = () => { if (this.props.fw) { this.manual = true; return; } const vw = document.documentElement.clientWidth, vh = window.innerHeight; if (vw !== this.state.vw || vh !== this.state.vh) this.setState({ vw, vh }); if (this.isMob() || this.manual) return; const pin = this.pin(); if (!pin) return; const r = pin.getBoundingClientRect(); const p = this.pFromF(this.fNow()); this.td.p = p; const q = Math.round(p * 1000) / 1000, ent = Math.max(0, Math.min(1, r.top / vh)); if (q !== this.state.p || Math.abs(ent - this.state.ent) > 0.01) this.setState({ p: q, ent }); };
     // one gesture = one step; input while animating (and trackpad inertia) is swallowed; the two ends release the page
@@ -105,7 +108,7 @@ class Component extends DCLogic {
   stepP(k) { const T = this.T; return k < 0 ? 0.262 : k >= 7 ? 0.668 : T.l0 + k * T.ls + T.ld; }
   goStep(k) { this.stopAuto(); const to = this.stepP(k); this.tween(to, Math.max(500, Math.abs(to - this.td.p) * 9000)); }
   play() { this.stopAuto(); const q = [[0.12, 1800], [0.185, 1300], [0.262, 1400], [-1, 900]]; for (let k = 0; k < 8; k++) q.push([this.stepP(k), 750], [-1, 1500]); q.push([0.745, 1800], [-1, 400], [0.9, 3200], [1, 2600]); let t = 0; this.tm = []; q.forEach(([to, ms]) => { if (to >= 0) this.tm.push(setTimeout(() => this.tween(to, ms), t)); t += ms; }); }
-  componentWillUnmount() { clearInterval(this.opPoll); this.opRunning = false; cancelAnimationFrame(this.oraf); clearTimeout(this.opWd); window.removeEventListener('scroll', this.opScroll); cancelAnimationFrame(this.fraf); cancelAnimationFrame(this.craf); cancelAnimationFrame(this.sraf); clearTimeout(this.adTm); clearTimeout(this.psTm); clearInterval(this.dIv); this.stopAuto(); this.io && this.io.disconnect(); window.removeEventListener('scroll', this.on); window.removeEventListener('resize', this.on); window.removeEventListener('wheel', this.onWheel); window.removeEventListener('keydown', this.onKey); window.removeEventListener('touchstart', this.onTS); window.removeEventListener('touchmove', this.onTM); window.removeEventListener('se:td-logo', this.onLogo); window.removeEventListener('se:parts-lib', this.onLib); this.dispose && this.dispose(); }
+  componentWillUnmount() { this.unregGL && this.unregGL(); clearInterval(this.opPoll); this.opRunning = false; cancelAnimationFrame(this.oraf); clearTimeout(this.opWd); window.removeEventListener('scroll', this.opScroll); cancelAnimationFrame(this.fraf); cancelAnimationFrame(this.craf); cancelAnimationFrame(this.sraf); clearTimeout(this.adTm); clearTimeout(this.psTm); clearInterval(this.dIv); this.stopAuto(); this.io && this.io.disconnect(); window.removeEventListener('scroll', this.on); window.removeEventListener('resize', this.on); window.removeEventListener('wheel', this.onWheel); window.removeEventListener('keydown', this.onKey); window.removeEventListener('touchstart', this.onTS); window.removeEventListener('touchmove', this.onTM); window.removeEventListener('se:td-logo', this.onLogo); window.removeEventListener('se:parts-lib', this.onLib); this.dispose && this.dispose(); }
   tossCheck() { if (this.isMob() || this.anim || this.revOn || this.capToss) return; const p = this.state.p; if (!this.tossOn && p > 0.178) this.tossStart(true); else if (this.tossOn && p < 0.1505) this.tossEnd(); }
   componentDidUpdate() { this.tossCheck(); if (this.isMob() !== this._mob) { this.setState({ loading: true }); this.setup(); } this.measureCol(); this.measureTitle(); this.finTrig(); this.cardTrig(); }
   // part card: on a step change keep the old card for its exit and count the new numbers up

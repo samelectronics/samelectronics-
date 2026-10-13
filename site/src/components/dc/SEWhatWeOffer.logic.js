@@ -4,6 +4,7 @@
 // and webpackIgnore on runtime imports. Converted 12 Oct 2026; maintained by hand since.
 import React from 'react';
 import { DCLogic, StreamableLogic } from '@/dc/runtime';
+import { registerScene, loseContexts } from '@/dc/gl-budget';
 
 class Component extends DCLogic {
   state = { data: window.SE_DATA || null };
@@ -12,12 +13,16 @@ class Component extends DCLogic {
   FAM = [['Screens', 'SCR', 0], ['Frames & housings', 'FRM', 1], ['Flex cables', 'FLX', 2], ['Logic boards', 'SML:0', 3], ['Batteries', 'BAT', 4], ['Cameras', 'CAM', 5], ['Small parts', 'SML:1', 6], ['Back glass', 'BCV', 7]];
   componentDidMount() {
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 60);
-    this.alive = true; this.mountShelf(); this.initDust();
-    const loop = () => { if (!this.alive) return; try { this.frame(performance.now() / 1000); } catch (e) { if (!this._fe) { this._fe = 1; console.warn('[What we offer]', e); } } this._raf = requestAnimationFrame(loop); }; loop();
+    this.alive = true; this.initDust();
+    // G16: the 3D shelf holds a WebGL context only while the section is near the viewport (src/dc/gl-budget.ts);
+    // when far away it is released and the cached library pictures stand in.
+    this.unreg = registerScene({ id: 'offer-shelf', el: () => this.root.current || this.host.current, mount: async () => { await this.mountShelf(); return () => this.unmountShelf(); } });
+    const loop = () => { if (!this.alive) return; const rr = this.root.current && this.root.current.getBoundingClientRect(), vh = window.innerHeight || 900; if (rr && (rr.bottom < -vh * 0.25 || rr.top > vh * 1.25)) { this._raf = requestAnimationFrame(loop); return; } try { this.frame(performance.now() / 1000); } catch (e) { if (!this._fe) { this._fe = 1; console.warn('[What we offer]', e); } } this._raf = requestAnimationFrame(loop); }; loop();
     window.seWwo = { at: (b, t) => { this.ov[b] = t; this.frame(performance.now() / 1000); }, hover: (i) => { this.hvT.fill(0); this.hv.fill(0); if (i != null && i >= 0) { this.hvT[i] = 1; this.hv[i] = 1; this.hvAt[i] = performance.now() / 1000 - 0.7; } this.frame(performance.now() / 1000); }, clear: () => { this.ov = {}; }, gl: () => this.glCanvas };
   }
   componentDidUpdate() { this._q = {}; }
-  componentWillUnmount() { this.alive = false; cancelAnimationFrame(this._raf); clearInterval(this.dIv); clearTimeout(this.fbT); try { this.mo && this.mo.disconnect(); this.disp && this.disp(); } catch (e) {} }
+  componentWillUnmount() { this.alive = false; cancelAnimationFrame(this._raf); clearInterval(this.dIv); clearTimeout(this.fbT); try { this.unreg && this.unreg(); } catch (e) {} }
+  unmountShelf() { clearTimeout(this.fbT); try { this.mo && this.mo.disconnect(); this.disp && this.disp(); } catch (e) {} const h = this.host.current; if (h) { loseContexts(h); h.querySelectorAll('canvas').forEach((c) => c.remove()); } this.mo = null; this.disp = null; this.api = null; this.glCanvas = null; this.scr = null; this.fallback(); }
   q(k) { const c = this._q[k]; if (c && c.isConnected) return c; const R = this.root.current; return (this._q[k] = R ? R.querySelector('[data-w="' + k + '"]') : null); }
   async mountShelf() {
     const h = this.host.current; if (!h) return; const cv = document.createElement('canvas'); cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block'; h.appendChild(cv);
@@ -26,7 +31,7 @@ class Component extends DCLogic {
       this.disp = await mod.mount(h, st); this.api = this.api || st.shelfApi;
       const keep = () => { const cs = Array.from(h.querySelectorAll('canvas')); this.glCanvas = cs.find((c) => { try { return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } }) || cv; Array.from(h.children).forEach((c) => { if (c !== this.glCanvas) c.style.display = 'none'; }); this.glCanvas.style.display = 'block'; };
       keep(); this.mo = new MutationObserver(keep); this.mo.observe(h, { childList: true });
-      if (this.api) { this.scr = document.createElement('canvas'); this.scr.width = 600; this.scr.height = 1300; this.api.setScreen(this.scr); } else this.fallback();
+      if (this.api) { this.scr = document.createElement('canvas'); this.scr.width = 600; this.scr.height = 1300; this.api.setScreen(this.scr); this.FAM.forEach((f, i) => { const im = this.q('fb' + i); if (im) im.style.display = 'none'; }); } else this.fallback();
     } catch (e) { console.warn('[What we offer] 3D shelf failed', e); this.fallback(); }
   }
   fallback() { const lib = window.seParts && window.seParts.peek && window.seParts.peek(); if (!lib || !lib.large) { if (window.seParts) window.seParts.get().then(() => this.fallback()); return; } this.FAM.forEach((f, i) => { const im = this.q('fb' + i); if (im) { im.src = lib.large[f[2]]; im.style.display = 'block'; } }); }
@@ -93,7 +98,7 @@ class Component extends DCLogic {
     const hz = this.host.current && hr.width ? this.host.current.clientWidth / hr.width : 1; if (hz !== 1) items.forEach((it) => { it.x *= hz; it.y *= hz; it.w *= hz; it.h *= hz; });
     if (this.api) { try { this.api.draw(items); } catch (e) { if (!this._de) { this._de = 1; console.warn('[What we offer] draw', e); } } }
   }
-  drawDust(c, dt, on) { const x = c.getContext('2d'), W = c.width, H = c.height; x.clearRect(0, 0, W, H); if (!on) return; this.dust.forEach((p) => { p.x += (p.vx * dt) / W; p.y += (p.vy * dt) / H; if (p.y > 1) { p.y = 0; p.x = Math.random(); } if (p.x < 0) p.x += 1; if (p.x > 1) p.x -= 1; const cx = W * 0.62, cy = H * 0.25, dx = (p.x * W - cx) / (W * 0.45), dy = (p.y * H - cy) / (H * 0.7), inL = Math.max(0, 1 - dx * dx - dy * dy); if (inL <= 0.02) return; const tw = 0.7 + 0.3 * Math.sin(performance.now() / 700 + p.ph); x.globalAlpha = p.a * inL * tw; x.fillStyle = '#F4EEE2'; x.beginPath(); x.arc(p.x * W, p.y * H, p.s, 0, 7); x.fill(); }); x.globalAlpha = 1; }
+  drawDust(c, dt, on) { const x = c.getContext('2d'), W = c.width, H = c.height; x.clearRect(0, 0, W, H); if (!on) return; const lim = window.seQuality ? window.seQuality.count(this.dust.length) : this.dust.length; this.dust.forEach((p, pi) => { if (pi >= lim) return; p.x += (p.vx * dt) / W; p.y += (p.vy * dt) / H; if (p.y > 1) { p.y = 0; p.x = Math.random(); } if (p.x < 0) p.x += 1; if (p.x > 1) p.x -= 1; const cx = W * 0.62, cy = H * 0.25, dx = (p.x * W - cx) / (W * 0.45), dy = (p.y * H - cy) / (H * 0.7), inL = Math.max(0, 1 - dx * dx - dy * dy); if (inL <= 0.02) return; const tw = 0.7 + 0.3 * Math.sin(performance.now() / 700 + p.ph); x.globalAlpha = p.a * inL * tw; x.fillStyle = '#F4EEE2'; x.beginPath(); x.arc(p.x * W, p.y * H, p.s, 0, 7); x.fill(); }); x.globalAlpha = 1; }
   drawScreen(t) {
     const c = this.scr, x = c.getContext('2d'), W = c.width, H = c.height, cl = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), eo = (v) => 1 - Math.pow(1 - cl(v), 3);
     x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; const boot = cl((t - 2.0) / 0.2), home = cl((t - 2.45) / 0.15);

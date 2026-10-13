@@ -55,3 +55,61 @@ Console errors at baseline:
 - 14 × missing `assets/brands/*.svg` (Step 3);
 - 5 × external services blocked on the build machine;
 - 2 × invalid URL (to check in the final step).
+
+---
+
+## Step 1 · G16 Performance (13 Oct)
+
+### What changed (no effect removed; the look is the same)
+
+**Parts library rendered once.**
+- The 10 part renders (large 640px + thumb 192px, about 250KB in total) are made once by `scripts/qa/render-parts.mjs` with the same builder and shipped in `public/parts/`.
+- `se-parts-lib.js` returns those files at once. The in-browser build is kept only as the fallback.
+- Visitors no longer spend a WebGL context or ~1 minute of first-load work on the library.
+
+**At most 2 live WebGL contexts** (`src/dc/gl-budget.ts`).
+- The teardown keeps its context; it already idles off-screen.
+- The What we offer 3D shelf, the Model File turntable and the Finale scene mount only when within one viewport. They release their context (really lost, not just disposed) when further than 1.6 viewports, or when a nearer scene needs the slot.
+- On return they are rebuilt on a fresh canvas. While the shelf is away, its cached part pictures stand in.
+- One renderer shared between the two engines (se-teardown-3d / se-3d) would mean merging them; the budget gives the same result (≤2 contexts) without touching the approved scenes.
+
+**Pause off-screen.**
+- Every CSS animation in a section more than one viewport away is paused, and resumes from the same frame (`OffscreenPause` + one CSS rule).
+- The What we offer frame loop skips work while its section is off-screen.
+- The teardown and se-3d loops already skipped rendering off-screen.
+- The hero is left running: its reel shares a JS clock with its CSS timeline, and Step 6 rebuilds it.
+
+**Transform/opacity.**
+- The hero search glow (an animated 70px box-shadow over a 620px bar, repainted every frame) is now a pre-drawn glow layer animating its opacity, same timing.
+- The other 42 looping non-composited animations are small elements (2px lines, status dots, chips). They are paused off-screen now and converted when their section is rebuilt in its step.
+
+**Particles.**
+- `public/se-perf.js` watches the frame rate.
+- The teardown dust (190 specks + bokeh) and the What we offer dust draw fewer specks (down to 40%) while fps stays under 50, and return to full density when it is smooth.
+
+**Teardown render density.**
+- Capped at 2× device pixels (was 3× on desktop; no visible difference at desktop sizes).
+- Steps down to 1.25× only while the frame rate stays low.
+
+### Measured, same machine, 1440×900
+
+| | Before | After |
+|---|---|---|
+| Main-thread blocking during load | 13.8s | 7.2–7.7s |
+| WebGL contexts created / live | 6 / 5 | 4 / ≤2 |
+| Live Board fps | 29.9 | 30–59.5 |
+| Bench Test fps | 30 | 59.9 |
+| Team fps | 59.9 | 59.9 |
+| Repair, Wholesale, Worldwide, Story, Social, footer | 59.9 | 59.9 |
+
+**3D sections.** The hero, teardown, What we offer, Model File, Visit (next to the Finale) and Finale stay at 1–12 fps on this machine. That is software WebGL drawing the teardown in about 1s per frame.
+
+**Without 3D.** Measured with the 3D engines blocked, every one of those sections runs at 60fps (hero 30fps), with under 1s of load blocking. So the page itself is smooth; the 3D cost belongs to the GPU, which this machine doesn't have. **Please check the 3D sections' smoothness on a real laptop.**
+
+### Not finished in this step
+
+- The other 42 looping animations still animate colour, shadows or dash offsets. They're paused off-screen and get converted when each section is rebuilt.
+- The hero's own animations are not paused off-screen yet (Step 6).
+- Fonts still load from Google Fonts with preconnect, not preloaded files.
+
+**Live:** https://samelectronics.vercel.app
