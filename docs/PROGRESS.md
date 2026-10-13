@@ -221,3 +221,41 @@ Step 2 deployed to production: `1cb859e`.
 - The Find My Part brand step's own scrollbar and arrows are part of Issue 18 (Step 24).
 
 **Live:** https://samelectronics.vercel.app
+
+Step 3 deployed to production: `b8e93d8`.
+
+---
+
+## Step 4 · G7 hours pill (13 Oct)
+
+### What changed
+
+**Hover pop-over** on the nav status pill: a small glass card showing:
+- the live status ("Closed · opens tomorrow 10:30") with its pulsing dot;
+- a live countdown ("Opens in 10h 54m" / "Closes in 3h 12m");
+- the branch ("Al Murar, Deira · Dubai time");
+- the weekly hours, Saturday to Friday, with today highlighted in yellow and Sunday "Closed".
+
+The countdown handles:
+- the split shift (break 14:00–16:00);
+- the short Friday (break 12:00–16:00);
+- the closed Sunday.
+
+The card opens on hover and on keyboard focus, entering with opacity and a 6px rise only (G16). It works in Arabic: translated, the countdown reads "يفتح خلال 10س 54د", and the card is anchored so it stays on screen in right-to-left.
+
+**Click** on the pill scrolls to the Visit us / hours section (checked: the section lands right under the nav).
+
+**Pulsing dots everywhere:**
+- The footer and menu-drawer status dots stopped pulsing when the shop was closed; they now use the same ping as the nav pill, Story branch card and Visit card.
+- All three states (open, closing soon, closed) pulse identically.
+
+### DONE WHEN (G7)
+
+| Item | Result |
+|---|---|
+| Green / amber / red, never grey | Yes |
+| All states pulse the same way, everywhere | Yes |
+| Hover shows weekly hours (today highlighted), branch, live status + countdown | Yes |
+| Click goes to the Visit / hours section | Yes |
+
+**Live:** https://samelectronics.vercel.app

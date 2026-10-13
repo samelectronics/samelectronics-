@@ -131,9 +131,11 @@ export default function SystemMapDrawer({ v }: { v: Vals }) {
                   }}
                 >
                   <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: '600' }}>
-                    <span
-                      style={cssToObj(`width:7px;height:7px;border-radius:50%;background:${s(v.st?.dot)};animation:${s(v.st?.breathe)}`)}
-                    ></span>
+                    <span style={{ position: 'relative', display: 'inline-block', width: '7px', height: '7px', flex: 'none' }}>
+                  {/* G7: same pulse in every state (the closed red dot is as alive as the open green one) */}
+                  <span style={cssToObj(`position:absolute;inset:0;border-radius:50%;background:${s(v.st?.dot)}`)}></span>
+                  <span style={cssToObj(`position:absolute;inset:0;border-radius:50%;background:${s(v.st?.dot)};animation:${s(v.st?.ping)}`)}></span>
+                </span>
                     Dubai · Deira
                   </span>
                   <span style={{ color: '#C9CBCE' }}>{t(v.st?.short)}</span>

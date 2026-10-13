@@ -75,6 +75,20 @@ class Component extends DCLogic {
     const cur = sh.find(([a, b]) => m >= a && m < b), nxt = sh.find(([a]) => a > m);
     return { open: !!cur, soon: !!cur && cur[1] - m <= 30, clock: hm(m), short: cur ? 'Open · closes ' + hm(cur[1]) : nxt ? 'Closed · opens ' + hm(nxt[0]) : 'Closed · opens ' + (day === 6 ? 'Mon' : 'tomorrow') + ' 10:30' };
   }
+  // G7: data for the status pill's pop-over: weekly hours (today highlighted), branch, live status and countdown.
+  // Handles the split shift (break 14:00–16:00, Friday 12:00–16:00) and the closed Sunday.
+  statusPop() {
+    const d = new Date(this.nowOv || this.state.now), g = new Date(d.getTime() + d.getTimezoneOffset() * 6e4 + 4 * 36e5), day = g.getDay(), m = g.getHours() * 60 + g.getMinutes();
+    const H = this.state.data ? this.state.data.hours : {}, hm = (x) => String(Math.floor(x / 60)).padStart(2, '0') + ':' + String(x % 60).padStart(2, '0');
+    const span = (mins) => { const dd = Math.floor(mins / 1440), hh = Math.floor((mins % 1440) / 60), mm = mins % 60; return dd ? dd + 'd ' + hh + 'h' : hh ? hh + 'h ' + String(mm).padStart(2, '0') + 'm' : mm + 'm'; };
+    const cur = (H[day] || []).find(([a, b]) => m >= a && m < b);
+    let count = '';
+    if (cur) count = 'Closes in ' + span(cur[1] - m);
+    else { for (let k = 0; k < 8 && !count; k++) { const dd = (day + k) % 7, nx = (H[dd] || []).find(([a]) => k > 0 || a > m); if (nx) count = 'Opens in ' + span(k * 1440 + nx[0] - m); } }
+    const NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const days = [6, 0, 1, 2, 3, 4, 5].map((k) => { const sh = H[k] || [], on = k === day; return { day: NAMES[k], h: sh.length ? sh.map(([a, b]) => hm(a) + '–' + hm(b)).join(' · ') : 'Closed', on, ink: on ? '#F7C032' : sh.length ? '#E4E5E7' : '#8A8C90', w: on ? 600 : 400, bg: on ? 'rgba(247,192,50,.10)' : 'transparent' }; });
+    return { count, days, branch: 'Al Murar, Deira · Dubai time' };
+  }
   memo(k, s, f) {
     const IGN = { tone: 1, z: 1, vw: 1, vh: 1, circSeen: 1, prog: 1, tp: 1, bp: 1, cartPop: 1 }, c = (this._memo = this._memo || {})[k];
     if (c) { let same = true; for (const key in s) { if (!IGN[key] && s[key] !== c.s[key]) { same = false; break; } } if (same) return c.v; }
@@ -450,7 +464,8 @@ class Component extends DCLogic {
     const nav = dark ? { bg: 'linear-gradient(180deg,rgba(61,62,63,.78),rgba(48,50,53,.70))', bd: 'rgba(255,255,255,.10)', ink: '#FFFFFF', sub: '#C9CBCE', pillBg: 'transparent', pillBd: 'rgba(255,255,255,.16)', track: 'rgba(255,255,255,.08)', langOn: '#FFFFFF', langOnInk: '#1A1B1D' }
       : { bg: 'linear-gradient(180deg,rgba(255,255,255,.82),rgba(255,255,255,.74))', bd: 'rgba(26,27,29,.08)', ink: '#1A1B1D', sub: '#3D3E3F', pillBg: 'transparent', pillBd: 'rgba(26,27,29,.12)', track: 'rgba(26,27,29,.08)', langOn: '#1A1B1D', langOnInk: '#FFFFFF' };
     nav.showLinks = s.vw >= 1240;
-    const st = { short: H.short, dot: H.open ? (H.soon ? '#F5A524' : '#5FD49A') : '#E5484D', ping: 'sePing 2.2s ease-out infinite', breathe: H.open ? 'seLive ' + (H.soon ? '3.2s' : '2.2s') + ' cubic-bezier(.45,0,.55,1) infinite' : 'none' };
+    const stPop = this.statusPop();
+    const st = { pop: stPop, go: (ev) => { ev && ev.preventDefault && ev.preventDefault(); const e = document.getElementById('visit'); if (e) window.scrollTo({ top: e.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' }); }, short: H.short, dot: H.open ? (H.soon ? '#F5A524' : '#5FD49A') : '#E5484D', ping: 'sePing 2.2s ease-out infinite', breathe: H.open ? 'seLive ' + (H.soon ? '3.2s' : '2.2s') + ' cubic-bezier(.45,0,.55,1) infinite' : 'none' };
     const noop = (msg) => (e) => { if (e && e.preventDefault) e.preventDefault(); };
     // brand stats
     const stats = this._stats || (this._stats = D ? D.brands.map((b) => { const ids = new Set(D.models.filter((m) => m.brand_id === b.id).map((m) => m.id)), ps = P.filter((p) => ids.has(p.model_id)), cats = {}; ps.forEach((p) => (cats[p.category] = (cats[p.category] || 0) + p.stock_qty)); return { id: b.id, name: b.name, models: ids.size, skus: ps.length, stock: ps.reduce((a, p) => a + p.stock_qty, 0), top: Object.entries(cats).sort((a, c) => c[1] - a[1]).slice(0, 3).map(([c, n]) => ({ name: D.categories.find((x) => x.id === c).name, n: fmt(n) })) }; }) : null) || [];

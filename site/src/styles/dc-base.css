@@ -144,3 +144,53 @@ body {
 [dir='rtl'] .se-hs-end svg {
   transform: none;
 }
+
+/* G7: the status pill's pop-over (src/components/home/sections/Nav.tsx). Glass card; enters with opacity +
+   a short rise only (G16). Opens on hover and on keyboard focus. */
+.se-status-pop {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  z-index: 70;
+  width: 336px;
+  box-sizing: border-box;
+  padding: 14px 14px 12px;
+  border-radius: 16px;
+  background: rgba(38, 40, 43, 0.86);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  backdrop-filter: blur(16px) saturate(1.2);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.10), 0 24px 48px rgba(0, 0, 0, 0.35);
+  color: #ffffff;
+  text-align: start;
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-50%, 6px);
+  transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 0s linear 0.2s;
+  pointer-events: none;
+}
+.se-status:hover .se-status-pop,
+.se-status:focus-within .se-status-pop {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+  transition-delay: 0s;
+  pointer-events: auto;
+}
+/* in Arabic the pill sits near the left edge: anchor the card to the pill's start edge so it stays on screen */
+[dir='rtl'] .se-status-pop {
+  left: 0;
+  transform: translate(0, 6px);
+}
+[dir='rtl'] .se-status:hover .se-status-pop,
+[dir='rtl'] .se-status:focus-within .se-status-pop {
+  transform: none;
+}
+/* keep the pop-over open while the mouse crosses the gap below the pill */
+.se-status::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 12px;
+}

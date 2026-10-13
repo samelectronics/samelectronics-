@@ -92,18 +92,56 @@ export default function Nav({ v }: { v: Vals }) {
         {'\n    '}
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 'none' }}>
           {'\n      '}
-          <span
-            style={cssToObj(
-              `display:flex;align-items:center;gap:8px;white-space:nowrap;height:32px;box-sizing:border-box;padding:0 12px;border-radius:10px;background:${s(v.nav?.pillBg)};border:1px solid ${s(v.nav?.pillBd)};font-size:13px;font-weight:500`,
-            )}
-          >
-            <span style={{ position: 'relative', width: '7px', height: '7px', flex: 'none' }}>
-              <span style={cssToObj(`position:absolute;inset:0;border-radius:50%;background:${s(v.st?.dot)}`)}></span>
-              <span
-                style={cssToObj(`position:absolute;inset:0;border-radius:50%;background:${s(v.st?.dot)};animation:${s(v.st?.ping)}`)}
-              ></span>
+          {/* G7: status pill. Hover (or keyboard focus) shows the weekly hours, branch and countdown; click goes to Visit us. */}
+          <span className="se-status" style={{ position: 'relative', display: 'flex' }}>
+            <button
+              type="button"
+              onClick={v.st?.go}
+              aria-describedby="se-status-pop"
+              style={cssToObj(
+                `display:flex;align-items:center;gap:8px;white-space:nowrap;height:32px;box-sizing:border-box;padding:0 12px;border-radius:10px;background:${s(v.nav?.pillBg)};border:1px solid ${s(v.nav?.pillBd)};font:inherit;font-size:13px;font-weight:500;color:inherit;cursor:pointer`,
+              )}
+            >
+              <span style={{ position: 'relative', width: '7px', height: '7px', flex: 'none' }}>
+                <span style={cssToObj(`position:absolute;inset:0;border-radius:50%;background:${s(v.st?.dot)}`)}></span>
+                <span
+                  style={cssToObj(`position:absolute;inset:0;border-radius:50%;background:${s(v.st?.dot)};animation:${s(v.st?.ping)}`)}
+                ></span>
+              </span>
+              {t(v.st?.short)}
+            </button>
+            <span id="se-status-pop" role="tooltip" className="se-status-pop">
+              <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 600, color: '#FFFFFF' }}>
+                <span style={{ position: 'relative', width: '8px', height: '8px', flex: 'none' }}>
+                  <span style={cssToObj(`position:absolute;inset:0;border-radius:50%;background:${s(v.st?.dot)}`)}></span>
+                  <span style={cssToObj(`position:absolute;inset:0;border-radius:50%;background:${s(v.st?.dot)};animation:${s(v.st?.ping)}`)}></span>
+                </span>
+                {t(v.st?.short)}
+              </span>
+              <span style={{ display: 'block', marginTop: '4px', paddingInlineStart: '16px', fontFamily: "'JetBrains Mono',monospace", fontSize: '12px', color: '#F7C032' }}>
+                {t(v.st?.pop?.count)}
+              </span>
+              <span style={{ display: 'block', margin: '12px 0 8px', fontFamily: "'JetBrains Mono',monospace", fontSize: '10.5px', letterSpacing: '.14em', textTransform: 'uppercase', color: '#8A8C90' }}>
+                {t(v.st?.pop?.branch)}
+              </span>
+              <span style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                {(Array.isArray(v.st?.pop?.days) ? v.st.pop.days : []).map((d: any) => (
+                  <span
+                    key={d.day}
+                    style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', padding: '5px 8px', borderRadius: '8px', background: d.bg, color: d.ink, fontWeight: d.w, fontSize: '13px' }}
+                  >
+                    <span>{d.day}</span>
+                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '12px', whiteSpace: 'nowrap' }}>{d.h}</span>
+                  </span>
+                ))}
+              </span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '10px', fontSize: '12px', color: '#C9CBCE' }}>
+                See hours &amp; directions
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M5 12h14M13 6l6 6-6 6"></path>
+                </svg>
+              </span>
             </span>
-            {t(v.st?.short)}
           </span>
           {'\n      '}
           <span style={cssToObj(`display:flex;gap:2px;padding:3px;border-radius:10px;background:${s(v.nav?.pillBg)};font-size:12px`)}>
