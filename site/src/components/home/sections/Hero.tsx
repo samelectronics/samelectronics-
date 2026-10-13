@@ -4,6 +4,7 @@
 import React from 'react';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 import SEBrandLogo from '../../dc/SEBrandLogo';
+import HeroSearch from '../HeroSearch';
 import SEPart from '../../dc/SEPart';
 
 export default function Hero({ v }: { v: Vals }) {
@@ -422,7 +423,8 @@ export default function Hero({ v }: { v: Vals }) {
               ></span>
               {'\n          '}
               <div style={{ position: 'absolute', inset: '4px', borderRadius: '28px', background: '#08090A', overflow: 'hidden' }}>
-                {'\n            '}
+                {/* Issue 1B: the iPad's crystal glass gets the same light sweep, offset so the two never shine together */}
+                <span className="se-glass-sweep" style={{ zIndex: 5, animationDelay: '-3s' }}></span>
                 <div
                   style={{
                     position: 'absolute',
@@ -431,6 +433,7 @@ export default function Hero({ v }: { v: Vals }) {
                     background: '#F2F3F4',
                     overflow: 'hidden',
                     color: '#1A1B1D',
+                    contain: 'layout paint',
                   }}
                 >
                   {'\n              '}
@@ -632,7 +635,7 @@ export default function Hero({ v }: { v: Vals }) {
                     }}
                   >
                     {'\n                '}
-                    <div style={cssToObj(`display:grid;grid-template-columns:1fr 1fr;gap:9px;animation:${s(v.ipAnim)} infinite`)}>
+                    <div style={cssToObj(`display:grid;grid-template-columns:1fr 1fr;gap:9px;will-change:transform;animation:${s(v.ipAnim)} infinite`)}>
                       {'\n                  '}
                       {(Array.isArray(v.ipCards) ? v.ipCards : []).map((__it: any, __i: number) => {
                         const v2 = { ...v, p: __it, $index: __i };
@@ -799,6 +802,13 @@ export default function Hero({ v }: { v: Vals }) {
           </div>
           {'\n\n      '}
           <div
+            ref={v.reelCtl?.ref}
+            className="se-reel"
+            onMouseEnter={v.reelCtl?.enter}
+            onMouseLeave={v.reelCtl?.leave}
+            onClick={v.reelCtl?.poster}
+            role="region"
+            aria-label="Phone ads: hover to pause, click for the poster"
             style={{
               position: 'absolute',
               left: '1170px',
@@ -808,8 +818,17 @@ export default function Hero({ v }: { v: Vals }) {
               zIndex: '4',
               transform: 'rotate(4deg)',
               transformOrigin: '50% 100%',
+              cursor: 'pointer',
             }}
           >
+            <div className="se-reel-nav" onClick={(e) => e.stopPropagation()}>
+              <button type="button" aria-label="Previous ad" onClick={v.reelCtl?.prev}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="m6 15 6-6 6 6" /></svg>
+              </button>
+              <button type="button" aria-label="Next ad" onClick={v.reelCtl?.next}>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+              </button>
+            </div>
             {'\n        '}
             <div
               style={{
@@ -926,7 +945,7 @@ export default function Hero({ v }: { v: Vals }) {
                               <div style={cssToObj(`position:absolute;inset:0;transform-origin:96px 229px;animation:${s(v.a?.aHold)}`)}>
                                 {'\n                        '}
                                 <div
-                                  style={{ position: 'absolute', inset: '0', transformOrigin: '96px 229px', transform: 'rotate(-10deg)' }}
+                                  style={{ position: 'absolute', inset: '0', transformOrigin: '96px 229px', transform: 'none' }}
                                 >
                                   {'\n                          '}
                                   {v.a?.isLib ? (
@@ -934,7 +953,7 @@ export default function Hero({ v }: { v: Vals }) {
                                       {'\n                            '}
                                       <div
                                         style={cssToObj(
-                                          `position:absolute;left:${s(v.a?.f?.l)}px;top:${s(v.a?.f?.t)}px;width:${s(v.a?.f?.w)}px;height:${s(v.a?.f?.h)}px`,
+                                          `position:absolute;left:${s(v.a?.f?.l)}px;top:${s(v.a?.f?.t)}px;width:${s(v.a?.f?.w)}px;height:${s(v.a?.f?.h)}px;transform:${s(v.a?.straight)};transform-origin:${s(v.a?.so)}`,
                                         )}
                                       >
                                         {'\n                              '}
@@ -1425,7 +1444,7 @@ export default function Hero({ v }: { v: Vals }) {
                               {'\n                      '}
                               <span
                                 style={cssToObj(
-                                  `position:absolute;left:9%;top:312px;width:82%;font-size:12.5px;line-height:1.3;color:${s(v.a?.sub)};white-space:pre-line`,
+                                  `position:absolute;left:9%;top:302px;width:82%;font-size:12.5px;line-height:1.3;color:${s(v.a?.sub)};white-space:pre-line`,
                                 )}
                               >
                                 {t(v.a?.d)}
@@ -1451,13 +1470,13 @@ export default function Hero({ v }: { v: Vals }) {
                     })}
                     {'\n                '}
                     <div
-                      style={cssToObj(
-                        `position:absolute;left:9%;right:9%;top:35px;height:2px;border-radius:1px;overflow:hidden;z-index:20;animation:${s(v.pgTrack)}`,
-                      )}
+                      style={{ position: 'absolute', left: '9%', right: '9%', top: '35px', height: '2px', zIndex: 20, display: 'flex', gap: '3px' }}
                     >
-                      <div
-                        style={cssToObj(`position:absolute;inset:0;transform-origin:0 50%;transform:scaleX(0);animation:${s(v.pgFill)}`)}
-                      ></div>
+                      {(Array.isArray(v.pgSegs) ? v.pgSegs : []).map((g: any, i: number) => (
+                        <span key={i} style={cssToObj(`position:relative;flex:1;height:2px;border-radius:1px;overflow:hidden;animation:${s(v.pgTrack)}`)}>
+                          <span style={cssToObj(`position:absolute;inset:0;border-radius:1px;opacity:0;animation:${s(g.a)}`)}></span>
+                        </span>
+                      ))}
                     </div>
                     {'\n              '}
                   </div>
@@ -1486,6 +1505,14 @@ export default function Hero({ v }: { v: Vals }) {
                       pointerEvents: 'none',
                     }}
                   ></div>
+                  <span className="se-glass-sweep" style={{ zIndex: 32 }}></span>
+                  <span
+                    aria-hidden="true"
+                    style={{
+                      position: 'absolute', left: '50%', bottom: '7px', width: '35%', height: '4px', transform: 'translateX(-50%)', borderRadius: '3px', zIndex: 33,
+                      background: 'linear-gradient(180deg,rgba(225,228,232,.72),rgba(170,174,180,.6))', boxShadow: '0 0 0 .5px rgba(255,255,255,.35),0 1px 3px rgba(0,0,0,.25)',
+                    }}
+                  ></span>
                   {'\n            '}
                 </div>
                 {'\n          '}
@@ -1547,44 +1574,10 @@ export default function Hero({ v }: { v: Vals }) {
             Genuine, tested mobile phone parts for repair shops, traders and everyday customers. More than 20 years in Deira.
           </p>
           {'\n      '}
-          <button
-            onClick={v.openSearch}
-            className="se-search-glow"
-            style={{
-              position: 'relative',
-              width: '620px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '12px',
-              height: '64px',
-              boxSizing: 'border-box',
-              padding: '0 7px 0 20px',
-              border: 'none',
-              borderRadius: '10px',
-              background: '#FFFFFF',
-              color: '#1A1B1D',
-              textAlign: 'left',
-              cursor: 'text',
-              boxShadow: '0 0 0 2px rgba(247,192,50,.4),0 0 30px rgba(247,192,50,.18)',
-            }}
-          >
-            {'\n        '}
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A1B1D" strokeWidth="2">
-              <circle cx="11" cy="11" r="7"></circle>
-              <path d="m20 20-3.5-3.5"></path>
-            </svg>
-            {'\n        '}
-            <span
-              style={{
-                position: 'relative',
-                flex: '1',
-                height: '22px',
-                fontSize: '16px',
-                color: '#3D3E3F',
-                whiteSpace: 'nowrap',
-                overflow: 'hidden',
-              }}
-            >
+          <HeroSearch
+            openFmp={v.openFmpAt}
+            typed={
+              <>
               {(Array.isArray(v.typedWords) ? v.typedWords : []).map((__it: any, __i: number) => {
                 const v2 = { ...v, w: __it, $index: __i };
                 return ((v: Vals) => (
@@ -1606,44 +1599,9 @@ export default function Hero({ v }: { v: Vals }) {
                   </React.Fragment>
                 ))(v2);
               })}
-            </span>
-            {'\n        '}
-            <span
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                fontFamily: "'JetBrains Mono',monospace",
-                fontSize: '12px',
-                color: '#8C9096',
-                padding: '4px 8px',
-                borderRadius: '6px',
-                boxShadow: 'inset 0 0 0 1px rgba(26,27,29,.14)',
-              }}
-            >
-              Ctrl K
-            </span>
-            <span
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: '10px',
-                height: '44px',
-                padding: '0 18px',
-                borderRadius: '10px',
-                background: '#26282B',
-                color: '#FFFFFF',
-                fontWeight: '600',
-                fontSize: '15px',
-              }}
-            >
-              Search
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F7C032" strokeWidth="2.4">
-                <path d="M5 12h14M13 6l6 6-6 6"></path>
-              </svg>
-            </span>
-            {'\n      '}
-          </button>
+              </>
+            }
+          />
           {'\n      '}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '620px' }}>
             {'\n        '}
@@ -1732,10 +1690,13 @@ export default function Hero({ v }: { v: Vals }) {
               return ((v: Vals) => (
                 <React.Fragment key={__i}>
                   <span
-                    style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: '#D5D7DA', whiteSpace: 'nowrap' }}
+                    className="se-tick-txt"
+                    style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: '#D5D7DA', whiteSpace: 'nowrap', animationDelay: __i * 0.8 + 's' }}
                   >
                     <span
+                      className="se-tick-dot"
                       style={{
+                        animationDelay: __i * 0.8 + 's',
                         display: 'grid',
                         placeItems: 'center',
                         width: '20px',
@@ -1745,7 +1706,7 @@ export default function Hero({ v }: { v: Vals }) {
                         boxShadow: 'inset 0 0 0 1px rgba(247,192,50,.5)',
                       }}
                     >
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#F7C032" strokeWidth="3">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#F7C032" strokeWidth="3" style={{ animationDelay: __i * 0.8 + 's' }}>
                         <path d="M5 12l5 5L20 7"></path>
                       </svg>
                     </span>

@@ -22,6 +22,8 @@ const num = (s: string) => s; // digits stay Western, as on UAE price tags
 type Rule = [RegExp, (...m: string[]) => string];
 
 const RULES: Rule[] = [
+  // G17 coming soon
+  [/^The full (.+) page is coming soon\. Use Find My Part in the meantime\.?$/, (_, m) => `صفحة ${m} الكاملة قادمة قريباً. استخدم «ابحث عن قطعتي» في هذه الأثناء.`],
   // stock, counts
   [/^([\d,.]+k?) in stock$/i, (_, n) => `${num(n)} متوفر`],
   [/^Only (\d+) left$/i, (_, n) => `بقي ${n} فقط`],

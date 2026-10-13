@@ -36,6 +36,8 @@ import SystemMapDrawer from '../home/sections/SystemMapDrawer';
 import CartDrawer from '../home/sections/CartDrawer';
 import SamsoomChat from '../home/sections/SamsoomChat';
 import Toast from '../home/sections/Toast';
+import HeroPoster from '../home/sections/HeroPoster';
+import ComingSoon from '../g17/ComingSoon';
 
 function render(v: Vals) {
   return (
@@ -76,6 +78,8 @@ function render(v: Vals) {
         ) : null}
         <SamsoomChat v={v} />
         <Toast v={v} />
+        <HeroPoster v={v} />
+        <ComingSoon />
         {'\n'}
         {t(v.sparkEl)}
         {'\n'}

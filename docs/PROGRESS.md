@@ -332,3 +332,112 @@ Step 4's deploy was confirmed: Vercel reported success for `c62f207`.
 **Not finished:** Claude's answers haven't been seen live yet, because no API key exists yet. The route was tested with no key (it replies `{fallback:true}`).
 
 **Live:** https://samelectronics.vercel.app
+
+---
+
+## Step 6 · Issue 1B hero
+
+Step 5's deploy was confirmed: Vercel reported success for `5d83c71`.
+
+**What was wrong, and what changed**
+
+**Products tilted, not centred**
+- Every product sat inside a hidden `rotate(-10deg)` layer, and the float added ±2° of rotation. Both are removed.
+- Library renders that lean in their picture (battery about 9°, board 8°, cameras 6°) are measured once from their outline and turned upright.
+- Products now stand straight and centred on the product box, and only float by ±3px. The phone body keeps its approved tilt.
+
+**Description almost touched the button**
+- The description moved up to about 73% of the screen height. There is now a clear gap of 3.5% of the height before the button, which stays at 84%.
+
+**Progress line followed time**
+- It is now step-based: one segment per ad (10). Finished ads stay filled, the current one is highlighted, and it resets with the loop. It sits under the island, as before.
+
+**Ads of different lengths, glitches, cards that differ between loops**
+- All reel animations now run on one master clock, re-synced every 1.6s, so no card can drift.
+- Every ad is exactly 3.2s on a 32s loop.
+
+**Colours repeated**
+- The fixed order is yellow → white → graphite ×3, then white. No two neighbouring ads share a colour, and the loop back to the first yellow never repeats.
+
+**Home bar**
+- An iPhone home bar sits at the bottom of every card: 35% wide, translucent crystal grey.
+
+**Dead glass**
+- A soft vertical band of light now sweeps across the whole phone screen every 6s.
+- The iPad has the same sweep, 3s offset, so the two never shine together.
+- The existing glossy reflection stays.
+
+**Couldn't pause or browse**
+- Hovering the phone pauses the reel. It waits for a card to finish entering, so it never freezes half-way.
+- Two round graphite arrows with a yellow outline appear beside the screen.
+- Up/down arrows, the mouse wheel over the phone and a swipe on touch all go to the previous or next ad with the same feed scroll-in.
+- Mouse out resumes the reel.
+
+**Ad poster**
+- Clicking the phone opens a pop-up poster of the current ad, in that ad's colours and type. It has:
+  - the big headline;
+  - a short paragraph;
+  - 3 key points;
+  - the stock line (sample data);
+  - "Shop [part]" and "Ask on WhatsApp" buttons;
+  - the product with its circular glow.
+- The worldwide poster uses the live globe; the wholesale poster uses stacked cartons.
+- The page behind dims and blurs. X, Esc and a click outside all close it.
+
+**Search bar didn't work**
+- The bar is now a real search, and the animated typing suggestions stay while it is empty.
+- Typing a model shows suggestions from our model list, tolerant of typos ("iphon 13", "galxy a54"). Part words such as "screen" or "battery" are understood.
+- Enter or a click opens the **G17 "Coming soon"** card: "The full [model] page is coming soon. Use Find My Part in the meantime." Its button opens Find My Part on that model (and on the part, if one was typed). Ctrl K focuses the bar.
+
+**Ticks**
+- The three ticks light up one after the other: each fills yellow with a soft glow and its text brightens for about 0.8s. Then a pause, and the loop repeats.
+
+**The iPad cart item flew into the Samsoom chat**
+- The chat panel covers the iPad's right column, and the flying copy was drawn above the chat. It is now drawn under the chat and launcher layers, so it always lands visibly on the iPad's own cart icon.
+- It also uses page coordinates, so it no longer misses when the page scrolls during the flight.
+
+**iPad lag while scrolling**
+- The iPad screen is now an isolated layer (`contain: layout paint`), and the auto-scrolling grid is promoted to its own layer.
+
+**New G17 parts, used from now on**
+- A shared "Coming soon" card (`site/src/components/g17/ComingSoon.tsx`, called with `comingSoon({...})` or the `se:soon` event).
+- A branded 404 page in English and Arabic: "Signal lost. This page switched to airplane mode.", with a button home. Unknown URLs return status 404.
+
+**Kept as approved:**
+- the island pill, no status bar;
+- the screen card's glossy glass with its flex tail and gliding reflection;
+- the dot-matrix globe: 22 countries, routes from Dubai, starting with the UAE facing the camera, one turn every 24s;
+- the cartons landing on the pallet;
+- the repair crack, heal and boot;
+- the circular glows and shadows;
+- the same headline size on every card (no shrinking);
+- the card motion timings;
+- the iPad layout.
+
+**Arabic:** 53 new strings were added, including the poster texts, the Coming soon card, search, arrows and the 404. The coverage check is back to the 16 allowed brand labels.
+
+**Performance:** the sweep and the ticks first cost about 4fps on this software renderer. Both now animate only opacity or transform on pre-drawn layers. In an A/B test against the Step 5 build on the same machine (3D blocked, 9 runs each), the hero averages 25.4 vs 26.6 fps, which is within noise.
+
+### DONE WHEN (Issue 1B)
+
+| Item | Result |
+|---|---|
+| Device: pill, no status bar, progress line, glass reflection | Yes |
+| All cards use the template: same positions and sizes | Yes |
+| Every product fits the product box, centred, with circular glow and shadow | Yes |
+| Screen card: glossy glass, gliding reflection, flex tail | Yes (kept) |
+| Globe: real, rotating, continents, route arcs | Yes (kept: dot-matrix, 22 countries) |
+| Wholesale: cartons stacking on a pallet | Yes (kept) |
+| Repair: same size; crack, heal, boot | Yes (kept) |
+| All headlines the same size | Yes |
+| The iPad uses library renders, centred, same size | Yes (kept) |
+| The reel loops identically | Yes (one master clock) |
+| Products straight and centred; gap before the button; home bar | Yes |
+| Step-based segmented progress; every ad 3.2s; fixed colour order | Yes |
+| Feed scroll between ads; pause on hover with arrows; poster opens and closes | Yes |
+| Crystal glass with the light sweep on phone and iPad | Yes |
+| Search works → Coming soon; ticks loop; cart flight always lands on the iPad | Yes |
+
+**Reading I chose:** the PDF allows up to ±2° of rotation while a product floats, but the owner's review says the products look tilted. I removed the rotation and kept only the ±3px float.
+
+**Live:** https://samelectronics.vercel.app
