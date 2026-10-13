@@ -2,7 +2,7 @@
 
 `project/` holds only what `Sam Electronics Home v3.dc.html` loads (traced recursively through dc-imports, script/iframe/img sources and dynamic imports), plus its two reference notes. Everything else from the Claude Design bundle is in `_archive/` at the same relative path. Nothing was deleted or edited.
 
-The specification is `docs/Round4_Directors_Edition.pdf` (52 pages, 12 Oct 2026). Where it disagrees with these files, the PDF wins. Real texts come from `docs/Sam_Electronics_Company_Facts.pdf`.
+The specification is `docs/Round4_Directors_Edition.pdf` (56 pages, 13 Oct 2026; the 12 Oct version is archived as `_archive/uploads/Round4_Directors_Edition_12Oct.pdf`). Where it disagrees with these files, the PDF wins. Real texts come from `docs/Sam_Electronics_Company_Facts.pdf`.
 
 ## In use (project/)
 
