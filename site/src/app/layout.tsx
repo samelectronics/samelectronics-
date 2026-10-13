@@ -12,6 +12,7 @@ import '@/styles/showcase.css';
 import '@/styles/deals.css';
 import '@/styles/wholesale.css';
 import '@/styles/worldwide.css';
+import '@/styles/story.css';
 
 export const metadata: Metadata = {
   title: DC_TITLE ?? 'Sam Electronics',

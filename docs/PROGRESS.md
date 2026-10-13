@@ -924,3 +924,56 @@ The map, the routes and the live shipments list are untouched. The four boxes ke
 | Map untouched | Yes |
 
 **Captured:** all four boxes mid-animation.
+
+## Step 16 · Issue 10 Our story & branches, "More than 20 years in Deira"
+
+Rebuilt as a new component (`SEStory.logic.js` / `.tsx`, styles in `src/styles/story.css`). The old Story section, with its default Google map, the sketch and the red stamp, is deleted.
+
+**The set:** warm fog, from #F2F3F4 warming to #F7F3EA where the light falls. A soft afternoon light comes from the top-right and drifts slowly across the section (a 46s cycle), over fine grain.
+
+**The film:** the section is pinned and scroll-driven, and scrubs both ways.
+- **0–15%:** the line draws to v1.0, with a yellow current streak at its tip.
+- **15–60%:** the line walks the versions.
+  - Each card lifts in when the line reaches it, and its instant photo develops over 1.2s, warm first, then true colour.
+  - The big year counter rolls 2003 → 2011 → 2015 → 2020 → today, and its label switches to TODAY.
+- **60–75%:**
+  - "Sam Electronics" (2020–today) switches to RUNNING, with a softly pulsing green dot. The PDF asks for green.
+  - Madrid switches to INSTALLING with a slowly filling bar that keeps creeping.
+
+**Reading noted:**
+- The PDF puts RUNNING on v3.0 and INSTALLING on v4.0. The Company Facts number the versions v1.0–v4.0 plus Madrid as v5.0, so I put RUNNING on today's shop and INSTALLING on Madrid. That matches what the PDF describes.
+- Every card shows the facts' own version number.
+
+**Photo frames:** white instant-photo borders rotated ±2°, each with a soft drop shadow. Until the owner's photos arrive, each frame holds a softly blurred warm placeholder:
+- an old shop;
+- a counter;
+- a market with bokeh;
+- today's shop with the yellow sign;
+- a Madrid plaza at dusk.
+
+**Branches (75–100%)**
+- The two map cards slide up side by side.
+- Both maps are brand-styled SVG: graphite ground, fog streets, the creek / Plaza Mayor.
+  - There is no default Google styling and no ctrl+scroll overlay. Each map is static until clicked, then opens Google Maps, and has an "Open in Maps" chip.
+  - Dubai has a yellow pin with a soft pulse.
+  - Madrid has a pulsing "Opening soon" area circle, not an exact pin, plus "Tell me when it opens".
+- Then the stats strip counts up: Since 2003 · 2 cities · 24+ countries served*.
+- The Dubai card keeps the address, Plus Code, today's hours, directions, WhatsApp and Call.
+
+**Arabic:** every new string is added, including the map labels. The checker is back to its baseline.
+
+**Speed:**
+- `#story` runs at 60fps, with an average in line with the other sections.
+- Fix found in testing: `will-change` on the blurred photo layers halved the fps, so it was removed. The photo develop now animates opacity only.
+
+### DONE WHEN (Issue 10)
+
+| Item | Result |
+|---|---|
+| Photo frames on every card with develop animation | Yes |
+| Line draw + year counter | Yes |
+| Madrid map matches Dubai | Yes (same style) |
+| Maps branded, no overlay | Yes |
+| Stats strip fills the gap | Yes |
+
+**Captured:** 30% (a photo developing), 70% (RUNNING / INSTALLING), and 100% (maps + stats).
