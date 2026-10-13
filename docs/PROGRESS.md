@@ -1021,3 +1021,57 @@ The old team cards are replaced by a new component (`SETeam.logic.js` / `.tsx`, 
 | Graphite wall with one light pool | Yes |
 
 **Captured:** after the drop-in, mid ticket journey (Bench Engineer lit), and one badge flipped.
+
+## Step 18 · Issue 12 Open to everyone, "Who are you?"
+
+Rebuilt as a new component (`SEWho.logic.js` / `.tsx`, styles in `src/styles/who.css`). The logo hub, the grey connector lines and the four identical cards are gone.
+
+**The set:** warm fog with grain. The light behind the stage shifts in 800ms to match the active lane.
+
+**Left column:**
+- The eyebrow and the headline.
+- Samsoom peeks in beside the tabs, asking "Who are you?".
+- 4 large tabs, each with an icon, a name and one line. The active tab is graphite with a yellow progress bar.
+
+**The stage:** one large stage of about 60% width. Every lane uses parts-library renders.
+- **Retail** (fog with warm yellow light):
+  - A hand holds the teardown phone (library front render) with a cracked screen.
+  - Find My Part types "iPhone 13", then the library screen slides in with grade chips and "from AED 125".
+  - A pin drops on "Collect in Deira or get it delivered".
+- **Repair shop** (graphite workbench, top-down):
+  - The bench has a mat with a faint grid, a driver, tweezers, a spudger and a light pool.
+  - A parts tray slides in with weight, and the three iPhone 13 grades line up side by side.
+  - A padlock clicks open and the trade prices are revealed.
+- **Trader & exporter** (dark dot-matrix map from the offline globe):
+  - A bulk list is scanned by a soft light and QUOTED stamps on it.
+  - Route arcs draw from Dubai to Lagos, Nairobi, Madrid, Baghdad and Muscat.
+- **Bulk buyer** (full yellow):
+  - 18 branded cartons drop onto a pallet. These are the same Pallet Builder objects as Wholesale.
+  - Shrink-wrap spirals up and an "Incoming shipments first" badge stamps.
+
+**Motion:**
+- The stage auto-cycles every 6.2s, pauses on hover, and a click jumps to a lane.
+- The leaving scene moves back and fades with depth, and the new one arrives with weight.
+- The lane's 3 benefits type in beside the lane button.
+
+**Buttons:**
+- Find my part opens Find My Part on screens.
+- Open a trade account goes to Wholesale.
+- Plan my shipment goes to Worldwide.
+- Request a bulk quote goes to Request & contact.
+
+**Arabic:** every new string is added. The checker is back to its baseline.
+
+**Speed:** `#everyone` runs at 60fps, with an average of 53.6.
+
+### DONE WHEN (Issue 12)
+
+| Item | Result |
+|---|---|
+| No logo hub, no grey connector lines | Yes |
+| Tabs + one stage | Yes |
+| Four real scenes in their environments | Yes |
+| Auto-cycle with progress bar | Yes |
+| No white emptiness | Yes |
+
+**Captured:** each lane mid-scene (t = 4.6s).

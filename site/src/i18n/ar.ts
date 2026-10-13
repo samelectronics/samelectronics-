@@ -1119,4 +1119,15 @@ export const ENGINE: Record<string, string> = {
   'LEADING SINCE 2003': 'يقود منذ 2003',
   'Sam Electronics · Deira': 'سام للإلكترونيات · ديرة',
   'ORDER': 'طلب',
+  // Who are you? (Issue 12)
+  'OPEN TO EVERYONE · WHO ARE YOU?': 'مفتوح للجميع · من أنت؟',
+  'Who are you?': 'من أنت؟',
+  'One phone, the right part.': 'هاتف واحد، والقطعة الصحيحة.',
+  'Parts for the bench, every day.': 'قطع لطاولة الصيانة، كل يوم.',
+  'Bulk lists, shipped worldwide.': 'قوائم جملة تُشحن حول العالم.',
+  'Volume, first in line.': 'الكميات الكبيرة أولاً.',
+  'TRADE PRICES': 'أسعار الجملة',
+  'BULK LIST': 'قائمة الجملة',
+  'Screens · mixed grades': 'شاشات · درجات مختلفة',
+  'Charging flex': 'فلكس الشحن',
 };
