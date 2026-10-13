@@ -46,7 +46,7 @@ class Component extends DCLogic {
     const D = this.vals || {}; const items = [], hr = this.host.current ? this.host.current.getBoundingClientRect() : { left: 0, top: 0 };
     // ----- Part A -----
     const tA = clk('A', 0.75), aEl = this.q('A');
-    { const eb = this.q('eb'), s = 'WHAT WE OFFER', n = Math.round(cl(tA / 0.7) * s.length); if (eb && eb.textContent.length !== n) eb.textContent = s.slice(0, n);
+    { const eb = this.q('eb'), s = window.seI18n ? window.seI18n.t('WHAT WE OFFER') : 'WHAT WE OFFER', n = Math.round(cl(tA / 0.7) * s.length); if (eb && eb.textContent !== s.slice(0, n)) eb.textContent = s.slice(0, n);
       [0, 1].forEach((i) => set('hl' + i, { transform: 'translateY(' + ((1 - ex((tA - 0.1 * i) / 0.6)) * 110).toFixed(2) + '%)' }));
       const ik = ex((tA - 0.3) / 0.6); set('intro', { opacity: ik.toFixed(3), transform: 'translateY(' + ((1 - ik) * 14).toFixed(1) + 'px)', filter: ik < 1 ? 'blur(' + ((1 - ik) * 6).toFixed(1) + 'px)' : 'none' }); }
     for (let i = 0; i < 8; i++) {

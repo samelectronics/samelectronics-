@@ -63,3 +63,9 @@ body {
   42% { opacity: 1; }
   60%, 100% { opacity: 0; }
 }
+
+/* Decorative glows may extend past the page edge (e.g. left: -10%). In right-to-left that overflow becomes
+   scrollable and shifts the page, so clip it. clip (not hidden) keeps sticky/pinned sections working. */
+#dc-root {
+  overflow-x: clip;
+}

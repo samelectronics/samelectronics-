@@ -1,6 +1,10 @@
 'use client';
 import dynamic from 'next/dynamic';
 import OffscreenPause from '@/components/perf/OffscreenPause';
+import { installI18n } from '@/i18n/lang';
+
+// G9: the language is applied before the home page renders, so nothing flashes in the other language.
+if (typeof window !== 'undefined') installI18n();
 
 // The home page is the design's Home v3. Its components read window globals and measure the
 // viewport while rendering, so it renders in the browser only.

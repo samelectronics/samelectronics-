@@ -37,6 +37,10 @@ svg{display:block;width:100%;height:100%}
 <script>
 (async function () {
   const D = window.SE_DATA, W = 1200, H = 620;
+  // G9: labels follow the parent page's language (window.seI18n); Arabic has no capitals.
+  const I18N = () => { try { return window.parent !== window ? window.parent.seI18n : null; } catch (e) { return null; } };
+  const LBL = (name) => { const I = I18N(); return I && I.lang() === 'ar' ? I.t(name) : name.toUpperCase(); };
+  try { window.parent.addEventListener('se:lang', () => document.querySelectorAll('text.lbl[data-en]').forEach((t) => { t.textContent = LBL(t.getAttribute('data-en')); })); } catch (e) {}
   const topo = await (await fetch('https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-110m.json')).json();
   const world = topojson.feature(topo, topo.objects.countries);
   const frame = { type: 'MultiPoint', coordinates: [[-18, 62], [92, 62], [-18, -6], [92, -6]] };
@@ -61,7 +65,7 @@ svg{display:block;width:100%;height:100%}
     grp.append('circle').attr('class', 'halo').attr('cx', p.x).attr('cy', p.y).attr('r', 4).style('animation-delay', (i * 0.21) + 's');
     grp.append('circle').attr('class', 'pin').attr('cx', p.x).attr('cy', p.y).attr('r', 3.6);
     const OFF = { Lebanon: [-8, -6, 'end'], Syria: [8, -10, 'start'], Iraq: [9, 12, 'start'], Jordan: [-8, 12, 'end'], 'Saudi Arabia': [-12, 18, 'end'], Kuwait: [8, -6, 'start'], Qatar: [-8, 10, 'end'], Bahrain: [-8, -4, 'end'], Oman: [8, 14, 'start'], Yemen: [8, 16, 'start'], Palestine: [-8, 4, 'end'], Israel: [-8, 4, 'end'] }, o = OFF[p.name] || [7, 4, 'start'];
-    grp.append('text').attr('class', 'lbl').attr('x', p.x + o[0]).attr('y', p.y + o[1]).attr('text-anchor', o[2]).text(p.name.toUpperCase());
+    grp.append('text').attr('class', 'lbl').attr('x', p.x + o[0]).attr('y', p.y + o[1]).attr('text-anchor', o[2]).attr('data-en', p.name).text(LBL(p.name));
   });
   (function(){ const kept = []; rg.selectAll('text.lbl').each(function(){ const el = this; let ok = false; for (const dy of [0, 12, -12, 22]) { if (dy) el.setAttribute('y', +el.getAttribute('y') + dy - (el._dy || 0)); el._dy = dy; const b = el.getBBox(); if (!kept.some((q) => b.x < q.x + q.width + 3 && b.x + b.width + 3 > q.x && b.y < q.y + q.height && b.y + b.height > q.y)) { kept.push(b); ok = true; break; } } if (!ok) el.style.display = 'none'; }); })();
     g.append('circle').attr('cx', dubai[0]).attr('cy', dubai[1]).attr('r', 60).attr('fill', 'url(#hubGlow)');

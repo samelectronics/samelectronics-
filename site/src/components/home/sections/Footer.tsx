@@ -269,20 +269,16 @@ export default function Footer({ v }: { v: Vals }) {
                 fontSize: '12px',
               }}
             >
-              <span style={{ padding: '4px 9px', borderRadius: '7px', background: '#FFFFFF', color: '#1A1B1D', fontWeight: '600' }}>
+              {/* G9: same switch as the nav (src/i18n/lang.ts). */}
+              <button data-no-i18n onClick={v.english} aria-pressed={!v.isAr} style={{ ...(v.isAr ? { padding: '4px 9px', border: 'none', borderRadius: '7px', background: 'none', color: '#FFFFFF', fontWeight: 400, cursor: 'pointer' } : { padding: '4px 9px', border: 'none', borderRadius: '7px', background: '#FFFFFF', color: '#1A1B1D', fontWeight: 600, cursor: 'pointer' }), font: 'inherit', fontSize: '12px' }}>
                 EN
-              </span>
+              </button>
               <button
+                data-no-i18n
+                lang="ar"
                 onClick={v.arabic}
-                style={{
-                  padding: '4px 9px',
-                  border: 'none',
-                  background: 'none',
-                  fontFamily: "'IBM Plex Sans Arabic',sans-serif",
-                  fontSize: '12px',
-                  color: '#FFFFFF',
-                  cursor: 'pointer',
-                }}
+                aria-pressed={!!v.isAr}
+                style={{ ...(v.isAr ? { padding: '4px 9px', border: 'none', borderRadius: '7px', background: '#FFFFFF', color: '#1A1B1D', fontWeight: 600, cursor: 'pointer' } : { padding: '4px 9px', border: 'none', borderRadius: '7px', background: 'none', color: '#FFFFFF', fontWeight: 400, cursor: 'pointer' }), fontFamily: "'IBM Plex Sans Arabic',sans-serif", fontSize: '12px' }}
               >
                 عربي
               </button>

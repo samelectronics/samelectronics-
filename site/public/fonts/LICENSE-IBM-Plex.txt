@@ -1,0 +1,2 @@
+IBM Plex Sans Arabic, Arabic subset (Google Fonts v15), SIL Open Font License 1.1.
+Copyright © 2017 IBM Corp. https://github.com/IBM/plex

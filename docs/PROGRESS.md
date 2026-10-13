@@ -113,3 +113,63 @@ Console errors at baseline:
 - Fonts still load from Google Fonts with preconnect, not preloaded files.
 
 **Live:** https://samelectronics.vercel.app
+
+Step 1 deployed to production on Vercel: commit `8385538`, "Deployment has completed".
+
+---
+
+## Step 2 · G9 Arabic (13 Oct)
+
+### What changed
+
+**One translations file:** `site/src/i18n/ar.ts`.
+- English → Arabic for every text on the home page, about 900 entries. They were collected from the live page (every section, the reel's full cycle, the overlays, the chat) and from every string in the components and logic code.
+- Patterns cover texts with numbers: stock counts, prices, countdowns, the opening-hours states, product names ("iPhone 15 Pro Screen" → "شاشة iPhone 15 Pro"), step counters.
+- Texts joined with " · " are translated piece by piece.
+- Brand names, model names, part codes (SE-4544), units and handles stay in Latin, as UAE shops write them.
+- The file is marked `REVIEW_STATUS = 'Arabic: to be reviewed by the owner'`.
+
+**The switch** (nav and footer, `site/src/i18n/lang.ts`).
+- Pressing عربي translates ALL text: headings, buttons, labels, the hero reel, the iPad, toasts, the chat, the footer and every pop-up.
+- Placeholders, titles and aria-labels are translated too.
+- Live text (clocks, reels, live board, chat) keeps being translated as it updates.
+- EN restores the original English exactly (checked: identical text before and after a round trip).
+- The choice is saved and applied before the first paint, so there is no flash of English.
+
+**Right to left.**
+- `<html dir="rtl" lang="ar">`: flex rows, alignment and arrows (the 37 arrow icons and the chevrons) mirror.
+- Times, phone numbers, prices and codes keep their own left-to-right order inside Arabic (Unicode isolates). Without them the hours read "22:00-16:00 · 14:00-10:30".
+- Decorative glows that stick out past the page edge used to shift the whole page 144px in RTL; the page root now clips them.
+
+**Font.**
+- IBM Plex Sans Arabic, self-hosted (Arabic subset, 4 weights, SIL OFL).
+- It is attached to every design family (Space Grotesk, Inter, JetBrains Mono) for Arabic characters only. Arabic therefore appears at the same sizes and weights as the English, and Latin keeps its own font.
+- Letter-spacing is 0 in the Arabic view, because spaced Arabic letters don't join. Brand wordmarks keep theirs.
+
+**Canvas and map.**
+- Text drawn on canvases goes through the same dictionary.
+- The world-map iframe labels follow the page's language and update on switch.
+
+**Coverage check:** `site/scripts/qa/i18n-check.mjs` loads the page in Arabic, sweeps every section and the overlays, and lists any English left on screen.
+- Result: 0 untranslated texts.
+- 16 allowed Latin items remain: brand-logo labels, a code-style board address, one false positive.
+
+### DONE WHEN (G9)
+
+| Item | Result |
+|---|---|
+| The switch works | Yes |
+| ALL text in Arabic | Yes (coverage check) |
+| IBM Plex Sans Arabic at the same sizes and spacing | Yes |
+| Mirrored right-to-left layout | Yes for flow layouts and arrows. The hero's device composition and the teardown stage are absolute-positioned scenes, so they keep their placement; the text inside them is right-aligned. |
+| Readable numbers and prices | Yes |
+| Remembered | Yes |
+| One translations file, marked for owner review | Yes |
+
+### Not finished in this step
+
+- **Letter-by-letter canvas text:** the teardown ad draws some titles one letter at a time, so those letters stay Latin. That ad is rebuilt in Step 7, with its Arabic.
+- **Chat answers:** Samsoom's answers are matched from English keywords. Questions typed in Arabic are handled in Step 5 (G8: answers in the language of the question).
+- **Arabic brand name:** the dictionary uses "سام للإلكترونيات" for Sam Electronics. The facts say to copy the exact Arabic spelling from the logo file, so this is TO CONFIRM by the owner.
+
+**Live:** https://samelectronics.vercel.app (press عربي in the nav)

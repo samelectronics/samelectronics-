@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import { DC_FONT_CSS, DC_SCRIPTS, DC_TITLE } from '@/dc/head';
 import { windowFacts } from '@/content/facts';
+import { PRE_PAINT } from '@/i18n/prepaint';
+import '@/styles/arabic.css';
 import '@/styles/dc-base.css';
 import '@/styles/dc.css';
 
@@ -25,6 +27,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         ))}
       </head>
       <body>
+        {/* G9: Arabic or English before the first paint. */}
+        <Script id="se-lang" strategy="beforeInteractive">
+          {PRE_PAINT}
+        </Script>
         {/* Company facts for public/se-data.js (must run before it). */}
         <Script id="se-facts" strategy="beforeInteractive">
           {`window.SE_FACTS=${JSON.stringify(windowFacts()).replace(/</g, '\\u003c')};`}

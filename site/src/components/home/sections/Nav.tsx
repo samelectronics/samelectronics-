@@ -107,24 +107,25 @@ export default function Nav({ v }: { v: Vals }) {
           </span>
           {'\n      '}
           <span style={cssToObj(`display:flex;gap:2px;padding:3px;border-radius:10px;background:${s(v.nav?.pillBg)};font-size:12px`)}>
-            <span
+            {/* G9: language switch. The active language is highlighted; the choice is remembered (src/i18n/lang.ts). */}
+            <button
+              data-no-i18n
+              onClick={v.english}
+              aria-pressed={!v.isAr}
               style={cssToObj(
-                `padding:4px 9px;border-radius:7px;background:${s(v.nav?.langOn)};color:${s(v.nav?.langOnInk)};font-weight:600`,
+                `padding:4px 9px;border:none;border-radius:7px;font:inherit;font-size:12px;cursor:pointer;background:${v.isAr ? 'none' : s(v.nav?.langOn)};color:${v.isAr ? 'inherit' : s(v.nav?.langOnInk)};font-weight:${v.isAr ? 400 : 600}`,
               )}
             >
               EN
-            </span>
+            </button>
             <button
+              data-no-i18n
+              lang="ar"
               onClick={v.arabic}
-              style={{
-                padding: '4px 9px',
-                border: 'none',
-                background: 'none',
-                fontFamily: "'IBM Plex Sans Arabic',sans-serif",
-                fontSize: '12px',
-                color: 'inherit',
-                cursor: 'pointer',
-              }}
+              aria-pressed={!!v.isAr}
+              style={cssToObj(
+                `padding:4px 9px;border:none;border-radius:7px;font-family:'IBM Plex Sans Arabic',sans-serif;font-size:12px;cursor:pointer;background:${v.isAr ? s(v.nav?.langOn) : 'none'};color:${v.isAr ? s(v.nav?.langOnInk) : 'inherit'};font-weight:${v.isAr ? 600 : 400}`,
+              )}
             >
               عربي
             </button>
