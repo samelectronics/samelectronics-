@@ -5,6 +5,7 @@
 import React from 'react';
 import { DCLogic, StreamableLogic } from '@/dc/runtime';
 import { site as SITE } from '@/content/facts';
+import { fallbackAnswer, emoteFor, isArabic } from '@/components/samsoom/brain';
 
 class Component extends DCLogic {
   state = { data: window.SE_DATA || null, now: Date.now(), k: 0, z: 1, vw: 1440, vh: 900, prog: 0, tp: 0, tone: 'dark', ip: 0, ipJump: false, ipToast: false, ipCart: 2, reel: 0, reelJump: false, hover: null, typeI: 0, typeN: 0, seen: false, tilt: null, mx: 900, my: 400 };
@@ -300,23 +301,48 @@ class Component extends DCLogic {
     return { re, whs, net, story, mapRef: this.mapRef, storyRef: this.storyRef, todayHours: td, dirLink: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(SITE.contact.plusCode + ' Dubai') };
   }
   chatRef = React.createRef();
+  // G8: where an answer can send the visitor (the API route's ACTIONS), with EN/AR button labels
+  chatAct(name, ar) {
+    const D = this.state.data || {}, wa = 'https://wa.me/' + ((D.contact && D.contact.wa) || SITE.contact.whatsapp);
+    const A = { visit: ['Opening hours & directions', 'الدوام والاتجاهات', () => this.go('visit')], repair: ['Repair estimator', 'مقدّر التصليح', () => this.go('repair')], wholesale: ['Wholesale', 'الجملة', () => this.go('wholesale')], network: ['Worldwide network', 'شبكتنا حول العالم', () => this.go('network')], models: ['Compare grades', 'قارن الدرجات', () => this.go('models')], fmp: ['Find My Part', 'ابحث عن قطعتي', () => this.openFmpAt()], story: ['Our story', 'قصتنا', () => this.go('story')], circuit: ['Sam Circuit', 'سام سيركت', () => this.go('circuit')], whatsapp: ['WhatsApp the desk', 'راسل المكتب على واتساب', () => window.open(wa, '_blank')] }[name];
+    return A ? { act: A[2], lbl: ar ? A[1] : A[0] } : {};
+  }
   reply(text) {
-    const D = this.state.data, t = text.toLowerCase(), H = this.hours(); if (!D) return { t: 'One moment…' };
+    const D = this.state.data, t = text.toLowerCase(), H = this.hours(), ar = isArabic(text); if (!D) return { t: ar ? 'لحظة…' : 'One moment…' };
     const GN = { OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' };
-    if (/open|hour|close|time|today|now/.test(t)) return { t: 'Right now: ' + H.short + ' (Dubai time).\nSat–Thu 10:30–14:00 and 16:00–22:00\nFri 10:30–12:00 and 16:00–22:00 · Sunday closed', act: () => this.go('visit'), lbl: 'Opening hours', mood: 'happy' };
-    if (/grade|original|oled|incell|copy|service|which/.test(t)) return { t: 'Five grades, always labelled:\n' + D.grades.map((g) => g.name + ': ' + g.desc).join('\n') + '\nOriginal or Service Pack for the best result, OLED for value, Incell when budget comes first.', act: () => this.go('models'), lbl: 'Compare grades', mood: 'happy' };
-    if (/ship|deliver|country|abroad|africa|europe|asia|export/.test(t)) return { t: 'Yes. We ship worldwide, mainly to the Middle East, Africa, Europe and Asia. Tracked and securely packed; shipping is quoted with your order.', act: () => this.go('network'), lbl: 'Worldwide network', mood: 'happy' };
-    if (/trade|wholesale|bulk|price list/.test(t)) return { t: 'Trade prices unlock once your trade account is approved. Send a bulk list and we quote it the same day.', act: () => this.go('wholesale'), lbl: 'Wholesale', mood: 'happy' };
-    if (/repair|fix|broken|crack/.test(t)) return { t: 'Our bench in Deira fixes screens, batteries, charging ports and board faults. Try the estimator for a price range.', act: () => this.go('repair'), lbl: 'Repair estimator', mood: 'happy' };
     const nt = t.replace(/[\s-]/g, '');
     const m = D.models.find((x) => nt.includes(x.name.toLowerCase().replace(/[\s-]/g, '')) || x.model_numbers.some((n) => nt.includes(n.toLowerCase().replace(/[\s-]/g, ''))) || nt.includes(x.name.toLowerCase().replace(/^(galaxy|iphone|xiaomi|redmi|realme|oppo|huawei|pixel|xperia)\s*/, '').replace(/[\s-]/g, '')));
-    if (m) { const W = { SCR: ['screen', 'lcd', 'oled', 'display'], BAT: ['battery', 'batt'], FLX: ['flex', 'charging', 'cable'], BCV: ['back', 'cover'], CAM: ['camera'], FRM: ['frame', 'housing'], SML: ['port', 'button', 'speaker'] };
+    if (m) { const W = { SCR: ['screen', 'lcd', 'oled', 'display', 'شاشه', 'شاشة'], BAT: ['battery', 'batt', 'بطاريه', 'بطارية'], FLX: ['flex', 'charging', 'cable', 'شحن'], BCV: ['back', 'cover', 'غطاء'], CAM: ['camera', 'كاميرا'], FRM: ['frame', 'housing', 'فريم'], SML: ['port', 'button', 'speaker', 'سماعه'] };
       const cat = Object.keys(W).find((k) => W[k].some((w) => t.includes(w))); const ps = D.products.filter((p) => p.model_id === m.id && (!cat || p.category === cat) && p.stock_qty > 0);
-      if (ps.length) { const best = ps.sort((a, b) => a.retail_price - b.retail_price); return { t: 'Found ' + ps.length + ' in-stock part' + (ps.length > 1 ? 's' : '') + ' for the ' + m.name + (cat ? '' : '') + ':\n' + best.slice(0, 3).map((p) => '· ' + p.title + ' · ' + GN[p.grade] + ' · AED ' + p.retail_price).join('\n') + '\n(sample prices)', act: () => this.openFmpAt(m.brand_id, m.id, cat || null), lbl: 'Open in Find My Part', mood: 'found' }; }
-      return { t: 'We have no ' + m.name + ' part in stock for that right now. I can ask the team on WhatsApp.', act: () => window.open('https://wa.me/' + D.contact.wa, '_blank'), lbl: 'WhatsApp the desk', mood: 'low' }; }
-    return { t: 'I didn’t catch that one. Try a model and part, like “A54 battery” or “iPhone 13 screen”, or ask about grades, hours or shipping.', act: () => this.openFmpAt(), lbl: 'Find My Part', mood: 'low' };
+      if (ps.length) { const best = ps.sort((a, b) => a.retail_price - b.retail_price); return { t: (ar ? 'وجدت ' + ps.length + ' قطعة متوفرة لـ ' + m.name + ':\n' : 'Found ' + ps.length + ' in-stock part' + (ps.length > 1 ? 's' : '') + ' for the ' + m.name + ':\n') + best.slice(0, 3).map((p) => '· ' + p.title + ' · ' + GN[p.grade] + ' · AED ' + p.retail_price).join('\n') + (ar ? '\n(أسعار تجريبية)' : '\n(sample prices)'), act: () => this.openFmpAt(m.brand_id, m.id, cat || null), lbl: ar ? 'افتح في «ابحث عن قطعتي»' : 'Open in Find My Part', emote: 'part', own: ar }; }
+      return { t: ar ? 'لا توجد قطعة ' + m.name + ' لهذا الطلب حالياً. أستطيع أن أسأل الفريق على واتساب.' : 'We have no ' + m.name + ' part in stock for that right now. I can ask the team on WhatsApp.', ...this.chatAct('whatsapp', ar), emote: 'low', own: ar }; }
+    const tr = (en) => (window.seI18n && window.seI18n.tr ? window.seI18n.tr(en) : en);
+    const fb = fallbackAnswer(text, { D, H, tr });
+    if (fb) return { t: fb.t, ...this.chatAct(fb.act, ar), emote: fb.emote, own: ar };
+    return { t: ar ? 'لم أفهم هذه تماماً. جرّب موديلاً وقطعة، مثل «بطارية A54» أو «شاشة iPhone 13»، أو اسأل عن الدرجات أو الدوام أو الشحن.' : 'I didn’t catch that one. Try a model and part, like “A54 battery” or “iPhone 13 screen”, or ask about grades, hours or shipping.', ...this.chatAct('fmp', ar), emote: 'low', own: ar };
   }
-  ask(q) { if (!q || !q.trim()) return; this.setState((s) => ({ chatMsgs: [...(s.chatMsgs || []), { me: true, t: q }], chatTyping: true, chatInput: '', chatTouched: true, chatOpen: true, chatMood: 'think' })); setTimeout(() => { const r = this.reply(q); this.setState((s) => ({ chatTyping: false, chatMood: r.mood || 'idle', chatMsgs: [...(s.chatMsgs || []), { t: r.t, act: r.act, lbl: r.lbl }] })); setTimeout(() => this.setState({ chatMood: 'idle' }), 2400); }, 900); }
+  // G8: Claude answers through /api/samsoom; until ANTHROPIC_API_KEY is set (or if it fails) the
+  // typo-tolerant fallback above answers instead. The chat shows "thinking" until the answer lands.
+  ask(q) {
+    if (!q || !q.trim()) return;
+    q = q.trim();
+    const hist = (this.state.chatMsgs || []).filter((m) => !m.intro).map((m) => ({ role: m.me ? 'user' : 'assistant', text: m.t }));
+    this.setState((s) => ({ chatMsgs: [...(s.chatMsgs || []), { me: true, t: q }], chatTyping: true, chatTouched: true, chatOpen: true }));
+    const t0 = Date.now(), lang = window.seI18n ? window.seI18n.lang() : 'en';
+    const land = (r) => { const wait = Math.max(0, 650 - (Date.now() - t0)); setTimeout(() => !this.dead && this.setState((s) => ({ chatTyping: false, chatMsgs: [...(s.chatMsgs || []), { t: r.t, act: r.act, lbl: r.lbl, emote: r.emote, own: true, n: (s.chatMsgs || []).length + 1 }] })), wait); };
+    const local = () => land(this.reply(q));
+    fetch('/api/samsoom', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages: [...hist, { role: 'user', text: q }].slice(-12), lang }) })
+      .then((r) => (r.ok ? r.json() : { fallback: true }))
+      .then((j) => {
+        if (!j || j.fallback || !j.text) return local();
+        // model or part questions keep the in-stock lookup (it knows the sample catalogue)
+        const lk = this.reply(q);
+        const useLk = lk.emote === 'part' && /AED/.test(lk.t);
+        if (useLk) return land(lk);
+        land({ t: j.text, ...this.chatAct(j.action, isArabic(q) || isArabic(j.text)), emote: emoteFor(q, j.text) || 'happy', own: true });
+      })
+      .catch(local);
+  }
   openFmpAt(b, m, c, q) { this.setState({ fmpOpen: true, fmpB: b || null, fmpM: m || null, fmpC: c || null, fmpQ: (!m && q) || '', drawerMap: false, drawerCart: false }); }
   extC(s, D, P, fmt, cl, pad, bars, KIND) {
     const GN = { OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' }, H = this.hours(), yr = new Date(s.now).getFullYear();
@@ -408,9 +434,11 @@ class Component extends DCLogic {
     const sub = cart.reduce((a, c) => a + P.find((p) => p.id === c.id).retail_price * c.qty, 0);
     // chat
     const msgs = s.chatMsgs || [{ t: 'Hi, I’m Samsoom. Ask me about a part, a grade, shipping, or whether the shop is open right now.' }];
-    const chat = { open: !!s.chatOpen, closed: !s.chatOpen, mood: s.chatMood || 'wave', typing: !!s.chatTyping, showChips: !s.chatTouched, input: s.chatInput || '', setInput: (e) => this.setState({ chatInput: e.target.value, chatTouched: true }), send: (e) => { e.preventDefault(); this.ask(s.chatInput); },
+    // G8: the chat keeps its own input and Samsoom's moods (src/components/home/sections/SamsoomChat.tsx), so
+    // typing never re-renders the home page; it only calls ask() and reads the messages.
+    const chat = { open: !!s.chatOpen, closed: !s.chatOpen, typing: !!s.chatTyping, showChips: !s.chatTouched, ask: (q) => this.ask(q), touch: () => !s.chatTouched && this.setState({ chatTouched: true }),
       chips: ['Find my part', 'Which grade?', 'Are you open?', 'Do you ship to my country?', 'Trade prices'].map((q2) => ({ q: q2, ask: () => (q2 === 'Find my part' ? this.ask('iPhone 13 screen') : this.ask(q2)) })),
-      msgs: msgs.map((m) => ({ t: m.t, al: m.me ? 'flex-end' : 'flex-start', bg: m.me ? '#1A1B1D' : '#FFFFFF', ink: m.me ? '#FFFFFF' : '#1A1B1D', hasAct: !!m.act, act: () => { this.setState({ chatOpen: false }); m.act && m.act(); }, actLbl: m.lbl || '' })) };
+      msgs: msgs.map((m, i) => ({ t: m.t, me: !!m.me, emote: m.emote || null, n: m.n || 0, own: !!(m.me || m.own), al: m.me ? 'flex-end' : 'flex-start', bg: m.me ? '#1A1B1D' : '#FFFFFF', ink: m.me ? '#FFFFFF' : '#1A1B1D', hasAct: !!m.act, act: () => { this.setState({ chatOpen: false }); m.act && m.act(); }, actLbl: m.lbl || '' })) };
     const sparks = s.sparks || [];
     const sparkEl = sparks.length ? React.createElement('div', { style: { position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 120 } }, sparks.map((k) => React.createElement('div', { key: k.id, style: { position: 'absolute', left: k.x, top: k.y } }, [React.createElement('span', { key: 'c', style: { position: 'absolute', left: -10, top: -10, width: 20, height: 20, borderRadius: '50%', background: 'radial-gradient(circle,#FFF4D1,#F7C032 50%,rgba(247,192,50,0) 70%)', animation: 'seSparkCore .5s ease-out forwards' } })].concat(Array.from({ length: 10 }, (_, i) => { const a = (i / 10) * Math.PI * 2 + 0.3, d = 26 + (i % 3) * 12; return React.createElement('span', { key: i, style: { position: 'absolute', left: -2, top: -2, width: 4, height: 4, borderRadius: 2, background: i % 2 ? '#FFDB6E' : '#FFFFFF', boxShadow: '0 0 6px #F7C032', '--sx': Math.cos(a) * d + 'px', '--sy': Math.sin(a) * d + 'px', animation: 'seSpark .6s cubic-bezier(.2,.8,.2,1) forwards' } }); }))))) : null;
     return { team, lanes, circ, ss, socials, posts, soc, googleReview: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Sam Electronics Al Murar Deira Dubai'), laneGo0: (ev) => { ev.preventDefault(); this.openFmpAt(); }, laneGo1: (ev) => { ev.preventDefault(); this.go('wholesale'); }, laneGo2: (ev) => { ev.preventDefault(); this.go('network'); }, laneGo3: (ev) => { ev.preventDefault(); this.go('visit'); }, reviewSoon: () => this.flash('Reviews open with customer accounts (My Bench).'), rq, visit, sysMap, sysMapShort, fmp,

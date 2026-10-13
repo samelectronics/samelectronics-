@@ -1,11 +1,73 @@
 // Converted from design/project/Sam Electronics Home v3.dc.html (12 Oct 2026); maintained by hand since.
 // Home v3 section "SamsoomChat". Renders against the home page's values (`v`, from HomeV3's logic class).
 'use client';
-import React from 'react';
-import { type Vals, cssToObj, cx, s, t, val } from '@/dc/runtime';
+import React, { useEffect, useRef, useState } from 'react';
+import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 import SESamsoom from '../../dc/SESamsoom';
+import { createScheduler } from '@/components/samsoom/scheduler';
+
+type Msg = { t: string; me: boolean; emote: string | null; n: number; own: boolean; [k: string]: unknown };
+
+/**
+ * G8: the open chat keeps Samsoom alive. He waves when the chat opens, thinks while the answer is on its
+ * way, "types" while the answer is written out, then plays the answer's context emote; in between, the
+ * scheduler gives him a universal emote every 3s + 5s rest. The input lives here, so typing only
+ * re-renders the chat.
+ */
+function useChatLife(open: boolean, typing: boolean, msgs: Msg[], listRef: React.RefObject<HTMLDivElement | null>) {
+  const [mood, setMood] = useState('wave');
+  const [reveal, setReveal] = useState<{ n: number; k: number } | null>(null);
+  const sch = useRef<ReturnType<typeof createScheduler> | null>(null);
+  const seen = useRef(0);
+  useEffect(() => {
+    if (!open) return;
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    const x = createScheduler({ onMood: setMood, auto: !reduce });
+    sch.current = x;
+    x.play('wave');
+    seen.current = Math.max(0, ...msgs.map((m) => m.n || 0)); // only new answers are written out
+    return () => {
+      x.stop();
+      sch.current = null;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+  useEffect(() => {
+    sch.current?.base(typing ? 'think' : reveal ? 'type' : 'idle');
+  }, [typing, reveal]);
+  // a new answer: write it out, then play its emote
+  const last = msgs[msgs.length - 1];
+  useEffect(() => {
+    if (!open || !last || last.me || !last.n || last.n <= seen.current) return;
+    seen.current = last.n;
+    const len = last.t.length, dur = Math.min(1600, Math.max(450, len * 14)), t0 = performance.now();
+    let raf = 0;
+    const step = () => {
+      const k = Math.min(len, Math.ceil(((performance.now() - t0) / dur) * len));
+      setReveal(k >= len ? null : { n: last.n, k });
+      const el = listRef.current;
+      if (el) el.scrollTop = el.scrollHeight;
+      if (k < len) raf = requestAnimationFrame(step);
+      else sch.current?.play(last.emote || 'happy');
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, last?.n]);
+  return { mood, reveal };
+}
 
 export default function SamsoomChat({ v }: { v: Vals }) {
+  const [input, setInput] = useState('');
+  const listRef = v.chatRef as React.RefObject<HTMLDivElement | null>;
+  const msgs: Msg[] = Array.isArray(v.chat?.msgs) ? v.chat.msgs : [];
+  const { mood, reveal } = useChatLife(!!v.chat?.open, !!v.chat?.typing, msgs, listRef);
+  const send = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+    v.chat?.ask(input);
+    setInput('');
+  };
   return (
     <>
       {v.chat?.open ? (
@@ -53,7 +115,7 @@ export default function SamsoomChat({ v }: { v: Vals }) {
                     overflow: 'hidden',
                   }}
                 >
-                  <SESamsoom mood={v.chat?.mood} size={32} />
+                  <SESamsoom mood={mood} size={32} />
                 </span>
                 <span style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                   <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: '600', fontSize: '16px' }}>Samsoom</span>
@@ -98,7 +160,7 @@ export default function SamsoomChat({ v }: { v: Vals }) {
               }}
             >
               {'\n    '}
-              {(Array.isArray(v.chat?.msgs) ? v.chat?.msgs : []).map((__it: any, __i: number) => {
+              {msgs.map((__it: any, __i: number) => {
                 const v2 = { ...v, m: __it, $index: __i };
                 return ((v: Vals) => (
                   <React.Fragment key={__i}>
@@ -107,12 +169,14 @@ export default function SamsoomChat({ v }: { v: Vals }) {
                         style={cssToObj(
                           `max-width:84%;padding:10px 14px;border-radius:16px;background:${s(v.m?.bg)};color:${s(v.m?.ink)};font-size:14px;line-height:1.45;white-space:pre-line;box-shadow:0 1px 2px rgba(0,0,0,.06)`,
                         )}
+                        {...(v.m?.own ? { 'data-no-i18n': '', dir: 'auto' } : {})}
                       >
-                        {t(v.m?.t)}
+                        {reveal && reveal.n === v.m?.n ? String(v.m?.t).slice(0, reveal.k) : t(v.m?.t)}
                       </span>
-                      {v.m?.hasAct ? (
+                      {v.m?.hasAct && !(reveal && reveal.n === v.m?.n) ? (
                         <>
                           <button
+                            {...(v.m?.own ? { 'data-no-i18n': '' } : {})}
                             onClick={v.m?.act}
                             style={{
                               display: 'flex',
@@ -214,13 +278,17 @@ export default function SamsoomChat({ v }: { v: Vals }) {
             ) : null}
             {'\n  '}
             <form
-              onSubmit={v.chat?.send}
+              onSubmit={send}
               style={{ display: 'flex', gap: '8px', padding: '12px 16px 16px', borderTop: '1px solid rgba(26,27,29,.06)' }}
             >
               {'\n    '}
               <input
-                value={val(v.chat?.input)}
-                onInput={v.chat?.setInput}
+                value={input}
+                dir="auto"
+                onChange={(e) => {
+                  setInput(e.target.value);
+                  v.chat?.touch();
+                }}
                 placeholder="Ask about a part, a grade, our hours…"
                 style={{
                   flex: '1',

@@ -234,6 +234,11 @@ function render(v: Vals) {
                   </>
                 ) : null}
                 {'\n          '}
+                {v.hasItem ? (
+                  <span style={cssToObj(`position:absolute;left:12px;top:52px;width:0;height:0;transform:rotate(${s(v.itemRot)}deg)`)}>
+                    <SamsoomItem v={v} />
+                  </span>
+                ) : null}
                 {v.hasHold ? (
                   <>
                     <span style={cssToObj(`position:absolute;left:-14px;top:42px;transform:rotate(${s(v.holdRot)}deg)`)}>
@@ -576,13 +581,11 @@ function render(v: Vals) {
                       {v.mO ? (
                         <>
                           <span
-                            style={{
-                              width: '10px',
-                              height: '12px',
-                              boxSizing: 'border-box',
-                              border: '3px solid #26282B',
-                              borderRadius: '50%',
-                            }}
+                            style={
+                              v.yawnO
+                                ? { width: '16px', height: '20px', boxSizing: 'border-box', border: '3px solid #26282B', borderRadius: '50%', background: '#5A2E1E', animation: 'smYawn 3s ease-in-out 1 both' }
+                                : { width: '10px', height: '12px', boxSizing: 'border-box', border: '3px solid #26282B', borderRadius: '50%' }
+                            }
                           ></span>
                         </>
                       ) : null}
@@ -809,6 +812,70 @@ function render(v: Vals) {
       </div>
     </>
   );
+}
+
+/** G8 context emotes: the little things Samsoom pulls out (28px, drawn above his right hand). */
+function SamsoomItem({ v }: { v: Vals }) {
+  const box: React.CSSProperties = { position: 'absolute', left: '-24px', top: '-52px', width: '48px', height: '48px', overflow: 'visible', filter: 'drop-shadow(0 2px 3px rgba(0,0,0,.3))' };
+  if (v.isClock)
+    return (
+      <svg viewBox="0 0 34 34" style={box}>
+        <circle cx="17" cy="17" r="15" fill="#FFFFFF" stroke="#26282B" strokeWidth="3" />
+        <circle cx="17" cy="17" r="11.5" fill="none" stroke="#F7C032" strokeWidth="1.5" strokeDasharray="1.5 4.5" />
+        <path d="M17 17V9" stroke="#26282B" strokeWidth="2.6" strokeLinecap="round" />
+        <path d="M17 17h-6" stroke="#26282B" strokeWidth="2.2" strokeLinecap="round" style={{ transformOrigin: '17px 17px', animation: v.itemAnim }} />
+        <circle cx="17" cy="17" r="2" fill="#F7C032" />
+      </svg>
+    );
+  if (v.isCheck)
+    return (
+      <svg viewBox="0 0 34 34" style={box}>
+        <rect x="5" y="4" width="24" height="29" rx="3" fill="#FFFFFF" stroke="#26282B" strokeWidth="2.6" />
+        <rect x="12" y="1.5" width="10" height="5" rx="1.5" fill="#F7C032" stroke="#26282B" strokeWidth="1.6" />
+        {[12, 19, 26].map((y, i) => (
+          <g key={y} style={{ opacity: 0, animation: `smCheck .4s ${0.35 + i * 0.45}s cubic-bezier(.2,.8,.2,1) both` }}>
+            <path d={`M9 ${y}l2 2 3.5-4`} fill="none" stroke="#2BB673" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d={`M17 ${y}h8`} stroke="#8C9096" strokeWidth="2" strokeLinecap="round" />
+          </g>
+        ))}
+      </svg>
+    );
+  if (v.isTool)
+    return (
+      <svg viewBox="0 0 34 34" style={{ ...box, transformOrigin: '17px 30px', animation: v.itemAnim }}>
+        <rect x="13" y="16" width="8" height="16" rx="3" fill="#F7C032" stroke="#26282B" strokeWidth="2" />
+        <path d="M15.5 19v10M18.5 19v10" stroke="#C9921A" strokeWidth="1.2" />
+        <rect x="15.6" y="2" width="2.8" height="15" rx="1" fill="#C9CCD0" stroke="#5E6064" strokeWidth=".8" />
+        <path d="M15.6 2h2.8v2h-2.8z" fill="#26282B" />
+      </svg>
+    );
+  if (v.isTag)
+    return (
+      <svg viewBox="0 0 34 34" style={{ ...box, transformOrigin: '17px 4px', animation: 'smSwing 1.5s ease-in-out infinite alternate' }}>
+        <path d="M17 1v6" stroke="#26282B" strokeWidth="1.4" />
+        <path d="M8 12l9-6 9 6v18a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2z" fill="#F7C032" stroke="#26282B" strokeWidth="2.2" strokeLinejoin="round" />
+        <circle cx="17" cy="11" r="2" fill="#FFFFFF" stroke="#26282B" strokeWidth="1.4" />
+        <path d="M12 19h10M12 24h7" stroke="#26282B" strokeWidth="2" strokeLinecap="round" />
+      </svg>
+    );
+  if (v.isParcel)
+    return (
+      <svg viewBox="0 0 34 34" style={box}>
+        <path d="M17 3 31 10v15l-14 7L3 25V10z" fill="#D9A55C" stroke="#26282B" strokeWidth="2.2" strokeLinejoin="round" />
+        <path d="M3 10l14 7 14-7M17 17v15" fill="none" stroke="#26282B" strokeWidth="1.8" strokeLinejoin="round" />
+        <path d="M10 6.5l14 7v5" fill="none" stroke="#F7C032" strokeWidth="3" />
+      </svg>
+    );
+  if (v.isGlobe)
+    return (
+      <svg viewBox="0 0 34 34" style={box}>
+        <circle cx="17" cy="17" r="14" fill="#1A1B1D" stroke="#F7C032" strokeWidth="2.2" />
+        <ellipse cx="17" cy="17" rx="7" ry="14" fill="none" stroke="#F7C032" strokeWidth="1.4" style={{ transformOrigin: '17px 17px', animation: v.itemAnim }} />
+        <ellipse cx="17" cy="17" rx="7" ry="14" fill="none" stroke="#FFDB6E" strokeWidth="1" opacity=".6" style={{ transformOrigin: '17px 17px', animation: v.itemAnim, animationDelay: '-.75s' }} />
+        <path d="M3 17h28M5.5 10h23M5.5 24h23" stroke="#F7C032" strokeWidth="1" opacity=".7" />
+      </svg>
+    );
+  return null;
 }
 
 const SESamsoom = createDC('SE Samsoom', Logic, render);

@@ -4,6 +4,8 @@
 // and webpackIgnore on runtime imports. Converted 12 Oct 2026; maintained by hand since.
 import React from 'react';
 import { DCLogic, StreamableLogic } from '@/dc/runtime';
+import { createScheduler } from '@/components/samsoom/scheduler';
+import { UNIVERSAL } from '@/components/samsoom/brain';
 
 class Component extends DCLogic {
   state = { mood: 'idle', mi: 0, open: false, tw: 0, lx: 0, ly: 0, cycles: 0 };
@@ -13,28 +15,32 @@ class Component extends DCLogic {
     this.tm = []; window.__seLauncher = this; this.ign = 0; this.alt = 0;
     if (this.rm) this.setState({ mood: 'happy', open: true });
     else {
+      // G8: every face change goes through the emote scheduler (3s emotes, never cut off, no repeats)
+      this.sch = createScheduler({ onMood: (mood) => !this.dead && this.setState({ mood }), emotes: UNIVERSAL.filter((e) => e !== 'wave') });
       this.later(1200, () => this.cycle());
       this.mm = (e) => { if (this.state.mood !== 'idle') return; const n = performance.now(); if (n - (this._t || 0) < 90) return; this._t = n; const r = this.rootRef.current && this.rootRef.current.getBoundingClientRect(); if (!r) return; const cl = (v) => Math.max(-1, Math.min(1, v)); const lx = Math.round(cl((e.clientX - (r.left + 28)) / 420) * 10) / 10, ly = Math.round(cl((e.clientY - (r.top + 28)) / 420) * 10) / 10; if (lx !== this.state.lx || ly !== this.state.ly) this.setState({ lx, ly }); };
       window.addEventListener('mousemove', this.mm, { passive: true });
     }
     this.measure();
   }
-  componentWillUnmount() { this.tm.forEach(clearTimeout); window.removeEventListener('mousemove', this.mm); }
+  componentWillUnmount() { this.dead = true; this.sch && this.sch.stop(); this.tm.forEach(clearTimeout); window.removeEventListener('mousemove', this.mm); }
   componentDidUpdate() { this.measure(); }
   later(d, f) { this.tm.push(setTimeout(f, d)); }
   msgs() { const p = this.props; return [p.m0 || 'Ask Samsoom', p.m1 || 'Open till 22:00', p.m2 || 'Need a screen?', p.m3 || 'Trade prices? Ask me', p.m4 || 'Track my order']; }
-  // one cycle ≈ 17s: wave+smile (circle) → "Ask Samsoom" → collapse + blink → a page message → collapse → one short emote → next. After 3 ignored cycles it rests.
+  // G8 cycle, 16s: wave + smile (circle, 3s) → "Ask Samsoom" → collapse + blink → a page message while he
+  // plays the next emote from the bag (3s) → collapse → repeat. Each emote is followed by a 5s rest.
+  // After 3 ignored cycles he yawns once and rests (still blinking and following the cursor).
   cycle() {
-    if (this.ign >= 3) { this.setState({ open: false, mood: 'idle' }); return; }
+    if (this.ign >= 3) { this.setState({ open: false }); this.sch.play('yawn'); return; }
     const sub = 1 + (this.alt++ % 4);
-    this.setState({ mood: 'wave', open: false });
-    this.later(1300, () => this.setState({ mood: 'happy' }));
-    this.later(1900, () => this.setState({ mood: 'idle', mi: 0, open: true }));
-    this.later(5900, () => this.setState({ open: false, mood: 'blink' }));
-    this.later(7300, () => this.setState({ mood: 'idle', mi: sub, open: true }));
-    this.later(11800, () => this.setState({ open: false }));
-    this.later(13600, () => { const E = ['dabke', 'kiss', 'happy'].filter((k) => k !== this._last), m = E[Math.floor(Math.random() * E.length)]; this._last = m; this.setState({ mood: m }); this.later(1200, () => this.setState({ mood: 'idle' })); });
-    this.later(17000, () => { this.ign++; this.cycle(); });
+    this.setState({ open: false });
+    this.sch.play('wave');
+    this.later(3000, () => this.setState({ mi: 0, open: true }));
+    this.later(6600, () => { this.setState({ open: false }); this.sch.base('blink'); });
+    this.later(7900, () => this.sch.base('idle'));
+    this.later(8000, () => { this.sch.play(this.sch.next()); this.setState({ mi: sub, open: true }); });
+    this.later(13200, () => this.setState({ open: false }));
+    this.later(16000, () => { this.ign++; this.cycle(); });
   }
   wake() { if (this.ign >= 3) { this.ign = 0; this.tm.forEach(clearTimeout); this.tm = []; this.cycle(); } else this.ign = 0; }
   measure() { const el = this.txtRef.current; if (!el) return; const w = Math.ceil(el.scrollWidth); if (w && w !== this.state.tw) this.setState({ tw: w }); }

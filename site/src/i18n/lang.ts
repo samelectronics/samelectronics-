@@ -124,7 +124,7 @@ export function t(en: string): string {
 
 declare global {
   interface Window {
-    seI18n?: { lang: () => Lang; t: (s: string) => string; set: (l: Lang) => void; toggle: () => void };
+    seI18n?: { lang: () => Lang; t: (s: string) => string; tr: (s: string) => string; set: (l: Lang) => void; toggle: () => void };
   }
 }
 
@@ -139,7 +139,7 @@ export function installI18n() {
   }
   lang = saved;
   applyDocument();
-  window.seI18n = { lang: () => lang, t, set: setLang, toggle: () => setLang(lang === 'ar' ? 'en' : 'ar') };
+  window.seI18n = { lang: () => lang, t, tr, set: setLang, toggle: () => setLang(lang === 'ar' ? 'en' : 'ar') };
   patchCanvasText();
   if (lang === 'ar') {
     startObserver();

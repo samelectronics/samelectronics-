@@ -259,3 +259,76 @@ The card opens on hover and on keyboard focus, entering with opacity and a 6px r
 | Click goes to the Visit / hours section | Yes |
 
 **Live:** https://samelectronics.vercel.app
+
+---
+
+## Step 5 · G8 Samsoom
+
+Step 4's deploy was confirmed: Vercel reported success for `c62f207`.
+
+**Brain (Claude API + fallback)**
+- A new server route, `site/src/app/api/samsoom/route.ts`, uses the Claude API.
+  - The model is `claude-opus-5-5` at low effort, so chat answers come back quickly.
+  - Samsoom's only knowledge is the whole Company Facts file, with each item's status.
+  - He gives short, friendly answers in the language of the question.
+  - He never invents prices, stock or policies.
+  - For TO CONFIRM items he says the team will confirm and offers WhatsApp.
+  - He can add one button that goes to a place on the site (Visit, Repair, Wholesale, Find My Part, WhatsApp, and so on).
+- **No key yet:** while `ANTHROPIC_API_KEY` is not set in Vercel, the route replies `{fallback:true}` and the page answers with the fuzzy brain in `site/src/components/samsoom/brain.js`. Adding the key in Vercel turns Claude on; no code change is needed. The fuzzy brain also answers if the API fails or refuses.
+- **The fuzzy brain is typo tolerant.** These were all tested: "helo", "are u opne now", "my scren is brokn", "do u shiip", "thnks", "whatsap number", "warrenty".
+  - It covers greetings, hours, location, brands, grades, shipping, repairs, trade prices, prices, warranty, stock, contact, thanks and goodbye.
+  - It works in English and Arabic ("وين المحل", "بكم الشاشة", "مرحبا") and answers in the language of the question.
+- **Model + part questions** (e.g. "iphone 13 screen") still use the in-stock lookup on the sample catalogue, because Claude doesn't know that catalogue.
+
+**Emote scheduler (`site/src/components/samsoom/scheduler.js`)**
+- One emote at a time, exactly 3s each, never cut off; then about 5s of rest (blinking, breathing, eyes following the cursor).
+- Never the same emote twice in a row.
+- Idle emotes come from a shuffled bag, so he goes through all of them.
+- **Measured on the launcher over 36s:** every emote lasted 3.0s and every rest 5.0s. The sequence was wave → kiss → wave → blush → wave, with no repeats.
+- **New emotes:**
+  - universal: blush, small spin, wink, sleepy yawn (wave, dabke, kiss and thumbs-up already existed);
+  - context:
+    - clock (asking if the shop is open now);
+    - checklist (the weekly hours, warranty);
+    - screwdriver (repairs);
+    - price tag (prices, trade);
+    - parcel or spinning globe (shipping; the globe when a country is named);
+    - holds up a part (stock, brands, grades);
+    - blush with a heart (thanks);
+    - wave (greetings).
+
+**Launcher pill**
+- Its width still fits the message exactly.
+- The 16s cycle goes:
+  1. wave (3s, as a circle);
+  2. "Ask Samsoom";
+  3. collapses and blinks;
+  4. a page or time message while he plays the next emote from the bag;
+  5. collapses.
+- After 3 ignored cycles he yawns once and rests. A hover or click wakes him.
+
+**Chat**
+- **Fixing the lag:** typing used to re-render the whole home page on every key. The chat now keeps its own input, so typing 15 characters caused no long tasks at all.
+- **While the answer is coming:** he thinks (the dots show).
+- **When the answer lands:**
+  - it is written out on screen with a "typing" pose;
+  - then he plays the answer's context emote;
+  - the answer's button appears once the writing finishes.
+- The chat opens with a wave.
+- Typed text and answers keep their own language (they are not run through the translator); they use `dir="auto"` so Arabic reads right to left.
+
+**Arabic:** the added strings are in `ar.ts`. The coverage check found two untranslated arrow labels from Step 3 ("Scroll back" / "Scroll forward"); both are now translated.
+
+### DONE WHEN (G8)
+
+| Item | Result |
+|---|---|
+| Pill width fits the message; cycle every 15–20s; rests after ignored cycles | Yes (16s cycle) |
+| Emotes 3s each, never cut off, ~5s rests, no back-to-back repeats, all cycled | Yes (measured) |
+| Universal + context emotes | Yes (all 14 new poses checked in screenshots) |
+| Alive in the chat: thinking → typing → emote; smooth open and typing | Yes |
+| Understands anything, typos, both languages; Claude route + fallback | Yes for the fallback. Claude switches on when the key is added. |
+
+**Not finished:** Claude's answers haven't been seen live yet, because no API key exists yet. The route was tested with no key (it replies `{fallback:true}`).
+
+**Live:** https://samelectronics.vercel.app
