@@ -1,34 +1,14 @@
 {
   "url": "http://localhost:3100/",
   "viewport": "1440x900",
-  "loadMs": 8470,
-  "loadBlockingMs": 935,
+  "loadMs": 8334,
+  "loadBlockingMs": 848,
   "sections": [
     {
-      "section": "#deals",
-      "frames": 200,
-      "fps": 59.9,
-      "avgFps": 51.6,
-      "p95ms": 33.4,
-      "longTasks": 0,
-      "longMs": 0,
-      "liveWebGL": 0
-    },
-    {
-      "section": "#wholesale",
-      "frames": 209,
-      "fps": 59.9,
-      "avgFps": 53.7,
-      "p95ms": 33.4,
-      "longTasks": 0,
-      "longMs": 0,
-      "liveWebGL": 0
-    },
-    {
       "section": "#network",
-      "frames": 207,
+      "frames": 215,
       "fps": 59.9,
-      "avgFps": 52.5,
+      "avgFps": 56.6,
       "p95ms": 33.3,
       "longTasks": 0,
       "longMs": 0,

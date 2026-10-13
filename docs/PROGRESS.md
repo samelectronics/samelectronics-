@@ -896,3 +896,31 @@ Full rebuild as a new component (`SEWholesale.logic.js` / `.tsx`, styles in `src
 | No circuits through objects | Yes (audit: no Wholesale hits) |
 
 **Captures checked:** after the entrance, the pallet at the 50+ tier, and the pallet full with its label.
+
+## Step 15 · Issue 9 Worldwide colour fix (keep the rest)
+
+The map, the routes and the live shipments list are untouched. The four boxes keep the same continuous motion and the same hover speed-up. They moved into `WorldwideBoxes.tsx`, with styles in `src/styles/worldwide.css`.
+
+**Palette only:** yellow for what moves, white and soft grey for lines and text, graphite for surfaces.
+- **Tracked:** a yellow parcel dot runs the dashed white route to a pulsing yellow pin, and the code types in.
+- **Packed:** a muted kraft carton (flutes, a lit edge, a contact shadow) closes its flaps, yellow tape seals it and a white barcoded label lands.
+- **Quoted:** the price rolls in white, then a yellow ring and a yellow tick draw themselves. This replaces the green tick.
+- **Regions:** a graphite dot globe with yellow and white dotted continents turns, and ME / AFR / EU / ASIA light in yellow in turn. This replaces the blue/green globe.
+
+**Size and light:**
+- Each animation sits centred in a 132px art well, about 45% of the box height.
+- Each well has a tiny warm key light and a soft contact shadow.
+- Each box has a faint top highlight.
+
+**Optional items skipped:** the dashed route line between the boxes and the "Where are you?" search. The PDF marks them "only if it looks good". The boxes read cleaner without the line, and the search would add a feature to the map, which must stay untouched.
+
+### DONE WHEN (Issue 9)
+
+| Item | Result |
+|---|---|
+| Four boxes and their motion kept | Yes |
+| Zero off-palette colours | Yes (in the boxes) |
+| Animations larger and lit | Yes |
+| Map untouched | Yes |
+
+**Captured:** all four boxes mid-animation.
