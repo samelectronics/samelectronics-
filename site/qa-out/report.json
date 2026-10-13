@@ -1,14 +1,24 @@
 {
   "url": "http://localhost:3100/",
   "viewport": "1440x900",
-  "loadMs": 8385,
-  "loadBlockingMs": 887,
+  "loadMs": 8325,
+  "loadBlockingMs": 919,
   "sections": [
     {
+      "section": "#team",
+      "frames": 154,
+      "fps": 59.5,
+      "avgFps": 38.4,
+      "p95ms": 50,
+      "longTasks": 0,
+      "longMs": 0,
+      "liveWebGL": 0
+    },
+    {
       "section": "#story",
-      "frames": 186,
+      "frames": 173,
       "fps": 59.9,
-      "avgFps": 48.3,
+      "avgFps": 44.6,
       "p95ms": 33.4,
       "longTasks": 0,
       "longMs": 0,
@@ -22,8 +32,8 @@
     "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
     "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
     "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
-    "Failed to load resource: net::ERR_FAILED",
     "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
     "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
     "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
     "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",

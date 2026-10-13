@@ -977,3 +977,47 @@ Rebuilt as a new component (`SEStory.logic.js` / `.tsx`, styles in `src/styles/s
 | Stats strip fills the gap | Yes |
 
 **Captured:** 30% (a photo developing), 70% (RUNNING / INSTALLING), and 100% (maps + stats).
+
+## Step 17 · Issue 11 The team, "Staff Badges"
+
+The old team cards are replaced by a new component (`SETeam.logic.js` / `.tsx`, styles in `src/styles/team.css`). Gone with them: "browse files", the empty stars and the text flip panel.
+
+**The set:**
+- A clean graphite wall (#2A2C2F) with one soft elliptical light pool and no visible cone.
+- A slim brushed-metal rail.
+- Yellow lanyards printed "SAM ELECTRONICS", with a fabric-weave texture and a slight twist, ending in metal clips with a highlight.
+- PVC badges with rounded corners, gloss, a slot cut-out, a hologram strip and a soft shadow on the wall.
+
+**Roles:** the PDF's "Staff Badges" list (T01 Parts Advisor, T02 Parts Flow Controller, T03 Bench Engineer, T04 Finance & Checkout, T05 Founder).
+- Each badge shows a clean role monogram until photos arrive, then the code, title, name and years.
+- Names that are not yet known read "Name to come".
+- The founder badge is larger, with a gold edge and "Leading since 2003": Tarek Alchoumari, 23 years with us.
+- Reviews are hidden.
+
+**Physics:** each badge is a damped pendulum on its lanyard plus a stretch spring.
+- Drop-in: the title masks in, then the badges fall one by one (120ms stagger), bounce on the lanyard's stretch and swing to rest.
+- Idle: each one sways at its own rhythm, and the hologram shimmers with the sway.
+- Mouse: a badge nudges away from the pointer and swings back.
+
+**Order ticket:** starting 1.8s after the entrance, an ORDER #1294 ticket rides the rail and stops at each badge in turn. Each badge lights with a yellow edge as the ticket passes: Parts Advisor → Parts Flow Controller → Bench Engineer → Finance & Checkout → Founder. It repeats every 12s.
+
+**Flip:** a click swings the badge up and flips it in 3D, with an overshoot for weight. The back shows "What I can help with" (3 points), a short bio and "Ask [name] →", which opens WhatsApp with a prefilled message for that role.
+
+**Speed (headless software rendering):** `#team` peaks at 59.5fps with an average of about 38, below the other sections because five swaying badges repaint every frame.
+- Changes found in testing: the 3D context is only switched on while a badge is turning, the wall shadow is part of the badge layer, and sub-pixel sway updates are skipped.
+- A real GPU composites the rotation directly.
+
+**Arabic:** every new string is added. The founder's name shows in Arabic. The checker is back to its baseline.
+
+### DONE WHEN (Issue 11)
+
+| Item | Result |
+|---|---|
+| Five badges on lanyards, swaying with physics | Yes |
+| No browse files, no empty stars | Yes |
+| Flip with weight | Yes |
+| Order ticket lights badges in order | Yes |
+| Founder badge distinct | Yes |
+| Graphite wall with one light pool | Yes |
+
+**Captured:** after the drop-in, mid ticket journey (Bench Engineer lit), and one badge flipped.

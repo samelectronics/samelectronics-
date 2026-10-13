@@ -19,12 +19,12 @@ import SETeardown from './SETeardown';
 import SEWhatWeOffer from './SEWhatWeOffer';
 import SEWholesale from './SEWholesale';
 import SEStory from './SEStory';
+import SETeam from './SETeam';
 import BootIntro from '../home/sections/BootIntro';
 import Nav from '../home/sections/Nav';
 import Hero from '../home/sections/Hero';
 import RepairLab from '../home/sections/RepairLab';
 import Worldwide from '../home/sections/Worldwide';
-import Team from '../home/sections/Team';
 import OpenToEveryone from '../home/sections/OpenToEveryone';
 import SamCircuit from '../home/sections/SamCircuit';
 import Social from '../home/sections/Social';
@@ -57,7 +57,7 @@ function render(v: Vals) {
             <SEWholesale />
             <Worldwide v={v} />
             <SEStory todayHours={v.todayHours} dirLink={v.dirLink} wa={v.visit?.wa} notify={v.story?.notify} />
-            <Team v={v} />
+            <SETeam />
             <OpenToEveryone v={v} />
             <SamCircuit v={v} />
             <SEHomeSamsoom />
