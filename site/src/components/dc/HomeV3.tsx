@@ -8,7 +8,7 @@ import SEBrandLogo from './SEBrandLogo';
 import SEFMPMenu from './SEFMPMenu';
 import SEFinale from './SEFinale';
 import SEHomeDeals from './SEHomeDeals';
-import SEHomeModels from './SEHomeModels';
+import SEShowcase from './SEShowcase';
 import SEHomeSamsoom from './SEHomeSamsoom';
 import SELauncher from './SELauncher';
 import SELiveBoard from './SELiveBoard';
@@ -52,7 +52,7 @@ function render(v: Vals) {
             <SEWhatWeOffer />
             <SELiveBoard />
             <SEBenchTest />
-            <SEHomeModels />
+            <SEShowcase />
             <SEHomeDeals />
             <RepairLab v={v} />
             <Wholesale v={v} />

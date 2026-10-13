@@ -743,3 +743,55 @@ The section was fully rebuilt as a **pinned scene of about 300vh**. Scrolling dr
 **Frames checked:** 5% · 20% · 35% · 55% · 75% · 92% · 100% of the pin.
 
 **Live:** https://samelectronics.vercel.app
+
+---
+
+## Step 12 · Issue 6 The Showcase (replaces the Model File)
+
+Step 11's deploy was confirmed: Vercel reported success for `af30837`.
+
+**The Model File is removed from the home page** (its component was deleted along with its 3D scene).
+- Browsing by model lives in Find My Part.
+- Every "Brands & models" link (teardown cards, the system map, Samsoom) now opens Find My Part.
+- **New G17 safety net:** any link to a section that isn't on the page opens the "Coming soon" card instead of doing nothing.
+
+**The Showcase:** a warm fog studio with one wide ad stage, graphite on the left and Signal Yellow on the right, with a soft shadow. A slow studio haze drifts behind the product.
+
+**Five screen-grade ads, auto-advancing**
+
+| Grade | Headline | Checklist |
+|---|---|---|
+| Service Pack (lead) | Straight from / the maker's box. | Genuine manufacturer part · Sealed in its service box · Warranty on every grade* |
+| Original | The original. / Nothing less. | Genuine original part · Tested before it ships · Warranty on every grade* |
+| OLED | Deep blacks. / Fair price. | OLED replacement screen · Bright, sharp, responsive · Tested on our bench |
+| Incell | Best value. / Still bright. | Incell replacement screen · Best value for money · Tested on our bench |
+| High Copy | Budget-friendly. / Still tested. | Tested copy (for example GX) · Budget comes first · Checked before it ships |
+
+**The film (each ad about 7.5s)**
+1. The mono grade eyebrow appears.
+2. The headline arrives word by word, blur to sharp.
+3. The product (the parts-library screen render) comes forward from 70% with a 2° overshoot, and its contact shadow forms.
+4. The checklist ticks in, and a "from AED X · sample" badge stamps on. The prices are the lowest sample price per grade.
+5. The hold: a slow ±10° turn, a light sweep over the glass every 3s, the haze drifting.
+6. The exit with depth, then the next ad.
+
+**The Service Pack moment (9.5s):** the sealed service box slides in, the flap lifts, the screen rises out of the box and turns, and a SEALED · GENUINE seal stamps. The packaging has no maker logo.
+
+**Controls:** story-style progress bars (one per ad, clickable); pause while the mouse is over the stage; ‹ › arrows; swipe on touch.
+
+**No simulated quality differences:** every ad shows the same render, and the grades differ in words only. There's no OLED/Incell slider and no back-cover colour ad.
+
+**Checks:** 60fps (3D blocked). Arabic: in Arabic, the headlines render as whole translated lines; grade names stay as written on orders.
+
+### DONE WHEN (Issue 6)
+
+| Item | Result |
+|---|---|
+| Model File removed from home | Yes |
+| Showcase built as a graphite / yellow stage in a warm fog studio | Yes |
+| 5 screen-grade ads per the film, auto-advancing, progress bars, pause, arrows, swipe | Yes |
+| No simulated colour comparisons | Yes |
+
+**Frames checked:** each ad at about 2s; the Service Pack box at 0.8s, 1.4s, 2.2s and 3.2s.
+
+**Live:** https://samelectronics.vercel.app

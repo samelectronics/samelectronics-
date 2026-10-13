@@ -537,7 +537,9 @@ class Component extends DCLogic {
       submit: (e) => { e.preventDefault(); if (flat[sel]) flat[sel].go(); else this.pushRecent(s.spQ); } };
     return { sp, openSearch: () => this.openSearch() };
   }
-  go(id) { const el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 74, behavior: 'smooth' }); }
+  // Issue 6: the Model File left the home page; "Brands & models" opens Find My Part (browsing by model lives there).
+  // G17: any other target that isn't on this page opens the "Coming soon" card instead of doing nothing.
+  go(id) { if (id === 'models') return this.openFmpAt(); const el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 74, behavior: 'smooth' }); else window.dispatchEvent(new CustomEvent('se:soon', { detail: {} })); }
   renderVals() {
     if (!this._extInit) { this._extInit = true; Object.keys(this.ext).forEach((k) => { if (this.state[k] === undefined) this.state[k] = this.ext[k]; }); }
     const s = this.state, D = s.data, P = D ? D.products : [], fmt = (n) => Math.round(n).toLocaleString('en-US'), cl = (x) => Math.min(1, Math.max(0, x)), pad = (n) => String(n).padStart(2, '0');
