@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 /**
+ * ARCHIVED (13 Oct 2026). This one-time converter produced the first version of src/components/ from
+ * design/project on 12 Oct. The components are now maintained by hand (Round 4, 13 Oct), so running it
+ * again would overwrite that work. Kept for reference only.
+ *
  * Converts the Claude Design prototypes in design/project/*.dc.html into React components.
  *
  *   node scripts/dc-codegen.mjs           regenerate everything

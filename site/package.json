@@ -3,12 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dc:build": "node scripts/dc-codegen.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit",
-    "dc:check": "node scripts/dc-codegen.mjs --check"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "next": "^16.4.0",

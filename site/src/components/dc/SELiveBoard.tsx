@@ -1,5 +1,4 @@
-// GENERATED from design/project/SE Live Board.dc.html by scripts/dc-codegen.mjs. Do not edit by hand: change the generator
-// (or detach this file from the generator's COMPONENTS list before hand-editing it).
+// Converted from design/project/SE Live Board.dc.html (12 Oct 2026); maintained by hand since.
 'use client';
 import React from 'react';
 import { type Vals, createDC, cssToObj, cx, s, t } from '@/dc/runtime';

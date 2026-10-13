@@ -1,5 +1,4 @@
-// GENERATED from design/project/Sam Electronics Home v3.dc.html by scripts/dc-codegen.mjs. Do not edit by hand: change the generator
-// (or detach this file from the generator's COMPONENTS list before hand-editing it).
+// Converted from design/project/Sam Electronics Home v3.dc.html (12 Oct 2026); maintained by hand since.
 // Home v3 section "SamsoomChat". Renders against the home page's values (`v`, from HomeV3's logic class).
 'use client';
 import React from 'react';

@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
-import { DC_FONT_CSS, DC_SCRIPTS, DC_TITLE } from '@/dc/head.generated';
+import { DC_FONT_CSS, DC_SCRIPTS, DC_TITLE } from '@/dc/head';
 import { windowFacts } from '@/content/facts';
 import '@/styles/dc-base.css';
-import '@/styles/dc.generated.css';
+import '@/styles/dc.css';
 
 export const metadata: Metadata = {
   title: DC_TITLE ?? 'Sam Electronics',

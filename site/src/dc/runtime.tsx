@@ -4,7 +4,7 @@
  *
  * The prototypes ran on the design tool's "dc" runtime: an HTML template bound with
  * {{ expressions }} plus a logic class (`class Component extends DCLogic`) whose
- * renderVals() feeds the template. scripts/dc-codegen.mjs turns each template into JSX;
+ * renderVals() feeds the template. scripts/archive/dc-codegen.mjs turned each template into JSX (12 Oct);
  * this file reproduces the runtime semantics the logic classes rely on (state, lifecycle,
  * the .sc-host wrapper, text interpolation and style parsing) so the visuals and
  * behaviour stay identical to design/project/.
