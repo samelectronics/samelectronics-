@@ -235,27 +235,32 @@ body {
    G16: the lit state is a pre-drawn layer whose opacity animates (no box-shadow repaint per frame). */
 .se-tick-dot { position: relative; }
 .se-tick-dot::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: #F7C032; box-shadow: 0 0 14px 2px rgba(247, 192, 50, .65); opacity: 0; animation: seTickLit 4s cubic-bezier(.45, 0, .55, 1) infinite; animation-delay: inherit; will-change: opacity; }
-.se-tick-dot svg { position: relative; z-index: 1; animation: seTickIco 4s cubic-bezier(.45, 0, .55, 1) infinite; }
+.se-tick-dot svg { position: relative; z-index: 1; }
+/* 14 Oct §05 E: the graphite check sits on its own layer and fades out just after the light, never through a light colour */
+.se-tick-dot .se-tick-on { position: absolute; z-index: 2; opacity: 0; animation: seTickOn 4s cubic-bezier(.45, 0, .55, 1) infinite; }
+@keyframes seTickOn { 0%, 27%, 100% { opacity: 0; } 4%, 19% { opacity: 1; } }
 .se-tick-txt { animation: seTickTxt 4s cubic-bezier(.45, 0, .55, 1) infinite; }
 @keyframes seTickLit { 0%, 25%, 100% { opacity: 0; } 4%, 18% { opacity: 1; } }
 @keyframes seTickIco { 0%, 25%, 100% { stroke: #F7C032; } 4%, 18% { stroke: #26282B; } }
 @keyframes seTickTxt { 0%, 25%, 100% { color: #D5D7DA; } 4%, 18% { color: #FFFFFF; } }
 
-/* Issue 1B · crystal glass: a soft vertical band of light sweeps across the whole screen every ~6s */
-.se-glass-sweep { position: absolute; inset: 0; overflow: hidden; pointer-events: none; border-radius: inherit; }
+/* 14 Oct §05 C · screen shine: a soft diagonal band (35°, ~18% wide, white 22% at its peak) crosses the glass from the
+   top-left corner to the bottom-right one in 1.2s. One 9.9s loop: iPad sweeps → 1.5s → phone sweeps → 6s rest, never both.
+   Clipped by the screen's own rounded glass (the span sits inside it). --d = half the screen's diagonal travel. */
+.se-glass-sweep { position: absolute; inset: 0; overflow: hidden; pointer-events: none; border-radius: inherit; --d: 220px; }
 .se-glass-sweep::before {
-  content: ''; position: absolute; top: -10%; bottom: -10%; left: 0; width: 38%;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .2) 45%, rgba(255, 255, 255, .26) 50%, rgba(255, 255, 255, .2) 55%, rgba(255, 255, 255, 0));
-  transform: translateX(-120%); animation: seGlassSweep 6s cubic-bezier(.45, 0, .55, 1) infinite; animation-delay: inherit; will-change: transform;
+  content: ''; position: absolute; left: -100%; top: -100%; width: 300%; height: 300%; mix-blend-mode: screen;
+  background: linear-gradient(125deg, rgba(255, 255, 255, 0) 47.6%, rgba(255, 255, 255, .22) 50%, rgba(255, 255, 255, 0) 52.4%);
+  transform: translate(calc(var(--d) * -.82), calc(var(--d) * -.57)); animation: seGlassSweep 9.9s infinite; animation-delay: inherit; will-change: transform;
 }
-@keyframes seGlassSweep { 0%, 76% { transform: translateX(-120%); } 100% { transform: translateX(380%); } }
+/* 14 Oct §05 D · real glass: a faint diagonal reflection (0→4%) on the top-left half, a thin darker bezel ring and a 3–5% edge vignette */
+.se-glass { position: absolute; inset: 0; pointer-events: none; border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255, 255, 255, .04) 0%, rgba(255, 255, 255, .015) 30%, rgba(255, 255, 255, 0) 50%), radial-gradient(130% 110% at 50% 50%, rgba(0, 0, 0, 0) 64%, rgba(0, 0, 0, .045) 100%);
+  box-shadow: inset 0 0 0 1.5px rgba(8, 9, 10, .55); }
+@keyframes seGlassSweep { 0% { transform: translate(calc(var(--d) * -.82), calc(var(--d) * -.57)); animation-timing-function: cubic-bezier(.45, 0, .55, 1); } 12.12%, 100% { transform: translate(calc(var(--d) * .82), calc(var(--d) * .57)); } }
 
 /* Issue 1B · hero phone: pause + browse arrows, shown on hover */
-.se-reel-nav { position: absolute; right: -50px; top: 50%; z-index: 6; display: flex; flex-direction: column; gap: 10px; transform: translateY(-50%); opacity: 0; pointer-events: none; transition: opacity .25s, transform .25s cubic-bezier(.2, .8, .2, 1); }
-.se-reel:hover .se-reel-nav, .se-reel:focus-within .se-reel-nav { opacity: 1; pointer-events: auto; }
-.se-reel-nav button { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; border: none; cursor: pointer; color: #F7C032; background: linear-gradient(180deg, #3D3E3F, #26282B); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 0 0 1px rgba(247, 192, 50, .5), 0 8px 20px rgba(26, 27, 29, .35); transition: box-shadow .2s, transform .2s; }
-.se-reel-nav button:hover { transform: scale(1.06); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 0 0 1.5px #F7C032, 0 0 18px rgba(247, 192, 50, .55); }
-
+.se-reel:hover 
 /* Issue 1B · the ad poster */
 .se-poster { position: relative; display: grid; grid-template-columns: 1.05fr 1fr; align-items: center; gap: 12px; width: min(920px, 100%); min-height: 520px; box-sizing: border-box; padding: 48px 44px 44px 52px; border-radius: 28px; overflow: hidden; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .25), 0 40px 100px rgba(0, 0, 0, .55); animation: seSoonIn .35s cubic-bezier(.2, .8, .2, 1) both; }
 .se-poster::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(235deg, rgba(255, 255, 255, .16) 0%, rgba(255, 255, 255, .04) 22%, rgba(255, 255, 255, 0) 34%); }

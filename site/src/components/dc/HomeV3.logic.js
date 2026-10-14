@@ -467,16 +467,18 @@ class Component extends DCLogic {
     const go = (dir) => {
       const cur = Math.floor(master() / STEP), tgt = ((cur + dir + 10) % 10) * STEP; // the start of that ad's scroll-in
       clearTimeout(holdT); off = tl() - tgt; pausedAt = null; sync();
-      if (hov) holdT = setTimeout(() => { if (hov) pause(); }, 1250); // let it scroll in, then hold it there
+      if (hov) holdT = setTimeout(() => { if (hov) pause(); }, 1250); // the 600ms feed motion + the ad's own entrance, then hold it
     };
-    const wheel = (e) => { e.preventDefault(); const n = Date.now(); if (n - lastGo < 700 || Math.abs(e.deltaY) < 4) return; lastGo = n; go(e.deltaY > 0 ? 1 : -1); };
-    const ts = (e) => { ty = e.touches[0].clientY; }, te = (e) => { if (ty == null) return; const dy = e.changedTouches[0].clientY - ty; ty = null; if (Math.abs(dy) > 30) { e.preventDefault(); this._swiped = Date.now(); go(dy < 0 ? 1 : -1); } };
+    // 14 Oct §05 B: one wheel gesture (events until 250ms of quiet) or one swipe = one ad; the page never scrolls meanwhile
+    let lastW = 0, busyUntil = 0;
+    const wheel = (e) => { e.preventDefault(); const n = Date.now(), fresh = n - lastW > 250; lastW = n; if (!fresh || n < busyUntil || Math.abs(e.deltaY) < 2) return; busyUntil = n + 650; go(e.deltaY > 0 ? 1 : -1); };
+    const ts = (e) => { ty = e.touches[0].clientY; hov = true; clearTimeout(this._rcLeave); pause(); }, tm = (e) => { if (ty != null) e.preventDefault(); }, te = (e) => { if (ty == null) return; const dy = e.changedTouches[0].clientY - ty; ty = null; if (Math.abs(dy) > 30) { e.preventDefault(); this._swiped = Date.now(); go(dy < 0 ? 1 : -1); } clearTimeout(this._rcLeave); this._rcLeave = setTimeout(() => { hov = false; resume(); }, 1000); };
     this._reelSync = setInterval(() => !this.dead && !document.hidden && sync(), 1600);
     window.seReel = { pause, resume, go, master, sync, at: (ms) => { pausedAt = ((ms % D) + D) % D; sync(); } };
     return (this._rc = {
-      ref: (n) => { if (el) { el.removeEventListener('wheel', wheel); el.removeEventListener('touchstart', ts); el.removeEventListener('touchend', te); } el = n; if (n) { n.addEventListener('wheel', wheel, { passive: false }); n.addEventListener('touchstart', ts, { passive: true }); n.addEventListener('touchend', te, { passive: false }); } },
-      enter: () => { hov = true; const into = master() % STEP; clearTimeout(holdT); if (into < 1250) holdT = setTimeout(() => hov && pause(), 1250 - into); else pause(); }, // never freeze a card half-way in
-      leave: () => { hov = false; clearTimeout(holdT); resume(); },
+      ref: (n) => { if (el) { el.removeEventListener('wheel', wheel); el.removeEventListener('touchstart', ts); el.removeEventListener('touchmove', tm); el.removeEventListener('touchend', te); } el = n; if (n) { n.addEventListener('wheel', wheel, { passive: false }); n.addEventListener('touchstart', ts, { passive: true }); n.addEventListener('touchmove', tm, { passive: false }); n.addEventListener('touchend', te, { passive: false }); } },
+      enter: () => { hov = true; clearTimeout(holdT); clearTimeout(this._rcLeave); pause(); }, // 14 Oct §05 B: stops at once, the progress segment freezes
+      leave: () => { clearTimeout(holdT); clearTimeout(this._rcLeave); this._rcLeave = setTimeout(() => { hov = false; resume(); }, 1000); }, // resumes 1s after the pointer leaves
       prev: (e) => { e && e.stopPropagation(); go(-1); },
       next: (e) => { e && e.stopPropagation(); go(1); },
       poster: () => { if (this._swiped && Date.now() - this._swiped < 400) return; this.setState({ posterI: Math.floor(master() / STEP) % 10 }); },
@@ -598,12 +600,14 @@ class Component extends DCLogic {
     const boxes = [[55, 259], [81, 259], [107, 259], [68, 232], [94, 232], [81, 205]].map(([x, y], j) => { const t = 0.6 + j * 0.1; return { x, y, an: this.tlK('hrC' + j, REEL_D, iWhs * 3.2, [[0, 'opacity:0;transform:translateY(-40px)'], [t, 'opacity:0;transform:translateY(-40px)'], [t + 0.01, 'opacity:1;transform:translateY(-40px)', 'cubic-bezier(.3,.6,.4,1)'], [t + 0.37, 'opacity:1;transform:translateY(0) scale(1)', 'ease-in-out'], [t + 0.43, 'opacity:1;transform:translateY(0) scale(1.02,.97)', 'ease-in-out'], [t + 0.53, 'opacity:1;transform:translateY(0) scale(1)'], [3.85, 'opacity:1;transform:translateY(0) scale(1)'], [3.9, 'opacity:0;transform:translateY(-40px)']]) }; });
     const GL = { dark: ['rgba(255,226,150,.42)', 'rgba(255,226,150,.16)'], yel: ['rgba(255,250,228,.8)', 'rgba(255,250,228,.3)'], light: ['rgba(255,206,96,.3)', 'rgba(255,206,96,.11)'] };
     if (!this._gRef) this._gRef = (el) => { this._gcv = el; if (el) { this._gDrawn = 0; this.loadGlobe(); this.drawGlobe(); } };
+    // 14 Oct §05 A: products sit centred between the title (bottom ≈121px) and the description (top 302px): 211.5 vs 228.8
+    const PROD_DY = -17.3;
     const reelAll = ads.map(([kind, th, k, t, d, c], i) => { const lib = !!LIB && LK[kind] != null && kind !== 'scr', f = lib ? bbFit(BB[LK[kind]], 96, 137.3, 96, 228.8) : null;
       const pw = kind === 'scr' ? 64.2 : kind === 'rep' ? rq.pw : kind === 'wld' ? 96 : kind === 'whs' ? 90 : lib ? f.pw : 88, ph = kind === 'scr' ? 137.3 : kind === 'rep' ? rq.ph : kind === 'wld' ? 96 : kind === 'whs' ? 99.5 : lib ? f.ph : 120, Lp = Math.max(pw, ph), gD = r1(Lp * 1.3), cy = 228.8;
       const [l1, l2] = t.split('\n'), G = GL[th];
       return { ...TH[th], kind, k, l1, l2, d, c, straight: lib && BB[LK[kind]] && BB[LK[kind]][5] ? 'rotate(' + BB[LK[kind]][5].toFixed(1) + 'deg)' : 'none', so: f ? r1(96 - f.l) + 'px ' + r1(228.8 - f.t) + 'px' : '50% 50%', isLib: lib, isCss: !LIB && !['scr', 'rep', 'whs', 'wld'].includes(kind), isScr: kind === 'scr', isRep: kind === 'rep', isWhs: kind === 'whs', isWld: kind === 'wld', f: f || { l: 0, t: 0, w: 0, h: 0 }, img: lib ? LIB[LK[kind]] : '', rq, boxes: kind === 'whs' ? boxes : [], gRef: this._gRef,
         gD, gL: r1(96 - gD / 2), gT: r1(cy - gD / 2), glow: 'radial-gradient(closest-side,' + G[0] + ' 0%,' + G[1] + ' 50%,rgba(255,255,255,0) 100%)', sW: r1(pw * 0.8), sL: r1(96 - pw * 0.4), sT: r1(228.8 + ph / 2 - 4),
-        aCard: K.card + dl(i), aEb: K.eb + dl(i), aL1: K.l1 + dl(i), aL2: K.l2 + dl(i), aProd: K.prod + dl(i), aFade: K.fade + dl(i), aBot: K.bot + dl(i), aHold: K.hold + dl(i), aSheen: K.sheen + dl(i), aSheenR: K.sheenR + dl(i) }; });
+        aCard: K.card + dl(i), aEb: K.eb + dl(i), aL1: K.l1 + dl(i), aL2: K.l2 + dl(i), aProd: K.prod + dl(i), aFade: K.fade + dl(i), aBot: K.bot + dl(i), aHold: K.hold + dl(i), aSheen: 'none', aSheenR: 'none', dy: PROD_DY }; }); // 14 Oct §05 C: no light on the products (only the glass shines)
     const PG = { dark: ['rgba(255,255,255,.16)', 'rgba(255,255,255,.8)'], yel: ['rgba(38,40,43,.16)', 'rgba(38,40,43,.72)'], light: ['rgba(38,40,43,.14)', 'rgba(38,40,43,.62)'] };
     const pgFr = (j) => ads.flatMap((a, i) => [[i * 3.2, 'background:' + PG[a[1]][j]], [i * 3.2 + 3.19, 'background:' + PG[a[1]][j]]]);
     // Issue 1B: step-based progress, one segment per ad: finished ads stay filled, the current one is highlighted

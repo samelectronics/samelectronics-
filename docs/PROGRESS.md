@@ -1629,3 +1629,54 @@ DONE WHEN
 - Teardown in AR: text + card on the right, list on the left. **PASS**
 
 **Note:** there is no separate connector line in the current teardown.
+
+## §05 · Hero: phone ads, screen shine, ticks
+**A · Product position:** every ad's product layer (product, glow and floor shadow) moves up 17.3px. It is now centred between the title (bottom ≈121px) and the description (top 302px). Size and angle are unchanged, and the shift is the same for all 10 ads.
+
+Pixel check (phone tilt flattened, product layer diffed):
+
+| Ad | Title → product (px) | Product → text (px) |
+|---|---|---|
+| Screens | 21 | 28 |
+| Batteries | 19 | ≈25 (its soft floor shadow comes within 10) |
+| Back covers | 25 | 24 |
+| Cameras | ≈24 | 24 |
+| Frames | 25 | ≈24 (shadow within 12) |
+| Worldwide | 48 | 51 |
+| Repairs, Wholesale, Flex, Small parts | ≥16.6 by eye | ≥16.6 by eye |
+
+4% of the screen is 16.6px. The Repairs and Wholesale pixel diffs were noisy (their scenes animate), so those two were checked by eye in `m-check.png` / `ads05.png`.
+
+**B · Hover and touch:**
+- Pointer or finger on the phone → it stops immediately and the progress segment freezes.
+- One wheel gesture (events until 250ms of quiet) or one swipe = one ad, with the 600ms feed motion. The page doesn't scroll.
+- It resumes 1s after the pointer leaves.
+- The side arrows and their CSS are removed. The poster pop-up is kept.
+
+Test (`hero05d.mjs`):
+- hover → paused;
+- one 8-event trackpad gesture → exactly +1 ad, page scrollY 0 → 0;
+- still paused 0.6s after leaving, resumed at 1.4s.
+
+**C · Shine:**
+- A diagonal 35° band, about 18% wide, peaking at white 22% (screen blend).
+- 1.2s ease-in-out sweep from the top-left corner to the bottom-right corner.
+- One 9.9s loop: iPad 0–1.2s → phone 2.7–3.9s → rest. Measured: iPad 0.47–1.6s, phone 3.2–4.3s, never both.
+- It sits inside each screen's rounded glass only.
+- The light sheen on the products inside the ads is removed (owner: "only reflect on the screen").
+
+**D · Real glass** (`.se-glass` on both screens):
+- a faint diagonal reflection (white 0→4%) on the top-left half;
+- a 1.5px darker bezel ring;
+- a 4.5% edge vignette.
+- It replaces the strong 16% top-right gloss on the phone (one reflection, not two).
+
+**E · Ticks:**
+- Cause: the check's own stroke was animated yellow ↔ graphite while the yellow light faded, so it passed through light colours. Its delay also wasn't synced with the light.
+- Fix: the yellow check never changes. A separate graphite check layer fades with the light, ending just after it, so the tick never flashes.
+
+DONE WHEN
+- No product touches the title or description (10 ads). **PASS**
+- Hover pauses; wheel/swipe moves one ad; leaving resumes after 1s; no arrows. **PASS**
+- Shine: diagonal, iPad then phone, never together, only on the glass. **PASS**
+- Ticks never flash light when fading. **PASS**

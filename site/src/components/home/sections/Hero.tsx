@@ -424,8 +424,9 @@ export default function Hero({ v }: { v: Vals }) {
               ></span>
               {'\n          '}
               <div style={{ position: 'absolute', inset: '4px', borderRadius: '28px', background: '#08090A', overflow: 'hidden' }}>
-                {/* Issue 1B: the iPad's crystal glass gets the same light sweep, offset so the two never shine together */}
-                <span className="se-glass-sweep" style={{ zIndex: 5, animationDelay: '-3s' }}></span>
+                {/* 14 Oct §05 C/D: the iPad sweeps first (phone 2.7s later, never together); real glass on top */}
+                <span className="se-glass" style={{ zIndex: 5 }}></span>
+                <span className="se-glass-sweep" style={{ zIndex: 6, animationDelay: '0s', ['--d' as string]: '300px' } as React.CSSProperties}></span>
                 <div
                   style={{
                     position: 'absolute',
@@ -823,14 +824,6 @@ export default function Hero({ v }: { v: Vals }) {
               cursor: 'pointer',
             }}
           >
-            <div className="se-reel-nav" onClick={(e) => e.stopPropagation()}>
-              <button type="button" aria-label="Previous ad" onClick={v.reelCtl?.prev}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="m6 15 6-6 6 6" /></svg>
-              </button>
-              <button type="button" aria-label="Next ad" onClick={v.reelCtl?.next}>
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
-              </button>
-            </div>
             {'\n        '}
             <div
               style={{
@@ -932,17 +925,17 @@ export default function Hero({ v }: { v: Vals }) {
                             {'\n                    '}
                             <span
                               style={cssToObj(
-                                `position:absolute;left:${s(v.a?.gL)}px;top:${s(v.a?.gT)}px;width:${s(v.a?.gD)}px;height:${s(v.a?.gD)}px;border-radius:50%;background:${s(v.a?.glow)};animation:${s(v.a?.aFade)}`,
+                                `position:absolute;left:${s(v.a?.gL)}px;top:${s(v.a?.gT)}px;width:${s(v.a?.gD)}px;height:${s(v.a?.gD)}px;border-radius:50%;background:${s(v.a?.glow)};animation:${s(v.a?.aFade)};translate:0 ${s(v.a?.dy)}px`,
                               )}
                             ></span>
                             {'\n                    '}
                             <span
                               style={cssToObj(
-                                `position:absolute;left:${s(v.a?.sL)}px;top:${s(v.a?.sT)}px;width:${s(v.a?.sW)}px;height:12px;border-radius:50%;background:radial-gradient(closest-side,${s(v.a?.shc)},rgba(0,0,0,0));filter:blur(2.5px);animation:${s(v.a?.aFade)}`,
+                                `position:absolute;left:${s(v.a?.sL)}px;top:${s(v.a?.sT)}px;width:${s(v.a?.sW)}px;height:12px;border-radius:50%;background:radial-gradient(closest-side,${s(v.a?.shc)},rgba(0,0,0,0));filter:blur(2.5px);animation:${s(v.a?.aFade)};translate:0 ${s(v.a?.dy)}px`,
                               )}
                             ></span>
                             {'\n                    '}
-                            <div style={cssToObj(`position:absolute;inset:0;transform-origin:96px 229px;animation:${s(v.a?.aProd)}`)}>
+                            <div style={cssToObj(`position:absolute;inset:0;transform-origin:96px 229px;animation:${s(v.a?.aProd)};translate:0 ${s(v.a?.dy)}px`)}>
                               {'\n                      '}
                               <div style={cssToObj(`position:absolute;inset:0;transform-origin:96px 229px;animation:${s(v.a?.aHold)}`)}>
                                 {'\n                        '}
@@ -1498,16 +1491,9 @@ export default function Hero({ v }: { v: Vals }) {
                     }}
                   ></span>
                   {'\n              '}
-                  <div
-                    style={{
-                      position: 'absolute',
-                      inset: '0',
-                      zIndex: '31',
-                      background: 'linear-gradient(235deg,rgba(255,255,255,.16) 0%,rgba(255,255,255,.05) 22%,rgba(255,255,255,0) 34%)',
-                      pointerEvents: 'none',
-                    }}
-                  ></div>
-                  <span className="se-glass-sweep" style={{ zIndex: 32 }}></span>
+                  {/* 14 Oct §05 D: real glass (faint top-left reflection, bezel ring, vignette) replaces the strong top-right gloss */}
+                  <span className="se-glass" style={{ zIndex: 31 }}></span>
+                  <span className="se-glass-sweep" style={{ zIndex: 32, animationDelay: '2.7s', ['--d' as string]: '200px' } as React.CSSProperties}></span>
                   <span
                     aria-hidden="true"
                     style={{
@@ -1709,7 +1695,11 @@ export default function Hero({ v }: { v: Vals }) {
                         boxShadow: 'inset 0 0 0 1px rgba(247,192,50,.5)',
                       }}
                     >
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#F7C032" strokeWidth="3" style={{ animationDelay: __i * 0.8 + 's' }}>
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#F7C032" strokeWidth="3">
+                        <path d="M5 12l5 5L20 7"></path>
+                      </svg>
+                      {/* 14 Oct §05 E: the lit check is a separate graphite layer that fades with the light, so the tick never flashes */}
+                      <svg className="se-tick-on" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#26282B" strokeWidth="3" style={{ animationDelay: __i * 0.8 + 's' }} aria-hidden="true">
                         <path d="M5 12l5 5L20 7"></path>
                       </svg>
                     </span>
