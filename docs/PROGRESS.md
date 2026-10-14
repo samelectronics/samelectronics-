@@ -1186,3 +1186,40 @@ The chat always shows the previous conversation, so there is no empty area. "Ask
 | Launcher pill per G8 on every page | Yes (unchanged) |
 
 **Captured:** after the arrival (wave), mid-typing (thinking dots), and a rich product card answer.
+
+## Step 21 · Issue 15 The Feed + What customers say (split)
+
+The old Social wall is split into two new sections: `SEFeed` (part A) and `SEReviews` (part B), with styles in `src/styles/feed.css`. The blank grey shapes, the static post cards and "No reviews yet" are gone.
+
+**A · The Feed** (graphite studio, light pool, polished floor)
+- Three teardown phones (library front render) fan out at −12°, 0° and +12°, each with a softbox glass reflection, a rim light and a floor reflection.
+- **Entrance:** the phones rise from the floor one by one with an overshoot. Then their screens power on (a scan-line open), inside G14 safe margins.
+- **Instagram:** our posts with library part images, auto-scrolling, with like counters ticking up.
+- **TikTok:** a muted reel. It shows a library camera part in a slow push-in, a progress bar, a mute icon, the like / comment / share rail with counters ticking, and hearts floating up.
+- **Facebook:** the page cover, a Follow button and the post feed.
+- **Hover:** a phone comes forward, straightens and brightens, and the others step back.
+- **Scan to follow:** the QR has a scan light sweeping over it, and the follower counts roll up. These counts are samples, marked as such; the owner confirms the real numbers.
+
+**B · What customers say** (white with soft yellow light)
+- A big Google card: the stars fill one by one, the review count counts up, and there are "Review us on Google" and "Write a review" buttons.
+- Two rows of review cards scroll in opposite directions, with fade overlays, light shadows and a yellow quote mark. Hovering a row pauses it.
+- **Honesty note:** the Company Facts contain no reviews, rating or follower numbers.
+  - The 4.9 rating, the review count and the eight review cards are clearly labelled "Sample review" / "sample until connected", with a line under the rows.
+  - They are placeholders for the real Google reviews, which the PDF says connect at the build stage. Owner action: provide the Google review link and the reviews.
+
+**Speed:**
+- The three playing screens were the cost (59→38fps in software rendering).
+- The Instagram and Facebook feeds now snap-scroll (hold a post, then slide) and every drop-shadow filter in the section is gone.
+- Result: `#social` peaks at 60fps with an average of 46, and `#reviews` runs at 60 with an average of 59.5.
+
+**Arabic:** every new string is added, including the review texts and the places Sharjah and Ajman. The checker is back to its baseline.
+
+### DONE WHEN (Issue 15)
+
+| Item | Result |
+|---|---|
+| No blank shapes, no "No reviews yet" | Yes |
+| Three live-feed phones with entrance and hover | Yes |
+| Reviews band separate with the Google card and two rows | Yes (sample content, labelled) |
+
+**Captured:** the Feed after the entrance, a phone hovered, and the reviews band.

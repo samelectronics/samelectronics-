@@ -1,15 +1,15 @@
 {
   "url": "http://localhost:3100/",
   "viewport": "1440x900",
-  "loadMs": 8400,
-  "loadBlockingMs": 814,
+  "loadMs": 8441,
+  "loadBlockingMs": 927,
   "sections": [
     {
-      "section": "#samsoom",
-      "frames": 218,
+      "section": "#social",
+      "frames": 177,
       "fps": 59.9,
-      "avgFps": 57.9,
-      "p95ms": 16.8,
+      "avgFps": 46.3,
+      "p95ms": 33.4,
       "longTasks": 0,
       "longMs": 0,
       "liveWebGL": 0
@@ -17,8 +17,8 @@
   ],
   "webglCreated": 0,
   "consoleErrors": [
-    "Failed to load resource: net::ERR_INVALID_URL",
     "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
+    "Failed to load resource: net::ERR_INVALID_URL",
     "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
     "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
     "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",

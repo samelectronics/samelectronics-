@@ -10,6 +10,8 @@ import SEFinale from './SEFinale';
 import SEHomeDeals from './SEHomeDeals';
 import SEShowcase from './SEShowcase';
 import SEMeet from './SEMeet';
+import SEFeed from './SEFeed';
+import SEReviews from './SEReviews';
 import SELauncher from './SELauncher';
 import SELiveBoard from './SELiveBoard';
 import SEPart from './SEPart';
@@ -27,7 +29,6 @@ import Nav from '../home/sections/Nav';
 import Hero from '../home/sections/Hero';
 import RepairLab from '../home/sections/RepairLab';
 import Worldwide from '../home/sections/Worldwide';
-import Social from '../home/sections/Social';
 import RequestVisit from '../home/sections/RequestVisit';
 import Footer from '../home/sections/Footer';
 import FindMyPartPanel from '../home/sections/FindMyPartPanel';
@@ -61,7 +62,8 @@ function render(v: Vals) {
             <SEWho />
             <SECircuit />
             <SEMeet />
-            <Social v={v} />
+            <SEFeed />
+            <SEReviews />
             <RequestVisit v={v} />
             <SEFinale />
             <Footer v={v} />
