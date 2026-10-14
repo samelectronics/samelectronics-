@@ -9,7 +9,7 @@ import SEFMPMenu from './SEFMPMenu';
 import SEFinale from './SEFinale';
 import SEHomeDeals from './SEHomeDeals';
 import SEShowcase from './SEShowcase';
-import SEHomeSamsoom from './SEHomeSamsoom';
+import SEMeet from './SEMeet';
 import SELauncher from './SELauncher';
 import SELiveBoard from './SELiveBoard';
 import SEPart from './SEPart';
@@ -60,7 +60,7 @@ function render(v: Vals) {
             <SETeam />
             <SEWho />
             <SECircuit />
-            <SEHomeSamsoom />
+            <SEMeet />
             <Social v={v} />
             <RequestVisit v={v} />
             <SEFinale />

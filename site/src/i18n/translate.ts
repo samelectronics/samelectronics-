@@ -23,6 +23,9 @@ type Rule = [RegExp, (...m: string[]) => string];
 
 const RULES: Rule[] = [
   // Issue 6 showcase
+  [/^Opens at (\d\d:\d\d)$/, (_, t) => `يفتح الساعة ${t}`],
+  [/^(\d+) in stock · Deira$/, (_, n) => `${n} متوفرة · ديرة`],
+  [/^(\d+)–(\d+) days · sample$/, (_, a, b) => `${a}–${b} أيام · عيّنة`],
   [/^AED ([\d,]+) spent$/, (_, n) => `إنفاق AED ${n}`],
   [/^AED ([\d,]+) to go$/, (_, n) => `باقٍ AED ${n}`],
   [/^(\d+) cartons on the pallet$/, (_, n) => `${n} كرتونة على المنصة`],

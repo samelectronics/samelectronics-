@@ -1130,3 +1130,59 @@ Rebuilt as a new component (`SECircuit.logic.js` / `.tsx`, styles in `src/styles
 | Member card tilts | Yes |
 
 **Captured:** after the entrance, mid tier-crossing (Supercharged badge and flash), and the card tilted.
+
+## Step 20 · Issue 14 Meet Samsoom, "Ask at 3 a.m."
+
+Rebuilt as a new component (`SEMeet.logic.js` / `.tsx`), with a new character component `SamsoomLED.tsx` and styles in `src/styles/meet.css`. The white page, the white chat, the blank grey shapes and the cartoon Samsoom on a pedestal are gone.
+
+**The set:** a warm Signal Yellow studio with grain and a soft vignette. Samsoom floats over a warm light pool, and his soft shadow grows lighter as he bobs up.
+
+**Samsoom (LED edition):**
+- His body is the teardown's own phone render from the parts library (front view, graphite frame, glass).
+- His face is glowing yellow pixel-LED eyes and mouth on deep black OLED, drawn as an SVG LED-dot pattern.
+- He has sleek metallic arms (tube, highlight, joint, hand). There is no pedestal.
+- Moods:
+  - idle, with a blink every ~4.6s;
+  - wave, on arrival;
+  - thinking: loading dots in his eyes;
+  - found: ✓ ✓;
+  - happy: a smile;
+  - rare short emotes: wink, a kiss with a floating heart, and a dabke step.
+- His eyes follow the cursor.
+- The small launcher Samsoom (G8) is unchanged and still on every page.
+
+**The film:**
+1. The eyebrow and headline arrive top-left by mask reveal.
+2. Samsoom flies in from the right, slows, settles into a float and waves.
+3. The graphite glass chat slides in at 1.2s and the first question appears.
+
+**The chat:** graphite glass in hero-card style. It loops 5 conversations, each with a typing indicator and a rich answer card:
+1. A54 battery: a product mini-card with the library battery render, the grade, the price and a working Add to cart.
+2. Which grade: the iPhone 13 grades with prices.
+3. Are you open?: a live hours card (Dubai time, open or closed).
+4. Trade prices: the tier steps plus "Open a trade account".
+5. Ship to Iraq: a shipping card with a route arc.
+
+The chat always shows the previous conversation, so there is no empty area. "Ask Samsoom your own question" opens the real chat.
+
+**Idle life:** a breathing bob and blinks. Faint real questions drift in the background, and each new question flies into the chat as the next message.
+
+**Bugs fixed while testing:**
+- An LED pattern fill set from CSS did not resolve, so the fill now sits on the SVG elements.
+- A mood class name collided with the dots class, so the dots class was renamed.
+
+**Arabic:** every new string is added, plus rules for "Opens at…", "N in stock · Deira" and the ETA. The checker is back to its baseline.
+
+**Speed:** `#samsoom` runs at 60fps, with an average of about 55.
+
+### DONE WHEN (Issue 14)
+
+| Item | Result |
+|---|---|
+| No blank shapes, no white panel | Yes |
+| Samsoom built on the teardown phone with an LED face | Yes |
+| Headline on top; all in one screen | Yes |
+| 5 conversations loop with rich cards and emotes | Yes |
+| Launcher pill per G8 on every page | Yes (unchanged) |
+
+**Captured:** after the arrival (wave), mid-typing (thinking dots), and a rich product card answer.
