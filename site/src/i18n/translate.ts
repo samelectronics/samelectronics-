@@ -23,6 +23,7 @@ type Rule = [RegExp, (...m: string[]) => string];
 
 const RULES: Rule[] = [
   // Issue 6 showcase
+  [/^See all (.+) models$/, (_, b) => `كل موديلات ${b}`],
   [/^Closes at (\d\d:\d\d)$/, (_, t) => `يغلق الساعة ${t}`],
   [/^Closes in (\d+h )?(\d+)m$/, (_, h, m) => `يغلق خلال ${h ? h.replace('h ', ' س ') : ''}${m} د`],
   [/^Opens in (\d+h )?(\d+)m$/, (_, h, m) => `يفتح خلال ${h ? h.replace('h ', ' س ') : ''}${m} د`],

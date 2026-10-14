@@ -1211,4 +1211,11 @@ export const ENGINE: Record<string, string> = {
   'QUALITY': 'الجودة',
   'WARRANTY': 'الضمان',
   'PRICE': 'السعر',
+  // Find My Part (Issue 18)
+  'FIND MY PART': 'ابحث عن قطعتي',
+  'Brand, model, part, grade. In seconds.': 'العلامة، الموديل، القطعة، الدرجة. في ثوانٍ.',
+  'results': 'نتيجة',
+  'Open in Shop with these filters': 'افتح في المتجر بهذه الفلاتر',
+  'Search by name or model number': 'ابحث بالاسم أو رقم الموديل',
+  'No model matches. Try a model number, for example A2849.': 'لا يوجد موديل مطابق. جرّب رقم الموديل، مثلاً A2849.',
 };

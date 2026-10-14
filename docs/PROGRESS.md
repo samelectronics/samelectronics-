@@ -1300,7 +1300,7 @@ It is 360px tall, about 40% of a 900px screen.
 
 **Arabic:** in Arabic the headline animates word by word over the translated line. The stats strings are added. The checker is at 2 entries.
 
-**Speed:** `#finale` runs at 60fps, with an average of about 47.
+**Speed:** `#finale` runs at 60fps, with an average of 41.5 (software rendering; the box-shadow glow on the bezel breathes).
 
 ### DONE WHEN (Issue 17)
 
@@ -1313,3 +1313,58 @@ It is 360px tall, about 40% of a 900px screen.
 | Idle continues | Yes |
 
 **Captured:** mid-current (0.6s), the power shockwave (1.25s), the neon words on (2.7s), and complete (5s).
+
+## Step 24 · Issue 18 Find My Part (redesign)
+
+The finder's state and data stay in HomeV3 (brand → model → part → grade, search, series, cart). The panel (`FindMyPartPanel.tsx`) and the nav quick view (`SEFMPMenu.tsx`) are redesigned, with styles in `src/styles/fmp.css`. The trigger button in the nav is unchanged.
+
+**The set:**
+- The page blurs (16px) and dims to graphite at 60%.
+- The panel is graphite glass with real depth: a soft inner light from the top, fine grain, a thin yellow top edge, a large soft shadow and generous padding.
+- Tiles are dark glass with a faint top highlight and a yellow edge glow on hover. There is no grey-on-grey.
+
+**Step indicator:** a circuit with LEDs, Brand · Model · Part · Grade.
+- Completed steps light yellow and show the choice ("Apple ✓"), with current flowing along the wire to the next step.
+- Click a completed step to go back.
+
+**Step 1 · Brand:**
+- 14 brands in a balanced 7 × 2 grid, so there is no orphan row.
+- Each tile has the brand's real logo or wordmark (G18), the models count, the parts in stock and a stock signal.
+- The POPULAR label and its rule sit above the popular tiles with clear space and never touch a tile.
+
+**Step 2 · Model:**
+- Every model sits in an identical lit frame showing a clean silhouette of its front (Dynamic Island, notch, home-button bezel or punch-hole, by model).
+- The owner's image slot sits on top for real photos.
+- Series tabs, instant search by name or model number, and "Recently viewed" and "Most searched" chips.
+
+**Step 3 · Part:** part cards with the parts-library renders (G15), stock and a "from" price. Out-of-stock parts are dimmed, with "Notify me".
+
+**Step 4 · Grade:** grade cards side by side, each with the price, a stock signal, the warranty, a "best for" line and Add to cart with the fly-to-cart moment.
+
+**Quick view:** the nav hover opens a compact mega-dropdown with brands (logos and stock) on the left and models on the right, each with its silhouette image. At its bottom, a full-width "See all [brand] models →" opens the full finder at step 2.
+
+**The film:**
+- The panel rises 24px and scales 96% → 100% (250ms, expo-out).
+- Tiles stagger in 25ms apart.
+- On a choice, the chosen tile flies into the step indicator (300ms) while the next step slides in from the right with depth (320ms). Every transition is under 400ms.
+
+**Footer:** a live summary ("Apple · iPhone 16 Pro Max · Screens"), a rolling result count, and "Open in Shop with these filters →".
+
+**Bugs fixed while testing:**
+- The panel's footer was a `<footer>` element, which the global off-screen pause rule froze. It is now a `div`.
+- A `.st` class collided with Our story's section class, so it was renamed.
+
+**Arabic:** every new string is added. The checker is at 2 entries.
+
+### DONE WHEN (Issue 18)
+
+| Item | Result |
+|---|---|
+| Premium panel | Yes |
+| LED circuit step indicator | Yes |
+| Brand wordmarks, balanced grid, Popular label clear | Yes |
+| Model image frames consistent | Yes |
+| Library part renders; grade cards with Add to cart | Yes |
+| Hover dropdown with a clear path to the full list | Yes |
+
+**Captured:** all 4 steps, the hover dropdown, and one frame mid-transition.
