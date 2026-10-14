@@ -1,26 +1,29 @@
 // @ts-nocheck
 /* eslint-disable */
-// Logic class from design/project/SE Finale.dc.html, unchanged except for this header, the export
-// and webpackIgnore on runtime imports. Converted 12 Oct 2026; maintained by hand since.
+// Finale (Issue 17, rebuilt 13 Oct 2026): "A phone on your bench? We have the part." Styles in src/styles/finale.css.
+// The film is CSS keyframes started when the section is seen (current → power → neon → message); the logic only
+// starts it, counts the stats up once and offers a capture hook (window.seFinale(t) freezes the film at t seconds).
 import React from 'react';
-import { DCLogic, StreamableLogic } from '@/dc/runtime';
-import { registerScene, freshStage } from '@/dc/gl-budget';
+import { DCLogic } from '@/dc/runtime';
 import { site as SITE } from '@/content/facts';
 
 class Component extends DCLogic {
-  state = { on: false, loading: true };
-  secRef = React.createRef(); hostRef = React.createRef(); fs = { start: 0 };
+  state = { on: false };
+  secRef = React.createRef();
   componentDidMount() {
-    this.io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { this.fs.start = performance.now(); this.setState({ on: true }); clearTimeout(this.cT); this.cT = setTimeout(() => this.count(), 6900); } else { this.fs.start = 0; this.setState({ on: false }); } }, { threshold: 0.3 });
+    this.io = new IntersectionObserver(([e]) => { if (e.isIntersecting && !this.state.on) { this.setState({ on: true }); clearTimeout(this.cT); this.cT = setTimeout(() => this.count(), 2600); } }, { threshold: 0.3 });
     setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
-    // G16: the finale scene holds a WebGL context only while it is near the viewport (src/dc/gl-budget.ts).
-    this.unreg = registerScene({ id: 'finale', el: () => this.hostRef.current, mount: async () => { const h = this.hostRef.current; if (!h) return; const stg = freshStage(h); try { const m = await import(/* webpackIgnore: true */ new URL('./se-3d.js', document.baseURI).href); const d = await m.mountFinale(stg.host, this.fs); this.setState({ loading: false }); return () => { d && d(); stg.remove(); }; } catch (e) { console.warn('finale', e && e.message); stg.remove(); this.setState({ loading: false }); } } });
+    this.onLang = () => this.forceUpdate(); window.addEventListener('se:lang', this.onLang);
+    window.seFinale = (t) => { this.setState({ on: true }, () => { const R = this.secRef.current; if (!R) return; R.getAnimations({ subtree: true }).forEach((a) => { a.pause(); a.currentTime = t * 1000 + (a.effect && a.effect.getTiming ? 0 : 0); }); if (t > 3) R.querySelectorAll('[data-fn]').forEach((el) => (el.textContent = Number(el.getAttribute('data-fn')).toLocaleString('en-US'))); }); };
   }
-  componentWillUnmount() { clearTimeout(this.cT); this.io && this.io.disconnect(); this.unreg && this.unreg(); }
-  count() { const r = this.secRef.current; if (!r) return; const els = [...r.querySelectorAll('[data-fn]')], t0 = performance.now(); const f = (t) => { const k = Math.min(1, (t - t0) / 1400), e = 1 - Math.pow(1 - k, 3); els.forEach((el) => (el.textContent = Math.round(Number(el.getAttribute('data-fn')) * e).toLocaleString('en-US'))); if (k < 1) requestAnimationFrame(f); }; requestAnimationFrame(f); }
+  componentWillUnmount() { window.removeEventListener('se:lang', this.onLang); clearTimeout(this.cT); cancelAnimationFrame(this.raf); this.io && this.io.disconnect(); }
+  count() { const r = this.secRef.current; if (!r) return; const els = [...r.querySelectorAll('[data-fn]')], t0 = performance.now();
+    const f = (t) => { const k = Math.min(1, (t - t0) / 1400), e = 1 - Math.pow(1 - k, 3); els.forEach((el) => (el.textContent = Math.round(Number(el.getAttribute('data-fn')) * e).toLocaleString('en-US'))); if (k < 1) this.raf = requestAnimationFrame(f); };
+    this.raf = requestAnimationFrame(f); }
   renderVals() {
-    const D = window.SE_DATA;
-    return { secRef: this.secRef, hostRef: this.hostRef, on: this.state.on, loading: this.state.loading,
+    const D = window.SE_DATA, L = window.seI18n, line = 'A phone on your bench? We have the part.';
+    const head = (L && L.lang() === 'ar' ? L.tr(line) : line).split(' '); // word by word, in the visitor's language
+    return { secRef: this.secRef, on: this.state.on, head,
       wa: D ? 'https://wa.me/' + D.contact.wa + '?text=' + encodeURIComponent('Hi Sam Electronics, I found you on your website.') : '#',
       dir: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(SITE.contact.plusCode + ' Dubai'),
       browse: (ev) => { ev.preventDefault(); window.dispatchEvent(new CustomEvent('se:go', { detail: { id: 'offer' } })); } };

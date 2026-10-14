@@ -1205,4 +1205,10 @@ export const ENGINE: Record<string, string> = {
   'fields printed': 'حقول مطبوعة',
   'Closed now': 'مغلق الآن',
   'SENT': 'أُرسل',
+  // Finale (Issue 17)
+  'years': 'عاماً',
+  'parts · sample': 'قطعة · عيّنة',
+  'QUALITY': 'الجودة',
+  'WARRANTY': 'الضمان',
+  'PRICE': 'السعر',
 };

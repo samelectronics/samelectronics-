@@ -1267,3 +1267,49 @@ The idea is kept: tabs plus a printed work order. It is rebuilt as `SEVisit.logi
 | No circuit near the console | Yes |
 
 **Captured:** mid-typing with printed lines, mid tear (SENT stamped), and the visit card.
+
+## Step 23 · Issue 17 Finale, "A phone on your bench? We have the part."
+
+Full rebuild (`SEFinale.logic.js` / `.tsx`, styles in `src/styles/finale.css`). The grey slab phone, the white slash, the floor box and the grey band are gone. The finale no longer needs a WebGL context: it is CSS and SVG only, so it also leaves the G16 GL budget.
+
+**The set:**
+- A deep graphite stage (#26282B at the edges to #34363A at the centre, never black).
+- One soft key light on the emblem with no visible cone, and dust falling slowly in the light (G12).
+- A polished floor with the emblem's fading reflection.
+
+**The emblem:** the owner's exact logo (`public/assets/se-logo.png`) set as the face of a premium object:
+- a machined-metal conic bezel;
+- a domed glass face with studio reflections;
+- a thick yellow edge that glows;
+- a darker back plate for depth.
+
+It is 360px tall, about 40% of a 900px screen.
+
+**The film:**
+1. **0–1s:** circuits from both sides, in the hero style, carry current streaks towards the emblem.
+2. **1.0–1.6s:** power. The two phones inside the logo light up, a soft ring of light shockwaves out across the floor, and the circuits glow fully for a moment.
+3. **1.6–3.0s:** QUALITY · WARRANTY · PRICE switch on one by one like neon signs (flicker, pause, steady), each with a glow on the floor beneath it.
+4. **2.4–3.6s:** the headline reveals word by word, the buttons rise in and the stats count up.
+
+**Idle life:**
+- The emblem turns slowly in 3D (±16°) while a key-light sweep crosses its glass.
+- Current keeps flowing and the edge glow breathes.
+- The neon words breathe softly.
+
+**Circuits:** they stay at emblem height and end at the bezel. None crosses or comes near a word. The audit lists them against the emblem image, which is intended, because the current has to reach the emblem.
+
+**Arabic:** in Arabic the headline animates word by word over the translated line. The stats strings are added. The checker is at 2 entries.
+
+**Speed:** `#finale` runs at 60fps, with an average of about 47.
+
+### DONE WHEN (Issue 17)
+
+| Item | Result |
+|---|---|
+| No phone, slash, floor box or grey band | Yes |
+| Emblem large, premium, rotating | Yes |
+| Power-up plays in order | Yes |
+| No circuit crosses any word | Yes |
+| Idle continues | Yes |
+
+**Captured:** mid-current (0.6s), the power shockwave (1.25s), the neon words on (2.7s), and complete (5s).

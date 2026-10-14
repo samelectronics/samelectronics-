@@ -1,319 +1,110 @@
-// Converted from design/project/SE Finale.dc.html (12 Oct 2026); maintained by hand since.
+// Finale (Issue 17): rebuilt 13 Oct 2026 as a power-up film. Styles in src/styles/finale.css.
+// The emblem is the owner's exact logo (public/assets/se-logo.png) set into a machined-metal bezel under glass,
+// with a thick glowing yellow edge; the two phones inside it light up when the current arrives.
 'use client';
 import React from 'react';
-import { type Vals, createDC, cx } from '@/dc/runtime';
+import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SEFinale.logic.js';
-import SESamsoom from './SESamsoom';
+
+// circuits (hero style) from both sides to the emblem's bezel; they stay at emblem height, never near the words
+const LEFT = ['M0 210 H180 L220 250 H420 L450 220 H546', 'M0 300 H140 L180 340 H420 L450 310 H548', 'M0 390 H240 L290 350 H556'];
+const mirror = (d: string) => d.replace(/([MHL]) ?(\d+)/g, (m, c, x) => (c === 'M' || c === 'L' || c === 'H' ? c + (1440 - Number(x)) : m));
+const RIGHT = LEFT.map(mirror);
+const WORDS = ['QUALITY', 'WARRANTY', 'PRICE'];
+const HEAD = ['A', 'phone', 'on', 'your', 'bench?', 'We', 'have', 'the', 'part.'];
+
+function Emblem({ refl }: { refl?: boolean }) {
+  return (
+    <div className={'fn-emb' + (refl ? ' refl' : '')} aria-hidden={refl ? true : undefined}>
+      <span className="fn-edge" />
+      <span className="fn-bezel" />
+      <span className="fn-face">
+        <img src="/assets/se-logo.png" alt={refl ? '' : 'Sam Electronics'} draggable={false} />
+        <i className="scr a" />
+        <i className="scr b" />
+      </span>
+      <span className="fn-glass" />
+      <span className="fn-sweep" />
+    </div>
+  );
+}
 
 function render(v: Vals) {
   return (
-    <>
-      <section
-        id="cta"
-        ref={v.secRef}
-        data-tone="dark"
-        data-screen-label="19 Finale"
-        style={{
-          position: 'relative',
-          overflow: 'hidden',
-          background: 'linear-gradient(180deg,#3D3E3F 0%,#2E3033 55%,#1F2022 100%)',
-          color: '#FFFFFF',
-          padding: '120px clamp(20px,4vw,64px)',
-        }}
-      >
-        {'\n  '}
-        <div
-          style={{
-            position: 'absolute',
-            left: '50%',
-            top: '-12%',
-            width: '1100px',
-            height: '1000px',
-            marginLeft: '-550px',
-            background:
-              'conic-gradient(from 160deg at 50% 0%,rgba(255,255,255,0) 0deg,rgba(255,255,255,.11) 20deg,rgba(255,255,255,0) 40deg)',
-            WebkitMaskImage: 'linear-gradient(180deg,#000,transparent 85%)',
-            maskImage: 'linear-gradient(180deg,#000,transparent 85%)',
-            animation: 'fnBeam 5s cubic-bezier(.45,0,.55,1) infinite',
-            pointerEvents: 'none',
-          }}
-        ></div>
-        {'\n  '}
-        {v.on ? (
-          <>
-            {'\n    '}
-            <svg
-              viewBox="0 0 1440 900"
-              preserveAspectRatio="none"
-              style={{
-                position: 'absolute',
-                inset: '0',
-                width: '100%',
-                height: '100%',
-                pointerEvents: 'none',
-                animation: 'fnTrace .4s 3.5s both',
-              }}
-              fill="none"
-              strokeLinecap="round"
-            >
-              {'\n      '}
-              <g stroke="rgba(247,192,50,.3)" strokeWidth="2">
-                <path d="M0 380 H420 L460 340 H600"></path>
-                <path d="M1440 380 H1020 L980 340 H840"></path>
-                <path d="M0 560 H360 L400 520 H600"></path>
-                <path d="M1440 560 H1080 L1040 520 H840"></path>
-              </g>
-              {'\n      '}
-              <g stroke="#FFDB6E" strokeWidth="3" strokeDasharray="120 880" style={{ filter: 'drop-shadow(0 0 5px #F7C032)' }}>
-                <path
-                  pathLength="1000"
-                  d="M0 380 H420 L460 340 H600"
-                  style={{ animation: 'fnRace 1s 3.5s cubic-bezier(.45,0,.55,1) both, fnRace 3s 4.5s linear infinite' }}
-                ></path>
-                <path
-                  pathLength="1000"
-                  d="M1440 380 H1020 L980 340 H840"
-                  style={{ animation: 'fnRace 1s 3.6s cubic-bezier(.45,0,.55,1) both, fnRace 3.4s 4.6s linear infinite' }}
-                ></path>
-                <path
-                  pathLength="1000"
-                  d="M0 560 H360 L400 520 H600"
-                  style={{ animation: 'fnRace 1s 3.7s cubic-bezier(.45,0,.55,1) both, fnRace 3.8s 4.7s linear infinite' }}
-                ></path>
-                <path
-                  pathLength="1000"
-                  d="M1440 560 H1080 L1040 520 H840"
-                  style={{ animation: 'fnRace 1s 3.8s cubic-bezier(.45,0,.55,1) both, fnRace 3.2s 4.8s linear infinite' }}
-                ></path>
-              </g>
-              {'\n    '}
-            </svg>
-            {'\n  '}
-          </>
-        ) : null}
-        {'\n  '}
-        <div
-          style={{
-            position: 'relative',
-            maxWidth: '1312px',
-            margin: '0 auto',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '24px',
-            textAlign: 'center',
-          }}
-        >
-          {'\n    '}
-          <div style={{ position: 'relative', width: 'min(560px,100%)', height: '440px' }}>
-            {'\n      '}
-            <div ref={v.hostRef} style={{ position: 'absolute', inset: '0' }}>
-              <canvas style={{ position: 'absolute', inset: '0', width: '100%', height: '100%', display: 'block' }}></canvas>
-            </div>
-            {'\n      '}
-            {v.loading ? (
-              <>
-                <span
-                  style={{
-                    position: 'absolute',
-                    left: '50%',
-                    top: '50%',
-                    width: '30px',
-                    height: '30px',
-                    margin: '-15px 0 0 -15px',
-                    borderRadius: '50%',
-                    boxShadow: 'inset 0 0 0 2px rgba(255,255,255,.12)',
-                    borderTop: '2px solid #F7C032',
-                    boxSizing: 'border-box',
-                    animation: 'fnSpin 1s linear infinite',
-                  }}
-                ></span>
-              </>
-            ) : null}
-            {'\n      '}
-            {v.on ? (
-              <>
-                <span
-                  style={{
-                    position: 'absolute',
-                    right: '-20px',
-                    bottom: '40px',
-                    animation: 'fnPop .6s 6.4s cubic-bezier(.2,.8,.2,1) both',
-                  }}
-                >
-                  <SESamsoom mood="wave" size={120} />
-                </span>
-              </>
-            ) : null}
-            {'\n    '}
-          </div>
-          {'\n    '}
-          {v.on ? (
-            <>
-              {'\n      '}
-              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '22px' }}>
-                {'\n        '}
-                <span
-                  style={{
-                    display: 'flex',
-                    gap: '18px',
-                    fontFamily: "'Space Grotesk',sans-serif",
-                    fontWeight: '700',
-                    fontSize: 'clamp(22px,2.2vw,30px)',
-                    letterSpacing: '.04em',
-                  }}
-                >
-                  <span style={{ color: '#5E6064', animation: 'fnWord .4s 4.5s both' }}>Quality</span>
-                  <span style={{ color: '#5E6064' }}>·</span>
-                  <span style={{ color: '#5E6064', animation: 'fnWord .4s 5.0s both' }}>Warranty</span>
-                  <span style={{ color: '#5E6064' }}>·</span>
-                  <span style={{ color: '#5E6064', animation: 'fnWord .4s 5.5s both' }}>Price</span>
-                </span>
-                {'\n        '}
-                <h2
-                  style={{
-                    margin: '0',
-                    fontFamily: "'Space Grotesk',sans-serif",
-                    fontWeight: '700',
-                    fontSize: 'clamp(44px,5vw,76px)',
-                    lineHeight: '1',
-                    letterSpacing: '-.045em',
-                    textWrap: 'balance',
-                    maxWidth: '900px',
-                    animation: 'fnRise .7s 6.0s cubic-bezier(.2,.8,.2,1) both',
-                  }}
-                >
-                  A phone on your bench? We have the part.
-                </h2>
-                {'\n        '}
-                <div
-                  style={{
-                    display: 'flex',
-                    gap: '10px',
-                    flexWrap: 'wrap',
-                    justifyContent: 'center',
-                    animation: 'fnRise .7s 6.4s cubic-bezier(.2,.8,.2,1) both',
-                  }}
-                >
-                  {'\n          '}
-                  <a
-                    href="#offer"
-                    onClick={v.browse}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px',
-                      height: '52px',
-                      padding: '0 22px',
-                      borderRadius: '10px',
-                      background: '#F7C032',
-                      color: '#1A1B1D',
-                      fontSize: '16px',
-                      fontWeight: '600',
-                      textDecoration: 'none',
-                      transition: 'transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s',
-                    }}
-                    className={cx(undefined, 'scp-c5046113')}
-                  >
-                    Browse all parts
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
-                      <path d="M5 12h14M13 6l6 6-6 6"></path>
-                    </svg>
-                  </a>
-                  {'\n          '}
-                  <a
-                    href={v.wa}
-                    target="_blank"
-                    rel="noopener"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px',
-                      height: '52px',
-                      padding: '0 22px',
-                      borderRadius: '10px',
-                      border: '1.5px solid rgba(255,255,255,.5)',
-                      color: '#FFFFFF',
-                      fontSize: '16px',
-                      fontWeight: '600',
-                      textDecoration: 'none',
-                    }}
-                    className={cx(undefined, 'scp-9ee067bf')}
-                  >
-                    WhatsApp us
-                  </a>
-                  {'\n          '}
-                  <a
-                    href={v.dir}
-                    target="_blank"
-                    rel="noopener"
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px',
-                      height: '52px',
-                      padding: '0 22px',
-                      borderRadius: '10px',
-                      border: '1.5px solid rgba(255,255,255,.5)',
-                      color: '#FFFFFF',
-                      fontSize: '16px',
-                      fontWeight: '600',
-                      textDecoration: 'none',
-                    }}
-                    className={cx(undefined, 'scp-9ee067bf')}
-                  >
-                    Visit Deira
-                  </a>
-                  {'\n        '}
-                </div>
-                {'\n        '}
-                <span
-                  style={{
-                    display: 'flex',
-                    gap: '28px',
-                    fontFamily: "'JetBrains Mono',monospace",
-                    fontSize: '13px',
-                    color: '#C9CBCE',
-                    animation: 'fnRise .7s 6.8s cubic-bezier(.2,.8,.2,1) both',
-                  }}
-                >
-                  <span>
-                    <span
-                      data-fn="20"
-                      style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: '700', fontSize: '22px', color: '#FFFFFF' }}
-                    >
-                      20
-                    </span>
-                    + years
-                  </span>
-                  <span>
-                    <span
-                      data-fn="14"
-                      style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: '700', fontSize: '22px', color: '#FFFFFF' }}
-                    >
-                      14
-                    </span>
-                    {' brands'}
-                  </span>
-                  <span>
-                    <span
-                      data-fn="9000"
-                      style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: '700', fontSize: '22px', color: '#FFFFFF' }}
-                    >
-                      9,000
-                    </span>
-                    + parts · sample
-                  </span>
-                </span>
-                {'\n      '}
-              </div>
-              {'\n    '}
-            </>
-          ) : null}
-          {'\n  '}
+    <section ref={v.secRef} id="finale" data-tone="dark" data-screen-label="Finale" className={'fn' + (v.on ? ' fn-on' : '')}>
+      <span className="fn-key" aria-hidden="true" />
+      <div className="fn-dust" aria-hidden="true">
+        {Array.from({ length: 16 }, (_, i) => (
+          <i key={i} style={{ ['--i' as string]: i } as React.CSSProperties} />
+        ))}
+      </div>
+      <svg className="fn-circ" viewBox="0 0 1440 520" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
+        {[...LEFT, ...RIGHT].map((d, i) => (
+          <g key={i}>
+            <path d={d} className="base" />
+            <path d={d} className="cur" pathLength={1} style={{ animationDelay: (i % 3) * 0.12 + 's' }} />
+            <path d={d} className="glow" />
+          </g>
+        ))}
+      </svg>
+      <div className="fn-stage">
+        <span className="fn-shock" aria-hidden="true" />
+        <div className="fn-rot">
+          <Emblem />
         </div>
-      </section>
-    </>
+        <div className="fn-reflw" aria-hidden="true">
+          <div className="fn-rot">
+            <Emblem refl />
+          </div>
+        </div>
+      </div>
+      <div className="fn-words">
+        {WORDS.map((w, i) => (
+          <React.Fragment key={w}>
+            {i ? <i className="fn-dotw" aria-hidden="true" /> : null}
+            <span className="fn-neon" style={{ ['--i' as string]: i } as React.CSSProperties}>
+              {w}
+              <em aria-hidden="true" />
+            </span>
+          </React.Fragment>
+        ))}
+      </div>
+      <div className="fn-msg">
+        <h2 className="fn-h" data-no-i18n="">
+          {(v.head || HEAD).map((w: string, i: number) => (
+            <React.Fragment key={i}>
+              {i ? ' ' : null}
+              <span style={{ animationDelay: 2.4 + i * 0.09 + 's' }}>{w}</span>
+            </React.Fragment>
+          ))}
+        </h2>
+        <div className="fn-acts">
+          <a href="#offer" onClick={v.browse} className="fn-btn yel">
+            Browse all parts
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </a>
+          <a href={v.wa} target="_blank" rel="noopener noreferrer" className="fn-btn line">
+            WhatsApp us
+          </a>
+          <a href={v.dir} target="_blank" rel="noopener noreferrer" className="fn-btn line">
+            Visit Deira
+          </a>
+        </div>
+        <div className="fn-stats">
+          <span>
+            <b data-fn="20">20</b>+ <small>years</small>
+          </span>
+          <span>
+            <b data-fn="14">14</b> <small>brands</small>
+          </span>
+          <span>
+            <b data-fn="9000">9,000</b>+ <small>parts · sample</small>
+          </span>
+        </div>
+      </div>
+    </section>
   );
 }
 

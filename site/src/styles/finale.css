@@ -1,0 +1,81 @@
+/* Issue 17 · Finale: deep graphite stage, one soft key light, the emblem powers up, the promises switch on like neon */
+.fn { position: relative; overflow: hidden; min-height: 900px; padding: 70px 0 80px; background: radial-gradient(60% 55% at 50% 34%, #34363A, #2A2C2F 60%, #26282B); color: #fff; text-align: center; }
+.fn::after { content: ''; position: absolute; left: 0; right: 0; top: 470px; bottom: 0; background: linear-gradient(180deg, rgba(20, 21, 23, 0), rgba(20, 21, 23, .45)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .04); pointer-events: none; }
+.fn-key { position: absolute; left: 50%; top: -120px; width: 760px; height: 620px; margin-left: -380px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 244, 222, .16), rgba(255, 244, 222, 0)); pointer-events: none; }
+.fn-dust i { position: absolute; left: calc(40% + (var(--i) * 37 % 20) * 1%); top: -10px; width: 3px; height: 3px; border-radius: 50%; background: rgba(255, 240, 210, .55); animation: fnDust calc(9s + var(--i) * .7s) calc(var(--i) * -1.3s) linear infinite; }
+@keyframes fnDust { from { transform: translate(0, 0); opacity: 0; } 10% { opacity: .9; } 90% { opacity: .6; } to { transform: translate(calc(-20px + var(--i) * 3px), 520px); opacity: 0; } }
+
+/* circuits: current runs in from both sides (0–1s), glows fully at power (1.0–1.6s), then keeps flowing */
+.fn-circ { position: absolute; left: 0; top: 0; width: 100%; height: 520px; pointer-events: none; }
+.fn-circ path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.fn-circ .base { stroke: rgba(255, 255, 255, .1); stroke-width: 2; }
+.fn-circ .cur { stroke: #FFDB6E; stroke-width: 2.5; stroke-dasharray: .12 .88; stroke-dashoffset: 1.12; opacity: 0; filter: drop-shadow(0 0 4px #F7C032); }
+.fn-on .fn-circ .cur { animation: fnCur 1s cubic-bezier(.5, 0, .7, 1) both, fnFlow 2.6s 1.6s linear infinite; }
+@keyframes fnCur { 0% { stroke-dashoffset: 1.12; opacity: 1; } 100% { stroke-dashoffset: 0; opacity: 1; } }
+@keyframes fnFlow { from { stroke-dashoffset: 1.12; opacity: .8; } to { stroke-dashoffset: 0; opacity: .8; } }
+.fn-circ .glow { stroke: #F7C032; stroke-width: 2; opacity: 0; }
+.fn-on .fn-circ .glow { animation: fnGlow 1.6s 1s ease-out both; }
+@keyframes fnGlow { 0% { opacity: 0; } 20% { opacity: .9; } 100% { opacity: .22; } }
+
+/* the emblem */
+.fn-stage { position: relative; z-index: 1; width: 360px; height: 360px; margin: 0 auto; perspective: 1100px; }
+.fn-rot { position: absolute; inset: 0; transform-style: preserve-3d; }
+.fn-on .fn-rot { animation: fnTurn 14s 3.6s ease-in-out infinite; }
+@keyframes fnTurn { 0%, 100% { transform: rotateY(-16deg) rotateX(3deg); } 50% { transform: rotateY(16deg) rotateX(-2deg); } }
+.fn-emb { position: absolute; inset: 0; transform-style: preserve-3d; }
+.fn-edge { position: absolute; inset: 0; border-radius: 50%; transform: translateZ(-14px); background: linear-gradient(90deg, #1A1B1D, #3D3E3F 50%, #1A1B1D); box-shadow: 0 40px 60px -20px rgba(0, 0, 0, .9); }
+.fn-bezel { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 200deg, #6B6E73, #F2F3F4 12%, #8E9196 25%, #3D3E3F 40%, #C9CCD0 55%, #5E6064 70%, #E4E5E7 84%, #6B6E73); box-shadow: 0 0 0 5px #F7C032, 0 0 0 7px rgba(255, 219, 110, .5), inset 0 0 0 2px rgba(0, 0, 0, .3); transition: box-shadow .4s; }
+.fn-on .fn-bezel { animation: fnEdge 1.6s 1s ease-out both, fnEdgeIdle 3.2s 2.6s ease-in-out infinite; }
+@keyframes fnEdge { 0% { box-shadow: 0 0 0 5px #C9921A, 0 0 0 7px rgba(255, 219, 110, 0), inset 0 0 0 2px rgba(0, 0, 0, .3); } 25% { box-shadow: 0 0 0 6px #FFDB6E, 0 0 60px 18px rgba(247, 192, 50, .8), inset 0 0 0 2px rgba(0, 0, 0, .3); } 100% { box-shadow: 0 0 0 5px #F7C032, 0 0 34px 6px rgba(247, 192, 50, .45), inset 0 0 0 2px rgba(0, 0, 0, .3); } }
+@keyframes fnEdgeIdle { 0%, 100% { box-shadow: 0 0 0 5px #F7C032, 0 0 34px 6px rgba(247, 192, 50, .45), inset 0 0 0 2px rgba(0, 0, 0, .3); } 50% { box-shadow: 0 0 0 5px #F7C032, 0 0 44px 10px rgba(247, 192, 50, .55), inset 0 0 0 2px rgba(0, 0, 0, .3); } }
+.fn-face { position: absolute; inset: 16px; border-radius: 50%; overflow: hidden; background: #fff; box-shadow: inset 0 6px 16px rgba(0, 0, 0, .35); transform: translateZ(2px); }
+.fn-face img { position: absolute; inset: -2%; width: 104%; height: 104%; object-fit: cover; }
+.fn-face .scr { position: absolute; border-radius: 6px; background: radial-gradient(80% 70% at 50% 40%, #FFF4D1, #FFDB6E 60%, #F7C032); mix-blend-mode: multiply; opacity: 0; }
+.fn-face .scr.a { left: 23.5%; top: 19%; width: 30%; height: 51%; }
+.fn-face .scr.b { left: 54.5%; top: 26%; width: 22%; height: 44%; }
+.fn-on .fn-face .scr { animation: fnScr 1.4s 1s ease-out both; }
+@keyframes fnScr { 0% { opacity: 0; } 15% { opacity: 1; } 30% { opacity: .5; } 45%, 100% { opacity: .9; } }
+.fn-glass { position: absolute; inset: 16px; border-radius: 50%; transform: translateZ(4px); background: radial-gradient(70% 50% at 30% 18%, rgba(255, 255, 255, .55), rgba(255, 255, 255, 0) 60%), linear-gradient(160deg, rgba(255, 255, 255, .14), rgba(255, 255, 255, 0) 40%, rgba(0, 0, 0, .08)); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .5); }
+.fn-sweep { position: absolute; inset: 16px; border-radius: 50%; overflow: hidden; transform: translateZ(5px); }
+.fn-sweep::after { content: ''; position: absolute; top: -20%; bottom: -20%; left: 0; width: 34%; background: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .45), rgba(255, 255, 255, 0)); transform: translateX(-140%) skewX(-12deg); }
+.fn-on .fn-sweep::after { animation: fnSweep 7s 3.6s ease-in-out infinite; }
+@keyframes fnSweep { 0%, 60% { transform: translateX(-140%) skewX(-12deg); } 100% { transform: translateX(420%) skewX(-12deg); } }
+.fn-emb:not(.refl) { opacity: 0; transform: translateY(30px) scale(.94); }
+.fn-on .fn-emb { animation: fnEmb 1.2s .2s cubic-bezier(.2, .9, .3, 1) both; }
+@keyframes fnEmb { to { opacity: 1; transform: none; } }
+/* the floor reflection, fading */
+.fn-reflw { position: absolute; left: 0; right: 0; top: 100%; height: 150px; overflow: hidden; opacity: .18; transform: scaleY(-1); transform-origin: 50% 0; margin-top: 18px; }
+.fn-reflw .fn-rot { top: -210px; height: 360px; }
+.fn-reflw::after { content: ''; position: absolute; inset: 0; transform: scaleY(-1); background: linear-gradient(180deg, rgba(38, 40, 43, 0), #26282B 90%); }
+.fn-emb.refl { opacity: 1; }
+/* power: a soft ring of light shockwaves across the floor */
+.fn-shock { position: absolute; left: 50%; top: 100%; width: 300px; height: 70px; margin: -10px 0 0 -150px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(255, 219, 110, .8), 0 0 30px 8px rgba(247, 192, 50, .45); opacity: 0; }
+.fn-on .fn-shock { animation: fnShock 1.4s 1.05s cubic-bezier(.2, .8, .3, 1) both; }
+@keyframes fnShock { 0% { opacity: 0; transform: scale(.4); } 4% { opacity: 1; transform: scale(.5); } 100% { opacity: 0; transform: scale(4.2, 2.6); } }
+
+/* the three promises switch on like neon signs */
+.fn-words { position: relative; z-index: 1; display: flex; justify-content: center; align-items: center; gap: 30px; margin-top: 60px; }
+.fn-neon { position: relative; font: 700 62px/1 'Space Grotesk', sans-serif; letter-spacing: .06em; color: rgba(255, 219, 110, .14); }
+.fn-neon em { position: absolute; left: 10%; right: 10%; top: 100%; height: 26px; margin-top: 6px; border-radius: 50%; background: radial-gradient(closest-side, rgba(247, 192, 50, .45), rgba(247, 192, 50, 0)); opacity: 0; }
+.fn-on .fn-neon { animation: fnNeon 1s calc(1.6s + var(--i) * .45s) linear both, fnBreathe 3.4s calc(2.8s + var(--i) * .45s) ease-in-out infinite; }
+.fn-on .fn-neon em { animation: fnFloor 1s calc(1.6s + var(--i) * .45s) linear both; }
+@keyframes fnNeon { 0% { color: rgba(255, 219, 110, .14); text-shadow: none; } 10% { color: #FFF4D1; text-shadow: 0 0 8px #F7C032, 0 0 26px rgba(247, 192, 50, .8); } 16% { color: rgba(255, 219, 110, .2); text-shadow: none; } 24% { color: #FFF4D1; text-shadow: 0 0 8px #F7C032, 0 0 26px rgba(247, 192, 50, .8); } 30%, 55% { color: rgba(255, 219, 110, .25); text-shadow: none; } 70%, 100% { color: #FFE58F; text-shadow: 0 0 6px #F7C032, 0 0 22px rgba(247, 192, 50, .7), 0 0 48px rgba(247, 192, 50, .35); } }
+@keyframes fnFloor { 0%, 60% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes fnBreathe { 0%, 100% { opacity: 1; } 50% { opacity: .9; } }
+.fn-dotw { width: 8px; height: 8px; border-radius: 50%; background: rgba(247, 192, 50, .5); box-shadow: 0 0 8px rgba(247, 192, 50, .6); }
+
+/* the message */
+.fn-msg { position: relative; z-index: 1; margin-top: 56px; }
+.fn-h { margin: 0; font: 700 40px/1.1 'Space Grotesk', sans-serif; letter-spacing: -.03em; }
+.fn-h span { display: inline-block; opacity: 0; transform: translateY(14px); }
+.fn-on .fn-h span { animation: fnWord .5s cubic-bezier(.2, 1, .3, 1) both; }
+@keyframes fnWord { to { opacity: 1; transform: none; } }
+.fn-acts { display: flex; justify-content: center; gap: 10px; margin-top: 24px; opacity: 0; transform: translateY(20px); }
+.fn-on .fn-acts { animation: fnWord .6s 3.1s cubic-bezier(.2, 1, .3, 1) both; }
+.fn-btn { display: inline-flex; align-items: center; gap: 8px; height: 50px; padding: 0 20px; border-radius: 12px; font: 600 15px Inter, sans-serif; text-decoration: none; }
+.fn-btn.yel { background: #F7C032; color: #1A1B1D; }
+.fn-btn.line { color: #fff; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .28); }
+.fn-stats { display: flex; justify-content: center; gap: 36px; margin-top: 26px; font: 500 15px Inter, sans-serif; color: #C9CBCE; opacity: 0; }
+.fn-on .fn-stats { animation: lbFade .6s 3.3s both; }
+.fn-stats b { font: 700 26px 'Space Grotesk', sans-serif; color: #fff; }
+@media (max-width: 900px) { .fn-neon { font-size: 34px; } .fn-words { gap: 14px; } .fn-stage { transform: scale(.8); } }
