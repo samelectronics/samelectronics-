@@ -1568,3 +1568,28 @@ DONE WHEN
 - 15:10 → yellow "Opening soon · 16:00"; 16:00 → green. **PASS**
 - Fri 11:00 → "Closing soon · 12:00"; Sunday → red "Closed". **PASS**
 - Correct with the computer's clock on Paris time. **PASS**
+
+## §03 · Language switch pop-up
+**Files:** `src/components/home/LangPop.tsx` and `src/styles/langpop.css`. Mounted in Home. `seI18n.set` / `toggle` now go through the pop-up; `seI18n.now` switches directly.
+
+**Sequence:**
+1. Click EN / AR. The page blurs (8px) under a 20% graphite tint (250ms).
+2. A 360×200 card in the hero-ad style scales 0.92→1 (300ms): graphite gradient, yellow glow, mono eyebrow, Space Grotesk line. Samsoom peeks over its corner.
+3. A yellow charging battery fills inside a spinning ring, with "Translating every screen and battery…" / "نترجم كل شاشة وكل بطارية…" in the language being switched to.
+4. The switch runs under the card at 320ms. "Done" means the page re-rendered and every font it asked for has loaded (`document.fonts.ready`), with at least 1.1s on screen.
+5. The battery becomes a drawn yellow tick: "Mission accomplished!" / "تمت المهمة!", plus one line in the new language.
+6. It auto-closes 1.2s later (fade + scale 0.96, the blur clears).
+7. If it isn't done after 4s, an X appears (Esc also closes it).
+
+**Remembered:** `localStorage` `se-lang`, as before.
+
+**Tests** (`lpop.mjs`):
+- EN→AR and AR→EN both show loading → done → closed.
+- A reload keeps Arabic.
+- With the network throttled (CDP, 5s latency): X at 4.0s, done when the Arabic weights arrived (~16s), then closed.
+- Screens: `lp-sheet.png`.
+
+DONE WHEN
+- Both directions show the pop-up, the done state, and close by themselves. **PASS**
+- On a slow network the X appears after 4s. **PASS**
+- The choice is remembered after reload. **PASS**

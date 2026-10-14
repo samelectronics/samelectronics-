@@ -1,0 +1,38 @@
+/* 14 Oct §03 · language switch pop-up (src/components/home/LangPop.tsx) */
+.lp { position: fixed; inset: 0; z-index: 260; display: grid; place-items: center; background: rgba(38, 40, 43, .2); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); animation: lpIn .25s ease-out both; }
+.lp-out { animation: lpOut .26s ease-in forwards; }
+.lp-card { position: relative; width: 360px; max-width: calc(100vw - 32px); min-height: 200px; box-sizing: border-box; padding: 26px 28px; border-radius: 20px; color: #fff; text-align: start;
+  background: radial-gradient(120% 90% at 18% 0%, rgba(247, 192, 50, .16), rgba(247, 192, 50, 0) 55%), linear-gradient(160deg, #3A3C40, #26282B 70%);
+  border: 1px solid rgba(255, 255, 255, .09); box-shadow: 0 30px 80px rgba(20, 21, 23, .45), 0 0 0 1px rgba(247, 192, 50, .06), 0 0 60px rgba(247, 192, 50, .12);
+  display: flex; flex-direction: column; justify-content: center; gap: 18px; animation: lpCard .3s cubic-bezier(.2, .9, .3, 1) both; }
+.lp-out .lp-card { animation: lpCardOut .26s ease-in forwards; }
+.lp-eb { font: 500 11px/1 'JetBrains Mono', monospace; letter-spacing: .16em; color: #F7C032; }
+.lp-card[lang='ar'] .lp-eb { font: 600 12px/1 'IBM Plex Sans Arabic', sans-serif; letter-spacing: 0; }
+.lp-row { display: flex; align-items: center; gap: 16px; }
+.lp-ic { flex: none; width: 44px; height: 44px; }
+.lp-txt { display: flex; flex-direction: column; gap: 6px; }
+.lp-txt b { font: 700 20px/1.2 'Space Grotesk', sans-serif; letter-spacing: -.02em; }
+.lp-txt span { font: 400 14px/1.4 Inter, sans-serif; color: rgba(255, 255, 255, .72); }
+.lp-card[lang='ar'] .lp-txt b { font: 700 20px/1.35 'IBM Plex Sans Arabic', sans-serif; letter-spacing: 0; }
+.lp-card[lang='ar'] .lp-txt span { font: 400 14px/1.5 'IBM Plex Sans Arabic', sans-serif; }
+.lp-done .lp-txt { animation: lpLine .35s cubic-bezier(.2, .8, .2, 1) both; }
+.lp-ring { fill: none; stroke: rgba(247, 192, 50, .25); stroke-width: 2; stroke-dasharray: 30 96; transform-origin: 22px 22px; animation: lpSpin 1s linear infinite; }
+.lp-done .lp-ring { stroke: #F7C032; stroke-dasharray: none; animation: none; fill: rgba(247, 192, 50, .12); transition: fill .3s; }
+.lp-fill { transform-origin: 14.5px 22px; animation: lpCharge 1.1s cubic-bezier(.45, 0, .55, 1) infinite; }
+.lp-bat { transition: opacity .2s, transform .25s; transform-origin: 22px 22px; }
+.lp-done .lp-bat { opacity: 0; transform: scale(.6); }
+.lp-tick { fill: none; stroke: #F7C032; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.lp-done .lp-tick { animation: lpTick .35s .1s cubic-bezier(.3, .9, .3, 1) forwards; }
+.lp-sam { position: absolute; top: -26px; inset-inline-end: 22px; width: 30px; height: 38px; animation: lpPeek .5s .25s cubic-bezier(.2, .9, .3, 1.2) both; }
+.lp-x { position: absolute; top: 10px; inset-inline-end: 10px; width: 30px; height: 30px; display: grid; place-items: center; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .08); color: #fff; cursor: pointer; animation: lpIn .2s ease-out both; }
+.lp-x:hover { background: rgba(255, 255, 255, .16); }
+@keyframes lpIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes lpOut { to { opacity: 0; -webkit-backdrop-filter: blur(0); backdrop-filter: blur(0); } }
+@keyframes lpCard { from { opacity: 0; transform: scale(.92); } to { opacity: 1; transform: none; } }
+@keyframes lpCardOut { to { opacity: 0; transform: scale(.96); } }
+@keyframes lpSpin { to { transform: rotate(360deg); } }
+@keyframes lpCharge { 0% { transform: scaleX(.05); } 85%, 100% { transform: scaleX(1); } }
+@keyframes lpTick { to { stroke-dashoffset: 0; } }
+@keyframes lpLine { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes lpPeek { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .lp-ring, .lp-fill { animation: none; } }

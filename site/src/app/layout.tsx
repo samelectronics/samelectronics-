@@ -23,6 +23,7 @@ import '@/styles/finale.css';
 import '@/styles/fmp.css';
 import '@/styles/titles.css';
 import '@/styles/boot.css';
+import '@/styles/langpop.css';
 
 export const metadata: Metadata = {
   title: DC_TITLE ?? 'Sam Electronics',

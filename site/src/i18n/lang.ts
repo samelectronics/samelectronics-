@@ -124,7 +124,7 @@ export function t(en: string): string {
 
 declare global {
   interface Window {
-    seI18n?: { lang: () => Lang; t: (s: string) => string; tr: (s: string) => string; set: (l: Lang) => void; toggle: () => void };
+    seI18n?: { lang: () => Lang; t: (s: string) => string; tr: (s: string) => string; set: (l: Lang) => void; now: (l: Lang) => void; toggle: () => void };
   }
 }
 
@@ -139,7 +139,14 @@ export function installI18n() {
   }
   lang = saved;
   applyDocument();
-  window.seI18n = { lang: () => lang, t, tr, set: setLang, toggle: () => setLang(lang === 'ar' ? 'en' : 'ar') };
+  // 14 Oct §03: switching from the site goes through the "Mission accomplished" pop-up (src/components/home/LangPop.tsx);
+  // it calls setLang itself once its card is up. Without the pop-up mounted, switch directly.
+  const sw = (l: Lang) => {
+    if (l === lang) return;
+    if ((window as unknown as { __seLangPop?: boolean }).__seLangPop) window.dispatchEvent(new CustomEvent('se:lang-pop', { detail: l }));
+    else setLang(l);
+  };
+  window.seI18n = { lang: () => lang, t, tr, set: sw, now: setLang, toggle: () => sw(lang === 'ar' ? 'en' : 'ar') };
   patchCanvasText();
   if (lang === 'ar') {
     startObserver();
