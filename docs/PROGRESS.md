@@ -1075,3 +1075,58 @@ Rebuilt as a new component (`SEWho.logic.js` / `.tsx`, styles in `src/styles/who
 | No white emptiness | Yes |
 
 **Captured:** each lane mid-scene (t = 4.6s).
+
+## Step 19 · Issue 13 Sam Circuit, "The Charging Station"
+
+Rebuilt as a new component (`SECircuit.logic.js` / `.tsx`, styles in `src/styles/circuit.css`). The all-yellow wallpaper, the full-cells-at-62% battery and the twelve "coming soon" pills are gone.
+
+**The set:** a graphite studio, lighter behind the battery, with a polished floor, a light pool and the battery's reflection. Yellow appears only as energy: the fill, the current, lit marks and unlocked chips.
+
+**The battery:**
+- A graphite metal casing with a glass window and a softbox reflection.
+- 4 tier marks engraved on the side, at 25 / 50 / 75 / 100%.
+- A metal connector plugged into its top, with the cable above it.
+- The fill is glowing liquid light, from an amber core #C98A12 to Signal Yellow at the surface, with a shimmering surface.
+- Measured in the DOM: the fill sits at exactly 62% for 62%. I also removed an outer glow that had made it look higher.
+
+**Model:**
+- One sample spend number drives everything. It maps through the tier thresholds (sample, to be confirmed: first order · AED 1,000 · 5,000 · 15,000), so the label, the fill, the ladder and the card always agree.
+- The demo starts at AED 2,920, which is 62%.
+
+**The film:**
+1. The headline masks in.
+2. The battery rises with a slow turn and its reflection forms.
+3. Current flows down the cable while the fill rises 0 → 62%. Each tier mark it passes lights up.
+4. The ladder rows slide in. The current tier glows, and the next tier shows "AED X to go" with a progress bar.
+
+**Simulator:** + Screen · AED 200, + Battery · AED 80, + Bulk order · AED 2,000.
+- Each tap sends a bright pulse down the cable, then the fill rises.
+- Crossing a tier mark flashes the battery, pops the tier badge and flips that tier's reward card from locked to unlocked with a light sweep. Tested: two bulk orders cross into Supercharged.
+- Reset powers the battery down: the fill drains and the current stops.
+
+**Ladder rows:** plug → bolt → double bolt → full battery icons, each with its name, requirement and status chip (Unlocked / AED X to go).
+
+**Member card:** graphite with a holographic edge, showing the name, tier and charge %. It tilts with the mouse and a light sweep follows.
+
+**Perks:**
+- 1–2 example perks per tier, marked "to be confirmed".
+- One blurred "More perks revealed at launch" teaser.
+- No repeated "coming soon", and no passport or stamp themes.
+
+**Idle life:** current keeps flowing, the surface shimmers and the next tier mark breathes.
+
+**Arabic:** every new string is added, plus rules for "AED X spent" and "AED X to go". The checker is back to its baseline.
+
+**Speed:** `#circuit` runs at 60fps, with an average of 59.5.
+
+### DONE WHEN (Issue 13)
+
+| Item | Result |
+|---|---|
+| Graphite studio, yellow only as energy | Yes |
+| Fill matches the real level | Yes (measured 0.620) |
+| Simulator works and flips tier cards | Yes |
+| Ladder statuses shown | Yes |
+| Member card tilts | Yes |
+
+**Captured:** after the entrance, mid tier-crossing (Supercharged badge and flash), and the card tilted.
