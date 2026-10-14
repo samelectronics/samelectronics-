@@ -1680,3 +1680,33 @@ DONE WHEN
 - Hover pauses; wheel/swipe moves one ad; leaving resumes after 1s; no arrows. **PASS**
 - Shine: diagonal, iPad then phone, never together, only on the glass. **PASS**
 - Ticks never flash light when fading. **PASS**
+
+## §06 · Brands marquee
+**Cause of the gap:**
+- In Arabic the row runs right-to-left, so the second copy sat to the left while the track still moved left, which emptied the window.
+- In English, two copies only just covered the window as the stock numbers changed width.
+
+**Fix:**
+- Three identical copies, moving one copy-width per loop (−33.33%).
+- 47.3s per copy, ~10% faster than the old 52s.
+- Arabic uses its own keyframe (+33.33%), so it moves the other way.
+- Hover still pauses it.
+
+**Logos:**
+- All are the G18 marks at the same 28px box height.
+- Brands with a separate symbol (Apple, Xiaomi, HUAWEI) now have an even 8px symbol→name gap. It was 4.5px; `GAP` 16 → 29 units in `build-logos.mjs`, applied to the three SVGs.
+- Wordmarks stay one piece.
+- Spacing between brands is 56px (padding 28px each side).
+
+**Test** (`marq.mjs`, 60s each, sampled every 250ms): spare track beyond the window edge never below
+
+| | 1440 | 1920 |
+|---|---|---|
+| EN | 4445px | 5909px |
+| AR | 3526px | 4702px |
+
+So no gap, ever. Screens: `marq-sheet.png`.
+
+DONE WHEN
+- 60s at 1440 and 1920, EN and AR: no gap. **PASS**
+- Logos the same size; even icon/text gap. **PASS**

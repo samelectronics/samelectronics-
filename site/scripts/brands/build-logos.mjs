@@ -29,7 +29,7 @@ const OUT = path.resolve(HERE, '../../public/assets/brands');
 
 const H = 100; // box height
 const WORD_H = 54; // wordmark height
-const GAP = 16; // symbol → wordmark
+const GAP = 29; // symbol → wordmark (14 Oct §06: an even 8px at the 28px rail height)
 
 /** One part of a logo: path data with its bounding box. */
 const fromPath = (d) => {

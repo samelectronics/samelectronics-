@@ -322,3 +322,8 @@ body {
 
 /* 14 Oct · H-G2: a section that fully left the view restarts its CSS animations when it comes back (SectionFX). */
 [data-se-rp] *, [data-se-rp] *::before, [data-se-rp] *::after { animation: none !important; }
+/* 14 Oct §06 · brand marquee: three identical copies, one copy-width per loop (~10% faster than before). Arabic runs the
+   other way: in a right-to-left row the copies sit to the left, so the track moves right. */
+@keyframes seRail3 { from { transform: translateX(0); } to { transform: translateX(-33.3333%); } }
+@keyframes seRail3R { from { transform: translateX(0); } to { transform: translateX(33.3333%); } }
+html[dir='rtl'] [style*='seRail3'] { animation-name: seRail3R !important; }

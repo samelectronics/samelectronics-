@@ -1793,7 +1793,7 @@ export default function Hero({ v }: { v: Vals }) {
             {'\n        '}
             <div
               style={cssToObj(
-                `display:flex;width:max-content;height:100%;animation:seRail 52s linear infinite;animation-play-state:${s(v.railPlay)}`,
+                `display:flex;width:max-content;height:100%;animation:seRail3 47.3s linear infinite;animation-play-state:${s(v.railPlay)}`,
               )}
             >
               {'\n          '}
@@ -1811,8 +1811,8 @@ export default function Hero({ v }: { v: Vals }) {
                         justifyContent: 'center',
                         alignItems: 'flex-start',
                         gap: '16px',
-                        padding: '0 34px',
-                        borderRight: '1px solid rgba(255,255,255,.07)',
+                        padding: '0 28px',
+                        borderInlineEnd: '1px solid rgba(255,255,255,.07)',
                         cursor: 'pointer',
                       }}
                     >
