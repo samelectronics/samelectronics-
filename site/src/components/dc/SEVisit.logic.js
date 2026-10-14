@@ -7,6 +7,7 @@
 // moving "now" marker, the week, a brand-styled map and the contact buttons.
 import React from 'react';
 import { DCLogic } from '@/dc/runtime';
+import { onReplay } from '@/components/perf/SectionFX';
 
 const FL = { 'Order parts': [['Model', 'e.g. iPhone 15 Pro'], ['Part & grade', 'e.g. Screen · OLED'], ['Quantity', '1']], 'Bulk quote': [['Company', 'Your shop or company'], ['Parts list', 'Paste models and quantities'], ['Country', 'e.g. Nigeria']], 'Book a repair': [['Model', 'e.g. Galaxy A54'], ['Problem', 'e.g. cracked screen'], ['Preferred time', 'e.g. Saturday evening']], 'Trade account': [['Business name', 'Your shop or company'], ['Customer type', 'Repair shop · Trader · Bulk buyer'], ['Country', 'e.g. UAE']], 'Shipping quote': [['Destination', 'City, country'], ['Parts & quantity', 'e.g. 50 screens'], ['Deadline', 'e.g. next week']], General: [['Your name', 'Name'], ['Message', 'How can we help?']] };
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -16,6 +17,7 @@ class Component extends DCLogic {
   secRef = React.createRef();
   state = { data: window.SE_DATA || null, type: null, vals: {}, now: Date.now(), sent: null, sentN: 0, seen: false };
   componentDidMount() {
+    this.offRp = onReplay(() => this.secRef.current, () => { this.setState({ seen: false }); }); // 14 Oct · H-G2: replay from the start
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 80);
     this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) this.setState({ seen: true }); }, { threshold: 0.2 });
     setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
@@ -23,7 +25,7 @@ class Component extends DCLogic {
     this.onLang = () => this.forceUpdate(); window.addEventListener('se:lang', this.onLang);
     window.seVisit = (o) => { if (o.now) this.ovNow = o.now; this.setState({ ...(o.now ? { now: o.now } : {}), ...(o.type ? { type: o.type } : {}), ...(o.vals ? { vals: { ...this.state.vals, ...o.vals } } : {}), ...(o.send ? { sent: o.send, sentN: this.state.sentN + 1 } : {}) }); };
   }
-  componentWillUnmount() { clearInterval(this.iv); clearInterval(this.dIv); clearTimeout(this.sT); this.io && this.io.disconnect(); window.removeEventListener('se:lang', this.onLang); }
+  componentWillUnmount() { this.offRp && this.offRp(); clearInterval(this.iv); clearInterval(this.dIv); clearTimeout(this.sT); this.io && this.io.disconnect(); window.removeEventListener('se:lang', this.onLang); }
   send(via, url) { window.open(url, '_blank', 'noopener'); this.setState({ sent: via, sentN: this.state.sentN + 1 }); clearTimeout(this.sT); this.sT = setTimeout(() => this.setState({ sent: null }), 3600); }
   renderVals() {
     const s = this.state, D = s.data, RT = D ? D.requestTypes : ['Order parts', 'Bulk quote', 'Book a repair', 'Trade account', 'Shipping quote', 'General'], rt = s.type || RT[0];

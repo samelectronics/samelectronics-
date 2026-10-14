@@ -869,7 +869,7 @@ function SamsoomItem({ v }: { v: Vals }) {
   if (v.isGlobe)
     return (
       <svg viewBox="0 0 34 34" style={box}>
-        <circle cx="17" cy="17" r="14" fill="#1A1B1D" stroke="#F7C032" strokeWidth="2.2" />
+        <circle cx="17" cy="17" r="14" fill="#26282B" stroke="#F7C032" strokeWidth="2.2" />
         <ellipse cx="17" cy="17" rx="7" ry="14" fill="none" stroke="#F7C032" strokeWidth="1.4" style={{ transformOrigin: '17px 17px', animation: v.itemAnim }} />
         <ellipse cx="17" cy="17" rx="7" ry="14" fill="none" stroke="#FFDB6E" strokeWidth="1" opacity=".6" style={{ transformOrigin: '17px 17px', animation: v.itemAnim, animationDelay: '-.75s' }} />
         <path d="M3 17h28M5.5 10h23M5.5 24h23" stroke="#F7C032" strokeWidth="1" opacity=".7" />

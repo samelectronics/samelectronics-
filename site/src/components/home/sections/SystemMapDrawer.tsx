@@ -29,7 +29,7 @@ export default function SystemMapDrawer({ v }: { v: Vals }) {
                 height: '100%',
                 display: 'flex',
                 flexDirection: 'column',
-                background: 'linear-gradient(180deg,#26282B,#1A1B1D)',
+                background: 'linear-gradient(180deg,#26282B,#26282B)',
                 color: '#FFFFFF',
                 boxShadow: '-30px 0 80px rgba(0,0,0,.4)',
                 animation: 'seSlideIn .35s cubic-bezier(.2,.8,.2,1)',

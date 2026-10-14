@@ -23,7 +23,7 @@ function render(v: Vals) {
             <span className="cs-eb">SAM CIRCUIT · MEMBERSHIP</span>
             <h2 className="cs-h">
               <span>
-                <span>Every order charges you up.</span>
+                <span>Every order</span> <span className="se-acc">charges you up.</span>
               </span>
             </h2>
             <p>Four levels, one battery. The more you buy from us, the higher your charge, and the better the perks.</p>

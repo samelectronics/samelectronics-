@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import OffscreenPause from '@/components/perf/OffscreenPause';
 import HScrollArrows from '@/components/perf/HScrollArrows';
 import CircuitSurge from '@/components/perf/CircuitSurge';
+import SectionFX from '@/components/perf/SectionFX';
 import { installI18n } from '@/i18n/lang';
 
 // G9: the language is applied before the home page renders, so nothing flashes in the other language.
@@ -19,6 +20,7 @@ export default function Home() {
       <OffscreenPause />
       <HScrollArrows />
       <CircuitSurge />
+      <SectionFX />
     </div>
   );
 }

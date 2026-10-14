@@ -6,6 +6,7 @@
 // wink, kiss or dabke step). His eyes follow the cursor through CSS variables written on mousemove.
 import React from 'react';
 import { DCLogic } from '@/dc/runtime';
+import { onReplay } from '@/components/perf/SectionFX';
 
 const T_Q = 0, T_TYPE = 0.7, T_ANS = 2.3, T_CARD = 2.7, DUR = 7.4;
 export const CONVOS = [
@@ -21,6 +22,7 @@ class Component extends DCLogic {
   secRef = React.createRef();
   state = { seen: false, ci: 0, t: 0, lib: null, data: window.SE_DATA || null, now: Date.now() };
   componentDidMount() {
+    this.offRp = onReplay(() => this.secRef.current, () => { this.t = -1.2; this._st = null; this.setState({ seen: false, ci: 0, t: 0 }); }); // 14 Oct · H-G2: replay from the start
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 80);
     const sp = window.seParts, pk = sp && sp.peek && sp.peek(); if (pk) this.setState({ lib: pk });
     this.onLib = (e) => this.setState({ lib: e.detail }); window.addEventListener('se:parts-lib', this.onLib);
@@ -39,7 +41,7 @@ class Component extends DCLogic {
     this.onLang = () => this.forceUpdate(); window.addEventListener('se:lang', this.onLang);
     window.seMeet = (ci, t) => { this.ov = t; this.t = t; this._st = null; this.setState({ seen: true, ci, t }); };
   }
-  componentWillUnmount() { this.alive = false; cancelAnimationFrame(this.raf); clearInterval(this.dIv); this.io && this.io.disconnect(); window.removeEventListener('se:parts-lib', this.onLib); window.removeEventListener('mousemove', this.onMove); window.removeEventListener('se:lang', this.onLang); }
+  componentWillUnmount() { this.offRp && this.offRp(); this.alive = false; cancelAnimationFrame(this.raf); clearInterval(this.dIv); this.io && this.io.disconnect(); window.removeEventListener('se:parts-lib', this.onLib); window.removeEventListener('mousemove', this.onMove); window.removeEventListener('se:lang', this.onLang); }
   stage(t) { return t < T_Q ? 0 : t < T_TYPE ? 1 : t < T_ANS ? 2 : t < T_CARD ? 3 : t < T_CARD + 1.2 ? 4 : 5; }
   hours() { const D = this.state.data, H = D ? D.hours : {}, d = new Date(this.state.now), g = new Date(d.getTime() + d.getTimezoneOffset() * 6e4 + 4 * 36e5), m = g.getHours() * 60 + g.getMinutes();
     const pad = (n) => String(n).padStart(2, '0'), hm = (x) => pad(Math.floor(x / 60)) + ':' + pad(x % 60), today = H[g.getDay()] || [];

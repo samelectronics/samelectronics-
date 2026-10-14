@@ -1,5 +1,5 @@
 /* Issue 16 · Request console + Visit us: a yellow section; the console is graphite glass that prints a thermal slip */
-.vs { position: relative; overflow: hidden; background: radial-gradient(70% 80% at 30% 30%, #FFD45C, #F7C032 55%, #E9B124); color: #1A1B1D; }
+.vs { position: relative; overflow: hidden; background: radial-gradient(70% 80% at 30% 30%, #FFD45C, #F7C032 55%, #E9B124); color: #26282B; }
 .vs::before { content: ''; position: absolute; inset: 0; opacity: .035; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 .vs::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 100% at 50% 40%, rgba(150, 95, 0, 0) 55%, rgba(150, 95, 0, .2)); }
 .vs-in { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 28px; width: 1272px; max-width: calc(100% - 48px); margin: 0 auto; padding: 96px 0; align-items: start; }
@@ -9,7 +9,7 @@
 .vs-h { margin: 12px 0 0; font: 700 36px/1.08 'Space Grotesk', sans-serif; letter-spacing: -.03em; }
 .vs-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 20px; }
 .vs-tabs button { height: 36px; padding: 0 14px; border: none; border-radius: 10px; background: rgba(255, 255, 255, .06); color: #fff; font: 600 13px Inter, sans-serif; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); transition: background .25s, color .25s; }
-.vs-tabs button.on { background: #F7C032; color: #1A1B1D; box-shadow: none; }
+.vs-tabs button.on { background: #F7C032; color: #26282B; box-shadow: none; }
 .vs-body { display: grid; grid-template-columns: minmax(0, 1fr) 240px; gap: 24px; margin-top: 20px; }
 .vs-fields { display: flex; flex-direction: column; gap: 12px; }
 .vs-f { display: flex; flex-direction: column; gap: 6px; animation: vsField .45s cubic-bezier(.2, 1, .3, 1) both; }
@@ -25,11 +25,11 @@
 .vs-prog small b { color: #fff; font-family: 'JetBrains Mono', monospace; }
 .vs-send { position: relative; display: flex; gap: 10px; margin-top: 4px; }
 .vs-btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 48px; padding: 0 18px; border: none; border-radius: 12px; font: 600 15px Inter, sans-serif; text-decoration: none; cursor: pointer; white-space: nowrap; transition: transform .2s; }
-.vs-btn.yel { background: #F7C032; color: #1A1B1D; }
+.vs-btn.yel { background: #F7C032; color: #26282B; }
 .vs-btn.line { background: transparent; color: #fff; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .28); }
-.vs-btn.dark { background: #1A1B1D; color: #fff; }
+.vs-btn.dark { background: #26282B; color: #fff; }
 .vs-btn.dark svg { color: #5FD49A; }
-.vs-btn.line.dk { color: #1A1B1D; box-shadow: inset 0 0 0 1.5px rgba(26, 27, 29, .25); }
+.vs-btn.line.dk { color: #26282B; box-shadow: inset 0 0 0 1.5px rgba(26, 27, 29, .25); }
 .vs-btn.hit { animation: vsHit .5s 1.15s cubic-bezier(.3, 1.6, .5, 1); }
 @keyframes vsHit { 50% { transform: scale(1.1); } }
 .vs-thumb { position: absolute; left: calc(100% - 40px); top: -16px; animation: vsThumb 3.2s 1.2s cubic-bezier(.2, 1.4, .4, 1) both; }
@@ -40,7 +40,7 @@
 .vs-slot { position: relative; z-index: 2; width: 240px; height: 26px; border-radius: 10px; background: linear-gradient(180deg, #4A4D52, #26282B); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .18), 0 8px 14px rgba(0, 0, 0, .5); }
 .vs-slot::after { content: ''; position: absolute; left: 14px; right: 14px; top: 15px; height: 4px; border-radius: 2px; background: #0B0B0C; }
 .vs-slip-wrap { position: relative; width: 220px; margin-top: -8px; padding-bottom: 30px; }
-.vs-slip { position: relative; display: flex; flex-direction: column; gap: 7px; padding: 22px 14px 18px; background: linear-gradient(180deg, #FBF8F1 0%, #F6F2E8 85%, #E9E3D6 100%); color: #1A1B1D; box-shadow: 0 14px 20px -10px rgba(0, 0, 0, .55), 0 2px 0 rgba(0, 0, 0, .05); transform: translateY(calc(var(--n, 0) * 5px)); transition: transform .3s steps(3); clip-path: polygon(0 0, 100% 0, 100% 97%, 92% 100%, 84% 97%, 76% 100%, 68% 97%, 60% 100%, 52% 97%, 44% 100%, 36% 97%, 28% 100%, 20% 97%, 12% 100%, 4% 97%, 0 100%); transform-origin: 50% 0; }
+.vs-slip { position: relative; display: flex; flex-direction: column; gap: 7px; padding: 22px 14px 18px; background: linear-gradient(180deg, #FBF8F1 0%, #F6F2E8 85%, #E9E3D6 100%); color: #26282B; box-shadow: 0 14px 20px -10px rgba(0, 0, 0, .55), 0 2px 0 rgba(0, 0, 0, .05); transform: translateY(calc(var(--n, 0) * 5px)); transition: transform .3s steps(3); clip-path: polygon(0 0, 100% 0, 100% 97%, 92% 100%, 84% 97%, 76% 100%, 68% 97%, 60% 100%, 52% 97%, 44% 100%, 36% 97%, 28% 100%, 20% 97%, 12% 100%, 4% 97%, 0 100%); transform-origin: 50% 0; }
 .vs-slip::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 26px; background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(120, 100, 70, .14)); pointer-events: none; }
 .vs-perf { position: absolute; left: 6px; right: 6px; top: 8px; height: 0; border-top: 2px dotted rgba(26, 27, 29, .25); }
 .vs-slip-h { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 6px; border-bottom: 1.5px dashed rgba(26, 27, 29, .35); }
@@ -51,9 +51,9 @@
 .vs-line b { font-weight: 700; text-align: end; overflow-wrap: anywhere; }
 .vs-line em { padding: 1px 6px; border-radius: 4px; background: #F7C032; font-style: normal; font-weight: 700; }
 @keyframes vsPrint { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
-.vs-bars { height: 26px; margin-top: 6px; background: repeating-linear-gradient(90deg, #1A1B1D 0 1.5px, transparent 1.5px 3px, #1A1B1D 3px 5.5px, transparent 5.5px 7px); }
+.vs-bars { height: 26px; margin-top: 6px; background: repeating-linear-gradient(90deg, #26282B 0 1.5px, transparent 1.5px 3px, #26282B 3px 5.5px, transparent 5.5px 7px); }
 .vs-foot { font: 500 9px 'JetBrains Mono', monospace; color: #5E6064; }
-.vs-sent { position: absolute; left: 50%; top: 42%; padding: 6px 14px 4px; border: 3.5px solid #1A1B1D; border-radius: 8px; font: 700 26px 'Space Grotesk', sans-serif; letter-spacing: .16em; color: #1A1B1D; transform: translate(-50%, -50%) rotate(-12deg); animation: vsStamp .4s .25s cubic-bezier(.2, .8, .2, 1) both; }
+.vs-sent { position: absolute; left: 50%; top: 42%; padding: 6px 14px 4px; border: 3.5px solid #26282B; border-radius: 8px; font: 700 26px 'Space Grotesk', sans-serif; letter-spacing: .16em; color: #26282B; transform: translate(-50%, -50%) rotate(-12deg); animation: vsStamp .4s .25s cubic-bezier(.2, .8, .2, 1) both; }
 .vs-sent::after { content: ''; position: absolute; inset: -4px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='i'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='3' seed='7'/%3E%3CfeColorMatrix values='0 0 0 0 .98  0 0 0 0 .97  0 0 0 0 .94  0 0 0 -3.2 1.55'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23i)'/%3E%3C/svg%3E"); }
 @keyframes vsStamp { from { opacity: 0; transform: translate(-50%, -50%) rotate(-12deg) scale(1.8); } to { opacity: 1; transform: translate(-50%, -50%) rotate(-12deg); } }
 /* tear: a jerk at the perforation, the stamp, a fold, then the slip flies into the chosen button */
@@ -75,16 +75,16 @@
 .vs-tl { display: flex; flex-direction: column; gap: 4px; }
 .vs-tl-bar { position: relative; height: 14px; border-radius: 7px; background: #F2F3F4; box-shadow: inset 0 1px 2px rgba(0, 0, 0, .08); }
 .vs-tl-bar i { position: absolute; top: 2px; bottom: 2px; border-radius: 5px; background: linear-gradient(90deg, #F7C032, #FFDB6E); }
-.vs-tl-bar .now { position: absolute; top: -5px; bottom: -5px; width: 2px; margin-left: -1px; background: #1A1B1D; transition: left 1s linear; }
-.vs-tl-bar .now::before { content: ''; position: absolute; left: -4px; top: -6px; width: 10px; height: 10px; border-radius: 50%; background: #1A1B1D; box-shadow: 0 0 0 3px #fff; }
+.vs-tl-bar .now { position: absolute; top: -5px; bottom: -5px; width: 2px; margin-left: -1px; background: #26282B; transition: left 1s linear; }
+.vs-tl-bar .now::before { content: ''; position: absolute; left: -4px; top: -6px; width: 10px; height: 10px; border-radius: 50%; background: #26282B; box-shadow: 0 0 0 3px #fff; }
 .vs-tl-l { display: flex; justify-content: space-between; font: 500 10px 'JetBrains Mono', monospace; color: #8C9096; }
 .vs-week { display: grid; grid-template-columns: 1fr; gap: 1px; margin: 0; padding: 0; list-style: none; }
 .vs-week li { display: flex; justify-content: space-between; gap: 8px; padding: 4px 10px; border-radius: 8px; font: 500 12.5px Inter, sans-serif; color: #4A4D52; }
 .vs-week li b { font: 500 11.5px 'JetBrains Mono', monospace; color: #26282B; white-space: nowrap; }
-.vs-week li.on { background: rgba(247, 192, 50, .22); color: #1A1B1D; font-weight: 700; }
+.vs-week li.on { background: rgba(247, 192, 50, .22); color: #26282B; font-weight: 700; }
 .vs-map { position: relative; display: block; height: 150px; border-radius: 16px; overflow: hidden; }
 .vs-map > svg { display: block; width: 100%; height: 100%; }
-.vs-map-a { position: absolute; right: 10px; bottom: 10px; display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border-radius: 9px; background: #F7C032; color: #1A1B1D; font: 600 13px Inter, sans-serif; white-space: nowrap; }
+.vs-map-a { position: absolute; right: 10px; bottom: 10px; display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border-radius: 9px; background: #F7C032; color: #26282B; font: 600 13px Inter, sans-serif; white-space: nowrap; }
 .vs-addr { margin: 0; font: 500 13px Inter, sans-serif; color: #4A4D52; }
 .vs-acts { display: flex; gap: 10px; }
 .vs-acts .vs-btn { flex: 1; }

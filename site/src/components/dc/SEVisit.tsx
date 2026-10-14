@@ -18,7 +18,7 @@ function render(v: Vals) {
         {/* ---------- the request console ---------- */}
         <div className="vs-con">
           <span className="vs-eb">REQUEST CONSOLE</span>
-          <h2 className="vs-h">Tell us what you need. We print the work order.</h2>
+          <h2 className="vs-h"><span>Tell us what you need.</span> <span>We print the work order.</span></h2>
           <div className="vs-tabs" role="tablist">
             {(v.types || []).map((t: any) => (
               <button key={t.name} type="button" role="tab" aria-selected={t.on} className={t.on ? 'on' : ''} onClick={t.pick}>

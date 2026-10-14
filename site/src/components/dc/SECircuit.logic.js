@@ -6,6 +6,7 @@
 // each frame; crossing a mark flashes the battery, pops the tier badge and flips that tier's reward card.
 import React from 'react';
 import { DCLogic } from '@/dc/runtime';
+import { onReplay } from '@/components/perf/SectionFX';
 
 // sample thresholds (owner to confirm): the spend at each tier mark
 export const MARKS = [[0, 0], [200, 0.25], [1000, 0.5], [5000, 0.75], [15000, 1]];
@@ -20,13 +21,14 @@ class Component extends DCLogic {
   cardRef = React.createRef();
   state = { seen: false, spend: DEMO, tier: -1, pop: 0, flash: 0, pulse: 0, on: true };
   componentDidMount() {
+    this.offRp = onReplay(() => this.secRef.current, () => { cancelAnimationFrame(this.tRaf); this.lv = 0; this.paint(); this.setState({ seen: false, tier: -1, on: true, spend: 2920 }); }); // 14 Oct · H-G2: replay from the start
     this.lv = 0; this.alive = true;
     this.io = new IntersectionObserver(([e]) => { if (e.isIntersecting && !this.state.seen) { this.setState({ seen: true }); setTimeout(() => this.tweenTo(levelOf(this.state.spend), 1400), 1000); } }, { threshold: 0.25 });
     setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
     this.onLang = () => this.forceUpdate(); window.addEventListener('se:lang', this.onLang);
     window.seCircuit = (spend, instant) => { this.setState({ seen: true, spend, on: true }); if (instant) { this.lv = levelOf(spend); this.paint(); this.syncTier(true); } else this.tweenTo(levelOf(spend), 900); };
   }
-  componentWillUnmount() { this.alive = false; cancelAnimationFrame(this.tRaf); this.io && this.io.disconnect(); window.removeEventListener('se:lang', this.onLang); }
+  componentWillUnmount() { this.offRp && this.offRp(); this.alive = false; cancelAnimationFrame(this.tRaf); this.io && this.io.disconnect(); window.removeEventListener('se:lang', this.onLang); }
   componentDidUpdate() { this.paint(); }
   tweenTo(to, ms) { cancelAnimationFrame(this.tRaf); const a = this.lv, t0 = performance.now();
     const step = (now) => { if (!this.alive) return; const k = Math.min(1, (now - t0) / ms), e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; this.lv = a + (to - a) * e; this.paint(); this.syncTier(); if (k < 1) this.tRaf = requestAnimationFrame(step); };

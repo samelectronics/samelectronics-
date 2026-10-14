@@ -23,7 +23,7 @@ function render(v: Vals) {
       >
         {'\n  '}
         <div style={{ position: 'absolute', inset: '0', zIndex: '1', pointerEvents: 'none' }}>
-          <div ref={v.host} style={{ position: 'sticky', top: '0', width: '100%', height: '100vh', overflow: 'hidden' }}></div>
+          <div ref={v.host} style={{ position: 'absolute', left: '0', top: '0', width: '100%', height: '100vh', overflow: 'hidden' }}></div>
         </div>
         {'\n\n  '}
         <div data-w="A" style={{ position: 'relative', padding: '180px 0 0' }}>
@@ -468,7 +468,7 @@ function render(v: Vals) {
                                       flex: 'none',
                                       padding: '3px 7px',
                                       borderRadius: '6px',
-                                      background: '#1A1B1D',
+                                      background: '#26282B',
                                       color: '#F7C032',
                                       fontFamily: "'JetBrains Mono',monospace",
                                       fontSize: '10px',
@@ -734,7 +734,7 @@ function render(v: Vals) {
                     padding: '0 16px',
                     borderRadius: '10px',
                     background: '#F7C032',
-                    color: '#1A1B1D',
+                    color: '#26282B',
                     fontWeight: '600',
                     fontSize: '15px',
                     transition: 'transform .2s,box-shadow .2s',
@@ -839,7 +839,7 @@ function render(v: Vals) {
                             height: '22px',
                             borderRadius: '50%',
                             background: '#F7C032',
-                            color: '#1A1B1D',
+                            color: '#26282B',
                           }}
                         >
                           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2">
@@ -1440,7 +1440,7 @@ function render(v: Vals) {
                         WebkitBackfaceVisibility: 'hidden',
                         transform: 'rotateY(180deg)',
                         borderRadius: '10px',
-                        background: 'linear-gradient(160deg,#3D3E3F,#1A1B1D)',
+                        background: 'linear-gradient(160deg,#3D3E3F,#26282B)',
                         boxShadow: '0 14px 28px rgba(70,54,10,.3)',
                         display: 'flex',
                         flexDirection: 'column',
@@ -1571,7 +1571,7 @@ function render(v: Vals) {
                   fontSize: '64px',
                   lineHeight: '1.02',
                   letterSpacing: '-.04em',
-                  color: '#1A1B1D',
+                  color: '#26282B',
                 }}
               >
                 {'\n          '}
@@ -1793,7 +1793,7 @@ function render(v: Vals) {
                   fontSize: '64px',
                   lineHeight: '1.02',
                   letterSpacing: '-.04em',
-                  color: '#1A1B1D',
+                  color: '#26282B',
                 }}
               >
                 {'\n          '}
@@ -1866,7 +1866,7 @@ function render(v: Vals) {
                     padding: '0 16px',
                     borderRadius: '10px',
                     background: '#F7C032',
-                    color: '#1A1B1D',
+                    color: '#26282B',
                     fontWeight: '600',
                     fontSize: '15px',
                     transition: 'transform .2s,box-shadow .2s',

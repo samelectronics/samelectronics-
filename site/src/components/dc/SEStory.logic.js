@@ -7,6 +7,7 @@
 //   60–75% RUNNING / INSTALLING · then the branches (map cards + stats strip) follow in the normal flow
 import React from 'react';
 import { DCLogic } from '@/dc/runtime';
+import { onReplay } from '@/components/perf/SectionFX';
 
 const cl = (x) => (x < 0 ? 0 : x > 1 ? 1 : x), seg = (p, a, b) => cl((p - a) / (b - a));
 export const CX = [0.1, 0.3, 0.5, 0.7, 0.9]; // card centres along the line
@@ -22,6 +23,7 @@ class Component extends DCLogic {
   brRef = React.createRef();
   state = { sc: 1, data: window.SE_DATA || null, br: false };
   componentDidMount() {
+    this.offRp = onReplay(() => this.secRef.current, () => { this.setState({ br: false }); }); // 14 Oct · H-G2: replay from the start
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 80);
     this.p = 0; this.alive = true;
     const loop = () => { if (!this.alive) return; this.frame(); this.raf = requestAnimationFrame(loop); };
@@ -33,7 +35,7 @@ class Component extends DCLogic {
     this.onLang = () => this.forceUpdate(); window.addEventListener('se:lang', this.onLang);
     window.seStory = (p) => { this.ov = p; this.p = p; this.frame(true); };
   }
-  componentWillUnmount() { this.alive = false; cancelAnimationFrame(this.raf); cancelAnimationFrame(this.nRaf); clearInterval(this.dIv); this.io && this.io.disconnect(); window.removeEventListener('resize', this.onResize); window.removeEventListener('se:lang', this.onLang); }
+  componentWillUnmount() { this.offRp && this.offRp(); this.alive = false; cancelAnimationFrame(this.raf); cancelAnimationFrame(this.nRaf); clearInterval(this.dIv); this.io && this.io.disconnect(); window.removeEventListener('resize', this.onResize); window.removeEventListener('se:lang', this.onLang); }
   q(k) { const R = this.secRef.current; if (!R) return null; this._q = this._q || {}; const c = this._q[k]; if (c && c.isConnected) return c; return (this._q[k] = R.querySelector('[data-s="' + k + '"]')); }
   set(k, s) { const e = this.q(k); if (e) for (const n in s) { const v = s[n]; if (e.style[n] !== v) e.style[n] = v; } return e; }
   frame(force) {

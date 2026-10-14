@@ -5,6 +5,7 @@
 // visit, so it always starts from the top); the logic only keeps the clock: auto-cycle, pause on hover, click to jump.
 import React from 'react';
 import { DCLogic } from '@/dc/runtime';
+import { onReplay } from '@/components/perf/SectionFX';
 
 export const LANES = [
   { id: 'ret', k: 'Retail customer', d: 'One phone, the right part.', cta: 'Find my part', ben: ['Find your part by model', 'Pick the grade for your budget', 'Collect in Deira or get it delivered'] },
@@ -18,6 +19,7 @@ class Component extends DCLogic {
   secRef = React.createRef();
   state = { i: 0, prev: -1, n: 0, seen: false, lib: null, data: window.SE_DATA || null };
   componentDidMount() {
+    this.offRp = onReplay(() => this.secRef.current, () => { this.t = 0; this.setState({ seen: false, i: 0, prev: -1 }); }); // 14 Oct · H-G2: replay from the start
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 80);
     const sp = window.seParts, pk = sp && sp.peek && sp.peek(); if (pk) this.setState({ lib: pk });
     this.onLib = (e) => this.setState({ lib: e.detail }); window.addEventListener('se:parts-lib', this.onLib);
@@ -32,7 +34,7 @@ class Component extends DCLogic {
     this.onLang = () => this.forceUpdate(); window.addEventListener('se:lang', this.onLang);
     window.seWho = (i, t) => { this.hold = t; this.setState({ seen: true, i, prev: -1, n: this.state.n + 1 }, () => { const S = this.secRef.current && this.secRef.current.querySelector('.wh-scene.on'); if (S) S.getAnimations({ subtree: true }).forEach((a) => { a.pause(); a.currentTime = t * 1000; }); }); };
   }
-  componentWillUnmount() { this.alive = false; cancelAnimationFrame(this.raf); clearInterval(this.dIv); clearTimeout(this.pT); this.io && this.io.disconnect(); window.removeEventListener('se:parts-lib', this.onLib); window.removeEventListener('se:lang', this.onLang); }
+  componentWillUnmount() { this.offRp && this.offRp(); this.alive = false; cancelAnimationFrame(this.raf); clearInterval(this.dIv); clearTimeout(this.pT); this.io && this.io.disconnect(); window.removeEventListener('se:parts-lib', this.onLib); window.removeEventListener('se:lang', this.onLang); }
   go(i) { this.t = 0; clearTimeout(this.pT); this.setState({ prev: this.state.i === i ? -1 : this.state.i, i, n: this.state.n + 1 }); this.pT = setTimeout(() => this.setState({ prev: -1 }), 700); }
   renderVals() {
     const s = this.state, D = s.data, lib = s.lib;

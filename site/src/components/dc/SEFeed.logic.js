@@ -5,6 +5,7 @@
 // Feeds scroll and reels play on CSS; the logic only ticks the like counters and rolls the follower counts once.
 import React from 'react';
 import { DCLogic } from '@/dc/runtime';
+import { onReplay } from '@/components/perf/SectionFX';
 
 export const CH = [
   { id: 'ig', name: 'Instagram', href: 'https://instagram.com/samelectronics.uae', followers: 12400 },
@@ -22,6 +23,7 @@ class Component extends DCLogic {
   secRef = React.createRef();
   state = { seen: false, tick: 0, lib: null };
   componentDidMount() {
+    this.offRp = onReplay(() => this.secRef.current, () => { cancelAnimationFrame(this.nRaf); this.setState({ seen: false }); }); // 14 Oct · H-G2: replay from the start
     const sp = window.seParts, pk = sp && sp.peek && sp.peek(); if (pk) this.setState({ lib: pk });
     this.onLib = (e) => this.setState({ lib: e.detail }); window.addEventListener('se:parts-lib', this.onLib);
     this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) { this.setState({ seen: true }); this.roll(); } }, { threshold: 0.25 });
@@ -29,7 +31,7 @@ class Component extends DCLogic {
     this.iv = setInterval(() => { if (this.vis && !document.hidden) this.setState({ tick: this.state.tick + 1 }); }, 1600);
     this.onLang = () => this.forceUpdate(); window.addEventListener('se:lang', this.onLang);
   }
-  componentWillUnmount() { clearInterval(this.iv); cancelAnimationFrame(this.nRaf); this.io && this.io.disconnect(); window.removeEventListener('se:parts-lib', this.onLib); window.removeEventListener('se:lang', this.onLang); }
+  componentWillUnmount() { this.offRp && this.offRp(); clearInterval(this.iv); cancelAnimationFrame(this.nRaf); this.io && this.io.disconnect(); window.removeEventListener('se:parts-lib', this.onLib); window.removeEventListener('se:lang', this.onLang); }
   roll() { const R = this.secRef.current; if (!R) return; const els = [...R.querySelectorAll('[data-n]')], t0 = performance.now() + 900;
     const k1 = (v) => (v >= 1000 ? (v / 1000).toFixed(1) + 'K' : String(Math.round(v)));
     const step = (now) => { const k = Math.max(0, Math.min(1, (now - t0) / 1400)), e = 1 - Math.pow(1 - k, 3); els.forEach((el) => { const s = k1(+el.dataset.n * e); if (el.textContent !== s) el.textContent = s; }); if (k < 1) this.nRaf = requestAnimationFrame(step); };

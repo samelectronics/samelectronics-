@@ -17,7 +17,7 @@ export default function BootIntro({ v }: { v: Vals }) {
               zIndex: '200',
               display: 'grid',
               placeItems: 'center',
-              background: '#1A1B1D',
+              background: '#26282B',
               cursor: 'pointer',
               animation: 'bootOut 1.6s ease-in forwards',
             }}

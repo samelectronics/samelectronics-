@@ -98,7 +98,7 @@ export default function SamsoomChat({ v }: { v: Vals }) {
                 gap: '12px',
                 height: '68px',
                 padding: '0 16px',
-                background: 'linear-gradient(140deg,#3D3E3F,#1A1B1D)',
+                background: 'linear-gradient(140deg,#3D3E3F,#26282B)',
                 color: '#FFFFFF',
               }}
             >
@@ -187,7 +187,7 @@ export default function SamsoomChat({ v }: { v: Vals }) {
                               borderRadius: '10px',
                               border: 'none',
                               background: '#F7C032',
-                              color: '#1A1B1D',
+                              color: '#26282B',
                               fontSize: '13px',
                               fontWeight: '600',
                               cursor: 'pointer',
@@ -261,7 +261,7 @@ export default function SamsoomChat({ v }: { v: Vals }) {
                             borderRadius: '10px',
                             border: 'none',
                             background: '#FFF4D1',
-                            color: '#1A1B1D',
+                            color: '#26282B',
                             fontSize: '13px',
                             fontWeight: '600',
                             cursor: 'pointer',
@@ -313,7 +313,7 @@ export default function SamsoomChat({ v }: { v: Vals }) {
                   height: '44px',
                   borderRadius: '10px',
                   border: 'none',
-                  background: '#1A1B1D',
+                  background: '#26282B',
                   cursor: 'pointer',
                 }}
               >

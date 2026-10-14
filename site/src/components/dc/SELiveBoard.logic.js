@@ -6,6 +6,7 @@
 // its counter, the counter flashes, rolls up and shows "+1". All data is the sample feed in public/se-data.js.
 import React from 'react';
 import { DCLogic, StreamableLogic } from '@/dc/runtime';
+import { onReplay } from '@/components/perf/SectionFX';
 
 class Component extends DCLogic {
   state = { data: window.SE_DATA || null, i: 0, filt: 'all', counts: { arr: 5, low: 4, drop: 3, ship: 6 }, flash: {}, spark: { arr: [2, 3, 3, 4, 5], low: [4, 4, 3, 4, 4], drop: [1, 2, 2, 3, 3], ship: [2, 3, 4, 5, 6] }, pulse: null, tr: 0, now: Date.now(), seen: false, lib: null, cu: 0 };
@@ -15,6 +16,7 @@ class Component extends DCLogic {
   ISO = { Nigeria: 'NG', Iraq: 'IQ', Romania: 'RO', Morocco: 'MA', Uganda: 'UG', Algeria: 'DZ', Tunisia: 'TN', Libya: 'LY', Egypt: 'EG', Sudan: 'SD', Eritrea: 'ER', Ethiopia: 'ET', 'Saudi Arabia': 'SA', Oman: 'OM', Yemen: 'YE', Syria: 'SY', Lebanon: 'LB', Iran: 'IR', 'Türkiye': 'TR', Turkey: 'TR', Azerbaijan: 'AZ', UK: 'GB', 'United Kingdom': 'GB', Spain: 'ES', Russia: 'RU', UAE: 'AE' };
   LK = { SCR: 0, FRM: 1, FLX: 2, BAT: 4, CAM: 5, SML: 6, BCV: 7 };
   componentDidMount() {
+    this.offRp = onReplay(() => this.secRef.current, () => { cancelAnimationFrame(this.cuR); this.setState({ seen: false, cu: 0 }); }); // 14 Oct · H-G2: replay from the start
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 60);
     const sp = window.seParts; const pk = sp && sp.peek && sp.peek(); if (pk) this.setState({ lib: pk }); this.onLib = (e) => this.setState({ lib: e.detail }); window.addEventListener('se:parts-lib', this.onLib);
     this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) { this.setState({ seen: true }); const t0 = performance.now() + 300; const f = (t) => { const k = Math.max(0, Math.min(1, (t - t0) / 900)); this.setState({ cu: 1 - Math.pow(1 - k, 3) }); if (k < 1) this.cuR = requestAnimationFrame(f); }; this.cuR = requestAnimationFrame(f); } }, { threshold: 0.25 });
@@ -22,7 +24,7 @@ class Component extends DCLogic {
     const next = () => { this.tm = setTimeout(() => { this.tick(); next(); }, 2500 + Math.random() * 1500); }; next(); // a new event every 2.5–4s
     this.tv = setInterval(() => { if (this.vis && !document.hidden) this.setState((s) => ({ tr: s.tr + 1, now: Date.now() })); }, 3000);
   }
-  componentWillUnmount() { cancelAnimationFrame(this.cuR); clearTimeout(this.tm); clearTimeout(this.pT); [this.tv, this.dIv].forEach(clearInterval); this.io && this.io.disconnect(); window.removeEventListener('se:parts-lib', this.onLib); }
+  componentWillUnmount() { this.offRp && this.offRp(); cancelAnimationFrame(this.cuR); clearTimeout(this.tm); clearTimeout(this.pT); [this.tv, this.dIv].forEach(clearInterval); this.io && this.io.disconnect(); window.removeEventListener('se:parts-lib', this.onLib); }
   events() { const D = this.state.data; if (!D) return []; if (this._eD === D) return this._ev; this._eD = D; const P = D.products, by = (id) => P.find((p) => p.id === id);
     this._ev = D.events.map((e) => { const p = e.pid && by(e.pid); const name = p ? p.title + ' · ' + (this.GN[p.grade] || '') : '';
       return { type: e.type, p, cc: e.type === 'shipped' ? this.ISO[e.country] || (e.country || '').slice(0, 2).toUpperCase() : '', text: e.type === 'shipped' ? e.city + ', ' + e.country : name, note: e.type === 'low' && p ? 'only ' + p.stock_qty + ' left' : e.type === 'shipped' ? e.note : e.type === 'drop' ? e.note : p ? 'AED ' + p.retail_price : '' }; }).filter((e) => e.text);
@@ -36,7 +38,7 @@ class Component extends DCLogic {
   }
   renderVals() {
     const s = this.state, E = this.events(), pad = (n) => String(n).padStart(2, '0'), lib = s.lib;
-    const TAG = { arrival: ['JUST LANDED', '#F7C032', '#1A1B1D'], restock: ['BACK IN STOCK', 'rgba(255,255,255,.12)', '#F2F3F4'], low: ['LOW STOCK', 'rgba(229,72,77,.18)', '#FF8A8E'], drop: ['PRICE DROP', 'rgba(247,192,50,.16)', '#FFDB6E'], shipped: ['SHIPPED', 'rgba(43,182,115,.16)', '#5FD49A'] };
+    const TAG = { arrival: ['JUST LANDED', '#F7C032', '#26282B'], restock: ['BACK IN STOCK', 'rgba(255,255,255,.12)', '#F2F3F4'], low: ['LOW STOCK', 'rgba(229,72,77,.18)', '#FF8A8E'], drop: ['PRICE DROP', 'rgba(247,192,50,.16)', '#FFDB6E'], shipped: ['SHIPPED', 'rgba(43,182,115,.16)', '#5FD49A'] };
     const g = new Date(s.now), gst = new Date(g.getTime() + g.getTimezoneOffset() * 6e4 + 4 * 36e5), base = gst.getHours() * 60 + gst.getMinutes();
     // the newest 6 matching events (the board shows the history, newest first)
     const list = []; for (let j = 0; j < 40 && E.length && list.length < 6; j++) { const idx = ((s.i - j) % E.length + E.length) % E.length, e = E[idx]; if (s.filt !== 'all' && this.MAP[e.type] !== s.filt) continue; list.push({ e, j }); }

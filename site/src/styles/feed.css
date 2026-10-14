@@ -88,9 +88,9 @@
 @keyframes ttHeart { 0% { opacity: 0; transform: translate(0, 0) scale(.6); } 15% { opacity: 1; } 100% { opacity: 0; transform: translate(calc(-10px + var(--i) * 4px), -110px) scale(1.1); } }
 .tt-cap { position: absolute; left: 7%; right: 24%; bottom: 6%; z-index: 2; display: flex; flex-direction: column; gap: 3px; font-size: 9.5px; line-height: 1.35; }
 .tt-cap b { font-size: 10px; }
-.fb { padding-top: 9%; background: #F2F3F4; color: #1A1B1D; }
+.fb { padding-top: 9%; background: #F2F3F4; color: #26282B; }
 .fb-cover { position: relative; height: 54px; margin: 0 -6.4% 0; background: linear-gradient(120deg, #F7C032, #FFDB6E); }
-.fb-av { position: absolute; left: 10px; bottom: -14px; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #1A1B1D; color: #F7C032; font: 700 11px 'Space Grotesk', sans-serif; box-shadow: 0 0 0 2px #F2F3F4; }
+.fb-av { position: absolute; left: 10px; bottom: -14px; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #26282B; color: #F7C032; font: 700 11px 'Space Grotesk', sans-serif; box-shadow: 0 0 0 2px #F2F3F4; }
 .fb-id { display: flex; justify-content: space-between; align-items: center; padding: 18px 2px 8px; font-size: 10px; }
 .fb-follow { padding: 3px 8px; border-radius: 6px; background: #1877F2; color: #fff; font-size: 9px; font-weight: 600; }
 .fb-post { display: flex; flex-direction: column; gap: 5px; padding: 8px; border-radius: 8px; background: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, .08); }
@@ -99,7 +99,7 @@
 .fb-m svg { color: #E5484D; width: 10px; height: 10px; }
 
 /* B · What customers say */
-.rv { position: relative; overflow: hidden; padding: 96px 0 80px; background: radial-gradient(60% 70% at 18% 20%, rgba(255, 219, 110, .35), rgba(255, 219, 110, 0) 70%), #FFFFFF; color: #1A1B1D; }
+.rv { position: relative; overflow: hidden; padding: 96px 0 80px; background: radial-gradient(60% 70% at 18% 20%, rgba(255, 219, 110, .35), rgba(255, 219, 110, 0) 70%), #FFFFFF; color: #26282B; }
 .rv-in { width: 1272px; max-width: calc(100% - 48px); margin: 0 auto; }
 .rv-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }
 .rv-eb { font: 600 12px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #8A6A1E; }
@@ -113,11 +113,11 @@
 .rv-seen .rv-g-stars i { animation: rvStar .4s cubic-bezier(.3, 1.6, .5, 1) both; }
 @keyframes rvStar { 0% { color: #E4E5E7; transform: scale(.6); } 60% { transform: scale(1.3); } 100% { color: #F7C032; transform: none; } }
 .rv-g-t small { font: 500 13px Inter, sans-serif; color: #5E6064; }
-.rv-g-t small b { color: #1A1B1D; }
+.rv-g-t small b { color: #26282B; }
 .rv-g-acts { display: flex; flex-direction: column; gap: 8px; margin-inline-start: 10px; }
 .rv-btn { display: inline-flex; align-items: center; justify-content: center; height: 40px; padding: 0 16px; border: none; border-radius: 10px; font: 600 14px Inter, sans-serif; text-decoration: none; cursor: pointer; white-space: nowrap; }
-.rv-btn.dark { background: #1A1B1D; color: #fff; }
-.rv-btn.line { background: transparent; color: #1A1B1D; box-shadow: inset 0 0 0 1.5px rgba(26, 27, 29, .25); }
+.rv-btn.dark { background: #26282B; color: #fff; }
+.rv-btn.line { background: transparent; color: #26282B; box-shadow: inset 0 0 0 1.5px rgba(26, 27, 29, .25); }
 .rv-row { position: relative; margin-top: 22px; overflow: hidden; }
 .rv-row:first-of-type { margin-top: 44px; }
 .rv-track { display: flex; gap: 16px; width: max-content; padding: 6px 0 14px; animation: rvMove 48s linear infinite; }
@@ -128,7 +128,7 @@
 .rv-q { position: absolute; right: 18px; top: 2px; font: 700 64px/1 'Space Grotesk', sans-serif; color: #F7C032; }
 .rv-card blockquote { margin: 0; padding-inline-end: 30px; font: 500 15px/1.5 Inter, sans-serif; color: #26282B; }
 .rv-card figcaption { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; font: 400 12px Inter, sans-serif; color: #5E6064; }
-.rv-card figcaption b { font: 700 13px Inter, sans-serif; color: #1A1B1D; }
+.rv-card figcaption b { font: 700 13px Inter, sans-serif; color: #26282B; }
 .rv-card .rv-stars { width: 100%; color: #F7C032; font-size: 14px; letter-spacing: 2px; }
 .rv-card figcaption em { margin-inline-start: auto; padding: 2px 7px; border-radius: 6px; background: #F2F3F4; font: 600 10px 'JetBrains Mono', monospace; font-style: normal; color: #8C9096; }
 .rv-fade { position: absolute; top: 0; bottom: 0; width: 120px; pointer-events: none; }

@@ -25,7 +25,7 @@ function render(v: Vals) {
             border: 'none',
             borderRadius: '10px',
             background: '#F7C032',
-            color: '#1A1B1D',
+            color: '#26282B',
             fontWeight: '600',
             fontSize: '15px',
             fontFamily: 'Inter,sans-serif',

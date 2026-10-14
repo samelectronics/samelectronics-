@@ -39,8 +39,8 @@ export function MapDubai() {
       <g transform="translate(332 150)">
         <circle r="10" className="st-pulse" />
         <circle r="10" className="st-pulse b" />
-        <path d="M0 0 C -4 -10 -14 -16 -14 -27 a14 14 0 0 1 28 0 C 14 -16 4 -10 0 0 Z" fill="#F7C032" stroke="#1A1B1D" strokeWidth="1.5" />
-        <circle cy="-27" r="5" fill="#1A1B1D" />
+        <path d="M0 0 C -4 -10 -14 -16 -14 -27 a14 14 0 0 1 28 0 C 14 -16 4 -10 0 0 Z" fill="#F7C032" stroke="#26282B" strokeWidth="1.5" />
+        <circle cy="-27" r="5" fill="#26282B" />
       </g>
     </svg>
   );

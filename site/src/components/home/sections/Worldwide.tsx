@@ -62,7 +62,7 @@ export default function Worldwide({ v }: { v: Vals }) {
                 letterSpacing: '-.03em',
               }}
             >
-              From Deira to the world.
+              <span>From Deira</span> <span>to the world.</span>
             </h2>
             {'\n        '}
             <p style={{ margin: '0', fontSize: '17px', lineHeight: '1.55', color: '#D5D7DA', maxWidth: '540px' }}>
@@ -110,7 +110,7 @@ export default function Worldwide({ v }: { v: Vals }) {
               position: 'relative',
               borderRadius: '24px',
               overflow: 'hidden',
-              background: '#1A1B1D',
+              background: '#26282B',
               boxShadow: 'inset 0 0 0 1px rgba(255,255,255,.08),0 30px 60px rgba(0,0,0,.4)',
               aspectRatio: '1200/620',
             }}

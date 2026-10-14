@@ -1436,3 +1436,67 @@ That is below the baseline set in Step 2.
 - Repair Lab has no issue of its own in the PDF and is unchanged.
 
 **Live:** https://samelectronics.vercel.app
+
+---
+
+# Home improvements 14 Oct (owner list + PDF "Home Improvements 14 Oct")
+Rule for this round: the owner's list wins over the Director's Edition PDF wherever they disagree. Each fix changes only the thing it names. One commit per section ("Home 14 Oct · §NN …").
+
+## §00 · Global rules
+**H-G1 entrance / H-G2 replay**
+- New `src/components/perf/SectionFX.tsx`, mounted once in Home. It watches every home section.
+- At ~25% in view the section gets `data-se-in`.
+- The sections that had no entrance of their own (Repair Lab, Worldwide, Who are you?, Feed, Reviews, Request + Visit) now get one generic entrance: titles, text, buttons and cards fade and rise in with a stagger. It uses WAAPI on the separate `translate` / `scale` properties, so it never fights a transform the section writes itself.
+- When a section fully leaves the view, it is reset silently. Its CSS animations restart (`data-se-rp` → `animation: none` → removed on return), and a `se:replay` event tells its own logic to reset its state (Deals, Live Board, Showcase, Wholesale, Story, Team physics, Who, Circuit, Meet, Feed, Reviews, Visit, Finale).
+- Test (`replay.mjs`): every section goes seen → reset → seen again.
+- The hero and the teardown keep their own state machines; the teardown reset is §07.
+
+**H-G3 no jumping**
+- Root cause in What we offer: the WebGL canvas host was `position: sticky` while the cards scroll on the compositor, so the canvas lagged a frame behind the cards and "jumped".
+- The host is now absolute and is moved over the visible group of cards each frame (`placeHost`). The canvas and the cards now scroll together.
+
+**H-G4 24px safe zone**
+- Hero circuits that ran under the search bar, the trust badges and the devices were shortened, and their nodes were moved (6 paths, both the base and the pulse copies).
+- Audit after the fix:
+  - #top: one empty dynamic path;
+  - #network: one false positive (the route drawing inside the Tracked box);
+  - #finale: the circuits run into the emblem on purpose and are revisited in §20.
+
+**H-G5 no #000 and two-tone titles**
+- `#1A1B1D` was replaced by graphite `#26282B` across the source (40 files).
+- What is still near-black is allowed: device screens, the camera island, real bezels and flags.
+- Title choices (`src/styles/titles.css`, plus the AR halves in `ar.ts`):
+
+| Section | Background | Title |
+|---|---|---|
+| Teardown | dark | white + yellow (unchanged) |
+| What we offer | light | graphite + grey line with yellow marker |
+| Live Parts Board | dark | white + yellow 2nd line |
+| Bench Test | yellow | graphite on yellow (unchanged) |
+| Showcase | light | graphite + grey line with yellow marker |
+| Deals | dark | white + yellow 2nd line (was grey) |
+| Repair Lab | light | graphite, "guaranteed." on yellow marker |
+| Wholesale | yellow | graphite on yellow (unchanged) |
+| Worldwide | dark | white + yellow "to the world." |
+| Our story | cream | graphite + grey line with yellow marker |
+| Team | dark | white + yellow 2nd line |
+| Who are you? | light | graphite, 2nd sentence on yellow marker |
+| Sam Circuit | dark | white + yellow "charges you up." |
+| Meet Samsoom | yellow | graphite on yellow (unchanged) |
+| Feed | dark | white + yellow "for daily stock drops." |
+| Reviews | white | graphite, "already trust us." on yellow marker |
+| Request + Visit | dark | white + yellow "We print the work order." |
+| Finale | dark | neon headline, done in §20 |
+
+- Why a marker on light backgrounds: yellow text on white or cream fails contrast. A yellow highlighter band under graphite text keeps "graphite + yellow" readable. In Arabic the marker follows the line (checked).
+
+**H-G7 fps:** the "before" figures are the final-check table above. The "after" figures for every section are in the final 14 Oct table.
+
+**Screens:** `t-en-*.png` / `t-ar-*.png` (every title, 1440, EN + AR).
+
+DONE WHEN
+- Every section enters and replays. **PASS**
+- What we offer doesn't jump. **PASS**
+- Hero circuits keep their clearance. **PASS** (the Finale is in §20)
+- No #000 / #1A1B1D; two-tone titles. **PASS**
+- Build passes. **PASS**

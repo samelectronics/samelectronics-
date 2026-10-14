@@ -137,7 +137,7 @@ function render(v: Vals) {
         <header className="fd-top">
           <div>
             <span className="fd-eb">THE FEED · @SAMELECTRONICS.UAE</span>
-            <h2 className="fd-h">Follow @samelectronics.uae for daily stock drops.</h2>
+            <h2 className="fd-h"><span>Follow @samelectronics.uae</span> <span>for daily stock drops.</span></h2>
             <div className="fd-links">
               {(v.ch || []).map((c: any) => (
                 <a key={c.id} href={c.href} target="_blank" rel="noopener noreferrer">

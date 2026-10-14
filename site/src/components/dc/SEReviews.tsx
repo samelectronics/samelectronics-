@@ -4,6 +4,7 @@
 'use client';
 import React from 'react';
 import { type Vals, createDC, DCLogic } from '@/dc/runtime';
+import { onReplay } from '@/components/perf/SectionFX';
 
 export const REVIEWS: [string, string, string][] = [
   ['Found the exact screen for my customer’s phone in minutes. Tested before I left the counter.', 'A. K.', 'Repair shop · Deira'],
@@ -22,11 +23,13 @@ class Logic extends DCLogic {
   state = { seen: false };
   io?: IntersectionObserver;
   raf = 0;
+  offRp?: () => void;
   componentDidMount() {
+    this.offRp = onReplay(() => this.secRef.current, () => { cancelAnimationFrame(this.raf); this.setState({ seen: false }); }); // 14 Oct · H-G2
     this.io = new IntersectionObserver(([e]) => { if (e.isIntersecting && !this.state.seen) { this.setState({ seen: true }); this.count(); } }, { threshold: 0.3 });
     setTimeout(() => this.secRef.current && this.io && this.io.observe(this.secRef.current), 50);
   }
-  componentWillUnmount() { this.io && this.io.disconnect(); cancelAnimationFrame(this.raf); }
+  componentWillUnmount() { this.offRp && this.offRp(); this.io && this.io.disconnect(); cancelAnimationFrame(this.raf); }
   count() {
     const el = this.secRef.current && (this.secRef.current.querySelector('[data-count]') as HTMLElement | null); if (!el) return; const t0 = performance.now() + 900;
     const step = (now: number) => { const k = Math.max(0, Math.min(1, (now - t0) / 1300)), v = String(Math.round(COUNT * (1 - Math.pow(1 - k, 3)))); if (el.textContent !== v) el.textContent = v; if (k < 1) this.raf = requestAnimationFrame(step); };
@@ -75,7 +78,7 @@ function render(v: Vals) {
         <div className="rv-head">
           <div>
             <span className="rv-eb">WHAT CUSTOMERS SAY</span>
-            <h2 className="rv-h">Shops across four regions already trust us.</h2>
+            <h2 className="rv-h"><span>Shops across four regions</span> <span>already trust us.</span></h2>
           </div>
           <div className="rv-g">
             <span className="rv-g-logo" aria-hidden="true">

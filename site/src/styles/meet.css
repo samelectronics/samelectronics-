@@ -1,5 +1,5 @@
 /* Issue 14 · Meet Samsoom, "Ask at 3 a.m.": a warm yellow studio, Samsoom floating on the teardown phone, a graphite chat */
-.mt { position: relative; overflow: hidden; background: radial-gradient(70% 80% at 30% 40%, #FFD45C, #F7C032 55%, #E9B124); color: #1A1B1D; }
+.mt { position: relative; overflow: hidden; background: radial-gradient(70% 80% at 30% 40%, #FFD45C, #F7C032 55%, #E9B124); color: #26282B; }
 .mt::before { content: ''; position: absolute; inset: 0; opacity: .035; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 .mt-vig { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 100% at 50% 40%, rgba(150, 95, 0, 0) 55%, rgba(150, 95, 0, .22)); }
 .mt-in { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 520px; gap: 48px; width: 1272px; max-width: calc(100% - 48px); margin: 0 auto; padding: 96px 0 80px; align-items: start; }
@@ -74,7 +74,7 @@
 @keyframes mtIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 .mt-m.me { align-self: flex-end; align-items: flex-end; }
 .mt-m .bub { padding: 10px 14px; border-radius: 16px 16px 16px 4px; background: rgba(255, 255, 255, .08); font: 400 14.5px/1.45 Inter, sans-serif; color: #F2F3F4; }
-.mt-m.me .bub { border-radius: 16px 16px 4px 16px; background: #F7C032; color: #1A1B1D; font-weight: 500; }
+.mt-m.me .bub { border-radius: 16px 16px 4px 16px; background: #F7C032; color: #26282B; font-weight: 500; }
 .mt-m.typing { flex-direction: row; align-items: center; gap: 5px; padding: 13px 16px; border-radius: 16px 16px 16px 4px; background: rgba(255, 255, 255, .08); }
 .mt-m.typing i { width: 7px; height: 7px; border-radius: 50%; background: #F7C032; animation: slDot .9s ease-in-out infinite; }
 .mt-m.typing i:nth-child(2) { animation-delay: .15s; } .mt-m.typing i:nth-child(3) { animation-delay: .3s; }
@@ -88,7 +88,7 @@
 .mt-card .tx small { font: 400 12px Inter, sans-serif; color: #9DA1A6; }
 .mt-card .tx small em { font-style: normal; color: #FFDB6E; font-family: 'JetBrains Mono', monospace; }
 .mt-card .tx strong { font: 700 18px 'Space Grotesk', sans-serif; color: #F7C032; }
-.mt-add { margin-inline-start: auto; height: 36px; padding: 0 12px; border: none; border-radius: 9px; background: #F7C032; color: #1A1B1D; font: 600 13px Inter, sans-serif; cursor: pointer; white-space: nowrap; }
+.mt-add { margin-inline-start: auto; height: 36px; padding: 0 12px; border: none; border-radius: 9px; background: #F7C032; color: #26282B; font: 600 13px Inter, sans-serif; cursor: pointer; white-space: nowrap; }
 .mt-card.grades { flex-direction: column; align-items: stretch; gap: 6px; }
 .mt-card.grades .row { display: flex; align-items: center; gap: 10px; padding: 4px; border-radius: 10px; }
 .mt-card.grades .row:first-child { background: rgba(247, 192, 50, .1); }
@@ -109,9 +109,9 @@
 .mt-card.ship .tx > span { display: flex; flex-direction: column; gap: 2px; }
 .mt-card.ship .tx small { font: 600 10px 'JetBrains Mono', monospace; letter-spacing: .12em; }
 .mt-card.ship .tx b { font-size: 13px; }
-.mt-flyq { position: absolute; left: 20px; bottom: 74px; z-index: 5; padding: 9px 14px; border-radius: 999px; background: rgba(255, 255, 255, .92); color: #1A1B1D; font: 500 14px Inter, sans-serif; white-space: nowrap; box-shadow: 0 10px 22px rgba(0, 0, 0, .3); pointer-events: none; animation: mtFlyQ .7s cubic-bezier(.4, 0, .2, 1) both; }
+.mt-flyq { position: absolute; left: 20px; bottom: 74px; z-index: 5; padding: 9px 14px; border-radius: 999px; background: rgba(255, 255, 255, .92); color: #26282B; font: 500 14px Inter, sans-serif; white-space: nowrap; box-shadow: 0 10px 22px rgba(0, 0, 0, .3); pointer-events: none; animation: mtFlyQ .7s cubic-bezier(.4, 0, .2, 1) both; }
 @keyframes mtFlyQ { 0% { opacity: 0; transform: translate(-560px, 120px) scale(.8); } 30% { opacity: 1; } 80% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-20px); } }
-.mt-ask { display: flex; align-items: center; justify-content: space-between; height: 60px; padding: 0 22px; border: none; background: #1A1B1D; color: #fff; font: 600 15px Inter, sans-serif; cursor: pointer; border-top: 1px solid rgba(255, 255, 255, .06); }
+.mt-ask { display: flex; align-items: center; justify-content: space-between; height: 60px; padding: 0 22px; border: none; background: #26282B; color: #fff; font: 600 15px Inter, sans-serif; cursor: pointer; border-top: 1px solid rgba(255, 255, 255, .06); }
 .mt-ask svg { color: #F7C032; }
 @media (max-width: 1100px) { .mt-in { grid-template-columns: 1fr; } .mt-chat { height: 600px; } }
 .mt-m.bot { align-self: flex-start; }

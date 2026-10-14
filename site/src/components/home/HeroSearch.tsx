@@ -96,11 +96,11 @@ export default function HeroSearch({ typed, openFmp }: { typed: React.ReactNode;
       role="search"
       style={{
         position: 'relative', width: '620px', display: 'flex', alignItems: 'center', gap: '12px', height: '64px', boxSizing: 'border-box',
-        padding: '0 7px 0 20px', borderRadius: '10px', background: '#FFFFFF', color: '#1A1B1D', textAlign: 'left', cursor: 'text',
+        padding: '0 7px 0 20px', borderRadius: '10px', background: '#FFFFFF', color: '#26282B', textAlign: 'left', cursor: 'text',
         boxShadow: '0 0 0 2px rgba(247,192,50,.4),0 0 30px rgba(247,192,50,.18)',
       }}
     >
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A1B1D" strokeWidth="2">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#26282B" strokeWidth="2">
         <circle cx="11" cy="11" r="7"></circle>
         <path d="m20 20-3.5-3.5"></path>
       </svg>

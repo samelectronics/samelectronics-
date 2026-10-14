@@ -5,6 +5,7 @@
 // plane and countdown always agree) and the graphite pre-orders card. All prices and stock are the sample feed.
 import React from 'react';
 import { DCLogic } from '@/dc/runtime';
+import { onReplay } from '@/components/perf/SectionFX';
 
 const GN = { OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' };
 const LK = { SCR: 0, FRM: 1, FLX: 2, BAT: 4, CAM: 5, SML: 6, BCV: 7 };
@@ -16,6 +17,7 @@ class Component extends DCLogic {
   state = { data: window.SE_DATA || null, now: Date.now(), seen: false, seenAt: 0, tab: 'all', lib: null, left: 32, waiting: 126 };
   secRef = React.createRef(); trackRef = React.createRef();
   componentDidMount() {
+    this.offRp = onReplay(() => this.secRef.current, () => { this.setState({ seen: false }); }); // 14 Oct · H-G2: replay from the start
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 80);
     const sp = window.seParts, pk = sp && sp.peek && sp.peek(); if (pk) this.setState({ lib: pk }); this.onLib = (e) => this.setState({ lib: e.detail }); window.addEventListener('se:parts-lib', this.onLib);
     this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) this.setState({ seen: true, seenAt: Date.now() }); }, { threshold: 0.2 });
@@ -27,7 +29,7 @@ class Component extends DCLogic {
     // the carousel drifts slowly left, one whole card at a time (so the first and last visible cards are always readable)
     this.drift = setInterval(() => { const el = this.trackRef.current; if (!el || !this.vis || this.hold || this.drag || document.hidden) return; const c = el.querySelector('.dl-card'); if (!c) return; const step = c.getBoundingClientRect().width + 16, max = el.scrollWidth - el.clientWidth; if (max < 4) return; el.scrollTo({ left: el.scrollLeft >= max - 4 ? 0 : el.scrollLeft + step, behavior: 'smooth' }); }, 4500);
   }
-  componentWillUnmount() { clearInterval(this.dIv); clearInterval(this.iv); clearInterval(this.wIv); clearTimeout(this.dT); clearInterval(this.drift); this.io && this.io.disconnect(); window.removeEventListener('se:parts-lib', this.onLib); }
+  componentWillUnmount() { this.offRp && this.offRp(); clearInterval(this.dIv); clearInterval(this.iv); clearInterval(this.wIv); clearTimeout(this.dT); clearInterval(this.drift); this.io && this.io.disconnect(); window.removeEventListener('se:parts-lib', this.onLib); }
   pool() {
     const D = this.state.data; if (!D) return []; if (this._pD === D) return this._pool; this._pD = D;
     const extra = D.products.filter((p) => p.model_id && p.stock_qty > 0 && LK[p.category] != null && !D.deals.some((d) => d.product_id === p.id) && (p.badges.includes('Best seller') || p.badges.includes('New arrival'))).slice(0, Math.max(0, 14 - D.deals.length))

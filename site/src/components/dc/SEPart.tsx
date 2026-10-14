@@ -60,7 +60,7 @@ function render(v: Vals) {
                             bottom: '2px',
                             height: '4px',
                             borderRadius: '1px',
-                            background: '#1A1B1D',
+                            background: '#26282B',
                             boxShadow: 'inset 0 1px 0 #C9A24A',
                           }}
                         ></span>
@@ -359,15 +359,15 @@ function render(v: Vals) {
                           <rect x="67" y="111.6" width="28" height="2.2" rx="1.1" fill="rgba(255,255,255,.55)"></rect>
                           {'\n          '}
                           <circle cx="44.5" cy="119" r="4.6" fill="url(#seFxSt)" stroke="#6E7176" strokeWidth=".6"></circle>
-                          <circle cx="44.5" cy="119" r="2.1" fill="#1A1B1D"></circle>
+                          <circle cx="44.5" cy="119" r="2.1" fill="#26282B"></circle>
                           <circle cx="43.7" cy="118.2" r=".6" fill="rgba(255,255,255,.5)"></circle>
                           {'\n          '}
                           <rect x="101" y="117" width="18" height="8" rx="4" fill="#2A2C2F" stroke="#7D8187" strokeWidth=".5"></rect>
-                          <circle cx="103" cy="121" r=".9" fill="#1A1B1D"></circle>
-                          <circle cx="106.2" cy="121" r=".9" fill="#1A1B1D"></circle>
-                          <circle cx="109.4" cy="121" r=".9" fill="#1A1B1D"></circle>
-                          <circle cx="112.6" cy="121" r=".9" fill="#1A1B1D"></circle>
-                          <circle cx="115.8" cy="121" r=".9" fill="#1A1B1D"></circle>
+                          <circle cx="103" cy="121" r=".9" fill="#26282B"></circle>
+                          <circle cx="106.2" cy="121" r=".9" fill="#26282B"></circle>
+                          <circle cx="109.4" cy="121" r=".9" fill="#26282B"></circle>
+                          <circle cx="112.6" cy="121" r=".9" fill="#26282B"></circle>
+                          <circle cx="115.8" cy="121" r=".9" fill="#26282B"></circle>
                           {'\n          '}
                           <rect x="50" y="117" width="3" height="1.8" rx=".3" fill="#BF9A62"></rect>
                           <rect x="50" y="117" width=".6" height="1.8" fill="#D8D3C4"></rect>
@@ -1022,7 +1022,7 @@ function render(v: Vals) {
                           width: '84px',
                           height: '64px',
                           borderRadius: '12px',
-                          background: 'linear-gradient(150deg,#3A3C40,#1A1B1D 60%)',
+                          background: 'linear-gradient(150deg,#3A3C40,#26282B 60%)',
                           boxShadow:
                             '0 10px 14px -6px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.25),inset 0 0 0 .8px rgba(255,255,255,.12)',
                         }}
@@ -1268,7 +1268,7 @@ function render(v: Vals) {
                             top: '5px',
                             height: '6px',
                             borderRadius: '3px',
-                            background: '#1A1B1D',
+                            background: '#26282B',
                           }}
                         ></span>
                       </div>

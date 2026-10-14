@@ -13,7 +13,7 @@ export default function Hero({ v }: { v: Vals }) {
       id="top"
       data-tone="dark"
       data-screen-label="01 Hero"
-      style={cssToObj(`position:relative;width:100%;height:${s(v.heroH)}px;overflow:hidden;background:#1A1B1D`)}
+      style={cssToObj(`position:relative;width:100%;height:${s(v.heroH)}px;overflow:hidden;background:#26282B`)}
     >
       {'\n  '}
       <div ref={v.heroRef} style={cssToObj(`position:absolute;left:0;top:0;width:1440px;height:1030px;zoom:${s(v.z)};color:#FFFFFF`)}>
@@ -21,7 +21,7 @@ export default function Hero({ v }: { v: Vals }) {
         <div style={{ position: 'absolute', left: '0', top: '0', width: '1440px', height: '860px', overflow: 'hidden' }}>
           {'\n      '}
           <div
-            style={{ position: 'absolute', inset: '0', background: 'linear-gradient(135deg,#3D3E3F 0%,#26282B 48%,#1A1B1D 100%)' }}
+            style={{ position: 'absolute', inset: '0', background: 'linear-gradient(135deg,#3D3E3F 0%,#26282B 48%,#26282B 100%)' }}
           ></div>
           {'\n      '}
           <div
@@ -129,20 +129,20 @@ export default function Hero({ v }: { v: Vals }) {
             {'\n        '}
             <g stroke="rgba(61,62,63,.26)">
               {'\n          '}
-              <path d="M1440 120 H1340 L1300 160 H1160 L1120 200 V230" strokeWidth="2.5"></path>
+              <path d="M1440 120 H1340 L1300 160 H1236" strokeWidth="2.5"></path>
               {'\n          '}
-              <path d="M1440 170 H1390 L1360 200 V300" strokeWidth="2"></path>
-              <path d="M1440 182 H1394 L1372 204 V300" strokeWidth="1"></path>
+              <path d="M1440 170 H1406 L1392 184" strokeWidth="2"></path>
+              <path d="M1440 182 H1410 L1400 192" strokeWidth="1"></path>
               {'\n          '}
               <path d="M1440 400 H1416 L1400 416 V470" strokeWidth="2"></path>
               {'\n          '}
-              <path d="M1040 735 V770 L1014 796 V860" strokeWidth="2.5"></path>
-              <path d="M1290 735 V776 L1314 800 V860" strokeWidth="2.5"></path>
+              <path d="M1030 806 L1014 822 V860" strokeWidth="2.5"></path>
+              <path d="M1300 812 L1314 826 V860" strokeWidth="2.5"></path>
               {'\n          '}
               <path d="M1440 620 H1420 L1404 636 V700" strokeWidth="1"></path>
               <path d="M1020 0 V40 L1050 70 H1240" strokeWidth="1.5"></path>
               {'\n          '}
-              <path d="M1440 60 H1300 L1270 90 H1100" strokeWidth="1"></path>
+              <path d="M1440 60 H1340" strokeWidth="1"></path>
               <path d="M1440 770 H1380 L1360 790 V860" strokeWidth="4" stroke="rgba(26,27,29,.12)"></path>
               {'\n        '}
             </g>
@@ -218,17 +218,17 @@ export default function Hero({ v }: { v: Vals }) {
               {'\n          '}
               <path
                 pathLength="1000"
-                d="M1440 120 H1340 L1300 160 H1160 L1120 200 V230"
+                d="M1440 120 H1340 L1300 160 H1236"
                 style={{ animation: 'sePulse 2.9s .2s linear infinite' }}
               ></path>
               {'\n          '}
-              <path pathLength="1000" d="M1440 170 H1390 L1360 200 V300" style={{ animation: 'sePulse 3.4s 1s linear infinite' }}></path>
+              <path pathLength="1000" d="M1440 170 H1406 L1392 184" style={{ animation: 'sePulse 3.4s 1s linear infinite' }}></path>
               {'\n          '}
               <path pathLength="1000" d="M1440 400 H1416 L1400 416 V470" style={{ animation: 'sePulse 4.4s 1.8s linear infinite' }}></path>
               {'\n          '}
-              <path pathLength="1000" d="M1040 735 V770 L1014 796 V860" style={{ animation: 'sePulseRev 3.1s linear infinite' }}></path>
+              <path pathLength="1000" d="M1030 806 L1014 822 V860" style={{ animation: 'sePulseRev 3.1s linear infinite' }}></path>
               {'\n          '}
-              <path pathLength="1000" d="M1290 735 V776 L1314 800 V860" style={{ animation: 'sePulseRev 2.6s .7s linear infinite' }}></path>
+              <path pathLength="1000" d="M1300 812 L1314 826 V860" style={{ animation: 'sePulseRev 2.6s .7s linear infinite' }}></path>
               {'\n          '}
               <path
                 pathLength="1000"
@@ -264,14 +264,14 @@ export default function Hero({ v }: { v: Vals }) {
             <g fill="#F7C032" stroke="rgba(61,62,63,.55)" strokeWidth="2">
               {'\n          '}
               <circle cx="1300" cy="160" r="4.5"></circle>
-              <circle cx="1360" cy="200" r="4"></circle>
+              <circle cx="1392" cy="184" r="4"></circle>
               <circle cx="1400" cy="416" r="4"></circle>
-              <circle cx="1014" cy="796" r="4.5"></circle>
-              <circle cx="1314" cy="800" r="4.5"></circle>
+              <circle cx="1030" cy="806" r="4.5"></circle>
+              <circle cx="1300" cy="812" r="4.5"></circle>
               <circle cx="1404" cy="636" r="3.5"></circle>
               <circle cx="1050" cy="70" r="3.5"></circle>
               <circle cx="1240" cy="70" r="3.5"></circle>
-              <circle cx="1100" cy="90" r="3"></circle>
+              <circle cx="1340" cy="60" r="3"></circle>
               <circle cx="1360" cy="790" r="3.5"></circle>
               {'\n        '}
             </g>
@@ -432,7 +432,7 @@ export default function Hero({ v }: { v: Vals }) {
                     borderRadius: '16px',
                     background: '#F2F3F4',
                     overflow: 'hidden',
-                    color: '#1A1B1D',
+                    color: '#26282B',
                     contain: 'layout paint',
                   }}
                 >
@@ -451,22 +451,22 @@ export default function Hero({ v }: { v: Vals }) {
                     <span>{t(v.clock)}</span>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <span style={{ display: 'flex', alignItems: 'flex-end', gap: '1.5px' }}>
-                        <span style={{ width: '3px', height: '4px', background: '#1A1B1D' }}></span>
-                        <span style={{ width: '3px', height: '6px', background: '#1A1B1D' }}></span>
-                        <span style={{ width: '3px', height: '8px', background: '#1A1B1D' }}></span>
-                        <span style={{ width: '3px', height: '10px', background: '#1A1B1D' }}></span>
+                        <span style={{ width: '3px', height: '4px', background: '#26282B' }}></span>
+                        <span style={{ width: '3px', height: '6px', background: '#26282B' }}></span>
+                        <span style={{ width: '3px', height: '8px', background: '#26282B' }}></span>
+                        <span style={{ width: '3px', height: '10px', background: '#26282B' }}></span>
                       </span>
                       <span
                         style={{
                           width: '20px',
                           height: '9px',
                           borderRadius: '3px',
-                          border: '1.5px solid #1A1B1D',
+                          border: '1.5px solid #26282B',
                           boxSizing: 'border-box',
                           padding: '1px',
                         }}
                       >
-                        <span style={{ display: 'block', width: '80%', height: '100%', borderRadius: '1px', background: '#1A1B1D' }}></span>
+                        <span style={{ display: 'block', width: '80%', height: '100%', borderRadius: '1px', background: '#26282B' }}></span>
                       </span>
                     </span>
                   </div>
@@ -545,7 +545,7 @@ export default function Hero({ v }: { v: Vals }) {
                     </span>
                     {'\n                '}
                     <span data-ipcart="1" style={{ position: 'relative', display: 'flex' }}>
-                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1A1B1D" strokeWidth="2">
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#26282B" strokeWidth="2">
                         <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
                         <path d="M3 6h18"></path>
                         <path d="M16 10a4 4 0 0 1-8 0"></path>
@@ -609,7 +609,7 @@ export default function Hero({ v }: { v: Vals }) {
                         flex: 'none',
                         borderRadius: '50%',
                         background: '#F7C032',
-                        color: '#1A1B1D',
+                        color: '#26282B',
                         fontSize: '10px',
                         fontWeight: '700',
                       }}
@@ -699,7 +699,7 @@ export default function Hero({ v }: { v: Vals }) {
                                     top: '5px',
                                     padding: '2px 5px',
                                     borderRadius: '5px',
-                                    background: '#1A1B1D',
+                                    background: '#26282B',
                                     color: '#F7C032',
                                     fontFamily: "'JetBrains Mono',monospace",
                                     fontSize: '8px',
@@ -718,7 +718,7 @@ export default function Hero({ v }: { v: Vals }) {
                                     width: '20px',
                                     height: '20px',
                                     borderRadius: '50%',
-                                    background: '#1A1B1D',
+                                    background: '#26282B',
                                     color: '#FFFFFF',
                                     display: 'grid',
                                     placeItems: 'center',
@@ -878,7 +878,7 @@ export default function Hero({ v }: { v: Vals }) {
               {'\n          '}
               <div style={{ position: 'absolute', inset: '3px', borderRadius: '35px', background: '#08090A', overflow: 'hidden' }}>
                 {'\n            '}
-                <div style={{ position: 'absolute', inset: '7px', borderRadius: '29px', overflow: 'hidden', background: '#1A1B1D' }}>
+                <div style={{ position: 'absolute', inset: '7px', borderRadius: '29px', overflow: 'hidden', background: '#26282B' }}>
                   {'\n              '}
                   <div data-se-reel="1" style={{ position: 'absolute', inset: '0', zIndex: '0' }}>
                     {'\n                '}
@@ -1021,7 +1021,7 @@ export default function Hero({ v }: { v: Vals }) {
                                             width: '18px',
                                             height: '8px',
                                             borderRadius: '2px',
-                                            background: 'linear-gradient(180deg,#3A3C40,#1A1B1D)',
+                                            background: 'linear-gradient(180deg,#3A3C40,#26282B)',
                                             boxShadow: 'inset 0 0 0 .5px rgba(255,255,255,.18)',
                                           }}
                                         >
@@ -1932,7 +1932,7 @@ export default function Hero({ v }: { v: Vals }) {
                   padding: '0 14px',
                   borderRadius: '10px',
                   background: '#F7C032',
-                  color: '#1A1B1D',
+                  color: '#26282B',
                   fontSize: '14px',
                   fontWeight: '600',
                   whiteSpace: 'nowrap',
@@ -2030,7 +2030,7 @@ export default function Hero({ v }: { v: Vals }) {
                   border: 'none',
                   borderRadius: '10px',
                   background: '#F7C032',
-                  color: '#1A1B1D',
+                  color: '#26282B',
                   fontWeight: '600',
                   fontSize: '14px',
                   cursor: 'pointer',

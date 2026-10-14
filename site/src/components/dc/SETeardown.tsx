@@ -65,11 +65,11 @@ function render(v: Vals) {
                   {'\n        '}
                   <div
                     style={cssToObj(
-                      `position:absolute;left:0;right:0;top:0;height:42%;background:linear-gradient(180deg,#1A1B1D,rgba(26,27,29,0));opacity:${s(v.studio?.ent)}`,
+                      `position:absolute;left:0;right:0;top:0;height:42%;background:linear-gradient(180deg,#26282B,rgba(26,27,29,0));opacity:${s(v.studio?.ent)}`,
                     )}
                   ></div>
                   {'\n        '}
-                  <div style={cssToObj(`position:absolute;inset:0;background:#1A1B1D;opacity:${s(v.studio?.dim)}`)}></div>
+                  <div style={cssToObj(`position:absolute;inset:0;background:#26282B;opacity:${s(v.studio?.dim)}`)}></div>
                   {'\n      '}
                 </div>
                 {'\n      '}
@@ -388,7 +388,7 @@ function render(v: Vals) {
                                 href="#models"
                                 onClick={v.c?.go}
                                 style={cssToObj(
-                                  `margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:12px;height:48px;box-sizing:border-box;padding:0 16px;border-radius:10px;background:#F7C032;color:#1A1B1D;font-size:15px;font-weight:600;text-decoration:none;white-space:nowrap;transition:box-shadow .2s;animation:${s(v.c?.a4)}`,
+                                  `margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:12px;height:48px;box-sizing:border-box;padding:0 16px;border-radius:10px;background:#F7C032;color:#26282B;font-size:15px;font-weight:600;text-decoration:none;white-space:nowrap;transition:box-shadow .2s;animation:${s(v.c?.a4)}`,
                                 )}
                                 className={cx(undefined, 'scp-bd4aecc6')}
                               >
@@ -696,7 +696,7 @@ function render(v: Vals) {
                           borderRadius: '10px',
                           background: '#F7C032',
                           border: '1.5px solid #F7C032',
-                          color: '#1A1B1D',
+                          color: '#26282B',
                           fontWeight: '600',
                           fontSize: '15px',
                           textDecoration: 'none',
@@ -839,7 +839,7 @@ function render(v: Vals) {
               {'\n    '}
               <div
                 style={cssToObj(
-                  `position:absolute;inset:0;background:linear-gradient(180deg,#26282B 0%,#1A1B1D 70%,#141517 100%);opacity:${s(v.bg?.g)};pointer-events:none`,
+                  `position:absolute;inset:0;background:linear-gradient(180deg,#26282B 0%,#26282B 70%,#141517 100%);opacity:${s(v.bg?.g)};pointer-events:none`,
                 )}
               ></div>
               {'\n    \n    '}
@@ -1157,7 +1157,7 @@ function render(v: Vals) {
                           padding: '0 12px',
                           borderRadius: '10px',
                           background: '#F7C032',
-                          color: '#1A1B1D',
+                          color: '#26282B',
                           fontSize: '14px',
                           fontWeight: '600',
                           textDecoration: 'none',
@@ -1195,7 +1195,7 @@ function render(v: Vals) {
               {v.mFin ? (
                 <>
                   {'\n      '}
-                  <div id="offer" style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '18px', color: '#1A1B1D' }}>
+                  <div id="offer" style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '18px', color: '#26282B' }}>
                     {'\n        '}
                     <span
                       style={{
@@ -1342,7 +1342,7 @@ function render(v: Vals) {
                           borderRadius: '10px',
                           background: 'rgba(255,255,255,.35)',
                           border: '1.5px solid #26282B',
-                          color: '#1A1B1D',
+                          color: '#26282B',
                           fontWeight: '600',
                           fontSize: '15px',
                           textDecoration: 'none',

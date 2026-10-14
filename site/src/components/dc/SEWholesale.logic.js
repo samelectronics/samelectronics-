@@ -6,6 +6,7 @@
 // the pallet, the tier ladder steps the unit price down, "You keep" rolls up; at 500 the pallet is shrink-wrapped and labelled.
 import React from 'react';
 import { DCLogic } from '@/dc/runtime';
+import { onReplay } from '@/components/perf/SectionFX';
 
 const LK = { SCR: 0, FRM: 1, FLX: 2, BAT: 4, CAM: 5, SML: 6, BCV: 7 };
 const GN = { OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' };
@@ -22,6 +23,7 @@ class Component extends DCLogic {
   keepRef = React.createRef();
   state = { part: PARTS[0], qty: 50, from: 0, seen: false, lib: null, data: window.SE_DATA || null, flash: 0 };
   componentDidMount() {
+    this.offRp = onReplay(() => this.secRef.current, () => { this.setState({ seen: false, from: 0 }); }); // 14 Oct · H-G2: replay from the start
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 80);
     const sp = window.seParts, pk = sp && sp.peek && sp.peek(); if (pk) this.setState({ lib: pk });
     this.onLib = (e) => this.setState({ lib: e.detail }); window.addEventListener('se:parts-lib', this.onLib);
@@ -31,7 +33,7 @@ class Component extends DCLogic {
     this.shown = this.keep();
     window.seWhs = (q, part) => this.setState({ seen: true, qty: q, part: part || this.state.part, from: MAXC }, () => this.paintKeep(this.keep()));
   }
-  componentWillUnmount() { clearInterval(this.dIv); this.io && this.io.disconnect(); cancelAnimationFrame(this.kRaf); cancelAnimationFrame(this.nRaf); window.removeEventListener('se:parts-lib', this.onLib); window.removeEventListener('se:lang', this.onLang); }
+  componentWillUnmount() { this.offRp && this.offRp(); clearInterval(this.dIv); this.io && this.io.disconnect(); cancelAnimationFrame(this.kRaf); cancelAnimationFrame(this.nRaf); window.removeEventListener('se:parts-lib', this.onLib); window.removeEventListener('se:lang', this.onLang); }
   prod() { const D = this.state.data; return D ? D.products.find((p) => p.id === this.state.part) : null; }
   keep(q = this.state.qty, p = this.prod()) { return p ? (p.retail_price - Math.round(p.retail_price * TIERS[tierOf(q)].f)) * q : 0; }
   paintKeep(v) { this.shown = v; const e = this.keepRef.current; if (e) e.textContent = 'AED ' + fmt(v); }

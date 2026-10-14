@@ -32,7 +32,7 @@ export default function CartDrawer({ v }: { v: Vals }) {
                 display: 'flex',
                 flexDirection: 'column',
                 background: '#FFFFFF',
-                color: '#1A1B1D',
+                color: '#26282B',
                 boxShadow: '-30px 0 80px rgba(0,0,0,.3)',
                 animation: 'seSlideIn .35s cubic-bezier(.2,.8,.2,1)',
               }}
@@ -66,7 +66,7 @@ export default function CartDrawer({ v }: { v: Vals }) {
                     cursor: 'pointer',
                   }}
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A1B1D" strokeWidth="2.2">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#26282B" strokeWidth="2.2">
                     <path d="M6 6l12 12M18 6 6 18"></path>
                   </svg>
                 </button>
@@ -207,7 +207,7 @@ export default function CartDrawer({ v }: { v: Vals }) {
                     height: '44px',
                     padding: '0 16px',
                     borderRadius: '10px',
-                    background: '#1A1B1D',
+                    background: '#26282B',
                     color: '#FFFFFF',
                     fontSize: '15px',
                     fontWeight: '600',

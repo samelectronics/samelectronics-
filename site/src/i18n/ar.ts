@@ -1001,6 +1001,19 @@ export const EXACT: Record<string, string> = {
   placeholders: 'مؤقت',
   Team: 'الفريق',
   'العربية: the full right-to-left Arabic view comes with the language pass.': 'العربية',
+  // 14 Oct · H-G5 two-tone titles (each half is translated on its own)
+  'Fixed, tested,': 'مُصلَح، مفحوص،',
+  'guaranteed.': 'مضمون.',
+  'Tell us what you need.': 'أخبرنا بما تحتاج.',
+  'We print the work order.': 'نطبع لك أمر العمل.',
+  'Shops across four regions': 'محلات في أربع مناطق',
+  'already trust us.': 'تثق بنا بالفعل.',
+  'Follow @samelectronics.uae': 'تابع ‎@samelectronics.uae',
+  'for daily stock drops.': 'لوصول المخزون اليومي.',
+  'One phone or one container.': 'هاتف واحد أو حاوية كاملة.',
+  'We serve everyone like family.': 'نخدم الجميع كالعائلة.',
+  'Every order': 'كل طلب',
+  'charges you up.': 'يشحن رصيدك.',
 };
 
 /** Strings rendered by the canvas engines and the map (window.seI18n.t). */

@@ -22,7 +22,7 @@ export default function Toast({ v }: { v: Vals }) {
               maxWidth: 'calc(100vw - 180px)',
               padding: '12px 16px',
               borderRadius: '12px',
-              background: '#1A1B1D',
+              background: '#26282B',
               color: '#FFFFFF',
               fontSize: '14px',
               boxShadow: '0 0 0 1px rgba(247,192,50,.5),0 20px 40px rgba(0,0,0,.35)',
@@ -40,7 +40,7 @@ export default function Toast({ v }: { v: Vals }) {
                 background: '#F7C032',
               }}
             >
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#1A1B1D" strokeWidth="3.4">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#26282B" strokeWidth="3.4">
                 <path d="M5 12l5 5L20 7"></path>
               </svg>
             </span>

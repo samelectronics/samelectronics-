@@ -5,6 +5,7 @@
 // Every element is a pure function of t, written to the DOM each frame, so pause, arrows and capture are exact.
 import React from 'react';
 import { DCLogic } from '@/dc/runtime';
+import { onReplay } from '@/components/perf/SectionFX';
 
 const cl = (x) => (x < 0 ? 0 : x > 1 ? 1 : x), seg = (t, a, d) => cl((t - a) / d);
 const ex = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * cl(x))), eio = (x) => { x = cl(x); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
@@ -22,6 +23,7 @@ class Component extends DCLogic {
   secRef = React.createRef();
   state = { i: 0, lib: null, data: window.SE_DATA || null, seen: false };
   componentDidMount() {
+    this.offRp = onReplay(() => this.secRef.current, () => { this.t = 0; this.setState({ seen: false, i: 0 }); }); // 14 Oct · H-G2: replay from the start
     this.t = 0; this.alive = true; this.hov = false; let last = performance.now();
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 80);
     const sp = window.seParts, pk = sp && sp.peek && sp.peek(); if (pk) this.setState({ lib: pk }); this.onLib = (e) => this.setState({ lib: e.detail }); window.addEventListener('se:parts-lib', this.onLib);
@@ -34,7 +36,7 @@ class Component extends DCLogic {
     this.onLang = () => this.forceUpdate(); window.addEventListener('se:lang', this.onLang);
     window.seShow = (i, t) => { this.ov = t; this.t = t; this.setState({ i }, () => this.frame()); };
   }
-  componentWillUnmount() { window.removeEventListener('se:lang', this.onLang); this.alive = false; cancelAnimationFrame(this.raf); clearInterval(this.dIv); this.io && this.io.disconnect(); window.removeEventListener('se:parts-lib', this.onLib); }
+  componentWillUnmount() { this.offRp && this.offRp(); window.removeEventListener('se:lang', this.onLang); this.alive = false; cancelAnimationFrame(this.raf); clearInterval(this.dIv); this.io && this.io.disconnect(); window.removeEventListener('se:parts-lib', this.onLib); }
   componentDidUpdate() { this.frame(); }
   next(d, auto) { const n = ADS.length, i = (this.state.i + d + n) % n; this.t = auto ? 0 : 0.02; this.setState({ i }); }
   q(k) { const R = this.secRef.current; if (!R) return null; return R.querySelector('[data-s="' + k + '"]'); }

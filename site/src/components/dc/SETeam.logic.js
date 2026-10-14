@@ -6,6 +6,7 @@
 // away; a click swings a badge up and flips it. An order ticket rides the rail and lights the badges in order.
 import React from 'react';
 import { DCLogic } from '@/dc/runtime';
+import { onReplay } from '@/components/perf/SectionFX';
 
 export const ROLES = [
   { code: 'T01', role: 'Parts Advisor', mono: 'PA', bio: 'Helps you find the exact part and grade, in person.', help: ['Finding the right part for your model', 'Choosing between grades', 'Checking stock on the spot'] },
@@ -21,6 +22,7 @@ class Component extends DCLogic {
   secRef = React.createRef();
   state = { seen: false, flip: -1 };
   componentDidMount() {
+    this.offRp = onReplay(() => this.secRef.current, () => { this.b.forEach((b) => { b.th = 0; b.w = 0; b.y = -720; b.vy = 0; b.dropAt = Infinity; b.landed = false; b.pth = null; }); this.t0 = null; this._g = null; this.setState({ seen: false, flip: -1 }); }); // 14 Oct · H-G2: replay from the start
     this.b = ROLES.map((_, i) => ({ th: 0, w: 0, y: -720, vy: 0, dropAt: Infinity, ph: i * 1.7 + 0.4, om: 2.3 + i * 0.17, amp: 3.2 + (i % 3) * 0.8 }));
     this.mx = null; this.alive = true; this.t = 0; let last = performance.now();
     this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) this.start(); }, { threshold: 0.2 });
@@ -31,7 +33,7 @@ class Component extends DCLogic {
     this.onResize = () => this.measure(); window.addEventListener('resize', this.onResize); setTimeout(() => this.measure(), 120);
     window.seTeam = (t, flip) => { if (!this.state.seen) this.start(); this.b.forEach((b) => { b.y = 0; b.vy = 0; b.th = 0; b.w = 0; b.dropAt = -1; }); this.t0 = this.t - t; if (flip != null) this.setState({ flip }); this.paint(); };
   }
-  componentWillUnmount() { this.alive = false; cancelAnimationFrame(this.raf); this.io && this.io.disconnect(); window.removeEventListener('se:lang', this.onLang); window.removeEventListener('resize', this.onResize); }
+  componentWillUnmount() { this.offRp && this.offRp(); this.alive = false; cancelAnimationFrame(this.raf); this.io && this.io.disconnect(); window.removeEventListener('se:lang', this.onLang); window.removeEventListener('resize', this.onResize); }
   start() { this.setState({ seen: true }); this.b.forEach((b, i) => { b.dropAt = this.t + 0.3 + i * 0.12; }); this.t0 = this.t; }
   step(dt) {
     const t = this.t, R = this.secRef.current;

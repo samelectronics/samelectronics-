@@ -201,7 +201,7 @@ export default function Nav({ v }: { v: Vals }) {
             </svg>
             <span
               style={cssToObj(
-                `position:absolute;top:-4px;right:-6px;min-width:18px;height:18px;padding:0 4px;box-sizing:border-box;border-radius:9px;background:#F7C032;color:#1A1B1D;font-size:11px;font-weight:700;display:grid;place-items:center;transform:scale(${s(v.cartPop)});transition:transform .3s cubic-bezier(.2,1.6,.4,1)`,
+                `position:absolute;top:-4px;right:-6px;min-width:18px;height:18px;padding:0 4px;box-sizing:border-box;border-radius:9px;background:#F7C032;color:#26282B;font-size:11px;font-weight:700;display:grid;place-items:center;transform:scale(${s(v.cartPop)});transition:transform .3s cubic-bezier(.2,1.6,.4,1)`,
               )}
             >
               {t(v.cartCountShown)}

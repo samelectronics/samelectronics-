@@ -87,8 +87,8 @@ function Scene({ id, v }: { id: string; v: Vals }) {
         </div>
         <div className="ret-pin">
           <svg width="26" height="34" viewBox="0 0 26 34" aria-hidden="true">
-            <path d="M13 34 C 9 24 0 20 0 12 a13 13 0 0 1 26 0 C 26 20 17 24 13 34 Z" fill="#F7C032" stroke="#1A1B1D" strokeWidth="1.5" />
-            <circle cx="13" cy="12" r="4.5" fill="#1A1B1D" />
+            <path d="M13 34 C 9 24 0 20 0 12 a13 13 0 0 1 26 0 C 26 20 17 24 13 34 Z" fill="#F7C032" stroke="#26282B" strokeWidth="1.5" />
+            <circle cx="13" cy="12" r="4.5" fill="#26282B" />
           </svg>
           <span>Collect in Deira or get it delivered</span>
         </div>
@@ -220,7 +220,7 @@ function render(v: Vals) {
       <div className="wh-in">
         <div className="wh-left">
           <span className="wh-eb">OPEN TO EVERYONE · WHO ARE YOU?</span>
-          <h2 className="wh-h">One phone or one container. We serve everyone like family.</h2>
+          <h2 className="wh-h"><span>One phone or one container.</span> <span>We serve everyone like family.</span></h2>
           <div className="wh-peek" aria-hidden="true">
             <SESamsoom mood="wave" size={64} />
             <span className="wh-bubble">Who are you?</span>

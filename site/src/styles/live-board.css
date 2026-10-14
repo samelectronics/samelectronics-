@@ -59,7 +59,7 @@
 .lb-tabs { display: flex; gap: 6px; padding: 8px 14px; border-bottom: 1px solid rgba(255, 255, 255, .06); flex: none; }
 .lb-tabs button { height: 28px; padding: 0 12px; border: none; border-radius: 8px; background: transparent; color: #B9BCC0; font: 600 12px Inter, sans-serif; cursor: pointer; transition: background .2s, color .2s; }
 .lb-tabs button:hover { color: #fff; background: rgba(255, 255, 255, .06); }
-.lb-tabs button.on { background: #F7C032; color: #1A1B1D; }
+.lb-tabs button.on { background: #F7C032; color: #26282B; }
 .lb-rows { flex: 1; overflow: hidden; }
 .lb-row { display: grid; grid-template-columns: 50px 118px 36px minmax(0, 1fr) auto; align-items: center; gap: 12px; width: 100%; height: 56px; box-sizing: border-box; padding: 0 18px; border: none; border-bottom: 1px solid rgba(255, 255, 255, .06); background: transparent; color: #E4E5E7; text-align: left; font: 500 14px 'JetBrains Mono', monospace; cursor: pointer; transition: transform .25s cubic-bezier(.2, .8, .2, 1), background .25s; animation: lbRowIn .35s cubic-bezier(.2, .8, .2, 1) both; }
 .lb-row:hover { transform: translateY(-1px); background: rgba(255, 255, 255, .04); }
@@ -90,7 +90,7 @@
 .lb-tick:hover .lb-tick-in { animation-play-state: paused; }
 .lb-chip { display: flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: 10px; white-space: nowrap; font: 500 14px Inter, sans-serif; background: rgba(255, 255, 255, .05); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08); }
 .lb-chip b { font: 600 12px 'JetBrains Mono', monospace; color: #F7C032; display: inline-block; animation: lbRoll .4s cubic-bezier(.2, .8, .2, 1); }
-.lb-cta { display: inline-flex; align-items: center; gap: 10px; height: 52px; margin-top: 24px; padding: 0 20px; border-radius: 10px; background: #F7C032; color: #1A1B1D; font: 600 16px Inter, sans-serif; text-decoration: none; transition: transform .2s, box-shadow .2s; }
+.lb-cta { display: inline-flex; align-items: center; gap: 10px; height: 52px; margin-top: 24px; padding: 0 20px; border-radius: 10px; background: #F7C032; color: #26282B; font: 600 16px Inter, sans-serif; text-decoration: none; transition: transform .2s, box-shadow .2s; }
 .lb-cta:hover { transform: translateY(-2px); box-shadow: 0 0 24px rgba(247, 192, 50, .4); }
 [dir='rtl'] .lb-tick-in { animation-name: lbTickR; }
 

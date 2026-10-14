@@ -276,7 +276,7 @@ export default function Footer({ v }: { v: Vals }) {
               }}
             >
               {/* G9: same switch as the nav (src/i18n/lang.ts). */}
-              <button data-no-i18n onClick={v.english} aria-pressed={!v.isAr} style={{ ...(v.isAr ? { padding: '4px 9px', border: 'none', borderRadius: '7px', background: 'none', color: '#FFFFFF', fontWeight: 400, cursor: 'pointer' } : { padding: '4px 9px', border: 'none', borderRadius: '7px', background: '#FFFFFF', color: '#1A1B1D', fontWeight: 600, cursor: 'pointer' }), font: 'inherit', fontSize: '12px' }}>
+              <button data-no-i18n onClick={v.english} aria-pressed={!v.isAr} style={{ ...(v.isAr ? { padding: '4px 9px', border: 'none', borderRadius: '7px', background: 'none', color: '#FFFFFF', fontWeight: 400, cursor: 'pointer' } : { padding: '4px 9px', border: 'none', borderRadius: '7px', background: '#FFFFFF', color: '#26282B', fontWeight: 600, cursor: 'pointer' }), font: 'inherit', fontSize: '12px' }}>
                 EN
               </button>
               <button
@@ -284,7 +284,7 @@ export default function Footer({ v }: { v: Vals }) {
                 lang="ar"
                 onClick={v.arabic}
                 aria-pressed={!!v.isAr}
-                style={{ ...(v.isAr ? { padding: '4px 9px', border: 'none', borderRadius: '7px', background: '#FFFFFF', color: '#1A1B1D', fontWeight: 600, cursor: 'pointer' } : { padding: '4px 9px', border: 'none', borderRadius: '7px', background: 'none', color: '#FFFFFF', fontWeight: 400, cursor: 'pointer' }), fontFamily: "'IBM Plex Sans Arabic',sans-serif", fontSize: '12px' }}
+                style={{ ...(v.isAr ? { padding: '4px 9px', border: 'none', borderRadius: '7px', background: '#FFFFFF', color: '#26282B', fontWeight: 600, cursor: 'pointer' } : { padding: '4px 9px', border: 'none', borderRadius: '7px', background: 'none', color: '#FFFFFF', fontWeight: 400, cursor: 'pointer' }), fontFamily: "'IBM Plex Sans Arabic',sans-serif", fontSize: '12px' }}
               >
                 عربي
               </button>

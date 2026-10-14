@@ -102,7 +102,7 @@ export default function RepairLab({ v }: { v: Vals }) {
                 letterSpacing: '-.03em',
               }}
             >
-              Fixed, tested, guaranteed.
+              <span>Fixed, tested,</span> <span>guaranteed.</span>
             </h2>
             {'\n      '}
           </div>
@@ -168,7 +168,7 @@ export default function RepairLab({ v }: { v: Vals }) {
                 <button
                   onClick={v.re?.mdd?.toggle}
                   style={cssToObj(
-                    `display:flex;align-items:center;justify-content:space-between;gap:8px;height:44px;padding:0 12px;border-radius:10px;border:1.5px solid ${s(v.re?.mdd?.bd)};background:#FFFFFF;font-size:15px;font-weight:500;color:#1A1B1D;cursor:pointer;text-align:left`,
+                    `display:flex;align-items:center;justify-content:space-between;gap:8px;height:44px;padding:0 12px;border-radius:10px;border:1.5px solid ${s(v.re?.mdd?.bd)};background:#FFFFFF;font-size:15px;font-weight:500;color:#26282B;cursor:pointer;text-align:left`,
                   )}
                 >
                   <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t(v.re?.mdd?.cur)}</span>
@@ -209,7 +209,7 @@ export default function RepairLab({ v }: { v: Vals }) {
                             <button
                               onClick={v.o?.pick}
                               style={cssToObj(
-                                `display:flex;align-items:center;justify-content:space-between;width:100%;height:36px;padding:0 10px;border:none;border-radius:8px;background:${s(v.o?.bg)};font-size:14px;font-weight:500;color:#1A1B1D;cursor:pointer;text-align:left`,
+                                `display:flex;align-items:center;justify-content:space-between;width:100%;height:36px;padding:0 10px;border:none;border-radius:8px;background:${s(v.o?.bg)};font-size:14px;font-weight:500;color:#26282B;cursor:pointer;text-align:left`,
                               )}
                               className={cx(undefined, 'scp-9735d96e')}
                             >
@@ -234,7 +234,7 @@ export default function RepairLab({ v }: { v: Vals }) {
                 <button
                   onClick={v.re?.pdd?.toggle}
                   style={cssToObj(
-                    `display:flex;align-items:center;justify-content:space-between;gap:8px;height:44px;padding:0 12px;border-radius:10px;border:1.5px solid ${s(v.re?.pdd?.bd)};background:#FFFFFF;font-size:15px;font-weight:500;color:#1A1B1D;cursor:pointer;text-align:left`,
+                    `display:flex;align-items:center;justify-content:space-between;gap:8px;height:44px;padding:0 12px;border-radius:10px;border:1.5px solid ${s(v.re?.pdd?.bd)};background:#FFFFFF;font-size:15px;font-weight:500;color:#26282B;cursor:pointer;text-align:left`,
                   )}
                 >
                   <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t(v.re?.pdd?.cur)}</span>
@@ -275,7 +275,7 @@ export default function RepairLab({ v }: { v: Vals }) {
                             <button
                               onClick={v.o?.pick}
                               style={cssToObj(
-                                `display:flex;align-items:center;justify-content:space-between;width:100%;height:36px;padding:0 10px;border:none;border-radius:8px;background:${s(v.o?.bg)};font-size:14px;font-weight:500;color:#1A1B1D;cursor:pointer;text-align:left`,
+                                `display:flex;align-items:center;justify-content:space-between;width:100%;height:36px;padding:0 10px;border:none;border-radius:8px;background:${s(v.o?.bg)};font-size:14px;font-weight:500;color:#26282B;cursor:pointer;text-align:left`,
                               )}
                               className={cx(undefined, 'scp-9735d96e')}
                             >
@@ -326,7 +326,7 @@ export default function RepairLab({ v }: { v: Vals }) {
                 gap: '10px',
                 padding: '18px',
                 borderRadius: '16px',
-                background: 'linear-gradient(140deg,#3D3E3F,#1A1B1D)',
+                background: 'linear-gradient(140deg,#3D3E3F,#26282B)',
                 color: '#FFFFFF',
               }}
             >
@@ -396,7 +396,7 @@ export default function RepairLab({ v }: { v: Vals }) {
                   padding: '0 16px',
                   borderRadius: '10px',
                   background: '#F7C032',
-                  color: '#1A1B1D',
+                  color: '#26282B',
                   fontSize: '15px',
                   fontWeight: '600',
                 }}
@@ -417,10 +417,10 @@ export default function RepairLab({ v }: { v: Vals }) {
                   height: '44px',
                   padding: '0 16px',
                   borderRadius: '10px',
-                  border: '1.5px solid #1A1B1D',
+                  border: '1.5px solid #26282B',
                   fontSize: '15px',
                   fontWeight: '600',
-                  color: '#1A1B1D',
+                  color: '#26282B',
                 }}
                 className={cx(undefined, 'scp-8a3ebd05')}
               >

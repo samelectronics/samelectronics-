@@ -227,7 +227,7 @@ class Component extends DCLogic {
       fmpLeave: () => this.setState({ mag: [0, 0], fmpH: false }),
       shop: { bd: s.shopH ? '#F7C032' : 'rgba(255,255,255,.32)', ty: s.shopH ? -2 : 0, sh: s.shopH ? '0 0 30px rgba(247,192,50,.35)' : '0 0 0 rgba(0,0,0,0)', ax: s.shopH ? 4 : 0 }, shopIn: () => this.setState({ shopH: true }), shopOut: () => this.setState({ shopH: false }), skp: { o: skpOn ? 1 : 0, pe: skpOn ? 'auto' : 'none' },
       skip: (ev) => { ev && ev.preventDefault && ev.preventDefault(); const el = this.secRef.current; if (!el) return; window.scrollTo({ top: window.scrollY + el.getBoundingClientRect().bottom - NAV, behavior: 'smooth' }); },
-      mt: { ink: fin > 0.5 ? '#1A1B1D' : '#FFFFFF', sub: fin > 0.5 ? '#26282B' : '#F7C032' }, mRail: fin < 0.5, mFin: fin >= 0.5,
+      mt: { ink: fin > 0.5 ? '#26282B' : '#FFFFFF', sub: fin > 0.5 ? '#26282B' : '#F7C032' }, mRail: fin < 0.5, mFin: fin >= 0.5,
       railFill: (allLit ? 1 : Math.max(0, act) / 7).toFixed(3),
       prev: () => this.goStep(Math.max(-1, act - 1)), next: () => this.goStep(Math.min(7, act + 1)), replay: () => { this.stopAuto(); this.at(0.02); setTimeout(() => this.play(), 200); },
       openFmp: (ev) => { ev && ev.preventDefault && ev.preventDefault(); window.dispatchEvent(new CustomEvent('se:fmp', { detail: {} })); }, shopAll: go('models'),
