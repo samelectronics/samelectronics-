@@ -1858,7 +1858,7 @@ function render(v: Vals) {
               <div data-w="Gb" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                 {'\n          '}
                 <a
-                  href="#network"
+                  href={v.quoteHref} target="_blank" rel="noopener" /* 14 Oct §09: opens a WhatsApp shipping quote */
                   style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -2026,19 +2026,7 @@ function render(v: Vals) {
             {'\n    '}
           </div>
           {'\n    '}
-          <span
-            style={{
-              position: 'absolute',
-              right: '24px',
-              bottom: '16px',
-              zIndex: '2',
-              fontFamily: "'JetBrains Mono',monospace",
-              fontSize: '11px',
-              color: '#5E6064',
-            }}
-          >
-            * Sample values · to be confirmed by Sam Electronics
-          </span>
+          {/* 14 Oct §09: the "sample values" footnote that collided with the buttons is removed */}
           {'\n  '}
         </div>
         </div>

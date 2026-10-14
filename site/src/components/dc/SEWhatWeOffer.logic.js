@@ -71,7 +71,7 @@ class Component extends DCLogic {
       const ch = this.q('ch' + i); if (ch) Array.from(ch.children).forEach((c, j) => { const p = cl((tA - 1.6 - i * 0.06 - j * 0.09) / 0.25), b = p >= 1 ? 1 : 0.6 + 0.4 * (1 + 2.2 * Math.pow(p - 1, 3) + 1.2 * Math.pow(p - 1, 2)); c.style.opacity = cl(p * 3).toFixed(3); c.style.transform = 'scale(' + b.toFixed(3) + ')'; });
       const slot = this.q('slot' + i); if (!slot || !this.api || d <= 0) continue; const r = slot.getBoundingClientRect(); if (r.bottom < 0 || r.top > vh) continue;
       const L = this.FAM[i][2], inf = this.api.info[L], hh = inf.hh, rxz = Math.hypot(inf.hw, inf.hd), w = r.width, hgt = r.height, kk = Math.min((2.7 * 0.84) / hh, (2.7 * (w / hgt) * 0.86) / rxz);
-      let a = i * 0.79 + (2 * PI * T) / 30 + (40 * PI / 180) * (1 - fall); const tgt = -0.55 + 2 * PI * Math.round((a + 0.55) / (2 * PI)); a += (tgt - a) * he;
+      let a = (2 * PI * T) / 30 + (40 * PI / 180) * (1 - fall); // 14 Oct §09: one shared clock and angle for every part (was offset per part) const tgt = -0.55 + 2 * PI * Math.round((a + 0.55) / (2 * PI)); a += (tgt - a) * he;
       const hs = cl((T - this.hvAt[i]) / 0.6), rs = ((T % 9) / 1.8) - (i % 4) * 0.25, rw = rs > 0 && rs < 1 ? Math.sin(PI * rs) * 0.7 : 0, hw2 = this.hvT[i] && hs < 1 ? Math.sin(PI * hs) : 0;
       const sw = Math.max(rw, hw2), sx = hw2 > rw ? -1 + 2 * hs : -1 + 2 * cl(rs), bot = hgt / 2 - ((hh * kk) / 2.7) * (hgt / 2);
       items.push({ L, x: r.left - hr.left, y: r.top - hr.top + bot + dy + y * 0, w, h: hgt, ry: a, rx: -0.06, el: 0.16, k: kk, sw, sx });
@@ -130,12 +130,17 @@ class Component extends DCLogic {
   }
   drawGlobe(cv, t, T) {
     const G = window.SE_GLOBE; if (!G) return; const x = cv.getContext('2d'), N = cv.width, R = N / 2 - 16, C = N / 2, Dg = Math.PI / 180, cl = (v) => (v < 0 ? 0 : v > 1 ? 1 : v), eo = (v) => 1 - Math.pow(1 - cl(v), 3);
-    const fin = eo(t / 1.0), lc = (t <= 1 ? 100 - 45 * eo(t / 1.0) : 55 - 4 * (t - 1)) * Dg, p0 = 20 * Dg, sp0 = Math.sin(p0), cp0 = Math.cos(p0);
+    const fin = eo(t / 1.0), p0 = 20 * Dg, sp0 = Math.sin(p0), cp0 = Math.cos(p0);
+    // 14 Oct §09: starts on the UAE; with each route the globe turns smoothly toward the destination, then back home
+    const DLON = [44.4, 28.98, 3.38, -3.7], eio2 = (v) => { v = cl(v); return v < 0.5 ? 2 * v * v : 1 - Math.pow(-2 * v + 2, 2) / 2; };
+    let lonC = 55.27; if (t >= 1) { const cy0 = Math.floor((t - 1) / 4), c0 = (t - 1) % 4, dl = DLON[cy0 % 4]; lonC = 55.27 + (dl - 55.27) * 0.6 * eio2(c0 / 1.3) * (1 - eio2((c0 - 2.9) / 1.1)); }
+    const lc = lonC * Dg;
     const pj = (lon, lat, h) => { const l = lon * Dg - lc, f = lat * Dg, cf = Math.cos(f), sf = Math.sin(f), cL = Math.cos(l), r = R * (h || 1); return [C + r * cf * Math.sin(l), C - r * (cp0 * sf - sp0 * cf * cL), sp0 * sf + cp0 * cf * cL]; };
     x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, N, N); if (fin <= 0) { cv.style.opacity = 0; return; } cv.style.opacity = fin.toFixed(3); cv.style.transform = 'scale(' + (0.9 + 0.1 * fin).toFixed(3) + ')'; cv.style.filter = fin < 1 ? 'blur(' + ((1 - fin) * 8).toFixed(1) + 'px)' : 'none';
     const bg = x.createRadialGradient(C - R * 0.35, C - R * 0.4, R * 0.05, C, C, R); bg.addColorStop(0, '#FFFFFF'); bg.addColorStop(0.6, '#F2F3F4'); bg.addColorStop(1, '#DCDDDF'); x.beginPath(); x.arc(C, C, R, 0, 7); x.fillStyle = bg; x.fill();
-    const dots = (arr, col, sz) => { x.fillStyle = col; for (let i = 0; i < arr.length; i += 2) { const q = pj(arr[i], arr[i + 1]); if (q[2] <= 0.02) continue; x.globalAlpha = Math.min(1, 0.12 + q[2]); const z = sz * (0.5 + 0.5 * q[2]); x.beginPath(); x.arc(q[0], q[1], z, 0, 7); x.fill(); } x.globalAlpha = 1; };
-    dots(G.land, '#3D3E3F', 3.6); dots(G.hi, '#E9B12A', 3.8);
+    // 14 Oct §09: the hero globe's crisp square dots (same colours as before), pixel-snapped, depth-faded toward the rim
+    const dots = (arr, col, sz) => { x.fillStyle = col; for (let i = 0; i < arr.length; i += 2) { const q = pj(arr[i], arr[i + 1]); if (q[2] <= 0.02) continue; x.globalAlpha = Math.min(1, 0.15 + q[2] * 1.1); const z = Math.max(1.5, sz * (0.55 + 0.45 * q[2])); x.fillRect(Math.round(q[0] - z / 2), Math.round(q[1] - z / 2), z, z); } x.globalAlpha = 1; };
+    dots(G.land, '#3D3E3F', 5.6); dots(G.hi, '#E9B12A', 6);
     const v3 = (lo, la) => [Math.cos(la * Dg) * Math.cos(lo * Dg), Math.cos(la * Dg) * Math.sin(lo * Dg), Math.sin(la * Dg)], ll = (v) => [Math.atan2(v[1], v[0]) / Dg, Math.asin(Math.max(-1, Math.min(1, v[2]))) / Dg];
     const slerp = (a, b, f) => { const d = Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2])), om = Math.acos(d); if (om < 1e-4) return a; const s1 = Math.sin((1 - f) * om) / Math.sin(om), s2 = Math.sin(f * om) / Math.sin(om); return [a[0] * s1 + b[0] * s2, a[1] * s1 + b[1] * s2, a[2] * s1 + b[2] * s2]; };
     const DST = [['BAGHDAD', 44.4, 33.3], ['ISTANBUL', 28.98, 41.0], ['LAGOS', 3.38, 6.52], ['MADRID', -3.7, 40.4]], O = v3(G.dxb[0], G.dxb[1]), cyc = t < 1 ? -1 : Math.floor((t - 1) / 4), ct = t < 1 ? -1 : (t - 1) % 4;
@@ -158,11 +163,12 @@ class Component extends DCLogic {
       go: (e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('se:fmp', { detail: { c: cat.split(':')[0] } })); },
       enter: () => { this.hvT[i] = 1; this.hvAt[i] = performance.now() / 1000; }, leave: () => { this.hvT[i] = 0; } }; });
     const SS = (D && D.serviceStats) || {}, col = (b, arr, bd) => arr.map((s, j) => ({ ...s, id: b + 'n' + j, v: s.n >= 1000 && s.n < 3000 ? String(s.n) : s.n.toLocaleString('en-US'), pl: j ? '16px' : '0', bl: j ? '1px solid ' + bd : 'none' }));
-    const stR = col('R', [{ n: 24, from: 1, u: 'h', l: 'SAME-DAY REPAIRS*' }, { n: 90, from: 1, u: ' days', l: 'WARRANTY ON EVERY REPAIR*' }, { n: 2003, from: 1990, u: '', l: 'IN DEIRA SINCE' }], 'rgba(255,255,255,.14)');
-    const stW = col('W', [{ n: SS.tradeMin || 10, from: 1, u: ' units', l: 'TRADE PRICES FROM*' }, { n: 24, from: 1, u: 'h', l: 'SAME-DAY QUOTES' }, { n: 2003, from: 1990, u: '', l: 'TRADING SINCE' }], 'rgba(38,40,43,.2)');
-    const stG = col('G', [{ n: SS.countries || 24, from: 1, u: '+', l: 'COUNTRIES SHIPPED TO*' }, { n: 100, from: 1, u: '%', l: 'PARCELS TRACKED' }, { n: 24, from: 1, u: 'h', l: 'PACKED SAME DAY*' }], 'rgba(38,40,43,.14)');
+    const stR = col('R', [{ n: 24, from: 1, u: 'h', l: 'SAME-DAY REPAIRS' }, { n: 90, from: 1, u: ' days', l: 'WARRANTY ON EVERY REPAIR' }, { n: 2003, from: 1990, u: '', l: 'IN DEIRA SINCE' }], 'rgba(255,255,255,.14)');
+    const stW = col('W', [{ n: SS.tradeMin || 10, from: 1, u: ' units', l: 'TRADE PRICES FROM' }, { n: 24, from: 1, u: 'h', l: 'SAME-DAY QUOTES' }, { n: 2003, from: 1990, u: '', l: 'TRADING SINCE' }], 'rgba(38,40,43,.2)');
+    const stG = col('G', [{ n: SS.countries || 24, from: 1, u: '+', l: 'COUNTRIES SHIPPED TO' }, { n: 100, from: 1, u: '%', l: 'PARCELS TRACKED' }, { n: 24, from: 1, u: 'h', l: 'PACKED SAME DAY' }], 'rgba(38,40,43,.14)');
     const boxes = [[-134, 0], [0, 0], [134, 0], [-134, -92], [0, -92], [134, -92], [-67, -184], [67, -184]].map(([bx, by], j) => ({ x: bx, y: by, id: 'ct' + j, sid: 'cs' + j, pid: 'pf' + j }));
-    const v = { root: this.root, host: this.host, fam, stR, stW, stG, boxes, chk: ['Touch', 'Display', 'Face ID', 'Speaker'].map((t, j) => ({ t, id: 'rc' + j })), steps: ['Packed', 'In transit', 'Delivered'].map((t, j) => ({ t, id: 'gs' + j, cid: 'gc' + j })) };
+    const C = (D && D.contact) || {}, quoteHref = 'https://wa.me/' + (C.wa || '971503420015') + '?text=' + encodeURIComponent('Hi Sam Electronics, I would like a shipping quote. Destination: … · Parts and quantity: …'); // 14 Oct §09
+    const v = { root: this.root, host: this.host, quoteHref, fam, stR, stW, stG, boxes, chk: ['Touch', 'Display', 'Face ID', 'Speaker'].map((t, j) => ({ t, id: 'rc' + j })), steps: ['Packed', 'In transit', 'Delivered'].map((t, j) => ({ t, id: 'gs' + j, cid: 'gc' + j })) };
     this.vals = v; return v;
   }
 }

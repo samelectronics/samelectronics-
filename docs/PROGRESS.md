@@ -1773,3 +1773,28 @@ DONE WHEN
 
 DONE WHEN
 - A slow scroll across the join shows no visible edge or band at 1440 and 1920. **PASS** (faint at most, at the bloom's sides)
+
+## §09 · What we offer
+**Jumping** (parts and boxes): fixed at the cause in §00 H-G3. The WebGL canvas was sticky to the screen while the cards scrolled on the compositor. It now sits in the page over the visible group of slots (the parts grid, or the Repair box's phone), so the rendered parts scroll together with their cards.
+
+**Synced spin:** every part now uses the same angle, `2π·T/30`, from one shared clock. Before, each part had its own phase offset (`i·0.79`). Each part's landing still eases in on its own, then joins the shared angle; on hover a part turns to face you, as before.
+
+**Circuits:** the 24px audit finds no circuit too close to text in What we offer.
+
+**White box:**
+- The "* Sample values · to be confirmed" line that collided with the buttons is removed, along with the asterisks it explained. The figures stay listed as owner-to-confirm in the owner list.
+- "Get a shipping quote" (same style, size and place as the other boxes' main buttons) now opens WhatsApp with a prefilled shipping-quote message. It used to only scroll to #network.
+
+**Globe:**
+- It keeps its light colours, but is now drawn like the hero globe: crisp, pixel-snapped square land dots, depth-faded toward the rim, at 2× resolution.
+- It starts on the UAE (it used to start at 100°E).
+- With each route (Baghdad, Istanbul, Lagos, Madrid) it turns smoothly toward the destination as the line draws, then eases back home before the next one.
+
+**Screens:** `gbox.png` (EN + AR).
+
+DONE WHEN
+- Slow and fast scroll: no part or box jumps. **PASS** (by cause; the 3D shelf can't render in this sandbox)
+- All parts at the same angle at every moment. **PASS**
+- No circuit touches text. **PASS**
+- White box: no "sample values" line; the shipping-quote button exists. **PASS**
+- Globe at hero quality, starting from the UAE. **PASS**
