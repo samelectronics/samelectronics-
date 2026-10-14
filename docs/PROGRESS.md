@@ -1593,3 +1593,39 @@ DONE WHEN
 - Both directions show the pop-up, the done state, and close by themselves. **PASS**
 - On a slow network the X appears after 4s. **PASS**
 - The choice is remembered after reload. **PASS**
+
+## §04 · Arabic: full mirror + full translation
+**Already mirrored** through `dir="rtl"`, flex, grid and logical properties: nav, What we offer, Live Board, Showcase, Deals, Repair Lab, Wholesale, Worldwide, Story, Team, Who are you?, Sam Circuit, Meet Samsoom, Feed, Reviews, Request + Visit, Finale. This was checked side by side at 1440: `mrs-0…6.png`.
+
+**Newly mirrored:**
+- **Hero** (fixed 1440 canvas):
+  - the scene layer (yellow slab, circuits, light, device shadows) is flipped with `scale: -1 1`;
+  - the iPad and phone are flipped back, so their screens read normally and only change side;
+  - the text block moves to the right.
+- **Bench Test:** the words are on the right and the rig is on the left; the rig keeps its own layout.
+- **Teardown:**
+  - the title and card are on the right and the numbered list is on the left;
+  - the rail line is on the list's start side and the rows nudge the right way;
+  - the 3D stays as it is;
+  - hover tags are in the page language.
+- **Header progress line:** fills right → left (logical inset); the end marker is on the left.
+- **Progress fills** grow from the right: Who, Bench, Visit, Story, Circuit, Deals, Wholesale steps, FMP steps, Showcase bars, Repair sequence.
+- **Marquees** run the other way (Reviews, the Wholesale belt). The hero brand rail and the Deals rail follow in §06 / §11.
+- **Not mirrored**, as asked: 3D, logos, the globe and maps, photos, numbers, prices and codes.
+
+**Translation:**
+- Added: "grade" / "grades".
+- Added the teardown callouts: WIDE → واسعة, ULTRA WIDE → واسعة جداً, MACRO → ماكرو, PROCESSOR, POWER IC, STORAGE, SIM TRAY, SPEAKER, SCREWS, CHARGING PORT, BOARD-TO-BOARD, COAX LINE, ALUMINIUM, SIDE KEYS, ANTENNA BANDS, TOUCH LAYER, LI-ION, CONNECTOR, WIRELESS COIL, CAMERA RING.
+- Added the remaining teardown-ad lines: "All in Deira.", "The small parts / that finish the job.", "Straight edges, / factory fit.", "Shop back glass", "Shop flex & ports", "MADE FOR REPAIR".
+- The loading screen, the language pop-up and the 404 / Coming soon were already Arabic.
+
+**Left in English on purpose:** the markings printed on the 3D parts (battery label text, board codes like `SE-LB-08 REV C`). They are part of the hardware, like model codes.
+
+**Check:** `i18n-check.mjs` in Arabic finds only the allowed baseline (brand aria-labels, `se://deira/board`).
+
+DONE WHEN
+- Every AR section screenshot looks like a professional mirror of EN. **PASS**
+- No English left on the AR page except brands and codes. **PASS**
+- Teardown in AR: text + card on the right, list on the left. **PASS**
+
+**Note:** there is no separate connector line in the current teardown.

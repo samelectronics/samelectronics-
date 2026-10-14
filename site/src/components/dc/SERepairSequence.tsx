@@ -54,11 +54,11 @@ function render(v: Vals) {
             </span>
             <span style={{ height: '3px', borderRadius: '2px', background: 'rgba(255,255,255,.12)', overflow: 'hidden' }}>
               <span
+                className="se-fill-start"
                 style={{
                   display: 'block',
                   height: '100%',
                   background: '#F7C032',
-                  transformOrigin: '0 50%',
                   animation: 'rsB0 16s linear infinite',
                 }}
               ></span>
@@ -85,11 +85,11 @@ function render(v: Vals) {
             </span>
             <span style={{ height: '3px', borderRadius: '2px', background: 'rgba(255,255,255,.12)', overflow: 'hidden' }}>
               <span
+                className="se-fill-start"
                 style={{
                   display: 'block',
                   height: '100%',
                   background: '#F7C032',
-                  transformOrigin: '0 50%',
                   animation: 'rsB1 16s linear infinite',
                 }}
               ></span>
@@ -116,11 +116,11 @@ function render(v: Vals) {
             </span>
             <span style={{ height: '3px', borderRadius: '2px', background: 'rgba(255,255,255,.12)', overflow: 'hidden' }}>
               <span
+                className="se-fill-start"
                 style={{
                   display: 'block',
                   height: '100%',
                   background: '#F7C032',
-                  transformOrigin: '0 50%',
                   animation: 'rsB2 16s linear infinite',
                 }}
               ></span>
@@ -147,11 +147,11 @@ function render(v: Vals) {
             </span>
             <span style={{ height: '3px', borderRadius: '2px', background: 'rgba(255,255,255,.12)', overflow: 'hidden' }}>
               <span
+                className="se-fill-start"
                 style={{
                   display: 'block',
                   height: '100%',
                   background: '#F7C032',
-                  transformOrigin: '0 50%',
                   animation: 'rsB3 16s linear infinite',
                 }}
               ></span>
@@ -178,11 +178,11 @@ function render(v: Vals) {
             </span>
             <span style={{ height: '3px', borderRadius: '2px', background: 'rgba(255,255,255,.12)', overflow: 'hidden' }}>
               <span
+                className="se-fill-start"
                 style={{
                   display: 'block',
                   height: '100%',
                   background: '#F7C032',
-                  transformOrigin: '0 50%',
                   animation: 'rsB4 16s linear infinite',
                 }}
               ></span>
@@ -209,11 +209,11 @@ function render(v: Vals) {
             </span>
             <span style={{ height: '3px', borderRadius: '2px', background: 'rgba(255,255,255,.12)', overflow: 'hidden' }}>
               <span
+                className="se-fill-start"
                 style={{
                   display: 'block',
                   height: '100%',
                   background: '#F7C032',
-                  transformOrigin: '0 50%',
                   animation: 'rsB5 16s linear infinite',
                 }}
               ></span>

@@ -419,7 +419,7 @@ function render(v: Vals) {
                     {'\n          '}
                     <span
                       style={cssToObj(
-                        `position:absolute;left:5px;top:22px;bottom:22px;width:1px;background:rgba(255,255,255,.16);transform-origin:0 0;transform:scaleY(${s(v.op?.r)})`,
+                        `position:absolute;inset-inline-start:5px;top:22px;bottom:22px;width:1px;background:rgba(255,255,255,.16);transform-origin:0 0;transform:scaleY(${s(v.op?.r)})`,
                       )}
                     ></span>
                     {'\n          '}
@@ -431,7 +431,7 @@ function render(v: Vals) {
                           <button
                             onClick={v.r?.pick}
                             style={cssToObj(
-                              `position:relative;display:grid;grid-template-columns:11px 28px minmax(0,1fr);column-gap:14px;align-items:center;height:44px;padding:0;border:none;background:none;cursor:pointer;text-align:left;font-family:Inter,sans-serif;opacity:${s(v.r?.o)};transform:translateX(${s(v.r?.tx)}px);transition:${s(v.r?.tr)}`,
+                              `position:relative;display:grid;grid-template-columns:11px 28px minmax(0,1fr);column-gap:14px;align-items:center;height:44px;padding:0;border:none;background:none;cursor:pointer;text-align:start;font-family:Inter,sans-serif;opacity:${s(v.r?.o)};transform:translateX(${s(v.r?.tx)}px);transition:${s(v.r?.tr)}`,
                             )}
                           >
                             {'\n              '}

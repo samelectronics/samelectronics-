@@ -18,7 +18,7 @@ export default function Hero({ v }: { v: Vals }) {
       {'\n  '}
       <div ref={v.heroRef} style={cssToObj(`position:absolute;left:0;top:0;width:1440px;height:1030px;zoom:${s(v.z)};color:#FFFFFF`)}>
         {'\n    '}
-        <div style={{ position: 'absolute', left: '0', top: '0', width: '1440px', height: '860px', overflow: 'hidden' }}>
+        <div data-hero-scene="" style={{ position: 'absolute', left: '0', top: '0', width: '1440px', height: '860px', overflow: 'hidden' }}>
           {'\n      '}
           <div
             style={{ position: 'absolute', inset: '0', background: 'linear-gradient(135deg,#3D3E3F 0%,#26282B 48%,#26282B 100%)' }}
@@ -375,6 +375,7 @@ export default function Hero({ v }: { v: Vals }) {
           {'\n\n      '}
           <div
             data-ipad="1"
+            data-hero-dev=""
             style={{
               position: 'absolute',
               left: '836px',
@@ -809,6 +810,7 @@ export default function Hero({ v }: { v: Vals }) {
             onClick={v.reelCtl?.poster}
             role="region"
             aria-label="Phone ads: hover to pause, click for the poster"
+            data-hero-dev=""
             style={{
               position: 'absolute',
               left: '1170px',
@@ -1525,6 +1527,7 @@ export default function Hero({ v }: { v: Vals }) {
         </div>
         {'\n\n    '}
         <div
+          data-hero-text=""
           style={{
             position: 'absolute',
             left: '80px',

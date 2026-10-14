@@ -160,7 +160,8 @@ class Component extends DCLogic {
     let act = -1; for (let i = 0; i < 7; i++) if (p >= T.l0 + i * T.ls && p < T.l0 + (i + 1) * T.ls && p < T.re0) act = i; if (p >= T.b8 && p < T.sh0) act = 7;
     const allLit = p >= T.sh0, fin = sm((p - 0.82) / 0.07);
     { const mono = (v) => '<span style="font-family:JetBrains Mono,monospace;font-weight:600">' + v + '</span>', dot = '<span style="color:rgba(255,255,255,.4)">·</span>';
-      this.td.tags = this.L.map(([t, c]) => { const ss = stat(c); return '<span style="font-weight:600">' + t + '</span>' + dot + mono(fmt(ss.stock)) + ' in stock' + dot + mono(ss.brands) + ' brands'; });
+      const T_ = (x) => (window.seI18n ? window.seI18n.t(x) : x); // 14 Oct §04: hover tags in the page language
+      this.td.tags = this.L.map(([t, c]) => { const ss = stat(c); return '<span style="font-weight:600">' + T_(t) + '</span>' + dot + mono(fmt(ss.stock)) + ' ' + T_('in stock') + dot + mono(ss.brands) + ' ' + T_('brands'); });
       const fl = stat('FLX'), sp = stat('SML'); this.td.adData = { N: this.L.map(([, c]) => stat(c).stock), B: this.L.map(([, c]) => stat(c).brands), brands: D && D.brands ? D.brands.length : 14 }; }
     this.td.spec = this.L.map(([, c], i) => { const ss = stat(c), n = ss.grades.length + (ss.grades.length === 1 ? ' GRADE' : ' GRADES'); return i === 0 ? ['OLED · INCELL', 'COVER GLASS', n] : i === 4 ? ['LI-ION', 'CHARGE LEVEL', n] : null; });
     const st = (k) => T.l0 + (k - 1) * T.ls;
@@ -188,6 +189,8 @@ class Component extends DCLogic {
     const z1x = Math.round(Math.max(40, vw * 0.035)), z1w = Math.round(vw * 0.3 - z1x - 8), hf = Math.round(Math.min(86, z1w / 11.4));
     const gone = finalCall || p > 0.875, chA = Math.round(vh - 112 - 40 - 28 - 31 - hf * 1.96), ch = Math.max(250, Math.min(360, chA)), z1 = { x: z1x, w: z1w, hf, ch, cg: ch >= 340 ? 12 : ch >= 300 ? 8 : 5, nf: Math.round(Math.max(20, Math.min(30, (z1w - 96) / 8.5, (ch - 200) / 4.5))), cp: ch >= 300 ? 22 : 16, o: gone ? 0 : 1, pe: gone ? 'none' : 'auto' };
     const z3 = { x: Math.round(vw * 0.75 + 12), w: Math.round(vw * 0.25 - 52), o: gone ? 0 : 1, pe: gone ? 'none' : 'auto', gx: gone ? 32 : 0 }; z1.gx = gone ? -32 : 0;
+    // 14 Oct §04: Arabic mirrors the stage (title + card on the right, numbered list on the left); the 3D stays as it is
+    const rtl = document.documentElement.dir === 'rtl'; if (rtl) { z1.x = vw - z1.x - z1.w; z3.x = vw - z3.x - z3.w; z1.gx = -z1.gx; z3.gx = -z3.gx; }
     const oT = mob ? 3.4 : s.oT == null ? 3.4 : s.oT, oc = (x) => Math.min(1, Math.max(0, x)), oe = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * oc(x))), tl = this.tl;
     const oU = mob ? 3.4 : oT < 3.4 ? Math.min(oT, 2.3) : 2.3 + (s.gT == null ? 0 : s.gT); this.td.koOn = !mob && oU < 3.4;
     const sc0 = tl ? Math.min(96 / hf, (vw * 0.82) / tl.w) : 1, gK = oe((oU - 2.3) / 0.7), gY = 1 - Math.pow(1 - gK, 2.2), scO = lerp(sc0, 1, gK);
@@ -207,7 +210,7 @@ class Component extends DCLogic {
     const cmI = (i) => Math.max(0, i - 1), cards = (s.ps >= 0 && cmI(s.ps) !== cmI(si) && s.ps < last ? [cardFor(cmI(s.ps), false)] : []).concat(si < last && oT >= 3.0 ? [cardFor(cmI(si), true)] : []); if (cards.length) cards[cards.length - 1].key = cards[cards.length - 1].key + '-' + (s.ck || 0);
     const actR = si >= 2 && si <= 9 ? si - 2 : -1;
     const rowsD = this.L.map(([t], i) => { const on = i === actR, dn = si >= 10 || (actR >= 0 && i < actR);
-      return { idx: i, i: String(i + 1).padStart(2, '0'), t, done: dn, tx: (on ? -8 : 0) + (1 - oe((oU - 2.75 - i * 0.05) / 0.25)) * 12, o: Math.min(1, oe((oU - 2.75 - i * 0.05) / 0.25) * 1.6).toFixed(3), led: oU > 2.75 + i * 0.05 && oU < 2.87 + i * 0.05, tr: oT < 3.4 ? 'none' : 'transform .45s cubic-bezier(.2,.8,.2,1)', num: on ? '#F7C032' : dn ? 'rgba(255,255,255,.75)' : 'rgba(255,255,255,.4)', ink: on ? '#FFFFFF' : dn ? 'rgba(255,255,255,.75)' : 'rgba(255,255,255,.4)',
+      return { idx: i, i: String(i + 1).padStart(2, '0'), t, done: dn, tx: (rtl ? -1 : 1) * ((on ? -8 : 0) + (1 - oe((oU - 2.75 - i * 0.05) / 0.25)) * 12), o: Math.min(1, oe((oU - 2.75 - i * 0.05) / 0.25) * 1.6).toFixed(3), led: oU > 2.75 + i * 0.05 && oU < 2.87 + i * 0.05, tr: oT < 3.4 ? 'none' : 'transform .45s cubic-bezier(.2,.8,.2,1)', num: on ? '#F7C032' : dn ? 'rgba(255,255,255,.75)' : 'rgba(255,255,255,.4)', ink: on ? '#FFFFFF' : dn ? 'rgba(255,255,255,.75)' : 'rgba(255,255,255,.4)',
         bg: on || (oU > 2.75 + i * 0.05 && oU < 2.87 + i * 0.05) ? '#F7C032' : dn ? 'rgba(247,192,50,.65)' : '#3A3C40', glow: on || (oU > 2.75 + i * 0.05 && oU < 2.87 + i * 0.05) ? '0 0 0 3px rgba(247,192,50,.25),0 0 14px #F7C032' : dn ? '0 0 6px rgba(247,192,50,.35)' : 'inset 0 0 0 1px rgba(255,255,255,.35)', pick: () => this.goTo(i + 2) }; });
     const cur = mob ? (allLit ? 8 : act + 1) : si >= 2 && si <= 9 ? si - 1 : si >= 10 ? 8 : 1;
     const cnt = { n: String(Math.max(1, cur)).padStart(2, '0'), anim: (cur % 2 ? 'tdRollA' : 'tdRollB') + ' .4s cubic-bezier(.2,.8,.2,1) both', label: allLit ? 'ALL LAYERS IN STOCK' : 'LAYERS SEPARATED' };

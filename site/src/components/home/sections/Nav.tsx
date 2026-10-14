@@ -251,7 +251,7 @@ export default function Nav({ v }: { v: Vals }) {
           data-prog="bar"
           style={{
             position: 'absolute',
-            left: '0',
+            insetInlineStart: '0', // 14 Oct §04: fills right → left in Arabic
             top: '0',
             bottom: '0',
             width: '0%',
@@ -266,11 +266,11 @@ export default function Nav({ v }: { v: Vals }) {
           data-prog="dot"
           style={{
             position: 'absolute',
-            left: '0%',
+            insetInlineStart: '0%',
             top: '-3px',
             width: '8px',
             height: '8px',
-            marginLeft: '-4px',
+            marginInlineStart: '-4px',
             borderRadius: '50%',
             background: '#FFDB6E',
             boxShadow: '0 0 12px 4px rgba(247,192,50,.7)',
@@ -280,7 +280,7 @@ export default function Nav({ v }: { v: Vals }) {
         <span
           style={{
             position: 'absolute',
-            right: '6px',
+            insetInlineEnd: '6px',
             top: '-4px',
             width: '10px',
             height: '10px',

@@ -53,3 +53,20 @@ html[dir='rtl'] path[d='m15 6-6 6 6 6'] {
   transform-box: fill-box;
   transform-origin: center;
 }
+
+.se-fill-start { transform-origin: left center; }
+/* 14 Oct §04 · progress fills grow from the right in Arabic (they scale from their start edge). */
+html[dir='rtl'] .wh-pg i, html[dir='rtl'] .bt-bar i, html[dir='rtl'] .vs-prog .bar i, html[dir='rtl'] .st-line, html[dir='rtl'] .st-bar b,
+html[dir='rtl'] .cs-row .bar i, html[dir='rtl'] .dl-stock-bar i, html[dir='rtl'] .dl-ship-bar i, html[dir='rtl'] .wf-steps .wire::after,
+html[dir='rtl'] .fm-steps .wire i, html[dir='rtl'] .sc-bars button i, html[dir='rtl'] .se-fill-start { transform-origin: right center; }
+/* Marquees run the other way: in a right-to-left row the copy sits to the left, so the track moves right. */
+@keyframes seMarqR { from { transform: translateX(0); } to { transform: translateX(50%); } }
+html[dir='rtl'] .rv-track, html[dir='rtl'] .wf-tick-row { animation-name: seMarqR; }
+/* 14 Oct §04 · hero: the scene (yellow slab, circuits, light, device shadows) mirrors; the iPad and phone are mirrored
+   back so their screens read normally (they only change side); the text block moves to the right. */
+html[dir='rtl'] [data-hero-scene] { scale: -1 1; }
+html[dir='rtl'] [data-hero-scene] [data-hero-dev] { scale: -1 1; }
+html[dir='rtl'] [data-hero-text] { left: 720px !important; }
+/* Bench Test: words on the right, the rig on the left (the rig itself is a device and keeps its own layout). */
+html[dir='rtl'] .bt-left { left: 768px; }
+html[dir='rtl'] .bt-rigwrap { left: 68px; }

@@ -48,7 +48,7 @@ class Component extends DCLogic {
   measure() {
     const de = document.documentElement, vw = de.clientWidth || window.innerWidth, vh = window.innerHeight, z = Math.max(0.5, vw / 1440);
     const prog = Math.min(1, Math.max(0, window.scrollY / Math.max(1, de.scrollHeight - vh))), root = this.rootRef.current;
-    if (root) { const pb = root.querySelector('[data-prog="bar"]'), pd = root.querySelector('[data-prog="dot"]'), pe = root.querySelector('[data-prog="end"]'), w = (prog * 100).toFixed(2) + '%'; if (pb) pb.style.width = w; if (pd) pd.style.left = w; if (pe) { const f = prog > 0.995; pe.style.background = f ? '#F7C032' : 'transparent'; pe.style.boxShadow = f ? '0 0 14px 4px rgba(247,192,50,.8)' : 'none'; } }
+    if (root) { const pb = root.querySelector('[data-prog="bar"]'), pd = root.querySelector('[data-prog="dot"]'), pe = root.querySelector('[data-prog="end"]'), w = (prog * 100).toFixed(2) + '%'; if (pb) pb.style.width = w; if (pd) pd.style.insetInlineStart = w; if (pe) { const f = prog > 0.995; pe.style.background = f ? '#F7C032' : 'transparent'; pe.style.boxShadow = f ? '0 0 14px 4px rgba(247,192,50,.8)' : 'none'; } }
     let tone = 'dark';
     if (root) for (const s of root.querySelectorAll('[data-tone]')) { const r = s.getBoundingClientRect(); if (r.top <= 40 && r.bottom > 40) { tone = s.getAttribute('data-tone'); break; } }
     const ce = document.getElementById('circuit'); const circSeen = this.state.circSeen || (ce && ce.getBoundingClientRect().top < vh * 0.75);
