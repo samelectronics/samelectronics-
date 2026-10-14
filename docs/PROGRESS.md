@@ -1223,3 +1223,47 @@ The old Social wall is split into two new sections: `SEFeed` (part A) and `SERev
 | Reviews band separate with the Google card and two rows | Yes (sample content, labelled) |
 
 **Captured:** the Feed after the entrance, a phone hovered, and the reviews band.
+
+## Step 22 · Issue 16 Request console + Visit us (improve)
+
+The idea is kept: tabs plus a printed work order. It is rebuilt as `SEVisit.logic.js` / `.tsx`, with styles in `src/styles/visit.css`, using the same request types, fields and WhatsApp / email bodies as before.
+
+**The set:** a yellow section with grain and a vignette. The console is graphite glass with a soft shadow, and the visit card is white with a soft shadow.
+
+**Console:**
+- **Live printing:** each filled field prints its line onto the slip with a fast line-by-line feed, and the slip moves down a little. A "2 / 3 fields printed" line fills as you go.
+- **Tab switch:** the fields morph in (staggered) and the slip's TYPE line reprints.
+- **The slip:** thermal paper, a warm white with a dotted perforation under the printer slot, a faint curl shading at the bottom, a torn-edge bottom and a soft hanging shadow.
+- **Send:**
+  1. The slip jerks at the perforation and tears.
+  2. "SENT" stamps on it with ink texture and the status line switches to SENT.
+  3. The slip folds and flies into the button you pressed (WhatsApp or Email), and the button bounces.
+  4. Samsoom pops up with his "thanks" emote.
+- The WhatsApp / email link opens at the click itself, so browsers don't block it as a popup.
+
+**Visit us:**
+- A live Dubai clock with seconds.
+- The G7 status dot (green open with a ping, amber in the last 30 minutes, red closed) with "Open now · Closes at 14:00" and a "Closes in 3h 14m" countdown.
+- A day-timeline bar with today's two shifts as yellow segments and a moving "now" marker.
+- The week, with today highlighted.
+- The brand-styled Deira map from Our story fills the gap, with "Get directions".
+- The address and Plus Code, and WhatsApp and phone buttons with their icons.
+
+**Circuits:** none in or near the console. The audit's one Worldwide hit is the dashed route drawing inside the Tracked box, not a circuit.
+
+**Arabic:** every new string is added, plus rules for "Closes at", "Closes in" and "Opens in". The checker is down to 2 entries, below its old baseline.
+
+**Speed:** `#visit` runs at 60fps, with an average of 57.
+
+### DONE WHEN (Issue 16)
+
+| Item | Result |
+|---|---|
+| Live printing works | Yes |
+| Tear-and-send works | Yes |
+| Status dot correct | Yes (G7 colours) |
+| Day timeline with now marker | Yes |
+| Gap filled | Yes (map) |
+| No circuit near the console | Yes |
+
+**Captured:** mid-typing with printed lines, mid tear (SENT stamped), and the visit card.

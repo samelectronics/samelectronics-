@@ -1201,4 +1201,8 @@ export const ENGINE: Record<string, string> = {
   'THE FEED · @SAMELECTRONICS.UAE': 'الخلاصة · ‎@SAMELECTRONICS.UAE',
   'WHAT CUSTOMERS SAY': 'ماذا يقول العملاء',
   'Galaxy A54 batteries back in stock': 'بطاريات Galaxy A54 عادت إلى المخزون',
+  // Request console + Visit us (Issue 16)
+  'fields printed': 'حقول مطبوعة',
+  'Closed now': 'مغلق الآن',
+  'SENT': 'أُرسل',
 };

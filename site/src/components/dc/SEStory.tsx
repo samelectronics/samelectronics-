@@ -11,7 +11,7 @@ const ARROW = (
 );
 
 /** Brand-styled Deira map: graphite ground, fog streets, the creek, a yellow pin with a soft pulse. Static until clicked. */
-function MapDubai() {
+export function MapDubai() {
   return (
     <svg viewBox="0 0 600 280" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <rect width="600" height="280" fill="#2A2C2F" />

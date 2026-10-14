@@ -18,6 +18,7 @@ import '@/styles/who.css';
 import '@/styles/circuit.css';
 import '@/styles/meet.css';
 import '@/styles/feed.css';
+import '@/styles/visit.css';
 
 export const metadata: Metadata = {
   title: DC_TITLE ?? 'Sam Electronics',
