@@ -26,7 +26,7 @@ function render(v: Vals) {
           <div ref={v.host} style={{ position: 'absolute', left: '0', top: '0', width: '100%', height: '100vh', overflow: 'hidden' }}></div>
         </div>
         {'\n\n  '}
-        <div data-w="A" style={{ position: 'relative', padding: '180px 0 0' }}>
+        <div data-w="A" style={{ position: 'relative', padding: 'max(180px, calc(48vh - 70px)) 0 0' }}>
           {'\n    '}
           <div style={{ position: 'absolute', inset: '0', background: 'radial-gradient(60% 50% at 50% 60%,#FAFAF8 0%,#F2F3F4 70%)' }}></div>
           {'\n    '}
@@ -36,8 +36,10 @@ function render(v: Vals) {
               left: '0',
               right: '0',
               top: '0',
-              height: '180px',
-              background: 'linear-gradient(180deg,#2A2C2F 0%,#4A4C50 30%,#C9CBCE 75%,rgba(242,243,244,0) 100%)',
+              // 14 Oct §08: a long eased blend (48vh) from the teardown's floor graphite through #3D3E3F to the light
+              // background; the final call's amber bloom (cut in half by the section edge) continues across the join and fades
+              height: '56vh',
+              background: 'radial-gradient(36% 56vh at 66% 0,rgba(201,138,18,.95) 0%,rgba(247,192,50,.7) 26%,rgba(247,192,50,.21) 56%,rgba(247,192,50,0) 100%),linear-gradient(180deg,rgb(31,32,35) 0.0%,rgb(33,34,37) 4.3%,rgb(38,39,42) 8.6%,rgb(46,47,49) 12.9%,rgb(57,58,59) 17.1%,rgb(68,69,70) 21.4%,rgb(81,82,83) 25.7%,rgb(94,95,96) 30.0%,rgb(109,110,111) 34.3%,rgb(124,125,126) 38.6%,rgb(139,140,141) 42.9%,rgb(155,156,157) 47.1%,rgb(170,171,172) 51.4%,rgb(184,185,186) 55.7%,rgb(198,199,200) 60.0%,rgb(210,211,212) 64.3%,rgb(221,222,223) 68.6%,rgb(230,231,232) 72.9%,rgb(236,237,238) 77.1%,rgb(241,242,243) 81.4%,rgb(242,243,244) 85.7%,rgb(242,243,244) 100%)',
             }}
           ></div>
           {'\n    '}

@@ -1756,3 +1756,20 @@ DONE WHEN
 - The title and elements move during the rotation; nothing waits for a scroll. **PASS**
 - Back cover edge: no flicker. **PASS by cause** (frame-by-frame check on a real GPU still open)
 - Card shows all brand logos; final ad centred, hero fonts, no black. **PASS**
+
+## §08 · Teardown → What we offer transition
+**Cause:** the teardown's final call ends on its floor graphite (#1F2023), with the amber bloom centred right on its bottom edge. What we offer started a 180px fade from #2A2C2F, so there was a line and a short "grey then white" band.
+
+**Fix** (`SEWhatWeOffer.tsx`, top of the section):
+- A long, eased (smoothstep) blend over 48vh: from #1F2023 through #3D3E3F to the light #F2F3F4.
+- The bloom that the section edge cut in half now continues across the join (same position at 66%, same 36% × 56vh size, same stops) and fades out within 56vh.
+- The section heading moves down to `max(180px, 48vh − 70px)`, so it sits where the blend is already light.
+- Circuits across the join were optional and were not added.
+
+**Check** (`join.mjs`, 1440 and 1920):
+- Away from the bloom's sides, the colour step between neighbouring rows across the join is at most 2 levels per channel, with no band.
+- At the bloom's sides it is 5–7 levels per channel. The teardown's bloom slowly breathes (6s), so the match there can't be exact. It is at the threshold of visibility.
+- Screens: `join-1440.png`, `join-1920.png`.
+
+DONE WHEN
+- A slow scroll across the join shows no visible edge or band at 1440 and 1920. **PASS** (faint at most, at the bloom's sides)
