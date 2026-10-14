@@ -1540,3 +1540,31 @@ DONE WHEN
 - The five lines play in order, EN + AR; Samsoom wakes up. **PASS**
 - 1.5s ≤ duration ≤ 5s, once per visit. **PASS**
 - The favicon is yellow + graphite and readable on light and dark tabs. **PASS**
+
+## §02 · Hours pill, four states
+**Shared module:** `src/lib/shopStatus.js`. Dubai wall clock = UTC+4 read with the UTC getters, so the visitor's timezone never matters.
+
+| State | Dot | When | Text |
+|---|---|---|---|
+| Open | green | inside hours, more than 60 min before a close | "Open · until 14:00" |
+| Closing soon | yellow | the last 60 min before any close (14:00, 22:00, Fri 12:00) | "Closing soon · 14:00" |
+| Closed | red | outside hours, more than 60 min before an opening | "Closed · opens tomorrow 10:30" |
+| Opening soon | yellow | the last 60 min before any opening (10:30, 16:00) | "Opening soon · 16:00" |
+
+- Every dot pulses.
+- The header recalculates every 60s, as before. Visit us ticks every second.
+- Arabic: يغلق قريباً · يفتح قريباً · مفتوح · حتى …
+- Used by the header pill, the Samsoom launcher line and Visit us (§16 reuses it).
+- Kept: the pop-over, click → Visit us, and the pill's size, font and position.
+
+**Header colour:**
+- It used to switch to white glass over light sections, which read as cream over the bright Finale.
+- Per the owner, it now stays graphite everywhere. That is one line in `HomeV3.logic.js`: `dark = true`.
+
+**Test** (browser timezone Europe/Paris, `seNowAt`): `pill-sheet.png`.
+
+DONE WHEN
+- Mon 13:15 → yellow "Closing soon · 14:00". **PASS**
+- 15:10 → yellow "Opening soon · 16:00"; 16:00 → green. **PASS**
+- Fri 11:00 → "Closing soon · 12:00"; Sunday → red "Closed". **PASS**
+- Correct with the computer's clock on Paris time. **PASS**

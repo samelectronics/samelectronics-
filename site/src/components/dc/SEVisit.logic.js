@@ -8,6 +8,7 @@
 import React from 'react';
 import { DCLogic } from '@/dc/runtime';
 import { onReplay } from '@/components/perf/SectionFX';
+import { shopStatus } from '@/lib/shopStatus';
 
 const FL = { 'Order parts': [['Model', 'e.g. iPhone 15 Pro'], ['Part & grade', 'e.g. Screen · OLED'], ['Quantity', '1']], 'Bulk quote': [['Company', 'Your shop or company'], ['Parts list', 'Paste models and quantities'], ['Country', 'e.g. Nigeria']], 'Book a repair': [['Model', 'e.g. Galaxy A54'], ['Problem', 'e.g. cracked screen'], ['Preferred time', 'e.g. Saturday evening']], 'Trade account': [['Business name', 'Your shop or company'], ['Customer type', 'Repair shop · Trader · Bulk buyer'], ['Country', 'e.g. UAE']], 'Shipping quote': [['Destination', 'City, country'], ['Parts & quantity', 'e.g. 50 screens'], ['Deadline', 'e.g. next week']], General: [['Your name', 'Name'], ['Message', 'How can we help?']] };
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -35,9 +36,9 @@ class Component extends DCLogic {
     const no = 'SE-REQ-' + (2600 + ((s.now / 864e5) | 0) % 900), body = 'Work order ' + no + '\nType: ' + rt + '\n' + fields.map((f) => f.label + ': ' + (f.val || '—')).join('\n');
     // Dubai time, G7 status and today's shifts
     const d = new Date(s.now), g = new Date(d.getTime() + d.getTimezoneOffset() * 6e4 + 4 * 36e5), day = g.getDay(), m = g.getHours() * 60 + g.getMinutes(), sec = g.getSeconds();
-    const H = D ? D.hours : {}, sh = H[day] || [], cur = sh.find(([a, b]) => m >= a && m < b), nxt = sh.find(([a]) => a > m), soon = !!cur && cur[1] - m <= 30;
+    const H = D ? D.hours : {}, sh = H[day] || [], cur = sh.find(([a, b]) => m >= a && m < b), nxt = sh.find(([a]) => a > m), SS = shopStatus(H, s.now), soon = SS.soon; // 14 Oct §02: shared 4-state status
     const left = cur ? cur[1] - m : nxt ? nxt[0] - m : 0, dur = (x) => (x >= 60 ? Math.floor(x / 60) + 'h ' + pad(x % 60) + 'm' : x + 'm');
-    const status = cur ? 'Open now' : 'Closed now', sub = cur ? 'Closes at ' + hm(cur[1]) : nxt ? 'Opens at ' + hm(nxt[0]) : 'Opens ' + (day === 6 ? 'Monday' : 'tomorrow') + ' at 10:30';
+    const status = { open: 'Open now', closing: 'Closing soon', opening: 'Opening soon', closed: 'Closed now' }[SS.state], sub = cur ? 'Closes at ' + hm(cur[1]) : nxt ? 'Opens at ' + hm(nxt[0]) : 'Opens ' + (day === 6 ? 'Monday' : 'tomorrow') + ' at 10:30';
     const count = cur ? 'Closes in ' + dur(left) : nxt ? 'Opens in ' + dur(left) : '';
     const week = [6, 1, 2, 3, 4, 5, 0].map((x) => ({ day: DAYS[x], on: x === day, h: (H[x] || []).length ? H[x].map(([a, b]) => hm(a) + '–' + hm(b)).join(' · ') : 'Closed' }));
     return { secRef: this.secRef, seen: s.seen,
@@ -45,7 +46,7 @@ class Component extends DCLogic {
       lines: fields.filter((f) => f.val.trim()).map((f) => ({ k: f.label.toUpperCase(), v: f.val })), sent: s.sent, sentN: s.sentN,
       sendWa: (e) => { e.preventDefault(); this.send('wa', wa + '?text=' + encodeURIComponent(body)); },
       sendMail: (e) => { e.preventDefault(); this.send('mail', 'mailto:' + email + '?subject=' + encodeURIComponent(no + ' · ' + rt) + '&body=' + encodeURIComponent(body)); },
-      clock: hm(m) + ':' + pad(sec), open: !!cur, soon, dot: cur ? (soon ? '#F5A524' : '#5FD49A') : '#E5484D', status, sub, count, today: DAYS[day],
+      clock: hm(m) + ':' + pad(sec), open: !!cur, soon, dot: SS.dot, state: SS.state, status, sub, count, today: DAYS[day],
       shifts: sh.map(([a, b]) => ({ l: ((a / 1440) * 100).toFixed(2) + '%', w: (((b - a) / 1440) * 100).toFixed(2) + '%', t: hm(a) + '–' + hm(b) })), nowAt: (((m + sec / 60) / 1440) * 100).toFixed(3) + '%', week,
       address: C.address || 'Al Murar, Deira, Dubai, UAE', plus: C.plus || '78G4+3H2', phone: C.phone || '+971 4 273 3031', tel: 'tel:' + (C.tel || '+97142733031'),
       wa: wa + '?text=' + encodeURIComponent('Hi Sam Electronics, I found you on your website.'),

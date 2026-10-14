@@ -106,7 +106,7 @@ function render(v: Vals) {
             </b>
           </div>
           <div className="vs-status">
-            <span className={'vs-dot' + (v.open ? ' on' : '')} style={{ ['--c' as string]: v.dot } as React.CSSProperties} />
+            <span className="vs-dot on" style={{ ['--c' as string]: v.dot } as React.CSSProperties} />
             <span>
               <b>{v.status}</b> · <span>{v.sub}</span>
             </span>

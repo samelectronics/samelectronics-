@@ -65,6 +65,11 @@ const RULES: Rule[] = [
   [/^(\d+)[–-](\d+) min$/, (_, a, b) => `${a}–${b} دقيقة`],
   [/^(\d+)[–-](\d+) hrs$/, (_, a, b) => `${a}–${b} ساعة`],
   [/^Open · closes (\d\d:\d\d)$/, (_, t) => `مفتوح · يغلق ${t}`],
+  // 14 Oct §02: the four live states
+  [/^Open · until (\d\d:\d\d)$/, (_, t) => `مفتوح · حتى ${t}`],
+  [/^Open now · until (\d\d:\d\d)$/, (_, t) => `مفتوح الآن · حتى ${t}`],
+  [/^Closing soon · (\d\d:\d\d)$/, (_, t) => `يغلق قريباً · ${t}`],
+  [/^Opening soon · (\d\d:\d\d)$/, (_, t) => `يفتح قريباً · ${t}`],
   [/^Open now · closes (\d\d:\d\d)$/, (_, t) => `مفتوح الآن · يغلق ${t}`],
   [/^Closed · opens (\d\d:\d\d)$/, (_, t) => `مغلق · يفتح ${t}`],
   [/^Closed · opens tomorrow (\d\d:\d\d)$/, (_, t) => `مغلق · يفتح غداً ${t}`],

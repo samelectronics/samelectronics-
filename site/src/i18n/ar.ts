@@ -1014,6 +1014,9 @@ export const EXACT: Record<string, string> = {
   'We serve everyone like family.': 'نخدم الجميع كالعائلة.',
   'Every order': 'كل طلب',
   'charges you up.': 'يشحن رصيدك.',
+  // 14 Oct §02
+  'Closing soon': 'يغلق قريباً',
+  'Opening soon': 'يفتح قريباً',
 };
 
 /** Strings rendered by the canvas engines and the map (window.seI18n.t). */
