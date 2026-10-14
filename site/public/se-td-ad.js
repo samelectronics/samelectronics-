@@ -52,7 +52,7 @@
     { L: 4, multi: [4, 4, 4], bg: C_Y, eb: 'WHOLESALE', h: ['Stock up.', 'Cost down.'], d: 'Trade prices for approved accounts.', b: 'Wholesale prices' },
     { L: 8, bg: C_F, eb: 'WORLDWIDE DELIVERY', h: ['From Deira', 'to the world.'], d: 'Tracked and securely packed, worldwide.', b: 'Shipping info' },
   ].map((q) => ({ ...q, k: 'a', dur: 3.2 }));
-  const SCN_B = [{ k: 'intro', dur: 1.8, bg: '#141517' }].concat([
+  const SCN_B = [{ k: 'intro', dur: 1.8, bg: C_G }].concat([
     { L: 0, bg: C_Y, kick: 'Bright like day one.', name: 'SCREENS', d: '2,211 in stock · 14 brands', b: 'Shop screens', tr: 'Z', dir: [-1, 0] },
     { L: 4, bg: C_G, kick: 'Full power, fully tested.', name: 'BATTERIES', d: '1,760 in stock · 14 brands', b: 'Shop batteries', tr: 'W', dir: [0, -1] },
     { L: 7, bg: C_F, kick: 'Factory finish, every brand.', name: 'BACK GLASS', d: '1,698 in stock · 14 brands', b: 'Shop back glass', tr: 'D', dir: [1, 0] },
@@ -187,7 +187,7 @@
       let s = 1; if (slam) { const k = K(lt, 0, 0.22); s = k < 1 ? 1.7 - 0.76 * ex(k) + 0.06 * Math.sin(k * Math.PI) : 1 + 0.015 * K(lt, 0.22, 0.38); }
       else s = 1 + 0.04 * (lt / q.dur);
       const shk = 0;
-      x.save(); x.translate(W / 2, H * 0.48); x.scale(s, s); x.translate(-W / 2, -H * 0.48); L.forEach((ln, i) => x.fillText(ln, 12 * u + shk, y0 + i * lh + fs * 0.35)); x.restore(); 
+      x.save(); x.translate(W / 2, H * 0.48); x.scale(s, s); x.translate(-W / 2, -H * 0.48); x.textAlign = 'center'; x.textBaseline = 'alphabetic'; L.forEach((ln, i) => x.fillText(ln, W / 2 + shk, y0 + i * lh + fs * 0.35)); x.restore(); /* 14 Oct §07 F: every final slide centred */ 
     }
     let dotSpr = null; const mkDot = () => { const c = mk(32, 32), x = c.getContext('2d'), g = x.createRadialGradient(16, 16, 0, 16, 16, 16); g.addColorStop(0, 'rgba(255,246,214,1)'); g.addColorStop(0.25, 'rgba(255,219,110,.95)'); g.addColorStop(0.55, 'rgba(247,192,50,.35)'); g.addColorStop(1, 'rgba(247,192,50,0)'); x.fillStyle = g; x.fillRect(0, 0, 32, 32); return c; };
     // E4: round glowing golden dots stream in from the screen edges on swirling curves, speed up and pour into the logo; flash; all absorbed; logo 104→100; sweep; name; yellow slogan; hold; fade
@@ -207,7 +207,7 @@
       const fb = K(lt, 1.7, 0.5); if (fb > 0) { x.fillStyle = 'rgba(0,0,0,' + fb + ')'; x.fillRect(0, 0, W, H); }
     }
     function sceneIntro(x, lt) {
-      x.fillStyle = '#141517'; x.fillRect(0, 0, W, H); const g0 = x.createRadialGradient(W / 2, H * 0.42, 0, W / 2, H * 0.42, H * 0.6); g0.addColorStop(0, '#2E3034'); g0.addColorStop(1, '#141517'); x.fillStyle = g0; x.fillRect(0, 0, W, H);
+      x.fillStyle = C_G; x.fillRect(0, 0, W, H); /* 14 Oct §07 F: graphite, never black */ const g0 = x.createRadialGradient(W / 2, H * 0.42, 0, W / 2, H * 0.42, H * 0.6); g0.addColorStop(0, '#2E3034'); g0.addColorStop(1, C_G); x.fillStyle = g0; x.fillRect(0, 0, W, H);
       const cx = W / 2, cy = H * 0.42, D = 46 * u, zk = lt > 1.45 ? Math.pow(K(lt, 1.45, 0.35), 2.2) : 0, zs = 1 + zk * 7; x.save(); x.translate(cx, cy); x.scale(zs, zs); x.translate(-cx, -cy); x.globalAlpha = 1 - K(lt, 1.6, 0.2);
       const sc = 0.92 + 0.08 * eio(K(lt, 0, 1.45)), Ds = D * sc, sw = eio(K(lt, 0.1, 1.0)), lx = -Ds * 1.2 + sw * Ds * 2.6;
       if (logoIm) { x.save(); x.translate(cx, cy); x.beginPath(); x.arc(0, 0, Ds / 2, 0, Math.PI * 2); x.clip(); x.globalAlpha *= 0.12; x.drawImage(logoIm, -Ds / 2, -Ds / 2, Ds, Ds); x.restore();
@@ -229,7 +229,7 @@
       const k = mode === 'A' ? eio(lt / TR) : eio(lt / TR), a = bufA.getContext('2d'), b = bufB.getContext('2d');
       a.setTransform(1, 0, 0, 1, 0, 0); b.setTransform(1, 0, 0, 1, 0, 0);
       const fromBlack = pv.k === 'logo';
-      if (fromBlack) { a.fillStyle = '#000'; a.fillRect(0, 0, W, H); } else scene(a, pv, pv.dur, mode === 'B' ? k : 0);
+      if (fromBlack) { a.fillStyle = C_G; a.fillRect(0, 0, W, H); } else scene(a, pv, pv.dur, mode === 'B' ? k : 0);
       scene(b, q, lt);
       const tr = mode === 'A' ? 'A' : q.tr;
       if (tr === 'A') { x.drawImage(bufA, 0, 0); const top = H * (1 - k); x.drawImage(bufB, 0, top, W, H - top, 0, top, W, H - top); }

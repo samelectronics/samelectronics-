@@ -369,12 +369,14 @@ function render(v: Vals) {
                                     whiteSpace: 'nowrap',
                                     overflow: 'hidden',
                                     textOverflow: 'ellipsis',
+                                    ...(v.c?.fitsLogos?.ids?.length ? { whiteSpace: 'normal', overflow: 'visible' } : {}),
                                   }}
                                 >
                                   {v.c?.fitsLogos?.ids?.length ? (
-                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', verticalAlign: 'middle' }} aria-label={v.c?.fits}>
+                                    // 14 Oct §07 E: every brand that fits, as small even logos, wrapping onto a second row
+                                    <span style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '6px 10px' }} aria-label={v.c?.fits}>
                                       {v.c.fitsLogos.ids.map((id: string) => (
-                                        <SEBrandLogo key={id} brand={id} h="13" color="rgba(255,255,255,.75)" />
+                                        <SEBrandLogo key={id} brand={id} h="11" color="rgba(255,255,255,.75)" />
                                       ))}
                                       {v.c.fitsLogos.more ? <span>{v.c.fitsLogos.more}</span> : null}
                                     </span>

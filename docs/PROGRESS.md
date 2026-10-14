@@ -1710,3 +1710,49 @@ So no gap, ever. Screens: `marq-sheet.png`.
 DONE WHEN
 - 60s at 1440 and 1920, EN and AR: no gap. **PASS**
 - Logos the same size; even icon/text gap. **PASS**
+
+## §07 · Teardown
+**A · One gesture = one step.** Root cause of "scroll over and over":
+- A gesture made while the opening (3.4s) or a step was animating was dropped.
+- It also marked the rest of that wheel stream as already used, so nothing reacted until the visitor paused and scrolled again.
+
+Fix:
+- Such a gesture is now held, one deep, and played the moment the step lands. Trackpad momentum still never counts twice.
+- The lock after a normal step is 700ms (was 950ms, while the tween is 900ms).
+- The turn's lock is 2.1s (was 3.3s).
+- Kept: the ≥40px gesture, never skipping, up = one step back, and the arrow-key rule (test 7).
+
+**B · Always from STEP 0:**
+- Leaving from the top resets it silently, as before.
+- The 3D module mounts and compiles at page load, so it is ready long before the visitor arrives.
+- Test: 10 runs in a row from above (slow wheel and fast jumps, one after leaving mid-film) → 10/10 at step 0.
+
+**C · The opening flows into the turn:**
+- When the opening ends, the phone turns from back to front on its own, without waiting for a scroll.
+- The title glide, card and list now run from 0.45s to 1.6s of the turn. They used to start only after the phone landed, at 2.25s.
+- Measured: opening ends at 3.45s, the turn starts at the same moment, and the UI moves from 0.51s to 1.60s of the turn.
+- A scroll made during the opening is consumed by this automatic turn.
+
+**D · Back-cover edge flicker:**
+- The back glass edge used the see-through glass-edge material (42%, no depth write). As the phone turned, the transparent sort order changed and the edge popped between grey and black.
+- It is now a solid satin edge (with polygonOffset).
+- The camera depth range now hugs the phone (near = distance − 12, far = distance + 40; it was 0.1–400) for stable depth at every angle.
+- Not verified frame by frame here: the sandbox only has software WebGL. To check on a real GPU.
+
+**E · Info card:**
+- Every fitting brand is shown as an even 11px G18 logo, wrapping onto two rows. No more "+N".
+- "grade" and the card labels are translated (§04).
+
+**F · Final-call ad:**
+- The word slides ("EVERY PART." … "Get yours today.") are now centred horizontally and vertically, in the hero ad title font (Space Grotesk 700).
+- The ad's text was already graphite / white / yellow. The "black" was the near-black intro and logo background (#141517) and the fade to pure black; both are now graphite #26282B.
+- Arabic: canvas text goes through the dictionary (§04).
+
+**Tests:** the 8 teardown scroll tests pass (8/8, no-3D mode; the full-3D run is too slow in software WebGL).
+
+DONE WHEN
+- 10 runs from above always start at STEP 0. **PASS**
+- Every gesture moves exactly one step, including during the opening. **PASS**
+- The title and elements move during the rotation; nothing waits for a scroll. **PASS**
+- Back cover edge: no flicker. **PASS by cause** (frame-by-frame check on a real GPU still open)
+- Card shows all brand logos; final ad centred, hero fonts, no black. **PASS**
