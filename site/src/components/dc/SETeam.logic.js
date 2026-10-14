@@ -70,11 +70,11 @@ class Component extends DCLogic {
   componentDidUpdate() { this._g = null; this.measure(); }
   renderVals() {
     const F = (this.props.$facts || {}).founder || {}, yr = new Date().getFullYear(), since = F.since || 2003, name = F.name || 'Tarek Alchoumari';
-    const wa = (this.props.$facts || {}).contact ? 'https://wa.me/' + String(this.props.$facts.contact.whatsapp || '').replace(/\D/g, '') : '#';
+    const D = window.SE_DATA, wa = 'https://wa.me/' + ((D && D.contact && D.contact.wa) || '971503420015');
     return { secRef: this.secRef, seen: this.state.seen,
       badges: ROLES.map((r, i) => ({ ...r, i, name: r.founder ? name : '', years: r.founder ? yr - since + ' years with us' : '', bio: r.founder ? name + ', leading the business since ' + since + '.' : r.bio,
         ask: r.founder ? 'Ask ' + name.split(' ')[0] : 'Ask our ' + r.role, flipped: this.state.flip === i,
-        href: wa + (wa !== '#' ? '?text=' + encodeURIComponent('Hi Sam Electronics, I have a question for the ' + (r.founder ? 'founder' : r.role) + '.') : ''),
+        href: wa + '?text=' + encodeURIComponent('Hi Sam Electronics, I have a question for the ' + (r.founder ? 'founder' : r.role) + '.'),
         flip: (e) => { if (e.target.closest('a')) return; this.b[i].w += 34; const c = e.currentTarget; c.classList.add('anim'); clearTimeout(c._t); c._t = setTimeout(() => c.classList.remove('anim'), 1100); const was = this.state.flip; if (was >= 0 && was !== i) { const o = this._c && this._c[was]; if (o) { o.classList.add('anim'); clearTimeout(o._t); o._t = setTimeout(() => o.classList.remove('anim'), 1100); } } this.setState({ flip: was === i ? -1 : i }); } })),
       move: (e) => { if (!this.cx) this.measure(); const st = this.secRef.current?.querySelector('.tm-stage'); if (!st) return; const r = st.getBoundingClientRect(); this.mx = e.clientX - r.left; this.my = e.clientY - r.top; },
       leave: () => { this.mx = null; },

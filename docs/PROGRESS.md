@@ -1368,3 +1368,71 @@ The finder's state and data stay in HomeV3 (brand → model → part → grade, 
 | Hover dropdown with a clear path to the full list | Yes |
 
 **Captured:** all 4 steps, the hover dropdown, and one frame mid-transition.
+
+## Final step · Full-site check (14 Oct 2026)
+
+**Links**
+- Every on-page link was clicked in a headless browser.
+- All `#…` links whose section no longer exists (#models, #find, #shop, #fmp) are handled in code. They open Find My Part, scroll to their section or open the G17 card, and none leaves a dead hash.
+- **Fixed:** the five "Ask …" buttons on the team badges' backs pointed to "#", because the WhatsApp number was read from a prop that isn't passed in. They now open WhatsApp with a prefilled message for that role.
+- External links:
+  - wa.me (WhatsApp);
+  - Google Maps;
+  - Instagram, TikTok and Facebook (@samelectronics.uae);
+  - tel: and mailto: for the phone and email.
+- No page links to a page that doesn't exist yet. Those actions use the G17 "Coming soon" card.
+
+**404:** `/this-page-does-not-exist` returns HTTP 404 with the branded "Signal lost · airplane mode" card and "Back to the home page".
+
+**Console errors**
+- **Fixed:** `favicon.ico` was a 404. The owner's logo is now the site icon (`src/app/icon.png`).
+- **Fixed:** a data URL error came from a grain layer in the locked teardown whose SVG data URL was cut at its `;`, so it never drew anything. It was removed with no visual change.
+- **Remaining, in this sandbox only:** errors from the external CDNs this machine can't reach (three / esm.sh, d3, topojson, world-atlas, simpleicons, qrserver). On the live site they load.
+- The world map's world-atlas fetch has no `.catch`, so it throws when offline. The map is "untouched" per Issue 9, so I left it.
+
+**Arabic, per section:** the checker loads the page in Arabic, scrolls every section, waits through the hero reel and opens the overlays, including Find My Part. Only these entries remain:
+- the brand logos' aria-labels (brand names stay as written);
+- the code label `se://deira/board`;
+- "Apple · Samsung · Xiaomi · +11".
+
+That is below the baseline set in Step 2.
+
+**fps, per section** (3D engines blocked, software rendering, 1440×900):
+
+| Section | Peak | Avg |
+|---|---|---|
+| Hero (#top) | 30 | 35.5 (unchanged from the Step 1 baseline; the 3D needs a GPU) |
+| Teardown | 60 | 57.3 |
+| What we offer | 60 | 58.8 |
+| Live Parts Board | 60 | 49.6 |
+| Bench Test | 60 | 54.2 |
+| Showcase | 60 | 57.5 |
+| Deals & arrivals | 60 | 59.3 |
+| Repair Lab | 60 | 58.9 |
+| Wholesale | 60 | 59.2 |
+| Worldwide | 60 | 57.7 |
+| Our story | 60 | 59.5 |
+| Team | 60 | 51.5 |
+| Who are you? | 60 | 53.7 |
+| Sam Circuit | 60 | 58.9 |
+| Meet Samsoom | 60 | 55.2 |
+| The Feed | 60 | 42.1 |
+| Reviews | 60 | 58.9 |
+| Request + Visit | 60 | 52.5 |
+| Finale | 60 | 43.3 |
+
+**Still open (owner):**
+1. The `ANTHROPIC_API_KEY` in Vercel. Samsoom's local fallback answers until it is added.
+2. Real Google reviews, the rating and the review link. The reviews band shows labelled samples until then.
+3. Follower counts.
+4. Team names and photos. The badges show monograms and "Name to come".
+5. Story photos. The frames hold warm placeholders.
+6. Confirm the sample figures: countries, minimum order, the trade tiers and the Sam Circuit thresholds and perks.
+7. The Madrid opening date.
+8. Check the 3D sections (hero, teardown) on a real laptop GPU.
+
+**Not built (outside the steps I was given):**
+- PDF Section S's "Batch 11 · Mobile round, every section at 390px" was not part of the step list I was given, so the mobile pass is still to do. The new sections have basic responsive rules, but no 390px capture pass yet.
+- Repair Lab has no issue of its own in the PDF and is unchanged.
+
+**Live:** https://samelectronics.vercel.app

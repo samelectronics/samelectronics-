@@ -43,11 +43,7 @@ function render(v: Vals) {
                     )}
                   ></div>
                   {'\n        '}
-                  <div
-                    style={cssToObj(
-                      `position:absolute;inset:0;background-image:url('data:image/svg+xml;utf8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22180%22 height=%22180%22%3E%3Cfilter id=%22n%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%22.85%22 numOctaves=%222%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23n)%22/%3E%3C/svg%3E');opacity:.18;mix-blend-mode:overlay;-webkit-mask-image:radial-gradient(${s(v.studio?.prx)}px ${s(v.studio?.pry)}px at ${s(v.studio?.cx)}px ${s(v.studio?.fy)}px,#000 0%,rgba(0,0,0,.5) 40%,transparent 80%);mask-image:radial-gradient(${s(v.studio?.prx)}px ${s(v.studio?.pry)}px at ${s(v.studio?.cx)}px ${s(v.studio?.fy)}px,#000 0%,rgba(0,0,0,.5) 40%,transparent 80%)`,
-                    )}
-                  ></div>
+                  {/* (a grain layer whose data URL was cut at its ';' never drew anything and logged a console error; removed 14 Oct 2026, no visual change) */}
                   {'\n        '}
                   <div
                     style={cssToObj(
