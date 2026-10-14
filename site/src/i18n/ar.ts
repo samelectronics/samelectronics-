@@ -1022,6 +1022,15 @@ export const EXACT: Record<string, string> = {
   // 14 Oct §02
   'Closing soon': 'يغلق قريباً',
   'Opening soon': 'يفتح قريباً',
+  // 14 Oct §10 showcase grades
+  'Genuine part · best colour, brightness and touch · longest warranty': 'قطعة أصلية · أفضل ألوان وسطوع ولمس · أطول ضمان',
+  'Manufacturer service part · near-original quality · strong warranty': 'قطعة خدمة من الشركة المصنّعة · جودة قريبة من الأصلي · ضمان قوي',
+  'Aftermarket OLED · deep blacks, true colour · great value': 'شاشة OLED بديلة · أسود عميق وألوان حقيقية · قيمة ممتازة',
+  'LCD with built-in touch · good everyday quality · budget friendly': 'شاشة LCD باللمس المدمج · جودة يومية جيدة · مناسبة للميزانية',
+  'Lowest price · basic quality · short warranty': 'أقل سعر · جودة أساسية · ضمان قصير',
+  'Brightness': 'السطوع',
+  'Colour': 'الألوان',
+  'Quality (sample)': 'الجودة (عيّنة)',
   // 14 Oct §04: teardown callouts, card and ad lines
   'grade': 'درجة',
   'grades': 'درجات',

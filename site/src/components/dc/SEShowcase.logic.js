@@ -10,13 +10,16 @@ import { onReplay } from '@/components/perf/SectionFX';
 const cl = (x) => (x < 0 ? 0 : x > 1 ? 1 : x), seg = (t, a, d) => cl((t - a) / d);
 const ex = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * cl(x))), eio = (x) => { x = cl(x); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
 
+// 14 Oct §10: Original first; each grade carries its own one-line description, four quality bars (out of 5, sample)
+// and a screen look (how bright and rich its picture is).
 export const ADS = [
-  { g: 'SP', k: 'SERVICE PACK', h: ['Straight from', 'the maker’s box.'], c: ['Genuine manufacturer part', 'Sealed in its service box', 'Warranty on every grade*'], box: true },
-  { g: 'OR', k: 'ORIGINAL', h: ['The original.', 'Nothing less.'], c: ['Genuine original part', 'Tested before it ships', 'Warranty on every grade*'] },
-  { g: 'OL', k: 'OLED', h: ['Deep blacks.', 'Fair price.'], c: ['OLED replacement screen', 'Bright, sharp, responsive', 'Tested on our bench'] },
-  { g: 'IN', k: 'INCELL', h: ['Best value.', 'Still bright.'], c: ['Incell replacement screen', 'Best value for money', 'Tested on our bench'] },
-  { g: 'HQ', k: 'HIGH COPY', h: ['Budget-friendly.', 'Still tested.'], c: ['Tested copy (for example GX)', 'Budget comes first', 'Checked before it ships'] },
+  { g: 'OR', k: 'ORIGINAL', h: ['The original.', 'Nothing less.'], d: 'Genuine part · best colour, brightness and touch · longest warranty', q: [5, 5, 5, 5], look: 'none' },
+  { g: 'SP', k: 'SERVICE PACK', h: ['Straight from', 'the maker’s box.'], d: 'Manufacturer service part · near-original quality · strong warranty', q: [5, 5, 5, 4], look: 'none', box: true },
+  { g: 'OL', k: 'OLED', h: ['Deep blacks.', 'Fair price.'], d: 'Aftermarket OLED · deep blacks, true colour · great value', q: [4, 4, 4, 3], look: 'saturate(1.08) contrast(1.06)' },
+  { g: 'IN', k: 'INCELL', h: ['Best value.', 'Still bright.'], d: 'LCD with built-in touch · good everyday quality · budget friendly', q: [3, 3, 4, 3], look: 'brightness(.94) saturate(.9)' },
+  { g: 'HQ', k: 'HIGH COPY', h: ['Budget-friendly.', 'Still tested.'], d: 'Lowest price · basic quality · short warranty', q: [2, 2, 3, 2], look: 'brightness(.86) saturate(.78) contrast(.94)' },
 ];
+export const QL = ['Brightness', 'Colour', 'Touch', 'Warranty'];
 const DUR = (i) => (ADS[i].box ? 9.5 : 7.5);
 
 class Component extends DCLogic {
@@ -28,16 +31,35 @@ class Component extends DCLogic {
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 80);
     const sp = window.seParts, pk = sp && sp.peek && sp.peek(); if (pk) this.setState({ lib: pk }); this.onLib = (e) => this.setState({ lib: e.detail }); window.addEventListener('se:parts-lib', this.onLib);
     this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) this.setState({ seen: true }); }, { threshold: 0.3 });
-    setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
+    setTimeout(() => { const S = this.secRef.current; if (S) this.io.observe(S.querySelector('.sc-pin') || S); }, 50); // 14 Oct §10: watch the held stage (the section is now several screens tall)
     const loop = (now) => { if (!this.alive) return; const dt = Math.min(0.1, (now - last) / 1000); last = now;
-      if (this.vis && !document.hidden && this.ov == null) { if (!this.hov) this.t += dt; if (this.t >= DUR(this.state.i)) this.next(1, true); this.frame(); }
+      if (this.vis && !document.hidden && this.ov == null) { if (!this.hov || this.t < 2.8) this.t += dt; /* 14 Oct §10: hover holds a grade only once it has built (scrolling with the mouse over the stage used to freeze it empty) */ if (this.t >= DUR(this.state.i)) { if (this.pinOn()) this.t = DUR(this.state.i) - 0.6; else this.next(1, true); } this.frame(); }
       this.raf = requestAnimationFrame(loop); };
     this.raf = requestAnimationFrame(loop);
     this.onLang = () => this.forceUpdate(); window.addEventListener('se:lang', this.onLang);
+    // 14 Oct §10 A: the section holds while it plays. Desktop: a sticky stage; the page scroll and the grade move together,
+    // one deliberate gesture (≥40px after 250ms of quiet) = one grade; after the last grade (or before the first) the page
+    // goes on. Scrolling up plays it backwards. A scrollbar drag or keys map the scroll position to a grade.
+    this.onScroll = () => { const S = this.secRef.current; if (!S || !this.pinOn()) return; const pin = S.querySelector('.sc-pin'); if (pin) { const top = Math.min(0, window.innerHeight - pin.offsetHeight); if (this._pt !== top) { this._pt = top; pin.style.top = top + 'px'; } }
+      if (this.scrolling) return; const r = S.getBoundingClientRect(), f = (this._pt || 0) - r.top, i = Math.max(0, Math.min(ADS.length - 1, Math.round(f / this.SH()))); if (i !== this.state.i && f > -10 && f < this.SH() * (ADS.length - 1) + 10) { this.t = 0.02; this.setState({ i }); } };
+    this.onWheel = (e) => { if (!this.pinOn() || !e.deltaY) return; const S = this.secRef.current; if (!S) return; const r = S.getBoundingClientRect(), f = (this._pt || 0) - r.top; if (f < -2 || f > this.SH() * (ADS.length - 1) + 2) return; // only while the stage is held
+      const now = performance.now(), quiet = now - (this.lastW || 0) >= 250; this.lastW = now; if (quiet) { this.gAcc = 0; this.gUsed = false; this.gRel = false; }
+      const dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1), dir = Math.sign(dy), i = this.state.i;
+      if (this.gRel) return; // this gesture already released the page: let it scroll on
+      if ((dir > 0 && i === ADS.length - 1 && !this.scrolling) || (dir < 0 && i === 0 && !this.scrolling)) { if (!this.gUsed) { this.gRel = true; return; } }
+      e.preventDefault(); if (this.gUsed) return; if (Math.sign(this.gAcc || 0) !== dir) this.gAcc = 0; this.gAcc = (this.gAcc || 0) + dy; if (Math.abs(this.gAcc) < 40) return;
+      this.gUsed = true; this.gAcc = 0; this.goGrade(i + dir); };
+    window.addEventListener('scroll', this.onScroll, { passive: true }); window.addEventListener('resize', this.onScroll); window.addEventListener('wheel', this.onWheel, { passive: false }); setTimeout(this.onScroll, 100);
     window.seShow = (i, t) => { this.ov = t; this.t = t; this.setState({ i }, () => this.frame()); };
   }
-  componentWillUnmount() { this.offRp && this.offRp(); window.removeEventListener('se:lang', this.onLang); this.alive = false; cancelAnimationFrame(this.raf); clearInterval(this.dIv); this.io && this.io.disconnect(); window.removeEventListener('se:parts-lib', this.onLib); }
+  componentWillUnmount() { window.removeEventListener('scroll', this.onScroll); window.removeEventListener('resize', this.onScroll); window.removeEventListener('wheel', this.onWheel); cancelAnimationFrame(this.sraf); this.offRp && this.offRp(); window.removeEventListener('se:lang', this.onLang); this.alive = false; cancelAnimationFrame(this.raf); clearInterval(this.dIv); this.io && this.io.disconnect(); window.removeEventListener('se:parts-lib', this.onLib); }
   componentDidUpdate() { this.frame(); }
+  pinOn() { return (document.documentElement.clientWidth || 1440) > 900; }
+  SH() { return Math.round(window.innerHeight * 0.55); }
+  /** Show grade i and move the page with it (the stage stays pinned, so the move is invisible). */
+  goGrade(i) { i = Math.max(0, Math.min(ADS.length - 1, i)); if (i === this.state.i) return; this.t = 0.02; this.setState({ i }); const S = this.secRef.current; if (!S) return;
+    const y0 = window.scrollY, y1 = Math.round(window.scrollY + S.getBoundingClientRect().top - (this._pt || 0) + i * this.SH()), t0 = performance.now(), dur = 600; cancelAnimationFrame(this.sraf); this.scrolling = true;
+    const f = (t) => { const k = Math.min(1, (t - t0) / dur), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; window.scrollTo(0, y0 + (y1 - y0) * e); if (k < 1) this.sraf = requestAnimationFrame(f); else this.scrolling = false; }; this.sraf = requestAnimationFrame(f); }
   next(d, auto) { const n = ADS.length, i = (this.state.i + d + n) % n; this.t = auto ? 0 : 0.02; this.setState({ i }); }
   q(k) { const R = this.secRef.current; if (!R) return null; return R.querySelector('[data-s="' + k + '"]'); }
   set(k, s) { const e = this.q(k); if (e) for (const n in s) if (e.style[n] !== s[n]) e.style[n] = s[n]; }
@@ -70,8 +92,8 @@ class Component extends DCLogic {
     const s = this.state, D = s.data, lib = s.lib, a = ADS[s.i];
     const price = (g) => { if (!D) return null; const ps = D.products.filter((p) => p.category === 'SCR' && p.grade === g); return ps.length ? Math.min(...ps.map((p) => p.retail_price)) : null; };
     const pr = price(a.g);
-    const L = window.seI18n; return { isAr: !!(L && L.lang() === 'ar'), tr: (x) => (L ? L.tr(x) : x), secRef: this.secRef, i: s.i, ad: a, ads: ADS.map((x, j) => ({ k: x.k, on: j === s.i, go: () => { this.t = 0.02; this.setState({ i: j }); } })), img: lib && lib.large ? lib.large[0] : '', hasImg: !!(lib && lib.large), price: pr ? 'AED ' + pr : '', hasPrice: !!pr,
-      enter: () => { this.hov = true; }, leave: () => { this.hov = false; }, prev: () => this.next(-1), next: () => this.next(1),
+    const L = window.seI18n; return { isAr: !!(L && L.lang() === 'ar'), tr: (x) => (L ? L.tr(x) : x), secRef: this.secRef, i: s.i, ad: a, ads: ADS.map((x, j) => ({ k: x.k, on: j === s.i, go: () => { if (this.pinOn()) this.goGrade(j); else { this.t = 0.02; this.setState({ i: j }); } } })), spacer: this.pinOn() ? (ADS.length - 1) * 55 + 'vh' : '0px', qual: QL.map((l, j) => ({ l, v: a.q[j], w: (a.q[j] / 5) * 100 + '%', d: j * 0.08 + 's' })), look: a.look, img: lib && lib.large ? lib.large[0] : '', hasImg: !!(lib && lib.large), price: pr ? 'AED ' + pr : '', hasPrice: !!pr,
+      enter: () => { this.hov = true; }, leave: () => { this.hov = false; }, prev: () => (this.pinOn() ? this.goGrade(this.state.i - 1) : this.next(-1)), next: () => (this.pinOn() ? this.goGrade(this.state.i + 1) : this.next(1)),
       ts: (e) => { this._tx = e.touches[0].clientX; }, te: (e) => { if (this._tx == null) return; const dx = e.changedTouches[0].clientX - this._tx; this._tx = null; if (Math.abs(dx) > 40) this.next(dx < 0 ? 1 : -1); },
       shop: (e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('se:fmp', { detail: { c: 'SCR' } })); } };
   }

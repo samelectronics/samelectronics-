@@ -9,6 +9,8 @@ function render(v: Vals) {
   const a = v.ad || { k: '', h: ['', ''], c: [] };
   return (
     <section id="showcase" ref={v.secRef} className="sc">
+      {/* 14 Oct §10: the stage is held (sticky) while the five grades play; the spacer is the scroll it holds for */}
+      <div className="sc-pin">
       <div className="sc-in">
         <header className="sc-top">
           <div>
@@ -43,17 +45,21 @@ function render(v: Vals) {
                 </span>
               ))}
             </h3>
-            <ul className="sc-list">
-              {a.c.map((c: string) => (
-                <li key={c} data-s="c">
-                  <span className="sc-tick">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.4" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M5 12l5 5L20 7" />
-                    </svg>
-                  </span>
-                  {c}
+            {/* 14 Oct §10 B: complete content per grade: one line + four quality bars (sample) */}
+            <p className="sc-d" data-s="c">
+              {a.d}
+            </p>
+            <ul className="sc-q" data-s="c" aria-label={v.tr('Quality (sample)')}>
+              {(v.qual || []).map((q: any) => (
+                <li key={q.l}>
+                  <span>{q.l}</span>
+                  <i>
+                    <b style={{ width: q.w, animationDelay: q.d }} />
+                  </i>
+                  <em>{q.v}/5</em>
                 </li>
               ))}
+              <li className="sc-q-note">{'SAMPLE'}</li>
             </ul>
             <a href="#fmp" className="sc-btn" data-s="btn" onClick={v.shop}>
               <span className="sc-btn-i">
@@ -89,7 +95,7 @@ function render(v: Vals) {
               </div>
             ) : null}
             <div className="sc-prod" data-s="prod">
-              {v.hasImg ? <img src={v.img} alt="" /> : null}
+              {v.hasImg ? <img src={v.img} alt="" style={{ filter: v.look === 'none' ? undefined : v.look + ' drop-shadow(0 20px 22px rgba(110,72,0,.35))' }} /> : null}
               <span className="sc-sheen" aria-hidden="true" style={v.hasImg ? { WebkitMask: `url(${v.img}) center / contain no-repeat`, mask: `url(${v.img}) center / contain no-repeat` } : undefined}>
                 <i data-s="sheen" />
               </span>
@@ -116,6 +122,8 @@ function render(v: Vals) {
           </div>
         </div>
       </div>
+      </div>
+      <div aria-hidden="true" style={{ height: v.spacer }} />
     </section>
   );
 }

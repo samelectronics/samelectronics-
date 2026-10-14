@@ -53,3 +53,16 @@
 .sc-seal { position: absolute; right: -16px; bottom: 18px; width: 74px; height: 74px; display: grid; place-items: center; text-align: center; border-radius: 50%; font: 700 9px/1.2 'JetBrains Mono', monospace; letter-spacing: .12em; color: #26282B; background: radial-gradient(circle at 35% 30%, #FFE58F, #F7C032 70%); box-shadow: inset 0 0 0 2px #26282B, inset 0 0 0 5px #F7C032, inset 0 0 0 6px rgba(26, 27, 29, .5), 0 6px 14px rgba(110, 72, 0, .35); opacity: 0; z-index: 5; }
 @keyframes scHaze { from { transform: translate(0, 0) scale(1); } to { transform: translate(40px, 30px) scale(1.15); } }
 @media (max-width: 900px) { .sc-stage { grid-template-columns: 1fr; height: auto; } .sc-r { height: 460px; } .sc-top { flex-direction: column; align-items: flex-start; } }
+/* 14 Oct §10 · held stage (desktop) and the complete content per grade */
+.sc { overflow: clip; }
+.sc-pin { position: sticky; top: 0; }
+@media (max-width: 900px) { .sc-pin { position: relative; } }
+.sc-d { margin: 2px 0 0; max-width: 460px; font: 500 16px/1.5 Inter, sans-serif; color: #E4E5E7; opacity: 0; }
+.sc-q { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 9px; max-width: 420px; opacity: 0; }
+.sc-q li { display: grid; grid-template-columns: 96px 1fr 30px; align-items: center; gap: 12px; font: 500 13px Inter, sans-serif; color: #D5D7DA; }
+.sc-q li i { position: relative; height: 6px; border-radius: 3px; background: rgba(255, 255, 255, .1); overflow: hidden; }
+.sc-q li b { position: absolute; inset-block: 0; inset-inline-start: 0; border-radius: 3px; background: linear-gradient(90deg, #C9921A, #F7C032); animation: scFill .8s cubic-bezier(.2, .8, .2, 1) both; transform-origin: left center; }
+html[dir='rtl'] .sc-q li b { transform-origin: right center; }
+.sc-q li em { font: 600 12px 'JetBrains Mono', monospace; font-style: normal; color: #F7C032; text-align: end; }
+.sc-q li.sc-q-note { display: block; font: 600 10px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #8C9096; }
+@keyframes scFill { from { transform: scaleX(0); } to { transform: scaleX(1); } }

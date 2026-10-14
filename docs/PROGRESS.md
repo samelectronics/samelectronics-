@@ -1798,3 +1798,31 @@ DONE WHEN
 - No circuit touches text. **PASS**
 - White box: no "sample values" line; the shipping-quote button exists. **PASS**
 - Globe at hero quality, starting from the UAE. **PASS**
+
+## §10 · The Showcase
+**A · Held while it plays (desktop):**
+- The stage is sticky; its top is set to `min(0, 100vh − stage height)` so the whole stage stays in view. A spacer of 4 × 55vh gives it the scroll it holds for.
+- One deliberate gesture (≥40px after 250ms of quiet, the teardown's rule) = one grade. The page scroll moves with the grade (600ms) and the stage stays put.
+- After the last grade the next gesture releases the page. Scrolling up re-enters at the last grade and plays it backwards to the first, then releases.
+- A scrollbar drag or keyboard scroll maps the scroll position to a grade.
+- The ad clock now holds at the end of each grade instead of auto-advancing (auto-advance stays on mobile, where nothing is held).
+
+Two bugs found and fixed while testing:
+- The section is now several screens tall, so its 30% visibility trigger could never fire. It now watches the held stage.
+- Hover paused the clock even before a grade had built, so scrolling with the mouse over the stage left it empty. Hover now only holds a grade once it is built.
+
+Test (`show10.mjs`): ↓ 0→1→2→3→4, then release; ↑ re-enter at 4 → 3 → 2 → 1 → 0. The stage stays pinned at the same spot throughout.
+
+**B · Complete content per grade** (order: Original, Service Pack, OLED, Incell, High Copy):
+- the headline;
+- the owner's one-line description;
+- four quality bars (Brightness, Colour, Touch, Warranty, out of 5, marked SAMPLE), which refill on every switch;
+- the "from AED … sample" badge;
+- the screen visual with a per-grade picture look (from full brightness down to a dimmer, flatter High Copy screen; Service Pack keeps its box moment);
+- the grade's shop button.
+
+All strings are in Arabic. Screens: `sc-sheet.png` (all five grades, EN + AR).
+
+DONE WHEN
+- The page holds until all grades have been seen; no empty space passes. **PASS**
+- All five buttons show different, complete content, in EN and AR. **PASS**
