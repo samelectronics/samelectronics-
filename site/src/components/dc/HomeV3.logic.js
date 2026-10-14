@@ -21,7 +21,7 @@ class Component extends DCLogic {
     this.offSeen = new WeakSet(); const scan = () => { document.querySelectorAll('section, footer').forEach((el) => { if (!this.offSeen.has(el)) { this.offSeen.add(el); el.setAttribute('data-off', ''); this.offIO.observe(el); } }); };
     scan(); this.offIv = setInterval(scan, 3000);
     false && setTimeout(() => { const r = this.rootRef.current; if (r) import(/* webpackIgnore: true */ new URL('./se-bus.js', document.baseURI).href).then((m) => { if (!this.dead) this.busOff = m.mount(r); }).catch((e) => console.warn('bus', e && e.message)); }, 300);
-    try { if (!sessionStorage.getItem('se-booted') && !matchMedia('(prefers-reduced-motion: reduce)').matches) { sessionStorage.setItem('se-booted', '1'); this.setState({ bootOn: true }); this.bootT = setTimeout(() => this.setState({ bootOn: false }), 1650); } } catch (e) {}
+    try { if (!sessionStorage.getItem('se-booted') && !matchMedia('(prefers-reduced-motion: reduce)').matches) { sessionStorage.setItem('se-booted', '1'); this.setState({ bootOn: true }); /* 14 Oct §01: BootIntro decides when to leave (real loading, 1.5–5s) */ } } catch (e) {}
     this.buyIv = setInterval(() => { if (document.hidden || window.scrollY > 600 || this.state.fmpOpen) return; const D = this.state.data; if (!D) return; const p = D.products.find((x) => x.stock_qty > 3 && x.category === 'SCR'); if (!p) return; this.flyToCart(); }, 12000);
     this.onKey = (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); this.openSearch(); } else if (e.key === 'Escape') this.setState({ posterI: null, spOpen: false, fmpOpen: false, drawerMap: false, drawerCart: false }); };
     window.addEventListener('keydown', this.onKey);

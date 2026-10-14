@@ -1500,3 +1500,43 @@ DONE WHEN
 - Hero circuits keep their clearance. **PASS** (the Finale is in §20)
 - No #000 / #1A1B1D; two-tone titles. **PASS**
 - Build passes. **PASS**
+
+## §01 · Loading screen + favicon
+**The square:** it was the CSS `drop-shadow` filter on the SVG ring. Its filter region is a box, and the glow was clipped to that box, so it read as a square watermark. The ring glow is now a wider, faint copy of the ring stroke (no filter). The logo is clipped to a circle (`clip-path`), and the soft glow is a radial gradient that fades out well inside its own box.
+
+**Scene** (`BootIntro.tsx`, `styles/boot.css`):
+- Graphite #26282B screen.
+- The 160px round logo with a breathing yellow glow (15%).
+- The yellow LED ring, kept: 2px, 12px outside the logo.
+- 32px below, five status lines (Inter 15px, white 80%, fade + 8px rise), each with a yellow icon (shelf, box, battery, parcel).
+- On "Waking Samsoom up…", the iconic Samsoom (48px) is asleep, yawns, blinks and waves.
+- Exit: the ring completes, the logo scales to 1.06, and the screen fades out in 400ms.
+
+**Real loading:** the ring follows four tasks: fonts, page + hero images (window load), globe data, and the parts library / first 3D. The screen leaves when all four are ready, at least 1.5s has passed and Samsoom has woken; at 5s it leaves regardless. Times are counted from navigation start.
+
+**Choice (noted per rule 2):**
+- The five lines and the wake-up always play, as the DONE WHEN asks.
+- Their cadence is 0.45–0.9s per line, shortened when React mounts late, so everything fits inside 5s.
+- So a first visit is about 3.5–5s, not 1.5s.
+
+**Flash fix:** a pre-paint script puts a graphite veil on the home page for a first visit, so the hero no longer flashes before the loading screen mounts. It is shown once per visit (sessionStorage); a reload in the same session skips it.
+
+**Arabic** (IBM Plex Sans Arabic, same size):
+- نرتّب البضاعة على الرفوف…
+- نفتح كراتين الشاشات الجديدة…
+- نشحن البطاريات…
+- نجهّز طلبات اليوم…
+- نوقظ سمسوم…
+
+**Favicon:**
+- The two-phones mark in graphite on a Signal Yellow circle, with thick strokes for 16px.
+- Files: `public/favicon.svg`, `favicon.ico` (16/32/48), `favicon-16/32/48.png`, `apple-touch-icon.png` (180), `icon-192/512.png`, and `manifest.webmanifest` (theme #26282B). The theme colour is also in the viewport meta.
+- The old `app/icon.png` (the full logo) was removed.
+
+**Screens:** `boot-sheet.png`, `boot-glow.png`, `fav-preview.png` (light and dark tabs).
+
+DONE WHEN
+- No square behind the logo. **PASS**
+- The five lines play in order, EN + AR; Samsoom wakes up. **PASS**
+- 1.5s ≤ duration ≤ 5s, once per visit. **PASS**
+- The favicon is yellow + graphite and readable on light and dark tabs. **PASS**

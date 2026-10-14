@@ -22,14 +22,27 @@ import '@/styles/visit.css';
 import '@/styles/finale.css';
 import '@/styles/fmp.css';
 import '@/styles/titles.css';
+import '@/styles/boot.css';
 
 export const metadata: Metadata = {
   title: DC_TITLE ?? 'Sam Electronics',
   description:
     'Sam Electronics L.L.C, Al Murar, Deira, Dubai: wholesale and retail mobile phone spare parts, repairs and worldwide shipping since 2003. Quality · Warranty · Price.',
+  // 14 Oct §01: the two-phones mark in graphite on a Signal Yellow circle
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-48.png', sizes: '48x48', type: 'image/png' },
+    ],
+    shortcut: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
+  manifest: '/manifest.webmanifest',
 };
 
-export const viewport: Viewport = { width: 'device-width', initialScale: 1 };
+export const viewport: Viewport = { width: 'device-width', initialScale: 1, themeColor: '#26282B' };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

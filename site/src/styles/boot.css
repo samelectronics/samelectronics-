@@ -1,0 +1,16 @@
+/* 14 Oct §01 · loading screen. The pre-paint script sets html.se-boot on a first visit to the home page, so the graphite
+   screen is there from the very first paint (no flash of the page before React mounts). */
+html.se-boot body::before { content: ''; position: fixed; inset: 0; z-index: 199; background: #26282B; }
+
+.se-bootv[data-leaving] { animation: bootFade .4s ease-in .02s forwards; }
+.se-boot-img { position: relative; width: 160px; height: 160px; display: block; border-radius: 50%; clip-path: circle(50%); animation: bootLogo .6s ease-out both; transition: transform .4s cubic-bezier(.2, .8, .2, 1); }
+.se-bootv[data-leaving] .se-boot-img { transform: scale(1.06); }
+.se-boot-glow { position: absolute; left: 50%; top: 50%; width: 440px; height: 440px; margin: -220px 0 0 -220px; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(closest-side, rgba(247, 192, 50, .15) 36%, rgba(247, 192, 50, .1) 46%, rgba(247, 192, 50, .06) 56%, rgba(247, 192, 50, .033) 66%, rgba(247, 192, 50, .014) 78%, rgba(247, 192, 50, .004) 88%, rgba(247, 192, 50, 0) 96%); animation: bootGlow 2.4s ease-in-out infinite; }
+.se-boot-ring, .se-boot-ringg { opacity: 0; animation: bootRingIn .3s ease-out .2s forwards; }
+.se-boot-txt { animation: bootLine .35s cubic-bezier(.2, .8, .2, 1) both; }
+@keyframes bootIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes bootFade { to { opacity: 0; visibility: hidden; } }
+@keyframes bootGlow { 0%, 100% { opacity: .75; transform: scale(.96); } 50% { opacity: 1; transform: scale(1.04); } }
+@keyframes bootRingIn { to { opacity: 1; } }
+@keyframes bootLine { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
