@@ -7,7 +7,7 @@ import { comingSoon } from '@/components/g17/ComingSoon';
 
 const WORDS: [string, string, string][] = [
   ['q', 'QUALITY', 'Display and touch passed'],
-  ['w', 'WARRANTY', 'True Tone passed, warranty sticker on'],
+  ['w', 'WARRANTY', 'True Tone passed, covered by warranty'],
   ['p', 'PRICE', 'Battery passed, the price you agreed'],
 ];
 
@@ -35,7 +35,7 @@ function Tile({ k, name, children }: { k: string; name: string; children: React.
 function render(v: Vals) {
   return (
     <section id="quality" ref={v.secRef} className="bt" style={{ ['--sc' as string]: v.sc } as React.CSSProperties}>
-      <div className="bt-pin">
+      <div className="bt-pin" data-b="pin">
         <div className="bt-bg" aria-hidden="true" />
         <div className="bt-box" style={{ ['--sc' as string]: v.sc } as React.CSSProperties}>
           {/* ---------- left: the promise ---------- */}

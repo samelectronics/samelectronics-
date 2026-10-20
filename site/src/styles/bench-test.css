@@ -3,6 +3,10 @@
 /* R6 §08: no longer pinned and scrubbed: the film plays on its own once the section is 60% in view, so the visitor never
    scrolls into an empty stage; the section is exactly one scaled box tall */
 .bt-pin { position: relative; height: calc(72px + 828px * var(--sc, 1)); overflow: hidden; }
+/* Urgent 4: held again, and scroll drives the tests (display → touch → True Tone → battery → sticker): the stage sticks for
+   160vh of scroll; a fast scroll simply passes through. The stage is already filled on arrival (the phone is on the rig). */
+.bt { height: calc(72px + 828px * var(--sc, 1) + 160vh); }
+.bt-pin { position: sticky; top: 0; }
 .bt-bg { position: absolute; inset: 0; background: radial-gradient(70% 70% at 45% 40%, #F7C032 0%, #F7C032 55%, #F7C032 100%); }
 .bt-bg::before { content: ''; position: absolute; inset: 0; opacity: .04; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 /* R6 §08: the bench band (and its line across the yellow) is gone: one continuous yellow */
@@ -23,8 +27,9 @@
 .bt-chk { fill: none; stroke: #26282B; stroke-width: 3.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1 1; stroke-dashoffset: 1; }
 .bt-wt { display: flex; flex-direction: column; gap: 6px; }
 .bt-w { position: relative; display: inline-block; font: 700 72px/1 'Space Grotesk', sans-serif; letter-spacing: -.035em; white-space: nowrap; }
-.bt-w-o { color: transparent; -webkit-text-stroke: 1.5px rgba(26, 27, 29, .42); }
-.bt-w-f { position: absolute; left: 0; top: 0; color: #26282B; clip-path: inset(0 100% 0 0); text-shadow: 0 0 22px rgba(255, 244, 209, .6); }
+/* Urgent 4: a soft ghost fill, not an outline stroke (strokes break on joined Arabic letters and look 'default') */
+.bt-w-o { color: rgba(38, 40, 43, .16); }
+.bt-w-f { position: absolute; inset-inline-start: 0; top: 0; color: #26282B; clip-path: inset(0 100% 0 0); }
 .bt-line { font: 500 16px Inter, sans-serif; color: #3D3E3F; clip-path: inset(0 100% 0 0); white-space: nowrap; }
 
 /* rig */
@@ -110,13 +115,14 @@
 .bt-o-r { display: flex; justify-content: space-between; gap: 10px; }
 .bt-o-r span:first-child { color: #8C9096; }
 .bt-o-bars { height: 18px; margin-top: 8px; background: repeating-linear-gradient(90deg, #26282B 0 2px, transparent 2px 4px, #26282B 4px 5px, transparent 5px 8px); }
-.bt-stamp { position: absolute; right: 12px; bottom: 30px; padding: 4px 10px; border-radius: 6px; font: 700 20px 'Space Grotesk', sans-serif; letter-spacing: .1em; color: #1D8A55; box-shadow: inset 0 0 0 2.5px #1D8A55, inset 0 0 0 5px rgba(255, 255, 255, .6), inset 0 0 0 6.5px rgba(29, 138, 85, .6); opacity: 0; mix-blend-mode: multiply; }
+.bt-stamp { position: absolute; right: 14px; bottom: 6px; padding: 4px 10px; border-radius: 6px; font: 700 20px 'Space Grotesk', sans-serif; letter-spacing: .1em; color: #1D8A55; box-shadow: inset 0 0 0 2.5px #1D8A55, inset 0 0 0 5px rgba(255, 255, 255, .6), inset 0 0 0 6.5px rgba(29, 138, 85, .6); opacity: 0; mix-blend-mode: multiply; }
 @keyframes btBreathe { 50% { box-shadow: 0 0 4px 0 rgba(95, 212, 154, .55), 0 0 8px rgba(95, 212, 154, .25); } }
 @keyframes btFlick { 0%, 96%, 100% { opacity: 1; } 97% { opacity: .55; } 98% { opacity: 1; } 99% { opacity: .7; } }
 @keyframes btRoll { from { transform: translateY(60%); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes btFlip { from { transform: rotateX(90deg); } to { transform: none; } }
 [dir='rtl'] .bt-box { direction: ltr; }
 [dir='rtl'] .bt-left { direction: rtl; text-align: right; }
+[dir='rtl'] .bt-w { font-size: 64px; line-height: 1.2; }
 
 /* R6 §08 · Today on the rig */
 .bt-today { margin-top: 26px; padding-top: 16px; border-top: 1.5px solid rgba(26, 27, 29, .16); }
@@ -130,11 +136,12 @@
 .bt-i { position: relative; }
 .bt-i span { position: absolute; left: 50%; bottom: calc(100% + 10px); width: 240px; margin-left: -120px; padding: 10px 12px; border-radius: 10px; background: #26282B; color: #F2F3F4; font: 400 12.5px/1.45 Inter, sans-serif; font-style: normal; text-align: start; box-shadow: 0 12px 24px -8px rgba(0, 0, 0, .5); opacity: 0; transform: translateY(4px); pointer-events: none; transition: opacity .2s, transform .2s; z-index: 5; }
 .bt-i:hover span, .bt-i:focus-visible span, .bt-i:focus span { opacity: 1; transform: none; }
-.bt-acts { display: flex; align-items: center; gap: 16px; margin-top: 16px; flex-wrap: wrap; }
+.bt-acts { display: flex; align-items: center; gap: 12px; margin-top: 18px; flex-wrap: nowrap; }
 .bt-how { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border: 0; border-radius: 10px; background: #26282B; color: #F7C032; font: 600 14px Inter, sans-serif; cursor: pointer; transition: transform .2s, box-shadow .2s; }
 .bt-how:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -10px rgba(38, 40, 43, .6); }
-.bt-run { display: inline-flex; align-items: center; gap: 6px; font: 500 13px Inter, sans-serif; color: #26282B; }
-.bt-run > span { margin-inline-end: 2px; }
-.bt-rq { height: 32px; padding: 0 10px; border: 1.5px solid rgba(26, 27, 29, .35); border-radius: 8px; background: transparent; color: #26282B; font: 600 12px 'JetBrains Mono', monospace; cursor: pointer; transition: background .2s, border-color .2s; }
-.bt-rq:hover { border-color: #26282B; }
+/* Urgent 4: one clean row: 'How we test' + a segmented control for the quality the rig runs */
+.bt-run { display: inline-flex; align-items: center; gap: 2px; height: 40px; padding: 4px; border-radius: 10px; background: rgba(38, 40, 43, .1); font: 500 13px Inter, sans-serif; color: #26282B; white-space: nowrap; }
+.bt-run > span { padding-inline: 10px 6px; font-size: 12.5px; color: #3D3E3F; }
+.bt-rq { height: 32px; padding: 0 12px; border: 0; border-radius: 7px; background: transparent; color: #26282B; font: 600 12px 'JetBrains Mono', monospace; cursor: pointer; transition: background .2s, border-color .2s; }
+.bt-rq:hover { background: rgba(38, 40, 43, .1); }
 .bt-rq.on { background: #26282B; border-color: #26282B; color: #F7C032; }

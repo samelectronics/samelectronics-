@@ -60,7 +60,7 @@
 .sc-q { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 9px; max-width: 420px; opacity: 0; }
 .sc-q li { display: grid; grid-template-columns: 96px 1fr 30px; align-items: center; gap: 12px; font: 500 13px Inter, sans-serif; color: #D5D7DA; }
 .sc-q li i { position: relative; height: 6px; border-radius: 3px; background: rgba(255, 255, 255, .1); overflow: hidden; }
-.sc-q li b { position: absolute; inset-block: 0; inset-inline-start: 0; border-radius: 3px; background: linear-gradient(90deg, #F7C032, #F7C032); animation: scFill .8s cubic-bezier(.2, .8, .2, 1) both; transform-origin: left center; }
+.sc-q li b { position: absolute; inset-block: 0; inset-inline-start: 0; border-radius: 3px; background: #F7C032; transform: scaleX(0); transform-origin: left center; /* Urgent 4: filled by the frame clock (SEShowcase.logic) */ }
 html[dir='rtl'] .sc-q li b { transform-origin: right center; }
 .sc-q li em { font: 600 12px 'JetBrains Mono', monospace; font-style: normal; color: #F7C032; text-align: end; }
 .sc-q li.sc-q-note { display: block; font: 600 10px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #8C9096; }
@@ -78,3 +78,22 @@ html[dir='rtl'] .sc-q li b { transform-origin: right center; }
 .sc-ufront .sc-sheen { position: absolute; inset: 0; }
 html[dir='rtl'] .sc-ulid { transform-origin: 80% 100%; }
 @media (max-width: 900px) { .sc-ubox { inset-inline-start: 16px; height: 220px; } .sc-uback { inset-inline-start: 250px; height: 240px; } .sc-ufront { inset-inline-start: 120px; height: 300px; } }
+
+/* Urgent 4 · the studio. Flat brand yellow wall, a short cove (36px, not a long fade) into a deeper yellow floor; every
+   product stands on the same floor line with a faint floor reflection. No haze blobs, no lid bar, no section glow. */
+.sc { background: #F2F3F4; }
+.sc-r { background: #F7C032; }
+.sc-haze, .sc-ulid { display: none; }
+.sc-floor { position: absolute; inset-inline: 0; bottom: 0; height: 132px; background: linear-gradient(180deg, #F7C032 0, #EDB62C 36px, #E9B128 100%); }
+.sc-floor::before { content: ''; position: absolute; inset-inline: 0; top: 36px; height: 1px; background: rgba(110, 72, 0, .08); }
+.sc-ubox { bottom: 112px; height: 278px; }
+.sc-uback { bottom: 112px; height: 292px; }
+.sc-ufront { bottom: 72px; }
+.sc-un img { filter: drop-shadow(0 14px 14px rgba(110, 72, 0, .28)); -webkit-box-reflect: below 0 linear-gradient(transparent 82%, rgba(0, 0, 0, .14)); }
+/* Urgent 4 · nav: flat graphite circles with a #F7C032 arrow */
+.sc-nav { right: 24px; bottom: 22px; gap: 8px; }
+html[dir='rtl'] .sc-nav { right: auto; left: 24px; }
+.sc-nav button { width: 44px; height: 44px; background: #26282B; color: #F7C032; box-shadow: 0 6px 14px -6px rgba(38, 40, 43, .5); transition: transform .2s, background .2s; }
+.sc-nav button:hover { transform: translateY(-2px); background: #34363A; }
+.sc-nav button:focus-visible { outline: 2px solid #26282B; outline-offset: 3px; }
+html[dir='rtl'] .sc-nav svg { transform: scaleX(-1); }

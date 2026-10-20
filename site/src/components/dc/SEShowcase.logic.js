@@ -35,7 +35,7 @@ class Component extends DCLogic {
     this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) this.setState({ seen: true }); }, { threshold: 0.3 });
     setTimeout(() => { const S = this.secRef.current; if (S) this.io.observe(S.querySelector('.sc-pin') || S); }, 50); // 14 Oct §10: watch the held stage (the section is now several screens tall)
     const loop = (now) => { if (!this.alive) return; const dt = Math.min(0.1, (now - last) / 1000); last = now;
-      if (this.vis && !document.hidden && this.ov == null) { if (!this.hov || this.t < 2.8) this.t += dt; /* 14 Oct §10: hover holds a grade only once it has built (scrolling with the mouse over the stage used to freeze it empty) */ if (this.t >= DUR(this.state.i)) { if (this.pinOn()) this.t = DUR(this.state.i) - 0.6; else this.next(1, true); } this.frame(); }
+      if (this.vis && !document.hidden && this.ov == null) { this.t += dt; /* Urgent 4: hover no longer pauses */ if (this.t >= DUR(this.state.i)) { if (this.pinOn()) this.t = DUR(this.state.i) - 0.6; else this.next(1, true); } this.frame(); }
       this.raf = requestAnimationFrame(loop); };
     this.raf = requestAnimationFrame(loop);
     this.onLang = () => this.forceUpdate(); window.addEventListener('se:lang', this.onLang);
@@ -57,7 +57,7 @@ class Component extends DCLogic {
   componentWillUnmount() { window.removeEventListener('scroll', this.onScroll); window.removeEventListener('resize', this.onScroll); window.removeEventListener('wheel', this.onWheel); cancelAnimationFrame(this.sraf); this.offRp && this.offRp(); window.removeEventListener('se:lang', this.onLang); this.alive = false; cancelAnimationFrame(this.raf); clearInterval(this.dIv); this.io && this.io.disconnect(); window.removeEventListener('se:parts-lib', this.onLib); }
   componentDidUpdate() { this.frame(); }
   // R6 Part B / §09 (overrides 14 Oct §10): the Showcase is never held. It auto-plays like the ads; free scrolling;
-  // hover pauses; clicking a segment jumps. (The held-stage code path stays off.)
+  // clicking a segment or an arrow jumps (Urgent 4: hover no longer pauses). (The held-stage code path stays off.)
   pinOn() { return false; }
   SH() { return Math.round(window.innerHeight * 0.55); }
   /** Show grade i and move the page with it (the stage stays pinned, so the move is invisible). */
@@ -75,6 +75,7 @@ class Component extends DCLogic {
     const R = this.secRef.current; if (!R) return;
     R.querySelectorAll('[data-s="w"]').forEach((w, j) => { const k = ex(seg(t, 0.1 + j * 0.06, 0.45)); w.style.opacity = (k * (1 - oe)).toFixed(3); w.style.filter = k < 1 ? 'blur(' + ((1 - k) * 8).toFixed(1) + 'px)' : 'none'; w.style.transform = 'translateY(' + (-oe * 30 - (1 - k) * 6).toFixed(1) + 'px)'; });
     R.querySelectorAll('[data-s="c"]').forEach((c, j) => { const k = seg(t, 1.0 + j * 0.25, 0.25); c.style.opacity = (ex(k) * (1 - oe)).toFixed(3); c.style.transform = 'translateY(' + (-oe * 30).toFixed(1) + 'px)'; c.classList.toggle('on', k > 0.4); });
+    R.querySelectorAll('.sc-q li b').forEach((b, j) => { const k = eio(seg(t, 1.25 + j * 0.08, 0.8)); b.style.transform = 'scaleX(' + k.toFixed(4) + ')'; });
     this.set('btn', { opacity: (ex(seg(t, 1.2, 0.4)) * (1 - oe)).toFixed(3), transform: 'translateY(' + ((1 - ex(seg(t, 1.2, 0.4))) * 12 - oe * 30).toFixed(1) + 'px)' });
     // R6 §09 · the unboxing. The box slides in from the reading end, its lid lifts, the screen rises out of it and turns
     // to its 25° pose, its back stands up behind it, the price lands; at the change everything leaves the other way.
@@ -82,7 +83,7 @@ class Component extends DCLogic {
     const bi = ex(seg(t, 0.05, 0.6)), lid = eio(seg(t, 0.6, 0.45)), rise = eio(seg(t, 1.0, 1.1)), turn = eio(seg(t, 1.4, 0.8)), bk = eio(seg(t, 2.0, 0.8));
     const xo = -sx * 70 * oe; // leave toward the reading start
     this.set('ubox', { opacity: (cl(bi * 1.4) * (1 - oe)).toFixed(3), transform: 'translateX(' + (sx * (1 - bi) * 260 + xo).toFixed(1) + 'px)' });
-    this.set('lid', { opacity: (1 - cl(lid * 1.3)).toFixed(3), transform: 'translateY(' + (-lid * 46).toFixed(1) + 'px) rotate(' + (-sx * lid * 14).toFixed(2) + 'deg)' });
+    false && this.set('lid', { opacity: (1 - cl(lid * 1.3)).toFixed(3), transform: 'translateY(' + (-lid * 46).toFixed(1) + 'px) rotate(' + (-sx * lid * 14).toFixed(2) + 'deg)' });
     const idle = t > 2.6 ? Math.sin((t - 2.6) * 1.1) * 3 : 0;
     this.set('prod', { opacity: (cl(rise * 3) * (1 - oe)).toFixed(3), transform: 'translateX(' + (sx * -(1 - rise) * 150 + xo).toFixed(1) + 'px) translateY(' + ((1 - rise) * 120).toFixed(1) + 'px) scale(' + (0.62 + 0.38 * rise).toFixed(4) + ') rotateY(' + (sx * ((1 - turn) * -55 + idle)).toFixed(2) + 'deg)' });
     this.set('uback', { opacity: (bk * 0.95 * (1 - oe)).toFixed(3), transform: 'translateX(' + (sx * -(1 - bk) * 90 + xo).toFixed(1) + 'px) scale(' + (0.9 + 0.1 * bk).toFixed(4) + ')' });

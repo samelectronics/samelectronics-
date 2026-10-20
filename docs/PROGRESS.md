@@ -2544,3 +2544,44 @@ DONE WHEN
 - Skip link in its own corner; no outlines/ghost/bokeh. **PASS**
 - New final-call ads (EN/AR). **PASS**
 - Clean seam; no overlap; graphite cards; #F7C032 only; parts static. **PASS**
+
+## Urgent 4 · Bench, Showcase, Repair Lab
+
+- **Bench: scroll-driven again.**
+  - The section holds (sticky) for 160vh, and scroll moves the tests in order: display → touch → True Tone → battery → sticker → passed.
+  - The phone is already clamped on arrival, so the stage is never empty. A fast scroll simply passes through.
+  - "Run the test yourself" plays one pass on its own clock, then scroll takes over again.
+- **Bench: QUALITY / WARRANTY / PRICE.**
+  - A soft ghost fill instead of the outline stroke (the stroke broke on joined Arabic letters). The fill runs right to left in Arabic.
+  - No glow.
+  - The Arabic size is tuned to 64px with line-height 1.2.
+- **Bench: one clean row.** "How we test" plus a segmented control for the quality (Original / OLED Soft / Incell).
+- **Bench: smaller fixes.**
+  - The warranty line now reads "True Tone passed, covered by warranty", because the sticker goes on last.
+  - "True Tone" is no longer written in English inside the Arabic (توازن الألوان).
+  - The PASSED stamp no longer covers the price on the work order.
+- **Showcase.**
+  - Hover no longer pauses the ads.
+  - A real studio: a flat #F7C032 wall, a short cove into a deeper yellow floor, every product on the same floor line with a faint reflection.
+  - The floating lid bar and the light haze blobs are gone, and the section has no warm glow.
+  - Nav: flat graphite circles with a #F7C032 arrow, mirrored in Arabic.
+  - The quality bars run on the film clock: the CSS fill animation stayed at 0 in Arabic.
+- **Repair Lab: every phase re-rendered** (`scripts/repairfilm`).
+  - The heat plate (it read as paper) is now a dark anodized, brushed aluminium separator with a grid of vacuum holes, a control strip, an LCD window and an amber LED. `mat-hot` lights the LED and LCD.
+  - The temperature climbs on the plate's own display, placed with anchors the renderer projects (`src/content/repairAnchors.json`).
+  - The cracked glass is real shards: radial cracks and ring breaks, each shard tilted in a bump map so the light breaks shard by shard, a crush zone, a few chips, and highlights that fade with distance.
+  - The checks run on the phone's own screen (`test0`–`test4`): icons only, so nothing English shows inside Arabic.
+  - The warranty seal is a rendered decal.
+  - The boot screen has no words.
+  - No orange wash, no fake heat shimmer, no spark.
+- **Repair Lab: overlays and section.**
+  - The debug-looking boxes are gone: the job ticket, the HEAT PLATE pill and the checklist card.
+  - The job line (#4821 · model · problems) and the live status ("Heating the seal", "New screen fitted", "Every check passed") sit in a caption bar under the film, in EN and AR.
+  - The section background is flat graphite.
+
+DONE WHEN
+- Bench holds and scroll drives the tests; fast scroll passes. **PASS**
+- QUALITY / WARRANTY / PRICE fill properly in EN and AR. **PASS**
+- One clean button row. **PASS**
+- Showcase: no hover pause, studio environment, new nav. **PASS**
+- Repair: every phase at render quality; no debug boxes. **PASS**

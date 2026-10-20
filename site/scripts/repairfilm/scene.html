@@ -41,16 +41,37 @@ const matTex = cv(2048, 1408, (x, w, h) => {
   x.fillStyle = '#25272a'; x.fillRect(0, 0, w, h);
   const id = x.getImageData(0, 0, w, h), d = id.data; for (let i = 0; i < d.length; i += 4) { const n = (rnd() - 0.5) * 9; d[i] += n; d[i + 1] += n; d[i + 2] += n; } x.putImageData(id, 0, 0);
   x.strokeStyle = 'rgba(255,255,255,.045)'; x.lineWidth = 1; for (let i = 0; i < w; i += 32) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i, h); x.stroke(); } for (let j = 0; j < h; j += 32) { x.beginPath(); x.moveTo(0, j); x.lineTo(w, j); x.stroke(); }
-  x.strokeStyle = 'rgba(247,192,50,.09)'; x.lineWidth = 3; x.lineCap = 'round';
-  [[[60, 1300], [60, 1100], [140, 1020], [520, 1020]], [[1990, 120], [1800, 120], [1720, 200], [1720, 380]], [[1990, 1250], [1700, 1250], [1640, 1190], [1400, 1190]]].forEach((p) => { x.beginPath(); x.moveTo(p[0][0], p[0][1]); p.slice(1).forEach(([a, b]) => x.lineTo(a, b)); x.stroke(); const e = p[p.length - 1]; x.beginPath(); x.arc(e[0], e[1], 9, 0, 7); x.stroke(); });
-  x.fillStyle = 'rgba(255,255,255,.18)'; x.font = '600 26px Arial'; x.fillText('ESD SAFE · SAM ELECTRONICS · DEIRA BENCH', 70, 70);
+  // Urgent 4: no printed words on the mat (they would be English inside Arabic) and no drawn traces; a small brand dot only
+  x.fillStyle = 'rgba(247,192,50,.5)'; x.beginPath(); x.arc(84, 84, 10, 0, 7); x.fill();
 });
 const mat = new THREE.Mesh(new THREE.PlaneGeometry(4.6, 3.16), new THREE.MeshStandardMaterial({ map: matTex, roughness: 0.92 })); mat.rotation.x = -PI / 2; mat.receiveShadow = true;
-const plate = new THREE.Mesh(new RoundedBoxGeometry(1.9, 0.03, 1.05, 3, 0.012), new THREE.MeshStandardMaterial({ color: 0x9aa0a6, roughness: 0.38, metalness: 0.85 })); plate.position.set(0.02, 0.015, 0.06); plate.receiveShadow = true; plate.castShadow = true;
-const shadowFloor = new THREE.Mesh(new THREE.PlaneGeometry(6, 6), new THREE.ShadowMaterial({ opacity: 0.45 })); shadowFloor.rotation.x = -PI / 2; shadowFloor.position.y = 0.0305; shadowFloor.receiveShadow = true;
+// Urgent 4: the heat plate was a pale slab that read as paper. Now a real screen separator: dark anodized aluminium,
+// brushed, a grid of vacuum holes under the phone, a control strip at the front with an LCD window and an amber LED.
+const PW = 1.98, PD = 1.22, PZ = 0.12, PY = 0.045;
+const plateTex = cv(2048, 1262, (x, w, h) => {
+  x.fillStyle = '#34373c'; x.fillRect(0, 0, w, h);
+  for (let i = 0; i < 2600; i++) { const y = rnd() * h; x.strokeStyle = `rgba(${rnd() < 0.5 ? '255,255,255' : '0,0,0'},${0.015 + rnd() * 0.03})`; x.lineWidth = 0.6 + rnd(); x.beginPath(); x.moveTo(rnd() * w * 0.3, y); x.lineTo(w * (0.6 + rnd() * 0.4), y + (rnd() - 0.5) * 2); x.stroke(); }
+  // vacuum holes in the heating zone
+  const hz = { x: w * 0.08, y: h * 0.06, w: w * 0.84, h: h * 0.7 };
+  for (let yy = hz.y; yy < hz.y + hz.h; yy += 38) for (let xx = hz.x; xx < hz.x + hz.w; xx += 38) { x.fillStyle = '#121315'; x.beginPath(); x.arc(xx, yy, 5.2, 0, 7); x.fill(); x.strokeStyle = 'rgba(255,255,255,.08)'; x.lineWidth = 1.4; x.beginPath(); x.arc(xx, yy + 0.8, 5.6, 0.2, PI - 0.2); x.stroke(); }
+  // a machined border around the zone
+  x.strokeStyle = 'rgba(0,0,0,.45)'; x.lineWidth = 4; rr(x, hz.x - 30, hz.y - 30, hz.w + 60 - 38, hz.h + 60 - 38, 22); x.stroke();
+  x.strokeStyle = 'rgba(255,255,255,.07)'; x.lineWidth = 2; rr(x, hz.x - 27, hz.y - 27, hz.w + 54 - 38, hz.h + 54 - 38, 20); x.stroke();
+});
+const plateMat = new THREE.MeshStandardMaterial({ map: plateTex, color: 0xffffff, roughness: 0.46, metalness: 0.82 });
+const plateSide = new THREE.MeshStandardMaterial({ color: 0x2b2d31, roughness: 0.4, metalness: 0.85 });
+const plate = new THREE.Group();
+{ const g = new RoundedBoxGeometry(PW, PY * 2, PD, 4, 0.03); const m = new THREE.Mesh(g, [plateSide, plateSide, plateMat, plateSide, plateSide, plateSide]); m.position.set(0.02, 0, PZ); m.receiveShadow = true; m.castShadow = true; plate.add(m);
+  // planar UVs on top so the texture maps across the whole plate
+  const pos = g.attributes.position, uv = g.attributes.uv; for (let i = 0; i < pos.count; i++) uv.setXY(i, pos.getX(i) / PW + 0.5, 0.5 - pos.getZ(i) / PD); uv.needsUpdate = true;
+  // the control strip: a recessed black LCD window and the LED, at the front right
+  const lcd = new THREE.Mesh(new RoundedBoxGeometry(0.3, 0.012, 0.1, 2, 0.008), new THREE.MeshPhysicalMaterial({ color: 0x07080a, roughness: 0.12, clearcoat: 1, clearcoatRoughness: 0.05 })); lcd.position.set(0.66, PY - 0.002, PZ + PD / 2 - 0.1); plate.add(lcd);
+  const ledMat = new THREE.MeshStandardMaterial({ color: 0x3a2a12, emissive: 0x000000, roughness: 0.3 }); const led = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.01, 24), ledMat); led.position.set(0.88, PY + 0.002, PZ + PD / 2 - 0.1); plate.add(led); plate.userData.led = ledMat; plate.userData.lcd = lcd;
+  [0.42, 0.5].forEach((bx) => { const b = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.024, 0.012, 32), new THREE.MeshStandardMaterial({ color: 0x1c1d20, roughness: 0.6 })); b.position.set(bx, PY + 0.003, PZ + PD / 2 - 0.1); plate.add(b); }); }
+const shadowFloor = new THREE.Mesh(new THREE.PlaneGeometry(6, 6), new THREE.ShadowMaterial({ opacity: 0.45 })); shadowFloor.rotation.x = -PI / 2; shadowFloor.position.y = PY + 0.0005; shadowFloor.receiveShadow = true;
 
 // ---------- the phone, lying on the plate, screen side up, long side across ----------
-const L = 1.5, Wd = 0.72, Hh = 0.07, Y0 = 0.031;
+const L = 1.5, Wd = 0.72, Hh = 0.07, Y0 = PY + 0.001;
 const phone = new THREE.Group(); phone.position.set(0.02, Y0, 0.06); phone.rotation.y = deg(-6);
 const rshape = (w, h, r) => { const s = new THREE.Shape(), a = -w / 2, b = -h / 2; s.moveTo(a + r, b); s.lineTo(a + w - r, b); s.quadraticCurveTo(a + w, b, a + w, b + r); s.lineTo(a + w, b + h - r); s.quadraticCurveTo(a + w, b + h, a + w - r, b + h); s.lineTo(a + r, b + h); s.quadraticCurveTo(a, b + h, a, b + h - r); s.lineTo(a, b + r); s.quadraticCurveTo(a, b, a + r, b); return s; };
 // housing: a titanium-grey frame ring with a dark back inside
@@ -79,24 +100,82 @@ const portFlex = (fresh) => { const g = new THREE.Group(), cu = new THREE.MeshPh
 // screens: glass slab with an OLED stack edge, flex out of one side; cracked, new, booted
 const screenTex = (kind) => cv(1400, 680, (x, w, h) => {
   const g = x.createLinearGradient(0, 0, w, h); g.addColorStop(0, '#0d0e10'); g.addColorStop(0.5, '#050506'); g.addColorStop(1, '#0b0c0e'); x.fillStyle = g; x.fillRect(0, 0, w, h);
-  if (kind === 'boot') { const gl = x.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, h * 0.7); gl.addColorStop(0, '#2b2c30'); gl.addColorStop(1, '#0a0a0b'); x.fillStyle = gl; x.fillRect(0, 0, w, h); x.save(); x.translate(w / 2, h / 2); x.rotate(PI / 2); x.strokeStyle = '#F7C032'; x.lineWidth = 14; x.beginPath(); x.arc(0, -40, 96, 0, 7); x.stroke(); x.fillStyle = '#F7C032'; x.beginPath(); x.arc(0, -40, 60, 0, 7); x.fill(); x.fillStyle = '#26282B'; x.font = 'bold 54px Arial'; x.textAlign = 'center'; x.fillText('SE', 0, -22); x.fillStyle = '#FFFFFF'; x.font = '600 34px Arial'; x.fillText('SAM ELECTRONICS', 0, 120); x.fillStyle = '#F7C032'; x.font = '22px Arial'; x.fillText('QUALITY · WARRANTY · PRICE', 0, 160); x.restore(); }
-  if (kind === 'crack') { // impact low-left, radial cracks with branching, concentric ring breaks, a few chipped shards catching the light
-    const ix = w * 0.24, iy = h * 0.66; x.lineCap = 'round';
-    for (let k = 0; k < 26; k++) { let a = (k / 26) * PI * 2 + rnd() * 0.2, px = ix, py = iy; const len = 120 + rnd() * 900; x.beginPath(); x.moveTo(px, py); for (let s = 0; s < len; s += 18) { a += (rnd() - 0.5) * 0.35; px += Math.cos(a) * 18; py += Math.sin(a) * 18; x.lineTo(px, py); if (rnd() < 0.06) { x.moveTo(px, py); let b = a + (rnd() - 0.5) * 1.6, qx = px, qy = py; for (let t = 0; t < 8; t++) { b += (rnd() - 0.5) * 0.4; qx += Math.cos(b) * 14; qy += Math.sin(b) * 14; x.lineTo(qx, qy); } x.moveTo(px, py); } } x.strokeStyle = 'rgba(200,210,220,.32)'; x.lineWidth = 1.1; x.stroke(); x.strokeStyle = 'rgba(255,255,255,.05)'; x.lineWidth = 4; x.stroke(); }
-    for (let r = 30; r < 220; r += 26 + rnd() * 20) { x.beginPath(); for (let a = 0; a < PI * 2; a += 0.3) { if (rnd() < 0.35) { x.moveTo(ix + Math.cos(a) * r, iy + Math.sin(a) * r); continue; } x.lineTo(ix + Math.cos(a) * (r + (rnd() - 0.5) * 8), iy + Math.sin(a) * (r + (rnd() - 0.5) * 8)); } x.strokeStyle = 'rgba(210,220,230,.24)'; x.lineWidth = 1; x.stroke(); }
-    for (let i = 0; i < 40; i++) { const a = rnd() * PI * 2, r = rnd() * 150, sx = ix + Math.cos(a) * r, sy = iy + Math.sin(a) * r; x.fillStyle = `rgba(255,255,255,${0.05 + rnd() * 0.18})`; x.beginPath(); x.moveTo(sx, sy); x.lineTo(sx + (rnd() - 0.5) * 40, sy + (rnd() - 0.5) * 40); x.lineTo(sx + (rnd() - 0.5) * 40, sy + (rnd() - 0.5) * 40); x.fill(); }
-    x.fillStyle = 'rgba(255,255,255,.35)'; x.beginPath(); x.arc(ix, iy, 6, 0, 7); x.fill(); }
+  if (kind === 'boot') { const gl = x.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, h * 0.7); gl.addColorStop(0, '#2b2c30'); gl.addColorStop(1, '#0a0a0b'); x.fillStyle = gl; x.fillRect(0, 0, w, h); x.save(); x.translate(w / 2, h / 2); x.rotate(PI / 2); x.strokeStyle = '#F7C032'; x.lineWidth = 14; x.beginPath(); x.arc(0, -40, 96, 0, 7); x.stroke(); x.fillStyle = '#F7C032'; x.beginPath(); x.arc(0, -40, 60, 0, 7); x.fill(); x.fillStyle = '#26282B'; x.font = 'bold 54px Arial'; x.textAlign = 'center'; x.fillText('SE', 0, -22); x.restore(); }
+  if (kind === 'crack') drawCrack(x, w, h, false);
+  if (kind && kind.startsWith('test')) drawTest(x, w, h, +kind.slice(4));
   x.fillStyle = '#000'; rr(x, w - 70, h * 0.36, 40, h * 0.28, 20); x.fill(); // the island, at the top edge (phone lies sideways)
 });
+
+// Urgent 4 · the cracked glass. Real shards: radial cracks from an impact, ring breaks between them, every shard its own
+// tilt (a gradient in the bump map, so the light breaks shard by shard), a crush zone of tiny fragments and a few chips.
+// The same geometry draws the colour (bump=false) and the height map (bump=true), so both line up exactly.
+const CRACK = (() => { let sd = 31; const r = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
+  const ix = 0.24, iy = 0.64, N = 19, rad = [], rings = [0.045, 0.1, 0.17, 0.27, 0.42, 0.62, 0.95];
+  for (let k = 0; k < N; k++) { const a0 = (k / N) * PI * 2 + (r() - 0.5) * 0.22, pts = []; let a = a0, len = 0.35 + r() * 0.9; let da = 0; for (let t = 0; t <= 1.0001; t += 0.025) { da = da * 0.8 + (r() - 0.5) * 0.03; a += da; pts.push([a, t * len]); } rad.push({ a0, len, pts, w: 0.6 + r() * 0.9 }); }
+  const at = (k, d) => { const R = rad[(k + N) % N], p = R.pts; const i = Math.min(p.length - 1, Math.round((d / R.len) * (p.length - 1))); return d > R.len ? null : p[i][0]; };
+  const shards = []; for (let k = 0; k < N; k++) for (let j = 0; j < rings.length - 1; j++) shards.push({ k, j, tint: r(), ang: r() * PI * 2, s: 0.5 + r() });
+  const crush = []; for (let i = 0; i < 70; i++) crush.push([r() * PI * 2, r() * 0.05, r(), r(), r()]);
+  const chips = []; for (let i = 0; i < 4; i++) chips.push([r() * PI * 2, 0.012 + r() * 0.03, 3 + r() * 5, r()]);
+  return { ix, iy, N, rad, rings, at, shards, crush, chips, r };
+})();
+function drawCrack(x, w, h, bump) {
+  const C = CRACK, ox = C.ix * w, oy = C.iy * h, S = h; // distances are fractions of the screen height
+  const P = (a, d) => [ox + Math.cos(a) * d * S, oy + Math.sin(a) * d * S];
+  if (bump) { x.fillStyle = '#808080'; x.fillRect(0, 0, w, h); }
+  // shards: quads between two neighbouring cracks and two ring breaks
+  C.shards.forEach((sh) => { const d0 = C.rings[sh.j], d1 = C.rings[sh.j + 1]; const a00 = C.at(sh.k, d0), a10 = C.at(sh.k + 1, d0); if (a00 == null || a10 == null) return; const a01 = C.at(sh.k, d1) ?? a00, a11 = C.at(sh.k + 1, d1) ?? a10;
+    let a11b = a11, a10b = a10; if (sh.k + 1 >= C.N) { a11b += PI * 2; a10b += PI * 2; }
+    const q = [P(a00, d0), P(a10b, d0), P(a11b, d1), P(a01, d1)]; x.beginPath(); x.moveTo(q[0][0], q[0][1]); q.slice(1).forEach((p) => x.lineTo(p[0], p[1])); x.closePath();
+    const far = sh.j / C.rings.length;
+    if (bump) { const cx = (q[0][0] + q[2][0]) / 2, cy = (q[0][1] + q[2][1]) / 2, L2 = (d1 - d0) * S; const g = x.createLinearGradient(cx - Math.cos(sh.ang) * L2, cy - Math.sin(sh.ang) * L2, cx + Math.cos(sh.ang) * L2, cy + Math.sin(sh.ang) * L2); const k = 26 * (1 - far * 0.8) * sh.s; g.addColorStop(0, `rgb(${128 - k},${128 - k},${128 - k})`); g.addColorStop(1, `rgb(${128 + k},${128 + k},${128 + k})`); x.fillStyle = g; x.fill(); }
+    else { x.fillStyle = `rgba(${sh.tint < 0.5 ? '255,255,255' : '160,180,200'},${(0.012 + sh.tint * 0.05) * (1 - far * 0.7)})`; x.fill(); } });
+  // crack lines: a dark groove and a fine bright edge; denser and brighter toward the impact
+  const line = (pts, wd) => { x.beginPath(); pts.forEach((p, i) => (i ? x.lineTo(p[0], p[1]) : x.moveTo(p[0], p[1]))); x.lineWidth = wd; x.stroke(); };
+  x.lineCap = 'round'; x.lineJoin = 'round';
+  C.rad.forEach((R) => { const pts = R.pts.map(([a, d]) => P(a, d));
+    if (bump) { x.strokeStyle = '#2a2a2a'; line(pts, 3.2 * R.w); }
+    else { x.strokeStyle = 'rgba(0,0,0,.45)'; line(pts.map(([a, b]) => [a + 0.8, b + 1]), 1.5 * R.w); const g = x.createRadialGradient(ox, oy, 0, ox, oy, R.len * S); g.addColorStop(0, 'rgba(235,242,255,.7)'); g.addColorStop(0.25, 'rgba(225,235,250,.26)'); g.addColorStop(1, 'rgba(215,228,245,.06)'); x.strokeStyle = g; line(pts, 0.9 * R.w); } });
+  // ring breaks: short arcs between neighbouring cracks
+  C.rings.slice(0, -1).forEach((d, j) => { for (let k = 0; k < C.N; k++) { if (((k * 7 + j * 3) % 5) < 2 + (j > 3 ? 1 : 0)) continue; const a0 = C.at(k, d), a1 = C.at(k + 1, d); if (a0 == null || a1 == null) continue; const b1 = k + 1 >= C.N ? a1 + PI * 2 : a1, pts = []; for (let t = 0; t <= 1.0001; t += 0.25) pts.push(P(a0 + (b1 - a0) * t, d * (1 + (C.r() - 0.5) * 0.06)));
+    if (bump) { x.strokeStyle = '#333'; line(pts, 2.4); } else { x.strokeStyle = 'rgba(0,0,0,.5)'; line(pts.map(([a, b]) => [a + 1, b + 1]), 1.4); x.strokeStyle = `rgba(225,235,250,${Math.max(0.04, 0.34 - j * 0.07)})`; line(pts, 0.7); } } });
+  // the crush zone: tiny bright fragments around the impact, and a few chips where glass is missing
+  C.crush.forEach(([a, d, s1, s2, s3]) => { const [px, py] = P(a, d), z = 3 + s1 * 9; x.beginPath(); x.moveTo(px, py); x.lineTo(px + (s2 - 0.5) * z * 2, py + (s3 - 0.5) * z * 2); x.lineTo(px + (s3 - 0.5) * z * 2, py + (s1 - 0.5) * z * 2); x.closePath(); x.fillStyle = bump ? `rgb(${90 + s2 * 80},${90 + s2 * 80},${90 + s2 * 80})` : `rgba(240,245,255,${0.18 + s2 * 0.4})`; x.fill(); });
+  C.chips.forEach(([a, d, z, s]) => { const [px, py] = P(a, d); x.beginPath(); for (let i = 0; i < 6; i++) { const b = (i / 6) * PI * 2, rr2 = z * (0.6 + ((s * 7 + i * 0.37) % 1) * 0.5); i ? x.lineTo(px + Math.cos(b) * rr2, py + Math.sin(b) * rr2) : x.moveTo(px + Math.cos(b) * rr2, py + Math.sin(b) * rr2); } x.closePath(); if (bump) { x.fillStyle = '#1a1a1a'; x.fill(); } else { x.fillStyle = 'rgba(0,0,0,.5)'; x.fill(); x.strokeStyle = 'rgba(245,248,255,.3)'; x.lineWidth = 0.8; x.stroke(); } });
+  if (!bump) { const g = x.createRadialGradient(ox, oy, 0, ox, oy, 14); g.addColorStop(0, 'rgba(255,255,255,.9)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.beginPath(); x.arc(ox, oy, 14, 0, 7); x.fill(); }
+}
+// Urgent 4 · the QC screen on the phone itself (no words: icons only, so nothing English shows inside Arabic):
+// four checks (touch, display, face, speaker); the first n are ticked green, the next one is running.
+function drawTest(x, w, h, n) {
+  x.fillStyle = '#16171a'; x.fillRect(0, 0, w, h);
+  x.fillStyle = '#F7C032'; x.beginPath(); x.arc(w * 0.1, h * 0.17, 16, 0, 7); x.fill();
+  x.fillStyle = 'rgba(255,255,255,.14)'; rr(x, w * 0.1 + 34, h * 0.17 - 6, 220, 12, 6); x.fill();
+  const icons = [
+    (cx, cy) => { x.beginPath(); x.arc(cx, cy, 7, 0, 7); x.fill(); x.beginPath(); x.arc(cx, cy, 16, 0, 7); x.stroke(); x.globalAlpha *= 0.5; x.beginPath(); x.arc(cx, cy, 26, 0, 7); x.stroke(); x.globalAlpha = 1; },
+    (cx, cy) => { rr(x, cx - 22, cy - 30, 44, 60, 8); x.stroke(); x.beginPath(); x.moveTo(cx - 8, cy + 20); x.lineTo(cx + 8, cy + 20); x.stroke(); },
+    (cx, cy) => { [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([a, b]) => { x.beginPath(); x.moveTo(cx + a * 26, cy + b * 12); x.lineTo(cx + a * 26, cy + b * 26); x.lineTo(cx + a * 12, cy + b * 26); x.stroke(); }); x.beginPath(); x.arc(cx, cy + 4, 10, 0.2, PI - 0.2); x.stroke(); x.fillRect(cx - 9, cy - 9, 4, 6); x.fillRect(cx + 5, cy - 9, 4, 6); },
+    (cx, cy) => { x.beginPath(); x.moveTo(cx - 24, cy - 8); x.lineTo(cx - 14, cy - 8); x.lineTo(cx, cy - 22); x.lineTo(cx, cy + 22); x.lineTo(cx - 14, cy + 8); x.lineTo(cx - 24, cy + 8); x.closePath(); x.stroke(); x.beginPath(); x.arc(cx + 6, cy, 14, -0.8, 0.8); x.stroke(); x.beginPath(); x.arc(cx + 6, cy, 26, -0.8, 0.8); x.stroke(); },
+  ];
+  icons.forEach((ic, i) => { const cx = w * (0.17 + i * 0.205), cy = h * 0.52, done = i < n, run = i === n;
+    x.fillStyle = done ? 'rgba(43,182,115,.14)' : 'rgba(255,255,255,.05)'; rr(x, cx - 112, cy - 150, 224, 300, 34); x.fill();
+    x.strokeStyle = done ? '#FFFFFF' : run ? 'rgba(255,255,255,.75)' : 'rgba(255,255,255,.32)'; x.fillStyle = x.strokeStyle; x.lineWidth = 5; x.lineCap = 'round'; x.lineJoin = 'round'; x.save(); x.translate(cx, cy - 30); x.scale(1.7, 1.7); ic(0, 0); x.restore();
+    const by = cy + 92; if (done) { x.fillStyle = '#2BB673'; x.beginPath(); x.arc(cx, by, 24, 0, 7); x.fill(); x.strokeStyle = '#fff'; x.lineWidth = 6; x.beginPath(); x.moveTo(cx - 11, by + 1); x.lineTo(cx - 3, by + 9); x.lineTo(cx + 12, by - 8); x.stroke(); }
+    else { x.strokeStyle = run ? '#F7C032' : 'rgba(255,255,255,.2)'; x.lineWidth = 5; x.beginPath(); x.arc(cx, by, 22, run ? -PI / 2 : 0, run ? PI * 0.9 : 7); x.stroke(); } });
+}
 const screen = (kind) => { const s = rshape(L - 0.012, Wd - 0.012, 0.115), g = new THREE.ExtrudeGeometry(s, { depth: 0.022, bevelEnabled: true, bevelThickness: 0.004, bevelSize: 0.004, bevelSegments: 3, curveSegments: 24 }); g.rotateX(-PI / 2);
   // planar UVs from x/z
   const pos = g.attributes.position, uv = new Float32Array(pos.count * 2); for (let i = 0; i < pos.count; i++) { uv[i * 2] = pos.getX(i) / L + 0.5; uv[i * 2 + 1] = 0.5 - pos.getZ(i) / Wd; } g.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
-  const glass = new THREE.MeshPhysicalMaterial({ map: screenTex(kind), emissiveMap: kind === 'boot' ? screenTex('boot') : null, emissive: kind === 'boot' ? 0xffffff : 0x000000, emissiveIntensity: kind === 'boot' ? 0.9 : 0, roughness: 0.05, clearcoat: 1, clearcoatRoughness: 0.03, envMapIntensity: 1.2 });
+  const lit = kind === 'boot' || kind.startsWith('test'), cr = kind === 'crack';
+  const bumpTex = cr ? cv(1400, 680, (x, w, h) => drawCrack(x, w, h, true)) : null; if (bumpTex) bumpTex.colorSpace = THREE.NoColorSpace;
+  const glass = new THREE.MeshPhysicalMaterial({ map: screenTex(kind), emissiveMap: lit ? screenTex(kind) : null, emissive: lit ? 0xffffff : 0x000000, emissiveIntensity: lit ? 0.9 : 0, roughness: cr ? 0.12 : 0.05, bumpMap: bumpTex, bumpScale: cr ? 3.2 : 0, clearcoat: cr ? 0.35 : 1, clearcoatRoughness: 0.03, envMapIntensity: cr ? 1.6 : 1.2 });
   const m = new THREE.Mesh(g, [glass, new THREE.MeshStandardMaterial({ color: 0x111214, roughness: 0.5 })]); m.position.y = Hh + 0.006; m.castShadow = true; const grp = new THREE.Group(); grp.add(m); return grp; };
 // tools
 const cup = (() => { const g = new THREE.Group(), m = new THREE.MeshPhysicalMaterial({ color: 0x8a8e94, roughness: 0.35, transmission: 0.35, thickness: 0.02, transparent: true, opacity: 0.92 }); const c = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.13, 0.05, 48), m); c.position.y = 0.025; const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.03, 0.08, 24), new THREE.MeshStandardMaterial({ color: 0x2b2c2f, roughness: 0.5 })); stem.position.y = 0.09; const ring2 = new THREE.Mesh(new THREE.TorusGeometry(0.06, 0.012, 16, 48), new THREE.MeshStandardMaterial({ color: 0xF7C032, roughness: 0.4 })); ring2.position.y = 0.15; ring2.rotation.y = PI / 2; g.add(c, stem, ring2); g.position.set(0.35, Hh + 0.03, 0.12); g.traverse((o) => { if (o.isMesh) o.castShadow = true; }); return g; })();
 const pick = (() => { const s = new THREE.Shape(); s.moveTo(0, 0); s.lineTo(0.22, 0.06); s.quadraticCurveTo(0.26, 0.0, 0.22, -0.06); s.closePath(); const g = new THREE.ExtrudeGeometry(s, { depth: 0.006, bevelEnabled: false }); g.rotateX(-PI / 2); const m = new THREE.Mesh(g, new THREE.MeshPhysicalMaterial({ color: 0x2f7be6, roughness: 0.25, transmission: 0.4, thickness: 0.01, transparent: true, opacity: 0.9 })); m.position.set(-0.05, Hh + 0.004, Wd / 2 - 0.02); m.rotation.y = deg(-95); m.castShadow = true; return m; })();
 
+// Urgent 4 · the warranty sticker: a real round decal on the new glass (a tick, no words)
+const sticker = (() => { const t = cv(256, 256, (x, w, h) => { x.fillStyle = '#F7C032'; x.beginPath(); x.arc(128, 128, 126, 0, 7); x.fill(); x.strokeStyle = '#26282B'; x.lineWidth = 6; x.beginPath(); x.arc(128, 128, 104, 0, 7); x.stroke(); x.lineWidth = 3; x.beginPath(); x.arc(128, 128, 90, 0, 7); x.stroke(); x.fillStyle = '#26282B'; x.beginPath(); x.arc(128, 128, 30, 0, 7); x.fill(); x.fillStyle = '#F7C032'; x.beginPath(); x.arc(128, 128, 12, 0, 7); x.fill(); });
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(0.075, 0.075, 0.002, 64), [new THREE.MeshStandardMaterial({ color: 0xe0ad2c }), new THREE.MeshPhysicalMaterial({ map: t, roughness: 0.35, clearcoat: 0.4 }), new THREE.MeshStandardMaterial({ color: 0xe0ad2c })]);
+  m.position.set(0.2, Hh + 0.006 + 0.03, -0.235); m.rotation.y = deg(170); m.castShadow = true; return m; })();
 // ---------- which layer ----------
 const depthOnly = (o) => { o.traverse((m) => { if (m.isMesh) { const mm = Array.isArray(m.material) ? m.material : [m.material]; m.material = mm.map((x) => { const c = x.clone(); c.colorWrite = false; return c; }); if (m.material.length === 1) m.material = m.material[0]; m.castShadow = false; } }); return o; };
 body.traverse((m) => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; } });
@@ -110,12 +189,18 @@ const LAYERS = {
   'screen-crack': () => { scene.add(shadowFloor); phone.add(screen('crack')); },
   'screen-new': () => { scene.add(shadowFloor); phone.add(screen('new')); },
   'screen-boot': () => { phone.add(screen('boot')); },
+  'test0': () => { phone.add(screen('test0')); }, 'test1': () => { phone.add(screen('test1')); }, 'test2': () => { phone.add(screen('test2')); }, 'test3': () => { phone.add(screen('test3')); }, 'test4': () => { phone.add(screen('test4')); },
+  sticker: () => { scene.add(shadowFloor); phone.add(depthOnly(screen('new')), sticker); },
+  'mat-hot': () => { scene.add(mat, plate); plate.userData.led.emissive.setHex(0xffa22a); plate.userData.led.emissiveIntensity = 3; plate.userData.lcd.material = new THREE.MeshPhysicalMaterial({ color: 0x0b0d0c, emissive: 0x2a1404, emissiveIntensity: 1, roughness: 0.12, clearcoat: 1 }); },
   cup: () => { scene.add(shadowFloor); phone.add(cup); },
   pick: () => { scene.add(shadowFloor); phone.add(pick); },
   all: () => { scene.add(mat, plate); phone.add(body, battery(false), portFlex(false), screen('crack'), cup, pick); },
 };
 (LAYERS[LAYER] || LAYERS.all)(); scene.add(phone);
 renderer.render(scene, cam);
+{ const pr = (x3, y3, z3) => { const v = new THREE.Vector3(x3, y3, z3).project(cam); return [+((v.x + 1) * 50).toFixed(3), +((1 - v.y) * 50).toFixed(3)]; }, lz = PZ + PD / 2 - 0.1, ly = PY + 0.005;
+  const ph = (px, pz) => { const v = new THREE.Vector3(px, Hh + 0.04, pz).applyAxisAngle(new THREE.Vector3(0, 1, 0), deg(-6)).add(new THREE.Vector3(0.02, Y0, 0.06)); return pr(v.x, v.y, v.z); };
+  window.__anch = { lcd: [pr(0.51, ly, lz - 0.05), pr(0.81, ly, lz - 0.05), pr(0.81, ly, lz + 0.05), pr(0.51, ly, lz + 0.05)], sticker: ph(0.2, -0.235) }; }
 window.__done = true;
 </script>
 </body>

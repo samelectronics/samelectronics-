@@ -22,7 +22,7 @@ function render(v: Vals) {
           </div>
           <p className="sc-p">Every grade is labelled on your order. The difference is explained in words, never faked on screen.</p>
         </header>
-        <div className="sc-stage" onMouseEnter={v.enter} onMouseLeave={v.leave} onTouchStart={v.ts} onTouchEnd={v.te}>
+        <div className="sc-stage" onTouchStart={v.ts} onTouchEnd={v.te}>
           <div className="sc-bars" role="tablist" aria-label="Screen adverts">
             {(v.ads || []).map((x: any, j: number) => (
               <button key={j} type="button" role="tab" aria-selected={x.on} aria-label={v.tr(x.k)} onClick={x.go}>
@@ -75,14 +75,13 @@ function render(v: Vals) {
             </a>
           </div>
           <div className="sc-r" key={'r' + v.i}>
-            <span className="sc-haze a" aria-hidden="true" />
-            <span className="sc-haze b" aria-hidden="true" />
+            {/* Urgent 4: a real studio: the yellow wall sweeps through a short cove into the floor every product stands on */}
+            <span className="sc-floor" aria-hidden="true" />
             {/* R6 §09: the unboxing: this quality's real box (Part E renders), its lid, the screen from the front and its
                 back standing behind it, each rendered on its own (scripts/productshot/render-showcase.mjs) */}
             <div className="sc-un" aria-hidden="true">
               <span className="sc-ubox" data-s="ubox">
                 <img src={v.u.box} srcSet={v.u.box + ' 1x, ' + v.u.box2 + ' 2x'} alt="" />
-                <i className="sc-ulid" data-s="lid" style={{ background: v.u.lid }} />
               </span>
               <span className="sc-uback" data-s="uback">
                 <img src={v.u.back} srcSet={v.u.back + ' 1x, ' + v.u.back2 + ' 2x'} alt="" />
