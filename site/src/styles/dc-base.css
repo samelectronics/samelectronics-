@@ -528,3 +528,40 @@ html[dir='rtl'] [style*='seRail3'] { animation-name: seRail3R !important; }
 /* Urgent (speed): sections off screen are not laid out or painted at all (they keep their measured size). Pinned or
    scroll-driven sections (teardown, story, bench) and the hero are left out. */
 #board, #showcase, #deals, #repair, #wholesale, #network, #team, #everyone, #circuit, #samsoom, #social, #reviews, #visit, #finale { content-visibility: auto; contain-intrinsic-size: auto 1000px; }
+/* Urgent 2 · store banners inside the iPad grid (one row tall, both columns): graphite or #F7C032, the product in its pose */
+.ipb { grid-column: span 2; position: relative; height: 186px; box-sizing: border-box; display: grid; grid-template-columns: 1fr 46%; align-items: center; gap: 6px; padding: 14px 10px 14px 16px; border-radius: 12px; overflow: hidden; }
+.ipb.dark { background: #26282B; color: #fff; }
+.ipb.yel { background: #F7C032; color: #26282B; }
+.ipb-t { display: flex; flex-direction: column; gap: 6px; }
+.ipb-t small { font: 600 8px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #F7C032; }
+.ipb.yel .ipb-t small { color: #26282B; }
+.ipb-t b { font: 700 17px/1.1 'Space Grotesk', sans-serif; letter-spacing: -.02em; }
+.ipb-t em { align-self: flex-start; margin-top: 4px; padding: 4px 8px; border-radius: 6px; font: 600 10px 'JetBrains Mono', monospace; font-style: normal; background: #F7C032; color: #26282B; }
+.ipb.yel .ipb-t em { background: #26282B; color: #F7C032; }
+.ipb img { width: 100%; height: 160px; object-fit: contain; filter: drop-shadow(0 8px 10px rgba(0, 0, 0, .3)); }
+.ipb-sweep { position: absolute; top: 0; bottom: 0; left: 0; width: 30%; background: linear-gradient(105deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .22), rgba(255, 255, 255, 0)); transform: translateX(-120%); animation: ipbSweep 5.6s 1s ease-in-out infinite; pointer-events: none; }
+@keyframes ipbSweep { 0% { transform: translateX(-120%); } 40%, 100% { transform: translateX(420%); } }
+html[dir='rtl'] .ipb { padding: 14px 16px 14px 10px; }
+/* Urgent 2 · the phone ad opens as a HORIZONTAL card: landscape 16:9, centred, at most 80% of the width; text left, the
+   product (in its pose) right; every size follows the card width so it always fits */
+.se-poster { --pw: min(80vw, 1120px, calc(80vh * 16 / 9)); width: var(--pw) !important; height: calc(var(--pw) * 9 / 16) !important; max-height: none !important; min-height: 0 !important;
+  display: grid !important; grid-template-columns: 1fr 1fr !important; grid-template-rows: 1fr !important; align-items: center !important; gap: calc(var(--pw) * .02) !important;
+  padding: calc(var(--pw) * .045) calc(var(--pw) * .05) !important; border-radius: 24px; }
+.se-poster .se-poster-txt { height: 100%; justify-content: center; }
+.se-poster .se-poster-k { font-size: calc(var(--pw) * .011) !important; }
+.se-poster h3 { font-size: calc(var(--pw) * .042) !important; margin: calc(var(--pw) * .01) 0 !important; }
+.se-poster .se-poster-d { font-size: calc(var(--pw) * .014) !important; margin: 0 0 calc(var(--pw) * .01) !important; }
+.se-poster ul { font-size: calc(var(--pw) * .013) !important; gap: calc(var(--pw) * .006) !important; margin: 0 0 calc(var(--pw) * .01) !important; }
+.se-poster .se-poster-stock { font-size: calc(var(--pw) * .011) !important; }
+.se-poster .se-poster-row { margin-top: calc(var(--pw) * .016) !important; }
+.se-poster .se-poster-row button, .se-poster .se-poster-row a { height: calc(var(--pw) * .042) !important; font-size: calc(var(--pw) * .014) !important; }
+.se-poster .se-poster-art { height: 100% !important; flex: none !important; }
+.se-poster .se-poster-art img { max-height: 92% !important; max-width: 100% !important; }
+@media (max-width: 700px) { .se-poster { --pw: 92vw; height: auto !important; grid-template-columns: 1fr !important; } .se-poster .se-poster-art { height: 40vw !important; } }
+.se-poster::after { display: none !important; } /* Urgent: no light bands */
+.se-chamfer { display: none !important; } /* Urgent 2: no vertical light band on the devices (one diagonal sweep only) */
+/* Urgent 2 · the progress line: one smooth, straight, thin #F7C032 line that fills as you scroll. No pads, no head dot, no end
+   ring, no flowing highlight. It stays clickable / draggable (the invisible .se-scrub hit area) with its section tooltip. */
+.se-scrub > i { display: none !important; }
+[data-prog='dot'], [data-prog='end'] { display: none !important; }
+[data-prog='bar'] { background: #F7C032 !important; background-image: none !important; animation: none !important; box-shadow: none !important; }

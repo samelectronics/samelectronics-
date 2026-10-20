@@ -38,7 +38,11 @@ class Component extends DCLogic {
   renderVals() {
     const b = this.props.brand || 'apple', h = Number(this.props.h) || 26, ok = !!this.state.ok, d = WM[b] || { t: b, f: "'Space Grotesk',sans-serif", w: 600, fs: 0.8, ls: '.04em' };
     const wm = { t: d.t, f: d.f, w: d.w, st: d.st || 'normal', ls: d.ls, fs: Math.round(h * d.fs * 0.82 * 10) / 10, dy: Math.round(h * (d.dy || 0) * 10) / 10 };
-    return { boxH: h, label: d.t, color: this.props.color || '#FFFFFF', hasLogo: ok, noLogo: !ok, wm, logoW: Math.round(h * this.state.ar), mask: "url('assets/brands/" + b + ".svg') left center / contain no-repeat" };
+    // Urgent 2 · fit="W×H": every logo gets the same visual AREA inside the same invisible box, so a long wordmark (HONOR,
+    // HUAWEI) and a short one (OPPO, vivo) carry equal optical weight, and nothing is ever cut off
+    let boxH = h, logoW = Math.round(h * this.state.ar);
+    if (this.props.fit) { const [FW, FH] = String(this.props.fit).split('x').map(Number), ar = this.state.ar, A = FW * FH * 0.42; let w = Math.sqrt(A * ar), hh = w / ar; if (w > FW) { w = FW; hh = w / ar; } if (hh > FH) { hh = FH; w = hh * ar; } boxH = Math.round(hh * 10) / 10; logoW = Math.round(w); }
+    return { boxH, label: d.t, color: this.props.color || '#FFFFFF', hasLogo: ok, noLogo: !ok, wm, logoW, mask: "url('assets/brands/" + b + ".svg') left center / contain no-repeat" };
   }
 }
 

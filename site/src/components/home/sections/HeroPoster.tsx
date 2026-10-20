@@ -20,20 +20,9 @@ const globeShot = () => {
   }
 };
 
-/** Wholesale: cartons stacked on a pallet (same look as the phone ad). */
+/** Wholesale: the real wrapped pallet (scripts/palletfilm), not drawn cartons. */
 function Cartons() {
-  const B = [[0, 2], [1, 2], [2, 2], [0.5, 1], [1.5, 1], [1, 0]];
-  return (
-    <span className="se-poster-cartons">
-      {B.map(([x, y], i) => (
-        <span key={i} style={{ left: x * 92 + 'px', top: y * 74 + 'px', animationDelay: i * 0.12 + 's' }}>
-          <i />
-          <b />
-        </span>
-      ))}
-      <em />
-    </span>
-  );
+  return <img src="/assets/pallet/full-600.webp" srcSet="/assets/pallet/full-600.webp 1x, /assets/pallet/full-1200.webp 2x" alt="" />;
 }
 
 export default function HeroPoster({ v }: { v: Vals }) {

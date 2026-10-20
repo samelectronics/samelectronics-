@@ -2,7 +2,6 @@
 // Home v3 section "Hero". Renders against the home page's values (`v`, from HomeV3's logic class).
 'use client';
 import React from 'react';
-import IpadFilm from '../IpadFilm';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 import SEBrandLogo from '../../dc/SEBrandLogo';
 import HeroSearch from '../HeroSearch';
@@ -448,7 +447,6 @@ export default function Hero({ v }: { v: Vals }) {
                     contain: 'layout paint',
                   }}
                 >
-                  <IpadFilm from={String(v.ipFrom || '')} />
                   {'\n              '}
                   <div
                     style={{
@@ -656,6 +654,18 @@ export default function Hero({ v }: { v: Vals }) {
                       {'\n                  '}
                       {(Array.isArray(v.ipCards) ? v.ipCards : []).map((__it: any, __i: number) => {
                         const v2 = { ...v, p: __it, $index: __i };
+                        if (__it && __it.banner)
+                          return (
+                            <div key={__i} className={'ipb ' + __it.tone} aria-hidden="true">
+                              <span className="ipb-t">
+                                <small>{__it.k}</small>
+                                <b>{__it.h}</b>
+                                <em>{__it.l}</em>
+                              </span>
+                              {__it.img ? <img src={__it.img} alt="" /> : null}
+                              <i className="ipb-sweep" />
+                            </div>
+                          );
                         return ((v: Vals) => (
                           <React.Fragment key={__i}>
                             {'\n                    '}
@@ -1809,10 +1819,10 @@ export default function Hero({ v }: { v: Vals }) {
                       {'\n              '}
                       <div
                         style={cssToObj(
-                          `height:30px;display:flex;align-items:center;filter:${s(v.b?.glow)};transform:translateY(${s(v.b?.lift)}px);transition:transform .2s,filter .2s`,
+                          `width:120px;height:28px;display:flex;align-items:center;justify-content:center;transform:translateY(${s(v.b?.lift)}px);transition:transform .2s`,
                         )}
                       >
-                        <SEBrandLogo brand={v.b?.id} color={v.b?.color} h="28" />
+                        <SEBrandLogo brand={v.b?.id} color={v.b?.color} h="28" fit="120x28" />
                       </div>
                       {'\n              '}
                       <span style={{ display: 'flex', alignItems: 'center', gap: '9px', whiteSpace: 'nowrap' }}>

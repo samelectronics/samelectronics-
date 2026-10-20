@@ -51,3 +51,14 @@
 .lp-done .lp-ic { filter: drop-shadow(0 0 12px rgba(247, 192, 50, .8)); animation: lpFlash .5s ease-out; }
 @keyframes lpDraw { to { stroke-dashoffset: 0; } }
 @keyframes lpFlash { 0% { transform: scale(1); } 40% { transform: scale(1.12); } 100% { transform: scale(1); } }
+/* Urgent 2 · battery loader: fills left → right over the fixed 2.0s, then turns into a tick */
+.lp-bo { fill: none; stroke: #F7C032; stroke-width: 2; }
+.lp-bn { fill: #F7C032; }
+.lp-bf { fill: #F7C032; transform-box: fill-box; transform-origin: left center; transform: scaleX(0); animation: lpFill 1.6s .2s cubic-bezier(.45, 0, .55, 1) forwards; }
+.lp-card[dir='rtl'] .lp-bf { transform-origin: left center; }
+@keyframes lpFill { to { transform: scaleX(1); } }
+.lp-bat2 { transform-box: view-box; transform-origin: 20px 20px; transition: opacity .2s, transform .25s; }
+.lp-done .lp-bat2 { opacity: 0; transform: scale(.7); }
+.lp-tick2 { fill: none; stroke: #F7C032; stroke-width: 3.2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.lp-done .lp-tick2 { animation: lpTick .35s .12s cubic-bezier(.3, .9, .3, 1) forwards; }
+.lp-done .lp-ic { filter: none !important; animation: none !important; }

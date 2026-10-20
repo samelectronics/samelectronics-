@@ -42,15 +42,14 @@ export default function LangPop() {
     <div className={'lp' + (phase === 'out' ? ' lp-out' : '')} data-no-i18n="" role="dialog" aria-modal="true" aria-live="polite" aria-label={done ? T.done : T.load}>
       <div className={'lp-card' + (done ? ' lp-done' : '')} dir={to === 'ar' ? 'rtl' : 'ltr'} lang={to}>
         <span className="lp-ic" aria-hidden="true">
-          {/* a circuit trace draws the new language's first letter, with solder pads at its ends */}
+          {/* Urgent 2: a clean themed loader: a small battery outline fills with yellow while switching, then becomes a tick */}
           <svg viewBox="0 0 40 40" width="40" height="40">
-            <rect x="1" y="1" width="38" height="38" rx="10" className="lp-plate" />
-            {to === 'ar' ? (
-              <path d="M27 11c-3-3-10-3-11 2-1 4 4 6 9 5-7 1-12 4-12 10 0 5 6 7 13 4" className="lp-trace" pathLength={1} />
-            ) : (
-              <path d="M10 31 20 9l10 22M14 24h12" className="lp-trace" pathLength={1} />
-            )}
-            {to === 'ar' ? (<><circle cx="27" cy="11" r="2" className="lp-pad" /><circle cx="26" cy="32" r="2" className="lp-pad" /></>) : (<><circle cx="10" cy="31" r="2" className="lp-pad" /><circle cx="30" cy="31" r="2" className="lp-pad" /></>)}
+            <g className="lp-bat2">
+              <rect x="5" y="12" width="27" height="16" rx="3.5" className="lp-bo" />
+              <rect x="33" y="17" width="3" height="6" rx="1" className="lp-bn" />
+              <rect x="8" y="15" width="21" height="10" rx="1.5" className="lp-bf" />
+            </g>
+            <path d="M11 21l6 6 12-13" className="lp-tick2" pathLength={1} />
           </svg>
         </span>
         <span className="lp-txt">
