@@ -2114,3 +2114,19 @@ DONE WHEN
 DONE WHEN
 - Favicon = original logo + yellow ring, readable at 16px on light and dark tabs. **PASS**
 - Every page's tab title follows the pattern, EN and AR. **PASS** (Home and 404 are the only pages so far)
+
+## §02 · Header: hours pop-over, progress bar, logo, menu
+
+- **Hours pop-over:** four working buttons, checked in EN and AR:
+  - Get directions → Google Maps 78G4+3H2;
+  - WhatsApp → wa.me/971503420015;
+  - Call → tel:+97142733031;
+  - All hours → scrolls to Visit (lands at the header line).
+- The pop-over is now opaque (nothing shows through the buttons), and a hover bridge keeps it open while the pointer moves down to the buttons.
+- **Reviewer idea, built:** a live Dubai clock and a thin bar filling towards the next change, next to "Closes in 2h 32m".
+- Progress bar click + drag with labels and solder pads: Part B3. Logo → top: Part B2. Arabic menu scrolls with the page locked: Part D.
+
+DONE WHEN
+- All pop-over buttons open the right thing. **PASS**
+- Progress bar click + drag works, EN and AR. **PASS** (Part B tests, 9/9 in each language)
+- Menu scrolls in AR. **PASS** (Part D)

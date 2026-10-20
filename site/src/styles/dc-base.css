@@ -156,7 +156,7 @@ body {
   box-sizing: border-box;
   padding: 14px 14px 12px;
   border-radius: 16px;
-  background: rgba(38, 40, 43, 0.86);
+  background: rgba(38, 40, 43, 0.97); /* R6 §02: buttons inside, so nothing may show through */
   -webkit-backdrop-filter: blur(16px) saturate(1.2);
   backdrop-filter: blur(16px) saturate(1.2);
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.10), 0 24px 48px rgba(0, 0, 0, 0.35);
@@ -345,3 +345,15 @@ html[dir='rtl'] [style*='seRail3'] { animation-name: seRail3R !important; }
 .se-info-card dd { margin: 0; color: #D5D7DA; }
 .se-info-card > button { height: 34px; padding: 0 14px; border: 0; border-radius: 9px; background: #F7C032; color: #26282B; font: 600 13px Inter, sans-serif; cursor: pointer; }
 @keyframes seInfoIn { from { opacity: 0; margin-top: 6px; } to { opacity: 1; margin-top: 0; } }
+/* R6 §02: the hours pop-over's live clock + bar and its four buttons */
+.se-hl { display: block; margin-top: 10px; padding-inline-start: 16px; }
+.se-hl-t { display: flex; justify-content: space-between; font: 500 11px 'JetBrains Mono', monospace; color: #9DA1A6; }
+.se-hl-t b { color: #fff; font-weight: 600; }
+.se-hl-bar { display: block; height: 3px; margin-top: 6px; border-radius: 2px; background: rgba(255, 255, 255, .1); overflow: hidden; }
+.se-hl-bar i { display: block; height: 100%; transform-origin: var(--se-start, left) center; transition: transform .9s linear; }
+.se-status-acts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 12px; }
+.se-status-acts a, .se-status-acts button { display: flex; align-items: center; justify-content: center; height: 32px; border-radius: 9px; border: 1px solid rgba(255, 255, 255, .14); background: rgba(255, 255, 255, .05); color: #fff; font: 500 12px Inter, sans-serif; text-decoration: none; cursor: pointer; transition: background .2s, border-color .2s; }
+.se-status-acts a:first-child { background: #F7C032; border-color: #F7C032; color: #26282B; font-weight: 600; }
+.se-status-acts a:hover, .se-status-acts button:hover { border-color: #F7C032; }
+/* R6 §02: a hover bridge over the 10px gap, so moving to the buttons never closes the pop-over */
+.se-status-pop::before { content: ''; position: absolute; left: 0; right: 0; top: -12px; height: 12px; }

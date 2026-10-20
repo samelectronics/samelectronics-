@@ -1024,6 +1024,7 @@ export const EXACT: Record<string, string> = {
   // 14 Oct §02
   'Closing soon': 'يغلق قريباً',
   'Opening soon': 'يفتح قريباً',
+  'All hours': 'كل الأوقات',
   'Shop AAA screens': 'تسوّق شاشات AAA',
   'Shop original screens': 'تسوّق الشاشات الأصلية',
   'Shop OLED screens': 'تسوّق شاشات OLED',

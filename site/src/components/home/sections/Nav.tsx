@@ -2,6 +2,8 @@
 // Home v3 section "Nav". Renders against the home page's values (`v`, from HomeV3's logic class).
 'use client';
 import ProgressScrub from '@/components/home/ProgressScrub';
+import HoursLive from '../HoursLive';
+import { site } from '@/content/facts';
 import React from 'react';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 import SEFMPMenu from '../../dc/SEFMPMenu';
@@ -111,7 +113,7 @@ export default function Nav({ v }: { v: Vals }) {
               </span>
               {t(v.st?.short)}
             </button>
-            <span id="se-status-pop" role="tooltip" className="se-status-pop">
+            <span id="se-status-pop" role="group" className="se-status-pop">
               <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 600, color: '#FFFFFF' }}>
                 <span style={{ position: 'relative', width: '8px', height: '8px', flex: 'none' }}>
                   <span style={cssToObj(`position:absolute;inset:0;border-radius:50%;background:${s(v.st?.dot)}`)}></span>
@@ -122,6 +124,7 @@ export default function Nav({ v }: { v: Vals }) {
               <span style={{ display: 'block', marginTop: '4px', paddingInlineStart: '16px', fontFamily: "'JetBrains Mono',monospace", fontSize: '12px', color: '#F7C032' }}>
                 {t(v.st?.pop?.count)}
               </span>
+              <HoursLive />
               <span style={{ display: 'block', margin: '12px 0 8px', fontFamily: "'JetBrains Mono',monospace", fontSize: '10.5px', letterSpacing: '.14em', textTransform: 'uppercase', color: '#8A8C90' }}>
                 {t(v.st?.pop?.branch)}
               </span>
@@ -136,11 +139,12 @@ export default function Nav({ v }: { v: Vals }) {
                   </span>
                 ))}
               </span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '10px', fontSize: '12px', color: '#C9CBCE' }}>
-                See hours &amp; directions
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M5 12h14M13 6l6 6-6 6"></path>
-                </svg>
+              {/* R6 §02: every button works */}
+              <span className="se-status-acts">
+                <a href={'https://www.google.com/maps/search/?api=1&query=' + site.contact.mapsQuery} target="_blank" rel="noopener noreferrer">Get directions</a>
+                <a href={'https://wa.me/' + site.contact.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                <a href={'tel:' + site.contact.storeTel}>Call</a>
+                <button type="button" onClick={v.st?.go}>All hours</button>
               </span>
             </span>
           </span>
