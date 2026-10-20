@@ -1024,6 +1024,11 @@ export const EXACT: Record<string, string> = {
   // 14 Oct §02
   'Closing soon': 'يغلق قريباً',
   'Opening soon': 'يفتح قريباً',
+  // R6 §10 · Deals
+  'DEALS & ARRIVALS · SAMPLE PRICES': 'العروض والوافد الجديد · أسعار تجريبية',
+  'live deals': 'عرض مباشر',
+  'Previous deals': 'العروض السابقة',
+  'Next deals': 'العروض التالية',
   'THE SHOWCASE · SCREENS BY QUALITY': 'المعرض · الشاشات حسب الجودة',
   // R6 §08 · Bench: Today on the rig
   'TODAY ON THE RIG': 'اليوم على جهاز الفحص',

@@ -60,7 +60,9 @@
 .dl-tabs button { height: 34px; padding: 0 14px; border: none; border-radius: 9px; background: rgba(255, 255, 255, .05); color: #C9CBCE; font: 600 13px Inter, sans-serif; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07); }
 .dl-tabs button.on { background: #F7C032; color: #26282B; box-shadow: none; }
 .dl-carwrap { position: relative; flex: 1; }
-.dl-track { display: flex; gap: 16px; height: 100%; overflow-x: auto; padding: 10px 0 14px; scroll-snap-type: x mandatory; scroll-behavior: smooth; scrollbar-width: thin; cursor: grab; user-select: none; }
+/* R6 §10: a belt, not a scroller: no browser scrollbar; the logic moves .dl-belt */
+.dl-track { position: relative; height: 100%; overflow: hidden; padding: 10px 0 14px; margin: -10px 0 -14px; cursor: grab; user-select: none; touch-action: pan-y; }
+.dl-belt { display: flex; gap: 16px; height: 100%; will-change: transform; }
 .dl-track:active { cursor: grabbing; }
 .dl-card { position: relative; flex: none; width: calc((100% - 32px) / 3); box-sizing: border-box; scroll-snap-align: start; justify-content: space-between; display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 18px; background: linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .025)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .12), inset 0 0 0 1px rgba(255, 255, 255, .06), 0 20px 40px -24px rgba(0, 0, 0, .7); transition: transform .35s cubic-bezier(.2, .8, .2, 1), box-shadow .35s; opacity: 0; transform: translateX(60px); }
 .dl-seen .dl-card { animation: lbSlide .6s cubic-bezier(.16, 1, .3, 1) both; }
@@ -126,3 +128,45 @@
 @keyframes dlSheen { to { transform: translateX(360%); } }
 @keyframes dlBeat { 50% { transform: scale(1.35); } }
 @media (max-width: 1000px) { .dl-main, .dl-below { grid-template-columns: 1fr; } }
+
+/* R6 §10 · live chip, rail controls, price drop, real map, pre-order loop */
+.dl-side { display: flex; align-items: center; gap: 16px; }
+.dl-live { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border-radius: 999px; background: rgba(255, 255, 255, .06); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); font: 500 13px Inter, sans-serif; color: #D5D7DA; white-space: nowrap; }
+.dl-live i { width: 8px; height: 8px; border-radius: 50%; background: #5FD49A; box-shadow: 0 0 0 0 rgba(95, 212, 154, .6); animation: dlLive 2s ease-out infinite; }
+.dl-live b { display: inline-block; font: 700 14px 'JetBrains Mono', monospace; color: #fff; animation: btRoll .4s cubic-bezier(.2, .8, .2, 1); }
+@keyframes dlLive { 0% { box-shadow: 0 0 0 0 rgba(95, 212, 154, .6); } 100% { box-shadow: 0 0 0 9px rgba(95, 212, 154, 0); } }
+.dl-ctl { position: absolute; top: -50px; inset-inline-end: 0; display: flex; gap: 8px; }
+.dl-ctl button { display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 50%; cursor: pointer; color: #F7C032; background: linear-gradient(180deg, #3D3E3F, #26282B); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .16), 0 6px 14px rgba(0, 0, 0, .35); transition: transform .2s; }
+.dl-ctl button:hover { transform: scale(1.08); }
+html[dir='rtl'] .dl-ctl svg { transform: scaleX(-1); }
+.dl-card.drop { animation: dlShake .32s cubic-bezier(.36, .07, .19, .97) 1 !important; }
+@keyframes dlShake { 20%, 60% { transform: translateX(-2px); } 40%, 80% { transform: translateX(2px); } }
+.dl-card-p b { display: inline-block; animation: dlSlideIn .45s cubic-bezier(.2, .8, .2, 1); }
+@keyframes dlSlideIn { from { transform: translateY(-70%); opacity: 0; } to { transform: none; opacity: 1; } }
+.dl-was { position: relative; text-decoration: none; }
+.dl-was i { position: absolute; left: -2px; right: -2px; top: 52%; height: 2px; border-radius: 1px; background: #F7C032; transform: scaleX(0); transform-origin: left; animation: dlStrike .3s ease-out both; box-shadow: 0 0 6px rgba(247, 192, 50, .8); }
+html[dir='rtl'] .dl-was i { transform-origin: right; }
+.dl-pct { animation: dlPop .35s cubic-bezier(.34, 1.56, .64, 1); }
+@keyframes dlPop { from { transform: scale(1.3); } to { transform: none; } }
+.dl-mapwrap { position: relative; }
+.dl-land { fill: rgba(255, 255, 255, .075); stroke: rgba(255, 255, 255, .22); stroke-width: .6; }
+.dl-borders { fill: none; stroke: rgba(255, 255, 255, .14); stroke-width: .5; stroke-dasharray: 2 2; }
+.dl-route { fill: none; stroke: rgba(247, 192, 50, .28); stroke-width: 1.5; stroke-dasharray: 3 5; }
+.dl-route-flow { fill: none; stroke: #FFDB6E; stroke-width: 2; stroke-linecap: round; stroke-dasharray: .02 .06; opacity: .7; animation: dlFlow 2.4s linear infinite; }
+@keyframes dlFlow { to { stroke-dashoffset: -.08; } }
+.dl-plane { animation: dlBob 2.6s ease-in-out infinite; filter: drop-shadow(0 0 4px rgba(255, 219, 110, .9)); }
+@keyframes dlBob { 50% { transform: translateY(1.6px); } }
+.dl-eta { position: absolute; transform: translate(-50%, calc(-100% - 16px)); padding: 6px 10px; border-radius: 8px; background: #F7C032; color: #26282B; font: 600 11px 'JetBrains Mono', monospace; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; box-shadow: 0 8px 18px rgba(0, 0, 0, .4); }
+.dl-eta b { font-weight: 700; }
+.dl-mapwrap:hover .dl-eta { opacity: 1; transform: translate(-50%, calc(-100% - 20px)); }
+.dl-pre-vp { position: relative; height: 262px; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(180deg, transparent, #000 8%, #000 92%, transparent); }
+.dl-pre-vp ul.roll { animation: dlPreRoll 16s linear infinite; }
+.dl-pre-vp:hover ul.roll { animation-play-state: paused; }
+.dl-pre-vp ul { gap: 10px; }
+@keyframes dlPreRoll { from { transform: translateY(calc(-50% - 5px)); } to { transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .dl-pre-vp ul.roll, .dl-route-flow, .dl-plane { animation: none; } }
+/* R6 §10 · Arabic: digits and clocks keep their order (the price read 14 for 41, the clock ran backwards) */
+html[dir='rtl'] .dl-new, html[dir='rtl'] .dl-flaps, html[dir='rtl'] .dl-ship-clock { direction: ltr; }
+/* soft edges where the belt enters and leaves */
+.dl-track { -webkit-mask-image: linear-gradient(90deg, transparent, #000 18px, #000 calc(100% - 18px), transparent); mask-image: linear-gradient(90deg, transparent, #000 18px, #000 calc(100% - 18px), transparent); }
+.dl-pre-vp { flex: 1; min-height: 262px; }

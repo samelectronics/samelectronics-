@@ -2354,3 +2354,25 @@ DONE WHEN
 DONE WHEN
 - Never holds the page. **PASS**
 - Each quality visibly different, real unboxing. **PASS** (the OLED box waits for the owner's photo)
+
+## §10 · Deals & arrivals
+
+- **No count in the title.** The eyebrow is "Deals & arrivals · Sample prices". At the side, a live chip shows a pulsing dot and "N live deals". N counts the deals whose clock is still running, so it goes down when one ends, and it rolls when it changes.
+- **Rail:**
+  - It is now a belt, not a scroller: there is no browser scrollbar in either language.
+  - It drifts continuously (24px/s) like the hero brand bar and loops seamlessly over a cloned set. It stays static when every card fits.
+  - Our own graphite/yellow arrows glide it one card; hover and drag hold it. Measured: it moved 48px in 2s, then 0px while hovered.
+  - Arabic: it runs the other way.
+- **Shipment map:**
+  - Real geography: Natural Earth 50m coastlines and country borders, projected once by `scripts/maps/make-ship-map.mjs` into `public/se-ship-map.json` (18KB gzipped, loaded only when the section nears).
+  - The arc runs Shenzhen → Dubai, with current flowing along it. The plane sits at the shipment's real progress (the same value drives the bar, the stages and the countdown) and bobs.
+  - Hovering the map shows the ETA in Dubai time.
+- **Pre-orders:** a continuous top → bottom loop that pauses on hover.
+- **Reviewer's idea:** every 11–18s a deal drops 1–2% more (sample feed). The old price gets a quick yellow strike, the new price slides in, the tag pops, and the card gives one 2px shake.
+- **Arabic bug fixed:** the Deal of the Day price read "14" for 41, and the flip clock ran backwards. Digits and clocks now keep their order.
+
+DONE WHEN
+- No count in the title. **PASS**
+- Rail loops correctly; custom controls; no browser scrollbar. **PASS**
+- Real map, moving plane. **PASS** (the plane moves at the real progress, plus a bob and flowing current)
+- Pre-orders loop. **PASS**
