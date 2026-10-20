@@ -130,7 +130,7 @@ export default function BootIntro({ v }: { v: Vals }) {
             <circle cx="104" cy="104" r={R} stroke="rgba(247,192,50,.22)" strokeWidth="7" strokeLinecap="round" ref={ringG} strokeDasharray={C} strokeDashoffset={C} className="se-boot-ringg" />
             <circle ref={ring} cx="104" cy="104" r={R} stroke="#F7C032" strokeWidth="2" strokeLinecap="round" strokeDasharray={C} strokeDashoffset={C} className="se-boot-ring" />
           </svg>
-          <img src="assets/se-logo.png" alt="Sam Electronics" width={160} height={160} className="se-boot-img" />
+          <img src="assets/se-logo-320.webp" alt="Sam Electronics" width={160} height={160} className="se-boot-img" />
         </div>
         <div className="se-boot-line" style={{ marginTop: '32px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <span key={line} className="se-boot-txt" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', font: (ar ? "500 15px 'IBM Plex Sans Arabic'" : "500 15px Inter") + ', sans-serif', color: 'rgba(255,255,255,.8)', whiteSpace: 'nowrap' }}>

@@ -495,7 +495,7 @@ export default function Hero({ v }: { v: Vals }) {
                         boxShadow: '0 0 0 1.5px #F7C032',
                       }}
                     >
-                      <img src="assets/se-logo.png" alt="" style={{ width: '100%', height: '100%', display: 'block' }} />
+                      <img src="assets/se-logo-128.webp" alt="" style={{ width: '100%', height: '100%', display: 'block' }} />
                     </span>
                     {'\n                '}
                     <span style={{ display: 'flex', flexDirection: 'column', gap: '1px' }}>
@@ -1201,7 +1201,7 @@ export default function Hero({ v }: { v: Vals }) {
                                           >
                                             {'\n                                  '}
                                             <img
-                                              src="assets/se-logo.png"
+                                              src="assets/se-logo-320.webp"
                                               alt=""
                                               style={cssToObj(
                                                 `width:${s(v.a?.rq?.lw)}px;height:${s(v.a?.rq?.lw)}px;border-radius:50%;display:block;box-shadow:0 0 18px rgba(247,192,50,.45);animation:${s(v.a?.rq?.logo)}`,

@@ -129,7 +129,7 @@ function render(v: Vals) {
           <div className="lb-board" data-board="1">
             <div className="lb-bh">
               <span className="lb-path">
-                <img src="/assets/se-logo.png" alt="" width="22" height="22" />
+                <img src="/assets/se-logo-128.webp" alt="" width="22" height="22" />
                 se://deira/board
               </span>
               <span className="lb-clock">

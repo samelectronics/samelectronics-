@@ -735,7 +735,7 @@ function render(v: Vals) {
                       animation: 'rsBoot 16s infinite',
                     }}
                   >
-                    <img src="assets/se-logo.png" alt="" style={{ width: '100%', height: '100%', display: 'block' }} />
+                    <img src="assets/se-logo-320.webp" alt="" style={{ width: '100%', height: '100%', display: 'block' }} />
                   </span>
                 </div>
                 {'\n          '}

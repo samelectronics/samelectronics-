@@ -10,9 +10,8 @@ export const DC_SCRIPTS: string[] = [
   "se-td-ad.js"
 ];
 /** Font stylesheets. */
+// R6 Part A: one font stylesheet (there were four: three near-identical copies plus 13 brand-wordmark fonts that the
+// SVG logos no longer need). IBM Plex Sans Arabic is self-hosted (src/styles/arabic.css).
 export const DC_FONT_CSS: string[] = [
-  "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@500;600&display=swap",
-  "https://fonts.googleapis.com/css2?family=Syncopate:wght@700&family=Nunito:wght@800&family=Poppins:wght@700&family=Rubik:wght@900&family=Comfortaa:wght@700&family=Varela+Round&family=Quicksand:wght@700&family=Montserrat:wght@600&family=Josefin+Sans:wght@600&family=Outfit:wght@500&family=DM+Serif+Display&family=Exo+2:ital,wght@1,800&family=Audiowide&family=Inter:wght@600&display=swap",
-  "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600;700&display=swap",
-  "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap"
+  "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap",
 ];

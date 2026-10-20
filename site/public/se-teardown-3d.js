@@ -15,7 +15,7 @@ export async function mount(host, state) {
   const PI = Math.PI;
   const canvas = host.querySelector('canvas');
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2) /* G16: 2× max (was 3× on desktop) */);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5) /* R6 Part A: 1.5× max */);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
@@ -580,7 +580,7 @@ export async function mount(host, state) {
   const DP = Array.from({ length: state.mob ? 90 : 190 }, (_, i) => { const bk = i < (state.mob ? 4 : 9), z = bk ? 1 : Math.random(), g0 = Math.random(), ang = Math.random() * 6.28, sp = (1.5 + Math.random() * 4) * (0.5 + z); return { bk, z, x: Math.random(), y: Math.random(), r: bk ? 2.5 + Math.random() * 2.5 : 0.5 + z * 0.9 + Math.random() * 0.1, a: bk ? 0.03 + Math.random() * 0.03 : 0.1 + z * 0.17 + Math.random() * 0.08, c: [255, Math.round(lerp(255, 238, g0)), Math.round(lerp(255, 222, g0))], vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp * 0.7, ph: Math.random() * 6.28, wb: 0.08 + Math.random() * 0.7, tw: 0.7 + Math.random() * 4.5, fv: 0.6 + Math.random() * 3.6, sx: (Math.random() - 0.5) * 3.2, ph2: Math.random() * 6.28 }; });
   let BKD = null; const mkBK = () => { const arr = []; let guard = 0; while (arr.length < 15 && guard++ < 6000) { const r = 20 + Math.pow(Math.random(), 1.2) * 60, x = r + Math.random() * Math.max(1, w - 2 * r), y = hgt * 0.06 + r + Math.random() * Math.max(1, hgt * 0.9 - 2 * r); if (arr.every((o) => Math.hypot(o.x - x, o.y - y) > o.r + r + 40)) arr.push({ x, y, r, th: Math.random() * 6.28, om: 0.05 + Math.random() * 0.12, ph: Math.random() * 6.28, v: 4 + (8 * (r - 20)) / 60, a: 0.06 + Math.random() * 0.08, bp: 4 + Math.random() * 2, rim: Math.random() < 0.45, c: [Math.round(lerp(228, 247, Math.random())), Math.round(lerp(150, 192, Math.random())), Math.round(lerp(36, 50, Math.random()))] }); } arr.w = w; arr.h = hgt; return arr; };
   // G16: render density follows the frame rate (window.seQuality from se-perf.js): 2× when smooth, down to 1.25× while it struggles.
-  let prWant = Math.min(window.devicePixelRatio || 1, 2);
+  let prWant = Math.min(window.devicePixelRatio || 1, 1.5); // R6 Part A: WebGL at 1.5× max
   const prNow = () => { const q = window.seQuality; return q && q.level < 1 ? Math.max(Math.min(1.25, prWant), +(prWant * (0.55 + 0.45 * q.level)).toFixed(2)) : prWant; };
   const resize = () => { const rw = host.clientWidth, rh = host.clientHeight, pr = prNow(); if (!rw || (rw === w && rh === hgt && LY && LY.mob === !!state.mob && pr === renderer.getPixelRatio())) return; w = rw; hgt = rh; renderer.setPixelRatio(pr); renderer.setSize(w, hgt, false); dpr = renderer.getPixelRatio(); refl.width = shd.width = dust.width = canvas.width; refl.height = shd.height = dust.height = canvas.height; cam.aspect = w / Math.max(1, hgt); LY = layout(w, hgt, !!state.mob); camD = hgt / (2 * Math.tan((cam.fov * PI) / 360) * LY.ppu); cam.updateProjectionMatrix(); measure(); };
   const hull = (P) => { P.sort((a, b) => a[0] - b[0] || a[1] - b[1]); const cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]); const lo = [], up = []; for (const q of P) { while (lo.length >= 2 && cr(lo[lo.length - 2], lo[lo.length - 1], q) <= 0) lo.pop(); lo.push(q); } for (let i = P.length - 1; i >= 0; i--) { const q = P[i]; while (up.length >= 2 && cr(up[up.length - 2], up[up.length - 1], q) <= 0) up.pop(); up.push(q); } up.pop(); lo.pop(); return lo.concat(up); };
@@ -773,7 +773,7 @@ export async function mount(host, state) {
   state.renderNow = () => { state.snap = true; state.snapZ = true; try { frame(); } catch (e) { if (!state.__rnErr) { state.__rnErr = 1; console.warn('[teardown] frame error', e && e.message, e && e.stack && e.stack.split('\n')[1]); } } };
   // shelf mode: no teardown loop; render library parts / the assembled phone into viewports of this canvas (What we offer)
   if (state.shelf) {
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); renderer.shadowMap.enabled = false;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5)); renderer.shadowMap.enabled = false;
     const swL = new THREE.DirectionalLight(0xffffff, 0); adS.add(swL); adS.add(swL.target);
     const info = [...parts, parts.asm].map((pv) => { pv.visible = true; pv.position.set(0, 0, 0); pv.rotation.set(0, 0, 0); pv.scale.setScalar(pv.userData.s); pv.updateMatrixWorld(true); const sz = new THREE.Box3().setFromObject(pv).getSize(new THREE.Vector3()); pv.visible = false; return { hh: sz.y / 2, hw: sz.x / 2, hd: sz.z / 2 }; });
     let scrT = null; const scrM = new THREE.MeshBasicMaterial({ toneMapped: false, color: 0x000000 });

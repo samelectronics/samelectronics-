@@ -243,7 +243,7 @@ function render(v: Vals) {
                     </svg>
                     <div
                       style={cssToObj(
-                        `position:relative;height:${s(v.z1?.ch)}px;clip-path:inset(0 0 ${s(v.op?.cc)}% 0 round 24px);border-radius:24px;background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.035));backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.1),0 24px 60px rgba(0,0,0,.28);overflow:hidden`,
+                        `position:relative;height:${s(v.z1?.ch)}px;clip-path:inset(0 0 ${s(v.op?.cc)}% 0 round 24px);border-radius:24px;background:linear-gradient(180deg,rgba(62,64,68,.86),rgba(48,50,54,.84));box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px rgba(255,255,255,.1),0 24px 60px rgba(0,0,0,.28);overflow:hidden`,
                       )}
                     >
                       {'\n          '}
@@ -493,7 +493,7 @@ function render(v: Vals) {
                     {'\n          '}
                     <span
                       style={cssToObj(
-                        `align-self:flex-start;display:flex;align-items:center;gap:10px;height:34px;padding:0 14px 0 12px;border-radius:999px;background:rgba(255,255,255,.06);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.12em;color:#D5D7DA;white-space:nowrap;opacity:${s(v.msg?.pl)};transform:translateX(${s(v.msg?.plY)}px);filter:${s(v.msg?.plB)}`,
+                        `align-self:flex-start;display:flex;align-items:center;gap:10px;height:34px;padding:0 14px 0 12px;border-radius:999px;background:rgba(52,54,58,.82);box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.12em;color:#D5D7DA;white-space:nowrap;opacity:${s(v.msg?.pl)};transform:translateX(${s(v.msg?.plY)}px);filter:${s(v.msg?.plB)}`,
                       )}
                     >
                       <span
@@ -583,7 +583,7 @@ function render(v: Vals) {
                               onMouseEnter={v.c?.enter}
                               onMouseLeave={v.c?.leave}
                               style={cssToObj(
-                                `position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;gap:4px;box-sizing:border-box;padding:8px 8px 12px;border-radius:16px;background:linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.03));backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px ${s(v.c?.bd)},${s(v.c?.sh)};color:#FFFFFF;text-decoration:none;opacity:${s(v.c?.o)};transform:translateY(${s(v.c?.y)}px);transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s`,
+                                `position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;gap:4px;box-sizing:border-box;padding:8px 8px 12px;border-radius:16px;background:linear-gradient(180deg,rgba(62,64,68,.86),rgba(48,50,54,.84));box-shadow:inset 0 1px 0 rgba(255,255,255,.16),inset 0 0 0 1px ${s(v.c?.bd)},${s(v.c?.sh)};color:#FFFFFF;text-decoration:none;opacity:${s(v.c?.o)};transform:translateY(${s(v.c?.y)}px);transition:transform .35s cubic-bezier(.16,1,.3,1),box-shadow .35s`,
                               )}
                             >
                               <span style={cssToObj(`position:relative;width:100%;height:${s(v.chipH)}px;display:grid;place-items:center`)}>

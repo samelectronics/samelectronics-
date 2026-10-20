@@ -18,13 +18,15 @@ class Component extends DCLogic {
   state = { sc: 1 };
   componentDidMount() {
     this.p = 0; this.tp = 0; this.alive = true;
-    const loop = () => { if (!this.alive) return; this.frame(); this.raf = requestAnimationFrame(loop); };
+    // R6 Part A: only measured while near the view (it used to read its position every frame for the whole visit)
+    this.near = false; this.nearIO = new IntersectionObserver(([e]) => { this.near = e.isIntersecting; }, { rootMargin: '10% 0px 10% 0px' }); setTimeout(() => this.secRef.current && this.nearIO.observe(this.secRef.current), 50);
+    const loop = () => { if (!this.alive) return; if (this.near) this.frame(); this.raf = requestAnimationFrame(loop); };
     this.raf = requestAnimationFrame(loop);
     this.onResize = () => { const vw = document.documentElement.clientWidth, vh = window.innerHeight, sc = Math.min(vw / 1440, (vh - 72) / 828); if (Math.abs(sc - this.state.sc) > 0.002) this.setState({ sc }); };
     window.addEventListener('resize', this.onResize); this.onResize();
     window.seBench = (p) => { this.ov = p; this.p = p; this.frame(true); };
   }
-  componentWillUnmount() { this.alive = false; cancelAnimationFrame(this.raf); window.removeEventListener('resize', this.onResize); }
+  componentWillUnmount() { this.nearIO && this.nearIO.disconnect(); this.alive = false; cancelAnimationFrame(this.raf); window.removeEventListener('resize', this.onResize); }
   q(k) { const R = this.secRef.current; if (!R) return null; this._q = this._q || {}; const c = this._q[k]; if (c && c.isConnected) return c; return (this._q[k] = R.querySelector('[data-b="' + k + '"]')); }
   set(k, s) { const e = this.q(k); if (e) for (const n in s) { const v = s[n]; if (e.style[n] !== v) e.style[n] = v; } return e; }
   frame(force) {

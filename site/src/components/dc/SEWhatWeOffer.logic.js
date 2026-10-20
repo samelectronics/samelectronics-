@@ -17,11 +17,13 @@ class Component extends DCLogic {
     // G16: the 3D shelf holds a WebGL context only while the section is near the viewport (src/dc/gl-budget.ts);
     // when far away it is released and the cached library pictures stand in.
     this.unreg = registerScene({ id: 'offer-shelf', el: () => this.root.current || this.host.current, mount: async () => { await this.mountShelf(); return () => this.unmountShelf(); } });
-    const loop = () => { if (!this.alive) return; const rr = this.root.current && this.root.current.getBoundingClientRect(), vh = window.innerHeight || 900; if (rr && (rr.bottom < -vh * 0.25 || rr.top > vh * 1.25)) { this._raf = requestAnimationFrame(loop); return; } try { this.frame(performance.now() / 1000); } catch (e) { if (!this._fe) { this._fe = 1; console.warn('[What we offer]', e); } } this._raf = requestAnimationFrame(loop); }; loop();
+    // R6 Part A: visibility comes from an IntersectionObserver; the loop used to measure the section every frame for the whole visit (a forced layout per frame: the biggest cost while scrolling)
+    this.near = false; this.nearIO = new IntersectionObserver(([e]) => { this.near = e.isIntersecting; }, { rootMargin: '25% 0px 25% 0px' }); setTimeout(() => this.root.current && this.nearIO.observe(this.root.current), 50);
+    const loop = () => { if (!this.alive) return; if (!this.near) { this._raf = requestAnimationFrame(loop); return; } try { this.frame(performance.now() / 1000); } catch (e) { if (!this._fe) { this._fe = 1; console.warn('[What we offer]', e); } } this._raf = requestAnimationFrame(loop); }; loop();
     window.seWwo = { at: (b, t) => { this.ov[b] = t; this.frame(performance.now() / 1000); }, hover: (i) => { this.hvT.fill(0); this.hv.fill(0); if (i != null && i >= 0) { this.hvT[i] = 1; this.hv[i] = 1; this.hvAt[i] = performance.now() / 1000 - 0.7; } this.frame(performance.now() / 1000); }, clear: () => { this.ov = {}; }, gl: () => this.glCanvas };
   }
   componentDidUpdate() { this._q = {}; }
-  componentWillUnmount() { this.alive = false; cancelAnimationFrame(this._raf); clearInterval(this.dIv); clearTimeout(this.fbT); try { this.unreg && this.unreg(); } catch (e) {} }
+  componentWillUnmount() { this.nearIO && this.nearIO.disconnect(); this.alive = false; cancelAnimationFrame(this._raf); clearInterval(this.dIv); clearTimeout(this.fbT); try { this.unreg && this.unreg(); } catch (e) {} }
   unmountShelf() { clearTimeout(this.fbT); try { this.mo && this.mo.disconnect(); this.disp && this.disp(); } catch (e) {} const h = this.host.current; if (h) { loseContexts(h); h.querySelectorAll('canvas').forEach((c) => c.remove()); } this.mo = null; this.disp = null; this.api = null; this.glCanvas = null; this.scr = null; this.fallback(); }
   q(k) { const c = this._q[k]; if (c && c.isConnected) return c; const R = this.root.current; return (this._q[k] = R ? R.querySelector('[data-w="' + k + '"]') : null); }
   async mountShelf() {

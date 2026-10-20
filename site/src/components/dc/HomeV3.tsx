@@ -3,34 +3,16 @@
 import React from 'react';
 import { type Vals, createDC, t } from '@/dc/runtime';
 import Logic from './HomeV3.logic.js';
-import SEBenchTest from './SEBenchTest';
 import SEBrandLogo from './SEBrandLogo';
 import SEFMPMenu from './SEFMPMenu';
-import SEFinale from './SEFinale';
-import SEHomeDeals from './SEHomeDeals';
-import SEShowcase from './SEShowcase';
-import SEMeet from './SEMeet';
-import SEFeed from './SEFeed';
-import SEReviews from './SEReviews';
-import SEVisit from './SEVisit';
 import SELauncher from './SELauncher';
-import SELiveBoard from './SELiveBoard';
 import SEPart from './SEPart';
 import SERepairSequence from './SERepairSequence';
 import SESamsoom from './SESamsoom';
 import SETeardown from './SETeardown';
-import SEWhatWeOffer from './SEWhatWeOffer';
-import SEWholesale from './SEWholesale';
-import SEStory from './SEStory';
-import SETeam from './SETeam';
-import SEWho from './SEWho';
-import SECircuit from './SECircuit';
 import BootIntro from '../home/sections/BootIntro';
 import Nav from '../home/sections/Nav';
 import Hero from '../home/sections/Hero';
-import RepairLab from '../home/sections/RepairLab';
-import Worldwide from '../home/sections/Worldwide';
-import Footer from '../home/sections/Footer';
 import FindMyPartPanel from '../home/sections/FindMyPartPanel';
 import SystemMapDrawer from '../home/sections/SystemMapDrawer';
 import CartDrawer from '../home/sections/CartDrawer';
@@ -38,6 +20,10 @@ import SamsoomChat from '../home/sections/SamsoomChat';
 import Toast from '../home/sections/Toast';
 import HeroPoster from '../home/sections/HeroPoster';
 import ComingSoon from '../g17/ComingSoon';
+import dynamic from 'next/dynamic';
+
+// R6 Part A: below-the-teardown sections in their own chunk (see HomeRest.tsx)
+const HomeRest = dynamic(() => import('./HomeRest'), { ssr: false });
 
 function render(v: Vals) {
   return (
@@ -49,24 +35,7 @@ function render(v: Vals) {
         {v.showRest ? (
           <>
             <SETeardown />
-            <SEWhatWeOffer />
-            <SELiveBoard />
-            <SEBenchTest />
-            <SEShowcase />
-            <SEHomeDeals />
-            <RepairLab v={v} />
-            <SEWholesale />
-            <Worldwide v={v} />
-            <SEStory todayHours={v.todayHours} dirLink={v.dirLink} wa={v.visit?.wa} notify={v.story?.notify} />
-            <SETeam />
-            <SEWho />
-            <SECircuit />
-            <SEMeet />
-            <SEFeed />
-            <SEReviews />
-            <SEVisit />
-            <SEFinale />
-            <Footer v={v} />
+            <HomeRest v={v} />
           </>
         ) : null}
         <FindMyPartPanel v={v} />

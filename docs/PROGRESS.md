@@ -1826,3 +1826,77 @@ All strings are in Arabic. Screens: `sc-sheet.png` (all five grades, EN + AR).
 DONE WHEN
 - The page holds until all grades have been seen; no empty space passes. **PASS**
 - All five buttons show different, complete content, in EN and AR. **PASS**
+
+---
+
+# Round 6 · Finish the home page (brief: docs/Round6_Finish_Home.pdf, catalogue: docs/Products.xlsx)
+Owner decisions (20 Oct):
+- Use the Excel exactly as it is, fixing only spelling customers see (logged in docs/CATALOG_CLEANUP.md).
+- Quality / Colour / Manufacturer show the master lists, and prices stay SAMPLE.
+- "Also fits" only where a list entry names 2+ models.
+- No models outside the Excel.
+- Everything must be editable later from the Control Room.
+- All text stays in translation files (French and Spanish come later).
+
+## Part A · Performance
+Measured on this sandbox: headless Chromium with **software** rendering, no GPU. Absolute fps are far below a real laptop, so only the before/after comparison on the same machine means anything.
+
+**Causes found and fixed** (no effect removed):
+1. **What we offer:** its animation loop measured the section (`getBoundingClientRect`) every frame for the whole visit, forcing a layout on every frame. It now uses an IntersectionObserver.
+2. **Bench Test:** the same problem; also fixed with an IntersectionObserver.
+3. **Teardown scroll/resize handlers:** they measured the page on every scroll event. They now run at most once per frame.
+4. **Showcase:** it read the page width on every scroll (forced layout). The width is now cached and updated on resize.
+5. **Header:**
+   - It scanned every `[data-tone]` block on each scroll to choose a colour that is now always graphite. The scan is removed.
+   - The progress line and its dot moved by `width` / `inset` (layout on every scroll). They now move with `transform`.
+6. **Hero keyframes:** they were appended to a `<style>` one by one, and each append re-parsed the whole growing sheet (~220ms at load). They are now queued and written once per task.
+7. **Hero globe:** it redrew every frame even when the hero was off screen. It now draws only while the hero is visible, at most ~30 times a second.
+8. **Frosted glass:**
+   - The teardown's glass cards blurred whatever was behind them, which is the live 3D and dust, so the blur was recomputed every frame. They now use an equivalent opaque tint (same look over the dark studio).
+   - Header blur reduced from 18px to 10px, with a more opaque background (same look).
+9. **WebGL** pixel ratio capped at 1.5× (was 2×).
+10. **Fonts:** four Google Fonts stylesheets merged into one. Three were near-identical copies; the fourth loaded 13 brand-wordmark fonts that the SVG logos no longer use.
+11. **Logo:** the 177 KB PNG was fetched six times. The page now uses 4 KB / 13 KB WebP versions; the PNG stays as the master for the 3D textures.
+12. **Script and bundle loading:**
+    - `image-slot.js` (64 KB, only used by Find My Part) loads after the page is interactive.
+    - Every section below the teardown is in its own chunk (`HomeRest.tsx`), so the hero parses and renders first.
+
+**Load** (same machine, no throttling):
+
+| | Before | After |
+|---|---|---|
+| Transferred | 2,090 KB | 1,088 KB |
+| First paint (loading screen) | 0.5s (Lighthouse) | 0.5s |
+| LCP (page observer) | 2.05s | 1.99s |
+| CLS | 0.0022 | 0.0018 |
+| Long tasks at load | 11 (max 833ms) | 12 (max 698ms) |
+
+**Scrolling top → bottom** (fps average, long tasks):
+
+| Section | Before | After | Long tasks |
+|---|---|---|---|
+| top | 15.6 | 18.6 | 1 → 1 |
+| teardown | 33.7 | 45 | 3 → 1 |
+| families | 19.2 | 23.3 | 10 → 8 |
+| board | 20.9 | 27.7 | 4 → 2 |
+| quality | 32.5 | 44.9 | 1 → 0 |
+| showcase | 29.4 | 37.4 | 0 → 0 |
+| deals | 28.4 | 32.4 | 0 → 0 |
+| repair | 28.7 | 37.5 | 0 → 0 |
+| ? | 21.4 | 39 | 1 → 0 |
+| wholesale | 32.2 | 37.2 | 0 → 0 |
+| network | 27.3 | 30.9 | 0 → 1 |
+| story | 22.2 | 25.3 | 0 → 1 |
+| team | 38.7 | 41.7 | 0 → 0 |
+| everyone | 25.7 | 23.1 | 1 → 0 |
+| circuit | 34 | 39.6 | 0 → 0 |
+| samsoom | 31.3 | 41 | 1 → 0 |
+| social | 26.1 | 29.2 | 0 → 0 |
+| reviews | 21.3 | 16.5 | 0 → 0 |
+| visit | 31.6 | 43.8 | 0 → 0 |
+| finale | 30 | 33.8 | 0 → 0 |
+**Not met here, and why:**
+- **55 fps** can't be reached on a software renderer at all; even the idle footer runs at 51. The gains above are all relative.
+- **Lighthouse LCP:** Lighthouse doesn't report one, because the hero's text starts invisible (opacity 0) for its entrance. LCP is therefore taken from the page's own observer.
+- **Reviews** (21 → 16.5) and **Who are you?** (25.7 → 23.1) are within run-to-run noise. Their cost is raster: moving cards and big gradients that a GPU composites cheaply.
+- A real-laptop pass (Chrome Performance panel) remains on the owner's side.

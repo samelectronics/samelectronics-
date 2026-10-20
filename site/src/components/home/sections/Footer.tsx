@@ -45,7 +45,7 @@ export default function Footer({ v }: { v: Vals }) {
                   boxShadow: '0 0 0 2px #F7C032,0 0 22px rgba(247,192,50,.4)',
                 }}
               >
-                <img src="assets/se-logo.png" alt="Sam Electronics" style={{ width: '100%', height: '100%', display: 'block' }} />
+                <img src="assets/se-logo-128.webp" alt="Sam Electronics" style={{ width: '100%', height: '100%', display: 'block' }} />
               </span>
               <span style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: '600', fontSize: '17px', letterSpacing: '.16em' }}>

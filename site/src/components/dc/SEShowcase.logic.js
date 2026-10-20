@@ -54,7 +54,8 @@ class Component extends DCLogic {
   }
   componentWillUnmount() { window.removeEventListener('scroll', this.onScroll); window.removeEventListener('resize', this.onScroll); window.removeEventListener('wheel', this.onWheel); cancelAnimationFrame(this.sraf); this.offRp && this.offRp(); window.removeEventListener('se:lang', this.onLang); this.alive = false; cancelAnimationFrame(this.raf); clearInterval(this.dIv); this.io && this.io.disconnect(); window.removeEventListener('se:parts-lib', this.onLib); }
   componentDidUpdate() { this.frame(); }
-  pinOn() { return (document.documentElement.clientWidth || 1440) > 900; }
+  // R6 Part A: the width is read once and on resize (reading it on every scroll forced a layout each time)
+  pinOn() { if (this._vw == null) { this._vw = document.documentElement.clientWidth || 1440; window.addEventListener('resize', () => { this._vw = document.documentElement.clientWidth || 1440; }); } return this._vw > 900; }
   SH() { return Math.round(window.innerHeight * 0.55); }
   /** Show grade i and move the page with it (the stage stays pinned, so the move is invisible). */
   goGrade(i) { i = Math.max(0, Math.min(ADS.length - 1, i)); if (i === this.state.i) return; this.t = 0.02; this.setState({ i }); const S = this.secRef.current; if (!S) return;

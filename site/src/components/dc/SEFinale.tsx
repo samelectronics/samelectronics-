@@ -19,7 +19,7 @@ function Emblem({ refl }: { refl?: boolean }) {
       <span className="fn-edge" />
       <span className="fn-bezel" />
       <span className="fn-face">
-        <img src="/assets/se-logo.png" alt={refl ? '' : 'Sam Electronics'} draggable={false} />
+        <img src="/assets/se-logo-320.webp" alt={refl ? '' : 'Sam Electronics'} draggable={false} />
         <i className="scr a" />
         <i className="scr b" />
       </span>

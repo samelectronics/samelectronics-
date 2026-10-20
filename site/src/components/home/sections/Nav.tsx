@@ -9,7 +9,7 @@ export default function Nav({ v }: { v: Vals }) {
   return (
     <header
       style={cssToObj(
-        `position:fixed;left:0;right:0;top:0;z-index:60;background:${s(v.nav?.bg)};backdrop-filter:blur(18px) saturate(1.3);-webkit-backdrop-filter:blur(18px) saturate(1.3);border-bottom:1px solid ${s(v.nav?.bd)};color:${s(v.nav?.ink)};transition:background .35s,color .35s,border-color .35s`,
+        `position:fixed;left:0;right:0;top:0;z-index:60;background:${s(v.nav?.bg)};backdrop-filter:blur(10px) saturate(1.2);-webkit-backdrop-filter:blur(10px) saturate(1.2);border-bottom:1px solid ${s(v.nav?.bd)};color:${s(v.nav?.ink)};transition:background .35s,color .35s,border-color .35s`,
       )}
     >
       {'\n  '}
@@ -37,7 +37,7 @@ export default function Nav({ v }: { v: Vals }) {
               flex: 'none',
             }}
           >
-            <img src="assets/se-logo.png" alt="Sam Electronics" style={{ width: '100%', height: '100%', display: 'block' }} />
+            <img src="assets/se-logo-128.webp" alt="Sam Electronics" style={{ width: '100%', height: '100%', display: 'block' }} />
           </span>
           {'\n      '}
           <span style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
@@ -254,7 +254,9 @@ export default function Nav({ v }: { v: Vals }) {
             insetInlineStart: '0', // 14 Oct §04: fills right → left in Arabic
             top: '0',
             bottom: '0',
-            width: '0%',
+            width: '100%',
+            transform: 'scaleX(0)', // R6 Part A: moved with transforms (no layout per scroll)
+            transformOrigin: 'var(--se-start, left) center',
             backgroundImage: 'linear-gradient(90deg,#C9921A 0%,#F7C032 30%,#FFF4D1 45%,#F7C032 60%,#C9921A 100%)',
             backgroundSize: '200px 2px',
             animation: 'seFlowBg 1.2s linear infinite',

@@ -70,3 +70,6 @@ html[dir='rtl'] [data-hero-text] { left: 720px !important; }
 /* Bench Test: words on the right, the rig on the left (the rig itself is a device and keeps its own layout). */
 html[dir='rtl'] .bt-left { left: 768px; }
 html[dir='rtl'] .bt-rigwrap { left: 68px; }
+
+/* R6 Part A: the header progress line scales from the reading start */
+html[dir='rtl'] { --se-start: right; }

@@ -67,7 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Script>
         {/* Data + engine globals the design components read from window (files in public/, unchanged from the design). */}
         {DC_SCRIPTS.map((src) => (
-          <Script key={src} src={'/' + src} strategy="beforeInteractive" />
+          <Script key={src} src={'/' + src} strategy={src === 'image-slot.js' ? 'lazyOnload' : 'beforeInteractive'} /* R6 Part A: only Find My Part uses it */ />
         ))}
         {children}
       </body>
