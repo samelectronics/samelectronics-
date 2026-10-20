@@ -470,27 +470,33 @@ class Component extends DCLogic {
   reelCtl() {
     if (this._rc) return this._rc;
     const D = 32000, STEP = 3200, tl = () => document.timeline.currentTime || performance.now();
-    const anims = () => { const r = document.querySelector('[data-se-reel]'); return r ? r.getAnimations({ subtree: true }).filter((a) => /^hr/.test(a.animationName || '')) : []; };
-    let off = tl(), pausedAt = null, hov = false, holdT = 0, lastGo = 0, el = null, ty = null;
+    const anims = () => { const r = document.querySelector('[data-se-reel]'), sw = document.querySelector('[data-se-sweep]'); const L = (r ? r.getAnimations({ subtree: true }) : []).concat(sw && !(r && r.contains(sw)) ? sw.getAnimations({ subtree: true }) : []); return L.filter((a) => /^hr/.test(a.animationName || '')); }; // R6 §03 C: + the glass sweep
+    let off = tl(), pausedAt = null, hov = false, holdT = 0, lastGo = 0, el = null, ty = null, rev = false;
     const master = () => (pausedAt != null ? pausedAt : (((tl() - off) % D) + D) % D);
-    const sync = () => { const m = master(); anims().forEach((a) => { const c = (((a.currentTime || 0) % D) + D) % D; if (Math.abs(c - m) > 40) a.currentTime = m; if (pausedAt != null) { if (a.playState !== 'paused') a.pause(); } else if (a.playState === 'paused') a.play(); }); };
+    const sync = () => { if (rev) return; const m = master(); anims().forEach((a) => { const c = (((a.currentTime || 0) % D) + D) % D; if (Math.abs(c - m) > 40) a.currentTime = m; if (pausedAt != null) { if (a.playState !== 'paused') a.pause(); } else if (a.playState === 'paused') a.play(); }); };
     const pause = () => { if (pausedAt == null) pausedAt = master(); sync(); };
     const resume = () => { if (pausedAt != null) { off = tl() - pausedAt; pausedAt = null; } sync(); };
     const go = (dir) => {
       const cur = Math.floor(master() / STEP), tgt = ((cur + dir + 10) % 10) * STEP; // the start of that ad's scroll-in
+      if (dir < 0) { // R6 §03 C: previous = the feed moves DOWN: the same 600ms scroll, played backwards, then hold that ad
+        clearTimeout(holdT); const base = cur * STEP; off = tl() - (base + 600); pausedAt = null; sync(); rev = true;
+        anims().forEach((a) => { a.currentTime = base + 600; a.playbackRate = -1; if (a.playState === 'paused') a.play(); });
+        holdT = setTimeout(() => { anims().forEach((a) => (a.playbackRate = 1)); rev = false; off = tl() - (tgt + 1250); pausedAt = null; sync(); if (hov) pause(); }, 600);
+        return;
+      }
       clearTimeout(holdT); off = tl() - tgt; pausedAt = null; sync();
       if (hov) holdT = setTimeout(() => { if (hov) pause(); }, 1250); // the 600ms feed motion + the ad's own entrance, then hold it
     };
     // 14 Oct §05 B: one wheel gesture (events until 250ms of quiet) or one swipe = one ad; the page never scrolls meanwhile
     let lastW = 0, busyUntil = 0;
     const wheel = (e) => { e.preventDefault(); const n = Date.now(), fresh = n - lastW > 250; lastW = n; if (!fresh || n < busyUntil || Math.abs(e.deltaY) < 2) return; busyUntil = n + 650; go(e.deltaY > 0 ? 1 : -1); };
-    const ts = (e) => { ty = e.touches[0].clientY; hov = true; clearTimeout(this._rcLeave); pause(); }, tm = (e) => { if (ty != null) e.preventDefault(); }, te = (e) => { if (ty == null) return; const dy = e.changedTouches[0].clientY - ty; ty = null; if (Math.abs(dy) > 30) { e.preventDefault(); this._swiped = Date.now(); go(dy < 0 ? 1 : -1); } clearTimeout(this._rcLeave); this._rcLeave = setTimeout(() => { hov = false; resume(); }, 1000); };
+    const ts = (e) => { ty = e.touches[0].clientY; hov = true; clearTimeout(this._rcLeave); pause(); }, tm = (e) => { if (ty != null) e.preventDefault(); }, te = (e) => { if (ty == null) return; const dy = e.changedTouches[0].clientY - ty; ty = null; if (Math.abs(dy) > 30) { e.preventDefault(); this._swiped = Date.now(); go(dy < 0 ? 1 : -1); } clearTimeout(this._rcLeave); this._rcLeave = setTimeout(() => { hov = false; resume(); }, 3000); };
     this._reelSync = setInterval(() => !this.dead && !document.hidden && sync(), 1600);
     window.seReel = { pause, resume, go, master, sync, at: (ms) => { pausedAt = ((ms % D) + D) % D; sync(); } };
     return (this._rc = {
       ref: (n) => { if (el) { el.removeEventListener('wheel', wheel); el.removeEventListener('touchstart', ts); el.removeEventListener('touchmove', tm); el.removeEventListener('touchend', te); } el = n; if (n) { n.addEventListener('wheel', wheel, { passive: false }); n.addEventListener('touchstart', ts, { passive: true }); n.addEventListener('touchmove', tm, { passive: false }); n.addEventListener('touchend', te, { passive: false }); } },
       enter: () => { hov = true; clearTimeout(holdT); clearTimeout(this._rcLeave); pause(); }, // 14 Oct §05 B: stops at once, the progress segment freezes
-      leave: () => { clearTimeout(holdT); clearTimeout(this._rcLeave); this._rcLeave = setTimeout(() => { hov = false; resume(); }, 1000); }, // resumes 1s after the pointer leaves
+      leave: () => { clearTimeout(holdT); clearTimeout(this._rcLeave); this._rcLeave = setTimeout(() => { hov = false; resume(); }, 3000); }, // R6 §03 C: resumes 3s after the pointer leaves
       prev: (e) => { e && e.stopPropagation(); go(-1); },
       next: (e) => { e && e.stopPropagation(); go(1); },
       poster: () => { if (this._swiped && Date.now() - this._swiped < 400) return; this.setState({ posterI: Math.floor(master() / STEP) % 10 }); },
@@ -501,7 +507,7 @@ class Component extends DCLogic {
     const i = this.state.posterI; if (i == null || !ads[i]) return { open: false };
     const [kind, th, k, t, d, c] = ads[i], D = this.state.data, lib = this.state.lib, LK = { scr: 0, frm: 1, flx: 2, board: 3, bat: 4, cam: 5, sml: 6, bcv: 7, rep: 9 }, CAT = { scr: 'SCR', bat: 'BAT', bcv: 'BCV', cam: 'CAM', frm: 'FRM', flx: 'FLX', sml: 'SML' };
     const INFO = {
-      scr: ['Every screen we sell is checked on the bench for touch, colour and brightness before it leaves Deira. Pick the grade that fits the job and the budget.', ['Original, Service Pack, OLED and Incell grades', 'Touch, colour and brightness tested', 'Every grade labelled on your order']],
+      scr: ['Every screen we sell is checked on the bench for touch, colour and brightness before it leaves Deira. Pick the grade that fits the job and the budget.', ['Original, OLED, Incell and AAA', 'Quality and manufacturer on every label', 'Touch, colour and brightness tested']],
       bat: ['Batteries for every major brand, checked for capacity and health before they ship, with the connector protected for the trip.', ['Genuine cells in every grade', 'Capacity checked before dispatch', 'Packed safely for shipping']],
       bcv: ['Back covers in every colour, cut to the exact fit of each model, with the camera ring and adhesive where the model needs them.', ['Every colour per model', 'Exact factory fit', 'Camera ring included where needed']],
       cam: ['Front and rear camera modules, focus-tested on the bench so the first photo after the repair is sharp.', ['Front and rear modules', 'Focus tested on the bench', 'For every major brand']],
@@ -517,7 +523,7 @@ class Component extends DCLogic {
     const shop = { scr: 'Shop screens', bat: 'Shop batteries', bcv: 'Shop back covers', cam: 'Shop cameras', frm: 'Shop frames', flx: 'Shop flex cables', sml: 'Shop small parts', wld: 'Shipping info', whs: 'Wholesale prices', rep: 'Book a repair' }[kind];
     const close = () => this.setState({ posterI: null });
     const wa = 'https://wa.me/' + ((D && D.contact && D.contact.wa) || SITE.contact.whatsapp) + '?text=' + encodeURIComponent('Hi, I saw your ' + k.toLowerCase() + ' ad. ');
-    const img = kind === 'scr' && window.SE_SHOTS ? window.SE_SHOTS.url('apple-sp', 480) /* R6 E7 */ : lib && lib.large && LK[kind] != null ? lib.large[LK[kind]] : '';
+    const img = kind === 'scr' && window.SE_SHOTS ? window.SE_SHOTS.url('apple-sp', 960) /* R6 E7 */ : lib && lib.large && LK[kind] != null ? lib.large[LK[kind]] : '';
     return { open: true, i, kind, th, k, l1: t.split('\n')[0], l2: t.split('\n')[1], d: d.replace('\n', ' '), p: INFO[0], pts: INFO[1], stock, img, hasImg: !!img, isWld: kind === 'wld', isWhs: kind === 'whs', shop, close, wa,
       go: () => { close(); if (CAT[kind]) this.openFmpAt(null, null, CAT[kind]); else this.go(kind === 'wld' ? 'network' : kind === 'whs' ? 'wholesale' : 'repair'); } };
   }
@@ -585,7 +591,7 @@ class Component extends DCLogic {
     const TH = { dark: { bg: 'radial-gradient(110% 70% at 50% 36%,#4B4B49 0%,#303132 52%,#1E1F21 100%)', ink: '#FFFFFF', sub: '#D5D7DA', kick: '#F7C032', kickO: 1, cta: '#F7C032', ctaInk: '#26282B', track: 'rgba(255,255,255,.1)', line: 'rgba(255,255,255,.3)', shc: 'rgba(0,0,0,.55)', shd: 'drop-shadow(0 12px 14px rgba(0,0,0,.45))' },
       yel: { bg: 'radial-gradient(110% 70% at 50% 36%,#FFE291 0%,#F7C032 56%,#E7A81E 100%)', ink: '#26282B', sub: '#26282B', kick: '#26282B', kickO: 0.7, cta: '#26282B', ctaInk: '#FFFFFF', track: 'rgba(38,40,43,.1)', line: 'rgba(38,40,43,.3)', shc: 'rgba(110,72,0,.42)', shd: 'drop-shadow(0 12px 14px rgba(110,72,0,.3))' },
       light: { bg: 'radial-gradient(110% 70% at 50% 36%,#FFFFFF 0%,#F6F4F0 50%,#E5E1D9 100%)', ink: '#26282B', sub: '#3D3E3F', kick: '#26282B', kickO: 0.7, cta: '#26282B', ctaInk: '#FFFFFF', track: 'rgba(38,40,43,.1)', line: 'rgba(38,40,43,.3)', shc: 'rgba(90,74,46,.34)', shd: 'drop-shadow(0 12px 14px rgba(90,74,46,.28))' } };
-    const ads = [['scr', 'dark', 'LCD & OLED SCREENS', 'Bright like\nday one.', 'Original, Service Pack,\nOLED and Incell.', 'From AED ' + cs('SCR').min], ['bat', 'yel', 'BATTERIES', 'Full power,\nfully tested.', 'Genuine cells, checked\nbefore they ship.', 'From AED ' + cs('BAT').min],
+    const ads = [['scr', 'dark', 'LCD & OLED SCREENS', 'Bright like\nday one.', 'Original, OLED,\nIncell and AAA.', 'From AED ' + cs('SCR').min], ['bat', 'yel', 'BATTERIES', 'Full power,\nfully tested.', 'Genuine cells, checked\nbefore they ship.', 'From AED ' + cs('BAT').min],
       ['bcv', 'light', 'BACK COVERS', 'Back to\nlike new.', 'Every colour,\nexact fit.', 'Shop back covers'], ['cam', 'dark', 'CAMERAS', 'Sharp shots,\nfocus tested.', 'Front and rear modules,\nchecked on the bench.', 'Shop cameras'],
       ['frm', 'dark', 'FRAMES & HOUSINGS', 'Factory-fit\nframes.', 'Mid-frames and housings\nfor every major model.', 'Shop frames'], ['wld', 'dark', 'WORLDWIDE DELIVERY', 'From Deira\nto the world.', 'Tracked and securely\npacked, worldwide.', 'Shipping info'],
       ['whs', 'yel', 'WHOLESALE', 'Stock up.\nCost down.', 'Trade prices for\napproved accounts.', 'Wholesale prices'], ['rep', 'dark', 'REPAIRS', 'Cracked today.\nFixed today.', 'Screens replaced and\ntested in Deira.', 'Book a repair'],
@@ -607,6 +613,11 @@ class Component extends DCLogic {
       hold: lk('Hold', hold),
       sheen: lk('Sh', [[0, 'transform:translateX(-170%)'], [1.7, 'transform:translateX(-170%)', IO], [2.9, 'transform:translateX(240%)'], [REEL_D, 'transform:translateX(240%)']]),
       sheenR: lk('ShR', [[0, 'transform:translateX(-170%)'], [0.65, 'transform:translateX(-170%)', IO], [1.1, 'transform:translateX(240%)'], [REEL_D, 'transform:translateX(240%)']]) };
+    // R6 §03 C: the glass shine plays on every new ad, 300ms after it settles (0.6s + 0.3s), brighter on dark ads and
+    // softer on light ones; the iPad's glass sweeps 1.5s later, never together. Both on the reel's 32s clock.
+    const SW0 = 'transform:translate(calc(var(--d) * -.82),calc(var(--d) * -.57))', SW1 = 'transform:translate(calc(var(--d) * .82),calc(var(--d) * .57))', SWO = { dark: 1, yel: 0.7, light: 0.5 };
+    const swFr = (lag) => { const fr = [[0, SW0 + ';opacity:0']]; ads.forEach((a, i) => { const t0 = i * 3.2 + 0.9 + lag, o = SWO[a[1]]; if (t0 + 1.12 > REEL_D) return; fr.push([t0, SW0 + ';opacity:' + o, IO], [t0 + 1.1, SW1 + ';opacity:' + o], [t0 + 1.11, SW0 + ';opacity:0']); }); fr.push([REEL_D, SW0 + ';opacity:0']); return fr; };
+    const sweepPh = this.tlK('hrSweep', REEL_D, 0, swFr(0)), sweepIp = this.tlK('ipSweep', REEL_D, 0, swFr(1.5));
     const iRep = ads.findIndex((a) => a[0] === 'rep'), iWhs = ads.findIndex((a) => a[0] === 'whs');
     const rqLib = s.lib && s.lib.large && s.lib.large[9] ? s.lib : null, rq = this.hrFilm((rqLib && rqLib.front) || { ph: [0.27, 0.04, 0.46, 0.92], scr: [0.045, 0.022, 0.91, 0.956] }, REEL_D, iRep * 3.2 + 0.9, rqLib ? rqLib.large[9] : '');
     const boxes = [[55, 259], [81, 259], [107, 259], [68, 232], [94, 232], [81, 205]].map(([x, y], j) => { const t = 0.6 + j * 0.1; return { x, y, an: this.tlK('hrC' + j, REEL_D, iWhs * 3.2, [[0, 'opacity:0;transform:translateY(-40px)'], [t, 'opacity:0;transform:translateY(-40px)'], [t + 0.01, 'opacity:1;transform:translateY(-40px)', 'cubic-bezier(.3,.6,.4,1)'], [t + 0.37, 'opacity:1;transform:translateY(0) scale(1)', 'ease-in-out'], [t + 0.43, 'opacity:1;transform:translateY(0) scale(1.02,.97)', 'ease-in-out'], [t + 0.53, 'opacity:1;transform:translateY(0) scale(1)'], [3.85, 'opacity:1;transform:translateY(0) scale(1)'], [3.9, 'opacity:0;transform:translateY(-40px)']]) }; });
@@ -645,7 +656,7 @@ class Component extends DCLogic {
       navLinks: [['Shop', 'offer'], ['Repair', 'repair'], ['Wholesale', 'wholesale'], ['Contact', 'visit']].map(([label, id]) => ({ label, href: '#' + id, go: (ev) => { ev.preventDefault(); this.go(id); } })),
       cartPop: 1, cartCount: 0, 
       z: s.z.toFixed(4), heroH: Math.round(1030 * s.z), glowX: 560, glowY: 420, clock: H.clock, ipQuery: 'Search 1,000+ parts', ipCart: s.ipCart, ipCartN: (s.ipCart || 2) + (s.ipBuys || 0), ipToastO: s.ipToast ? 1 : 0, ipToastY: s.ipToast ? 0 : 48, ipChips, ipCards, ipAnim: this.kf('seIpScroll', Array.from({ length: 7 }, (_, i) => -i * 195), 2.8, 'Y') + ' 16.8s',
-      showRest: !window.SE_ONLY, reel: reelAll, pgTrack, pgSegs, reelCtl: this.reelCtl(), poster: this.posterVals(ads, cs, fmt), openFmpAt: (b, m, c, q) => this.openFmpAt(b, m, c, q), ipCartP: Math.max(0, (s.ipCart || 2) + (s.ipBuys || 0) - 1), ipOdo: s.ipBuys ? 'ipOdo .35s cubic-bezier(.2,.8,.2,1) both' : 'none', ipToastName: s.ipToastName || 'Part',
+      showRest: !window.SE_ONLY, reel: reelAll, pgTrack, pgSegs, sweepPh, sweepIp, ipFrom: (() => { const ps = P.filter((p) => p.category === 'SCR' && p.shot === 'samsung-sp'); return ps.length ? 'from AED ' + Math.min(...ps.map((p) => p.retail_price)) : ''; })(), reelCtl: this.reelCtl(), poster: this.posterVals(ads, cs, fmt), openFmpAt: (b, m, c, q) => this.openFmpAt(b, m, c, q), ipCartP: Math.max(0, (s.ipCart || 2) + (s.ipBuys || 0) - 1), ipOdo: s.ipBuys ? 'ipOdo .35s cubic-bezier(.2,.8,.2,1) both' : 'none', ipToastName: s.ipToastName || 'Part',
       typedWords, trust: ['Tested before it ships', 'Warranty on every grade', 'Trusted since 2003'],
       heroBtns: [{ label: 'Browse all parts', href: '#offer', target: '_self', go: (ev) => { ev.preventDefault(); this.go('offer'); }, bg: '#F7C032', bd: '#F7C032', ink: '#26282B', iconBg: 'rgba(26,27,29,.12)', iSearch: true }, { label: 'Trade prices', href: '#wholesale', target: '_self', go: (ev) => { ev.preventDefault(); this.go('wholesale'); }, bg: 'rgba(255,255,255,.04)', bd: 'rgba(255,255,255,.32)', ink: '#FFFFFF', iconBg: 'rgba(247,192,50,.14)', iTag: true }, { label: 'Book a repair', href: '#repair', target: '_self', go: (ev) => { ev.preventDefault(); this.go('repair'); }, bg: 'rgba(255,255,255,.04)', bd: 'rgba(255,255,255,.32)', ink: '#FFFFFF', iconBg: 'rgba(247,192,50,.14)', iWrench: true }, { label: 'WhatsApp us', href: 'https://wa.me/' + SITE.contact.whatsapp, target: '_blank', go: () => {}, bg: 'rgba(255,255,255,.04)', bd: 'rgba(255,255,255,.32)', ink: '#FFFFFF', iconBg: 'rgba(247,192,50,.14)', iWa: true }],
       rail, railPlay: s.hover ? 'paused' : 'running', totalRaw: total, brandCount: stats.length, modelCount: D ? D.models.length : 0, hasHover: !!hb,

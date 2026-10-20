@@ -5,8 +5,34 @@
  * list, tolerant of small typos; Enter or a click opens the G17 "Coming soon" card for that model's full
  * page, with a button that opens Find My Part for it.
  */
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { comingSoon } from '@/components/g17/ComingSoon';
+import SEBrandLogo from '@/components/dc/SEBrandLogo';
+
+/** R6 §03 A · the example searches: the caret appears with the first typed letter and blinks only once the word is
+ *  complete; after erasing, the field stays empty for 300ms before the next example starts. */
+function Typewriter({ words }: { words: string[] }) {
+  const [txt, setTxt] = useState(''), [done, setDone] = useState(false);
+  useEffect(() => {
+    if (!words.length) return;
+    let wi = 0, ci = 0, phase: 'type' | 'hold' | 'erase' | 'gap' = 'type', tm = 0;
+    const step = () => {
+      const w0 = words[wi % words.length], L = (window as unknown as { seI18n?: { t: (x: string) => string } }).seI18n, w = L ? L.t(w0) : w0; // in the visitor's language
+      if (phase === 'type') { ci++; setTxt(w.slice(0, ci)); if (ci >= w.length) { phase = 'hold'; setDone(true); tm = window.setTimeout(step, 1600); return; } tm = window.setTimeout(step, 60 + Math.random() * 40); return; }
+      if (phase === 'hold') { phase = 'erase'; setDone(false); }
+      if (phase === 'erase') { ci--; setTxt(w.slice(0, Math.max(0, ci))); if (ci <= 0) { phase = 'gap'; tm = window.setTimeout(step, 300); return; } tm = window.setTimeout(step, 28); return; }
+      if (phase === 'gap') { wi++; ci = 0; phase = 'type'; tm = window.setTimeout(step, 10); }
+    };
+    tm = window.setTimeout(step, 500);
+    return () => window.clearTimeout(tm);
+  }, [words]);
+  return (
+    <span className="se-tw" aria-hidden="true">
+      {txt}
+      {txt ? <i className={done ? 'blink' : ''} /> : null}
+    </span>
+  );
+}
 
 type Model = { id: string; name: string; brand_id: string; series: string; model_numbers: string[] };
 type Hit = { m: Model; cat: string | null; score: number };
@@ -41,7 +67,7 @@ export function findModels(q: string, models: Model[]): Hit[] {
   if (nq.length < 2) return [];
   const out: Hit[] = [];
   for (const m of models) {
-    const tail = m.name.replace(/^(galaxy|iphone|xiaomi|redmi|realme|oppo|huawei|honor|vivo|pixel|xperia|tecno|infinix|poco)\s*/i, '');
+    const tail = m.name.replace(/^(galaxy|iphone|ipad|google pixel|pixel|xiaomi|redmi|realme|oppo|huawei|honor|vivo|oneplus|nokia|tecno|infinix|poco)\s*/i, '');
     const keys = [key(m.name), key(m.brand_id + m.name), key(tail), ...m.model_numbers.map(key)];
     let best = 9;
     for (const k of keys) {
@@ -56,10 +82,10 @@ export function findModels(q: string, models: Model[]): Hit[] {
     }
     if (best < 9) out.push({ m, cat, score: best + m.name.length * 0.001 });
   }
-  return out.sort((a, b) => a.score - b.score).slice(0, 6);
+  return out.sort((a, b) => a.score - b.score).slice(0, 8);
 }
 
-export default function HeroSearch({ typed, openFmp }: { typed: React.ReactNode; openFmp: (b?: string, m?: string, c?: string | null, q?: string) => void }) {
+export default function HeroSearch({ examples, openFmp }: { examples: string[]; openFmp: (b?: string, m?: string, c?: string | null, q?: string) => void }) {
   const [q, setQ] = useState('');
   const [focus, setFocus] = useState(false);
   const [sel, setSel] = useState(0);
@@ -72,7 +98,8 @@ export default function HeroSearch({ typed, openFmp }: { typed: React.ReactNode;
     if (!h) {
       if (!q.trim()) return inp.current?.focus();
       // no model matched: Find My Part with the words typed
-      comingSoon({ title: 'Coming soon', text: 'Model pages are coming soon. Use Find My Part in the meantime.', cta: 'Open Find My Part', act: () => openFmp(undefined, undefined, null, q) });
+      // the shop page with these results is coming (G17): say what was searched, offer Find My Part with the words
+      comingSoon({ title: '“' + q.trim() + '”', text: 'Search results open on the Shop page, coming soon. Use Find My Part in the meantime.', cta: 'Open Find My Part', act: () => openFmp(undefined, undefined, null, q) });
       return;
     }
     setFocus(false);
@@ -85,6 +112,12 @@ export default function HeroSearch({ typed, openFmp }: { typed: React.ReactNode;
     });
   };
   const open = focus && hits.length > 0;
+  const fams = (id: string) => {
+    const D = (window as unknown as { SE_DATA?: { products: { model_id: string; category: string }[]; categories: { id: string; name: string }[] } }).SE_DATA;
+    if (!D) return '';
+    const cs = [...new Set(D.products.filter((p) => p.model_id === id).map((p) => p.category))].map((c) => D.categories.find((x) => x.id === c)?.name).filter(Boolean);
+    return cs.length ? cs.slice(0, 3).join(' · ') + (cs.length > 3 ? ' · +' + (cs.length - 3) : '') : 'All parts · ask us';
+  };
   return (
     <form
       onSubmit={(e) => {
@@ -105,7 +138,7 @@ export default function HeroSearch({ typed, openFmp }: { typed: React.ReactNode;
         <path d="m20 20-3.5-3.5"></path>
       </svg>
       <span style={{ position: 'relative', flex: '1', height: '22px', fontSize: '16px', color: '#3D3E3F', whiteSpace: 'nowrap', overflow: 'hidden' }}>
-        {!q && !focus ? typed : null}
+        {!q && !focus ? <Typewriter words={examples} /> : null}
         <input
           ref={inp}
           className="se-hs-input"
@@ -155,8 +188,10 @@ export default function HeroSearch({ typed, openFmp }: { typed: React.ReactNode;
                 pick(h);
               }}
             >
+              {/* R6 §03 A: brand logo, model, the part families we list for it */}
+              <span className="lg"><SEBrandLogo brand={h.m.brand_id} color="#26282B" h="13" /></span>
               <span data-no-i18n="">{h.m.name}</span>
-              <small data-no-i18n="">{h.m.model_numbers[0]}</small>
+              <small>{fams(h.m.id)}</small>
             </li>
           ))}
         </ul>

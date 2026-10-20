@@ -2130,3 +2130,63 @@ DONE WHEN
 - All pop-over buttons open the right thing. **PASS**
 - Progress bar click + drag works, EN and AR. **PASS** (Part B tests, 9/9 in each language)
 - Menu scrolls in AR. **PASS** (Part D)
+
+## §03 · Hero: search, ticks, phone ads, screens, iPad, Arabic
+
+**A · Search:**
+- The examples are typed by a small JS typewriter (`HeroSearch.tsx`). The caret appears with the first letter and blinks only once the word is complete; after erasing, the field stays empty for 300ms.
+  - Measured over 60 samples: the caret never showed without letters.
+- Suggestions: brand logo + model + its part families; three rows visible, the rest scroll inside with the yellow scrollbar (8 rows, 144px visible).
+- Enter / Search / a click opens the G17 Coming soon card for that model or the typed term, with Find My Part as the next step.
+- The search now covers all 801 Excel models.
+
+**B · Ticks:** only the ring lights (yellow stroke + soft glow); the tick never changes. Each ring glows 1.2s and fades 0.6s, then the next.
+
+**C · Phone ads:**
+- Screens are the box + LCD product shot; the other parts keep their straight studio parts.
+- The shine now runs on the reel's own clock: it plays on every new ad, 300ms after it settles. It is brighter on dark ads (0.7–1) and softer on light ones (0.5), and the iPad sweeps 1.5s later.
+- Wheel or swipe works both ways. "Previous" now really moves the feed down (the same 600ms scroll, played backwards); before, it slid the earlier ad up.
+- Hover pauses at once and resumes 3s after leaving.
+- **Poster:** a 9:16 poster, centred, at most 88% of the screen height, fully visible at 1440×900 and 1280×720. It grows out of the phone screen (450ms) and closes back into it; Esc, X or a click outside closes it.
+- The screen ad copy uses the Excel qualities ("Original, OLED, Incell and AAA").
+
+**D · Glass, frames, background:**
+- **Background:** the 14 Oct §00 change was found in git: the hero's background and gradient end went from #1A1B1D to #26282B. Restored in the hero only. ⚠ This undoes the 14 Oct "no #1A1B1D" rule for the hero, because this brief asks for the previous contrast.
+- **Glass:** deep blacks, a soft window reflection top-left, a dark bezel ring and a thin bright fresnel line.
+- **Frames:** a chamfer light that slides across both device frames as the page scrolls (scroll-driven CSS, no JS).
+- **Honest status: PARTIAL.** The frames are still CSS-drawn. Brushed metal, antenna lines and real lens reflections are not at a "very 3D, real" level yet.
+
+**E · iPad film** (`IpadFilm.tsx`, 16s loop):
+- Inventory grid → "Samsung · Service Pack" feature (the box + LCD turning slowly, "In stock · from AED 185") → "Same-day trade quotes" with an animated WhatsApp chat.
+- A notification drops in every 10s (sample texts) and goes back up after 3s.
+- Signal and wifi flicker; the battery drains, then charges with the bolt; the clock is Dubai time.
+- The loose floating card (Screenshot 02) did not appear in any capture this round.
+
+**F · Language pop-up:**
+- Fixed timing, measured three times: done at 2.03–2.06s, closed at 3.49–3.50s.
+- Card 380×140, 40px icon, 18px text, 24px padding. No Samsoom.
+- Reviewer idea, built: a tiny circuit trace draws "A" / "ع" while loading, then flashes yellow.
+
+**G · Arabic:** the device group keeps the English composition on the left (Part D). Samsoom sits bottom-left, clear of the buttons.
+
+**Film beats:**
+- Power-on entrance after the loading screen: circuits reveal from the edges, the screens switch on with a soft white flash, the title lines rise 80ms apart, then the text, search, buttons and ticks.
+- On scroll the device group drifts slower than the text (depth).
+
+**Reviewer ideas:**
+- Built: the cursor light (follows the mouse; mirrored correctly in Arabic) and the WhatsApp icon pulsing once after the entrance.
+- **Not built:** the "Parts shipped today" counter. There is no room under the ticks without touching the protected bottom-left circuit (24px safe zone).
+
+**Checks:** teardown tests 9/9, scroll engine 9/9, no script errors (EN + AR).
+
+DONE WHEN
+- Search: no early caret, max 3 rows, Enter leaves the hero. **PASS**
+- Ticks: ring only. **PASS**
+- All ads same product composition. **PASS**
+- Shine on every new ad, visible on dark and light. **PASS**
+- Wheel/swipe both ways; 3s wait. **PASS**
+- Poster pop-up full. **PASS**
+- Real glass, real frames, vivid background. **PARTIAL** (glass + background done; frames still CSS)
+- iPad film plays; notifications drop. **PASS**
+- Language pop-up fixed timing, no Samsoom. **PASS**
+- Arabic: same composition. **PASS**

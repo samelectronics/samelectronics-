@@ -36,3 +36,18 @@
 @keyframes lpLine { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 @keyframes lpPeek { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .lp-ring, .lp-fill { animation: none; } }
+
+/* R6 §03 F · compact card (~380×140), 40px icon, 18px text, centred, 24px padding; no Samsoom; fixed timing */
+.lp-card { width: 380px; min-height: 140px; padding: 24px; flex-direction: row; align-items: center; justify-content: center; gap: 18px; text-align: start; }
+.lp-ic { width: 40px; height: 40px; }
+.lp-txt { gap: 6px; }
+.lp-txt b, .lp-card[lang='ar'] .lp-txt b { font-size: 18px; }
+.lp-plate { fill: rgba(247, 192, 50, .08); stroke: rgba(247, 192, 50, .3); stroke-width: 1; }
+.lp-trace { fill: none; stroke: #F7C032; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: lpDraw 1.7s .15s cubic-bezier(.45, 0, .55, 1) forwards; }
+.lp-pad { fill: #26282B; stroke: #F7C032; stroke-width: 1.6; }
+.lp-done .lp-plate { fill: #F7C032; stroke: #F7C032; transition: fill .2s; }
+.lp-done .lp-trace { stroke: #26282B; stroke-dashoffset: 0; animation: none; }
+.lp-done .lp-pad { fill: #26282B; stroke: #26282B; }
+.lp-done .lp-ic { filter: drop-shadow(0 0 12px rgba(247, 192, 50, .8)); animation: lpFlash .5s ease-out; }
+@keyframes lpDraw { to { stroke-dashoffset: 0; } }
+@keyframes lpFlash { 0% { transform: scale(1); } 40% { transform: scale(1.12); } 100% { transform: scale(1); } }

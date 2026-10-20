@@ -2,6 +2,7 @@
 // Home v3 section "Hero". Renders against the home page's values (`v`, from HomeV3's logic class).
 'use client';
 import React from 'react';
+import IpadFilm from '../IpadFilm';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 import SEBrandLogo from '../../dc/SEBrandLogo';
 import HeroSearch from '../HeroSearch';
@@ -13,7 +14,12 @@ export default function Hero({ v }: { v: Vals }) {
       id="top"
       data-tone="dark"
       data-screen-label="01 Hero"
-      style={cssToObj(`position:relative;width:100%;height:${s(v.heroH)}px;overflow:hidden;background:#26282B`)}
+      data-in={v.bootOn ? undefined : ''} /* R6 §03: the power-on entrance starts when the loading screen hands over */
+      onMouseMove={(e) => { // R6 §03 (reviewer's idea): a very soft light follows the cursor over the hero background
+        const g = (e.currentTarget as HTMLElement).querySelector<HTMLElement>('[data-hero-glow]'), r = e.currentTarget.getBoundingClientRect(), z = Number(v.z) || 1;
+        const x = (e.clientX - r.left) / z; if (g) { g.style.left = (document.documentElement.dir === 'rtl' ? 1440 - x : x) + 'px'; /* the scene is mirrored in Arabic */ g.style.top = (e.clientY - r.top) / z + 'px'; }
+      }}
+      style={cssToObj(`position:relative;width:100%;height:${s(v.heroH)}px;overflow:hidden;background:#1A1B1D`)}
     >
       {'\n  '}
       <div ref={v.heroRef} style={cssToObj(`position:absolute;left:0;top:0;width:1440px;height:1030px;zoom:${s(v.z)};color:#FFFFFF`)}>
@@ -21,7 +27,7 @@ export default function Hero({ v }: { v: Vals }) {
         <div data-hero-scene="" style={{ position: 'absolute', left: '0', top: '0', width: '1440px', height: '860px', overflow: 'hidden' }}>
           {'\n      '}
           <div
-            style={{ position: 'absolute', inset: '0', background: 'linear-gradient(135deg,#3D3E3F 0%,#26282B 48%,#26282B 100%)' }}
+            style={{ position: 'absolute', inset: '0', background: 'linear-gradient(135deg,#3D3E3F 0%,#26282B 48%,#1A1B1D 100%)' /* R6 §03 D: the pre-14 Oct contrast, restored */ }}
           ></div>
           {'\n      '}
           <div
@@ -52,6 +58,7 @@ export default function Hero({ v }: { v: Vals }) {
           ></div>
           {'\n      '}
           <div
+            data-hero-glow=""
             style={cssToObj(
               `position:absolute;left:${s(v.glowX)}px;top:${s(v.glowY)}px;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;background:radial-gradient(closest-side,rgba(247,192,50,.16),rgba(247,192,50,0));pointer-events:none;transition:left .6s ease-out,top .6s ease-out`,
             )}
@@ -389,7 +396,8 @@ export default function Hero({ v }: { v: Vals }) {
               transformOrigin: '50% 100%',
             }}
           >
-            {'\n        '}
+            {/* R6 §03 D: the frame's chamfer catches a light that slides as the page scrolls */}
+            <span className="se-chamfer" aria-hidden="true" style={{ borderRadius: '30px' }} />
             <div
               style={{
                 position: 'absolute',
@@ -428,7 +436,7 @@ export default function Hero({ v }: { v: Vals }) {
               <div style={{ position: 'absolute', inset: '4px', borderRadius: '28px', background: '#08090A', overflow: 'hidden' }}>
                 {/* 14 Oct §05 C/D: the iPad sweeps first (phone 2.7s later, never together); real glass on top */}
                 <span className="se-glass" style={{ zIndex: 5 }}></span>
-                <span className="se-glass-sweep" style={{ zIndex: 6, animationDelay: '0s', ['--d' as string]: '300px' } as React.CSSProperties}></span>
+                <span className="se-glass-sweep" style={{ zIndex: 6, animationDelay: '0s', ['--d' as string]: '300px', ['--sw' as string]: v.sweepIp } as React.CSSProperties}></span>
                 <div
                   style={{
                     position: 'absolute',
@@ -440,6 +448,7 @@ export default function Hero({ v }: { v: Vals }) {
                     contain: 'layout paint',
                   }}
                 >
+                  <IpadFilm from={String(v.ipFrom || '')} />
                   {'\n              '}
                   <div
                     style={{
@@ -454,12 +463,14 @@ export default function Hero({ v }: { v: Vals }) {
                   >
                     <span>{t(v.clock)}</span>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <span style={{ display: 'flex', alignItems: 'flex-end', gap: '1.5px' }}>
+                      {/* R6 §03 E: signal and wifi flicker now and then; the battery drains, then charges with the bolt */}
+                      <span className="ipf-sig" style={{ display: 'flex', alignItems: 'flex-end', gap: '1.5px' }}>
                         <span style={{ width: '3px', height: '4px', background: '#26282B' }}></span>
                         <span style={{ width: '3px', height: '6px', background: '#26282B' }}></span>
                         <span style={{ width: '3px', height: '8px', background: '#26282B' }}></span>
                         <span style={{ width: '3px', height: '10px', background: '#26282B' }}></span>
                       </span>
+                      <svg className="ipf-wifi" width="12" height="9" viewBox="0 0 24 18" fill="#26282B" aria-hidden="true"><path d="M12 18l3.5-4.2a5.5 5.5 0 0 0-7 0z" /><path className="w2" d="M12 9.5a10 10 0 0 1 6.4 2.3l2-2.4a13 13 0 0 0-16.8 0l2 2.4A10 10 0 0 1 12 9.5z" /><path className="w3" d="M12 3a16.5 16.5 0 0 1 10.6 3.8l2-2.4A19.6 19.6 0 0 0-0.6 4.4l2 2.4A16.5 16.5 0 0 1 12 3z" /></svg>
                       <span
                         style={{
                           width: '20px',
@@ -468,9 +479,11 @@ export default function Hero({ v }: { v: Vals }) {
                           border: '1.5px solid #26282B',
                           boxSizing: 'border-box',
                           padding: '1px',
+                          position: 'relative',
                         }}
                       >
-                        <span style={{ display: 'block', width: '80%', height: '100%', borderRadius: '1px', background: '#26282B' }}></span>
+                        <svg className="ipf-bolt" width="7" height="9" viewBox="0 0 10 14" aria-hidden="true"><path d="M6 0 0 8h4l-1 6 6-8H5z" fill="#F7C032" stroke="#26282B" strokeWidth=".8" /></svg>
+                        <span className="ipf-batt" style={{ display: 'block', width: '80%', height: '100%', borderRadius: '1px', background: '#26282B' }}></span>
                       </span>
                     </span>
                   </div>
@@ -826,7 +839,7 @@ export default function Hero({ v }: { v: Vals }) {
               cursor: 'pointer',
             }}
           >
-            {'\n        '}
+            <span className="se-chamfer" aria-hidden="true" style={{ borderRadius: '36px' }} />
             <div
               style={{
                 position: 'absolute',
@@ -1495,7 +1508,7 @@ export default function Hero({ v }: { v: Vals }) {
                   {'\n              '}
                   {/* 14 Oct §05 D: real glass (faint top-left reflection, bezel ring, vignette) replaces the strong top-right gloss */}
                   <span className="se-glass" style={{ zIndex: 31 }}></span>
-                  <span className="se-glass-sweep" style={{ zIndex: 32, animationDelay: '2.7s', ['--d' as string]: '200px' } as React.CSSProperties}></span>
+                  <span className="se-glass-sweep" data-se-sweep="" style={{ zIndex: 32, animationDelay: '0s', ['--d' as string]: '200px', ['--sw' as string]: v.sweepPh } as React.CSSProperties}></span>
                   <span
                     aria-hidden="true"
                     style={{
@@ -1568,31 +1581,7 @@ export default function Hero({ v }: { v: Vals }) {
           {'\n      '}
           <HeroSearch
             openFmp={v.openFmpAt}
-            typed={
-              <>
-              {(Array.isArray(v.typedWords) ? v.typedWords : []).map((__it: any, __i: number) => {
-                const v2 = { ...v, w: __it, $index: __i };
-                return ((v: Vals) => (
-                  <React.Fragment key={__i}>
-                    <span style={cssToObj(`position:absolute;left:0;top:0;opacity:0;animation:seWord12 33.6s ${s(v.w?.d)} infinite`)}>
-                      <span style={cssToObj(`display:inline-block;animation:seWordType12 33.6s ${s(v.w?.d)} infinite`)}>{t(v.w?.t)}</span>
-                      <span
-                        style={{
-                          display: 'inline-block',
-                          width: '2px',
-                          height: '18px',
-                          marginLeft: '2px',
-                          verticalAlign: '-3px',
-                          background: '#F7C032',
-                          animation: 'seCaret 1s steps(1) infinite',
-                        }}
-                      ></span>
-                    </span>
-                  </React.Fragment>
-                ))(v2);
-              })}
-              </>
-            }
+            examples={(Array.isArray(v.typedWords) ? v.typedWords : []).map((w: any) => String(w.t)) /* R6 §03 A: JS typewriter */}
           />
           {'\n      '}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '620px' }}>
@@ -1609,7 +1598,7 @@ export default function Hero({ v }: { v: Vals }) {
                     style={cssToObj(
                       `display:flex;align-items:center;gap:12px;height:52px;box-sizing:border-box;padding:0 16px;border-radius:10px;background:${s(v.b?.bg)};border:1.5px solid ${s(v.b?.bd)};color:${s(v.b?.ink)};font-weight:600;font-size:15px;transition:transform .2s,box-shadow .2s,border-color .2s`,
                     )}
-                    className={cx(undefined, 'scp-5861bbd1')}
+                    className={cx(undefined, 'scp-5861bbd1' + (v.b?.iWa ? ' se-wa-pulse' : ''))}
                   >
                     {'\n            '}
                     <span
@@ -1682,13 +1671,12 @@ export default function Hero({ v }: { v: Vals }) {
               return ((v: Vals) => (
                 <React.Fragment key={__i}>
                   <span
-                    className="se-tick-txt"
-                    style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: '#D5D7DA', whiteSpace: 'nowrap', animationDelay: __i * 0.8 + 's' }}
+                    style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: '#D5D7DA', whiteSpace: 'nowrap' }}
                   >
                     <span
                       className="se-tick-dot"
                       style={{
-                        animationDelay: __i * 0.8 + 's',
+                        animationDelay: __i * 1.8 + 's',
                         display: 'grid',
                         placeItems: 'center',
                         width: '20px',
@@ -1699,10 +1687,6 @@ export default function Hero({ v }: { v: Vals }) {
                       }}
                     >
                       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#F7C032" strokeWidth="3">
-                        <path d="M5 12l5 5L20 7"></path>
-                      </svg>
-                      {/* 14 Oct §05 E: the lit check is a separate graphite layer that fades with the light, so the tick never flashes */}
-                      <svg className="se-tick-on" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#26282B" strokeWidth="3" style={{ animationDelay: __i * 0.8 + 's' }} aria-hidden="true">
                         <path d="M5 12l5 5L20 7"></path>
                       </svg>
                     </span>

@@ -2,7 +2,7 @@
 // details (a short paragraph, key points, the stock line), in the phone ad's colours and type. An X at the
 // top right, Esc and a click outside close it; the page behind dims and blurs.
 'use client';
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import type { Vals } from '@/dc/runtime';
 
 const TH: Record<string, { bg: string; ink: string; sub: string; kick: string; cta: string; ctaInk: string; ghost: string; glow: string }> = {
@@ -38,24 +38,47 @@ function Cartons() {
 
 export default function HeroPoster({ v }: { v: Vals }) {
   const p = v.poster || {};
+  const box = useRef<HTMLDivElement>(null);
+  // R6 §03 C: the poster grows out of the phone screen (450ms) and closes back into it
+  const fromPhone = (): Keyframe[] | null => {
+    const ph = document.querySelector('[data-se-reel]'), el = box.current;
+    if (!ph || !el) return null;
+    const a = ph.getBoundingClientRect(), b = el.getBoundingClientRect();
+    const dx = a.left + a.width / 2 - (b.left + b.width / 2), dy = a.top + a.height / 2 - (b.top + b.height / 2), k = Math.min(a.width / b.width, a.height / b.height);
+    return [{ transform: `translate(${dx}px,${dy}px) scale(${k})`, opacity: 0.4, borderRadius: '40px' }, { transform: 'none', opacity: 1, borderRadius: '28px' }];
+  };
+  useLayoutEffect(() => {
+    if (!p.open || !box.current) return;
+    const kf = fromPhone(), reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (kf && !reduce) box.current.animate(kf, { duration: 450, easing: 'cubic-bezier(.16,1,.3,1)' });
+  }, [p.open]);
+  const close = () => {
+    const kf = fromPhone(), reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!kf || reduce || !box.current) return p.close && p.close();
+    const an = box.current.animate(kf.slice().reverse(), { duration: 380, easing: 'cubic-bezier(.65,0,.35,1)', fill: 'forwards' });
+    an.onfinish = () => p.close && p.close();
+  };
   useEffect(() => {
     if (!p.open) return;
     window.seReel?.pause();
-    return () => window.seReel?.resume();
-  }, [p.open]);
+    const esc = (e: KeyboardEvent) => e.key === 'Escape' && close();
+    window.addEventListener('keydown', esc);
+    return () => { window.removeEventListener('keydown', esc); window.seReel?.resume(); };
+  }, [p.open]); // eslint-disable-line react-hooks/exhaustive-deps
   if (!p.open) return null;
   const c = TH[p.th] || TH.dark;
   return (
-    <div className="se-soon-scrim" onClick={p.close} role="presentation" style={{ zIndex: 190 }}>
+    <div className="se-soon-scrim se-poster-scrim" onClick={close} role="presentation" style={{ zIndex: 190 }}>
       <div
         role="dialog"
         aria-modal="true"
         aria-label={p.k}
         onClick={(e) => e.stopPropagation()}
+        ref={box}
         className="se-poster"
         style={{ background: c.bg, color: c.ink }}
       >
-        <button className="se-soon-x" onClick={p.close} aria-label="Close" style={{ color: c.ink, borderColor: c.ghost, zIndex: 3 }}>
+        <button className="se-soon-x" onClick={close} aria-label="Close" style={{ color: c.ink, borderColor: c.ghost, zIndex: 3 }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
             <path d="M6 6l12 12M18 6 6 18" />
           </svg>

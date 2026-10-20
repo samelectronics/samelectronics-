@@ -1,10 +1,9 @@
 'use client';
-// 14 Oct §03 · the language switch moment. Click EN / AR → the page blurs (8px, 20% graphite), a small card in the hero
-// ad style scales in with a yellow charging loader and a fun line; the switch runs under it; the loader turns into a
-// yellow tick + "Mission accomplished!" in the new language; it closes itself 1.2s later. If it isn't done after 4s an
-// X appears. The choice is remembered by setLang (localStorage).
+// R6 §03 F · the language switch moment, the same every time: the page blurs, a compact card (380×140) shows a tiny
+// circuit trace drawing the new language's first letter (A / ع) for 2.0s while the switch runs under it, then the
+// letter flashes yellow with "Mission accomplished!" for 1.2s, and it closes. No Samsoom. The choice is remembered
+// by setLang (localStorage).
 import React, { useEffect, useRef, useState } from 'react';
-import SESamsoom from '@/components/dc/SESamsoom';
 
 type Lang = 'en' | 'ar';
 type Phase = 'off' | 'load' | 'done' | 'out';
@@ -16,8 +15,6 @@ const TXT = {
 export default function LangPop() {
   const [phase, setPhase] = useState<Phase>('off');
   const [to, setTo] = useState<Lang>('ar');
-  const [x, setX] = useState(false);
-  const [ok, setOk] = useState(false);
   const timers = useRef<number[]>([]);
   const clear = () => { timers.current.forEach(clearTimeout); timers.current = []; };
   const later = (ms: number, f: () => void) => timers.current.push(window.setTimeout(f, ms));
@@ -25,62 +22,41 @@ export default function LangPop() {
   useEffect(() => {
     const W = window as unknown as { __seLangPop?: boolean };
     W.__seLangPop = true;
+    const close = () => { clear(); setPhase('out'); later(260, () => setPhase('off')); };
     const onPop = (e: Event) => {
       const l = (e as CustomEvent).detail as Lang;
-      clear();
-      setTo(l); setX(false); setOk(false); setPhase('load');
-      const t0 = performance.now();
-      later(4000, () => setX(true)); // still busy after 4s → the customer can close it
-      later(320, async () => {
-        // the switch runs under the card; done = the page re-rendered and the new script's font is ready
-        window.seI18n && window.seI18n.now(l);
-        await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-        // every font the re-rendered page asked for (Arabic weights load on first use)
-        try { await Promise.race([document.fonts ? document.fonts.ready : null, new Promise((r) => setTimeout(r, 15000))]); } catch {}
-        const wait = Math.max(0, 1100 - (performance.now() - t0)); // long enough to read the fun line
-        later(wait, () => { clear(); setOk(true); setPhase('done'); later(1200, close); });
-      });
+      clear(); setTo(l); setPhase('load');
+      later(320, () => window.seI18n && window.seI18n.now(l)); // the switch runs under the card
+      later(2000, () => setPhase('done')); // fixed: loader 2.0s
+      later(3200, close); // then "Mission accomplished!" 1.2s
     };
-    const close = () => { clear(); setPhase('out'); later(260, () => setPhase('off')); };
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
-    (window as unknown as { seLangPopClose?: () => void }).seLangPopClose = close;
     window.addEventListener('se:lang-pop', onPop);
     window.addEventListener('keydown', onKey);
     return () => { W.__seLangPop = false; clear(); window.removeEventListener('se:lang-pop', onPop); window.removeEventListener('keydown', onKey); };
   }, []);
 
   if (phase === 'off') return null;
-  const T = TXT[to], done = ok;
+  const T = TXT[to], done = phase === 'done' || phase === 'out';
   return (
     <div className={'lp' + (phase === 'out' ? ' lp-out' : '')} data-no-i18n="" role="dialog" aria-modal="true" aria-live="polite" aria-label={done ? T.done : T.load}>
       <div className={'lp-card' + (done ? ' lp-done' : '')} dir={to === 'ar' ? 'rtl' : 'ltr'} lang={to}>
-        <span className="lp-sam" aria-hidden="true">
-          <SESamsoom mood={done ? 'happy' : 'think'} size={30} still={!done} />
+        <span className="lp-ic" aria-hidden="true">
+          {/* a circuit trace draws the new language's first letter, with solder pads at its ends */}
+          <svg viewBox="0 0 40 40" width="40" height="40">
+            <rect x="1" y="1" width="38" height="38" rx="10" className="lp-plate" />
+            {to === 'ar' ? (
+              <path d="M27 11c-3-3-10-3-11 2-1 4 4 6 9 5-7 1-12 4-12 10 0 5 6 7 13 4" className="lp-trace" pathLength={1} />
+            ) : (
+              <path d="M10 31 20 9l10 22M14 24h12" className="lp-trace" pathLength={1} />
+            )}
+            {to === 'ar' ? (<><circle cx="27" cy="11" r="2" className="lp-pad" /><circle cx="26" cy="32" r="2" className="lp-pad" /></>) : (<><circle cx="10" cy="31" r="2" className="lp-pad" /><circle cx="30" cy="31" r="2" className="lp-pad" /></>)}
+          </svg>
         </span>
-        {x && !done ? (
-          <button type="button" className="lp-x" aria-label={T.close} onClick={() => (window as unknown as { seLangPopClose: () => void }).seLangPopClose()}>
-            <svg viewBox="0 0 14 14" width="14" height="14"><path d="M3 3l8 8M11 3l-8 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg>
-          </button>
-        ) : null}
-        <span className="lp-eb">{T.eb}</span>
-        <div className="lp-row">
-          <span className="lp-ic" aria-hidden="true">
-            {/* a small charging battery that fills, then becomes a tick */}
-            <svg viewBox="0 0 44 44" width="44" height="44">
-              <circle cx="22" cy="22" r="20" className="lp-ring" />
-              <g className="lp-bat">
-                <rect x="12" y="15" width="18" height="14" rx="2.6" fill="none" stroke="#F7C032" strokeWidth="2" />
-                <rect x="31" y="19.5" width="2.4" height="5" rx="1" fill="#F7C032" />
-                <rect x="14.5" y="17.5" width="13" height="9" rx="1.2" fill="#F7C032" className="lp-fill" />
-              </g>
-              <path d="M13 22.5l6 6 12-13" className="lp-tick" pathLength={1} />
-            </svg>
-          </span>
-          <span className="lp-txt">
-            <b>{done ? T.done : T.load}</b>
-            {done ? <span>{T.sub}</span> : null}
-          </span>
-        </div>
+        <span className="lp-txt">
+          <span className="lp-eb">{T.eb}</span>
+          <b>{done ? T.done : T.load}</b>
+        </span>
       </div>
     </div>
   );
