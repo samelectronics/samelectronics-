@@ -1944,3 +1944,42 @@ DONE WHEN
 - Logo click from the footer reaches the top in under 1s. **PASS**
 - The progress bar can be clicked and dragged. **PASS**
 - Slow scrolling still steps one gesture at a time. **PASS**
+
+## Part C · Global rules + motion language
+
+**C1 · Titles:** `src/styles/titles.css` rewritten. The highlighter marker (`--se-mk`, the yellow band behind words) is deleted from the code.
+- Dark backgrounds: white + yellow second line (#F7C032).
+- Light backgrounds (`#families`, `#showcase`, `#story`, `#repair`, `#everyone`, `#reviews`): graphite + deeper yellow (#D99A00), so it stays readable on white.
+- Checked in the browser: zero background bands inside any `h2` (EN and AR).
+
+**C4 · Icons:** the empty squares are gone.
+- WhatsApp, Instagram, TikTok, Facebook and Google icons are now self-hosted in `public/icons/` (from simple-icons), not loaded from a blocked CDN.
+- Used by the hero "WhatsApp us" button and the footer social buttons.
+
+**C6 · Samsoom hints:**
+- A hint opens only if nothing is under it: before opening, it tests the area for links, buttons, inputs, images, canvases, headings, text and cards.
+- Shown for about 4s at most.
+- In Arabic the floating button sits bottom-left (measured: x 24–80 in AR, 1360–1416 in EN at 1440).
+- The footer's last row now leaves room so the button no longer covers "Staff · Control Room" (it did, in both languages).
+
+**C7 · Information buttons:**
+- `InfoTip` ("i" button + small card: what it is, quality, warranty, "Learn more" → Coming soon).
+- Texts for every Quality and Manufacturer name in the Excel are in `src/content/specInfo.ts`, translated in `ar.ts`.
+- Warranty periods are not invented. The card says "Covered by our warranty. Ask us for the period." until the Control Room sets them.
+- The buttons get placed next to each grade/maker chip in Part E, when the old five grades (incl. High Copy) are replaced by the Excel lists.
+
+**C5 · Cut text:** new `scripts/qa/cut-text.mjs` scrolls the whole page at 1280/1440/1920 in EN and AR.
+- It flags text clipped by its box or running past the window edge.
+- Result: 0 findings in the 2D sections.
+- The teardown's 3D labels can't render in this sandbox (no GPU), so they are checked by eye in §07.
+
+**C0 / C2 / C3 · Motion, alive sections, working circuits:** applied section by section (§09–§23), each with its own entrance, hero loop and micro loop, and checked in the final pass.
+
+DONE WHEN
+- Zero highlighter titles in the code. **PASS**
+- Every section has an entrance + one continuous motion. **NOT DONE YET** (per section, §09–§23)
+- Every circuit pulses and none touches text. **NOT DONE YET** (per section)
+- Sibling buttons aligned. **NOT DONE YET** (per section)
+- No empty icon slots. **PASS**
+- No cut text at 1280/1440/1920 px in EN and AR. **PASS** (2D sections; teardown in §07)
+- Samsoom hints never cover content. **PASS**

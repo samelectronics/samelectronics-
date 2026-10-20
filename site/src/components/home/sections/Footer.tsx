@@ -232,6 +232,7 @@ export default function Footer({ v }: { v: Vals }) {
             alignItems: 'center',
             gap: '16px',
             paddingTop: '22px',
+            paddingInlineEnd: '76px', // R6 C6: room for the floating Samsoom button (bottom-right, bottom-left in Arabic)
             borderTop: '1px solid rgba(255,255,255,.08)',
             fontSize: '13px',
             color: '#9DA1A6',

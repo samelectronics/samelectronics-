@@ -1649,8 +1649,8 @@ export default function Hero({ v }: { v: Vals }) {
                               width: '16px',
                               height: '16px',
                               background: '#F7C032',
-                              WebkitMask: 'url(https://cdn.simpleicons.org/whatsapp/000000) center / contain no-repeat',
-                              mask: 'url(https://cdn.simpleicons.org/whatsapp/000000) center / contain no-repeat',
+                              WebkitMask: 'url(/icons/whatsapp.svg) center / contain no-repeat',
+                              mask: 'url(/icons/whatsapp.svg) center / contain no-repeat',
                             }}
                           ></span>
                         </>

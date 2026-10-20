@@ -1,12 +1,9 @@
-/* 14 Oct · H-G5: every section title is two-tone. Dark backgrounds: white + yellow (the second line or key words in
-   #F7C032). Light backgrounds: graphite + a yellow marker under the second line. Yellow backgrounds keep graphite on
-   yellow (already graphite + yellow). The teardown already had its yellow line; the Finale headline is handled in §20. */
-:root { --se-mk: linear-gradient(transparent 64%, rgba(247, 192, 50, 0.6) 64%, rgba(247, 192, 50, 0.6) 90%, transparent 90%); }
+/* R6 Part C1 · titles: never a highlighter (no band behind or under words, anywhere).
+   Dark backgrounds: white + yellow second line (#F7C032). Light backgrounds: graphite + yellow second line, in the deeper
+   gold #D99A00 so it stays readable on white and fog. Yellow backgrounds keep graphite on yellow. */
 /* dark backgrounds */
 #board h2 > span:last-child, #deals h2 > span:last-child, #deals h2 > span:last-child > span, #team h2 > span:last-child, #network h2 > span:last-child,
 #circuit h2 .se-acc, #social h2 > span:last-child, #visit h2 > span:last-child { color: #F7C032; }
-/* light backgrounds: the marker sits on the innermost line so it is revealed with it */
+/* light backgrounds */
 #families h2 > span:last-child > span, #showcase h2 > span:last-child, #story h2 > span:last-child,
-#repair h2 > span:last-child, #everyone h2 > span:last-child, #reviews h2 > span:last-child {
-  width: fit-content; background-image: var(--se-mk); -webkit-box-decoration-break: clone; box-decoration-break: clone;
-}
+#repair h2 > span:last-child, #everyone h2 > span:last-child, #reviews h2 > span:last-child { color: #D99A00 !important; }

@@ -35,12 +35,25 @@ class Component extends DCLogic {
     const sub = 1 + (this.alt++ % 4);
     this.setState({ open: false });
     this.sch.play('wave');
-    this.later(3000, () => this.setState({ mi: 0, open: true }));
+    this.later(3000, () => this.hint(0));
     this.later(6600, () => { this.setState({ open: false }); this.sch.base('blink'); });
     this.later(7900, () => this.sch.base('idle'));
-    this.later(8000, () => { this.sch.play(this.sch.next()); this.setState({ mi: sub, open: true }); });
-    this.later(13200, () => this.setState({ open: false }));
+    this.later(8000, () => { this.sch.play(this.sch.next()); this.hint(sub); });
+    this.later(12000, () => this.setState({ open: false })); // R6 Part C6: a hint stays at most ~4s
     this.later(16000, () => { this.ign++; this.cycle(); });
+  }
+  // R6 Part C6: a hint only opens where its pill would cover nothing (no button, link, field, text, image or card under
+  // it); otherwise Samsoom just plays his emote and the hint waits for the next cycle.
+  hint(mi) {
+    const r = this.rootRef.current && this.rootRef.current.getBoundingClientRect(); if (!r) return;
+    const msg = this.msgs()[mi], w = Math.min(280, 60 + msg.length * 8.2 + 18), rtl = document.documentElement.dir === 'rtl';
+    const x0 = rtl ? r.left : r.right - w, x1 = x0 + w, y0 = r.top + 4, y1 = r.bottom - 4, root = this.rootRef.current;
+    const BAD = 'a,button,input,select,textarea,[role="button"],img,canvas,video,iframe,h1,h2,h3,h4,p,li,blockquote,figure,[class*="card"],[class*="btn"]';
+    for (let i = 0; i <= 6; i++) for (const y of [y0, (y0 + y1) / 2, y1]) {
+      const x = x0 + ((x1 - x0) * i) / 6;
+      for (const el of document.elementsFromPoint(x, y)) { if (root.contains(el)) continue; if (el.closest(BAD)) return; }
+    }
+    this.setState({ mi, open: true });
   }
   wake() { if (this.ign >= 3) { this.ign = 0; this.tm.forEach(clearTimeout); this.tm = []; this.cycle(); } else this.ign = 0; }
   measure() { const el = this.txtRef.current; if (!el) return; const w = Math.ceil(el.scrollWidth); if (w && w !== this.state.tw) this.setState({ tw: w }); }

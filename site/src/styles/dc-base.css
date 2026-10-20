@@ -332,3 +332,16 @@ html[dir='rtl'] [style*='seRail3'] { animation-name: seRail3R !important; }
 .se-scrub > i { position: absolute; top: 5px; width: 6px; height: 6px; margin-inline-start: -3px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid rgba(247, 192, 50, .45); background: #26282B; transition: background .25s, border-color .25s, box-shadow .25s; pointer-events: none; }
 .se-scrub > i.on { background: #F7C032; border-color: #F7C032; box-shadow: 0 0 6px rgba(247, 192, 50, .8); }
 .se-scrub-tip { position: absolute; top: 18px; transform: translateX(-50%); padding: 4px 9px; border-radius: 7px; background: #26282B; color: #fff; font: 500 12px Inter, sans-serif; white-space: nowrap; box-shadow: 0 6px 16px rgba(0, 0, 0, .3); pointer-events: none; }
+/* R6 Part C7 · "i" info buttons and their card */
+.se-info { display: inline-grid; place-items: center; width: 16px; height: 16px; margin-inline-start: 5px; padding: 0; border: 0; border-radius: 50%; vertical-align: middle; cursor: pointer; font: italic 700 10px/1 Georgia, serif; color: #26282B; background: rgba(247, 192, 50, .9); flex: none; transition: transform .15s, box-shadow .15s; }
+.se-info:hover, .se-info[aria-expanded='true'] { transform: scale(1.12); box-shadow: 0 0 0 3px rgba(247, 192, 50, .25); }
+.se-info.light { background: #26282B; color: #F7C032; }
+.se-info-card { position: fixed; z-index: 300; width: 280px; transform: translateX(-50%); padding: 14px 16px; border-radius: 14px; background: #26282B; color: #fff; text-align: start; box-shadow: 0 0 0 1px rgba(255, 255, 255, .1), 0 18px 40px rgba(0, 0, 0, .35); animation: seInfoIn .2s cubic-bezier(.16, 1, .3, 1) both; font: 400 13px/1.5 Inter, sans-serif; }
+.se-info-card.up { transform: translate(-50%, -100%); }
+.se-info-card b { display: block; font: 700 15px 'Space Grotesk', sans-serif; color: #F7C032; }
+.se-info-card p { margin: 6px 0 8px; color: #E4E5E7; }
+.se-info-card dl { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; margin: 0 0 12px; }
+.se-info-card dt { font: 600 10.5px 'JetBrains Mono', monospace; letter-spacing: .1em; text-transform: uppercase; color: #8C9096; padding-top: 2px; }
+.se-info-card dd { margin: 0; color: #D5D7DA; }
+.se-info-card > button { height: 34px; padding: 0 14px; border: 0; border-radius: 9px; background: #F7C032; color: #26282B; font: 600 13px Inter, sans-serif; cursor: pointer; }
+@keyframes seInfoIn { from { opacity: 0; margin-top: 6px; } to { opacity: 1; margin-top: 0; } }

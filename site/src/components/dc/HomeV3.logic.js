@@ -352,7 +352,7 @@ class Component extends DCLogic {
   openFmpAt(b, m, c, q) { this.setState({ fmpOpen: true, fmpB: b || null, fmpM: m || null, fmpC: c || null, fmpQ: (!m && q) || '', drawerMap: false, drawerCart: false }); }
   extC(s, D, P, fmt, cl, pad, bars, KIND) {
     const GN = { OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' }, H = this.hours(), yr = new Date(s.now).getFullYear();
-    const wa = D ? 'https://wa.me/' + D.contact.wa : '#', sm = (x) => 'url(https://cdn.simpleicons.org/' + x + '/000000) center / contain no-repeat';
+    const wa = D ? 'https://wa.me/' + D.contact.wa : '#', sm = (x) => 'url(/icons/' + x + '.svg) center / contain no-repeat' /* R6 Part C4: self-hosted (the CDN mask came back empty) */;
     // team (entry → senior)
     const TM = D ? D.teamRoles.map((role, i) => { const t = D.team.find((x) => x.role === role) || {}, f = role.startsWith('Founder'); return { role, n: 'C' + pad(i + 1), slot: 'se-team-' + i, name: t.name || 'Name to come', nameC: t.name ? '#FFFFFF' : '#9DA1A6', years: t.since ? (yr - t.since) + ' years with us' : 'Years · to come', stars: [0, 1, 2, 3, 4].map(() => ({ f: 'none' })), rateT: 'No ratings yet', bg: f ? 'linear-gradient(160deg,rgba(247,192,50,.16),rgba(255,255,255,.04))' : 'rgba(255,255,255,.04)', sh: f ? 'inset 0 0 0 1.5px #F7C032,0 20px 40px rgba(0,0,0,.3)' : 'inset 0 0 0 1px rgba(255,255,255,.09)', ring: f ? '#F7C032' : 'rgba(247,192,50,.45)' }; }) : [];
     const team = { members: TM, meet: () => this.flash('The full team roster is on the Our Story page, next in the build.'), join: () => this.flash('Careers and the job application are on the Our Story page.') };
