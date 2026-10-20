@@ -60,7 +60,7 @@
     const badges = [];
     if (h % 11 === 0) badges.push('New arrival');
     if (h % 7 === 0) badges.push('Best seller');
-    products.push({ id, model_id: m.id, category: cat, part: c.part, part_name: partName[c.part], grade: g, quality: G[g][0], manufacturer: G[g][1], title: `${m.name} ${c.one}`, shot: cat === 'SCR' && window.SE_SHOTS ? window.SE_SHOTS.pick(m.brand_id, G[g][1]) : null,
+    products.push({ id, model_id: m.id, category: cat, part: c.part, part_name: partName[c.part], grade: g, quality: G[g][0], manufacturer: G[g][1], title: `${m.name} ${c.one}`, shot: window.SE_SHOTS ? window.SE_SHOTS.forCat(cat, m.brand_id, G[g][1]) : null, /* Urgent 1: every product has its pose shot */
       retail_price: retail, wholesale_price: Math.round(retail * 0.78), stock_qty: stock, low_stock_threshold: 3, badges, visible: true, sample: true });
   })));
 

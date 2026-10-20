@@ -29,6 +29,14 @@
     return own + '-temp';
   };
   // srcset helper: `base` = /assets/shots/<id>
-  const url = (id, w) => '/assets/shots/' + id + '-' + (w <= 240 ? 240 : w <= 480 ? 480 : 960) + '.webp';
-  window.SE_SHOTS = { shots, pick, url };
+  // Urgent 1: THE product pose (scripts/productshot/pose.html → public/assets/pose): carton behind, product in front,
+  // both 20° right. Screens keep their brand / manufacturer box; every other part stands on its white carton.
+  const PART = { BAT: 'part-bat', BCV: 'part-bcv', FLX: 'part-flx', CAM: 'part-cam', SML: 'part-sml', FRM: 'part-frm', BOARD: 'part-board' };
+  const forCat = (cat, brand, maker) => (cat === 'SCR' ? pick(brand, maker) : PART[cat] || 'part-sml');
+  const url = (id, w) => '/assets/pose/' + id + '-' + (w <= 240 ? 240 : w <= 480 ? 480 : 960) + '.webp';
+  // the parts-library index (0 Screen · 1 Frame · 2 Flex · 3 Board · 4 Battery · 5 Cameras · 6 Small parts · 7 Back glass) → its pose
+  const IDX = ['apple-sp', 'part-frm', 'part-flx', 'part-board', 'part-bat', 'part-cam', 'part-sml', 'part-bcv'];
+  const byIndex = (i, w) => (IDX[i] ? url(IDX[i], w || 480) : '');
+  const byKind = (k, w) => byIndex({ scr: 0, frm: 1, flx: 2, board: 3, bat: 4, cam: 5, sml: 6, bcv: 7 }[k], w);
+  window.SE_SHOTS = { shots, pick, forCat, url, byIndex, byKind };
 })();

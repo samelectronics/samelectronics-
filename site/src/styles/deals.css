@@ -12,7 +12,7 @@
 .dl-all { display: inline-flex; align-items: center; gap: 10px; height: 48px; padding: 0 18px; border-radius: 10px; background: #F7C032; color: #26282B; font: 600 15px Inter, sans-serif; text-decoration: none; white-space: nowrap; }
 .dl-main { display: grid; grid-template-columns: 40% minmax(0, 1fr); gap: 24px; align-items: stretch; }
 .dl-k { font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .14em; color: #F7C032; }
-.dl-grade { align-self: flex-start; display: inline-block; padding: 3px 8px; border-radius: 6px; font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .04em; color: #FFDB6E; background: rgba(247, 192, 50, .12); box-shadow: inset 0 0 0 1px rgba(247, 192, 50, .3); }
+.dl-grade { align-self: flex-start; display: inline-block; padding: 3px 8px; border-radius: 6px; font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .04em; color: #F7C032; background: rgba(247, 192, 50, .12); box-shadow: inset 0 0 0 1px rgba(247, 192, 50, .3); }
 
 /* spotlight */
 .dl-spot { position: relative; display: flex; flex-direction: column; gap: 14px; padding: 24px; border-radius: 22px; background: linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .025)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .14), inset 0 0 0 1px rgba(255, 255, 255, .06), 0 30px 60px -28px rgba(0, 0, 0, .7); }
@@ -98,7 +98,7 @@
 .dl-city { font: 600 9px 'JetBrains Mono', monospace; letter-spacing: .12em; fill: #B9BCC0; }
 .dl-dxb { animation: dlBeat 2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
 .dl-ship-bar { position: relative; height: 6px; border-radius: 3px; background: rgba(255, 255, 255, .08); }
-.dl-ship-bar i { position: absolute; inset: 0; border-radius: 3px; transform-origin: left; background: linear-gradient(90deg, #C9921A, #F7C032); }
+.dl-ship-bar i { position: absolute; inset: 0; border-radius: 3px; transform-origin: left; background: linear-gradient(90deg, #F7C032, #F7C032); }
 .dl-ship-bar span { position: absolute; right: 0; top: 12px; font: 500 11px 'JetBrains Mono', monospace; color: #9DA1A6; }
 .dl-stages { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin: 14px 0 0; padding: 0; list-style: none; font: 500 11px/1.3 Inter, sans-serif; color: #8C9096; }
 .dl-stages li { display: flex; flex-direction: column; gap: 6px; }
@@ -152,9 +152,9 @@ html[dir='rtl'] .dl-was i { transform-origin: right; }
 .dl-land { fill: rgba(255, 255, 255, .075); stroke: rgba(255, 255, 255, .22); stroke-width: .6; }
 .dl-borders { fill: none; stroke: rgba(255, 255, 255, .14); stroke-width: .5; stroke-dasharray: 2 2; }
 .dl-route { fill: none; stroke: rgba(247, 192, 50, .28); stroke-width: 1.5; stroke-dasharray: 3 5; }
-.dl-route-flow { fill: none; stroke: #FFDB6E; stroke-width: 2; stroke-linecap: round; stroke-dasharray: .02 .06; opacity: .7; animation: dlFlow 2.4s linear infinite; }
+.dl-route-flow { fill: none; stroke: #F7C032; stroke-width: 2; stroke-linecap: round; stroke-dasharray: .02 .06; opacity: .7; animation: dlFlow 2.4s linear infinite; }
 @keyframes dlFlow { to { stroke-dashoffset: -.08; } }
-.dl-plane { animation: dlBob 2.6s ease-in-out infinite; filter: drop-shadow(0 0 4px rgba(255, 219, 110, .9)); }
+.dl-plane { animation: dlBob 2.6s ease-in-out infinite; filter: drop-shadow(0 0 4px rgba(247, 192, 50, .9)); }
 @keyframes dlBob { 50% { transform: translateY(1.6px); } }
 .dl-eta { position: absolute; transform: translate(-50%, calc(-100% - 16px)); padding: 6px 10px; border-radius: 8px; background: #F7C032; color: #26282B; font: 600 11px 'JetBrains Mono', monospace; white-space: nowrap; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; box-shadow: 0 8px 18px rgba(0, 0, 0, .4); }
 .dl-eta b { font-weight: 700; }
@@ -170,3 +170,6 @@ html[dir='rtl'] .dl-new, html[dir='rtl'] .dl-flaps, html[dir='rtl'] .dl-ship-clo
 /* soft edges where the belt enters and leaves */
 .dl-track { -webkit-mask-image: linear-gradient(90deg, transparent, #000 18px, #000 calc(100% - 18px), transparent); mask-image: linear-gradient(90deg, transparent, #000 18px, #000 calc(100% - 18px), transparent); }
 .dl-pre-vp { flex: 1; min-height: 262px; }
+/* Urgent 1: the product pose never turns; hover lifts the card only */
+.dl-seen .dl-spot-art img { animation: dlRise 1.1s .3s cubic-bezier(.16, 1, .3, 1) both !important; }
+.dl-card:hover .dl-card-art img { transform: translateY(-4px) !important; }

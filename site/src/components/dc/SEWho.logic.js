@@ -44,7 +44,7 @@ class Component extends DCLogic {
     return { secRef: this.secRef, seen: s.seen, i: s.i, prev: s.prev, n: s.n,
       lanes: LANES.map((l, j) => ({ ...l, j, on: j === s.i, pick: () => this.go(j), act: go(l.id) })),
       enter: () => { this.hov = true; }, leave: () => { this.hov = false; },
-      img: (k) => (lib && lib.large ? lib.large[k] : ''), front: lib && lib.front ? lib.front : null,
+      img: (k) => (window.SE_SHOTS && window.SE_SHOTS.byIndex(k)) || (lib && lib.large ? lib.large[k] : ''), /* Urgent 1: the pose */ front: lib && lib.front ? lib.front : null,
       grades: scr.slice().sort((a, b) => b.retail_price - a.retail_price).map((p) => ({ g: GN[p.grade], p: 'AED ' + p.retail_price, t: 'AED ' + p.wholesale_price })), from: lo ? 'from AED ' + lo : '' };
   }
 }

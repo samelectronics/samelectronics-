@@ -9,3 +9,4 @@ next-env.d.ts
 .vercel
 public/assets/repair/.png/
 public/assets/pallet/.png/
+public/assets/pose/.png/
