@@ -28,7 +28,7 @@ function render(v: Vals) {
               width: '48px',
               height: '48px',
               borderRadius: '50%',
-              background: 'radial-gradient(circle at 40% 30%,#FFE58F,#F7C032 65%,#E0A61E)',
+              background: 'radial-gradient(circle at 40% 30%,#F7C032,#F7C032 65%,#E0A61E)',
               overflow: 'hidden',
             }}
           >

@@ -39,7 +39,7 @@ class Component extends DCLogic {
   }
   renderVals() {
     const s = this.state, E = this.events(), pad = (n) => String(n).padStart(2, '0'), lib = s.lib;
-    const TAG = { arrival: ['JUST LANDED', '#F7C032', '#26282B'], restock: ['BACK IN STOCK', 'rgba(255,255,255,.12)', '#F2F3F4'], low: ['LOW STOCK', 'rgba(229,72,77,.18)', '#FF8A8E'], drop: ['PRICE DROP', 'rgba(247,192,50,.16)', '#FFDB6E'], shipped: ['SHIPPED', 'rgba(43,182,115,.16)', '#5FD49A'] };
+    const TAG = { arrival: ['JUST LANDED', '#F7C032', '#26282B'], restock: ['BACK IN STOCK', 'rgba(255,255,255,.12)', '#F2F3F4'], low: ['LOW STOCK', 'rgba(229,72,77,.18)', '#FF8A8E'], drop: ['PRICE DROP', 'rgba(247,192,50,.16)', '#F7C032'], shipped: ['SHIPPED', 'rgba(43,182,115,.16)', '#5FD49A'] };
     const g = new Date(s.now), gst = new Date(g.getTime() + g.getTimezoneOffset() * 6e4 + 4 * 36e5), base = gst.getHours() * 60 + gst.getMinutes();
     // the newest 6 matching events (the board shows the history, newest first)
     const list = []; for (let j = 0; j < 40 && E.length && list.length < 6; j++) { const idx = ((s.i - j) % E.length + E.length) % E.length, e = E[idx]; if (s.filt !== 'all' && this.MAP[e.type] !== s.filt) continue; list.push({ e, j }); }
@@ -47,7 +47,7 @@ class Component extends DCLogic {
       return { key: (s.i - j) + s.filt, t: pad(Math.floor(((m % 1440) + 1440) % 1440 / 60)) + ':' + pad(((m % 60) + 60) % 60), tag: tg[0], tagBg: tg[1], tagInk: tg[2], text: e.text, note: e.note, noteC: e.type === 'low' ? '#FF8A8E' : e.type === 'drop' ? '#F7C032' : '#C9CBCE',
         th, hasTh: !!th, cc: e.cc, hasCc: !th && !!e.cc, isNew: top, d: (r * 0.1).toFixed(2) + 's',
         go: () => { if (e.p) { const D = s.data, mo = D && D.models.find((x) => x.id === e.p.model_id); window.dispatchEvent(new CustomEvent('se:fmp', { detail: { b: mo && mo.brand_id, m: e.p.model_id, c: e.p.category } })); } else window.dispatchEvent(new CustomEvent('se:go', { detail: { id: 'network' } })); } }; });
-    const T = [['arr', 'JUST LANDED', '#F7C032', 'box'], ['low', 'LOW STOCK', '#FF8A8E', 'bat'], ['drop', 'PRICE DROPS', '#FFDB6E', 'tag'], ['ship', 'SHIPPED TODAY', '#5FD49A', 'truck']];
+    const T = [['arr', 'JUST LANDED', '#F7C032', 'box'], ['low', 'LOW STOCK', '#FF8A8E', 'bat'], ['drop', 'PRICE DROPS', '#F7C032', 'tag'], ['ship', 'SHIPPED TODAY', '#5FD49A', 'truck']];
     const sp = (a) => { const mx = Math.max(...a), mn = Math.min(...a), n = a.length - 1, pts = a.map((v, i) => [(i / n) * 120, 30 - ((v - mn) / Math.max(1, mx - mn)) * 24]); const line = pts.map((q, i) => (i ? 'L' : 'M') + q[0].toFixed(1) + ' ' + q[1].toFixed(1)).join(' '); return { line, fill: line + ' L120 34 L0 34 Z', ex: pts[n][0].toFixed(1), ey: pts[n][1].toFixed(1) }; };
     const tiles = T.map(([id, k, c, ic], n) => { const on = s.filt === id, f = s.flash[id] || 0, a = s.spark[id], spk = sp(a), dl = a[a.length - 1] - a[Math.max(0, a.length - 4)];
       return { id, k, c, v: Math.round(s.counts[id] * s.cu), ic, spark: spk, grad: 'lbg' + id, delta: '+' + Math.max(1, dl) + ' in the last hour', on, f, d: (0.3 + n * 0.08).toFixed(2) + 's', pick: () => this.setState({ filt: on ? 'all' : id }) }; });

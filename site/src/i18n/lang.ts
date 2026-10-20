@@ -98,6 +98,14 @@ function applyDocument() {
   h.dir = lang === 'ar' ? 'rtl' : 'ltr';
 }
 
+/** Urgent · Plex for Arabic must be loaded before canvases (teardown ads, globes) draw Arabic, or they fall back to a
+ *  stock font: load the Arabic faces of every family the site uses, then tell the canvases to redraw. */
+export function loadArabicFonts() {
+  if (typeof document === 'undefined' || !document.fonts) return;
+  const fams = ['Space Grotesk', 'Inter', 'JetBrains Mono', 'Arabic UI'], ws = ['400', '500', '600', '700'];
+  Promise.all(fams.flatMap((f) => ws.map((w) => document.fonts.load(`${w} 16px "${f}"`, 'بحث')))).then(() => window.dispatchEvent(new CustomEvent('se:fonts'))).catch(() => {});
+}
+
 /** Switch the whole site's language and remember it. */
 export function setLang(next: Lang) {
   if (next === lang) return;
@@ -108,7 +116,7 @@ export function setLang(next: Lang) {
     /* private mode */
   }
   applyDocument();
-  if (next === 'ar') startObserver();
+  if (next === 'ar') { startObserver(); loadArabicFonts(); }
   walk(document.body);
   if (next === 'en' && observer) {
     observer.disconnect();
@@ -149,6 +157,7 @@ export function installI18n() {
   window.seI18n = { lang: () => lang, t, tr, set: sw, now: setLang, toggle: () => sw(lang === 'ar' ? 'en' : 'ar') };
   patchCanvasText();
   if (lang === 'ar') {
+    loadArabicFonts();
     startObserver();
     if (document.body) walk(document.body);
   }

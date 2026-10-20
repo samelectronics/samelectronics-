@@ -77,7 +77,7 @@ function render(v: Vals) {
                 <div style={cssToObj(`position:absolute;inset:0;opacity:${s(v.fin?.o)};pointer-events:none`)}>
                   <div
                     style={cssToObj(
-                      `position:absolute;inset:0;background:radial-gradient(36% 56% at ${s(v.fin?.cx)}% 100%,#C98A12 0%,rgba(247,192,50,.74) 26%,rgba(247,192,50,.22) 56%,rgba(38,40,43,0) 100%);animation:tdBreath 6s ease-in-out infinite`,
+                      `position:absolute;inset:0;background:radial-gradient(36% 56% at ${s(v.fin?.cx)}% 100%,#F7C032 0%,rgba(247,192,50,.74) 26%,rgba(247,192,50,.22) 56%,rgba(38,40,43,0) 100%);animation:tdBreath 6s ease-in-out infinite`,
                     )}
                   ></div>
                   <div
@@ -169,7 +169,7 @@ function render(v: Vals) {
                                 >
                                   <span
                                     style={cssToObj(
-                                      `display:inline-block;color:transparent;background-image:linear-gradient(100deg,#FFFFFF 0%,#FFFFFF 41%,#FFE58F 46%,#F7C032 50%,#FFE58F 54%,#FFFFFF 59%,#FFFFFF 100%) /* R6 §05 B: a real yellow scanner light, leaving the letters white */;background-size:300% 100%;background-position:${s(v.w?.bp)}% 0;-webkit-background-clip:text;background-clip:text;opacity:${s(v.w?.o)};filter:${s(v.w?.f)};transform-origin:50% 100%;transform:translateY(${s(v.w?.y)}px) scale(${s(v.w?.sc)});will-change:transform,filter`,
+                                      `display:inline-block;color:transparent;background-image:linear-gradient(100deg,#FFFFFF 0%,#FFFFFF 41%,#F7C032 46%,#F7C032 50%,#F7C032 54%,#FFFFFF 59%,#FFFFFF 100%) /* R6 §05 B: a real yellow scanner light, leaving the letters white */;background-size:300% 100%;background-position:${s(v.w?.bp)}% 0;-webkit-background-clip:text;background-clip:text;opacity:${s(v.w?.o)};filter:${s(v.w?.f)};transform-origin:50% 100%;transform:translateY(${s(v.w?.y)}px) scale(${s(v.w?.sc)});will-change:transform,filter`,
                                     )}
                                   >
                                     {t(v.w?.w)}
@@ -803,7 +803,7 @@ function render(v: Vals) {
               {'\n    '}
               <div
                 style={cssToObj(
-                  `position:absolute;inset:0;background:linear-gradient(180deg,#F2F3F4 0%,#FFE9A8 30%,#FFDB6E 55%,#F7C032 100%);opacity:${s(v.bg?.fin)};pointer-events:none`,
+                  `position:absolute;inset:0;background:linear-gradient(180deg,#F2F3F4 0%,#FFE9A8 30%,#F7C032 55%,#F7C032 100%);opacity:${s(v.bg?.fin)};pointer-events:none`,
                 )}
               ></div>
               {'\n    '}

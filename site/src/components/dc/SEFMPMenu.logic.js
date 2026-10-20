@@ -20,7 +20,7 @@ class Component extends DCLogic {
       enter: () => { clearTimeout(this.t); this.t = setTimeout(() => this.setState({ open: true }), 120); },
       leave: () => { clearTimeout(this.t); this.t = setTimeout(() => this.setState({ open: false }), 220); },
       openAll: () => this.fire({}),
-      brands: Br.map((b) => { const on = b.id === s.b; return { id: b.id, q: k(this._bq[b.id]) + ' in stock', bg: on ? 'rgba(247,192,50,.14)' : 'transparent', ink: on ? '#FFDB6E' : '#FFFFFF', sub: on ? '#FFDB6E' : '#8C9096', hover: () => this.setState({ b: b.id }), pick: () => this.fire({ b: b.id }) }; }),
+      brands: Br.map((b) => { const on = b.id === s.b; return { id: b.id, q: k(this._bq[b.id]) + ' in stock', bg: on ? 'rgba(247,192,50,.14)' : 'transparent', ink: on ? '#F7C032' : '#FFFFFF', sub: on ? '#F7C032' : '#8C9096', hover: () => this.setState({ b: b.id }), pick: () => this.fire({ b: b.id }) }; }),
       cur: { name: curB.name, n: ms.length + ' models · ' + k(this._bq[s.b]) + ' parts in stock', all: () => this.fire({ b: s.b }) },
       models: ms.slice(0, 10).map((m) => ({ name: m.name, q: k(this._mq[m.id]) + ' parts in stock', pick: () => this.fire({ b: m.brand_id, m: m.id }) }))
     };

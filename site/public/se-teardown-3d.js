@@ -543,11 +543,11 @@ export async function mount(host, state) {
   const shd = document.createElement('canvas'); shd.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none'; host.insertBefore(shd, canvas); const sx = shd.getContext('2d');
   const mkS = (t) => document.createElementNS(NS, t), cPath = mkS('path'), cHalo = mkS('circle'), cDot = mkS('circle');
   cPath.setAttribute('fill', 'none'); cPath.setAttribute('stroke', '#F7C032'); cPath.setAttribute('stroke-width', '1.5'); cPath.setAttribute('stroke-linejoin', 'round'); cPath.style.filter = 'drop-shadow(0 0 4px rgba(247,192,50,.7))';
-  cHalo.setAttribute('r', '9'); cHalo.setAttribute('fill', 'rgba(247,192,50,.22)'); cDot.setAttribute('r', '4'); cDot.setAttribute('fill', '#FFDB6E'); cDot.setAttribute('stroke', '#1A1B1D'); cDot.setAttribute('stroke-width', '1.5');
+  cHalo.setAttribute('r', '9'); cHalo.setAttribute('fill', 'rgba(247,192,50,.22)'); cDot.setAttribute('r', '4'); cDot.setAttribute('fill', '#F7C032'); cDot.setAttribute('stroke', '#1A1B1D'); cDot.setAttribute('stroke-width', '1.5');
   [cPath, cHalo, cDot].forEach((n) => { n.style.opacity = 0; svg.appendChild(n); }); cPath.setAttribute('pathLength', '1'); cPath.setAttribute('stroke-dasharray', '1 1');
-  let actx = null; const arm = () => { try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); actx.resume(); } catch (e) {} };
-  ['pointerdown', 'keydown', 'touchstart'].forEach((e) => window.addEventListener(e, arm, { once: true, passive: true }));
-  const click = () => { if (!actx || actx.state !== 'running') return; const t0 = actx.currentTime, o = actx.createOscillator(), g = actx.createGain(); o.type = 'triangle'; o.frequency.setValueAtTime(2600, t0); o.frequency.exponentialRampToValueAtTime(700, t0 + 0.035); g.gain.setValueAtTime(0.0001, t0); g.gain.exponentialRampToValueAtTime(0.06, t0 + 0.004); g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.06); o.connect(g).connect(actx.destination); o.start(t0); o.stop(t0 + 0.08); };
+  // Urgent: no sound effects anywhere (the lock click and its audio context are gone)
+
+  const click = () => {};
 
   let act0 = -2, tAct = 0, liftS = new Array(8).fill(0), zMul = 1, orbS = 0, drawT = 0;
   const clO = Array.from({ length: 3 }, () => { const d = document.createElement('div'); d.style.cssText = 'position:absolute;left:0;top:0;font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.1em;color:rgba(255,255,255,.9);white-space:nowrap;pointer-events:none;opacity:0;will-change:transform,opacity'; host.appendChild(d); const ln = document.createElementNS('http://www.w3.org/2000/svg', 'path'); ln.setAttribute('fill', 'none'); ln.setAttribute('stroke', 'rgba(255,255,255,.55)'); ln.setAttribute('stroke-width', '1'); const dt = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); dt.setAttribute('r', '2.5'); dt.setAttribute('fill', '#F7C032'); return { d, ln, dt }; });

@@ -13,7 +13,7 @@
 /* tracked: a yellow parcel dot runs the dashed route; the code types in */
 .nwb-trk { position: relative; width: 180px; height: 100px; }
 .nwb-trk svg { position: absolute; left: 0; top: 0; }
-.nwb-dot { position: absolute; left: 0; top: 0; width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; border-radius: 50%; background: #FFDB6E; box-shadow: 0 0 10px #F7C032, 0 0 0 3px rgba(247, 192, 50, .25); offset-path: path('M18 66 C 52 8, 120 6, 160 52'); animation: nwTrack calc(3s * var(--sp)) cubic-bezier(.45, 0, .55, 1) infinite; }
+.nwb-dot { position: absolute; left: 0; top: 0; width: 11px; height: 11px; margin: -5.5px 0 0 -5.5px; border-radius: 50%; background: #F7C032; box-shadow: 0 0 10px #F7C032, 0 0 0 3px rgba(247, 192, 50, .25); offset-path: path('M18 66 C 52 8, 120 6, 160 52'); animation: nwTrack calc(3s * var(--sp)) cubic-bezier(.45, 0, .55, 1) infinite; }
 .nwb-ping { transform-origin: 160px 52px; animation: nwbPing calc(1.6s * var(--sp)) ease-out infinite; }
 @keyframes nwbPing { from { transform: scale(.6); opacity: 1; } to { transform: scale(2); opacity: 0; } }
 .nwb-type { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); font: 600 11px 'JetBrains Mono', monospace; color: #E4E5E7; white-space: nowrap; animation: nwType calc(3s * var(--sp)) steps(20) infinite; }
@@ -24,7 +24,7 @@
 .nwb-pk .fl { position: absolute; top: 0; width: 38px; height: 22px; background: linear-gradient(180deg, #B49A75, #A28866); box-shadow: inset 0 0 0 .5px rgba(60, 45, 25, .3); }
 .nwb-pk .fl.l { left: 0; transform-origin: 0 0; animation: nwFlapL calc(3s * var(--sp)) cubic-bezier(.2, .8, .2, 1) infinite; }
 .nwb-pk .fl.r { right: 0; transform-origin: 100% 0; animation: nwFlapR calc(3s * var(--sp)) cubic-bezier(.2, .8, .2, 1) infinite; }
-.nwb-pk .tape { position: absolute; left: 31px; top: -1px; width: 14px; height: 60px; transform-origin: 50% 0; background: linear-gradient(90deg, #E0A825, #FFDB6E 45%, #F7C032 60%, #E0A825); opacity: .95; animation: nwTape calc(3s * var(--sp)) cubic-bezier(.2, .8, .2, 1) infinite; }
+.nwb-pk .tape { position: absolute; left: 31px; top: -1px; width: 14px; height: 60px; transform-origin: 50% 0; background: linear-gradient(90deg, #F7C032, #F7C032 45%, #F7C032 60%, #F7C032); opacity: .95; animation: nwTape calc(3s * var(--sp)) cubic-bezier(.2, .8, .2, 1) infinite; }
 .nwb-pk .lbl { position: absolute; left: 6px; bottom: 7px; display: flex; align-items: flex-end; width: 22px; height: 15px; padding: 2px; box-sizing: border-box; border-radius: 1.5px; background: #F4F1EA; box-shadow: 0 1px 1px rgba(0, 0, 0, .25); animation: nwLbl calc(3s * var(--sp)) cubic-bezier(.2, .8, .2, 1) infinite; }
 .nwb-pk .lbl i { display: block; width: 100%; height: 6px; background: repeating-linear-gradient(90deg, #26282B 0 1px, transparent 1px 2px); }
 
@@ -74,7 +74,7 @@
 .nwp .pk-ctn::before { content: ''; position: absolute; inset: 0; opacity: .25; background: repeating-linear-gradient(90deg, rgba(90, 55, 20, .25) 0 2px, transparent 2px 6px); }
 .nwp .pk-pad { position: absolute; left: 6px; right: 6px; top: -8px; height: 14px; border-radius: 6px; transform-origin: bottom; opacity: 0; background: radial-gradient(circle at 6px 6px, rgba(255, 255, 255, .9) 3px, rgba(255, 255, 255, .5) 4px, transparent 5px) 0 0 / 12px 12px, rgba(225, 232, 238, .85); }
 .nwp .pk-flap { position: absolute; left: 0; right: 0; top: -30px; height: 30px; transform-origin: bottom; background: linear-gradient(0deg, #C49557, #D8AE74); clip-path: polygon(6% 100%, 0 0, 100% 0, 94% 100%); }
-.nwp .pk-tape { position: absolute; left: -2px; right: -2px; top: -3px; height: 16px; overflow: hidden; transform-origin: left; transform: scaleX(0); background: linear-gradient(180deg, #FFD45C, #F7C032); box-shadow: 0 1px 2px rgba(0, 0, 0, .25); }
+.nwp .pk-tape { position: absolute; left: -2px; right: -2px; top: -3px; height: 16px; overflow: hidden; transform-origin: left; transform: scaleX(0); background: linear-gradient(180deg, #F7C032, #F7C032); box-shadow: 0 1px 2px rgba(0, 0, 0, .25); }
 html[dir='rtl'] .nwp .pk-tape { transform-origin: right; }
 .nwp .pk-sweep { position: absolute; top: 0; bottom: 0; left: 0; width: 30%; background: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .7), rgba(255, 255, 255, 0)); }
 .nwp .pk-lbl { position: absolute; left: 50%; bottom: 34px; z-index: 3; display: flex; flex-direction: column; gap: 2px; width: 74px; margin-left: -6px; padding: 5px 6px; background: #F6F3EC; box-shadow: 0 2px 4px rgba(0, 0, 0, .3); opacity: 0; }

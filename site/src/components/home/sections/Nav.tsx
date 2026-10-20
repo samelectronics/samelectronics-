@@ -262,7 +262,7 @@ export default function Nav({ v }: { v: Vals }) {
             width: '100%',
             transform: 'scaleX(0)', // R6 Part A: moved with transforms (no layout per scroll)
             transformOrigin: 'var(--se-start, left) center',
-            backgroundImage: 'linear-gradient(90deg,#C9921A 0%,#F7C032 30%,#FFF4D1 45%,#F7C032 60%,#C9921A 100%)',
+            backgroundImage: 'linear-gradient(90deg,#F7C032 0%,#F7C032 30%,#FFF4D1 45%,#F7C032 60%,#F7C032 100%)',
             backgroundSize: '200px 2px',
             animation: 'seFlowBg 1.2s linear infinite',
             boxShadow: '0 0 10px rgba(247,192,50,.8)',
@@ -279,7 +279,7 @@ export default function Nav({ v }: { v: Vals }) {
             height: '8px',
             marginInlineStart: '-4px',
             borderRadius: '50%',
-            background: '#FFDB6E',
+            background: '#F7C032',
             boxShadow: '0 0 12px 4px rgba(247,192,50,.7)',
           }}
         ></span>

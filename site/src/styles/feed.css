@@ -62,9 +62,9 @@
 .ig { background: #0B0B0C; color: #fff; }
 .ig-post { display: flex; flex-direction: column; gap: 5px; }
 .ig-h { display: flex; align-items: center; gap: 5px; font-size: 9px; }
-.ig-h i { width: 14px; height: 14px; border-radius: 50%; background: conic-gradient(#F7C032, #FFDB6E, #C9921A, #F7C032); }
+.ig-h i { width: 14px; height: 14px; border-radius: 50%; background: conic-gradient(#F7C032, #F7C032, #F7C032, #F7C032); }
 .ig-img { position: relative; display: grid; place-items: center; aspect-ratio: 1 / 1; border-radius: 6px; overflow: hidden; }
-.ig-img.y { background: radial-gradient(70% 70% at 50% 40%, #FFE58F, #F7C032); }
+.ig-img.y { background: radial-gradient(70% 70% at 50% 40%, #F7C032, #F7C032); }
 .ig-img.w { background: radial-gradient(70% 70% at 50% 40%, #FFFFFF, #D9DBDE); }
 .ig-img.d { background: radial-gradient(70% 70% at 50% 40%, #4A4D52, #1F2023); }
 .ig-img img { width: 82%; height: 82%; object-fit: contain; }
@@ -89,7 +89,7 @@
 .tt-cap { position: absolute; left: 7%; right: 24%; bottom: 6%; z-index: 2; display: flex; flex-direction: column; gap: 3px; font-size: 9.5px; line-height: 1.35; }
 .tt-cap b { font-size: 10px; }
 .fb { padding-top: 9%; background: #F2F3F4; color: #26282B; }
-.fb-cover { position: relative; height: 54px; margin: 0 -6.4% 0; background: linear-gradient(120deg, #F7C032, #FFDB6E); }
+.fb-cover { position: relative; height: 54px; margin: 0 -6.4% 0; background: linear-gradient(120deg, #F7C032, #F7C032); }
 .fb-av { position: absolute; left: 10px; bottom: -14px; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #26282B; color: #F7C032; font: 700 11px 'Space Grotesk', sans-serif; box-shadow: 0 0 0 2px #F2F3F4; }
 .fb-id { display: flex; justify-content: space-between; align-items: center; padding: 18px 2px 8px; font-size: 10px; }
 .fb-follow { padding: 3px 8px; border-radius: 6px; background: #1877F2; color: #fff; font-size: 9px; font-weight: 600; }
@@ -99,7 +99,7 @@
 .fb-m svg { color: #E5484D; width: 10px; height: 10px; }
 
 /* B · What customers say */
-.rv { position: relative; overflow: hidden; padding: 96px 0 80px; background: radial-gradient(60% 70% at 18% 20%, rgba(255, 219, 110, .35), rgba(255, 219, 110, 0) 70%), #FFFFFF; color: #26282B; }
+.rv { position: relative; overflow: hidden; padding: 96px 0 80px; background: radial-gradient(60% 70% at 18% 20%, rgba(247, 192, 50, .35), rgba(247, 192, 50, 0) 70%), #FFFFFF; color: #26282B; }
 .rv-in { width: 1272px; max-width: calc(100% - 48px); margin: 0 auto; }
 .rv-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }
 .rv-eb { font: 600 12px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #8A6A1E; }

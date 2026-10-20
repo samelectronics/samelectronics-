@@ -3,7 +3,7 @@
 .sc::before { content: ''; position: absolute; inset: 0; opacity: .035; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 .sc-in { position: relative; width: 1272px; max-width: calc(100% - 48px); margin: 0 auto; padding: 104px 0 112px; }
 .sc-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 48px; margin-bottom: 36px; }
-.sc-eb { font: 600 13px/1 'JetBrains Mono', monospace; letter-spacing: .15em; color: #8A6A10; }
+.sc-eb { font: 600 13px/1 'JetBrains Mono', monospace; letter-spacing: .15em; color: #F7C032; }
 .sc-h { display: flex; flex-direction: column; margin: 16px 0 0; font: 700 52px/1.04 'Space Grotesk', sans-serif; letter-spacing: -.035em; }
 .sc-h span:last-child { color: rgba(38, 40, 43, .6); }
 .sc-p { margin: 0; max-width: 420px; font: 400 17px/1.55 Inter, sans-serif; color: #3D3E3F; }
@@ -27,7 +27,7 @@
 .sc-btn { align-self: flex-start; display: inline-flex; align-items: center; gap: 12px; height: 52px; margin-top: 8px; padding: 0 16px; border-radius: 10px; background: #F7C032; color: #26282B; font: 600 15px Inter, sans-serif; text-decoration: none; opacity: 0; transition: box-shadow .2s; }
 .sc-btn:hover { box-shadow: 0 0 24px rgba(247, 192, 50, .45); }
 .sc-btn-i { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: rgba(26, 27, 29, .12); }
-.sc-r { position: relative; overflow: hidden; perspective: 1200px; background: radial-gradient(70% 70% at 50% 45%, #FFD95C 0%, #F7C032 55%, #E7A81E 100%); }
+.sc-r { position: relative; overflow: hidden; perspective: 1200px; background: radial-gradient(70% 70% at 50% 45%, #F7C032 0%, #F7C032 55%, #F7C032 100%); }
 .sc-haze { position: absolute; width: 420px; height: 420px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 250, 228, .55), rgba(255, 250, 228, 0)); filter: blur(10px); animation: scHaze 18s ease-in-out infinite alternate; pointer-events: none; }
 .sc-haze.a { left: 10%; top: 4%; }
 .sc-haze.b { right: -10%; bottom: -12%; width: 360px; height: 360px; animation-duration: 23s; animation-direction: alternate-reverse; }
@@ -50,7 +50,7 @@
 .sc-box-front small { font: 600 10px 'JetBrains Mono', monospace; letter-spacing: .2em; color: #8C9096; }
 .sc-box-front b { font: 700 24px 'Space Grotesk', sans-serif; letter-spacing: -.02em; color: #26282B; }
 .sc-box-front i { display: block; width: 90px; height: 4px; margin-top: 10px; border-radius: 2px; background: #F7C032; }
-.sc-seal { position: absolute; right: -16px; bottom: 18px; width: 74px; height: 74px; display: grid; place-items: center; text-align: center; border-radius: 50%; font: 700 9px/1.2 'JetBrains Mono', monospace; letter-spacing: .12em; color: #26282B; background: radial-gradient(circle at 35% 30%, #FFE58F, #F7C032 70%); box-shadow: inset 0 0 0 2px #26282B, inset 0 0 0 5px #F7C032, inset 0 0 0 6px rgba(26, 27, 29, .5), 0 6px 14px rgba(110, 72, 0, .35); opacity: 0; z-index: 5; }
+.sc-seal { position: absolute; right: -16px; bottom: 18px; width: 74px; height: 74px; display: grid; place-items: center; text-align: center; border-radius: 50%; font: 700 9px/1.2 'JetBrains Mono', monospace; letter-spacing: .12em; color: #26282B; background: radial-gradient(circle at 35% 30%, #F7C032, #F7C032 70%); box-shadow: inset 0 0 0 2px #26282B, inset 0 0 0 5px #F7C032, inset 0 0 0 6px rgba(26, 27, 29, .5), 0 6px 14px rgba(110, 72, 0, .35); opacity: 0; z-index: 5; }
 @keyframes scHaze { from { transform: translate(0, 0) scale(1); } to { transform: translate(40px, 30px) scale(1.15); } }
 @media (max-width: 900px) { .sc-stage { grid-template-columns: 1fr; height: auto; } .sc-r { height: 460px; } .sc-top { flex-direction: column; align-items: flex-start; } }
 /* 14 Oct §10 · held stage (desktop) and the complete content per grade */
@@ -60,7 +60,7 @@
 .sc-q { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 9px; max-width: 420px; opacity: 0; }
 .sc-q li { display: grid; grid-template-columns: 96px 1fr 30px; align-items: center; gap: 12px; font: 500 13px Inter, sans-serif; color: #D5D7DA; }
 .sc-q li i { position: relative; height: 6px; border-radius: 3px; background: rgba(255, 255, 255, .1); overflow: hidden; }
-.sc-q li b { position: absolute; inset-block: 0; inset-inline-start: 0; border-radius: 3px; background: linear-gradient(90deg, #C9921A, #F7C032); animation: scFill .8s cubic-bezier(.2, .8, .2, 1) both; transform-origin: left center; }
+.sc-q li b { position: absolute; inset-block: 0; inset-inline-start: 0; border-radius: 3px; background: linear-gradient(90deg, #F7C032, #F7C032); animation: scFill .8s cubic-bezier(.2, .8, .2, 1) both; transform-origin: left center; }
 html[dir='rtl'] .sc-q li b { transform-origin: right center; }
 .sc-q li em { font: 600 12px 'JetBrains Mono', monospace; font-style: normal; color: #F7C032; text-align: end; }
 .sc-q li.sc-q-note { display: block; font: 600 10px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #8C9096; }

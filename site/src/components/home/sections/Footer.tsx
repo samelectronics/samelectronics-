@@ -23,7 +23,7 @@ export default function Footer({ v }: { v: Vals }) {
           style={{
             width: '40%',
             height: '100%',
-            background: 'linear-gradient(90deg,transparent,#F7C032,#FFDB6E,transparent)',
+            background: 'linear-gradient(90deg,transparent,#F7C032,#F7C032,transparent)',
             animation: 'seRun 4s linear infinite',
           }}
         ></div>

@@ -3,7 +3,7 @@
 /* R6 §08: no longer pinned and scrubbed: the film plays on its own once the section is 60% in view, so the visitor never
    scrolls into an empty stage; the section is exactly one scaled box tall */
 .bt-pin { position: relative; height: calc(72px + 828px * var(--sc, 1)); overflow: hidden; }
-.bt-bg { position: absolute; inset: 0; background: radial-gradient(70% 70% at 45% 40%, #FFD45C 0%, #F7C032 55%, #E4AC20 100%); }
+.bt-bg { position: absolute; inset: 0; background: radial-gradient(70% 70% at 45% 40%, #F7C032 0%, #F7C032 55%, #F7C032 100%); }
 .bt-bg::before { content: ''; position: absolute; inset: 0; opacity: .04; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 /* R6 §08: the bench band (and its line across the yellow) is gone: one continuous yellow */
 .bt-box { position: absolute; left: 50%; top: 72px; width: 1440px; height: 828px; transform: translateX(-50%) scale(var(--sc, 1)); transform-origin: top center; color: #26282B; }
@@ -65,7 +65,7 @@
 .bt-probe { position: absolute; inset: 0; z-index: 7; opacity: 0; pointer-events: none; }
 .bt-stylus { position: absolute; left: -1.5px; bottom: 100%; width: 3px; height: 600px; margin-bottom: -6px; background: linear-gradient(90deg, #6E7378, #E4E6E9 50%, #6E7378); box-shadow: 0 0 0 .5px rgba(0, 0, 0, .4); }
 .bt-tip { position: absolute; left: -8px; top: -8px; width: 16px; height: 16px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, rgba(255, 255, 255, .5), rgba(255, 255, 255, .08) 65%); box-shadow: inset 0 0 0 2px #E4E6E9, 0 0 0 1px rgba(0, 0, 0, .5), 0 0 12px rgba(255, 255, 255, .55); transition: transform .12s; }
-.bt-sticker { position: absolute; right: -14px; bottom: 54px; width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; text-align: center; font: 700 8.5px/1.15 'JetBrains Mono', monospace; letter-spacing: .08em; color: #26282B; background: radial-gradient(circle at 35% 30%, #FFE58F, #F7C032 70%); box-shadow: inset 0 0 0 2px #26282B, inset 0 0 0 5px #F7C032, inset 0 0 0 6px rgba(26, 27, 29, .5), 0 4px 10px rgba(0, 0, 0, .3); opacity: 0; z-index: 8; }
+.bt-sticker { position: absolute; right: -14px; bottom: 54px; width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; text-align: center; font: 700 8.5px/1.15 'JetBrains Mono', monospace; letter-spacing: .08em; color: #26282B; background: radial-gradient(circle at 35% 30%, #F7C032, #F7C032 70%); box-shadow: inset 0 0 0 2px #26282B, inset 0 0 0 5px #F7C032, inset 0 0 0 6px rgba(26, 27, 29, .5), 0 4px 10px rgba(0, 0, 0, .3); opacity: 0; z-index: 8; }
 .bt-clamp { position: absolute; top: 200px; width: 30px; height: 120px; border-radius: 8px; background: linear-gradient(90deg, #D9DCE0, #9DA1A6); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8), 0 4px 10px rgba(0, 0, 0, .25); z-index: 2; }
 .bt-clamp.l { left: calc(50% - 107px - 26px); }
 .bt-clamp.r { left: calc(50% + 107px - 4px); }
@@ -88,7 +88,7 @@
 .bt-sub { font: 500 11.5px 'JetBrains Mono', monospace; color: #9DA1A6; }
 .bt-sub b { color: #5FD49A; font-weight: 600; }
 .bt-bar { position: relative; height: 8px; border-radius: 4px; background: rgba(255, 255, 255, .08); overflow: hidden; }
-.bt-bar i { position: absolute; inset: 0; transform-origin: left; transform: scaleX(0); background: linear-gradient(90deg, #C9921A, #F7C032 60%, #FFE58F); }
+.bt-bar i { position: absolute; inset: 0; transform-origin: left; transform: scaleX(0); background: linear-gradient(90deg, #F7C032, #F7C032 60%, #F7C032); }
 .bt-bar.b i { background: linear-gradient(90deg, #2BB673, #5FD49A); }
 .bt-mini { width: 100%; height: 22px; }
 .bt-mini path { fill: none; stroke: #F7C032; stroke-width: 2.2; stroke-dasharray: 1 1; stroke-dashoffset: 1; stroke-linejoin: round; }

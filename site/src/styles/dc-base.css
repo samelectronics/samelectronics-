@@ -53,7 +53,7 @@ body {
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
-  box-shadow: 0 0 0 2px #ffdb6e, 0 0 70px rgba(247, 192, 50, 0.55);
+  box-shadow: 0 0 0 2px #F7C032, 0 0 70px rgba(247, 192, 50, 0.55);
   opacity: 0;
   animation: seSearchGlowO 3.2s linear infinite;
   will-change: opacity;
@@ -315,7 +315,7 @@ body {
 @media (max-width: 1100px) { .wwo-boxes { grid-template-columns: 1fr; max-width: 560px; } }
 
 /* Issue 4 · a surge: one streak of current brightens for 400ms (src/components/perf/CircuitSurge.tsx) */
-.se-surge { stroke: #FFF4D1 !important; filter: drop-shadow(0 0 5px #FFDB6E) drop-shadow(0 0 12px rgba(247, 192, 50, .95)); }
+.se-surge { stroke: #FFF4D1 !important; filter: drop-shadow(0 0 5px #F7C032) drop-shadow(0 0 12px rgba(247, 192, 50, .95)); }
 
 /* 14 Oct · H-G2: a section that fully left the view restarts its CSS animations when it comes back (SectionFX). */
 [data-se-rp] *, [data-se-rp] *::before, [data-se-rp] *::after { animation: none !important; }
@@ -525,3 +525,6 @@ html[dir='rtl'] [style*='seRail3'] { animation-name: seRail3R !important; }
 [data-w='R']:hover .wo-flow, [data-w='W']:hover .wo-flow, [data-w='G']:hover .wo-flow { animation-duration: 4s !important; }
 [data-w='R']:hover .wo-btn1::after, [data-w='W']:hover .wo-btn1::after, [data-w='G']:hover .wo-btn1::after { animation-duration: 1.6s; }
 @media (prefers-reduced-motion: reduce) { .wo-btn1::after { animation: none; } }
+/* Urgent (speed): sections off screen are not laid out or painted at all (they keep their measured size). Pinned or
+   scroll-driven sections (teardown, story, bench) and the hero are left out. */
+#board, #showcase, #deals, #repair, #wholesale, #network, #team, #everyone, #circuit, #samsoom, #social, #reviews, #visit, #finale { content-visibility: auto; contain-intrinsic-size: auto 1000px; }

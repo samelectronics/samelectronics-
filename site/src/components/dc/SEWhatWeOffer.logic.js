@@ -111,7 +111,7 @@ class Component extends DCLogic {
       const ck = ex((t - 2.95) / 0.3); set('cnt', { opacity: (ck * (1 - so)).toFixed(3), transform: 'translateY(' + ((1 - ck) * 14).toFixed(1) + 'px)' });
       const n = t < 3.2 ? 10 : t < 3.55 ? Math.round(10 + 40 * eo((t - 3.2) / 0.25)) : Math.round(50 + 50 * eo((t - 3.55) / 0.25)), cn = this.q('cntN'); if (cn && cn.textContent !== String(n)) cn.textContent = String(n); }
     // ----- Ad 3 Worldwide -----
-    { const g = this.q('glb'); if (g) this.drawGlobe(g, tG, T); }
+    { const g = this.q('glb'); if (g && T - (this._gT || 0) > 1 / 30) { const r = g.getBoundingClientRect(); if (r.bottom > 0 && r.top < vh) { this._gT = T; this.drawGlobe(g, tG, T); } } } /* Urgent (speed): 30fps, only on screen */
     const hz = this.host.current && hr.width ? this.host.current.clientWidth / hr.width : 1; if (hz !== 1) items.forEach((it) => { it.x *= hz; it.y *= hz; it.w *= hz; it.h *= hz; });
     if (this.api) { try { this.api.draw(items); } catch (e) { if (!this._de) { this._de = 1; console.warn('[What we offer] draw', e); } } }
   }
@@ -129,7 +129,7 @@ class Component extends DCLogic {
       this.cr.forEach((cr) => { const P = cr.pts.map(([a, b]) => [a * W, b * H]); const path = () => { x.beginPath(); x.moveTo(P[0][0], P[0][1]); for (let i = 1; i < P.length; i++) x.lineTo(P[i][0], P[i][1]); };
         const ys = 0.85 + cr.o * 0.75, yk = cl((t - ys) / 0.32), fade = 1 - cl((t - ys - 0.32) / 0.25);
         if (fade > 0) { x.globalAlpha = 0.85 * fade; x.strokeStyle = '#FFFFFF'; x.lineWidth = 3; path(); x.stroke(); x.globalAlpha = 0.18 * fade; x.lineWidth = 12; path(); x.stroke(); }
-        if (yk > 0) { let Ltot = 0; const seg = []; for (let i = 1; i < P.length; i++) { const l = Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]); seg.push(l); Ltot += l; } let rem = Ltot * yk; x.save(); x.shadowColor = '#F7C032'; x.shadowBlur = 18; x.strokeStyle = 'rgba(255,219,110,' + (0.95 * (1 - cl((t - 1.95) / 0.1))).toFixed(3) + ')'; x.lineWidth = 6; x.beginPath(); x.moveTo(P[0][0], P[0][1]); for (let i = 1; i < P.length && rem > 0; i++) { const f = Math.min(1, rem / seg[i - 1]); x.lineTo(P[i - 1][0] + (P[i][0] - P[i - 1][0]) * f, P[i - 1][1] + (P[i][1] - P[i - 1][1]) * f); rem -= seg[i - 1]; } x.stroke(); x.restore(); } });
+        if (yk > 0) { let Ltot = 0; const seg = []; for (let i = 1; i < P.length; i++) { const l = Math.hypot(P[i][0] - P[i - 1][0], P[i][1] - P[i - 1][1]); seg.push(l); Ltot += l; } let rem = Ltot * yk; x.save(); x.shadowColor = '#F7C032'; x.shadowBlur = 18; x.strokeStyle = 'rgba(247,192,50,' + (0.95 * (1 - cl((t - 1.95) / 0.1))).toFixed(3) + ')'; x.lineWidth = 6; x.beginPath(); x.moveTo(P[0][0], P[0][1]); for (let i = 1; i < P.length && rem > 0; i++) { const f = Math.min(1, rem / seg[i - 1]); x.lineTo(P[i - 1][0] + (P[i][0] - P[i - 1][0]) * f, P[i - 1][1] + (P[i][1] - P[i - 1][1]) * f); rem -= seg[i - 1]; } x.stroke(); x.restore(); } });
       const fl = t > 0.6 && t < 1.0 ? Math.sin(Math.PI * cl((t - 0.6) / 0.4)) : 0; if (fl > 0) { const g = x.createRadialGradient(ix, iy, 0, ix, iy, W * 0.4); g.addColorStop(0, 'rgba(255,240,200,' + (0.35 * fl).toFixed(3) + ')'); g.addColorStop(1, 'rgba(255,240,200,0)'); x.fillStyle = g; x.fillRect(0, 0, W, H); }
       const sc = cl((t - 1.7) / 0.3); if (sc > 0 && sc < 1) { const yy = H * (0.95 - sc * 1.0), g = x.createLinearGradient(0, yy - 60, 0, yy + 60); g.addColorStop(0, 'rgba(255,248,225,0)'); g.addColorStop(0.5, 'rgba(255,248,225,.5)'); g.addColorStop(1, 'rgba(255,248,225,0)'); x.fillStyle = g; x.fillRect(0, yy - 60, W, 120); }
       x.globalAlpha = 1; }
@@ -146,7 +146,7 @@ class Component extends DCLogic {
     const bg = x.createRadialGradient(C - R * 0.35, C - R * 0.4, R * 0.05, C, C, R); bg.addColorStop(0, '#FFFFFF'); bg.addColorStop(0.6, '#F2F3F4'); bg.addColorStop(1, '#DCDDDF'); x.beginPath(); x.arc(C, C, R, 0, 7); x.fillStyle = bg; x.fill();
     // 14 Oct §09: the hero globe's crisp square dots (same colours as before), pixel-snapped, depth-faded toward the rim
     const dots = (arr, col, sz) => { x.fillStyle = col; for (let i = 0; i < arr.length; i += 2) { const q = pj(arr[i], arr[i + 1]); if (q[2] <= 0.02) continue; x.globalAlpha = Math.min(1, 0.15 + q[2] * 1.1); const z = Math.max(1.5, sz * (0.55 + 0.45 * q[2])); x.fillRect(Math.round(q[0] - z / 2), Math.round(q[1] - z / 2), z, z); } x.globalAlpha = 1; };
-    dots(G.land, '#3D3E3F', 5.6); dots(G.hi, '#E9B12A', 6);
+    dots(G.land, '#3D3E3F', 5.6); dots(G.hi, '#F7C032', 6);
     const v3 = (lo, la) => [Math.cos(la * Dg) * Math.cos(lo * Dg), Math.cos(la * Dg) * Math.sin(lo * Dg), Math.sin(la * Dg)], ll = (v) => [Math.atan2(v[1], v[0]) / Dg, Math.asin(Math.max(-1, Math.min(1, v[2]))) / Dg];
     const slerp = (a, b, f) => { const d = Math.max(-1, Math.min(1, a[0] * b[0] + a[1] * b[1] + a[2] * b[2])), om = Math.acos(d); if (om < 1e-4) return a; const s1 = Math.sin((1 - f) * om) / Math.sin(om), s2 = Math.sin(f * om) / Math.sin(om); return [a[0] * s1 + b[0] * s2, a[1] * s1 + b[1] * s2, a[2] * s1 + b[2] * s2]; };
     const DST = [['BAGHDAD', 44.4, 33.3], ['ISTANBUL', 28.98, 41.0], ['LAGOS', 3.38, 6.52], ['MADRID', -3.7, 40.4]], O = v3(G.dxb[0], G.dxb[1]), cyc = t < 1 ? -1 : Math.floor((t - 1) / 4), ct = t < 1 ? -1 : (t - 1) % 4;

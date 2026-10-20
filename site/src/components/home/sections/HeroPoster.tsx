@@ -7,7 +7,7 @@ import type { Vals } from '@/dc/runtime';
 
 const TH: Record<string, { bg: string; ink: string; sub: string; kick: string; cta: string; ctaInk: string; ghost: string; glow: string }> = {
   dark: { bg: 'radial-gradient(110% 80% at 70% 35%,#4B4B49 0%,#303132 52%,#1E1F21 100%)', ink: '#FFFFFF', sub: '#D5D7DA', kick: '#F7C032', cta: '#F7C032', ctaInk: '#26282B', ghost: 'rgba(255,255,255,.22)', glow: 'rgba(255,226,150,.38)' },
-  yel: { bg: 'radial-gradient(110% 80% at 70% 35%,#FFE291 0%,#F7C032 56%,#E7A81E 100%)', ink: '#26282B', sub: '#26282B', kick: '#26282B', cta: '#26282B', ctaInk: '#FFFFFF', ghost: 'rgba(38,40,43,.3)', glow: 'rgba(255,250,228,.75)' },
+  yel: { bg: 'radial-gradient(110% 80% at 70% 35%,#FFE291 0%,#F7C032 56%,#F7C032 100%)', ink: '#26282B', sub: '#26282B', kick: '#26282B', cta: '#26282B', ctaInk: '#FFFFFF', ghost: 'rgba(38,40,43,.3)', glow: 'rgba(255,250,228,.75)' },
   light: { bg: 'radial-gradient(110% 80% at 70% 35%,#FFFFFF 0%,#F6F4F0 50%,#E5E1D9 100%)', ink: '#26282B', sub: '#3D3E3F', kick: '#26282B', cta: '#26282B', ctaInk: '#FFFFFF', ghost: 'rgba(38,40,43,.25)', glow: 'rgba(255,206,96,.3)' },
 };
 

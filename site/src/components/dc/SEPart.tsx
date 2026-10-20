@@ -945,7 +945,7 @@ function render(v: Vals) {
                           inset: '0',
                           borderRadius: '16px',
                           background:
-                            'linear-gradient(118deg,rgba(255,255,255,.22),rgba(255,255,255,0) 28%,rgba(255,255,255,0) 72%,rgba(255,219,110,.12))',
+                            'linear-gradient(118deg,rgba(255,255,255,.22),rgba(255,255,255,0) 28%,rgba(255,255,255,0) 72%,rgba(247,192,50,.12))',
                           pointerEvents: 'none',
                         }}
                       ></div>
@@ -1411,7 +1411,7 @@ function render(v: Vals) {
                               right: '0',
                               top: '56px',
                               height: '3px',
-                              background: 'linear-gradient(90deg,#B9852F,#FFDB6E,#B9852F)',
+                              background: 'linear-gradient(90deg,#B9852F,#F7C032,#B9852F)',
                             }}
                           ></span>
                           <span
@@ -1577,7 +1577,7 @@ function render(v: Vals) {
                             width: '8px',
                             height: '20px',
                             borderRadius: '3px',
-                            background: 'linear-gradient(90deg,#B9852F,#F7C032 45%,#FFDB6E 60%,#C9921A)',
+                            background: 'linear-gradient(90deg,#B9852F,#F7C032 45%,#F7C032 60%,#F7C032)',
                           }}
                         ></span>
                         {'\n      '}

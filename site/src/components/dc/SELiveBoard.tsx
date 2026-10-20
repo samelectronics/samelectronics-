@@ -30,7 +30,7 @@ function Icon({ k }: { k: string }) {
     return (
       <span className="lb-icw">
         {L('', <path d="M16 3v5" stroke="#8C9096" strokeWidth="1.2" />)}
-        {L('lb-ic-swing', <><path d="M9 12l7-5 7 5v13a2 2 0 0 1-2 2H11a2 2 0 0 1-2-2z" fill="rgba(255,219,110,.18)" stroke="#FFDB6E" strokeWidth="1.6" strokeLinejoin="round" /><circle cx="16" cy="11.5" r="1.6" fill="#FFDB6E" /><path d="M12.5 18h7M12.5 22h5" stroke="#FFDB6E" strokeWidth="1.6" strokeLinecap="round" /></>)}
+        {L('lb-ic-swing', <><path d="M9 12l7-5 7 5v13a2 2 0 0 1-2 2H11a2 2 0 0 1-2-2z" fill="rgba(247,192,50,.18)" stroke="#F7C032" strokeWidth="1.6" strokeLinejoin="round" /><circle cx="16" cy="11.5" r="1.6" fill="#F7C032" /><path d="M12.5 18h7M12.5 22h5" stroke="#F7C032" strokeWidth="1.6" strokeLinecap="round" /></>)}
       </span>
     );
   return (

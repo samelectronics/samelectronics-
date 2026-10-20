@@ -40,7 +40,7 @@ class Component extends DCLogic {
       hasItem: !!item && item !== 'part', item, itemRot: -L[1], itemAnim: A(item === 'clock' ? 'smTick 3s linear 1' : item === 'globe' ? 'smGlobe 1.5s linear infinite' : item === 'tool' ? 'smTwist .5s ease-in-out .4s 4 alternate' : 'none'),
       isClock: item === 'clock', isCheck: item === 'check', isTool: item === 'tool', isTag: item === 'tag', isParcel: item === 'parcel', isGlobe: item === 'globe',
       zzz: m === 'sleep', heart: m0 === 'kiss' || m0 === 'thanks', spark: m === 'found' || (!!item && !still), confetti: m === 'celebrate' && !still,
-      conf: Array.from({ length: 12 }, (_, i) => { const a = (i / 12) * Math.PI * 2; return { x: Math.round(Math.cos(a) * 70), y: Math.round(Math.sin(a) * 60 - 30), c: ['#F7C032', '#FFFFFF', '#3D3E3F', '#FFDB6E', '#E5484D', '#B87333'][i % 6], d: (i % 3) * 0.12 + 's' }; })
+      conf: Array.from({ length: 12 }, (_, i) => { const a = (i / 12) * Math.PI * 2; return { x: Math.round(Math.cos(a) * 70), y: Math.round(Math.sin(a) * 60 - 30), c: ['#F7C032', '#FFFFFF', '#3D3E3F', '#F7C032', '#E5484D', '#B87333'][i % 6], d: (i % 3) * 0.12 + 's' }; })
     };
   }
 }

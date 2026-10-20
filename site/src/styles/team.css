@@ -26,7 +26,7 @@
 .tm-slot { display: flex; justify-content: center; }
 .tm-swing { position: relative; display: flex; flex-direction: column; align-items: center; transform-origin: 50% 0; transform: translateY(-720px); }
 .tm-ring { width: 16px; height: 16px; margin-top: -2px; border-radius: 50%; box-shadow: inset 0 0 0 3px #B9BCC0, 0 2px 3px rgba(0, 0, 0, .5); }
-.tm-lan { position: relative; width: 22px; height: 116px; margin-top: -4px; overflow: hidden; background: repeating-linear-gradient(45deg, rgba(0, 0, 0, .07) 0 1px, rgba(0, 0, 0, 0) 1px 3px), repeating-linear-gradient(-45deg, rgba(255, 255, 255, .08) 0 1px, rgba(0, 0, 0, 0) 1px 3px), linear-gradient(90deg, #C9921A 0%, #F7C032 30%, #FFDB6E 52%, #F7C032 70%, #D9A21F 100%); box-shadow: 0 4px 8px rgba(0, 0, 0, .35); transform: skewY(-2deg); }
+.tm-lan { position: relative; width: 22px; height: 116px; margin-top: -4px; overflow: hidden; background: repeating-linear-gradient(45deg, rgba(0, 0, 0, .07) 0 1px, rgba(0, 0, 0, 0) 1px 3px), repeating-linear-gradient(-45deg, rgba(255, 255, 255, .08) 0 1px, rgba(0, 0, 0, 0) 1px 3px), linear-gradient(90deg, #F7C032 0%, #F7C032 30%, #F7C032 52%, #F7C032 70%, #D9A21F 100%); box-shadow: 0 4px 8px rgba(0, 0, 0, .35); transform: skewY(-2deg); }
 .tm-slot:nth-child(even) .tm-lan { transform: skewY(2deg); }
 .tm-lan span { position: absolute; left: 50%; top: 6px; writing-mode: vertical-rl; transform: translateX(-50%); font: 700 9px 'Space Grotesk', sans-serif; letter-spacing: .22em; color: #26282B; white-space: nowrap; }
 .tm-clip { position: relative; width: 30px; height: 24px; margin-top: -2px; border-radius: 4px 4px 7px 7px; background: linear-gradient(90deg, #77797D, #E4E5E7 35%, #FFFFFF 45%, #B9BCC0 60%, #5E6064); box-shadow: 0 3px 6px rgba(0, 0, 0, .5); }
@@ -56,7 +56,7 @@
 .tm-yrs { margin-top: 2px; font: 500 11px 'JetBrains Mono', monospace; color: #5E6064; }
 .tm-name.dim, .tm-yrs.dim { color: #8C9096; }
 .tm-holo { position: absolute; left: 14px; right: 14px; bottom: 14px; height: 16px; border-radius: 4px; overflow: hidden; background: #E4E5E7; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .06); }
-.tm-holo i { position: absolute; top: 0; bottom: 0; left: -60%; width: 220%; background: repeating-linear-gradient(115deg, rgba(255, 219, 110, .9) 0 8px, rgba(190, 230, 255, .8) 8px 16px, rgba(255, 190, 230, .75) 16px 24px, rgba(200, 255, 220, .8) 24px 32px, rgba(255, 255, 255, .95) 32px 40px); opacity: .8; }
+.tm-holo i { position: absolute; top: 0; bottom: 0; left: -60%; width: 220%; background: repeating-linear-gradient(115deg, rgba(247, 192, 50, .9) 0 8px, rgba(190, 230, 255, .8) 8px 16px, rgba(255, 190, 230, .75) 16px 24px, rgba(200, 255, 220, .8) 24px 32px, rgba(255, 255, 255, .95) 32px 40px); opacity: .8; }
 .tm-gloss { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(125deg, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, 0) 32%, rgba(255, 255, 255, 0) 70%, rgba(255, 255, 255, .18) 100%); mix-blend-mode: normal; opacity: .6; }
 .tm-face.back .tm-gloss { opacity: .12; }
 .tm-slot.f .tm-face.front { background: linear-gradient(170deg, #FFFFFF, #F4F0E4); box-shadow: inset 0 0 0 3px #D4A63A, inset 0 0 0 4px rgba(255, 240, 200, .9); }

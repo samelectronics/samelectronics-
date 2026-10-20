@@ -68,7 +68,7 @@
 .wf-chips .th img { width: 40px; height: 40px; object-fit: contain; filter: drop-shadow(0 3px 3px rgba(0, 0, 0, .5)); }
 .wf-chips .nm { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .wf-chips .nm b { font: 600 13px/1.2 Inter, sans-serif; }
-.wf-chips .nm small { font: 500 11px 'JetBrains Mono', monospace; color: #FFDB6E; }
+.wf-chips .nm small { font: 500 11px 'JetBrains Mono', monospace; color: #F7C032; }
 .wf-qty { display: flex; justify-content: space-between; align-items: baseline; margin-top: 4px; font: 500 14px Inter, sans-serif; color: #C9CBCE; }
 .wf-qty b { font: 700 22px 'JetBrains Mono', monospace; color: #F7C032; }
 .wf-qty b small { font-size: 12px; color: #9DA1A6; font-weight: 500; }
@@ -162,12 +162,12 @@
 .wf-sc-rep .scr::after { content: ''; position: absolute; inset: 0; background: linear-gradient(115deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, .25) 45%, rgba(255, 255, 255, 0) 60%); transform: translateX(-100%); animation: wfScr 3.2s ease-in-out infinite; }
 @keyframes wfScr { 0%, 40% { transform: translateX(-100%); } 80%, 100% { transform: translateX(100%); } }
 .wf-sc-rep .drv { position: absolute; left: 50%; top: 22px; z-index: 2; width: 12px; height: 74px; margin-left: 12px; transform-origin: 50% 100%; transform: rotate(28deg); animation: wfDrv 2.4s ease-in-out infinite; }
-.wf-sc-rep .drv::before { content: ''; position: absolute; left: 0; top: 0; width: 12px; height: 34px; border-radius: 5px 5px 3px 3px; background: linear-gradient(90deg, #C9921A, #FFDB6E 45%, #E0A825); box-shadow: 0 4px 6px rgba(0, 0, 0, .4); }
+.wf-sc-rep .drv::before { content: ''; position: absolute; left: 0; top: 0; width: 12px; height: 34px; border-radius: 5px 5px 3px 3px; background: linear-gradient(90deg, #F7C032, #F7C032 45%, #F7C032); box-shadow: 0 4px 6px rgba(0, 0, 0, .4); }
 .wf-sc-rep .drv i { position: absolute; left: 5px; top: 34px; width: 2.5px; height: 40px; background: linear-gradient(90deg, #8E9196, #F2F3F4, #8E9196); }
 @keyframes wfDrv { 0%, 100% { transform: rotate(28deg); } 50% { transform: rotate(22deg) translateY(2px); } }
 /* traders: a hanging price tag that steps down */
 .wf-sc-trd .str { position: absolute; left: 50%; top: 0; width: 1.5px; height: 30px; background: #C9CBCE; }
-.wf-sc-trd .tag { position: absolute; left: 50%; top: 28px; width: 104px; height: 56px; margin-left: -52px; border-radius: 8px 8px 8px 8px; background: linear-gradient(160deg, #FFDB6E, #F7C032 55%, #E0A825); box-shadow: 0 10px 14px rgba(0, 0, 0, .4); transform-origin: 50% -2px; animation: wfSwing 3.6s ease-in-out infinite; clip-path: polygon(16% 0, 84% 0, 100% 22%, 100% 100%, 0 100%, 0 22%); }
+.wf-sc-trd .tag { position: absolute; left: 50%; top: 28px; width: 104px; height: 56px; margin-left: -52px; border-radius: 8px 8px 8px 8px; background: linear-gradient(160deg, #F7C032, #F7C032 55%, #F7C032); box-shadow: 0 10px 14px rgba(0, 0, 0, .4); transform-origin: 50% -2px; animation: wfSwing 3.6s ease-in-out infinite; clip-path: polygon(16% 0, 84% 0, 100% 22%, 100% 100%, 0 100%, 0 22%); }
 .wf-sc-trd .hole { position: absolute; left: 50%; top: 5px; width: 7px; height: 7px; margin-left: -3.5px; border-radius: 50%; background: #2A2C2F; }
 .wf-sc-trd .tag b { position: absolute; left: 0; right: 0; top: 22px; text-align: center; font: 700 18px 'Space Grotesk', sans-serif; color: #26282B; }
 .wf-sc-trd .p1 { animation: wfP1 4.8s ease-in-out infinite; }
@@ -259,7 +259,7 @@ html[dir='rtl'] .wf-seen .wf-tape-t { animation-direction: reverse; }
 .wf-hits button:hover { background: rgba(247, 192, 50, .12); }
 .wf-hits .th { width: 34px; height: 34px; display: grid; place-items: center; }
 .wf-hits .th img { max-width: 100%; max-height: 100%; object-fit: contain; }
-.wf-hits small { font: 600 11px 'JetBrains Mono', monospace; color: #FFDB6E; }
+.wf-hits small { font: 600 11px 'JetBrains Mono', monospace; color: #F7C032; }
 .wf-hits em { font: 600 12px 'JetBrains Mono', monospace; font-style: normal; color: #B9BCC0; }
 .wf-hits .none { padding: 10px; color: #B9BCC0; font: 500 13px Inter, sans-serif; }
 /* the real pallet stage (isometric renders; cartons placed on their cells) */

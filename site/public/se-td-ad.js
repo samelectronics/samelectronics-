@@ -128,7 +128,7 @@
       x.lineCap = 'round'; x.lineJoin = 'round';
       cracks.forEach((p, j) => { if (grow <= 0) return; const s0 = 1.25 + j * 0.085, sk = K(lt, s0, 0.3), head = eio(sk); const g1 = eo(grow);
         if (head < 1) { x.strokeStyle = 'rgba(255,255,255,.85)'; x.lineWidth = Math.max(1, sw * 0.008); pathTo(x, p, head, g1, sx, sy, sw, sh); x.stroke(); x.strokeStyle = 'rgba(255,255,255,.18)'; x.lineWidth = Math.max(2, sw * 0.025); pathTo(x, p, head, g1, sx, sy, sw, sh); x.stroke(); }
-        if (sk > 0) { const fade = 1 - K(lt, s0 + 0.3, 0.35); if (fade > 0) { x.save(); x.shadowColor = '#F7C032'; x.shadowBlur = sw * 0.04; x.strokeStyle = 'rgba(255,219,110,' + fade + ')'; x.lineWidth = Math.max(1, sw * 0.012); pathTo(x, p, 0, head * g1, sx, sy, sw, sh); x.stroke(); x.restore(); }
+        if (sk > 0) { const fade = 1 - K(lt, s0 + 0.3, 0.35); if (fade > 0) { x.save(); x.shadowColor = '#F7C032'; x.shadowBlur = sw * 0.04; x.strokeStyle = 'rgba(247,192,50,' + fade + ')'; x.lineWidth = Math.max(1, sw * 0.012); pathTo(x, p, 0, head * g1, sx, sy, sw, sh); x.stroke(); x.restore(); }
           if (sk < 1) { const L = head * p.L; let i = 1; while (i < p.length - 1 && p.len[i] < L) i++; const t = (L - p.len[i - 1]) / (p.len[i] - p.len[i - 1] || 1), hx = sx + (p[i - 1][0] + (p[i][0] - p[i - 1][0]) * t) * sw, hy = sy + (p[i - 1][1] + (p[i][1] - p[i - 1][1]) * t) * sh; const g = x.createRadialGradient(hx, hy, 0, hx, hy, sw * 0.06); g.addColorStop(0, 'rgba(255,240,190,.95)'); g.addColorStop(1, 'rgba(247,192,50,0)'); x.fillStyle = g; x.fillRect(hx - sw * 0.06, hy - sw * 0.06, sw * 0.12, sw * 0.12); } } });
       const g = x.createLinearGradient(sx, sy, sx + sw, sy + sh * 0.6); g.addColorStop(0, 'rgba(255,255,255,.1)'); g.addColorStop(0.35, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(sx, sy, sw, sh); x.restore();
     }
@@ -190,7 +190,7 @@
       const shk = 0;
       x.save(); x.translate(W / 2, H * 0.48); x.scale(s, s); x.translate(-W / 2, -H * 0.48); x.textAlign = 'center'; x.textBaseline = 'alphabetic'; L.forEach((ln, i) => x.fillText(ln, W / 2 + shk, y0 + i * lh + fs * 0.35)); x.restore(); /* 14 Oct §07 F: every final slide centred */ 
     }
-    let dotSpr = null; const mkDot = () => { const c = mk(32, 32), x = c.getContext('2d'), g = x.createRadialGradient(16, 16, 0, 16, 16, 16); g.addColorStop(0, 'rgba(255,246,214,1)'); g.addColorStop(0.25, 'rgba(255,219,110,.95)'); g.addColorStop(0.55, 'rgba(247,192,50,.35)'); g.addColorStop(1, 'rgba(247,192,50,0)'); x.fillStyle = g; x.fillRect(0, 0, 32, 32); return c; };
+    let dotSpr = null; const mkDot = () => { const c = mk(32, 32), x = c.getContext('2d'), g = x.createRadialGradient(16, 16, 0, 16, 16, 16); g.addColorStop(0, 'rgba(255,246,214,1)'); g.addColorStop(0.25, 'rgba(247,192,50,.95)'); g.addColorStop(0.55, 'rgba(247,192,50,.35)'); g.addColorStop(1, 'rgba(247,192,50,0)'); x.fillStyle = g; x.fillRect(0, 0, 32, 32); return c; };
     // E4: round glowing golden dots stream in from the screen edges on swirling curves, speed up and pour into the logo; flash; all absorbed; logo 104→100; sweep; name; yellow slogan; hold; fade
     function sceneLogo(x, lt) {
       bg(x, C_G, W / 2, H * 0.42); const cx = W / 2, cy = H * 0.42, D = 46 * u; if (!dotSpr) dotSpr = mkDot();

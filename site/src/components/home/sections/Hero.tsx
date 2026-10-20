@@ -81,7 +81,7 @@ export default function Hero({ v }: { v: Vals }) {
                 width: '760px',
                 height: '720px',
                 borderRadius: '50%',
-                background: 'radial-gradient(closest-side,#FFE58F 0%,rgba(255,219,110,.8) 35%,rgba(255,219,110,0) 100%)',
+                background: 'radial-gradient(closest-side,#F7C032 0%,rgba(247,192,50,.8) 35%,rgba(247,192,50,0) 100%)',
               }}
             ></div>
             {'\n        '}
@@ -164,17 +164,17 @@ export default function Hero({ v }: { v: Vals }) {
               y1="0"
               x2="660"
               y2="860"
-              stroke="#FFDB6E"
+              stroke="#F7C032"
               strokeWidth="3"
               style={{
-                filter: 'drop-shadow(0 0 8px #FFDB6E) drop-shadow(0 0 20px rgba(247,192,50,.8))',
+                filter: 'drop-shadow(0 0 8px #F7C032) drop-shadow(0 0 20px rgba(247,192,50,.8))',
                 animation: 'seEdgeGlow 4s ease-in-out infinite',
               }}
             ></line>
             {'\n        '}
             <g
               clipPath="url(#seDarkSide)"
-              stroke="#FFDB6E"
+              stroke="#F7C032"
               strokeWidth="3.5"
               strokeDasharray="70 930"
               style={{ filter: 'drop-shadow(0 0 5px #F7C032) drop-shadow(0 0 12px rgba(247,192,50,.8))' }}
@@ -859,7 +859,7 @@ export default function Hero({ v }: { v: Vals }) {
                 borderRadius: '38px',
                 background: 'linear-gradient(115deg,#FFFFFF 0%,#D2D5D9 7%,#868B92 34%,#D9DCE0 66%,#8E939A 100%)',
                 boxShadow:
-                  'inset 0 1.5px 0 rgba(255,255,255,.95),inset 1.5px 0 0 rgba(255,255,255,.8),inset 0 -1.5px 0 rgba(26,27,29,.35),0 0 0 1px rgba(26,27,29,.22),0 0 70px rgba(255,219,110,.4)',
+                  'inset 0 1.5px 0 rgba(255,255,255,.95),inset 1.5px 0 0 rgba(255,255,255,.8),inset 0 -1.5px 0 rgba(26,27,29,.35),0 0 0 1px rgba(26,27,29,.22),0 0 70px rgba(247,192,50,.4)',
               }}
             >
               {'\n          '}
@@ -1189,7 +1189,7 @@ export default function Hero({ v }: { v: Vals }) {
                                               stroke="#F7C032"
                                               strokeLinecap="round"
                                               strokeLinejoin="round"
-                                              style={{ filter: 'drop-shadow(0 0 1.6px #FFDB6E)' }}
+                                              style={{ filter: 'drop-shadow(0 0 1.6px #F7C032)' }}
                                             >
                                               {(Array.isArray(v.a?.rq?.cracks) ? v.a?.rq?.cracks : []).map((__it: any, __i: number) => {
                                                 const v2 = { ...v, c: __it, $index: __i };
@@ -1721,7 +1721,7 @@ export default function Hero({ v }: { v: Vals }) {
               style={{
                 width: '40%',
                 height: '100%',
-                background: 'linear-gradient(90deg,transparent,#F7C032,#FFDB6E,transparent)',
+                background: 'linear-gradient(90deg,transparent,#F7C032,#F7C032,transparent)',
                 animation: 'seRun 3.5s linear infinite',
               }}
             ></div>

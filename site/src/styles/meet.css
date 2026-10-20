@@ -1,5 +1,5 @@
 /* Issue 14 · Meet Samsoom, "Ask at 3 a.m.": a warm yellow studio, Samsoom floating on the teardown phone, a graphite chat */
-.mt { position: relative; overflow: hidden; background: radial-gradient(70% 80% at 30% 40%, #FFD45C, #F7C032 55%, #E9B124); color: #26282B; }
+.mt { position: relative; overflow: hidden; background: radial-gradient(70% 80% at 30% 40%, #F7C032, #F7C032 55%, #E9B124); color: #26282B; }
 .mt::before { content: ''; position: absolute; inset: 0; opacity: .035; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 .mt-vig { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 100% at 50% 40%, rgba(150, 95, 0, 0) 55%, rgba(150, 95, 0, .22)); }
 .mt-in { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 520px; gap: 48px; width: 1272px; max-width: calc(100% - 48px); margin: 0 auto; padding: 96px 0 80px; align-items: start; }
@@ -86,14 +86,14 @@
 .mt-card .tx { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .mt-card .tx b { font: 600 15px Inter, sans-serif; }
 .mt-card .tx small { font: 400 12px Inter, sans-serif; color: #9DA1A6; }
-.mt-card .tx small em { font-style: normal; color: #FFDB6E; font-family: 'JetBrains Mono', monospace; }
+.mt-card .tx small em { font-style: normal; color: #F7C032; font-family: 'JetBrains Mono', monospace; }
 .mt-card .tx strong { font: 700 18px 'Space Grotesk', sans-serif; color: #F7C032; }
 .mt-add { margin-inline-start: auto; height: 36px; padding: 0 12px; border: none; border-radius: 9px; background: #F7C032; color: #26282B; font: 600 13px Inter, sans-serif; cursor: pointer; white-space: nowrap; }
 .mt-card.grades { flex-direction: column; align-items: stretch; gap: 6px; }
 .mt-card.grades .row { display: flex; align-items: center; gap: 10px; padding: 4px; border-radius: 10px; }
 .mt-card.grades .row:first-child { background: rgba(247, 192, 50, .1); }
 .mt-card.grades .row b { flex: 1; font: 600 14px Inter, sans-serif; }
-.mt-card.grades .row em { font: 600 14px 'JetBrains Mono', monospace; font-style: normal; color: #FFDB6E; }
+.mt-card.grades .row em { font: 600 14px 'JetBrains Mono', monospace; font-style: normal; color: #F7C032; }
 .mt-card.hours .dot { flex: none; width: 14px; height: 14px; margin: 0 6px; border-radius: 50%; background: #E5484D; box-shadow: 0 0 0 4px rgba(229, 72, 77, .2); }
 .mt-card.hours .dot.on { background: #2BB673; box-shadow: 0 0 0 4px rgba(43, 182, 115, .2); }
 .mt-card.trade { flex-wrap: wrap; }

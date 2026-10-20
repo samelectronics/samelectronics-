@@ -193,7 +193,7 @@ function render(v: Vals) {
                     fontSize: '13px',
                     fontWeight: '600',
                     letterSpacing: '.14em',
-                    color: '#8A6A10',
+                    color: '#F7C032',
                     whiteSpace: 'nowrap',
                   }}
                 >
@@ -1022,7 +1022,7 @@ function render(v: Vals) {
                                     top: '0',
                                     width: '20px',
                                     height: '26px',
-                                    background: 'linear-gradient(180deg,#F7C032,#E9B12A)',
+                                    background: 'linear-gradient(180deg,#F7C032,#F7C032)',
                                     boxShadow: 'inset 0 -1px 0 rgba(120,80,0,.3)',
                                     overflow: 'hidden',
                                   }}
@@ -1611,7 +1611,7 @@ function render(v: Vals) {
                     fontSize: '13px',
                     fontWeight: '600',
                     letterSpacing: '.14em',
-                    color: '#8A6A10',
+                    color: '#F7C032',
                   }}
                 >
                   WORLDWIDE

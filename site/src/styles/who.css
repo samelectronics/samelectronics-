@@ -35,7 +35,7 @@
 .wh-stage.ret { background: radial-gradient(60% 70% at 62% 30%, rgba(255, 214, 110, .55), rgba(255, 214, 110, 0)), linear-gradient(180deg, #F7F2E7, #ECE5D6); }
 .wh-stage.rep { background: radial-gradient(55% 60% at 50% 40%, #3A3C40, #2A2C2F 70%, #222326); }
 .wh-stage.exp { background: radial-gradient(60% 60% at 55% 40%, #26282C, #18191B); }
-.wh-stage.blk { background: radial-gradient(60% 70% at 50% 30%, #FFD45C, #F7C032 55%, #E4AC20); }
+.wh-stage.blk { background: radial-gradient(60% 70% at 50% 30%, #F7C032, #F7C032 55%, #F7C032); }
 .wh-scene { position: absolute; inset: 0; }
 .wh-scene > div:first-child { position: absolute; inset: 0; }
 .wh-scene.on { animation: whArrive .85s cubic-bezier(.2, 1.25, .4, 1) both; }
@@ -72,7 +72,7 @@
 @keyframes retPart { from { opacity: 0; transform: translateX(140px) rotate(6deg); } to { opacity: 1; transform: none; } }
 .ret-part img { width: 180px; height: 180px; object-fit: contain; filter: drop-shadow(0 18px 18px rgba(60, 40, 10, .35)); }
 .ret-chips { display: flex; gap: 6px; flex-wrap: wrap; }
-.ret-chips span { padding: 6px 10px; border-radius: 9px; background: #26282B; color: #FFDB6E; font: 600 12px 'JetBrains Mono', monospace; opacity: 0; animation: dlStamp .3s cubic-bezier(.2, .8, .2, 1) both; }
+.ret-chips span { padding: 6px 10px; border-radius: 9px; background: #26282B; color: #F7C032; font: 600 12px 'JetBrains Mono', monospace; opacity: 0; animation: dlStamp .3s cubic-bezier(.2, .8, .2, 1) both; }
 .ret-price { font: 700 26px 'Space Grotesk', sans-serif; opacity: 0; animation: lbFade .4s 3.2s both; }
 .ret-pin { position: absolute; left: 430px; top: 448px; z-index: 3; display: flex; align-items: flex-end; gap: 8px; }
 .ret-pin svg { animation: retDrop .6s 3.6s cubic-bezier(.3, 1.6, .5, 1) both; filter: drop-shadow(0 4px 4px rgba(0, 0, 0, .3)); }
@@ -82,7 +82,7 @@
 /* repair shop: a top-down bench; the tray slides in, grades line up, a padlock clicks open on trade prices */
 .rep-mat { position: absolute; inset: 24px 24px 96px; border-radius: 20px; background: radial-gradient(60% 70% at 50% 35%, rgba(255, 236, 190, .1), rgba(255, 236, 190, 0)), repeating-linear-gradient(0deg, rgba(247, 192, 50, .07) 0 1px, transparent 1px 26px), repeating-linear-gradient(90deg, rgba(247, 192, 50, .07) 0 1px, transparent 1px 26px), linear-gradient(180deg, #2E3033, #26282B); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06), inset 0 2px 0 rgba(255, 255, 255, .05), 0 20px 40px -20px rgba(0, 0, 0, .7); }
 .rep-driver { position: absolute; left: 64px; top: 70px; width: 150px; height: 16px; transform: rotate(28deg); }
-.rep-driver::before { content: ''; position: absolute; left: 0; top: 0; width: 62px; height: 16px; border-radius: 8px 4px 4px 8px; background: linear-gradient(180deg, #FFDB6E, #E0A825); box-shadow: 0 6px 8px rgba(0, 0, 0, .5); }
+.rep-driver::before { content: ''; position: absolute; left: 0; top: 0; width: 62px; height: 16px; border-radius: 8px 4px 4px 8px; background: linear-gradient(180deg, #F7C032, #F7C032); box-shadow: 0 6px 8px rgba(0, 0, 0, .5); }
 .rep-driver i { position: absolute; left: 60px; top: 6px; width: 86px; height: 4px; border-radius: 2px; background: linear-gradient(180deg, #F2F3F4, #8E9196); box-shadow: 0 4px 5px rgba(0, 0, 0, .45); }
 .rep-tweez { position: absolute; right: 70px; top: 60px; width: 120px; height: 10px; transform: rotate(-24deg); background: linear-gradient(180deg, #E4E5E7, #8E9196); clip-path: polygon(0 30%, 100% 0, 100% 100%, 0 70%); filter: drop-shadow(0 4px 4px rgba(0, 0, 0, .5)); }
 .rep-spud { position: absolute; left: 90px; bottom: 130px; width: 90px; height: 9px; border-radius: 5px; transform: rotate(-12deg); background: linear-gradient(180deg, #4A4D52, #26282B); box-shadow: 0 4px 6px rgba(0, 0, 0, .5), inset 0 1px 0 rgba(255, 255, 255, .15); }
@@ -92,7 +92,7 @@
 .rep-part { display: grid; place-items: center; width: 116px; height: 116px; }
 .rep-part img { width: 112px; height: 112px; object-fit: contain; filter: drop-shadow(0 10px 8px rgba(0, 0, 0, .5)); opacity: 0; animation: repPart .5s calc(1.1s + var(--k) * .22s) cubic-bezier(.2, 1.3, .3, 1) both; }
 @keyframes repPart { from { opacity: 0; transform: translateY(-30px) scale(.8); } to { opacity: 1; transform: none; } }
-.rep-cell b { font: 700 13px 'JetBrains Mono', monospace; color: #FFDB6E; opacity: 0; animation: lbFade .3s calc(1.4s + var(--k) * .22s) both; }
+.rep-cell b { font: 700 13px 'JetBrains Mono', monospace; color: #F7C032; opacity: 0; animation: lbFade .3s calc(1.4s + var(--k) * .22s) both; }
 .rep-pr { position: relative; display: flex; flex-direction: column; align-items: center; gap: 2px; height: 38px; }
 .rep-pr s { font: 500 13px 'JetBrains Mono', monospace; color: #9DA1A6; opacity: 0; animation: lbFade .3s 1.9s both; }
 .rep-pr em { font: 700 17px 'JetBrains Mono', monospace; font-style: normal; color: #F7C032; opacity: 0; animation: repReveal .5s calc(3.1s + var(--k) * .12s) cubic-bezier(.2, 1.2, .3, 1) both; }
@@ -100,7 +100,7 @@
 .rep-lock { position: absolute; left: calc(50% + 230px); top: 220px; width: 54px; height: 70px; }
 .rep-lock .sh { position: absolute; left: 11px; top: 0; width: 32px; height: 36px; border-radius: 16px 16px 0 0; border: 6px solid #C9CCD0; border-bottom: none; box-sizing: border-box; transform-origin: 85% 100%; animation: repOpen .5s 2.8s cubic-bezier(.3, 1.6, .5, 1) both; }
 @keyframes repOpen { to { transform: translateY(-10px) rotate(24deg); } }
-.rep-lock .bd { position: absolute; left: 0; bottom: 0; width: 54px; height: 42px; border-radius: 9px; background: linear-gradient(160deg, #FFDB6E, #F7C032 50%, #C9921A); box-shadow: 0 10px 14px rgba(0, 0, 0, .5), inset 0 1px 0 rgba(255, 255, 255, .5); }
+.rep-lock .bd { position: absolute; left: 0; bottom: 0; width: 54px; height: 42px; border-radius: 9px; background: linear-gradient(160deg, #F7C032, #F7C032 50%, #F7C032); box-shadow: 0 10px 14px rgba(0, 0, 0, .5), inset 0 1px 0 rgba(255, 255, 255, .5); }
 .rep-lock .bd i { position: absolute; left: 50%; top: 13px; width: 8px; height: 14px; margin-left: -4px; border-radius: 4px; background: #26282B; }
 .rep-lock .fl { position: absolute; left: 50%; top: 40%; width: 20px; height: 20px; margin: -10px 0 0 -10px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(247, 192, 50, .8); opacity: 0; animation: repFlash .6s 2.85s ease-out both; }
 @keyframes repFlash { 0% { opacity: 1; transform: scale(.5); } 100% { opacity: 0; transform: scale(4); } }
@@ -119,9 +119,9 @@
 .exp-doc-h { display: flex; justify-content: space-between; padding-bottom: 8px; margin-bottom: 2px; border-bottom: 1.5px solid #26282B; font: 700 11px 'JetBrains Mono', monospace; letter-spacing: .1em; }
 .exp-row { display: flex; justify-content: space-between; gap: 10px; font: 500 12px Inter, sans-serif; color: #26282B; }
 .exp-row b { font: 700 12px 'JetBrains Mono', monospace; }
-.exp-scan { position: absolute; left: 0; right: 0; top: 0; height: 46px; background: linear-gradient(180deg, rgba(255, 219, 110, 0), rgba(255, 219, 110, .55) 70%, rgba(255, 255, 255, .9) 72%, rgba(255, 219, 110, 0) 74%); transform: translateY(-60px); animation: expScan 1.4s .6s ease-in-out both; }
+.exp-scan { position: absolute; left: 0; right: 0; top: 0; height: 46px; background: linear-gradient(180deg, rgba(247, 192, 50, 0), rgba(247, 192, 50, .55) 70%, rgba(255, 255, 255, .9) 72%, rgba(247, 192, 50, 0) 74%); transform: translateY(-60px); animation: expScan 1.4s .6s ease-in-out both; }
 @keyframes expScan { 0% { transform: translateY(-60px); opacity: 1; } 95% { transform: translateY(260px); opacity: 1; } 100% { transform: translateY(260px); opacity: 0; } }
-.exp-stamp { position: absolute; right: 16px; bottom: 26px; padding: 8px 14px 6px; border: 3.5px solid #C9921A; border-radius: 8px; color: #C9921A; font: 700 22px 'Space Grotesk', sans-serif; letter-spacing: .14em; transform: rotate(-12deg); opacity: 0; animation: wfStamp .5s 2.2s cubic-bezier(.2, .8, .2, 1) both; }
+.exp-stamp { position: absolute; right: 16px; bottom: 26px; padding: 8px 14px 6px; border: 3.5px solid #F7C032; border-radius: 8px; color: #F7C032; font: 700 22px 'Space Grotesk', sans-serif; letter-spacing: .14em; transform: rotate(-12deg); opacity: 0; animation: wfStamp .5s 2.2s cubic-bezier(.2, .8, .2, 1) both; }
 
 /* bulk buyer: cartons stack on a pallet, shrink-wrap spirals, the badge stamps */
 .bk-st { position: absolute; left: 50%; top: 40px; width: 406px; height: 352px; margin-left: -203px; transform: scale(.95); transform-origin: 50% 0; }

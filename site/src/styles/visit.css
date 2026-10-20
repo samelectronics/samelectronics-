@@ -1,5 +1,5 @@
 /* Issue 16 · Request console + Visit us: a yellow section; the console is graphite glass that prints a thermal slip */
-.vs { position: relative; overflow: hidden; background: radial-gradient(70% 80% at 30% 30%, #FFD45C, #F7C032 55%, #E9B124); color: #26282B; }
+.vs { position: relative; overflow: hidden; background: radial-gradient(70% 80% at 30% 30%, #F7C032, #F7C032 55%, #E9B124); color: #26282B; }
 .vs::before { content: ''; position: absolute; inset: 0; opacity: .035; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 .vs::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 100% at 50% 40%, rgba(150, 95, 0, 0) 55%, rgba(150, 95, 0, .2)); }
 .vs-in { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 28px; width: 1272px; max-width: calc(100% - 48px); margin: 0 auto; padding: 96px 0; align-items: start; }
@@ -74,7 +74,7 @@
 @keyframes vsPing { from { transform: scale(1); opacity: .7; } to { transform: scale(3); opacity: 0; } }
 .vs-tl { display: flex; flex-direction: column; gap: 4px; }
 .vs-tl-bar { position: relative; height: 14px; border-radius: 7px; background: #F2F3F4; box-shadow: inset 0 1px 2px rgba(0, 0, 0, .08); }
-.vs-tl-bar i { position: absolute; top: 2px; bottom: 2px; border-radius: 5px; background: linear-gradient(90deg, #F7C032, #FFDB6E); }
+.vs-tl-bar i { position: absolute; top: 2px; bottom: 2px; border-radius: 5px; background: linear-gradient(90deg, #F7C032, #F7C032); }
 .vs-tl-bar .now { position: absolute; top: -5px; bottom: -5px; width: 2px; margin-left: -1px; background: #26282B; transition: left 1s linear; }
 .vs-tl-bar .now::before { content: ''; position: absolute; left: -4px; top: -6px; width: 10px; height: 10px; border-radius: 50%; background: #26282B; box-shadow: 0 0 0 3px #fff; }
 .vs-tl-l { display: flex; justify-content: space-between; font: 500 10px 'JetBrains Mono', monospace; color: #8C9096; }

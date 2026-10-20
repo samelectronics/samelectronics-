@@ -46,7 +46,7 @@ function render(v: Vals) {
               {'\n        '}
               <span
                 style={cssToObj(
-                  `position:absolute;left:94px;top:2px;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFF4D1,#F7C032 55%,#C9921A);animation:${s(v.antAnim)}`,
+                  `position:absolute;left:94px;top:2px;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFF4D1,#F7C032 55%,#F7C032);animation:${s(v.antAnim)}`,
                 )}
               ></span>
               {'\n        '}
@@ -162,7 +162,7 @@ function render(v: Vals) {
                       <path
                         d="M2 2 C 10 0, 20 4, 28 2 C 26 10, 28 18, 24 24 C 16 20, 8 22, 2 18 C 4 12, 0 8, 2 2 Z"
                         fill="#F7C032"
-                        stroke="#C9921A"
+                        stroke="#F7C032"
                         strokeWidth="1"
                       ></path>
                       <path
@@ -317,7 +317,7 @@ function render(v: Vals) {
                       position: 'absolute',
                       inset: '4px',
                       borderRadius: '19px',
-                      background: 'radial-gradient(110% 80% at 40% 25%,#FFF1B8 0%,#FFDB6E 35%,#F7C032 75%,#E0A61E 100%)',
+                      background: 'radial-gradient(110% 80% at 40% 25%,#FFF1B8 0%,#F7C032 35%,#F7C032 75%,#E0A61E 100%)',
                       overflow: 'hidden',
                     }}
                   >
@@ -723,7 +723,7 @@ function render(v: Vals) {
                     <path
                       d="M12 21s-7-4.4-9.5-8.6C.7 9.3 2.4 5 6.3 5c2.2 0 3.6 1.3 4.2 2.4h3C14.1 6.3 15.5 5 17.7 5c3.9 0 5.6 4.3 3.8 7.4C19 16.6 12 21 12 21z"
                       fill="#F7C032"
-                      stroke="#C9921A"
+                      stroke="#F7C032"
                       strokeWidth="1"
                     ></path>
                   </svg>
@@ -741,8 +741,8 @@ function render(v: Vals) {
                   >
                     <path
                       d="M12 21s-7-4.4-9.5-8.6C.7 9.3 2.4 5 6.3 5c2.2 0 3.6 1.3 4.2 2.4h3C14.1 6.3 15.5 5 17.7 5c3.9 0 5.6 4.3 3.8 7.4C19 16.6 12 21 12 21z"
-                      fill="#FFDB6E"
-                      stroke="#C9921A"
+                      fill="#F7C032"
+                      stroke="#F7C032"
                       strokeWidth="1"
                     ></path>
                   </svg>
@@ -774,7 +774,7 @@ function render(v: Vals) {
                     viewBox="0 0 24 24"
                     style={{ position: 'absolute', left: '146px', top: '36px', animation: 'smSpark 1.4s ease-in-out infinite' }}
                   >
-                    <path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z" fill="#FFDB6E"></path>
+                    <path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z" fill="#F7C032"></path>
                   </svg>
                   <svg
                     width="12"
@@ -782,7 +782,7 @@ function render(v: Vals) {
                     viewBox="0 0 24 24"
                     style={{ position: 'absolute', left: '38px', top: '60px', animation: 'smSpark 1.4s .7s ease-in-out infinite' }}
                   >
-                    <path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z" fill="#FFDB6E"></path>
+                    <path d="M12 0 L14 10 L24 12 L14 14 L12 24 L10 14 L0 12 L10 10 Z" fill="#F7C032"></path>
                   </svg>
                 </>
               ) : null}
@@ -844,7 +844,7 @@ function SamsoomItem({ v }: { v: Vals }) {
     return (
       <svg viewBox="0 0 34 34" style={{ ...box, transformOrigin: '17px 30px', animation: v.itemAnim }}>
         <rect x="13" y="16" width="8" height="16" rx="3" fill="#F7C032" stroke="#26282B" strokeWidth="2" />
-        <path d="M15.5 19v10M18.5 19v10" stroke="#C9921A" strokeWidth="1.2" />
+        <path d="M15.5 19v10M18.5 19v10" stroke="#F7C032" strokeWidth="1.2" />
         <rect x="15.6" y="2" width="2.8" height="15" rx="1" fill="#C9CCD0" stroke="#5E6064" strokeWidth=".8" />
         <path d="M15.6 2h2.8v2h-2.8z" fill="#26282B" />
       </svg>
@@ -871,7 +871,7 @@ function SamsoomItem({ v }: { v: Vals }) {
       <svg viewBox="0 0 34 34" style={box}>
         <circle cx="17" cy="17" r="14" fill="#26282B" stroke="#F7C032" strokeWidth="2.2" />
         <ellipse cx="17" cy="17" rx="7" ry="14" fill="none" stroke="#F7C032" strokeWidth="1.4" style={{ transformOrigin: '17px 17px', animation: v.itemAnim }} />
-        <ellipse cx="17" cy="17" rx="7" ry="14" fill="none" stroke="#FFDB6E" strokeWidth="1" opacity=".6" style={{ transformOrigin: '17px 17px', animation: v.itemAnim, animationDelay: '-.75s' }} />
+        <ellipse cx="17" cy="17" rx="7" ry="14" fill="none" stroke="#F7C032" strokeWidth="1" opacity=".6" style={{ transformOrigin: '17px 17px', animation: v.itemAnim, animationDelay: '-.75s' }} />
         <path d="M3 17h28M5.5 10h23M5.5 24h23" stroke="#F7C032" strokeWidth="1" opacity=".7" />
       </svg>
     );

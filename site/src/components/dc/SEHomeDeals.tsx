@@ -224,7 +224,7 @@ function render(v: Vals) {
                   <defs>
                     <linearGradient id="dlTrail" gradientUnits="userSpaceOnUse" x1={A[0]} y1={A[1]} x2={plx} y2={ply}>
                       <stop offset="0" stopColor="#F7C032" stopOpacity="0" />
-                      <stop offset="1" stopColor="#FFDB6E" stopOpacity=".95" />
+                      <stop offset="1" stopColor="#F7C032" stopOpacity=".95" />
                     </linearGradient>
                   </defs>
                   <path d={M.land} className="dl-land" />

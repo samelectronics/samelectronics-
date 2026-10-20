@@ -884,7 +884,7 @@ function render(v: Vals) {
                   height: '96px',
                   borderRadius: '50%',
                   boxShadow: 'inset 0 0 0 3px #26282B,inset 0 0 0 8px #F7C032,inset 0 0 0 10px #26282B',
-                  background: '#FFDB6E',
+                  background: '#F7C032',
                   color: '#26282B',
                   fontFamily: "'Space Grotesk',sans-serif",
                   fontWeight: '700',
