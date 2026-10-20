@@ -9,7 +9,7 @@ import { DCLogic } from '@/dc/runtime';
 import { onReplay } from '@/components/perf/SectionFX';
 
 const LK = { SCR: 0, FRM: 1, FLX: 2, BAT: 4, CAM: 5, SML: 6, BCV: 7 };
-const GN = { OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' };
+const GN = ((typeof window !== 'undefined' && window.SE_DATA && window.SE_DATA.gradeNames) || {}) /* R6 Part E: Excel qualities */;
 const PARTS = ['SE-IP13-SCR-IN', 'SE-A54-BAT-OR', 'SE-RN13-SCR-OR', 'SE-IP15-BCV-HQ'];
 // sample trade tiers: share of the retail price paid per unit
 export const TIERS = [{ min: 10, f: 0.88 }, { min: 50, f: 0.82 }, { min: 100, f: 0.78 }, { min: 500, f: 0.72 }];

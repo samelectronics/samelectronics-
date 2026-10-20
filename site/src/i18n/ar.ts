@@ -32,6 +32,7 @@ export const PARTS: Record<string, string> = {
   camera: 'كاميرا',
   cameras: 'كاميرات',
   'small parts': 'قطع صغيرة',
+  'sim tray': 'درج الشريحة',
 };
 
 export const GRADES: Record<string, string> = {
@@ -39,7 +40,8 @@ export const GRADES: Record<string, string> = {
   'Service Pack': 'سيرفس باك',
   OLED: 'OLED',
   Incell: 'إنسل',
-  'High Copy': 'هاي كوبي',
+  'OLED Soft': 'OLED مرن',
+  AAA: 'AAA',
 };
 
 export const PLACES: Record<string, string> = {
@@ -1022,6 +1024,29 @@ export const EXACT: Record<string, string> = {
   // 14 Oct §02
   'Closing soon': 'يغلق قريباً',
   'Opening soon': 'يفتح قريباً',
+  'Shop AAA screens': 'تسوّق شاشات AAA',
+  'Shop original screens': 'تسوّق الشاشات الأصلية',
+  'Shop OLED screens': 'تسوّق شاشات OLED',
+  'Shop Incell screens': 'تسوّق شاشات إنسل',
+  'Xiaomi Group': 'مجموعة شاومي',
+  'BBK / OPlus Group': 'مجموعة BBK / OPlus',
+  'Transsion Group': 'مجموعة ترانسشن',
+  'No model matches. Try another name, for example A54 or Note 13.': 'لا يوجد موديل مطابق. جرّب اسماً آخر، مثل A54 أو Note 13.',
+  'Ask us on WhatsApp': 'اسألنا على واتساب',
+  'Four qualities of screen.': 'أربع جودات من الشاشات.',
+  'ORIGINAL · SERVICE PACK': 'أصلي · سيرفس باك',
+  'AAA · GX': 'AAA · GX',
+  'Close to': 'قريبة من',
+  'the original.': 'الأصلية.',
+  'Genuine part, sealed in the maker’s service box · best colour, brightness and touch': 'قطعة أصلية مختومة في علبة الصيانة من الشركة · أفضل ألوان وسطوع ولمس',
+  'OLED replacement · deep blacks, true colour · great value': 'بديل OLED · أسود عميق وألوان حقيقية · قيمة ممتازة',
+  'High-grade copy · very good colour and touch · lower price': 'نسخة عالية الدرجة · ألوان ولمس ممتازان · سعر أقل',
+  'Value': 'القيمة',
+  'Warranty · ask us for the period': 'الضمان · اسألنا عن المدة',
+  'Best for: close-to-original at a lower price': 'الأفضل لـ: جودة قريبة من الأصلية بسعر أقل',
+  'Models coming soon': 'الموديلات قريباً',
+  'Also fits': 'يركب أيضاً على',
+  '15 brands': '15 ماركة',
   'Bright like day one, every model.': 'ساطعة كأول يوم، لكل موديل.',
   'Factory finish, every major brand.': 'تشطيب المصنع، لكل الماركات الكبرى.',
   'Charging ports & flex, tested.': 'منافذ الشحن والفلكسات، مفحوصة.',

@@ -7,7 +7,7 @@ import React from 'react';
 import { DCLogic } from '@/dc/runtime';
 import { onReplay } from '@/components/perf/SectionFX';
 
-const GN = { OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' };
+const GN = ((typeof window !== 'undefined' && window.SE_DATA && window.SE_DATA.gradeNames) || {}) /* R6 Part E: Excel qualities */;
 const LK = { SCR: 0, FRM: 1, FLX: 2, BAT: 4, CAM: 5, SML: 6, BCV: 7 };
 const TABS = [['all', 'All'], ['SCR', 'Screens'], ['BAT', 'Batteries'], ['BCV', 'Back covers'], ['CAM', 'Cameras']];
 export const STAGES = ['Packed', 'Departed Shenzhen', 'In flight', 'Customs Dubai', 'Arrived Deira'];

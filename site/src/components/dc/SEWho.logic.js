@@ -39,7 +39,7 @@ class Component extends DCLogic {
   renderVals() {
     const s = this.state, D = s.data, lib = s.lib;
     const scr = D ? D.products.filter((p) => p.id.startsWith('SE-IP13-SCR')) : [], lo = scr.length ? Math.min(...scr.map((p) => p.retail_price)) : 0;
-    const GN = { OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' };
+    const GN = ((typeof window !== 'undefined' && window.SE_DATA && window.SE_DATA.gradeNames) || {}) /* R6 Part E: Excel qualities */;
     const go = (id) => (ev) => { ev.preventDefault(); window.dispatchEvent(new CustomEvent(id === 'ret' ? 'se:fmp' : 'se:go', { detail: id === 'ret' ? { c: 'SCR' } : { id: id === 'rep' ? 'wholesale' : id === 'exp' ? 'network' : 'visit' } })); };
     return { secRef: this.secRef, seen: s.seen, i: s.i, prev: s.prev, n: s.n,
       lanes: LANES.map((l, j) => ({ ...l, j, on: j === s.i, pick: () => this.go(j), act: go(l.id) })),

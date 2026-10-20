@@ -87,16 +87,15 @@ export const facts = {
   // 5. What we sell
   categories: confirmed(['Screens', 'Batteries', 'Flex cables', 'Back covers', 'Frames & housings', 'Cameras', 'Small parts', 'Tools']),
   logicBoardsSold: toConfirm(null, 'The teardown shows a Logic board layer; is it sold as a product?'),
+  // R6 Part E: Quality and Manufacturer are the Excel's two master lists (src/content/catalog.ts); High Copy is gone.
   grades: confirmed([
-    { name: 'Original', meaning: 'Genuine original part' },
-    { name: 'Service Pack', meaning: 'Genuine manufacturer service part, sealed in its service box' },
-    { name: 'OLED', meaning: 'OLED replacement screen' },
-    { name: 'Incell', meaning: 'Incell replacement screen, best value' },
-    { name: 'High Copy', meaning: 'Budget-friendly, tested copy (for example GX)' },
+    { name: 'Quality', meaning: 'Original · Compatible · Standard · AAA · AA · OLED Soft · OLED Big · OLED Small · Incell · Other' },
+    { name: 'Manufacturer', meaning: 'Service Pack · OEM · Refurbished · OLED · GX · ZY · YK · Taiwan · Other' },
   ]),
   gradeAvailability: toConfirm(null, 'Which grades exist for each brand and part, and the warranty for each grade.'),
-  brandsConfirmed: confirmed(['Apple', 'Samsung', 'Xiaomi', 'Redmi', 'Realme', 'Oppo', 'Huawei']),
-  brandsToConfirm: toConfirm(['POCO', 'Vivo', 'Honor', 'Google', 'Sony', 'Tecno', 'Infinix'], 'Used across the designs (14 brands in total).'),
+  // R6 Part E: the owner's 15 brands in 4 groups (src/content/brands.ts); only the display order is still to confirm
+  brandsConfirmed: confirmed(['Apple', 'Samsung', 'Xiaomi', 'Redmi', 'POCO', 'Huawei', 'Honor', 'Oppo', 'Realme', 'OnePlus', 'Vivo', 'Infinix', 'Tecno', 'Google', 'Nokia']),
+  brandsToConfirm: toConfirm(['Apple · Samsung · Xiaomi Group · Huawei · Honor · BBK / OPlus Group · Transsion Group · Google · Nokia'], 'Display order (reviewer proposal).'),
   services: {
     screenReplacement: confirmed('Screen (LCD/OLED) replacement'),
     batteryRepair: confirmed('Battery repair and replacement'),
@@ -158,14 +157,14 @@ export const facts = {
   ),
   familySample: sample(
     [
-      { family: 'Screens', stock: 2211, brands: 14, from: 70 },
-      { family: 'Frames', stock: 464, brands: 14, from: 60 },
-      { family: 'Flex cables', stock: 1629, brands: 14, from: 25 },
-      { family: 'Logic boards', stock: 461, brands: 14, from: 25 },
-      { family: 'Batteries', stock: 1760, brands: 14, from: 35 },
+      { family: 'Screens', stock: 2211, brands: 15, from: 70 },
+      { family: 'Frames', stock: 464, brands: 15, from: 60 },
+      { family: 'Flex cables', stock: 1629, brands: 15, from: 25 },
+      { family: 'Logic boards', stock: 461, brands: 15, from: 25 },
+      { family: 'Batteries', stock: 1760, brands: 15, from: 35 },
       { family: 'Cameras', stock: 566, brands: 11, from: 130 },
-      { family: 'Small parts', stock: 377, brands: 14, from: 25 },
-      { family: 'Back glass / back covers', stock: 1698, brands: 14, from: 30 },
+      { family: 'Small parts', stock: 377, brands: 15, from: 25 },
+      { family: 'Back glass / back covers', stock: 1698, brands: 15, from: 30 },
     ],
     'Reference values from the approved designs. The page computes stock from the sample catalogue in public/se-data.js.',
   ),

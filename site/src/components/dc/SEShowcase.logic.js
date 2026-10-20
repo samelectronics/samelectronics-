@@ -12,14 +12,15 @@ const ex = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * cl(x))), eio = (x) => { x 
 
 // 14 Oct §10: Original first; each grade carries its own one-line description, four quality bars (out of 5, sample)
 // and a screen look (how bright and rich its picture is).
+// R6 Part E: the Excel's qualities (High Copy is not one of them and is gone). Featured until the owner chooses: Original
+// (sealed in its Service Pack box, the lead ad), OLED, Incell and AAA. No warranty claims here: periods come per product.
 export const ADS = [
-  { g: 'OR', k: 'ORIGINAL', h: ['The original.', 'Nothing less.'], d: 'Genuine part · best colour, brightness and touch · longest warranty', q: [5, 5, 5, 5], look: 'none' },
-  { g: 'SP', k: 'SERVICE PACK', h: ['Straight from', 'the maker’s box.'], d: 'Manufacturer service part · near-original quality · strong warranty', q: [5, 5, 5, 4], look: 'none', box: true },
-  { g: 'OL', k: 'OLED', h: ['Deep blacks.', 'Fair price.'], d: 'Aftermarket OLED · deep blacks, true colour · great value', q: [4, 4, 4, 3], look: 'saturate(1.08) contrast(1.06)' },
-  { g: 'IN', k: 'INCELL', h: ['Best value.', 'Still bright.'], d: 'LCD with built-in touch · good everyday quality · budget friendly', q: [3, 3, 4, 3], look: 'brightness(.94) saturate(.9)' },
-  { g: 'HQ', k: 'HIGH COPY', h: ['Budget-friendly.', 'Still tested.'], d: 'Lowest price · basic quality · short warranty', q: [2, 2, 3, 2], look: 'brightness(.86) saturate(.78) contrast(.94)' },
+  { g: 'OR', k: 'ORIGINAL · SERVICE PACK', h: ['The original.', 'Nothing less.'], d: 'Genuine part, sealed in the maker’s service box · best colour, brightness and touch', q: [5, 5, 5, 3], look: 'none', box: true },
+  { g: 'OL', k: 'OLED', h: ['Deep blacks.', 'Fair price.'], d: 'OLED replacement · deep blacks, true colour · great value', q: [4, 4, 4, 4], look: 'saturate(1.08) contrast(1.06)' },
+  { g: 'AQ', k: 'AAA · GX', h: ['Close to', 'the original.'], d: 'High-grade copy · very good colour and touch · lower price', q: [4, 3, 4, 4], look: 'brightness(.97) saturate(.95)' },
+  { g: 'IN', k: 'INCELL', h: ['Best value.', 'Still bright.'], d: 'LCD with built-in touch · good everyday quality · budget friendly', q: [3, 3, 4, 5], look: 'brightness(.94) saturate(.9)' },
 ];
-export const QL = ['Brightness', 'Colour', 'Touch', 'Warranty'];
+export const QL = ['Brightness', 'Colour', 'Touch', 'Value'];
 const DUR = (i) => (ADS[i].box ? 9.5 : 7.5);
 
 class Component extends DCLogic {

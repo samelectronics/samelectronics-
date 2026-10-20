@@ -76,7 +76,7 @@ function loop(host, r, cam, scene, onFrame) {
   requestAnimationFrame(tick);
   return () => { alive = false; io.disconnect(); r.dispose(); };
 }
-const PRESET = { apple: { body: 'titanium', cams: 'tri', matte: true }, samsung: { body: 'graphite', cams: 'col' }, google: { body: 'black', cams: 'bar' }, xiaomi: { body: 'black', cams: 'ring' }, redmi: { body: 'blue', cams: 'col' }, poco: { body: 'black', cams: 'col' }, huawei: { body: 'green', cams: 'ring' }, honor: { body: 'silver', cams: 'ring' }, oppo: { body: 'silver', cams: 'ring' }, vivo: { body: 'blue', cams: 'ring' }, realme: { body: 'green', cams: 'col' }, sony: { body: 'black', cams: 'col', round: 0.12 }, tecno: { body: 'blue', cams: 'ring' }, infinix: { body: 'graphite', cams: 'col' } };
+const PRESET = { apple: { body: 'titanium', cams: 'tri', matte: true }, samsung: { body: 'graphite', cams: 'col' }, google: { body: 'black', cams: 'bar' }, xiaomi: { body: 'black', cams: 'ring' }, redmi: { body: 'blue', cams: 'col' }, poco: { body: 'black', cams: 'col' }, huawei: { body: 'green', cams: 'ring' }, honor: { body: 'silver', cams: 'ring' }, oppo: { body: 'silver', cams: 'ring' }, vivo: { body: 'blue', cams: 'ring' }, realme: { body: 'green', cams: 'col' }, tecno: { body: 'blue', cams: 'ring' }, infinix: { body: 'graphite', cams: 'col' } };
 // Turntable: state = { brand, show } ; ±25° oscillation, 12s period
 export async function mountTurntable(host, state) {
   const L = await T(), { THREE } = L, { r, scene, cam } = stage(host.querySelector('canvas'), L, { floorY: -1.62, floorColor: 0x2e3033 });

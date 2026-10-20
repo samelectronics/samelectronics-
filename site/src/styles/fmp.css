@@ -117,3 +117,16 @@
 .fmq-m small { font: 500 10px 'JetBrains Mono', monospace; color: #9DA1A6; }
 .fr-mini { display: grid; place-items: center; width: 40px; height: 52px; border-radius: 8px; background: radial-gradient(70% 60% at 50% 30%, #3A3C40, #232427 70%); flex: none; }
 .fmq-all { display: flex; justify-content: space-between; align-items: center; height: 46px; margin-top: 12px; padding: 0 16px; border: none; border-radius: 12px; background: #F7C032; color: #26282B; font: 600 14px Inter, sans-serif; cursor: pointer; }
+/* R6 Part E: "Also fits" line after picking a model */
+.fm-fits { margin: 0 0 14px; padding: 10px 14px; border-radius: 12px; background: rgba(247, 192, 50, .08); box-shadow: inset 0 0 0 1px rgba(247, 192, 50, .28); font-size: 13px; color: #E6E7E9; }
+.fm-fits b { color: #F7C032; margin-inline-end: 8px; font-weight: 600; }
+.fm-bgroup + .fm-bgroup { margin-top: 12px; }
+.fm-grade .g .mk { display: flex; align-items: center; gap: 4px; margin-top: 2px; font: 500 11px Inter, sans-serif; color: #9DA1A6; }
+/* R6 Part E: brands clustered by the owner's groups; each label sits above its cluster */
+.fm-brands:has(.fm-bgroup) { padding-top: 0; }
+.fm-bgroup .fm-pop { position: static; display: block; width: auto; max-width: 320px; margin-bottom: 10px; }
+/* every logo keeps one height but never runs under the stock bars: a wide wordmark scales down to fit */
+.fm-tile.brand .lg { max-width: calc(100% - 40px); }
+.fm-tile.brand .lg, .fm-tile.brand .lg * { min-width: 0; max-width: 100%; }
+.fm-tile.brand .lg { max-width: calc(100% - 40px); }
+[dir='rtl'] .fm-tile.brand .sig { right: auto; left: 12px; } /* R6 Part D: bars at the tile's far side */

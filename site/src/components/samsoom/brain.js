@@ -54,7 +54,7 @@ const INTENTS = {
   hours: { words: 'open opened opening hours hour close closed closing today tonight tomorrow now time friday sunday saturday schedule timing مفتوح مفتوحين فاتح فاتحين دوام ساعات مسكر مسكرين مغلق متي اليوم الوقت الجمعه الاحد بكره', phrases: 'are you open' },
   location: { words: 'where location located address map maps directions shop store deira murar dubai branch visit وين اين عنوان موقع مكان محل ديره المرر دبي فرع', phrases: 'find you|get there' },
   contact: { words: 'contact phone call number whatsapp email mail instagram tiktok facebook human person talk تواصل رقم هاتف تلفون جوال واتس واتساب ايميل اتصل', phrases: '' },
-  brands: { words: 'brand brands apple iphone samsung galaxy xiaomi redmi poco realme oppo vivo huawei honor google pixel sony tecno infinix ماركات ماركه براند ابل ايفون سامسونج شاومي ريدمي هواوي اوبو', phrases: 'which phones' },
+  brands: { words: 'brand brands apple iphone samsung galaxy xiaomi redmi poco realme oppo vivo huawei honor google pixel tecno infinix oneplus nokia ماركات ماركه براند ابل ايفون سامسونج شاومي ريدمي هواوي اوبو', phrases: 'which phones' },
   stock: { words: 'stock available availability part parts screen screens battery batteries lcd display متوفر موجود قطعه قطع شاشه بطاريه', phrases: 'do you have|عندكم' },
   thanks: { words: 'thanks thank thx ty appreciate awesome amazing perfect love شكرا مشكور تسلم يعطيك', phrases: 'thank you' },
   bye: { words: 'bye goodbye cya باي', phrases: 'see you|مع السلامه' },
@@ -152,8 +152,8 @@ export function fallbackAnswer(q, ctx) {
     }
     case 'grades':
       t = L(
-        'Five grades, always labelled:\n' + (D.grades || []).map((g) => g.name + ': ' + g.desc).join('\n') + '\nOriginal or Service Pack for the best result, OLED for value, Incell when budget comes first.',
-        'خمس درجات، وكلها موضحة على الطلب: Original وService Pack لأفضل نتيجة، OLED قيمة ممتازة، Incell عندما تكون الميزانية أولاً، وHigh Copy الخيار الاقتصادي المفحوص.',
+        'Quality and manufacturer are labelled separately on every part.\nQualities: ' + (D.qualities || []).map((q) => q.name).join(' · ') + '\nManufacturers: ' + (D.manufacturers || []).map((m) => m.name).join(' · ') + '\nOriginal (Service Pack) for the best result, OLED or AAA for value, Incell when budget comes first.',
+        'نوضح الجودة والشركة المصنّعة لكل قطعة بشكل منفصل.\nالجودة: ' + (D.qualities || []).map((q) => q.name).join(' · ') + '\nالمصنّع: ' + (D.manufacturers || []).map((m) => m.name).join(' · ') + '\nOriginal (Service Pack) لأفضل نتيجة، OLED أو AAA قيمة ممتازة، Incell عندما تكون الميزانية أولاً.',
       );
       act = 'models';
       break;

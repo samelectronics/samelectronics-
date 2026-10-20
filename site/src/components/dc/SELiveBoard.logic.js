@@ -11,7 +11,7 @@ import { onReplay } from '@/components/perf/SectionFX';
 class Component extends DCLogic {
   state = { data: window.SE_DATA || null, i: 0, filt: 'all', counts: { arr: 5, low: 4, drop: 3, ship: 6 }, flash: {}, spark: { arr: [2, 3, 3, 4, 5], low: [4, 4, 3, 4, 4], drop: [1, 2, 2, 3, 3], ship: [2, 3, 4, 5, 6] }, pulse: null, tr: 0, now: Date.now(), seen: false, lib: null, cu: 0 };
   secRef = React.createRef();
-  GN = { OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' };
+  GN = ((typeof window !== 'undefined' && window.SE_DATA && window.SE_DATA.gradeNames) || {}) /* R6 Part E: Excel qualities */;
   MAP = { arrival: 'arr', restock: 'arr', low: 'low', drop: 'drop', shipped: 'ship' };
   ISO = { Nigeria: 'NG', Iraq: 'IQ', Romania: 'RO', Morocco: 'MA', Uganda: 'UG', Algeria: 'DZ', Tunisia: 'TN', Libya: 'LY', Egypt: 'EG', Sudan: 'SD', Eritrea: 'ER', Ethiopia: 'ET', 'Saudi Arabia': 'SA', Oman: 'OM', Yemen: 'YE', Syria: 'SY', Lebanon: 'LB', Iran: 'IR', 'Türkiye': 'TR', Turkey: 'TR', Azerbaijan: 'AZ', UK: 'GB', 'United Kingdom': 'GB', Spain: 'ES', Russia: 'RU', UAE: 'AE' };
   LK = { SCR: 0, FRM: 1, FLX: 2, BAT: 4, CAM: 5, SML: 6, BCV: 7 };

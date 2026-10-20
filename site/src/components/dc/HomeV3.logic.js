@@ -9,6 +9,8 @@ import { jumpTo } from '@/lib/jumpScroll'; // R6 Part B: logo, nav links, hours 
 import { site as SITE } from '@/content/facts';
 import { fallbackAnswer, emoteFor, isArabic } from '@/components/samsoom/brain';
 
+// R6 Part E: quality names come from the Excel (window.SE_DATA.gradeNames); read lazily so it also works before data loads
+const GN = new Proxy({}, { get: (_, k) => ((typeof window !== 'undefined' && window.SE_DATA && window.SE_DATA.gradeNames) || {})[k] });
 class Component extends DCLogic {
   state = { data: window.SE_DATA || null, now: Date.now(), k: 0, z: 1, vw: 1440, vh: 900, prog: 0, tp: 0, tone: 'dark', ip: 0, ipJump: false, ipToast: false, ipCart: 2, reel: 0, reelJump: false, hover: null, typeI: 0, typeN: 0, seen: false, tilt: null, mx: 900, my: 400 };
   benchRef = React.createRef();
@@ -214,7 +216,7 @@ class Component extends DCLogic {
   spark(x, y) { const id = Date.now() + Math.random(); this.setState((s) => ({ sparks: [...(s.sparks || []), { id, x, y }] })); setTimeout(() => this.setState((s) => ({ sparks: (s.sparks || []).filter((k) => k.id !== id) })), 700); }
   flash(t) { clearTimeout(this.toastT2); this.setState({ toast: t }); this.toastT2 = setTimeout(() => this.setState({ toast: '' }), 2600); }
   extA(s, D, P, fmt, cl, pad, bars, KIND) {
-    const GN = { OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' };
+    const GN = ((typeof window !== 'undefined' && window.SE_DATA && window.SE_DATA.gradeNames) || {}) /* R6 Part E: Excel qualities */;
     const byId = (id) => P.find((p) => p.id === id);
     const mOf = (p) => D && p && D.models.find((m) => m.id === p.model_id);
     const dg = new Date(s.now), g = new Date(dg.getTime() + dg.getTimezoneOffset() * 6e4 + 4 * 36e5), tsec = g.getHours() * 3600 + g.getMinutes() * 60 + g.getSeconds();
@@ -246,7 +248,7 @@ class Component extends DCLogic {
       selTitle: sel ? sel.title : '', selGrade: sel ? GN[sel.grade] + ' · ' + (sel.stock_qty >= 4 ? 'in stock' : 'only ' + sel.stock_qty + ' left') : '', selPrice: sel ? 'AED ' + fmt(sel.retail_price) : '',
       add: (ev) => sel && this.addToCart(sel.id, ev), open: (ev) => { ev.preventDefault(); this.flash('The full Model File page is next in the build.'); } };
     // deals
-    const deals = D ? D.deals.slice(0, 4).map((d) => { const p = byId(d.product_id); if (!p) return null; const left = Math.max(0, d.ends - s.now) / 1000; return { kind: KIND[p.category], pct: '−' + d.discount + '%', grade: ({ OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' })[p.grade], title: p.title, price: 'AED ' + fmt(p.retail_price * (1 - d.discount / 100)), old: 'AED ' + fmt(p.retail_price), bars: bars(p.stock_qty, '#F7C032', 'rgba(255,255,255,.18)'), stock: p.stock_qty >= 4 ? 'In stock' : p.stock_qty ? 'Only ' + p.stock_qty + ' left' : 'Restocking', left: left > 86400 ? Math.floor(left / 86400) + 'd ' + pad(Math.floor((left % 86400) / 3600)) + 'h' : Math.floor(left / 3600) + 'h ' + pad(Math.floor((left % 3600) / 60)) + 'm', add: (ev) => this.addToCart(p.id, ev) }; }).filter(Boolean) : [];
+    const deals = D ? D.deals.slice(0, 4).map((d) => { const p = byId(d.product_id); if (!p) return null; const left = Math.max(0, d.ends - s.now) / 1000; return { kind: KIND[p.category], pct: '−' + d.discount + '%', grade: GN[p.grade], title: p.title, price: 'AED ' + fmt(p.retail_price * (1 - d.discount / 100)), old: 'AED ' + fmt(p.retail_price), bars: bars(p.stock_qty, '#F7C032', 'rgba(255,255,255,.18)'), stock: p.stock_qty >= 4 ? 'In stock' : p.stock_qty ? 'Only ' + p.stock_qty + ' left' : 'Restocking', left: left > 86400 ? Math.floor(left / 86400) + 'd ' + pad(Math.floor((left % 86400) / 3600)) + 'h' : Math.floor(left / 3600) + 'h ' + pad(Math.floor((left % 3600) / 60)) + 'm', add: (ev) => this.addToCart(p.id, ev) }; }).filter(Boolean) : [];
     const sh = D && D.shipments[0], sl = sh ? Math.max(0, sh.lands - s.now) / 1000 : 0, span = 7 * 86400;
     const ship = { id: sh ? sh.id : '', label: sh ? sh.label : '', origin: sh ? sh.origin : '', pct: (cl(1 - sl / span) * 100).toFixed(1) + '%', parts: [[Math.floor(sl / 86400), 'DAYS'], [Math.floor((sl % 86400) / 3600), 'HRS'], [Math.floor((sl % 3600) / 60), 'MIN']].map(([v, u]) => ({ v: pad(v), u })), notify: () => this.flash('We’ll message you when ' + (sh ? sh.id : 'it') + ' lands. (demo)') };
     const preorders = D ? D.preorders.map((p) => ({ ...p, bg: p.status === 'Pre-order open' ? '#F7C032' : '#F2F3F4' })) : [];
@@ -254,7 +256,7 @@ class Component extends DCLogic {
   }
   mapRef = React.createRef(); storyRef = React.createRef();
   extB(s, D, P, fmt, cl, pad) {
-    const GN = { OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' };
+    const GN = ((typeof window !== 'undefined' && window.SE_DATA && window.SE_DATA.gradeNames) || {}) /* R6 Part E: Excel qualities */;
     // repair estimator
     const reBrand = s.reBrand || 'apple', models = D ? D.models.filter((m) => m.brand_id === reBrand) : [];
     const reModel = models.some((m) => m.id === s.reModel) ? s.reModel : models[0] ? models[0].id : '';
@@ -315,7 +317,7 @@ class Component extends DCLogic {
   }
   reply(text) {
     const D = this.state.data, t = text.toLowerCase(), H = this.hours(), ar = isArabic(text); if (!D) return { t: ar ? 'لحظة…' : 'One moment…' };
-    const GN = { OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' };
+    const GN = ((typeof window !== 'undefined' && window.SE_DATA && window.SE_DATA.gradeNames) || {}) /* R6 Part E: Excel qualities */;
     const nt = t.replace(/[\s-]/g, '');
     const m = D.models.find((x) => nt.includes(x.name.toLowerCase().replace(/[\s-]/g, '')) || x.model_numbers.some((n) => nt.includes(n.toLowerCase().replace(/[\s-]/g, ''))) || nt.includes(x.name.toLowerCase().replace(/^(galaxy|iphone|xiaomi|redmi|realme|oppo|huawei|pixel|xperia)\s*/, '').replace(/[\s-]/g, '')));
     if (m) { const W = { SCR: ['screen', 'lcd', 'oled', 'display', 'شاشه', 'شاشة'], BAT: ['battery', 'batt', 'بطاريه', 'بطارية'], FLX: ['flex', 'charging', 'cable', 'شحن'], BCV: ['back', 'cover', 'غطاء'], CAM: ['camera', 'كاميرا'], FRM: ['frame', 'housing', 'فريم'], SML: ['port', 'button', 'speaker', 'سماعه'] };
@@ -351,7 +353,7 @@ class Component extends DCLogic {
   }
   openFmpAt(b, m, c, q) { this.setState({ fmpOpen: true, fmpB: b || null, fmpM: m || null, fmpC: c || null, fmpQ: (!m && q) || '', drawerMap: false, drawerCart: false }); }
   extC(s, D, P, fmt, cl, pad, bars, KIND) {
-    const GN = { OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' }, H = this.hours(), yr = new Date(s.now).getFullYear();
+    const GN = ((typeof window !== 'undefined' && window.SE_DATA && window.SE_DATA.gradeNames) || {}) /* R6 Part E: Excel qualities */, H = this.hours(), yr = new Date(s.now).getFullYear();
     const wa = D ? 'https://wa.me/' + D.contact.wa : '#', sm = (x) => 'url(/icons/' + x + '.svg) center / contain no-repeat' /* R6 Part C4: self-hosted (the CDN mask came back empty) */;
     // team (entry → senior)
     const TM = D ? D.teamRoles.map((role, i) => { const t = D.team.find((x) => x.role === role) || {}, f = role.startsWith('Founder'); return { role, n: 'C' + pad(i + 1), slot: 'se-team-' + i, name: t.name || 'Name to come', nameC: t.name ? '#FFFFFF' : '#9DA1A6', years: t.since ? (yr - t.since) + ' years with us' : 'Years · to come', stars: [0, 1, 2, 3, 4].map(() => ({ f: 'none' })), rateT: 'No ratings yet', bg: f ? 'linear-gradient(160deg,rgba(247,192,50,.16),rgba(255,255,255,.04))' : 'rgba(255,255,255,.04)', sh: f ? 'inset 0 0 0 1.5px #F7C032,0 20px 40px rgba(0,0,0,.3)' : 'inset 0 0 0 1px rgba(255,255,255,.09)', ring: f ? '#F7C032' : 'rgba(247,192,50,.45)' }; }) : [];
@@ -412,14 +414,17 @@ class Component extends DCLogic {
     const path = PN.map(([k, v], i) => { const done = i < lvl - 1, cur = i === lvl - 1; return { label: done ? v + ' ✓' : k, go: backs[i], off: !done, cur: done ? 'pointer' : 'default', ink: done ? '#FFDB6E' : cur ? '#FFFFFF' : '#8C9096', bg: done || cur ? '#3D3E3F' : '#2E3033', dot: done ? '#FFDB6E' : cur ? '#FFFFFF' : '#5E6064', glow: done ? '0 0 0 1.5px #F7C032,0 0 14px rgba(247,192,50,.7)' : cur ? '0 0 0 1.5px #FFFFFF' : 'inset 0 0 0 1.5px #5E6064', more: i < 3, fill: done ? 1 : 0, flow: i === lvl - 2 }; });
     const POP = ['apple', 'samsung', 'xiaomi'];
     if (this._fmD !== D) { this._fmD = D; this._fmB = Br.map((x) => { const ms = Mo.filter((m) => m.brand_id === x.id), ids = new Set(ms.map((m) => m.id)), qq = P.filter((p) => ids.has(p.model_id)).reduce((t, p) => t + p.stock_qty, 0); return { id: x.id, nm: ms.length, q: qq }; }); }
-    const brandsF = [...(this._fmB || [])].sort((x, y) => (POP.indexOf(y.id) >= 0) - (POP.indexOf(x.id) >= 0)).map((x, i) => ({ id: x.id, pop: POP.includes(x.id), models: x.nm + ' models', parts: kf(x.q) + ' in stock', bars: fbar(x.q / 20), d: dl(i), bg: POP.includes(x.id) ? 'linear-gradient(180deg,rgba(247,192,50,.12),rgba(255,255,255,.04))' : 'rgba(255,255,255,.05)', pick: () => this.setState({ fmpB: x.id, fmpQ: '', fmpSer: null }) }));
-    const bm = Mo.filter((m) => !fb || m.brand_id === fb), SER = [...new Set(bm.map((m) => m.series))].slice(0, 10), ser = s.fmpSer;
-    const fModels = bm.filter((m) => (!ser || m.series === ser) && (!q || (m.name + m.model_numbers.join('')).toLowerCase().replace(/[\s-]/g, '').includes(q)));
-    const CAM = { apple: 'cTri', samsung: 'cCol', google: 'cBar', redmi: 'cCol', poco: 'cCol', realme: 'cCol', sony: 'cCol', infinix: 'cCol' };
+    const GRP = Object.fromEntries(((D && D.brandGroups) || []).map((g) => [g.id, g.name])), BG = Object.fromEntries(Br.map((b) => [b.id, b.group]));
+    // R6 Part E: the owner's order and groups (src/content/brands.ts); a small family label heads each cluster
+    const brandsF = (this._fmB || []).map((x, i) => ({ id: x.id, grp: GRP[BG[x.id]] || '', pop: POP.includes(x.id), models: x.nm ? x.nm + ' models' : 'Models coming soon', parts: x.nm ? (x.q ? kf(x.q) + ' in stock' : 'Ask us') : 'Ask us on WhatsApp', bars: fbar(x.q / 20), d: dl(i), bg: POP.includes(x.id) ? 'linear-gradient(180deg,rgba(247,192,50,.12),rgba(255,255,255,.04))' : 'rgba(255,255,255,.05)', pick: () => this.setState({ fmpB: x.id, fmpQ: '', fmpSer: null }) }));
+    const bm = Mo.filter((m) => !fb || m.brand_id === fb), SER = [...new Set(bm.map((m) => m.series).filter(Boolean))], ser = s.fmpSer;
+    const fModels = bm.filter((m) => (!ser || m.series === ser) && (!q || (m.name + m.model_numbers.join('') + (m.fits || []).map((g) => g.names.join('')).join('')).toLowerCase().replace(/[\s-]/g, '').includes(q))); // R6 E: a compatible name finds the model too
+    const CAM = { apple: 'cTri', samsung: 'cCol', google: 'cBar', redmi: 'cCol', poco: 'cCol', realme: 'cCol', infinix: 'cCol', oneplus: 'cCol', nokia: 'cCol' };
     const mp = P.filter((p) => p.model_id === fm);
     const fgr = mp.filter((p) => p.category === fc).sort((x, y) => y.retail_price - x.retail_price);
-    const BEST = { OR: 'Best for: a like-new result', SP: 'Best for: factory-original quality', OL: 'Best for: rich colour at a lower price', IN: 'Best for: tight budgets', HQ: 'Best for: the lowest cost' };
-    const WAR = { OR: 'Warranty · 6 months (sample)', SP: 'Warranty · 6 months (sample)', OL: 'Warranty · 3 months (sample)', IN: 'Warranty · 1 month (sample)', HQ: 'Warranty · 1 month (sample)' };
+    // R6 Part E: one line per quality, never an invented warranty period (that is set per product in the Control Room)
+    const BEST = { OR: 'Best for: a like-new result', OL: 'Best for: rich colour at a lower price', IN: 'Best for: tight budgets', AQ: 'Best for: close-to-original at a lower price' };
+    const WAR = new Proxy({}, { get: () => 'Warranty · ask us for the period' });
         const bProds = fb ? P.filter((p) => { const m = Mo.find((x) => x.id === p.model_id); return m && m.brand_id === fb; }) : P;
     const scope = lvl === 1 ? P : lvl === 2 ? bProds : lvl === 3 ? mp : fgr, count = scope.length, stockU = units(scope);
     const pathTxt = [bName, mObj && mObj.name, cObj && cObj.name].filter(Boolean).join(' › ') || 'All parts';
@@ -428,9 +433,11 @@ class Component extends DCLogic {
       slide: (lvl % 2 ? 'fmSlideA' : 'fmSlideB') + ' .3s cubic-bezier(.2,.8,.2,1) both', brands: brandsF,
       series: [{ name: 'All', id: null }, ...SER.map((x) => ({ name: x, id: x }))].map((x) => ({ name: x.name, bg: ser === x.id ? '#F7C032' : 'rgba(255,255,255,.07)', ink: ser === x.id ? '#26282B' : '#FFFFFF', pick: () => this.setState({ fmpSer: x.id }) })),
       quick: (fb ? bm.slice(0, 2) : []).map((m, i) => ({ t: (i ? 'Most searched · ' : 'Recently viewed · ') + m.name, pick: () => this.setState({ fmpM: m.id }) })),
-      models: fModels.slice(0, 24).map((m, i) => { const ck = CAM[m.brand_id] || 'cRing'; return { name: m.name, num: m.model_numbers[0], parts: kf(units(P.filter((p) => p.model_id === m.id))) + ' in stock', slot: 'fmp-model-' + m.id, d: dl(i), cTri: ck === 'cTri', cCol: ck === 'cCol', cBar: ck === 'cBar', cRing: ck === 'cRing', pick: () => this.setState({ fmpM: m.id, fmpB: m.brand_id }) }; }), none: lvl === 2 && !fModels.length,
+      models: fModels.slice(0, 24).map((m, i) => { const ck = CAM[m.brand_id] || 'cRing'; return { name: m.name, num: m.model_numbers[0], parts: (() => { const mp2 = P.filter((p) => p.model_id === m.id); return mp2.length ? kf(units(mp2)) + ' in stock' : 'Ask us'; })(), slot: 'fmp-model-' + m.id, d: dl(i), cTri: ck === 'cTri', cCol: ck === 'cCol', cBar: ck === 'cBar', cRing: ck === 'cRing', pick: () => this.setState({ fmpM: m.id, fmpB: m.brand_id }) }; }), none: lvl === 2 && !fModels.length,
+      fits: mObj && mObj.fits && mObj.fits.length ? [...new Set(mObj.fits.flatMap((g) => g.names))].filter((n) => n.toLowerCase().replace(/\s/g, '') !== mObj.name.toLowerCase().replace(/\s/g, '')).join(' · ') : '',
+      ask: lvl === 3 && !mp.length ? Ca.filter((c) => !c.soon).map((c, i) => ({ name: c.name, kind: KIND[c.id], d: dl(i), wa: wa + '?text=' + encodeURIComponent('Hi Sam Electronics, do you have the ' + c.one.toLowerCase() + ' for ' + mObj.name + '?') })) : [],
       cats: Ca.filter((c) => mp.some((p) => p.category === c.id)).map((c, i) => { const cp = mp.filter((p) => p.category === c.id), qq = cp.reduce((t, p) => t + p.stock_qty, 0); return { name: c.name, kind: KIND[c.id], d: dl(i), n: cp.length + ' grades · from AED ' + Math.min(...cp.map((p) => p.retail_price)), o: qq ? 1 : 0.7, tag: kf(qq) + ' in stock', has: !!qq, out: !qq, slot: 'fmp-part-' + fm + '-' + c.id, notify: (ev) => { ev.stopPropagation(); this.flash('We’ll message you when ' + c.name.toLowerCase() + ' for this model are back. (demo)'); }, pick: () => this.setState({ fmpC: c.id }) }; }),
-      grades: fgr.map((p, i) => { const out = p.stock_qty === 0; return { code: GN[p.grade], name: GN[p.grade], best: BEST[p.grade] || '', warranty: WAR[p.grade] || '', d: dl(i), price: 'AED ' + fmt(p.retail_price), stock: out ? 'Restocking' : p.stock_qty >= 4 ? 'In stock' : 'Only ' + p.stock_qty + ' left', bars: fbar(p.stock_qty), o: out ? 0.55 : 1, bd: i === 0 ? 'rgba(247,192,50,.5)' : 'rgba(255,255,255,.1)', kind: KIND[p.category], slot: 'fmp-grade-' + p.id, inStock: !out, out, shop: () => goShop(p), add: (ev) => { ev.stopPropagation(); out ? this.flash('We’ll message you when it’s back. (demo)') : this.addToCart(p.id, ev); } }; }),
+      grades: fgr.map((p, i) => { const out = p.stock_qty === 0; return { code: GN[p.grade], name: GN[p.grade], maker: ((D && D.makerNames) || {})[p.grade] || '', best: BEST[p.grade] || '', warranty: WAR[p.grade] || '', d: dl(i), price: 'AED ' + fmt(p.retail_price), stock: out ? 'Restocking' : p.stock_qty >= 4 ? 'In stock' : 'Only ' + p.stock_qty + ' left', bars: fbar(p.stock_qty), o: out ? 0.55 : 1, bd: i === 0 ? 'rgba(247,192,50,.5)' : 'rgba(255,255,255,.1)', kind: KIND[p.category], slot: 'fmp-grade-' + p.id, inStock: !out, out, shop: () => goShop(p), add: (ev) => { ev.stopPropagation(); out ? this.flash('We’ll message you when it’s back. (demo)') : this.addToCart(p.id, ev); } }; }),
       summary: [bName, mObj && mObj.name, cObj && cObj.name].filter(Boolean).join(' · ') || 'Pick a brand to start',
       foot: fmt(stockU) + ' parts in stock · ' + count + ' listings' + (lvl === 2 ? ' · ' + fModels.length + ' models' : '') + ' · sample data', count, countF: fmt(count), roll: (count % 2 ? 'fmRollA' : 'fmRollB') + ' .35s cubic-bezier(.2,.8,.2,1) both',
       shop: () => goShop(null) };
@@ -517,7 +524,7 @@ class Component extends DCLogic {
   // Issue 1B: the hero bar is the search (Ctrl K focuses it)
   openSearch() { const el = document.querySelector('.se-hs-input'); if (!el) return; this.setState({ fmpOpen: false }); if (window.scrollY > 200) jumpTo(0); setTimeout(() => el.focus({ preventScroll: true }), 60); }
   extD(s, D, P, fmt, KIND) {
-    const GN = { OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' };
+    const GN = ((typeof window !== 'undefined' && window.SE_DATA && window.SE_DATA.gradeNames) || {}) /* R6 Part E: Excel qualities */;
     const q = (s.spQ || '').trim().toLowerCase(), nq = q.replace(/[\s-]/g, ''), Br = D ? D.brands : [], Mo = D ? D.models : [], Ca = D ? D.categories : [];
     const has = (str) => str.toLowerCase().replace(/[\s-]/g, '').includes(nq);
     const close = () => this.setState({ spOpen: false });
@@ -572,7 +579,7 @@ class Component extends DCLogic {
     const KIND = { SCR: 'scr', BAT: 'bat', FLX: 'flx', BCV: 'bcv', FRM: 'frm', CAM: 'cam', SML: 'sml', TLS: 'tls' };
     const ip12 = (this._ip || []).slice(0, 12), ipBase = [...ip12, ...ip12.slice(0, 6)], tap = -1;
     const ipLK = { scr: 0, frm: 1, flx: 2, board: 3, bat: 4, cam: 5, sml: 6, bcv: 7 }, ipTh = s.lib && s.lib.thumb && s.lib.thumb.length >= 8 ? s.lib.thumb : null, ipFit = (bb) => { const [x0, y0, bw, bh, ar] = bb || [0.1, 0.1, 0.8, 0.8, 1], Wi = Math.min(80 / bw, 80 / (bh * ar)), Hi = Wi * ar, q = (v) => Math.round(v * 10) / 10; return { l: q(40 - (x0 + bw / 2) * Wi), t: q(40 - (y0 + bh / 2) * Hi), w: q(Wi), h: q(Hi) }; };
-    const ipCards = ipBase.map((p, i) => ({ ...((() => { const ix = ipLK[KIND[p.category]], ok = !!ipTh && ix != null && !!ipTh[ix]; return { lib: ok, css: !ok, img: ok ? ipTh[ix] : '', f: ipFit((s.bb || {})[ix]) }; })()), kind: KIND[p.category], grade: ({ OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' })[p.grade], title: p.title, price: 'AED ' + fmt(p.retail_price), stock: p.stock_qty >= 4 ? 'In stock' : 'Only ' + p.stock_qty, bars: bars(p.stock_qty, '#26282B', '#D5D7DA'), ring: i === tap && s.ipToast ? '0 0 0 2px #F7C032,0 8px 22px rgba(247,192,50,.45)' : '0 1px 2px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.05)' }));
+    const ipCards = ipBase.map((p, i) => ({ ...((() => { const ix = ipLK[KIND[p.category]], ok = !!ipTh && ix != null && !!ipTh[ix]; return { lib: ok, css: !ok, img: ok ? ipTh[ix] : '', f: ipFit((s.bb || {})[ix]) }; })()), kind: KIND[p.category], grade: GN[p.grade], title: p.title, price: 'AED ' + fmt(p.retail_price), stock: p.stock_qty >= 4 ? 'In stock' : 'Only ' + p.stock_qty, bars: bars(p.stock_qty, '#26282B', '#D5D7DA'), ring: i === tap && s.ipToast ? '0 0 0 2px #F7C032,0 8px 22px rgba(247,192,50,.45)' : '0 1px 2px rgba(0,0,0,.06),0 2px 8px rgba(0,0,0,.05)' }));
     const ipChips = ['All', 'Screens', 'Batteries', 'Covers', 'Cameras'].map((c, i) => { const on = i === 0; return { c, bg: on ? '#26282B' : '#FFFFFF', ink: on ? '#FFFFFF' : '#3D3E3F' }; });
     // phone reel
     const TH = { dark: { bg: 'radial-gradient(110% 70% at 50% 36%,#4B4B49 0%,#303132 52%,#1E1F21 100%)', ink: '#FFFFFF', sub: '#D5D7DA', kick: '#F7C032', kickO: 1, cta: '#F7C032', ctaInk: '#26282B', track: 'rgba(255,255,255,.1)', line: 'rgba(255,255,255,.3)', shc: 'rgba(0,0,0,.55)', shd: 'drop-shadow(0 12px 14px rgba(0,0,0,.45))' },

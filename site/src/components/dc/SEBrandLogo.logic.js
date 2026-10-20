@@ -20,9 +20,10 @@ const WM = {
   huawei: { t: 'HUAWEI', f: "'Montserrat',sans-serif", w: 600, fs: 0.8, ls: '.1em' },
   honor: { t: 'HONOR', f: "'Josefin Sans',sans-serif", w: 600, fs: 0.86, ls: '.2em', dy: 0.06 },
   google: { t: 'Google', f: "'Outfit',sans-serif", w: 500, fs: 0.92, ls: '-.01em' },
-  sony: { t: 'SONY', f: "'DM Serif Display',serif", w: 400, fs: 0.9, ls: '.05em' },
   tecno: { t: 'TECNO', f: "'Exo 2',sans-serif", w: 800, fs: 0.84, ls: '.03em', st: 'italic' },
-  infinix: { t: 'Infinix', f: "'Audiowide',sans-serif", w: 400, fs: 0.82, ls: '.01em' }
+  infinix: { t: 'Infinix', f: "'Audiowide',sans-serif", w: 400, fs: 0.82, ls: '.01em' },
+  oneplus: { t: 'OnePlus', f: "'Space Grotesk',sans-serif", w: 700, fs: 0.8, ls: '.02em' },
+  nokia: { t: 'NOKIA', f: "'Space Grotesk',sans-serif", w: 500, fs: 0.8, ls: '.12em' }
 };
 class Component extends DCLogic {
   state = { ok: null, ar: 3.2 };

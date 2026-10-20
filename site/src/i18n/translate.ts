@@ -9,7 +9,7 @@ const norm = (s: string) => s.replace(/\s+/g, ' ').trim();
 const DICT: Record<string, string> = { ...ENGINE, ...EXACT, ...PLACES };
 
 const MODEL_RE =
-  /^(?:iPhone|Galaxy|Redmi|POCO|Pixel|Realme|Oppo|Vivo|Huawei|Honor|Xperia|Tecno|Infinix|Xiaomi|SM-|S\d{2}|A\d{2,4}|Note|Magic|Camon|Spark|Nova|P\d{2})/;
+  /^(?:iPhone|iPad|Apple Watch|Galaxy|Redmi|POCO|Poco|Pixel|Google|Realme|Oppo|OPPO|RENO|Reno|Vivo|Huawei|Honor|OnePlus|Nokia|Tecno|Infinix|Xiaomi|Mi |SM-|S\d{2}|A\d{2,4}|M\d{3}|J\d|Z |F\d{3}|Note|Magic|Camon|Spark|Nova|P\d{2})/; // R6 Part E: the Excel's model names
 const partAr = (p: string) => PARTS[p.toLowerCase()];
 const PART_ALT = Object.keys(PARTS)
   .sort((a, b) => b.length - a.length)
@@ -113,7 +113,7 @@ const RULES: Rule[] = [
   [/^(\d\d) \/ (\d\d) · (.+)$/, (_, a, b, x) => `${a} / ${b} · ${tr(x)}`],
   // products: "<model> <part>[ · <grade>]" → "<part> <model>[ · <grade>]"
   [
-    new RegExp(`^(.+?) (${PART_ALT})(?: · (Original|Service Pack|OLED|Incell|High Copy))?$`, 'i'),
+    new RegExp(`^(.+?) (${PART_ALT})(?: · (Original|Service Pack|OLED Soft|OLED|Incell|AAA))?$`, 'i'),
     (all, model, part, grade) => (MODEL_RE.test(model) ? `${partAr(part)} ${model}${grade ? ' · ' + gradeAr(grade) : ''}` : all),
   ],
   // ships, codes and places joined with a dot
@@ -182,7 +182,7 @@ export function looksUntranslated(s: string): boolean {
   if (!/[A-Za-z]{2}/.test(t) || KEEP.test(t)) return false;
   // allowed Latin: brands, models, units, codes, product grades kept in Latin
   const rest = t
-    .replace(/\b(?:Apple|Samsung|SAMSUNG|Xiaomi|Redmi|POCO|Realme|realme|Oppo|oppo|Vivo|vivo|Huawei|HUAWEI|Honor|HONOR|Google|Sony|SONY|Tecno|TECNO|Infinix|OnePlus|Nokia|Motorola|iPhone|iPad|Galaxy|Pixel|Xperia|Camon|Spark|Note|Pro|Max|Ultra|Plus|Mini|Magic\d*|Nova|Reno|OLED|LCD|AED|mAh|DXB|GST|UAE|QR|ID|Face|True|Tone|Ctrl|EN|K|V|W|WhatsApp|Instagram|TikTok|Facebook|Google|Plus Code|SE|IP\d+\w*|Li-ion|GX)\b/g, '')
+    .replace(/\b(?:Apple|Samsung|SAMSUNG|Xiaomi|Redmi|POCO|Realme|realme|Oppo|oppo|Vivo|vivo|Huawei|HUAWEI|Honor|HONOR|Google|Tecno|TECNO|Infinix|OnePlus|Nokia|Motorola|iPhone|iPad|Galaxy|Pixel|Xperia|Camon|Spark|Note|Pro|Max|Ultra|Plus|Mini|Magic\d*|Nova|Reno|OLED|LCD|AED|mAh|DXB|GST|UAE|QR|ID|Face|True|Tone|Ctrl|EN|K|V|W|WhatsApp|Instagram|TikTok|Facebook|Google|Plus Code|SE|IP\d+\w*|Li-ion|GX)\b/g, '')
     .replace(/[A-Z]{1,4}-?[\dA-Z]{2,}(?:-[\dA-Z]+)*/g, '')
     .replace(/[\w.+-]+@[\w.-]+|@[\w.]+|https?:\/\/\S+/g, '');
   return /[A-Za-z]{2}/.test(rest);

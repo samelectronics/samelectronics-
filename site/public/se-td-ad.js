@@ -52,13 +52,14 @@
     { L: 4, multi: [4, 4, 4], bg: C_Y, eb: 'WHOLESALE', h: ['Stock up.', 'Cost down.'], d: 'Trade prices for approved accounts.', b: 'Wholesale prices' },
     { L: 8, bg: C_F, eb: 'WORLDWIDE DELIVERY', h: ['From Deira', 'to the world.'], d: 'Tracked and securely packed, worldwide.', b: 'Shipping info' },
   ].map((q) => ({ ...q, k: 'a', dur: 3.2 }));
+  const NB = ((window.SE_DATA && window.SE_DATA.brands) || []).length || 15; // R6 Part E: the owner's brand list
   const SCN_B = [{ k: 'intro', dur: 1.8, bg: C_G }].concat([
-    { L: 0, bg: C_Y, kick: 'Bright like day one.', name: 'SCREENS', d: '2,211 in stock · 14 brands', b: 'Shop screens', tr: 'Z', dir: [-1, 0] },
-    { L: 4, bg: C_G, kick: 'Full power, fully tested.', name: 'BATTERIES', d: '1,760 in stock · 14 brands', b: 'Shop batteries', tr: 'W', dir: [0, -1] },
-    { L: 7, bg: C_F, kick: 'Factory finish, every brand.', name: 'BACK GLASS', d: '1,698 in stock · 14 brands', b: 'Shop back glass', tr: 'D', dir: [1, 0] },
+    { L: 0, bg: C_Y, kick: 'Bright like day one.', name: 'SCREENS', d: '2,211 in stock · ' + NB + ' brands', b: 'Shop screens', tr: 'Z', dir: [-1, 0] },
+    { L: 4, bg: C_G, kick: 'Full power, fully tested.', name: 'BATTERIES', d: '1,760 in stock · ' + NB + ' brands', b: 'Shop batteries', tr: 'W', dir: [0, -1] },
+    { L: 7, bg: C_F, kick: 'Factory finish, every brand.', name: 'BACK GLASS', d: '1,698 in stock · ' + NB + ' brands', b: 'Shop back glass', tr: 'D', dir: [1, 0] },
     { L: 5, bg: C_Y, kick: 'Sharp again, every lens.', name: 'CAMERAS', d: '566 in stock · 11 brands', b: 'Shop cameras', tr: 'Z', dir: [0, 1] },
-    { L: 2, bg: C_G, kick: 'Charging again in minutes.', name: 'FLEX & PORTS', d: '1,629 in stock · 14 brands', b: 'Shop flex & ports', tr: 'W', dir: [-1, 0] },
-    { L: 6, bg: C_F, kick: 'The small parts that matter.', name: 'SMALL PARTS', d: '377 in stock · 14 brands', b: 'Shop small parts', tr: 'D', dir: [0, 1] },
+    { L: 2, bg: C_G, kick: 'Charging again in minutes.', name: 'FLEX & PORTS', d: '1,629 in stock · ' + NB + ' brands', b: 'Shop flex & ports', tr: 'W', dir: [-1, 0] },
+    { L: 6, bg: C_F, kick: 'The small parts that matter.', name: 'SMALL PARTS', d: '377 in stock · ' + NB + ' brands', b: 'Shop small parts', tr: 'D', dir: [0, 1] },
   ].map((q) => ({ ...q, k: 'b', dur: 1.1 })).concat([
     { k: 'word', dur: 0.35, bg: C_Y, ink: C_G, w: 'EVERY PART.' },
     { k: 'word', dur: 0.35, bg: C_G, ink: C_Y, w: 'EVERY BRAND.' },

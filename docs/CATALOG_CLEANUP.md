@@ -34,7 +34,7 @@ customers see is fixed.** Nothing was regrouped, merged or reinterpreted, and no
 - The MI sheet's *Redmi series* is filed under **Redmi**, and *Pocophone series* under **POCO**.
 - The Oppo sheet's *Realme series* is filed under **Realme**.
 
-## Spelling fixes (172)
+## Spelling fixes (278)
 
 | Where | In the Excel | On the site | Why |
 |---|---|---|---|
@@ -208,8 +208,114 @@ customers see is fixed.** Nothing was regrouped, merged or reinterpreted, and no
 | Colour (Samsung screens) | BLUE+LEVANDER | Blue+Lavender | typo |
 | Colour (Samsung screens) | BLUE-CREAM-LEVANDER-MINT CREEM | Blue-Cream-Lavender-Mint Cream | typo |
 | Screen type (Samsung) | Full screen with frame / FILL Screen | Framed / Frameless | the owner's brief: 'FILL screen' is the frameless screen |
-| Also fits list | Note 9oro (5g) | Note 9 Pro (5g) | typo |
+| Also fits list | Mi 10T Lite (5g) | Mi 10T Lite (5G) | capital letters |
+| Also fits list | Note 9oro (5g) | Note 9 Pro (5G) | capital letters, typo |
+| Also fits list | Mi 11 Lite (5g) | Mi 11 Lite (5G) | capital letters |
+| Also fits list | Mi 11 ultra | Mi 11 Ultra | capital letters |
+| Also fits list | 11x pro | 11x Pro | capital letters |
+| Also fits list | redmi K20 pro | Redmi K20 Pro | capital letters |
+| Also fits list | 10 pro | 10 Pro | capital letters |
+| Also fits list | 10 lite | 10 Lite | capital letters |
+| Also fits list | redmi A1+ | Redmi A1+ | capital letters |
+| Also fits list | redmi A3 | Redmi A3 | capital letters |
+| Also fits list | poco C61 | POCO C61 | capital letters |
+| Also fits list | redmi 8 | Redmi 8 | capital letters |
+| Also fits list | redmi 8c | Redmi 8c | capital letters |
+| Also fits list | redmi 9 | Redmi 9 | capital letters |
+| Also fits list | redmi 9 power | Redmi 9 Power | capital letters |
+| Also fits list | redmi 9A | Redmi 9A | capital letters |
+| Also fits list | redmi 9t | Redmi 9t | capital letters |
+| Also fits list | poco m3 | POCO m3 | capital letters |
+| Also fits list | redmi 10 | Redmi 10 | capital letters |
+| Also fits list | redmi 10 (5g) | Redmi 10 (5G) | capital letters |
+| Also fits list | M4(5g) | M4(5G) | capital letters |
+| Also fits list | M5(4g) | M5(4G) | capital letters |
+| Also fits list | redmi 10 power | Redmi 10 Power | capital letters |
+| Also fits list | redmi 10a | Redmi 10a | capital letters |
+| Also fits list | redmi 11 lite | Redmi 11 Lite | capital letters |
+| Also fits list | redmi 12 | Redmi 12 | capital letters |
+| Also fits list | redmi 12c | Redmi 12c | capital letters |
+| Also fits list | redmi 13c | Redmi 13c | capital letters |
+| Also fits list | redmi K40 | Redmi K40 | capital letters |
+| Also fits list | redmi note 6 pro | Redmi Note 6 Pro | capital letters |
+| Also fits list | redmi note 7 | Redmi Note 7 | capital letters |
+| Also fits list | redmi note 8 | Redmi Note 8 | capital letters |
+| Also fits list | redmi note 8 pro | Redmi Note 8 Pro | capital letters |
+| Also fits list | redmi note 8T | Redmi Note 8T | capital letters |
+| Also fits list | redmi note 9 | Redmi Note 9 | capital letters |
+| Also fits list | redmi note 9s | Redmi Note 9s | capital letters |
+| Also fits list | redmi note 9T | Redmi Note 9T | capital letters |
+| Also fits list | note 9 (5g) | Note 9 (5G) | capital letters |
+| Also fits list | redmi note 10 (4g) | Redmi Note 10 (4G) | capital letters |
+| Also fits list | redmi note 10 (5g) | Redmi Note 10 (5G) | capital letters |
+| Also fits list | redmi note 10 pro (4g) | Redmi Note 10 Pro (4G) | capital letters |
+| Also fits list | 11pro 6.67(4g+5g) | 11pro 6.67(4G+5G) | capital letters |
+| Also fits list | redmi note 10 pro (5g) | Redmi Note 10 Pro (5G) | capital letters |
+| Also fits list | redmi note 10 pro max | Redmi Note 10 Pro Max | capital letters |
+| Also fits list | redmi note 11 (5g) | Redmi Note 11 (5G) | capital letters |
+| Also fits list | 11s (5g) | 11s (5G) | capital letters |
+| Also fits list | 11T (5g) | 11T (5G) | capital letters |
+| Also fits list | redmi note 11 | Redmi Note 11 | capital letters |
+| Also fits list | redmi note 11R | Redmi Note 11R | capital letters |
+| Also fits list | redmi note 12 (4g+5g) POCO X5 | Redmi Note 12 (4G+5G) POCO X5 | capital letters |
+| Also fits list | redmi note 12pro (4g) | Redmi Note 12pro (4G) | capital letters |
+| Also fits list | redmi note 12pro (5g) poco x5 pro | Redmi Note 12pro (5G) POCO x5 Pro | capital letters |
+| Also fits list | redmi note 12pro plus (5g) | Redmi Note 12pro Plus (5G) | capital letters |
+| Also fits list | redmi note 13 (5g) | Redmi Note 13 (5G) | capital letters |
+| Also fits list | redmi note 13 pro (5g) | Redmi Note 13 Pro (5G) | capital letters |
+| Also fits list | redmi note 13 pro + (5g) | Redmi Note 13 Pro + (5G) | capital letters |
+| Also fits list | F3 pro | F3 Pro | capital letters |
+| Also fits list | POCO M3 PRO 10 (5g) | POCO M3 PRO 10 (5G) | capital letters |
+| Also fits list | POCO M4 (5g) | POCO M4 (5G) | capital letters |
+| Also fits list | POCO M4 PRO (5g) | POCO M4 PRO (5G) | capital letters |
+| Also fits list | 11S (5g) | 11S (5G) | capital letters |
+| Also fits list | POCO M5 (4g) | POCO M5 (4G) | capital letters |
+| Also fits list | POCO X3 pro | POCO X3 Pro | capital letters |
+| Also fits list | POCO X4 PRO 4g | POCO X4 PRO 4G | capital letters |
+| Also fits list | POCO X4 PRO 5g | POCO X4 PRO 5G | capital letters |
+| Also fits list | A2 (5g) | A2 (5G) | capital letters |
+| Also fits list | A1 (5g) | A1 (5G) | capital letters |
+| Also fits list | realme 7i | Realme 7i | capital letters |
+| Also fits list | A54 4g | A54 4G | capital letters |
+| Also fits list | A54 5g | A54 5G | capital letters |
+| Also fits list | A58 5g | A58 5G | capital letters |
+| Also fits list | A77 5g | A77 5G | capital letters |
+| Also fits list | A78 5g | A78 5G | capital letters |
+| Also fits list | A71 4g | A71 4G | capital letters |
+| Also fits list | A74 5g | A74 5G | capital letters |
+| Also fits list | A74(4g) | A74(4G) | capital letters |
+| Also fits list | A94(5g) | A94(5G) | capital letters |
+| Also fits list | A95(5g) | A95(5G) | capital letters |
+| Also fits list | A94 (5g | A94 (5G | capital letters |
+| Also fits list | 4g) | 4G) | capital letters |
+| Also fits list | A98 (5g) | A98 (5G) | capital letters |
+| Also fits list | A79 (5g) | A79 (5G) | capital letters |
+| Also fits list | Realme 11 (5g) | Realme 11 (5G) | capital letters |
+| Also fits list | 11x (5g) | 11x (5G) | capital letters |
+| Also fits list | 8PRO (4g) | 8PRO (4G) | capital letters |
+| Also fits list | Realme 9 pro | Realme 9 Pro | capital letters |
+| Also fits list | F21 pro | F21 Pro | capital letters |
+| Also fits list | Realme 9i (4g) | Realme 9i (4G) | capital letters |
+| Also fits list | A56 (4g) | A56 (4G) | capital letters |
+| Also fits list | C67 (5g) | C67 (5G) | capital letters |
+| Also fits list | RENO 4 (4g) | RENO 4 (4G) | capital letters |
+| Also fits list | A93 (4g) | A93 (4G) | capital letters |
+| Also fits list | RENO 5 (4g) | RENO 5 (4G) | capital letters |
+| Also fits list | RENO 5 (5g) | RENO 5 (5G) | capital letters |
+| Also fits list | RENO 6 (4g) | RENO 6 (4G) | capital letters |
+| Also fits list | RENO 7 (4g) | RENO 7 (4G) | capital letters |
+| Also fits list | RENO 7 (5g) | RENO 7 (5G) | capital letters |
+| Also fits list | se | SE | capital letters |
+| Also fits list | RENO 8 (5g) | RENO 8 (5G) | capital letters |
+| Also fits list | RENO 8T (5g+4g) edge | RENO 8T (5G+4G) edge | capital letters |
+| Also fits list | Honor X6 (5g) | Honor X6 (5G) | capital letters |
+| Also fits list | Honor X9 4g | Honor X9 4G | capital letters |
+| Also fits list | MATE 30 lite | MATE 30 Lite | capital letters |
+| Also fits list | NOVA 5i pro | NOVA 5i Pro | capital letters |
 | Also fits list | P9 LITE MENI NEW | P9 LITE Mini NEW | typo |
+| Also fits list | honor 9a | Honor 9a | capital letters |
+| Also fits list | Y7 prime 2017 | Y7 Prime 2017 | capital letters |
+| Also fits list | Y7 pro 2019 | Y7 Pro 2019 | capital letters |
 
 ## For the owner to check (kept as written)
 

@@ -6,6 +6,7 @@ import { useScrollLock, stopWheel } from '@/lib/scrollLock';
 import { type Vals } from '@/dc/runtime';
 import SEBrandLogo from '../../dc/SEBrandLogo';
 import SEPart from '../../dc/SEPart';
+import InfoTip from '../InfoTip';
 
 /** A clean lit silhouette of the model's front: island, notch or punch-hole, all in identical frames. */
 export function ModelShape({ name, small }: { name: string; small?: boolean }) {
@@ -95,25 +96,30 @@ export default function FindMyPartPanel({ v }: { v: Vals }) {
         <div className="fm-body" key={step}>
           {step === 1 ? (
             <div className="fm-brands">
-              <span className="fm-pop">POPULAR</span>
-              <div className="fm-grid7">
-                {B.map((b: any, i: number) => (
-                  <button key={b.id} type="button" className={'fm-tile brand' + (b.pop ? ' pop' : '')} style={{ animationDelay: Math.min(i, 14) * 25 + 'ms' }} onClick={(e) => flyTo(e, 0, b.pick)}>
-                    <span className="lg">
-                      <SEBrandLogo brand={b.id} color="#FFFFFF" h="18" />
-                    </span>
-                    <span className="meta">
-                      <span>{b.models}</span>
-                      <span>{b.parts}</span>
-                    </span>
-                    <span className="sig" aria-hidden="true">
-                      {(b.bars || []).map((x: any, k: number) => (
-                        <i key={k} style={{ height: x.h, background: x.c }} />
-                      ))}
-                    </span>
-                  </button>
-                ))}
-              </div>
+              {/* R6 Part E: the owner's 15 brands, clustered by group (standalone brands have no label) */}
+              {B.reduce((acc: any[][], b: any) => { const last = acc[acc.length - 1]; if (last && last[0].grp === b.grp) last.push(b); else acc.push([b]); return acc; }, []).map((grp: any[], gi: number) => (
+                <div key={gi} className="fm-bgroup">
+                  {grp[0].grp && grp[0].grp !== 'Standalone' ? <span className="fm-pop">{grp[0].grp}</span> : null}
+                  <div className="fm-grid7">
+                    {grp.map((b: any, i: number) => (
+                      <button key={b.id} type="button" className={'fm-tile brand' + (b.pop ? ' pop' : '')} style={{ animationDelay: Math.min(gi * 2 + i, 14) * 25 + 'ms' }} onClick={(e) => flyTo(e, 0, b.pick)}>
+                        <span className="lg">
+                          <SEBrandLogo brand={b.id} color="#FFFFFF" h="18" />
+                        </span>
+                        <span className="meta">
+                          <span>{b.models}</span>
+                          <span>{b.parts}</span>
+                        </span>
+                        <span className="sig" aria-hidden="true">
+                          {(b.bars || []).map((x: any, k: number) => (
+                            <i key={k} style={{ height: x.h, background: x.c }} />
+                          ))}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
             </div>
           ) : null}
 
@@ -144,10 +150,10 @@ export default function FindMyPartPanel({ v }: { v: Vals }) {
                   ))}
                 </div>
               ) : null}
-              {f.none ? <p className="fm-none">No model matches. Try a model number, for example A2849.</p> : null}
+              {f.none ? <p className="fm-none">No model matches. Try another name, for example A54 or Note 13.</p> : null}
               <div className="fm-grid6">
                 {(f.models || []).map((m: any, i: number) => (
-                  <button key={m.name} type="button" className="fm-tile model" style={{ animationDelay: Math.min(i, 14) * 25 + 'ms' }} onClick={(e) => flyTo(e, 1, m.pick)}>
+                  <button key={m.slot} type="button" className="fm-tile model" style={{ animationDelay: Math.min(i, 14) * 25 + 'ms' }} onClick={(e) => flyTo(e, 1, m.pick)}>
                     <span className="fr">
                       <span className="fr-light" aria-hidden="true" />
                       <ModelShape name={m.name} />
@@ -155,7 +161,7 @@ export default function FindMyPartPanel({ v }: { v: Vals }) {
                     </span>
                     <b data-no-i18n="">{m.name}</b>
                     <small>
-                      <span data-no-i18n="">{m.num}</span> · <span>{m.parts}</span>
+                      {m.num ? <><span data-no-i18n="">{m.num}</span> · </> : null}<span>{m.parts}</span>
                     </small>
                   </button>
                 ))}
@@ -163,6 +169,27 @@ export default function FindMyPartPanel({ v }: { v: Vals }) {
             </div>
           ) : null}
 
+          {step === 3 && f.fits ? (
+            /* R6 Part E: the owner's "fit each other" lists */
+            <p className="fm-fits">
+              <b>Also fits</b> <span data-no-i18n="">{f.fits}</span>
+            </p>
+          ) : null}
+          {step === 3 && (f.ask || []).length ? (
+            /* a model without offers yet: every family, asked on WhatsApp (stock and prices come from the Control Room) */
+            <div className="fm-grid4">
+              {(f.ask || []).map((c: any, i: number) => (
+                <a key={c.name} className="fm-tile part" href={c.wa} target="_blank" rel="noopener noreferrer" style={{ animationDelay: c.d }}>
+                  <span className="fr part">
+                    <span className="fr-light" aria-hidden="true" />
+                    <SEPart kind={c.kind} size={112} />
+                  </span>
+                  <b>{c.name}</b>
+                  <span className="tag">Ask us on WhatsApp</span>
+                </a>
+              ))}
+            </div>
+          ) : null}
           {step === 3 ? (
             <div className="fm-grid4">
               {(f.cats || []).map((c: any, i: number) => (
@@ -192,7 +219,15 @@ export default function FindMyPartPanel({ v }: { v: Vals }) {
                     <span className="fr-light" aria-hidden="true" />
                     <SEPart kind={g.kind} size={92} />
                   </span>
-                  <span className="g">{g.name}</span>
+                  {/* R6 Part E + C7: quality and manufacturer, each with its "i" */}
+                  <span className="g">
+                    {g.name} <InfoTip name={g.name} kind="quality" />
+                    {g.maker ? (
+                      <small className="mk">
+                        {g.maker} <InfoTip name={g.maker} kind="maker" />
+                      </small>
+                    ) : null}
+                  </span>
                   <b className="pr" data-no-i18n="">
                     {g.price}
                   </b>

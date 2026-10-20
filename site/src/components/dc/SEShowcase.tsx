@@ -9,14 +9,14 @@ function render(v: Vals) {
   const a = v.ad || { k: '', h: ['', ''], c: [] };
   return (
     <section id="showcase" ref={v.secRef} className="sc">
-      {/* 14 Oct §10: the stage is held (sticky) while the five grades play; the spacer is the scroll it holds for */}
+      {/* 14 Oct §10: the stage is held (sticky) while the qualities play; the spacer is the scroll it holds for */}
       <div className="sc-pin">
       <div className="sc-in">
         <header className="sc-top">
           <div>
             <span className="sc-eb">THE SHOWCASE · SCREENS BY GRADE</span>
             <h2 className="sc-h">
-              <span>Five grades of screen.</span>
+              <span>Four qualities of screen.</span>
               <span>One for every budget.</span>
             </h2>
           </div>
@@ -68,7 +68,7 @@ function render(v: Vals) {
                   <path d="m20 20-3.5-3.5" />
                 </svg>
               </span>
-              {'Shop ' + a.k.toLowerCase() + ' screens'}
+              {'Shop ' + ({ ORIGINAL: 'original', OLED: 'OLED', AAA: 'AAA', INCELL: 'Incell' } as Record<string, string>)[a.k.split(' · ')[0]] + ' screens'}
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
                 <path d="M5 12h14M13 6l6 6-6 6" />
               </svg>
