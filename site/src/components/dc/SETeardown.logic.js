@@ -85,6 +85,8 @@ class Component extends DCLogic {
     this.td.snap = true; this.setState({ p: this.td.p });
   }
   busy() { return this.opBusy() || this.anim || performance.now() < (this.busyUntil || 0) || this.revOn; }
+  /** Urgent 3: never freeze the page: end a stalled opening / tween and accept input again. */
+  unstick() { console.warn('[teardown] unstick'); if (this.opBusy()) this.opShow('unstick'); cancelAnimationFrame(this.twRaf); this.anim = false; this.busyUntil = 0; this.revOn = false; this.pend = 0; }
   /** One deliberate gesture: a step, or at the two ends a release of the page. */
   gesture(dir) {
     const last = this.FS.length - 1, i = this.idx || 0;
@@ -120,16 +122,27 @@ class Component extends DCLogic {
     // one gesture = one step; input while animating (and trackpad inertia) is swallowed; the two ends release the page
     this.gUsed = false; this.lastW = 0;
     this.onWheel = (e) => { if (this.isMob() || this.props.fw || !e.deltaY) return; if (this.mode !== 'film' || !this.inside()) return;
-      const now = performance.now(), quiet = now - (this.lastW || 0) >= 250, dy0 = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1);
+      const now = performance.now(), dy0 = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1);
+      // a short gap in a same-direction stream whose deltas are not growing is still the old gesture (decaying momentum,
+      // or a main thread busy with the step delaying events) — only a real pause or a fresh, stronger push starts a new one
+      const gap = now - (this.lastW || 0), prev = this.lastDy || 0, decaying = Math.sign(prev) === Math.sign(dy0) && Math.abs(dy0) <= Math.abs(prev) * 1.2;
+      const quiet = gap >= 300 && !(decaying && gap < 600); this.lastDy = dy0;
       // R6 Part B: three gestures within 1.4s, a big flick or a jump → pass straight through
       if (quiet) { this.gSum = 0; (this.fresh = this.fresh || []).push(now); while (this.fresh.length && now - this.fresh[0] > 1400) this.fresh.shift(); }
       this.gSum = (this.gSum || 0) + Math.abs(dy0);
-      if (jumping() || (this.fresh && this.fresh.length >= 3) || this.gSum > 3500 || Math.abs(dy0) > 600) { this.lastW = now; this.pass(Math.sign(dy0)); return; }
+      if (jumping() || (this.fresh && this.fresh.length >= 5) || this.gSum > 3500 || Math.abs(dy0) > 600) /* Urgent 3: 3 unhurried wheel notches used to count as 'fast' and skip the whole film */ { this.lastW = now; this.pass(Math.sign(dy0)); return; }
       e.preventDefault(); this.lastW = now; if (quiet) { this.gAcc = 0; this.gUsed = false; }
       if (this.gUsed) return; // momentum of a gesture already used
       const dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1), dir = Math.sign(dy);
       if (Math.sign(this.gAcc || 0) !== dir) this.gAcc = 0; this.gAcc = (this.gAcc || 0) + dy; if (Math.abs(this.gAcc) < 40) return; // tiny nudges never do anything
-      this.gUsed = true; this.gAcc = 0; if (this.busy()) { this.pend = dir; this.pendAt = now; return; } this.gesture(dir); };
+      this.gUsed = true; this.gAcc = 0;
+      // Urgent 3: one gesture = one step, always. A gesture made while a step is still playing is spent, so slow wheel
+      // notches or trackpad momentum can never add a second step. Only a gesture made during the opening is held.
+      // If input stays blocked for 3s (a stalled opening), unstick instead of freezing.
+      if (this.busy()) {
+        if (!this.blockedAt) this.blockedAt = now; if (now - this.blockedAt > 3000) { this.unstick(); this.blockedAt = 0; this.gesture(dir); return; }
+        if (this.opBusy()) { this.pend = dir; this.pendAt = now; } return; }
+      this.blockedAt = 0; this.gesture(dir); };
     // 14 Oct §07 A: root cause of 'scroll over and over': a gesture made during the opening or a step was dropped AND marked
     // its whole scroll stream as used, so it took a new pause + scroll to react. Now it is held (one deep) and played as soon as
     // the step lands; trackpad momentum still never counts twice.
@@ -202,8 +215,8 @@ class Component extends DCLogic {
 
     const cntK = mob ? sm((p - 0.93) / 0.04) : 1 - Math.pow(1 - cl((s.ft - 0.5) / 1.0), 3);
     const cIn = (k) => (mob ? 1 : sm((s.ft - 0.55 - k * 0.08) / 0.35));
-    const counts = [[8, '', 'LAYERS IN STOCK'], [((this.state.data && this.state.data.brands) || []).length || 15, '', 'BRANDS'], [9000, '+', 'PARTS (SAMPLE)']].map(([n, plus, t], k) => { const rk = mob ? 1 : eoF((s.ft - 0.75 - k * 0.18) / 0.45); return { v: fmt(Math.max(1, n * rk)) + plus, t, o: cIn(k).toFixed(3), y: Math.round((1 - cIn(k)) * 12), ry: ((1 - rk) * 90).toFixed(1), rb: rk >= 0.99 ? 'none' : 'blur(' + ((1 - rk) * 3).toFixed(1) + 'px)', pl: k ? 22 : 0, dv: k ? 'inset 1px 0 0 rgba(255,255,255,.14)' : 'none' }; });
-    const thumbs = (s.lib && s.lib.thumb) || s.thumbs, chIn = (i) => (mob ? 1 : sm((s.ft - 1.0 - i * 0.04) / 0.3));
+    const counts = [[8, '', 'LAYERS IN STOCK'], [((this.state.data && this.state.data.brands) || []).length || 15, '', 'BRANDS'], [9000, '+', 'PARTS (SAMPLE)']].map(([n, plus, t], k) => { const rk = mob ? 1 : eoF((s.ft - 0.75 - k * 0.18) / 0.45); return { v: fmt(Math.max(1, n * rk)) + plus, t, o: cIn(k).toFixed(3), y: Math.round((1 - cIn(k)) * 12), ry: ((1 - rk) * 90).toFixed(1), rb: rk >= 0.99 ? 'none' : 'blur(' + ((1 - rk) * 3).toFixed(1) + 'px)', pl: k ? 22 : 0, dv: 'none' /* Urgent 3: no outlines or dividers around the stats */ }; });
+    const thumbs = window.SE_SHOTS ? (this._poseTh = this._poseTh || [0, 1, 2, 3, 4, 5, 6, 7].map((i) => window.SE_SHOTS.byIndex(i, 240))) : (s.lib && s.lib.thumb) || s.thumbs, /* Urgent 1: the pose */ chIn = (i) => (mob ? 1 : sm((s.ft - 1.0 - i * 0.04) / 0.3));
     const mxS = Math.max(1, ...this.L.map(([, cd]) => stat(cd).stock));
     const chips = this.L.map(([t, cd, , , kind], i) => { const on = s.hov === i, k = chIn(i); return { t, kind, stock: fmt(stat(cd).stock) + ' in stock', img: thumbs ? thumbs[i] : '', hasImg: !!thumbs, noImg: !thumbs, o: k.toFixed(3), y: on ? -4 : Math.round((1 - k) * 14), rt: on ? 'perspective(240px) rotateY(-18deg) rotateZ(-3deg) scale(1.07)' : 'none', ln: on ? 1 : 0, sh: on ? '0 18px 36px rgba(0,0,0,.34)' : '0 10px 24px rgba(0,0,0,.18)', bd: on ? 'rgba(255,255,255,.2)' : 'rgba(255,255,255,.1)', go: go('models'), enter: () => { if (performance.now() - (this.lastMM || 0) > 200) return; this.td.hover = i; this.setState({ hov: i }); }, leave: () => { if (this.td.hover === i) this.td.hover = null; if (this.state.hov === i) this.setState({ hov: -1 }); } }; });
     const ci = Math.max(0, Math.min(7, act < 0 ? (allLit ? 7 : 0) : act)), a = this.L[ci], cs = stat(a[1]);

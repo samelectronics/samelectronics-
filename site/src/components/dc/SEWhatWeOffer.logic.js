@@ -16,7 +16,7 @@ class Component extends DCLogic {
     this.alive = true; this.initDust();
     // G16: the 3D shelf holds a WebGL context only while the section is near the viewport (src/dc/gl-budget.ts);
     // when far away it is released and the cached library pictures stand in.
-    this.unreg = registerScene({ id: 'offer-shelf', el: () => this.root.current || this.host.current, mount: async () => { await this.mountShelf(); return () => this.unmountShelf(); } });
+    /* Urgent 3: every part is a still pose now, nothing is drawn in 3D: the WebGL shelf is no longer mounted (speed) */ this.unreg = null; false && registerScene({ id: 'offer-shelf', el: () => this.root.current || this.host.current, mount: async () => { await this.mountShelf(); return () => this.unmountShelf(); } });
     // R6 Part A: visibility comes from an IntersectionObserver; the loop used to measure the section every frame for the whole visit (a forced layout per frame: the biggest cost while scrolling)
     this.near = false; this.nearIO = new IntersectionObserver(([e]) => { this.near = e.isIntersecting; }, { rootMargin: '25% 0px 25% 0px' }); setTimeout(() => this.root.current && this.nearIO.observe(this.root.current), 50);
     const loop = () => { if (!this.alive) return; if (!this.near) { this._raf = requestAnimationFrame(loop); return; } try { this.frame(performance.now() / 1000); } catch (e) { if (!this._fe) { this._fe = 1; console.warn('[What we offer]', e); } } this._raf = requestAnimationFrame(loop); }; loop();
@@ -33,10 +33,12 @@ class Component extends DCLogic {
       this.disp = await mod.mount(h, st); this.api = this.api || st.shelfApi;
       const keep = () => { const cs = Array.from(h.querySelectorAll('canvas')); this.glCanvas = cs.find((c) => { try { return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } }) || cv; Array.from(h.children).forEach((c) => { if (c !== this.glCanvas) c.style.display = 'none'; }); this.glCanvas.style.display = 'block'; };
       keep(); this.mo = new MutationObserver(keep); this.mo.observe(h, { childList: true });
-      if (this.api) { this.scr = document.createElement('canvas'); this.scr.width = 600; this.scr.height = 1300; this.api.setScreen(this.scr); this.FAM.forEach((f, i) => { const im = this.q('fb' + i); if (im) im.style.display = 'none'; }); } else this.fallback();
+      if (this.api) { this.scr = document.createElement('canvas'); this.scr.width = 600; this.scr.height = 1300; this.api.setScreen(this.scr); this.poses(); } else this.fallback();
     } catch (e) { console.warn('[What we offer] 3D shelf failed', e); this.fallback(); }
   }
-  fallback() { const lib = window.seParts && window.seParts.peek && window.seParts.peek(); if (!lib || !lib.large) { if (window.seParts) window.seParts.get().then(() => this.fallback()); return; } this.FAM.forEach((f, i) => { const im = this.q('fb' + i); if (im) { im.src = lib.large[f[2]]; im.style.display = 'block'; } const rf = this.q('fr' + i); if (rf) { rf.src = lib.large[f[2]]; rf.style.display = 'block'; } }); }
+  /** Urgent 3: every family card shows its pose shot (static); the 3D host is only used for the Repair box phone. */
+  poses() { const SH = window.SE_SHOTS; if (!SH) return; this.FAM.forEach((f, i) => { const im = this.q('fb' + i); if (im && !im.src) { im.src = SH.byIndex(f[2], 480); im.srcset = SH.byIndex(f[2], 480) + ' 1x, ' + SH.byIndex(f[2], 960) + ' 2x'; } }); }
+  fallback() { this.poses(); return; const lib = window.seParts && window.seParts.peek && window.seParts.peek(); if (!lib || !lib.large) { if (window.seParts) window.seParts.get().then(() => this.fallback()); return; } this.FAM.forEach((f, i) => { const im = this.q('fb' + i); if (im) { im.src = lib.large[f[2]]; im.style.display = 'block'; } const rf = this.q('fr' + i); if (rf) { rf.src = lib.large[f[2]]; rf.style.display = 'block'; } }); }
   initDust() { let sd = 9; const r = () => ((sd = (sd * 16807) % 2147483647) / 2147483647); this.dust = Array.from({ length: 70 }, () => ({ x: r(), y: r(), z: r(), s: 0.6 + r() * 1.1, a: 0.1 + r() * 0.2, vx: (r() - 0.5) * 6, vy: 2 + r() * 5, ph: r() * 6 }));
     sd = 21; this.cr = Array.from({ length: 11 }, (_, k) => { let a = (-110 + k * 22 + r() * 10) * Math.PI / 180, x = 0.24, y = 0.8; const pts = [[x, y]]; const n = 4 + Math.floor(r() * 4); for (let j = 0; j < n; j++) { a += (r() - 0.5) * 0.5; const l = 0.05 + r() * 0.09; x += Math.cos(a) * l * 0.9; y += Math.sin(a) * l * 0.42; pts.push([x, y]); if (x < 0 || x > 1 || y < 0 || y > 1) break; } return { pts, o: k / 10 }; }); }
   // 14 Oct (H-G3): the 3D canvas used to be sticky to the screen, so on every scroll the cards moved at once while the
@@ -51,6 +53,7 @@ class Component extends DCLogic {
     if (this._hostT !== top || this._hostH !== hh) { this._hostT = top; this._hostH = hh; h.style.top = top + 'px'; h.style.height = hh + 'px'; } }
   // ---------- per-frame engine ----------
   frame(T) {
+    if (!this._posed) { this.poses(); this._posed = this.FAM.every((f, i) => { const im = this.q('fb' + i); return im && im.src; }); } // the pose shows at once, not after the 3D engine
     const R = this.root.current; if (!R) return; const dt = Math.min(0.05, Math.max(0, T - (this.lastT || T))); this.lastT = T; const vh = window.innerHeight;
     const cl = (x) => (x < 0 ? 0 : x > 1 ? 1 : x), ex = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * cl(x))), eo = (x) => 1 - Math.pow(1 - cl(x), 3), eio = (x) => { x = cl(x); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }, PI = Math.PI;
     const clk = (b, frac) => { if (this.ov[b] != null) return this.ov[b]; const el = this.q(b); if (!el) return 0; const r = el.getBoundingClientRect(); if (r.bottom < 0 || r.top > vh) { this.ck[b] = null; return 0; } if (this.ck[b] == null && r.top < vh * frac) this.ck[b] = T; if (this.ck[b] != null && b.length === 1 && b !== 'A' && el.matches(':hover')) this.ck[b] -= dt * 0.3; /* Issue 2: a hovered box's scene runs a little faster */ return this.ck[b] == null ? 0 : T - this.ck[b]; };
@@ -72,6 +75,7 @@ class Component extends DCLogic {
       set('ps' + i, { opacity: cl((tA - l0 - 0.45) / 0.08).toFixed(3) });
       const nk = eo((tA - 1.4 - i * 0.08) / 0.8), nE = this.q('n' + i), st = (D.fam && D.fam[i] && D.fam[i].raw) || 0; if (nE) { const tx = Math.round(st * nk).toLocaleString('en-US'); if (nE.textContent !== tx) nE.textContent = tx; }
       const ch = this.q('ch' + i); if (ch) Array.from(ch.children).forEach((c, j) => { const p = cl((tA - 1.6 - i * 0.06 - j * 0.09) / 0.25), b = p >= 1 ? 1 : 0.6 + 0.4 * (1 + 2.2 * Math.pow(p - 1, 3) + 1.2 * Math.pow(p - 1, 2)); c.style.opacity = cl(p * 3).toFixed(3); c.style.transform = 'scale(' + b.toFixed(3) + ')'; });
+      continue; /* Urgent 3: parts do not rotate; the cards show the static pose */
       const slot = this.q('slot' + i); if (!slot || !this.api || d <= 0) continue; const r = slot.getBoundingClientRect(); if (r.bottom < 0 || r.top > vh) continue;
       const L = this.FAM[i][2], inf = this.api.info[L], hh = inf.hh, rxz = Math.hypot(inf.hw, inf.hd), w = r.width, hgt = r.height, kk = Math.min((2.7 * 0.84) / hh, (2.7 * (w / hgt) * 0.86) / rxz);
       // R6 §06 A: one shared clock, one revolution every 12s, the same angle at the same moment for every part; on hover
@@ -95,7 +99,7 @@ class Component extends DCLogic {
       [0, 1, 2, 3].forEach((j) => { const re = t > 3.6 ? (t - 3.6) % 6 : -1, s0 = t < 3.6 ? 2.6 + j * 0.22 : 3.6 + Math.floor((t - 3.6) / 6) * 6 + (re < 0.06 ? 99 : 0.1 + j * 0.08), lt = t < 3.6 ? t - s0 : re - (0.1 + j * 0.08), p = cl(lt / 0.18), b = p >= 1 ? 1 : 0.4 + 0.6 * (1 + 2.4 * Math.pow(p - 1, 3) + 1.4 * Math.pow(p - 1, 2)); set('rc' + j, { opacity: cl(p * 2).toFixed(3), transform: 'scale(' + b.toFixed(3) + ')' }); });
       const ck = ex((t - 2.5) / 0.4); set('Rchk', { opacity: ck.toFixed(3), transform: 'translateX(' + ((1 - ck) * 30).toFixed(1) + 'px)' });
       const sk = cl((t - 3.45) / 0.16), shk = t > 3.6 && t < 3.8 ? Math.sin((t - 3.6) * 90) * 3 * (1 - (t - 3.6) / 0.2) : 0; set('Rseal', { opacity: cl(sk * 2).toFixed(3), transform: 'translateX(' + shk.toFixed(1) + 'px) rotate(-12deg) scale(' + (1.7 - 0.7 * eo(sk)).toFixed(3) + ')' });
-      if (this.api && slot) { const r = slot.getBoundingClientRect(); if (r.bottom > 0 && r.top < vh) { const fk = cl(t / 0.65), fe = eio(fk), st2 = cl((t - 0.65) / 0.2), roll = PI * (1 - fe), lift = 0.32 * Math.sin(PI * fe) - 0.03 * Math.sin(PI * st2), yaw = -0.32 + (t > 3.6 ? 0.14 * Math.sin((2 * PI * (t - 3.6)) / 7) : 0), inf = this.api.info[8], kk = (2.7 * 0.86) / inf.hh, sp = (T % 5) / 1.6;
+      if (false && this.api && slot) /* Urgent 3: still pose, the phone no longer rolls */ { const r = slot.getBoundingClientRect(); if (r.bottom > 0 && r.top < vh) { const fk = cl(t / 0.65), fe = eio(fk), st2 = cl((t - 0.65) / 0.2), roll = PI * (1 - fe), lift = 0.32 * Math.sin(PI * fe) - 0.03 * Math.sin(PI * st2), yaw = -0.32 + (t > 3.6 ? 0.14 * Math.sin((2 * PI * (t - 3.6)) / 7) : 0), inf = this.api.info[8], kk = (2.7 * 0.86) / inf.hh, sp = (T % 5) / 1.6;
           items.push({ L: 8, x: r.left - hr.left, y: r.top - hr.top, w: r.width, h: r.height, lay: { roll, yaw }, el: 0.9, k: kk, py: lift, sw: sp < 1 ? Math.sin(PI * sp) * 0.8 : 0, sx: -1 + 2 * cl(sp) });
           if (this.scr) { this.drawScreen(t); this.api.screenDirty(); } } }
       const dc = this.q('Rdust'); if (dc) this.drawDust(dc, dt, tR > 0 || this.ov.R != null); }

@@ -77,7 +77,7 @@ function render(v: Vals) {
                 <div style={cssToObj(`position:absolute;inset:0;opacity:${s(v.fin?.o)};pointer-events:none`)}>
                   <div
                     style={cssToObj(
-                      `position:absolute;inset:0;background:radial-gradient(36% 56% at ${s(v.fin?.cx)}% 100%,#F7C032 0%,rgba(247,192,50,.74) 26%,rgba(247,192,50,.22) 56%,rgba(38,40,43,0) 100%);animation:tdBreath 6s ease-in-out infinite`,
+                      `display:none` /* Urgent 3: no blurry yellow bloom / light band (clean graphite) */,
                     )}
                   ></div>
                   <div
@@ -760,7 +760,7 @@ function render(v: Vals) {
                   href="#families"
                   onClick={v.skip}
                   style={cssToObj(
-                    `position:absolute;left:${s(v.z1?.sl)};right:${s(v.z1?.sr)};bottom:40px;display:flex;align-items:center;gap:8px;height:32px;color:rgba(255,255,255,.8);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.08em;text-decoration:none;white-space:nowrap;opacity:${s(v.skp?.o)};pointer-events:${s(v.skp?.pe)};transition:color .2s,opacity .3s`,
+                    `position:absolute;inset-inline-end:24px;top:96px;z-index:30;display:flex;align-items:center;gap:8px;height:32px;padding:0 12px;border-radius:999px;background:rgba(38,40,43,.78);box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);color:rgba(255,255,255,.85);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.08em;text-decoration:none;white-space:nowrap;opacity:${s(v.skp?.o)};pointer-events:${s(v.skp?.pe)};transition:color .2s,opacity .3s`,
                   )}
                   className={cx(undefined, 'scp-f2a4cf2e')}
                 >
@@ -797,13 +797,13 @@ function render(v: Vals) {
               {'\n    \n    '}
               <div
                 style={cssToObj(
-                  `position:absolute;inset:0;background:linear-gradient(0deg,rgba(247,192,50,0) 0%,rgba(247,192,50,0) 30%,rgba(247,192,50,.85) 62%,rgba(247,192,50,.2) 75%,rgba(61,62,63,0) 90%);opacity:${s(v.bg?.flood)};pointer-events:none`,
+                  `display:none` /* Urgent 3: no blurry yellow bloom / light band (clean graphite) */,
                 )}
               ></div>
               {'\n    '}
               <div
                 style={cssToObj(
-                  `position:absolute;inset:0;background:linear-gradient(180deg,#F2F3F4 0%,#FFE9A8 30%,#F7C032 55%,#F7C032 100%);opacity:${s(v.bg?.fin)};pointer-events:none`,
+                  `display:none` /* Urgent 3: no blurry yellow bloom / light band (clean graphite) */,
                 )}
               ></div>
               {'\n    '}

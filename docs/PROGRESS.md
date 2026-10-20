@@ -2461,3 +2461,86 @@ DONE WHEN
 DONE WHEN
 - 8 countries everywhere; counts correct. **PASS**
 - Four realistic scenes; no cut text. **PASS**
+
+---
+
+# Urgent corrections (owner, mid Round 6: overrides the PDF)
+
+Art-director standard: Apple product pages. Brand rules: no black (titles #26282B), yellow only #F7C032, no muddy gradients / light bands / long fades, Arabic in IBM Plex Sans Arabic (~8% smaller, line-height 1.5), no English inside Arabic, no sound effects.
+
+## Urgent 0 · Brand rules + speed
+
+- **Yellow.** Every yellow is #F7C032, including titles (39 files; #D99A00 is gone).
+- **Arabic font.**
+  - Plex Sans Arabic is preloaded when Arabic is chosen.
+  - It is loaded before any canvas draws Arabic (`se:fonts`), and the map iframe gets the font too.
+  - `size-adjust: 92%`, line-height 1.5.
+- **Sound.** The teardown click sound was removed.
+- **Speed.**
+  - The teardown measures its column with a ResizeObserver instead of every frame.
+  - Off-screen sections use `content-visibility: auto`.
+  - The globe is capped at 30fps.
+  - Long tasks went from 3.9s to 2.7s in total (the longest from 924 to 506ms).
+
+DONE WHEN
+- One yellow. **PASS**
+- Plex loaded for DOM, canvas and map. **PASS**
+- No sound. **PASS**
+
+## Urgent 1 · The product pose
+
+- **One pose for every product.** The carton stands behind and the product in front, both turned 20° right, with ~70% of the carton visible and one shared shadow.
+  - Screens use the brand/maker box with a short flex.
+  - Every other part uses a white carton with a barcode and QR, sized to the part.
+  - Rendered offline to `public/assets/pose/` (22 poses).
+- **Used everywhere.** Product cards, the hero reel and iPad, the poster, Who / Meet / Feed and Deals. The pose never turns.
+
+DONE WHEN
+- Same pose everywhere; every product has a carton. **PASS**
+
+## Urgent 2 · Hero, brand bar, progress bar
+
+- **iPad.** It is always the store, with graphite and yellow product banners inside the grid.
+- **Phone ad.** A click opens a landscape 16:9 card (max 80% wide).
+- **Phone reel.**
+  - It freezes while the pointer or a finger is on it.
+  - One wheel or trackpad gesture moves exactly one ad.
+  - It resumes 3s after leaving.
+- **Shine.** One diagonal sweep, alternating phone / iPad, never both at once.
+- **Language pop-up.** A battery loader with a tick.
+- **Brand bar.** Equal 120×28 boxes, white at 85%, colour on hover.
+- **Progress bar.** One plain thin line with no dots, still clickable and draggable.
+
+DONE WHEN
+- All items above. **PASS**
+
+## Urgent 3 · Teardown, seam, What we offer
+
+- **Teardown: one gesture = one step.**
+  - A gesture made while a step is still playing is spent; it no longer queues a second step. Only a gesture made during the opening is held.
+  - Decaying same-direction input (trackpad momentum, or events delayed by a busy main thread) counts as the same gesture unless there is a real pause or a stronger new push.
+  - The pass-through needs 5 separate gestures in 1.4s (it was 3), so slow notches never skip the film.
+  - A watchdog unsticks the engine after 3s of blocked input, so the page never freezes.
+- **Teardown: layout and effects.**
+  - The skip link is its own graphite pill in the top corner.
+  - The stat outlines, the ghost text, the yellow fog/bloom overlays and the bokeh are gone.
+- **Final-call ad (`public/se-td-ad.js`), rebuilt.**
+  - Six product scenes: Screens, Batteries, Back glass, Cameras, Charging flex, Small parts.
+  - Each shows the pose, a headline and a "from AED" price, with a 0.4s cross-fade.
+  - It ends on the logo card. No more 3D-library dependency.
+- **Seam.** A clean cut from the teardown to the fog section, with no fade or band.
+- **What we offer: the 8 family cards.**
+  - Graphite #26282B on Fog, each with the static pose (no rotation).
+  - Chips with small "i" icons.
+  - The fixed 900px container that made the cards overlap the boxes is gone.
+- **What we offer: the 3 service boxes.**
+  - Repair shows a still pose instead of a rolling 3D phone.
+  - Wholesale is flat #F7C032 (the grey floor band and the cream glow were removed).
+  - No circuit lines on the box edges.
+  - Since nothing is drawn in 3D any more, the WebGL shelf is no longer mounted (one less WebGL context and model download).
+
+DONE WHEN
+- Teardown tests 1–9d all PASS (`scripts/qa/teardown-tests.mjs`: three notches 280ms apart, five fast notches, a trackpad swipe with 1.2s momentum, a notch during a step: each is exactly one step). **PASS**
+- Skip link in its own corner; no outlines/ghost/bokeh. **PASS**
+- New final-call ads (EN/AR). **PASS**
+- Clean seam; no overlap; graphite cards; #F7C032 only; parts static. **PASS**

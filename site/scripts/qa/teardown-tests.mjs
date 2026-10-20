@@ -65,6 +65,16 @@ const goStep = async (p, i) => { while ((await st(p)).idx < i) { await wheel(p, 
   a = c; await p.keyboard.press('ArrowDown'); for (let k = 0; k < 4; k++) { await p.waitForTimeout(120); await p.keyboard.press('ArrowDown'); }
   await idle(p); c = await st(p); const m1 = c.idx; await p.keyboard.press('ArrowDown'); await idle(p); c = await st(p);
   ok('7 arrows during an animation are ignored; then one step per press', m1 === a.idx + 1 && c.idx === a.idx + 2, a.idx + ' → ' + m1 + ' → ' + c.idx);
+  // 9 (Urgent 3): one gesture = one step, whatever the input: slow wheel notches, fast notches, a notch while a step plays,
+  //    a long trackpad stream with momentum. Each must move exactly one step.
+  for (const [name, gaps, dy] of [['9a three wheel notches 280ms apart', [0, 280, 280], 100], ['9b five fast wheel notches', [0, 90, 90, 90, 90], 100], ['9c a trackpad swipe with 1.2s of momentum', Array.from({ length: 70 }, () => 17), 0]]) {
+    await idle(p); while ((await st(p)).idx > 7) { await p.keyboard.press('ArrowUp'); await idle(p); } // 11→12 is one automatic double step
+    a = await st(p); for (let k = 0; k < gaps.length; k++) { await p.waitForTimeout(gaps[k]); await p.mouse.wheel(0, dy || Math.max(2, 40 - k * 0.55)); }
+    await p.waitForTimeout(400); await idle(p); c = await st(p); ok(name + ' = exactly one step', c.idx === a.idx + 1, a.idx + ' → ' + c.idx);
+  }
+  await idle(p); while ((await st(p)).idx > 7) { await p.keyboard.press('ArrowUp'); await idle(p); }
+  a = await st(p); await wheel(p, 120); await p.waitForTimeout(450); await wheel(p, 120); await p.waitForTimeout(300); await idle(p); c = await st(p);
+  ok('9d a second notch while the step is still playing never adds a second step', c.idx === a.idx + 1, a.idx + ' → ' + c.idx);
   // 8. from the final call, scroll down continues the page
   await goStep(p, 12); await idle(p); await p.waitForTimeout(400); await wheel(p, 120); await p.waitForTimeout(1500); c = await st(p);
   ok('8 from the final call, scroll down continues to the next section', c.mode === 'out' && c.bottom < 200, JSON.stringify(c));

@@ -531,7 +531,7 @@ export async function mount(host, state) {
   state.renderLib = (TS) => renderThumbs(TS, true);
   // final-call ad = Template B of the shared phone-ad engine (se-phone-ad.js); 3D renderAd stays as fallback
   let ad2 = null, ad2Cv = null, ad2Tex = null, ad2Wait = 0;
-  const ad2Init = () => { if (ad2 || !window.SETdAd) return ad2; const sp = window.seParts, lib = sp && sp.peek && sp.peek(); if (!lib || !lib.large || lib.large.length < 10) { if (sp && !ad2Wait) { ad2Wait = 1; sp.get().catch(() => {}); } return null; }
+  const ad2Init = () => { if (ad2 || !window.SETdAd) return ad2; const sp = window.seParts, lib = sp && sp.peek && sp.peek(); /* Urgent 3: the new ad draws the pose shots itself; it no longer waits for the parts library */
     const w = state.mob ? 560 : 780; ad2Cv = cvs(w, Math.round((w * AH) / AW)); ad2 = window.SETdAd.create(ad2Cv, { lib, data: state.adData }); ad2Tex = new THREE.CanvasTexture(ad2Cv); ad2Tex.colorSpace = THREE.SRGBColorSpace; ad2Tex.anisotropy = ANI; state.adTOT = ad2.dur; state.adLogoT = ad2.logoT; return ad2; };
   state.ad2Init = ad2Init;
   state.adShot2 = (t) => { if (!ad2Init()) return null; ad2.draw(t); return ad2Cv.toDataURL('image/jpeg', 0.9); };
@@ -744,7 +744,7 @@ export async function mount(host, state) {
         if (wA > 0.003) { dx.globalAlpha = Math.min(1, wA); dx.drawImage(sw.w, X * dpr - R2, Y * dpr - R2, R2 * 2, R2 * 2); }
         if (gA > 0.003) { dx.globalAlpha = Math.min(1, gA); dx.drawImage(sw.g, X * dpr - R2, Y * dpr - R2, R2 * 2, R2 * 2); }
         dx.globalAlpha = 1; });
-      if (gk > 0.004) { if (!BKD || BKD.w !== w || BKD.h !== hgt) BKD = mkBK(); const ek = eio(gk);
+      if (false && gk > 0.004) { /* Urgent 3: no bokeh circles over the phone */ if (!BKD || BKD.w !== w || BKD.h !== hgt) BKD = mkBK(); const ek = eio(gk);
         BKD.forEach((b2) => { const th = b2.th + 0.9 * Math.sin(t * b2.om + b2.ph); b2.x += Math.cos(th) * b2.v * dt; b2.y += (Math.sin(th) * 0.8 - 0.25) * b2.v * dt; if (b2.x < -b2.r) b2.x = w + b2.r; if (b2.x > w + b2.r) b2.x = -b2.r; if (b2.y < -b2.r) b2.y = hgt + b2.r; if (b2.y > hgt + b2.r) b2.y = -b2.r; });
         for (let i = 0; i < BKD.length; i++) for (let j = i + 1; j < BKD.length; j++) { const p1 = BKD[i], p2 = BKD[j], ddx = p2.x - p1.x, ddy = p2.y - p1.y, dd = Math.hypot(ddx, ddy) || 1, ov = p1.r + p2.r + 24 - dd; if (ov > 0) { const k2 = Math.min(ov, 30) * dt * 0.8 / dd; p1.x -= ddx * k2; p1.y -= ddy * k2; p2.x += ddx * k2; p2.y += ddy * k2; } }
         BKD.forEach((b2, j) => { const hd = DP[9 + j] || DP[j], X = lerp(hd.px == null ? b2.x : hd.px, b2.x, ek), Y = lerp(hd.py == null ? b2.y : hd.py, b2.y, ek), r = lerp(hd.r * 3, b2.r, ek) * dpr, A = b2.a * (1 + 0.2 * Math.sin((t * PI * 2) / b2.bp + b2.ph)) * cl(gk * 1.2), c3 = b2.c.join(',');

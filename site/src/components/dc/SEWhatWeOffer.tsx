@@ -172,9 +172,8 @@ function render(v: Vals) {
               width: '1272px',
               maxWidth: 'calc(100% - 48px)',
               margin: '0 auto',
-              height: '900px',
               boxSizing: 'border-box',
-              paddingTop: '44px',
+              paddingTop: '44px', /* Urgent 3: no fixed 900px height (the cards spilled under the service boxes) */
               display: 'flex',
               flexDirection: 'column',
               gap: '28px',
@@ -263,28 +262,10 @@ function render(v: Vals) {
                         style={{ position: 'relative', borderRadius: '16px' }}
                       >
                         {/* R6 §06 B: a graphite card with a lit stage: a soft yellow rim light at the back, a glossy black floor */}
-                        <div className="wo-stage">
-                          <span data-w={`lt${s(v.f?.i)}`} className="wo-rim"></span>
-                          <span className="wo-floor"></span>
-                          <span data-w={`pr${s(v.f?.i)}`} className="wo-ring"></span>
-                          <span className="wo-puck"></span>
-                          <span data-w={`ps${s(v.f?.i)}`} className="wo-pshadow"></span>
-                        </div>
-                        <img
-                          data-w={`fb${s(v.f?.i)}`}
-                          alt=""
-                          style={{
-                            position: 'absolute',
-                            left: '50%',
-                            top: '16px',
-                            width: '140px',
-                            height: '140px',
-                            marginLeft: '-70px',
-                            objectFit: 'contain',
-                            display: 'none',
-                          }}
-                        />
-                        <img data-w={`fr${s(v.f?.i)}`} alt="" className="wo-refl" style={{ display: 'none' }} />
+                        {/* Urgent 3: the part stands still in THE pose (carton behind, product in front), perfectly lit; no
+                            turntable, no glowing ovals */}
+                        <div className="wo-stage" />
+                        <img data-w={`fb${s(v.f?.i)}`} alt="" className="wo-pose" />
                       </div>
                       {'\n          '}
                     </React.Fragment>
@@ -625,7 +606,10 @@ function render(v: Vals) {
             {'\n      '}
             <div data-w="Rscene" style={{ position: 'relative', height: '560px' }}>
               {'\n        '}
-              <div data-w="Rslot" style={{ position: 'absolute', left: '-20px', top: '60px', width: '480px', height: '480px' }}></div>
+              <div data-w="Rslot" style={{ position: 'absolute', left: '-20px', top: '60px', width: '480px', height: '480px' }}>
+                {/* Urgent 3: a still product pose (carton behind, screen in front), no rolling 3D phone */}
+                <img className="wo-rpose" src="/assets/pose/apple-sp-480.webp" srcSet="/assets/pose/apple-sp-480.webp 1x, /assets/pose/apple-sp-960.webp 2x" alt="" />
+              </div>
               {'\n        '}
               <div
                 data-w="Rchk"
@@ -722,7 +706,7 @@ function render(v: Vals) {
           {'\n    '}
           <div
             data-w="Wwipe"
-            style={{ position: 'absolute', inset: '0', background: 'radial-gradient(80% 90% at 40% 45%,#F7C032 55%,#E3AE24 100%)' }}
+            style={{ position: 'absolute', inset: '0', background: '#F7C032' }}
           >
             {'\n      '}
             <div
@@ -735,27 +719,9 @@ function render(v: Vals) {
               }}
             ></div>
             {'\n      '}
-            <div
-              style={{
-                position: 'absolute',
-                left: '0',
-                right: '0',
-                bottom: '0',
-                height: '34%',
-                background: 'linear-gradient(180deg,rgba(214,206,186,0) 0%,rgba(200,192,172,.55) 40%,rgba(190,182,162,.7) 100%)',
-              }}
-            ></div>
+            {/* Urgent 3: no grey floor band, no cream glow: one flat brand yellow */}
             {'\n      '}
-            <div
-              style={{
-                position: 'absolute',
-                left: '4%',
-                width: '52%',
-                bottom: '13%',
-                height: '16%',
-                background: 'radial-gradient(closest-side,rgba(255,250,230,.55),rgba(255,250,230,0))',
-              }}
-            ></div>
+
             {'\n      '}
             <svg className="wo-side" aria-hidden="true"
               viewBox="0 0 60 1000"
