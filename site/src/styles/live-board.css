@@ -94,6 +94,22 @@
 .lb-cta:hover { transform: translateY(-2px); box-shadow: 0 0 24px rgba(247, 192, 50, .4); }
 [dir='rtl'] .lb-tick-in { animation-name: lbTickR; }
 
+/* R6 §07 · side circuits in the gutters (hidden when the gutter is too narrow for a 24px safe zone), pings into the newest
+   row, a yellow flash on the new row's status chip, sparklines that draw in as the section enters */
+.lb-side { position: absolute; top: calc(var(--ry, 50%) - 200px); height: 400px; width: calc((100% - 1272px) / 2 - 24px); overflow: visible; pointer-events: none; }
+.lb-side.l { left: 0; } .lb-side.r { right: 0; transform: scaleX(-1); }
+@media (max-width: 1399px) { .lb-side { display: none; } }
+.lb-strace { fill: none; stroke: rgba(247, 192, 50, .16); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
+.lb-snode { fill: #2A2C2F; stroke: rgba(247, 192, 50, .4); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
+.lb-spulse { fill: none; stroke: #FFE9A8; stroke-width: 3; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: .14 1; stroke-dashoffset: .14; filter: drop-shadow(0 0 4px rgba(247, 192, 50, .9)); animation: lbSPing .8s cubic-bezier(.45, 0, .55, 1) both; }
+@keyframes lbSPing { from { stroke-dashoffset: .14; opacity: 1; } 90% { opacity: 1; } to { stroke-dashoffset: -.98; opacity: 0; } }
+.lb-row.new .lb-tag { animation: lbChip 1s .3s ease-out both; }
+@keyframes lbChip { 0% { box-shadow: 0 0 0 0 rgba(247, 192, 50, 0); filter: none; } 20% { box-shadow: 0 0 0 2px #F7C032, 0 0 14px rgba(247, 192, 50, .8); filter: brightness(1.35); } 100% { box-shadow: 0 0 0 0 rgba(247, 192, 50, 0); filter: none; } }
+.lb-sline { stroke-dasharray: 1 1; stroke-dashoffset: 1; }
+.lb-seen .lb-sline { animation: lbDraw 1.2s .6s ease-out both; }
+.lb-sfill { opacity: 0; }
+.lb-seen .lb-sfill { animation: lbFade .8s 1.4s both; }
+
 @keyframes lbRise { to { transform: none; } }
 @keyframes lbFade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes lbSlide { to { opacity: 1; transform: none; } }

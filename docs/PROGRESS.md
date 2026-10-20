@@ -2291,3 +2291,17 @@ DONE WHEN
 - Cards show qualities, manufacturers, stock, price, button. **PASS**
 - Three scenes realistic; boxes use the real designs; globe realistic. **NOT DONE**
 - No circuit over text; buttons aligned. **PASS**
+
+## §07 · Live parts board
+
+- Layout and content kept. Names come from the Excel data (Part E); no highlighter.
+- Side circuits:
+  - faint traces (16%) in the left and right gutters, at least 24px from the board and text (measured: 140px → 164px at 1600px wide);
+  - hidden below 1400px, where the gutter is too narrow.
+- With every new row, a ping runs from one side's circuit (alternating left / right) into the board at the newest row's height. The logic measures that height (`--ry`); the ping lands within 14px of the row's middle.
+- Each new row still slides in from the top; its status chip now flashes yellow (1s).
+- Reviewer's idea: the tiles' sparklines draw in as the section enters (line 1.2s, then the fill).
+- Screenshots EN / AR at 1600px.
+
+DONE WHEN
+- Side circuits with pulses; rows arrive with the flash. **PASS**

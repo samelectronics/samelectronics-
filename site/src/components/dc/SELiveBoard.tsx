@@ -47,6 +47,18 @@ function render(v: Vals) {
   const pulse = v.pulse;
   return (
     <section id="board" ref={v.secRef} className={'lb' + (v.seen ? ' lb-seen' : '')}>
+      {/* R6 §07: faint side circuits in the gutters, away from the board and text; with every new row a ping runs
+          from one side's circuit into the board at the newest row's height (--ry, measured by the logic) */}
+      {(['l', 'r'] as const).map((sd, n) => (
+        <svg key={sd} className={'lb-side ' + sd} viewBox="0 0 100 400" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 36 H38 L58 56 V176 L82 200 H100" className="lb-strace" />
+          <path d="M0 330 H26 L46 310 V244 L64 226" className="lb-strace" />
+          <path d="M0 120 H18 L30 132 V150" className="lb-strace" />
+          <circle cx="64" cy="226" r="3" className="lb-snode" />
+          <circle cx="30" cy="150" r="3" className="lb-snode" />
+          {pulse && pulse.id % 2 === n ? <path key={pulse.id} d="M0 36 H38 L58 56 V176 L82 200 H100" className="lb-spulse" pathLength={1} /> : null}
+        </svg>
+      ))}
       <div className="lb-in">
         <header className="lb-top">
           <div>
@@ -104,8 +116,8 @@ function render(v: Vals) {
                       <stop offset="1" stopColor={x.c} stopOpacity="0" />
                     </linearGradient>
                   </defs>
-                  <path d={x.spark.fill} fill={`url(#${x.grad})`} />
-                  <path d={x.spark.line} stroke={x.c} strokeWidth="1.6" fill="none" vectorEffect="non-scaling-stroke" />
+                  <path d={x.spark.fill} fill={`url(#${x.grad})`} className="lb-sfill" />
+                  <path d={x.spark.line} stroke={x.c} strokeWidth="1.6" fill="none" vectorEffect="non-scaling-stroke" className="lb-sline" pathLength={1} />
                   <circle cx={x.spark.ex} cy={x.spark.ey} r="2.6" fill={x.c} className="lb-dot" />
                 </svg>
               </button>
