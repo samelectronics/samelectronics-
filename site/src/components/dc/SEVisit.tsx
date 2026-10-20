@@ -112,7 +112,7 @@ function render(v: Vals) {
             </span>
             {v.count ? <em>{v.count}</em> : null}
           </div>
-          <div className="vs-tl">
+          <div className="vs-tl se-ltr" /* R6 Part D: the day runs 00 → 24 left to right in both languages, like the times */>
             <span className="vs-tl-bar">
               {(v.shifts || []).map((s: any) => (
                 <i key={s.t} style={{ left: s.l, width: s.w }} />
@@ -131,7 +131,7 @@ function render(v: Vals) {
             {(v.week || []).map((w: any) => (
               <li key={w.day} className={w.on ? 'on' : ''}>
                 <span>{w.day}</span>
-                <b data-no-i18n={w.h === 'Closed' ? undefined : ''}>{w.h}</b>
+                <b className="se-ltr" data-no-i18n={w.h === 'Closed' ? undefined : ''}>{w.h}</b>
               </li>
             ))}
           </ul>

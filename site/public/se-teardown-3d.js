@@ -5,7 +5,9 @@ export const NAV = 72;
 export function layout(w, h, mob) {
   if (mob) { const ppu = Math.min(w / 4.4, h / 4.1), top = 14, floorY = Math.round(h * 0.9); return { mob, ppu, cx: w / 2, fx: w / 2, top, aW: w - 28, floorY, Hs: (floorY - top) * 0.8 }; }
   const ppu = Math.min((h - 60) / 3.3, (w * 0.5) / 3.6), top = NAV + 48, floorY = h - 48;
-  return { mob, ppu, cx: w * 0.525, fx: w * 0.75, top, aW: w * 0.45 - 40, floorY, Hs: Math.min(h * 0.75, floorY - top - 6) };
+  // R6 Part D: Arabic mirrors the stage (list on the left, title on the right), so the phone's centre mirrors too
+  const rtl = typeof document !== 'undefined' && document.documentElement.dir === 'rtl';
+  return { mob, rtl, ppu, cx: w * (rtl ? 0.475 : 0.525), fx: w * (rtl ? 0.25 : 0.75), top, aW: w * 0.45 - 40, floorY, Hs: Math.min(h * 0.75, floorY - top - 6) };
 }
 export async function mount(host, state) {
   const THREE = await import('https://esm.sh/three@0.160.0');
@@ -348,10 +350,14 @@ export async function mount(host, state) {
   const eo = (x) => { x = Math.min(1, Math.max(0, x)); return x >= 1 ? 1 : 1 - Math.pow(2, -10 * x); };
   const eioA = (x) => { x = Math.min(1, Math.max(0, x)); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
   const FAM = { sg: '"Space Grotesk", sans-serif', mono: '"JetBrains Mono", monospace', in: 'Inter, sans-serif' };
-  const mkText = (t, o) => { const fam = FAM[o.f || 'sg'], wt = o.wt || 700, c0 = cvs(8, 8).getContext('2d'); let sz = Math.round(o.size * fq), mw;
+  // R6 Part D: every advert text goes through the site dictionary (Arabic now, French/Spanish later). Arabic letters must
+  // join, so Arabic text gets no letter spacing and is drawn right-to-left (numbers inside stay in their own order).
+  const TR = (t) => (typeof window !== 'undefined' && window.seI18n && window.seI18n.t ? window.seI18n.t(t) : t), ARB = /[\u0600-\u06FF]/;
+  const mkText = (t, o) => { t = TR(t); if (ARB.test(t)) o = { ...o, ls: 0, rtl: true }; const fam = FAM[o.f || 'sg'], wt = o.wt || 700, c0 = cvs(8, 8).getContext('2d'); let sz = Math.round(o.size * fq), mw;
+    if (o.rtl) c0.direction = 'rtl';
     for (;;) { c0.font = wt + ' ' + sz + 'px ' + fam; setLS(c0, (o.ls || 0) * sz + 'px'); mw = c0.measureText(t).width; if (mw <= (o.maxW || AW * 0.76) || sz < 18) break; sz -= 2; }
     const pad = Math.ceil(sz * 0.12), cw = Math.ceil(mw + pad * 2), ch = Math.ceil(sz * 1.3);
-    const tx = tex(cw, ch, (x) => { x.font = wt + ' ' + sz + 'px ' + fam; setLS(x, (o.ls || 0) * sz + 'px'); x.fillStyle = o.color; x.fillText(t, pad, Math.round(sz * 0.98)); }); tx.generateMipmaps = false; tx.minFilter = THREE.LinearFilter;
+    const tx = tex(cw, ch, (x) => { x.font = wt + ' ' + sz + 'px ' + fam; setLS(x, (o.ls || 0) * sz + 'px'); x.fillStyle = o.color; if (o.rtl) { x.direction = 'rtl'; x.textAlign = 'left'; } x.fillText(t, pad, Math.round(sz * 0.98)); }); tx.generateMipmaps = false; tx.minFilter = THREE.LinearFilter;
     const clip = new THREE.Plane(new THREE.Vector3(0, 1, 0), 1e5), m = new THREE.Mesh(new THREE.PlaneGeometry(cw, ch), ovMat({ map: tx, clippingPlanes: [clip] })); m.renderOrder = o.ro || 20; m.visible = false; ovS.add(m);
     return { m, w: cw, h: ch, pad, len: t.length, sz,
       at(xL, yC, a, dy = 0, mask = false, sc = 1) { m.visible = a > 0.002; m.material.opacity = a; m.scale.setScalar(sc); m.position.set(xL - pad + cw / 2 * sc, yC + dy, 0); clip.constant = mask ? -(yC - ch / 2) : 1e5; } }; };
@@ -401,19 +407,23 @@ export async function mount(host, state) {
   const PAL = { [C_Y]: { ink: INK, sub: INK, d: '#3D3E3F', bb: INK, bi: '#FFFFFF', gl: '#FFF4CC', g0: '#FFD65C', g1: '#F7C032', g2: '#E7A91A' }, [C_G]: { ink: '#FFFFFF', sub: '#E6E7E9', d: '#C9CBCE', bb: C_Y, bi: INK, gl: '#F7C032', g0: '#45474B', g1: '#2C2E31', g2: '#1A1B1D' }, [C_W]: { ink: INK, sub: INK, d: '#5E6064', bb: C_Y, bi: INK, gl: '#F7C032', g0: '#FFFFFF', g1: '#F2F3F4', g2: '#DDE0E3' } };
   const bgT = {}; [C_Y, C_G, C_W].forEach((c) => { const P = PAL[c]; bgT[c] = tex(256, 512, (x, w2, h2) => { const g = x.createRadialGradient(w2 * 0.5, h2 * 0.42, 0, w2 * 0.5, h2 * 0.42, h2 * 0.75); g.addColorStop(0, P.g0); g.addColorStop(0.55, P.g1); g.addColorStop(1, P.g2); x.fillStyle = g; x.fillRect(0, 0, w2, h2); }); });
   const bgQ = quadB(AW * 1.02, AH * 1.02, ovMat({ map: bgT[C_G] }), 0);
-  const mkBtn = (label, bg, ink) => { const pw = Math.round(CW), fz = Math.round(SZ_B * fq), ph = Math.round(fz * 2.4); const tx = tex(pw, ph, (x, w2, h2) => { x.fillStyle = bg; x.beginPath(); x.roundRect(0, 0, w2, h2, h2 / 2); x.fill(); x.fillStyle = ink; x.strokeStyle = ink; x.font = '600 ' + fz + 'px ' + FAM.in; x.textBaseline = 'middle'; x.fillText(label, h2 * 0.42, h2 / 2 + fz * 0.04); x.lineWidth = fz * 0.11; x.lineCap = 'round'; x.lineJoin = 'round'; const ax = w2 - h2 * 0.42, ay = h2 / 2, a = fz * 0.36; x.beginPath(); x.moveTo(ax - a * 1.7, ay); x.lineTo(ax, ay); x.moveTo(ax - a * 0.8, ay - a * 0.8); x.lineTo(ax, ay); x.lineTo(ax - a * 0.8, ay + a * 0.8); x.stroke(); });
+  const mkBtn = (label, bg, ink) => { label = TR(label); const pw = Math.round(CW), fz = Math.round(SZ_B * fq), ph = Math.round(fz * 2.4); const tx = tex(pw, ph, (x, w2, h2) => { x.fillStyle = bg; x.beginPath(); x.roundRect(0, 0, w2, h2, h2 / 2); x.fill(); x.fillStyle = ink; x.strokeStyle = ink; x.font = '600 ' + fz + 'px ' + FAM.in; x.textBaseline = 'middle'; x.fillText(label, h2 * 0.42, h2 / 2 + fz * 0.04); x.lineWidth = fz * 0.11; x.lineCap = 'round'; x.lineJoin = 'round'; const ax = w2 - h2 * 0.42, ay = h2 / 2, a = fz * 0.36; x.beginPath(); x.moveTo(ax - a * 1.7, ay); x.lineTo(ax, ay); x.moveTo(ax - a * 0.8, ay - a * 0.8); x.lineTo(ax, ay); x.lineTo(ax - a * 0.8, ay + a * 0.8); x.stroke(); });
     const m = new THREE.Mesh(new THREE.PlaneGeometry(pw, ph), ovMat({ map: tx })); m.renderOrder = 22; m.visible = false; ovS.add(m); return { m, w: pw, h: ph }; };
   const wrapL = (t, fz, wt, fam, maxW) => { const c0 = cvs(8, 8).getContext('2d'); c0.font = wt + ' ' + fz + 'px ' + fam; const out = []; let cur = ''; t.split(' ').forEach((wd) => { const tr = cur ? cur + ' ' + wd : wd; if (c0.measureText(tr).width > maxW && cur) { out.push(cur); cur = wd; } else cur = tr; }); if (cur) out.push(cur); return out; };
   const gRT = new THREE.WebGLRenderTarget(Math.round(AW / 8), Math.round(AH / 8), { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, generateMipmaps: false }), silM = new THREE.MeshBasicMaterial({ color: 0xffffff });
   const GT = Array.from({ length: 14 }, (_, i) => ({ q: quadB(AW, AH, ovMat({ color: 0xffffff, alphaMap: gRT.texture }), 1), r: i < 7 ? 0.45 : 1, a: (i % 7) / 7 * PI * 2 + (i < 7 ? 0 : 0.45) })); let glowOn = false;
   const glowY = quadB(1, 1, ovMat({ map: tex(256, 256, (x, w2) => { const g = x.createRadialGradient(w2 / 2, w2 / 2, 0, w2 / 2, w2 / 2, w2 / 2); g.addColorStop(0, 'rgba(255,236,170,.9)'); g.addColorStop(0.4, 'rgba(247,192,50,.35)'); g.addColorStop(1, 'rgba(247,192,50,0)'); x.fillStyle = g; x.fillRect(0, 0, w2, w2); }), blending: THREE.AdditiveBlending }), 8);
   ovB.remove(glowY); ovS.add(glowY);
-  SC.forEach((q) => { const P = PAL[q.bg];
-    if (q.k === 'p') { q.T = mkText(q.t, { wt: 700, size: SZ_T, ls: -0.01, color: P.ink, maxW: 1e5 }); q.S = wrapL(q.sub, Math.round(SZ_S * fq), 500, FAM.in, CW).map((t2) => mkText(t2, { f: 'in', wt: 500, size: SZ_S, color: P.sub, maxW: 1e5 })); q.P = mkBtn(q.shop, P.bb, P.bi); }
+  let tagO, stmt, fmpP; const drop = (o) => { if (o && o.m) { if (o.m.parent) o.m.parent.remove(o.m); const mp = o.m.material && o.m.material.map; if (mp) mp.dispose(); } };
+  const buildAdText = () => {
+  SC.forEach((q) => { const P = PAL[q.bg]; [q.T, q.P, q.D, ...(q.S || []), ...(q.W || [])].forEach(drop); q.D = null;
+    if (q.k === 'p') { q.T = mkText(q.t, { wt: 700, size: SZ_T, ls: -0.01, color: P.ink, maxW: 1e5 }); q.S = wrapL(TR(q.sub), Math.round(SZ_S * fq), 500, FAM.in, CW).map((t2) => mkText(t2, { f: 'in', wt: 500, size: SZ_S, color: P.sub, maxW: 1e5 })); q.P = mkBtn(q.shop, P.bb, P.bi); }
     if (q.k === 'word' || q.k === 'slam') q.W = q.w.map((t2) => mkText(t2, { wt: 700, size: q.k === 'slam' ? 168 : 210, ls: -0.03, color: q.col, maxW: 1e5 })); });
   const WM = 'SAM ELECTRONICS'.split('').map((c) => mkText(c === ' ' ? '\u00a0' : c, { wt: 600, size: 58, ls: 0, color: '#FFFFFF' }));
-  const tagO = mkText('QUALITY · WARRANTY · PRICE', { f: 'mono', wt: 600, size: 32, ls: 0.1, color: C_Y }), stmt = mkText('All in Deira.', { size: 150, ls: -0.05, color: '#FFFFFF', maxW: AW * 0.8 });
-  const fmpP = (() => { const pw = Math.round(AW * 0.5), ph = Math.round(110 * fq); const tx2 = tex(pw, ph, (x, w2, h2) => { x.fillStyle = C_Y; x.beginPath(); x.roundRect(0, 0, w2, h2, h2 / 2); x.fill(); x.fillStyle = INK; x.font = '600 ' + Math.round(38 * fq) + 'px ' + FAM.in; x.textBaseline = 'middle'; x.textAlign = 'center'; x.fillText('Find My Part', w2 / 2, h2 / 2 + 1); }); const m = quad(pw, ph, ovMat({ map: tx2 }), 22); return { m, w: pw, h: ph }; })();
+  [tagO, stmt, fmpP].forEach(drop);
+  tagO = mkText('QUALITY · WARRANTY · PRICE', { f: 'mono', wt: 600, size: 32, ls: 0.1, color: C_Y }); stmt = mkText('All in Deira.', { size: 150, ls: -0.05, color: '#FFFFFF', maxW: AW * 0.8 });
+  fmpP = (() => { const pw = Math.round(AW * 0.5), ph = Math.round(110 * fq); const tx2 = tex(pw, ph, (x, w2, h2) => { x.fillStyle = C_Y; x.beginPath(); x.roundRect(0, 0, w2, h2, h2 / 2); x.fill(); x.fillStyle = INK; x.font = '600 ' + Math.round(38 * fq) + 'px ' + FAM.in; x.textBaseline = 'middle'; x.textAlign = 'center'; x.fillText(TR('Find My Part'), w2 / 2, h2 / 2 + 1); }); const m = quad(pw, ph, ovMat({ map: tx2 }), 22); return { m, w: pw, h: ph }; })();
+  dKey = ''; };
   const NP = 1400, pPos = new Float32Array(NP * 3), pFrom = [], pTo = [], pDl = [], pDu = [], pSw = [];
   { const cand = []; try { const id = logoTex.image.getContext('2d').getImageData(0, 0, LG, LG).data; for (let y = 0; y < LG; y += 4) for (let x = 0; x < LG; x += 4) { const dd = Math.hypot(x - LG / 2, y - LG / 2), j = (y * LG + x) * 4, lum = (id[j] + id[j + 1] + id[j + 2]) / 765; let wt = 0; if (dd > LR + 3 && dd < LR + 17) wt = 1; else if (dd < LR) wt = lum < 0.6 ? 1 : 0.18; if (wt && Math.random() < wt) cand.push([(x / LG - 0.5) * LGS, (0.5 - y / LG) * LGS]); } } catch (e) {}
     for (let i = cand.length - 1; i > 0; i--) { const k = Math.floor(Math.random() * (i + 1)); [cand[i], cand[k]] = [cand[k], cand[i]]; }
@@ -422,9 +432,9 @@ export async function mount(host, state) {
   const dotTex = tex(64, 64, (x) => { const g = x.createRadialGradient(32, 32, 0, 32, 32, 32); g.addColorStop(0, 'rgba(255,240,200,1)'); g.addColorStop(0.4, 'rgba(255,230,170,.6)'); g.addColorStop(1, 'rgba(255,220,150,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64); });
   const pts = new THREE.Points(pGeo, new THREE.PointsMaterial({ size: 14 * fq, map: dotTex, transparent: true, depthTest: false, depthWrite: false, sizeAttenuation: false, blending: THREE.AdditiveBlending, toneMapped: false })); pts.renderOrder = 7; pts.visible = false; ovS.add(pts);
   const fmtN = (n) => Math.round(n).toLocaleString('en-US');
-  let dKey = ''; const MON = [4, 5, 7, 1, 3], MBG = [C_Y, C_G, C_W, C_Y, C_G]; let monT = [];
+  let dKey = ''; buildAdText(); const onAdLang = () => buildAdText(); window.addEventListener('se:lang', onAdLang); const MON = [4, 5, 7, 1, 3], MBG = [C_Y, C_G, C_W, C_Y, C_G]; let monT = [];
   const ensureData = () => { const D2 = state.adData || {}, N2 = D2.N || [], key = JSON.stringify(N2) + '|' + (D2.brands || 0); if (key === dKey) return; dKey = key; const br = D2.brands || 14;
-    SC.forEach((q) => { if (q.k !== 'p') return; if (q.D) ovS.remove(q.D.m); q.D = mkText(fmtN(Math.max(1, N2[q.L] || 0)) + ' in stock · ' + br + ' brands', { f: 'in', wt: 400, size: SZ_D, color: PAL[q.bg].d, maxW: 1e5 }); }); };
+    SC.forEach((q) => { if (q.k !== 'p') return; if (q.D) ovS.remove(q.D.m); q.D = mkText(fmtN(Math.max(1, N2[q.L] || 0)) + ' ' + TR('in stock') + ' · ' + br + ' ' + TR('brands'), { f: 'in', wt: 400, size: SZ_D, color: PAL[q.bg].d, maxW: 1e5 }); }); };
   const bo = (x) => { x = Math.min(1, Math.max(0, x)); const c1 = 1.9, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
   const chgA = parts[4].getObjectByName('chg');
   const LV = new THREE.Vector3(), NV = new THREE.Vector3(), camP = new THREE.Vector3(), camL = new THREE.Vector3(), clA = (x) => Math.min(1, Math.max(0, x)), lp = (a2, b2, k) => a2 + (b2 - a2) * k;
@@ -582,7 +592,7 @@ export async function mount(host, state) {
   // G16: render density follows the frame rate (window.seQuality from se-perf.js): 2× when smooth, down to 1.25× while it struggles.
   let prWant = Math.min(window.devicePixelRatio || 1, 1.5); // R6 Part A: WebGL at 1.5× max
   const prNow = () => { const q = window.seQuality; return q && q.level < 1 ? Math.max(Math.min(1.25, prWant), +(prWant * (0.55 + 0.45 * q.level)).toFixed(2)) : prWant; };
-  const resize = () => { const rw = host.clientWidth, rh = host.clientHeight, pr = prNow(); if (!rw || (rw === w && rh === hgt && LY && LY.mob === !!state.mob && pr === renderer.getPixelRatio())) return; w = rw; hgt = rh; renderer.setPixelRatio(pr); renderer.setSize(w, hgt, false); dpr = renderer.getPixelRatio(); refl.width = shd.width = dust.width = canvas.width; refl.height = shd.height = dust.height = canvas.height; cam.aspect = w / Math.max(1, hgt); LY = layout(w, hgt, !!state.mob); camD = hgt / (2 * Math.tan((cam.fov * PI) / 360) * LY.ppu); cam.updateProjectionMatrix(); measure(); };
+  const resize = () => { const rw = host.clientWidth, rh = host.clientHeight, pr = prNow(); if (!rw || (rw === w && rh === hgt && LY && LY.mob === !!state.mob && LY.rtl === (document.documentElement.dir === 'rtl') && pr === renderer.getPixelRatio())) return; w = rw; hgt = rh; renderer.setPixelRatio(pr); renderer.setSize(w, hgt, false); dpr = renderer.getPixelRatio(); refl.width = shd.width = dust.width = canvas.width; refl.height = shd.height = dust.height = canvas.height; cam.aspect = w / Math.max(1, hgt); LY = layout(w, hgt, !!state.mob); camD = hgt / (2 * Math.tan((cam.fov * PI) / 360) * LY.ppu); cam.updateProjectionMatrix(); measure(); };
   const hull = (P) => { P.sort((a, b) => a[0] - b[0] || a[1] - b[1]); const cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]); const lo = [], up = []; for (const q of P) { while (lo.length >= 2 && cr(lo[lo.length - 2], lo[lo.length - 1], q) <= 0) lo.pop(); lo.push(q); } for (let i = P.length - 1; i >= 0; i--) { const q = P[i]; while (up.length >= 2 && cr(up[up.length - 2], up[up.length - 1], q) <= 0) up.pop(); up.push(q); } up.pop(); lo.pop(); return lo.concat(up); };
   const OFF = 30000;
   const shade = (pts, a, blur, ox, oy, sc) => { const hp = hull(pts); if (hp.length < 3) return; let cx = 0, cy = 0; hp.forEach((q) => { cx += q[0]; cy += q[1]; }); cx /= hp.length; cy /= hp.length; sx.shadowColor = 'rgba(6,7,8,' + Math.min(1, a).toFixed(3) + ')'; sx.shadowBlur = Math.min(90, Math.max(0.5, blur)) * dpr; sx.shadowOffsetX = OFF; sx.shadowOffsetY = 0; sx.beginPath(); hp.forEach((q, i) => { const X = (cx + (q[0] - cx) * sc + ox) * dpr - OFF, Y = (cy + (q[1] - cy) * sc + oy) * dpr; i ? sx.lineTo(X, Y) : sx.moveTo(X, Y); }); sx.closePath(); sx.fillStyle = '#000'; sx.fill(); };
@@ -745,26 +755,26 @@ export async function mount(host, state) {
       const hulls = ok ? L.map((g, s2) => (s2 === act || !g.visible ? null : hull(OUT.map((c) => proj(cv.copy(c).applyMatrix4(g.matrixWorld)))))).filter(Boolean) : [];
       const inH = (P2, x, y) => { let sg = 0; for (let k = 0; k < P2.length; k++) { const a2 = P2[k], b2 = P2[(k + 1) % P2.length], c2 = (b2[0] - a2[0]) * (y - a2[1]) - (b2[1] - a2[1]) * (x - a2[0]); if (c2 === 0) continue; if (!sg) sg = Math.sign(c2); else if (Math.sign(c2) !== sg) return false; } return true; };
       const free = (xa, xb, y) => { for (let k = 0; k <= 24; k++) { const x = lerp(xa, xb, k / 24); if (hulls.some((P2) => inH(P2, x, y))) return false; } return true; };
-      const bx = x0 - 14, own = ok ? OUT.map((c) => proj(cv.copy(c).applyMatrix4(L[act].matrixWorld))) : [];
-      let tg = ok ? CLP[act].map(([x, y], i) => { let q = proj(L[act].localToWorld(V.set(x, y, 0.04))); if (!free(bx, q[0], q[1])) { let best = null, bd = 1e9; own.forEach((o2) => { if (o2[0] - x0 > (x1 - x0) * 0.45) return; const dd = Math.abs(o2[1] - q[1]); if (dd < bd && free(bx, o2[0] - 1, o2[1])) { bd = dd; best = o2; } }); q = best; } return q ? { q, i } : null; }).filter((g2) => g2 && g2.q[0] > 4 && g2.q[0] < w - 4 && g2.q[1] > LY.top - 8 && g2.q[1] < LY.floorY + 8).sort((a2, b2) => a2.q[1] - b2.q[1]) : [];
+      const RT = LY.rtl, bx = RT ? x1 + 14 : x0 - 14, own = ok ? OUT.map((c) => proj(cv.copy(c).applyMatrix4(L[act].matrixWorld))) : [];
+      let tg = ok ? CLP[act].map(([x, y], i) => { let q = proj(L[act].localToWorld(V.set(x, y, 0.04))); if (!free(bx, q[0], q[1])) { let best = null, bd = 1e9; own.forEach((o2) => { if ((RT ? x1 - o2[0] : o2[0] - x0) > (x1 - x0) * 0.45) return; const dd = Math.abs(o2[1] - q[1]); if (dd < bd && free(bx, o2[0] + (RT ? 1 : -1), o2[1])) { bd = dd; best = o2; } }); q = best; } return q ? { q, i } : null; }).filter((g2) => g2 && g2.q[0] > 4 && g2.q[0] < w - 4 && g2.q[1] > LY.top - 8 && g2.q[1] < LY.floorY + 8).sort((a2, b2) => a2.q[1] - b2.q[1]) : [];
       if (tg.length) { const n = tg.length, mid = tg.reduce((a2, b2) => a2 + b2.q[1], 0) / n, gap = 40, y0s = Math.max(LY.top + 10, Math.min(LY.floorY - 20 - gap * (n - 1), mid - (gap * (n - 1)) / 2)); tg.forEach((g2, k) => (g2.ly = y0s + k * gap)); }
       clO.forEach((c, i) => { if (!c.ln.parentNode) { svg.appendChild(c.ln); svg.appendChild(c.dt); } const it = tg[i]; const o = it ? cl((tt - 0.35 - i * 0.12) / 0.3) : 0;
         if (!it || o <= 0) { c.d.style.opacity = 0; c.ln.style.opacity = 0; c.dt.style.opacity = 0; return; }
-        const q = it.q, ly = it.ly; c.d.textContent = specs[it.i] || ''; const lwid = c.d.offsetWidth || 90, rx2 = Math.max(LY.cx - LY.aW / 2 + lwid, bx - 44);
+        const q = it.q, ly = it.ly; c.d.textContent = specs[it.i] || ''; const lwid = c.d.offsetWidth || 90, rx2 = RT ? Math.min(LY.cx + LY.aW / 2 - lwid, bx + 44) + lwid : Math.max(LY.cx - LY.aW / 2 + lwid, bx - 44);
         c.d.style.transform = 'translate(' + (rx2 - lwid).toFixed(1) + 'px,' + (ly - 7).toFixed(1) + 'px)'; c.d.style.opacity = o.toFixed(3);
-        c.ln.setAttribute('d', 'M' + (rx2 + 8).toFixed(1) + ' ' + ly.toFixed(1) + ' L' + bx.toFixed(1) + ' ' + q[1].toFixed(1) + ' H' + q[0].toFixed(1)); c.ln.style.opacity = (o * 0.9).toFixed(3);
+        c.ln.setAttribute('d', 'M' + (RT ? rx2 - lwid - 8 : rx2 + 8).toFixed(1) + ' ' + ly.toFixed(1) + ' L' + bx.toFixed(1) + ' ' + q[1].toFixed(1) + ' H' + q[0].toFixed(1)); c.ln.style.opacity = (o * 0.9).toFixed(3);
         c.dt.setAttribute('cx', q[0].toFixed(1)); c.dt.setAttribute('cy', q[1].toFixed(1)); c.dt.style.opacity = o.toFixed(3); }); }
     // drawer tag beside the slid-out part
     { let hi = -1, hm = 0.04; hovK.forEach((k, s2) => { if (k > hm) { hm = k; hi = s2; } });
       if (hi >= 0) { let xr = -1e9, xl = 1e9, yM = -1e9, ya = 0, yb = 0, n = 0; OUT.forEach((c) => { const q = proj(cv.copy(c).applyMatrix4(L[hi].matrixWorld)); xr = Math.max(xr, q[0]); xl = Math.min(xl, q[0]); ya += q[1]; yM = Math.max(yM, q[1]); n++; }); yb = ya / n;
-        const txt = (state.tags && state.tags[hi]) || ''; const tw = tag.offsetWidth || 220, side = xr + 16 + tw <= w - 24; if (tag.dataset.t !== txt + side) { tag.dataset.t = txt + side; tag.innerHTML = (side ? '<span style="position:absolute;left:-16px;top:50%;width:16px;height:1px;background:rgba(247,192,50,.85)"></span>' : '<span style="position:absolute;left:50%;top:-12px;width:1px;height:12px;background:rgba(247,192,50,.85)"></span>') + txt; } tag.style.transform = side ? 'translate(' + (xr + 16).toFixed(1) + 'px,' + (yb - 20).toFixed(1) + 'px)' : 'translate(' + Math.max(24, Math.min(w - tw - 24, (xl + xr) / 2 - tw / 2)).toFixed(1) + 'px,' + (yM + 12).toFixed(1) + 'px)'; tag.style.opacity = cl((hm - 0.4) / 0.5).toFixed(3); }
+        const txt = (state.tags && state.tags[hi]) || ''; const tw = tag.offsetWidth || 220, RT2 = LY.rtl, side = RT2 ? xl - 16 - tw >= 24 : xr + 16 + tw <= w - 24; if (tag.dataset.t !== txt + side + RT2) { tag.dataset.t = txt + side + RT2; tag.innerHTML = (side ? '<span style="position:absolute;' + (RT2 ? 'right' : 'left') + ':-16px;top:50%;width:16px;height:1px;background:rgba(247,192,50,.85)"></span>' : '<span style="position:absolute;left:50%;top:-12px;width:1px;height:12px;background:rgba(247,192,50,.85)"></span>') + txt; } tag.style.transform = side ? 'translate(' + (RT2 ? xl - 16 - tw : xr + 16).toFixed(1) + 'px,' + (yb - 20).toFixed(1) + 'px)' : 'translate(' + Math.max(24, Math.min(w - tw - 24, (xl + xr) / 2 - tw / 2)).toFixed(1) + 'px,' + (yM + 12).toFixed(1) + 'px)'; tag.style.opacity = cl((hm - 0.4) / 0.5).toFixed(3); }
       else tag.style.opacity = 0; }
     const root = host.parentElement, oc = !mob && stepOn && oo >= 0.999 && rise > 0.98 && root ? root.querySelector('[data-td-dot="' + act + '"]') : null;
     let show = false;
     if (oc) { const hr = host.getBoundingClientRect(), r = oc.getBoundingClientRect(), kk = hr.width / w || 1;
-      let ax = -1e9, ay = 0; CORN.forEach((c) => { cv.copy(c).applyMatrix4(L[act].matrixWorld); const q = proj(cv); if (q[0] > ax) { ax = q[0]; ay = q[1]; } });
-      const dx2 = (r.left + r.width / 2 - hr.left) / kk, dy2 = (r.top + r.height / 2 - hr.top) / kk, sx2 = ax + 8, kx = dx2 - 26;
-      cPath.setAttribute('d', 'M' + sx2.toFixed(1) + ' ' + ay.toFixed(1) + ' L' + kx.toFixed(1) + ' ' + dy2.toFixed(1) + ' H' + (dx2 - 6).toFixed(1));
+      const sg = LY.rtl ? -1 : 1; let ax = -1e9, ay = 0; CORN.forEach((c) => { cv.copy(c).applyMatrix4(L[act].matrixWorld); const q = proj(cv); if (q[0] * sg > ax) { ax = q[0] * sg; ay = q[1]; } }); ax *= sg;
+      const dx2 = (r.left + r.width / 2 - hr.left) / kk, dy2 = (r.top + r.height / 2 - hr.top) / kk, sx2 = ax + 8 * sg, kx = dx2 - 26 * sg;
+      cPath.setAttribute('d', 'M' + sx2.toFixed(1) + ' ' + ay.toFixed(1) + ' L' + kx.toFixed(1) + ' ' + dy2.toFixed(1) + ' H' + (dx2 - 6 * sg).toFixed(1));
       cPath.setAttribute('stroke-dashoffset', (1 - (1 - Math.pow(1 - cl((t - drawT - 0.1) / 0.3), 3))).toFixed(3));
       cHalo.setAttribute('cx', sx2.toFixed(1)); cHalo.setAttribute('cy', ay.toFixed(1)); cDot.setAttribute('cx', sx2.toFixed(1)); cDot.setAttribute('cy', ay.toFixed(1)); cHalo.setAttribute('r', (7 + 2 * Math.sin(t * 4)).toFixed(1)); show = ax > 0 && ax < w && ay > LY.top - 8 && ay < LY.floorY + 8; }
     [cPath, cHalo, cDot].forEach((n) => (n.style.opacity = show ? 1 : 0));
@@ -793,8 +803,8 @@ export async function mount(host, state) {
           const y = H2 - it.y - it.h; renderer.setViewport(it.x, y, it.w, it.h); renderer.setScissor(it.x, y, it.w, it.h); renderer.render(adS, adCam); });
         renderer.setScissorTest(false); adS.background = bg0; parts.forEach((q) => (q.visible = false)); parts.asm.visible = false; } };
     state.shelfApi = api; state.onShelf && state.onShelf(api);
-    return () => { alive = false; window.removeEventListener('pointermove', onMove); renderer.dispose(); pmrem.dispose(); svg.remove(); refl.remove(); shd.remove(); dust.remove(); clO.forEach((c) => c.d.remove()); tag.remove(); };
+    return () => { alive = false; window.removeEventListener('se:lang', onAdLang); window.removeEventListener('pointermove', onMove); renderer.dispose(); pmrem.dispose(); svg.remove(); refl.remove(); shd.remove(); dust.remove(); clO.forEach((c) => c.d.remove()); tag.remove(); };
   }
   tick();
-  return () => { alive = false; window.removeEventListener('pointermove', onMove); rt.dispose(); renderer.dispose(); pmrem.dispose(); svg.remove(); refl.remove(); shd.remove(); dust.remove(); clO.forEach((c) => c.d.remove()); tag.remove(); };
+  return () => { alive = false; window.removeEventListener('se:lang', onAdLang); window.removeEventListener('pointermove', onMove); rt.dispose(); renderer.dispose(); pmrem.dispose(); svg.remove(); refl.remove(); shd.remove(); dust.remove(); clO.forEach((c) => c.d.remove()); tag.remove(); };
 }

@@ -278,6 +278,8 @@ export default function Hero({ v }: { v: Vals }) {
             {'\n      '}
           </svg>
           {'\n\n      '}
+          {/* R6 Part D: the device group (shadows, light, iPad, phone). In Arabic it changes side as one block and keeps its composition */}
+          <div data-hero-group="" style={{ position: 'absolute', inset: '0' }}>
           <div
             style={{
               position: 'absolute',
@@ -1508,6 +1510,7 @@ export default function Hero({ v }: { v: Vals }) {
               {'\n        '}
             </div>
             {'\n      '}
+          </div>
           </div>
           {'\n    '}
         </div>

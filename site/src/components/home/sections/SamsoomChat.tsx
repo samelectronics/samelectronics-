@@ -75,7 +75,7 @@ export default function SamsoomChat({ v }: { v: Vals }) {
           <aside
             style={{
               position: 'fixed',
-              right: '24px',
+              insetInlineEnd: '24px', // R6 Part D: bottom-left in Arabic, with the floating button
               bottom: '24px',
               zIndex: '95',
               width: 'min(390px,calc(100vw - 48px))',
@@ -152,6 +152,7 @@ export default function SamsoomChat({ v }: { v: Vals }) {
               style={{
                 flex: '1',
                 overflowY: 'auto',
+                overscrollBehavior: 'contain',
                 display: 'flex',
                 flexDirection: 'column',
                 gap: '10px',

@@ -132,7 +132,7 @@ export default function Nav({ v }: { v: Vals }) {
                     style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', padding: '5px 8px', borderRadius: '8px', background: d.bg, color: d.ink, fontWeight: d.w, fontSize: '13px' }}
                   >
                     <span>{d.day}</span>
-                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '12px', whiteSpace: 'nowrap' }}>{d.h}</span>
+                    <span className="se-ltr" style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '12px', whiteSpace: 'nowrap' }}>{d.h}</span>
                   </span>
                 ))}
               </span>

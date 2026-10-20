@@ -1983,3 +1983,49 @@ DONE WHEN
 - No empty icon slots. **PASS**
 - No cut text at 1280/1440/1920 px in EN and AR. **PASS** (2D sections; teardown in §07)
 - Samsoom hints never cover content. **PASS**
+
+## Part D · Arabic: mirror the layout, keep the look
+
+**Hero:**
+- The 14 Oct full mirror is replaced.
+- Blocks swap; the inside of the device group is never flipped. The background (yellow slab, circuits) mirrors as the device column's backdrop.
+- The device group (shadows, light, iPad, phone) is wrapped in `data-hero-group` and mirrored back around its own centre, so it only changes side: same overlap, same angles, same light.
+- Measured at 1440:
+  - Devices: EN x 808–1412 → AR x 28–632 (the exact mirror).
+  - Text block: EN 80–720 → AR 720–1360.
+
+**Teardown** (`SETeardown.logic.js`, `public/se-teardown-3d.js`):
+- The stage mirrors with the same distances:
+  - the 3D phone's centre: 52.5% → 47.5%, final position 75% → 25%;
+  - the studio light;
+  - the final message and its glow;
+  - the Skip link, which sits at the zone's reading start.
+- The connector to the parts list starts on the **left** edge of the part in Arabic and runs left to the list dot. Measured in the real 3D render at step 4:
+  - EN: part dot x 865 → list dot x 1104.
+  - AR: part dot x 491 → list dot x 325.
+- Spec callouts move to the right of the stack; drawer tags open on the free side.
+- The final-call advert texts (drawn into 3D textures) now go through the dictionary. They redraw on a language switch; Arabic gets no letter spacing and right-to-left drawing.
+- A stray Arabic accent of the hidden yellow line no longer shows.
+
+**Menus:**
+- The System Map, cart drawer and Find My Part lock the page while open; their lists scroll inside themselves (`src/lib/scrollLock.js`, `overscroll-behavior: contain`).
+- Measured: wheel over the menu list scrolls the list; the page behind moved 0px (before: 240px in AR, 360px in EN).
+- Drawers slide in from the left in Arabic. The Samsoom chat panel sits bottom-left with its button.
+
+**Times:**
+- The footer hours, the hours pop-over and the Visit card keep `10:30-14:00 · 16:00-22:00` in order.
+- The Visit day timeline runs 00 → 24 in both languages (its bars used to sit under the wrong labels in Arabic).
+
+**Translation:**
+- `i18n-check.mjs` in Arabic: only brand names (aria labels) and the `se://deira/board` code stay in Latin.
+- The 3D advert words were added to `ar.ts`.
+
+**Checks:**
+- Side-by-side EN | AR screenshots of all 20 sections at 1440, reviewed: same composition, same spacing, mirrored.
+- Teardown tests 9/9; scroll engine 9/9 in AR.
+
+DONE WHEN
+- Side-by-side screenshots EN vs AR of every section: same composition, same spacing, mirrored. **PASS**
+- Teardown connector dots on the left of components in AR, lines never crossing components. **PASS**
+- The menu scrolls in AR. **PASS**
+- Footer hours in the correct order. **PASS**

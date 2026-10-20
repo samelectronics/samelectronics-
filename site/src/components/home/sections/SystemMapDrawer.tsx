@@ -2,14 +2,16 @@
 // Home v3 section "SystemMapDrawer". Renders against the home page's values (`v`, from HomeV3's logic class).
 'use client';
 import React from 'react';
+import { useScrollLock, stopWheel } from '@/lib/scrollLock';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 
 export default function SystemMapDrawer({ v }: { v: Vals }) {
+  useScrollLock(!!v.drawer?.map); // R6 Part D: the page stays still behind the open drawer
   return (
     <>
       {v.drawer?.map ? (
         <>
-          <div style={{ position: 'fixed', inset: '0', zIndex: '90', display: 'flex', justifyContent: 'flex-end' }}>
+          <div {...stopWheel} style={{ position: 'fixed', inset: '0', zIndex: '90', display: 'flex', justifyContent: 'flex-end' }}>
             {'\n  '}
             <div
               onClick={v.drawer?.close}
@@ -23,6 +25,7 @@ export default function SystemMapDrawer({ v }: { v: Vals }) {
             ></div>
             {'\n  '}
             <nav
+              data-drawer=""
               style={{
                 position: 'relative',
                 width: 'min(460px,100%)',
@@ -73,7 +76,7 @@ export default function SystemMapDrawer({ v }: { v: Vals }) {
                 </button>
               </div>
               {'\n    '}
-              <div style={{ flex: '1', overflowY: 'auto', padding: '8px 12px' }}>
+              <div style={{ flex: '1', overflowY: 'auto', overscrollBehavior: 'contain', padding: '8px 12px' }}>
                 {'\n      '}
                 {(Array.isArray(v.sysMap) ? v.sysMap : []).map((__it: any, __i: number) => {
                   const v2 = { ...v, m: __it, $index: __i };

@@ -810,7 +810,7 @@ function render(v: Vals) {
                   href="#families"
                   onClick={v.skip}
                   style={cssToObj(
-                    `position:absolute;left:${s(v.z1?.x)}px;bottom:40px;display:flex;align-items:center;gap:8px;height:32px;color:rgba(255,255,255,.8);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.08em;text-decoration:none;white-space:nowrap;opacity:${s(v.skp?.o)};pointer-events:${s(v.skp?.pe)};transition:color .2s,opacity .3s`,
+                    `position:absolute;left:${s(v.z1?.sl)};right:${s(v.z1?.sr)};bottom:40px;display:flex;align-items:center;gap:8px;height:32px;color:rgba(255,255,255,.8);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;letter-spacing:.08em;text-decoration:none;white-space:nowrap;opacity:${s(v.skp?.o)};pointer-events:${s(v.skp?.pe)};transition:color .2s,opacity .3s`,
                   )}
                   className={cx(undefined, 'scp-f2a4cf2e')}
                 >

@@ -2,6 +2,7 @@
 // Renders against HomeV3's finder values (v.fmp): brand → model → part → grade, with an LED-circuit step indicator.
 'use client';
 import React from 'react';
+import { useScrollLock, stopWheel } from '@/lib/scrollLock';
 import { type Vals } from '@/dc/runtime';
 import SEBrandLogo from '../../dc/SEBrandLogo';
 import SEPart from '../../dc/SEPart';
@@ -52,11 +53,12 @@ function flyTo(e: React.MouseEvent, step: number, then: () => void) {
 
 export default function FindMyPartPanel({ v }: { v: Vals }) {
   const f = v.fmp || {};
+  useScrollLock(!!f.open); // R6 Part D: the page stays still behind the open panel
   if (!f.open) return null;
   const step = f.s1 ? 1 : f.s2 ? 2 : f.s3 ? 3 : 4;
   const B = f.brands || [];
   return (
-    <div className="fm" role="dialog" aria-modal="true" aria-label="Find My Part">
+    <div className="fm" {...stopWheel} role="dialog" aria-modal="true" aria-label="Find My Part">
       <div className="fm-scrim" onClick={f.close} />
       <div className="fm-panel">
         <header className="fm-head">

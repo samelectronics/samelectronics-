@@ -2,16 +2,18 @@
 // Home v3 section "CartDrawer". Renders against the home page's values (`v`, from HomeV3's logic class).
 'use client';
 import React from 'react';
+import { useScrollLock, stopWheel } from '@/lib/scrollLock';
 import { type Vals, cx, t } from '@/dc/runtime';
 import SEPart from '../../dc/SEPart';
 import SESamsoom from '../../dc/SESamsoom';
 
 export default function CartDrawer({ v }: { v: Vals }) {
+  useScrollLock(!!v.drawer?.cart); // R6 Part D: the page stays still behind the open drawer
   return (
     <>
       {v.drawer?.cart ? (
         <>
-          <div style={{ position: 'fixed', inset: '0', zIndex: '90', display: 'flex', justifyContent: 'flex-end' }}>
+          <div {...stopWheel} style={{ position: 'fixed', inset: '0', zIndex: '90', display: 'flex', justifyContent: 'flex-end' }}>
             {'\n  '}
             <div
               onClick={v.drawer?.close}
@@ -25,6 +27,7 @@ export default function CartDrawer({ v }: { v: Vals }) {
             ></div>
             {'\n  '}
             <aside
+              data-drawer=""
               style={{
                 position: 'relative',
                 width: 'min(440px,100%)',
@@ -72,7 +75,7 @@ export default function CartDrawer({ v }: { v: Vals }) {
                 </button>
               </div>
               {'\n    '}
-              <div style={{ flex: '1', overflowY: 'auto', padding: '12px 24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ flex: '1', overflowY: 'auto', overscrollBehavior: 'contain', padding: '12px 24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 {'\n      '}
                 {v.cartEmpty ? (
                   <>

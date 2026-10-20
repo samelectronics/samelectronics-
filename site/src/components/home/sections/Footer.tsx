@@ -214,7 +214,7 @@ export default function Footer({ v }: { v: Vals }) {
                 <React.Fragment key={__i}>
                   <span style={cssToObj(`display:flex;justify-content:space-between;gap:10px;font-size:13px;color:${s(v.d?.fc)}`)}>
                     <span style={cssToObj(`font-weight:${s(v.d?.w)}`)}>{t(v.d?.short)}</span>
-                    <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '12px', textAlign: 'right' }}>{t(v.d?.h)}</span>
+                    <span className="se-ltr" style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '12px', textAlign: 'right' }}>{t(v.d?.h)}</span>
                   </span>
                 </React.Fragment>
               ))(v2);
