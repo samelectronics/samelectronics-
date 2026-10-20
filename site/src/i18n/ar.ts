@@ -1022,6 +1022,11 @@ export const EXACT: Record<string, string> = {
   // 14 Oct §02
   'Closing soon': 'يغلق قريباً',
   'Opening soon': 'يفتح قريباً',
+  // R6 §12 · Wholesale
+  'Search any part: model, part, quality': 'ابحث عن أي قطعة: الموديل، القطعة، الجودة',
+  'Search any part': 'ابحث عن أي قطعة',
+  'No match. Ask us on WhatsApp.': 'لا نتائج. اسألنا على واتساب.',
+  pallets: 'منصات',
   // R6 §11 · Repair Lab
   'Charging port / connector': 'منفذ الشحن / الموصل',
   Camera: 'الكاميرا',

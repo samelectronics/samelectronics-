@@ -2413,3 +2413,32 @@ DONE WHEN
 - Six phases realistic. **PASS** (real 3D renders; layered, see notes)
 - Estimator: multi-select, Original, 15 brands. **PASS**
 - Film reacts to the chosen problem. **PASS** (screen / battery / port)
+
+## §12 · Wholesale & trade
+
+- **Tape:** unrolls once, then rolls continuously left → right like tape off a roll (right → left in Arabic; measured), glint kept.
+- **Pallet builder:**
+  - Search with autocomplete over the whole catalogue: title, model, brand (Samsung also answers to "Galaxy"), series, part and quality. The picked product joins the quick chips.
+  - Slider 10 → 5,000; a 1000+ tier added (sample); a pallets counter.
+  - 500 units = one full pallet (sample, Control Room value).
+- **Realistic pallet** (`scripts/palletfilm`, three.js with an isometric camera):
+  - a real wooden pallet: grain, knots, 7 deck boards, 9 blocks, stringers and bottom boards, finished on every side;
+  - the shipping carton: kraft with the Sam Electronics tape, a barcode label and printed marks;
+  - the full pallet with stretch film and sheen.
+  - The renderer writes the 18 carton cells (px offsets + draw order) to `src/content/palletCells.ts`, so each carton dropped by the slider lands exactly on its cell, back row first, layer by layer.
+- **Full pallet → new pallet film:** passing a 500 step makes the wrapped pallet glide back and shrink into the warehouse row (which grows with each pallet), a forklift's shadow passes, and a new empty pallet rolls in and refills.
+- **Reviewer's savings meter:** the needle swings into the green as the order grows, beside "You keep AED …".
+- **Who we supply:** real renders in the same quality, each with its scene:
+  - a new screen lowers and clicks into the phone (the Repair Lab renders, with a click flash);
+  - the price tag swings in and drops;
+  - the carton is labelled and flown along the arc;
+  - the bulk list ticks and gets a QUOTED stamp.
+- **How trade works:** the ring around each number lights in turn and loops; the numbers never change.
+- Arabic: mirrored; the slider fill now follows the thumb from the right.
+
+DONE WHEN
+- Tape rolls. **PASS**
+- Search any product; max 5,000. **PASS**
+- Realistic pallet; full pallet → new pallet film. **PASS**
+- Who we supply realistic. **PASS** (real renders for the screen and carton scenes; the tag and the list are CSS objects)
+- Steps light, numbers unchanged. **PASS**

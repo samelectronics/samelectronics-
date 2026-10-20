@@ -243,3 +243,76 @@
 @media (prefers-reduced-motion: reduce) {
   .wf *, .wf *::before, .wf *::after { animation-duration: .01s !important; animation-iteration-count: 1 !important; }
 }
+
+/* ================= R6 §12 ================= */
+/* tape: unrolls once, then keeps rolling left → right like tape off a roll (right → left in Arabic); the glint stays */
+.wf-seen .wf-tape-t { animation: wfRoll 38s linear infinite; }
+@keyframes wfRoll { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+html[dir='rtl'] .wf-seen .wf-tape-t { animation-direction: reverse; }
+/* search the whole catalogue */
+.wf-search { position: relative; display: flex; align-items: center; gap: 10px; height: 46px; padding: 0 14px; border-radius: 12px; background: rgba(255, 255, 255, .06); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); color: #B9BCC0; }
+.wf-search:focus-within { box-shadow: inset 0 0 0 1.5px #F7C032; }
+.wf-search input { flex: 1; min-width: 0; height: 100%; border: 0; outline: 0; background: transparent; color: #fff; font: 500 15px Inter, sans-serif; }
+.wf-search input::placeholder { color: #8C9096; }
+.wf-hits { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 40; margin: 0; padding: 6px; list-style: none; border-radius: 12px; background: #26282B; box-shadow: 0 0 0 1px rgba(255, 255, 255, .1), 0 24px 40px rgba(0, 0, 0, .5); max-height: 320px; overflow-y: auto; }
+.wf-hits button { display: grid; grid-template-columns: 34px 1fr auto auto; align-items: center; gap: 10px; width: 100%; padding: 6px 8px; border: 0; border-radius: 8px; background: transparent; color: #fff; text-align: start; cursor: pointer; font: 500 14px Inter, sans-serif; }
+.wf-hits button:hover { background: rgba(247, 192, 50, .12); }
+.wf-hits .th { width: 34px; height: 34px; display: grid; place-items: center; }
+.wf-hits .th img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.wf-hits small { font: 600 11px 'JetBrains Mono', monospace; color: #FFDB6E; }
+.wf-hits em { font: 600 12px 'JetBrains Mono', monospace; font-style: normal; color: #B9BCC0; }
+.wf-hits .none { padding: 10px; color: #B9BCC0; font: 500 13px Inter, sans-serif; }
+/* the real pallet stage (isometric renders; cartons placed on their cells) */
+.wf-stage3 { position: relative; z-index: 2; width: min(100%, 560px); aspect-ratio: 1200 / 1008; margin: 0 auto 8px; opacity: 0; }
+.wf-seen .wf-stage3 { animation: lbFade .4s 1.1s both; }
+.wf-stage3[data-roll] { animation: wfRollIn .9s .55s cubic-bezier(.2, .8, .2, 1) both !important; }
+@keyframes wfRollIn { from { opacity: 0; transform: translateX(-60%); } to { opacity: 1; transform: none; } }
+.wf-stage3 > img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; pointer-events: none; }
+.wf-ct3 { transform: translate(var(--x), var(--y)); }
+.wf-ct3.drop { animation: wfDrop3 .6s cubic-bezier(.55, 0, .85, .4) both; }
+@keyframes wfDrop3 { 0% { opacity: 0; transform: translate(var(--x), calc(var(--y) - 22%)); } 30% { opacity: 1; } 82% { transform: translate(var(--x), calc(var(--y) + .6%)); } 100% { opacity: 1; transform: translate(var(--x), var(--y)); } }
+.wf-full3 { animation: lbFade .5s both; }
+.wf-filmshine { position: absolute; inset: 0; pointer-events: none; overflow: hidden; -webkit-mask: url(/assets/pallet/full-600.webp) center / 100% 100% no-repeat; mask: url(/assets/pallet/full-600.webp) center / 100% 100% no-repeat; }
+.wf-filmshine::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 18%; background: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .32), rgba(255, 255, 255, 0)); transform: translateX(-120%); animation: wfShine3 5s 1s ease-in-out infinite; mix-blend-mode: screen; }
+@keyframes wfShine3 { 0% { transform: translateX(-120%); } 45%, 100% { transform: translateX(620%); } }
+/* the warehouse row behind: full pallets that glided back */
+.wf-row { position: absolute; left: 8%; right: 8%; top: 7%; height: 26%; z-index: 1; pointer-events: none; }
+.wf-row img { position: absolute; top: 0; height: 100%; left: calc(var(--i) * 15%); opacity: .55; filter: saturate(.8) brightness(.9) blur(.4px); }
+.wf-going { position: absolute; z-index: 3; left: 50%; bottom: 60px; width: min(90%, 520px); transform: translateX(-50%); pointer-events: none; animation: wfGoing 1.5s cubic-bezier(.45, 0, .2, 1) both; }
+@keyframes wfGoing { 0% { opacity: 1; transform: translateX(-50%) scale(1); } 100% { opacity: 0; transform: translateX(10%) translateY(-60%) scale(.32); } }
+.wf-fork { position: absolute; z-index: 4; bottom: 40px; left: -40%; width: 46%; height: 70px; border-radius: 40% 40% 30% 30%; background: radial-gradient(closest-side, rgba(40, 34, 26, .45), rgba(40, 34, 26, 0)); filter: blur(6px); pointer-events: none; animation: wfFork3 1.6s .2s ease-in-out both; }
+@keyframes wfFork3 { from { transform: translateX(0); opacity: 0; } 15%, 85% { opacity: 1; } to { transform: translateX(330%); opacity: 0; } }
+/* savings meter */
+.wf-keep { position: relative; }
+.wf-meter { width: 120px; height: 70px; flex: none; }
+.wf-meter .trk { fill: none; stroke: rgba(255, 255, 255, .12); stroke-width: 8; stroke-linecap: round; }
+.wf-meter .grn { fill: none; stroke: #2BB673; stroke-width: 8; stroke-linecap: round; stroke-dasharray: .45 1; stroke-dashoffset: -.55; }
+.wf-meter .ndl { transform-origin: 60px 62px; transform-box: view-box; transition: transform .7s cubic-bezier(.34, 1.4, .64, 1); }
+.wf-meter .ndl path { stroke: #F7C032; stroke-width: 3; stroke-linecap: round; }
+.wf-meter .ndl circle { fill: #F7C032; }
+/* how trade works: the ring around each number lights in turn (the number never changes) */
+.wf-steps .node { position: relative; }
+.wf-steps .node .ring { position: absolute; inset: -6px; border-radius: 50%; box-shadow: 0 0 0 2px rgba(247, 192, 50, 0); animation: wfRing 3.6s calc(var(--i) * 1.2s + 2.4s) ease-in-out infinite; pointer-events: none; }
+@keyframes wfRing { 0%, 34%, 100% { box-shadow: 0 0 0 2px rgba(247, 192, 50, 0), 0 0 0 0 rgba(247, 192, 50, 0); } 8%, 22% { box-shadow: 0 0 0 2.5px #F7C032, 0 0 18px 2px rgba(247, 192, 50, .55); } }
+/* who we supply: real renders */
+.wf-sc-rep .rph { position: absolute; left: -6%; top: -38%; width: 112%; aspect-ratio: 1280 / 880; }
+.wf-sc-rep .rph img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.wf-sc-rep .rscr { animation: wfScr3 4.4s cubic-bezier(.45, 0, .2, 1) infinite; }
+@keyframes wfScr3 { 0%, 12% { transform: translateY(-26%); opacity: 0; } 22% { opacity: 1; } 46% { transform: translateY(0); } 47% { transform: translateY(.6%); } 48%, 88% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(0); opacity: 0; } }
+.wf-sc-rep .click { position: absolute; left: 38%; top: 44%; width: 40px; height: 40px; border-radius: 50%; background: radial-gradient(closest-side, #fff, rgba(247, 192, 50, .6) 40%, rgba(247, 192, 50, 0)); opacity: 0; mix-blend-mode: screen; animation: wfClick 4.4s infinite; }
+@keyframes wfClick { 0%, 45% { opacity: 0; transform: scale(.4); } 49% { opacity: 1; transform: scale(1); } 60%, 100% { opacity: 0; transform: scale(1.4); } }
+.wf-sc-rep .ph, .wf-sc-rep .drv { display: none; }
+.wf-sc-exp .box3 { position: absolute; left: 14px; bottom: 10px; z-index: 1; width: 78px; animation: wfFly 4.8s cubic-bezier(.45, 0, .2, 1) infinite; }
+.wf-sc-exp .box3 img { display: block; width: 100%; }
+.wf-sc-exp .lbl3 { position: absolute; left: 12%; top: 40%; padding: 2px 4px; border-radius: 2px; background: #F7C032; font: 700 7px 'JetBrains Mono', monospace; font-style: normal; color: #26282B; opacity: 0; transform: scale(1.8) rotate(-8deg); animation: wfLbl 4.8s infinite; }
+@keyframes wfLbl { 0%, 14% { opacity: 0; transform: scale(1.8) rotate(-8deg); } 20%, 100% { opacity: 1; transform: scale(1) rotate(-8deg); } }
+@keyframes wfFly { 0%, 30% { transform: none; opacity: 1; } 70% { transform: translate(150px, -50px) scale(.4); opacity: 1; } 76%, 90% { transform: translate(170px, -40px) scale(.3); opacity: 0; } 100% { transform: none; opacity: 0; } }
+.wf-sc-blk .qstamp { position: absolute; right: -10px; bottom: 30px; padding: 3px 8px; border-radius: 4px; font: 700 12px 'Space Grotesk', sans-serif; font-style: normal; letter-spacing: .1em; color: #1D8A55; box-shadow: inset 0 0 0 2px #1D8A55; transform: rotate(-12deg) scale(1.8); opacity: 0; mix-blend-mode: multiply; animation: wfQ 4.8s infinite; }
+@keyframes wfQ { 0%, 52% { opacity: 0; transform: rotate(-12deg) scale(1.8); } 58%, 92% { opacity: 1; transform: rotate(-12deg) scale(1); } 100% { opacity: 0; } }
+.wf-sc-trd .tag { animation-name: wfTag3; }
+@keyframes wfTag3 { 0% { transform: translateY(-80px) rotate(-30deg); } 18% { transform: translateY(0) rotate(14deg); } 30% { transform: rotate(-9deg); } 42% { transform: rotate(5deg); } 54%, 80% { transform: rotate(0); } 92%, 100% { transform: translateY(120px) rotate(20deg); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .wf-seen .wf-tape-t, .wf-steps .node .ring, .wf-sc-rep .rscr, .wf-sc-exp .box3 { animation: none; } }
+.wf-tiers { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; }
+.wf-tiers li { padding-inline: 8px !important; }
+html[dir='rtl'] .wf-range::-webkit-slider-runnable-track { background: linear-gradient(270deg, #F7C032 var(--f), rgba(255, 255, 255, .1) var(--f)); }
+html[dir='rtl'] .wf-range::-moz-range-track { background: linear-gradient(270deg, #F7C032 var(--f), rgba(255, 255, 255, .1) var(--f)); }

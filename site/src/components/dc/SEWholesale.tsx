@@ -3,6 +3,10 @@
 import React from 'react';
 import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SEWholesale.logic.js';
+import { PALLET_CELLS, PALLET_FRAME } from '@/content/palletCells';
+
+const PL = (l: string) => `/assets/pallet/${l}-600.webp`;
+const PL2 = (l: string) => `/assets/pallet/${l}-1200.webp`;
 
 const TAPE = 'SAM ELECTRONICS · WHOLESALE · TRADE';
 
@@ -59,8 +63,13 @@ function Scene({ k }: { k: string }) {
   if (k === 'rep')
     return (
       <div className="wf-sc wf-sc-rep" aria-hidden="true">
-        <span className="ph"><i className="scr" /></span>
-        <span className="drv"><i /></span>
+        {/* R6 §12: the real bench renders: a new screen lowers and clicks into the phone */}
+        <span className="rph">
+          <img src="/assets/repair/body-640.webp" alt="" />
+          <img className="rbat" src="/assets/repair/bat-new-640.webp" alt="" />
+          <img className="rscr" src="/assets/repair/screen-new-640.webp" alt="" />
+        </span>
+        <i className="click" />
       </div>
     );
   if (k === 'trd')
@@ -80,7 +89,10 @@ function Scene({ k }: { k: string }) {
             <animateMotion dur="3.6s" repeatCount="indefinite" rotate="auto" path="M20 92 Q100 -6 180 70" />
           </g>
         </svg>
-        <span className="box"><i /></span>
+        <span className="box3">
+          <img src="/assets/pallet/single-600.webp" alt="" />
+          <i className="lbl3">SE-2611 · LOS</i>
+        </span>
       </div>
     );
   return (
@@ -92,34 +104,31 @@ function Scene({ k }: { k: string }) {
             <b />
           </span>
         ))}
+        <em className="qstamp">QUOTED</em>
       </span>
     </div>
   );
 }
 
+/** R6 §12: one real carton render, placed on its cell of the isometric pallet (scripts/palletfilm) */
 function Carton({ c }: { c: any }) {
-  const x = c.col * 118 + (c.back ? 26 : 0), y = 312 - (c.layer + 1) * 86 - (c.back ? 18 : 0) - 18;
+  const cell = PALLET_CELLS[c.i] || PALLET_CELLS[0];
   return (
-    <div className={'wf-ct' + (c.drop ? ' drop' : '')} style={{ left: x, top: y, zIndex: c.z, animationDelay: c.dl }}>
-      <i className="t" />
-      <i className="s" />
-      <i className="f">
-        {!c.back ? (
-          <span className="lbl">
-            <b>{c.code}</b>
-            <em />
-          </span>
-        ) : null}
-      </i>
-      {c.drop ? <span className="dust" style={{ animationDelay: c.dl }} /> : null}
-    </div>
+    <img
+      className={'wf-ct3' + (c.drop ? ' drop' : '')}
+      src={PL('carton')}
+      srcSet={PL('carton') + ' 1x, ' + PL2('carton') + ' 2x'}
+      alt=""
+      draggable={false}
+      style={{ ['--x' as string]: ((cell.dx / PALLET_FRAME.w) * 100).toFixed(3) + '%', ['--y' as string]: ((cell.dy / PALLET_FRAME.h) * 100).toFixed(3) + '%', zIndex: 10 + cell.z, animationDelay: c.dl } as React.CSSProperties}
+    />
   );
 }
 
 function render(v: Vals) {
   const tape = (
     <span className="wf-tape-t">
-      {Array.from({ length: 6 }, (_, i) => (
+      {Array.from({ length: 12 }, (_, i) => (
         <React.Fragment key={i}>
           <b>{TAPE}</b>
           <i>◆</i>
@@ -212,6 +221,32 @@ function render(v: Vals) {
               <span className="wf-k">PALLET BUILDER</span>
               <span className="wf-k dim">SAMPLE TRADE PRICES</span>
             </div>
+            {/* R6 §12: search the whole catalogue */}
+            <div className="wf-search">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-3.5-3.5" />
+              </svg>
+              <input type="search" value={v.search?.q || ''} onChange={v.search?.on} onFocus={v.search?.focus} onBlur={v.search?.blur} placeholder="Search any part: model, part, quality" aria-label="Search any part" />
+              {v.search?.open ? (
+                <ul className="wf-hits" role="listbox">
+                  {(v.search.hits || []).length ? (
+                    v.search.hits.map((h: any) => (
+                      <li key={h.id}>
+                        <button type="button" onMouseDown={h.pick}>
+                          <span className="th">{h.img ? <img src={h.img} alt="" /> : null}</span>
+                          <b data-no-i18n="">{h.name}</b>
+                          <small>{h.grade}</small>
+                          <em>{h.price}</em>
+                        </button>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="none">No match. Ask us on WhatsApp.</li>
+                  )}
+                </ul>
+              ) : null}
+            </div>
             <div className="wf-chips" role="radiogroup" aria-label="Part">
               {(v.parts || []).map((p: any) => (
                 <button key={p.id} type="button" role="radio" aria-checked={p.on} className={p.on ? 'on' : ''} onClick={p.pick}>
@@ -226,14 +261,14 @@ function render(v: Vals) {
             <label className="wf-qty">
               <span>Quantity</span>
               <b>
-                {v.qty} <small>units</small>
+                {v.qtyTxt} <small>units</small>
               </b>
             </label>
             <input
               className="wf-range"
               type="range"
               min={10}
-              max={500}
+              max={v.maxQ}
               step={10}
               value={v.qty}
               onChange={v.setQty}
@@ -271,6 +306,15 @@ function render(v: Vals) {
               </div>
             </div>
             <div className="wf-keep">
+              {/* reviewer's idea: the savings meter swings into the green as the order grows */}
+              <svg className="wf-meter" viewBox="0 0 120 70" aria-hidden="true">
+                <path d="M12 62 A48 48 0 0 1 108 62" className="trk" />
+                <path d="M12 62 A48 48 0 0 1 108 62" className="grn" pathLength={1} />
+                <g style={{ transform: `rotate(${v.meter?.ang || -80}deg)` }} className="ndl">
+                  <path d="M60 62 L60 20" />
+                  <circle cx="60" cy="62" r="5" />
+                </g>
+              </svg>
               <span>You keep</span>
               <b ref={v.keepRef}>{v.keepInit}</b>
             </div>
@@ -278,35 +322,27 @@ function render(v: Vals) {
 
           <div className="wf-floor">
             <span className="wf-pool" aria-hidden="true" />
-            <div className="wf-stage" aria-label={v.n + ' cartons on the pallet'}>
-              <div className="wf-pallet">
-                <span className="wf-cshadow" aria-hidden="true" />
-                <i className="deck" />
-                <i className="deck2" />
-                <i className="blk b1" />
-                <i className="blk b2" />
-                <i className="blk b3" />
-              </div>
-              <div className="wf-stack">
-                {v.seen ? (v.cartons || []).map((c: any) => <Carton key={c.key} c={c} />) : null}
-                {v.full ? (
-                  <div className="wf-wrap" aria-hidden="true">
-                    <i className="sp" />
-                    <i className="sh" />
-                  </div>
-                ) : null}
-                {v.full ? (
-                  <div className="wf-label">
-                    <b>SE-2611</b>
-                    <span>Ready to ship from Deira.</span>
-                    <em aria-hidden="true" />
-                  </div>
-                ) : null}
-              </div>
+            {/* the warehouse row: every full pallet glides back here */}
+            <div className="wf-row" aria-hidden="true">
+              {(v.row || []).map((i: number) => (
+                <img key={i} src={PL('full')} alt="" style={{ ['--i' as string]: i } as React.CSSProperties} />
+              ))}
             </div>
+            <div className="wf-stage3" key={'p' + v.rowN} data-roll={v.roll ? '1' : undefined} aria-label={v.n + ' cartons on the pallet'}>
+              <img className="wf-pal3" src={PL('pallet')} srcSet={PL('pallet') + ' 1x, ' + PL2('pallet') + ' 2x'} alt="" draggable={false} />
+              {v.seen && !v.full ? (v.cartons || []).map((c: any) => <Carton key={c.key} c={c} />) : null}
+              {v.full ? (
+                <>
+                  <img className="wf-full3" src={PL('full')} srcSet={PL('full') + ' 1x, ' + PL2('full') + ' 2x'} alt="" draggable={false} />
+                  <span className="wf-filmshine" aria-hidden="true" />
+                </>
+              ) : null}
+            </div>
+            {v.roll ? <span className="wf-fork" key={'f' + v.roll} aria-hidden="true" /> : null}
+            {v.roll ? <img className="wf-going" key={'g' + v.roll} src={PL('full')} alt="" aria-hidden="true" /> : null}
             <div className="wf-floor-cap">
               <span>
-                <b>{v.n}</b> cartons on the pallet
+                <b>{v.n}</b> cartons on the pallet · <b>{v.pallets}</b> pallets
               </span>
               <span>{v.full ? 'Pallet full · wrapped · ready to ship' : 'Packed in Deira'}</span>
             </div>
@@ -333,7 +369,10 @@ function render(v: Vals) {
           <ol className="wf-steps">
             {['Apply', 'Get approved', 'Order at trade prices'].map((t, i) => (
               <li key={t} style={{ ['--i' as string]: i } as React.CSSProperties}>
-                <i className="node">{i + 1}</i>
+                <i className="node">
+                  {i + 1}
+                  <span className="ring" aria-hidden="true" />
+                </i>
                 <b>{t}</b>
                 {i < 2 ? <span className="wire" /> : null}
               </li>
