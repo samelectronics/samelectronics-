@@ -15,7 +15,7 @@
     [C_G]: { ink: '#FFFFFF', eb: 'rgba(255,255,255,.7)', kick: 'rgba(255,255,255,.8)', d: '#D5D7DA', bb: C_Y, bi: C_G, st: '#FFFFFF', glow: 'rgba(255,170,64,.25)', line: 'rgba(255,255,255,.08)' },
     [C_F]: { ink: INK, eb: 'rgba(38,40,43,.75)', kick: 'rgba(38,40,43,.8)', d: '#3D3E3F', bb: C_G, bi: '#FFFFFF', st: C_G, glow: 'rgba(196,184,166,.3)', line: 'rgba(38,40,43,.08)' },
   };
-  function spaced(x, s, X, Y, ls, measure) { let w = 0; for (const ch of s) { const cw = x.measureText(ch).width; if (!measure) x.fillText(ch, X + w, Y); w += cw + ls; } return w - ls; }
+  function spaced(x, s, X, Y, ls, measure) { if (/[\u0600-\u06FF]/.test(s)) { if (!measure) x.fillText(s, X, Y); return x.measureText(s).width; } /* Arabic letters must join: no per-letter spacing */ let w = 0; for (const ch of s) { const cw = x.measureText(ch).width; if (!measure) x.fillText(ch, X + w, Y); w += cw + ls; } return w - ls; }
   function wrap(x, s, maxW) { const words = s.replace(/\n/g, ' ').split(' '), out = []; let l = ''; words.forEach((w) => { const t = l ? l + ' ' + w : w; if (x.measureText(t).width > maxW && l) { out.push(l); l = w; } else l = t; }); if (l) out.push(l); return out; }
   function rr(x, X, Y, w, h, r) { x.beginPath(); x.moveTo(X + r, Y); x.arcTo(X + w, Y, X + w, Y + h, r); x.arcTo(X + w, Y + h, X, Y + h, r); x.arcTo(X, Y + h, X, Y, r); x.arcTo(X, Y, X + w, Y, r); x.closePath(); }
 
@@ -54,16 +54,16 @@
   ].map((q) => ({ ...q, k: 'a', dur: 3.2 }));
   const NB = ((window.SE_DATA && window.SE_DATA.brands) || []).length || 15; // R6 Part E: the owner's brand list
   const SCN_B = [{ k: 'intro', dur: 1.8, bg: C_G }].concat([
-    { L: 0, bg: C_Y, kick: 'Bright like day one.', name: 'SCREENS', d: '2,211 in stock · ' + NB + ' brands', b: 'Shop screens', tr: 'Z', dir: [-1, 0] },
-    { L: 4, bg: C_G, kick: 'Full power, fully tested.', name: 'BATTERIES', d: '1,760 in stock · ' + NB + ' brands', b: 'Shop batteries', tr: 'W', dir: [0, -1] },
-    { L: 7, bg: C_F, kick: 'Factory finish, every brand.', name: 'BACK GLASS', d: '1,698 in stock · ' + NB + ' brands', b: 'Shop back glass', tr: 'D', dir: [1, 0] },
-    { L: 5, bg: C_Y, kick: 'Sharp again, every lens.', name: 'CAMERAS', d: '566 in stock · 11 brands', b: 'Shop cameras', tr: 'Z', dir: [0, 1] },
-    { L: 2, bg: C_G, kick: 'Charging again in minutes.', name: 'FLEX & PORTS', d: '1,629 in stock · ' + NB + ' brands', b: 'Shop flex & ports', tr: 'W', dir: [-1, 0] },
-    { L: 6, bg: C_F, kick: 'The small parts that matter.', name: 'SMALL PARTS', d: '377 in stock · ' + NB + ' brands', b: 'Shop small parts', tr: 'D', dir: [0, 1] },
+    { L: 0, bg: C_Y, kick: 'Bright like day one.', name: 'Screens', d: '2,211 in stock · ' + NB + ' brands', b: 'Shop screens', tr: 'Z', dir: [-1, 0] },
+    { L: 4, bg: C_G, kick: 'Full power, fully tested.', name: 'Batteries', d: '1,760 in stock · ' + NB + ' brands', b: 'Shop batteries', tr: 'W', dir: [0, -1] },
+    { L: 7, bg: C_F, kick: 'Factory finish, every brand.', name: 'Back glass', d: '1,698 in stock · ' + NB + ' brands', b: 'Shop back glass', tr: 'D', dir: [1, 0] },
+    { L: 5, bg: C_Y, kick: 'Sharp again, every lens.', name: 'Cameras', d: '566 in stock · ' + NB + ' brands', b: 'Shop cameras', tr: 'Z', dir: [0, 1] },
+    { L: 2, bg: C_G, kick: 'Charging again in minutes.', name: 'Flex & ports', d: '1,629 in stock · ' + NB + ' brands', b: 'Shop flex & ports', tr: 'W', dir: [-1, 0] },
+    { L: 6, bg: C_F, kick: 'The small parts that matter.', name: 'Small parts', d: '377 in stock · ' + NB + ' brands', b: 'Shop small parts', tr: 'D', dir: [0, 1] },
   ].map((q) => ({ ...q, k: 'b', dur: 1.1 })).concat([
-    { k: 'word', dur: 0.35, bg: C_Y, ink: C_G, w: 'EVERY PART.' },
-    { k: 'word', dur: 0.35, bg: C_G, ink: C_Y, w: 'EVERY BRAND.' },
-    { k: 'word', dur: 0.35, bg: C_F, ink: C_G, w: 'ALL IN DEIRA.' },
+    { k: 'word', dur: 0.35, bg: C_Y, ink: C_G, w: 'Every part.' },
+    { k: 'word', dur: 0.35, bg: C_G, ink: C_Y, w: 'Every brand.' },
+    { k: 'word', dur: 0.35, bg: C_F, ink: C_G, w: 'All in Deira.' },
     { k: 'slam', dur: 0.6, bg: C_Y, ink: C_G, w: 'Get yours today.' },
     { k: 'logo', dur: 2.2, bg: C_G },
   ]));
@@ -204,7 +204,7 @@
       if (logoIm && solid > 0) { x.save(); x.globalAlpha = solid; x.translate(cx, cy); x.scale(sc, sc); x.beginPath(); x.arc(0, 0, D / 2, 0, Math.PI * 2); x.clip(); x.drawImage(logoIm, -D / 2, -D / 2, D, D); const sk = K(lt, 0.85, 0.5); if (sk > 0 && sk < 1) { const bx = -D + sk * D * 2; x.rotate(-0.4); const g = x.createLinearGradient(bx - D * 0.2, 0, bx + D * 0.2, 0); g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(0.5, 'rgba(255,255,255,.45)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(-D, -D, D * 2, D * 2); } x.restore(); }
       if (flash > 0) { const g = x.createRadialGradient(cx, cy, 0, cx, cy, D); g.addColorStop(0, 'rgba(255,236,170,' + 0.55 * flash + ')'); g.addColorStop(1, 'rgba(255,236,170,0)'); x.fillStyle = g; x.fillRect(0, 0, W, H); }
       const wk = eo(K(lt, 0.85, 0.3)); if (wk > 0) { x.save(); x.globalAlpha = wk; x.fillStyle = '#FFFFFF'; x.font = '600 ' + 5.6 * u + 'px ' + F.sg; const ls = 5.6 * u * (0.16 + 0.5 * (1 - wk)), ww = spaced(x, 'SAM ELECTRONICS', 0, 0, ls, true); spaced(x, 'SAM ELECTRONICS', cx - ww / 2, cy + D / 2 + 11 * u, ls); x.restore(); }
-      const sk2 = eo(K(lt, 0.95, 0.2)); if (sk2 > 0) { x.save(); x.globalAlpha = sk2; x.fillStyle = C_Y; x.font = '500 ' + 3.4 * u + 'px ' + F.in; const ls = 3.4 * u * 0.14, ww = spaced(x, 'QUALITY · WARRANTY · PRICE', 0, 0, ls, true); spaced(x, 'QUALITY · WARRANTY · PRICE', cx - ww / 2, cy + D / 2 + 18 * u + (1 - sk2) * 2 * v, ls); x.restore(); }
+      const sk2 = eo(K(lt, 0.95, 0.2)); if (sk2 > 0) { x.save(); x.globalAlpha = sk2; x.fillStyle = C_Y; x.font = '500 ' + 3.4 * u + 'px ' + F.in; const ls = 3.4 * u * 0.14, ww = spaced(x, 'Quality · Warranty · Price', 0, 0, ls, true); spaced(x, 'Quality · Warranty · Price', cx - ww / 2, cy + D / 2 + 18 * u + (1 - sk2) * 2 * v, ls); x.restore(); }
       const fb = K(lt, 1.7, 0.5); if (fb > 0) { x.fillStyle = 'rgba(0,0,0,' + fb + ')'; x.fillRect(0, 0, W, H); }
     }
     function sceneIntro(x, lt) {
@@ -216,15 +216,18 @@
         if (sw > 0 && sw < 1) { x.rotate(-0.55); const g = x.createLinearGradient(lx - Ds * 0.3, 0, lx + Ds * 0.06, 0); g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(0.8, 'rgba(255,248,225,.7)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(lx - Ds * 0.3, -Ds * 2, Ds * 0.36, Ds * 4); } x.restore();
         if (sw > 0 && sw < 1) { x.save(); x.globalCompositeOperation = 'lighter'; x.translate(cx, cy); x.rotate(-0.55); const g = x.createLinearGradient(lx - Ds * 0.5, 0, lx + Ds * 0.5, 0); g.addColorStop(0, 'rgba(255,220,140,0)'); g.addColorStop(0.5, 'rgba(255,220,140,.14)'); g.addColorStop(1, 'rgba(255,220,140,0)'); x.fillStyle = g; x.fillRect(lx - Ds * 0.5, -H, Ds, H * 2); x.restore(); } }
       const wk = eo(K(lt, 0.6, 0.6)); if (wk > 0) { x.save(); x.globalAlpha *= wk; x.fillStyle = '#FFFFFF'; x.font = '600 ' + 5.6 * u + 'px ' + F.sg; const ls = 5.6 * u * (0.16 + 0.9 * (1 - wk)), ww = spaced(x, 'SAM ELECTRONICS', 0, 0, ls, true); spaced(x, 'SAM ELECTRONICS', cx - ww / 2, cy + D / 2 + 11 * u, ls); x.restore(); }
-      const sk = eo(K(lt, 1.0, 0.3)); if (sk > 0) { x.save(); x.globalAlpha *= sk; x.fillStyle = C_Y; x.font = '500 ' + 3.4 * u + 'px ' + F.in; const ls = 3.4 * u * 0.14, ww = spaced(x, 'QUALITY · WARRANTY · PRICE', 0, 0, ls, true); spaced(x, 'QUALITY · WARRANTY · PRICE', cx - ww / 2, cy + D / 2 + 18 * u + (1 - sk) * 2 * v, ls); x.restore(); }
+      const sk = eo(K(lt, 1.0, 0.3)); if (sk > 0) { x.save(); x.globalAlpha *= sk; x.fillStyle = C_Y; x.font = '500 ' + 3.4 * u + 'px ' + F.in; const ls = 3.4 * u * 0.14, ww = spaced(x, 'Quality · Warranty · Price', 0, 0, ls, true); spaced(x, 'Quality · Warranty · Price', cx - ww / 2, cy + D / 2 + 18 * u + (1 - sk) * 2 * v, ls); x.restore(); }
       x.restore(); const fi = 1 - K(lt, 0, 0.25); if (fi > 0) { x.fillStyle = 'rgba(0,0,0,' + fi + ')'; x.fillRect(0, 0, W, H); }
     }
     function scene(x, q, lt, exitK) { x.save(); if (q.k === 'a') sceneA(x, q, lt, exitK); else if (q.k === 'b') sceneB(x, q, lt, exitK); else if (q.k === 'logo') sceneLogo(x, lt); else if (q.k === 'intro') sceneIntro(x, lt); else sceneWord(x, q, lt); x.restore(); }
 
+    // R6 §05 E: every text in the visitor's language (the site dictionary; French/Spanish later)
+    const LOCK = ['kick', 'name', 'd', 'b', 'eb', 'w'], locC = new Map();
+    const loc = (q) => { const L = window.seI18n, lg = L ? L.lang() : 'en'; if (lg === 'en' || !L) return q; const key = q; let c = locC.get(key); if (!c || c.lg !== lg) { c = { ...q, lg }; LOCK.forEach((f) => { if (typeof q[f] === 'string') c[f] = L.t(q[f]); }); if (Array.isArray(q.h)) c.h = q.h.map((x) => L.t(x)); locC.set(key, c); } return c; };
     function draw(t) {
       if (cv.width !== W || cv.height !== H) resize();
       t = ((t % TOT) + TOT) % TOT; let i = SC.length - 1; for (let k = 0; k < SC.length; k++) if (t < SC[k].st + SC[k].dur) { i = k; break; }
-      const q = SC[i], lt = t - q.st, pv = SC[(i + SC.length - 1) % SC.length], x = ctx; x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
+      const q = loc(SC[i]), lt = t - q.st, pv = SC[(i + SC.length - 1) % SC.length], x = ctx; x.setTransform(1, 0, 0, 1, 0, 0); x.globalAlpha = 1; x.globalCompositeOperation = 'source-over';
       const TR = 0.15, hard = q.k === 'word' || q.k === 'slam' || q.k === 'logo' || q.k === 'intro';
       if (hard || lt >= TR) { scene(x, q, lt); return i; }
       const k = mode === 'A' ? eio(lt / TR) : eio(lt / TR), a = bufA.getContext('2d'), b = bufB.getContext('2d');

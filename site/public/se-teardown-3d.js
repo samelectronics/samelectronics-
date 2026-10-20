@@ -16,7 +16,7 @@ export async function mount(host, state) {
   try { await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1500))]); } catch (e) {}
   const PI = Math.PI;
   const canvas = host.querySelector('canvas');
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true, logarithmicDepthBuffer: true }); // R6 §05 A: no depth fighting on the back-cover edge at any distance
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5) /* R6 Part A: 1.5× max */);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;

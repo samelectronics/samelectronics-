@@ -1,6 +1,7 @@
 // Converted from design/project/SE Teardown.dc.html (12 Oct 2026); maintained by hand since.
 'use client';
 import React from 'react';
+import InfoTip from '@/components/home/InfoTip';
 import { type Vals, createDC, cssToObj, cx, s, t } from '@/dc/runtime';
 import Logic from './SETeardown.logic.js';
 import SEPart from './SEPart';
@@ -168,7 +169,7 @@ function render(v: Vals) {
                                 >
                                   <span
                                     style={cssToObj(
-                                      `display:inline-block;color:transparent;background-image:linear-gradient(100deg,#FFFFFF 0%,#FFFFFF 40%,#FFF3C4 50%,#FFFFFF 60%,#FFFFFF 100%);background-size:300% 100%;background-position:${s(v.w?.bp)}% 0;-webkit-background-clip:text;background-clip:text;opacity:${s(v.w?.o)};filter:${s(v.w?.f)};transform-origin:50% 100%;transform:translateY(${s(v.w?.y)}px) scale(${s(v.w?.sc)});will-change:transform,filter`,
+                                      `display:inline-block;color:transparent;background-image:linear-gradient(100deg,#FFFFFF 0%,#FFFFFF 41%,#FFE58F 46%,#F7C032 50%,#FFE58F 54%,#FFFFFF 59%,#FFFFFF 100%) /* R6 §05 B: a real yellow scanner light, leaving the letters white */;background-size:300% 100%;background-position:${s(v.w?.bp)}% 0;-webkit-background-clip:text;background-clip:text;opacity:${s(v.w?.o)};filter:${s(v.w?.f)};transform-origin:50% 100%;transform:translateY(${s(v.w?.y)}px) scale(${s(v.w?.sc)});will-change:transform,filter`,
                                     )}
                                   >
                                     {t(v.w?.w)}
@@ -319,71 +320,20 @@ function render(v: Vals) {
                                 })}
                               </span>
                               {'\n              '}
-                              <span
-                                style={cssToObj(
-                                  `display:flex;flex-wrap:nowrap;gap:4px;height:24px;overflow:hidden;flex:none;animation:${s(v.c?.a3)}`,
-                                )}
-                              >
-                                {(Array.isArray(v.c?.grades) ? v.c?.grades : []).map((__it: any, __i: number) => {
-                                  const v2 = { ...v, g: __it, $index: __i };
-                                  return ((v: Vals) => (
-                                    <React.Fragment key={__i}>
-                                      <span
-                                        style={{
-                                          padding: '4px 8px',
-                                          borderRadius: '6px',
-                                          background: 'rgba(26,27,29,.5)',
-                                          color: '#F7C032',
-                                          fontFamily: "'JetBrains Mono',monospace",
-                                          fontSize: '11px',
-                                          fontWeight: '600',
-                                          whiteSpace: 'nowrap',
-                                          boxShadow: 'inset 0 0 0 1px rgba(247,192,50,.4)',
-                                        }}
-                                      >
-                                        {t(v.g)}
-                                      </span>
-                                    </React.Fragment>
-                                  ))(v2);
-                                })}
+                              {/* R6 §05 C: the Excel qualities, each with its "i"; then the brands we stock this part for (no "Fits"),
+                                  as 20px logos wrapping across the card from the reading start */}
+                              <span className="td-q" style={cssToObj(`animation:${s(v.c?.a3)}`)}>
+                                {(Array.isArray(v.c?.grades) ? v.c?.grades : []).map((g: string) => (
+                                  <span key={g} className="td-qc">
+                                    {t(g)}
+                                    <InfoTip name={g} kind="quality" />
+                                  </span>
+                                ))}
                               </span>
-                              {'\n              '}
-                              <span style={cssToObj(`display:flex;align-items:baseline;gap:8px;min-width:0;animation:${s(v.c?.a3)}`)}>
-                                <span
-                                  style={{
-                                    flex: 'none',
-                                    fontFamily: "'JetBrains Mono',monospace",
-                                    fontSize: '10.5px',
-                                    fontWeight: '600',
-                                    letterSpacing: '.12em',
-                                    color: 'rgba(255,255,255,.5)',
-                                  }}
-                                >
-                                  FITS
-                                </span>
-                                <span
-                                  style={{
-                                    minWidth: '0',
-                                    fontSize: '14px',
-                                    color: 'rgba(255,255,255,.6)',
-                                    whiteSpace: 'nowrap',
-                                    overflow: 'hidden',
-                                    textOverflow: 'ellipsis',
-                                    ...(v.c?.fitsLogos?.ids?.length ? { whiteSpace: 'normal', overflow: 'visible' } : {}),
-                                  }}
-                                >
-                                  {v.c?.fitsLogos?.ids?.length ? (
-                                    // 14 Oct §07 E: every brand that fits, as small even logos, wrapping onto a second row
-                                    <span style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '6px 10px' }} aria-label={v.c?.fits}>
-                                      {v.c.fitsLogos.ids.map((id: string) => (
-                                        <SEBrandLogo key={id} brand={id} h="11" color="rgba(255,255,255,.75)" />
-                                      ))}
-                                      {v.c.fitsLogos.more ? <span>{v.c.fitsLogos.more}</span> : null}
-                                    </span>
-                                  ) : (
-                                    t(v.c?.fits)
-                                  )}
-                                </span>
+                              <span className="td-brands" style={cssToObj(`animation:${s(v.c?.a3)}`)} aria-label={v.c?.fits}>
+                                {(v.c?.fitsLogos?.ids || []).map((id: string) => (
+                                  <SEBrandLogo key={id} brand={id} h="20" color="rgba(255,255,255,.82)" />
+                                ))}
                               </span>
                               {'\n              '}
                               <a

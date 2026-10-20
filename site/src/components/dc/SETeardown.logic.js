@@ -3,6 +3,7 @@
 // Logic class from design/project/SE Teardown.dc.html, unchanged except for this header, the export
 // and webpackIgnore on runtime imports. Converted 12 Oct 2026; maintained by hand since.
 import React from 'react';
+import { comingSoon } from '@/components/g17/ComingSoon';
 import { DCLogic, StreamableLogic } from '@/dc/runtime';
 import { registerScene } from '@/dc/gl-budget';
 import { jumping, jumpTo } from '@/lib/jumpScroll';
@@ -11,7 +12,7 @@ class Component extends DCLogic {
   state = { p: 0, data: window.SE_DATA || null, loading: true, vw: document.documentElement.clientWidth || 1440, vh: window.innerHeight || 900, fs: 1, ft: 0, fo: false, si: 0, ps: -1, cT: 1, ent: 0, thumbs: null, oT: 3.4, ck: 0, mag: [0, 0], fmpH: false, shopH: false, hov: -1, lib: null };
   secRef = React.createRef(); h2Ref = React.createRef(); opDone = false; opSp = 1; tl = null; hostRef = React.createRef(); finRef = React.createRef(); td = { p: 0.15, hover: null };
   T = { rise0: 0.10, rise1: 0.15, pwr0: 0.165, pwr1: 0.185, lay0: 0.19, lay1: 0.26, l0: 0.27, ls: 0.055, ld: 0.05, b8: 0.655, sh0: 0.68, sh1: 0.745, re0: 0.75, rs: 0.0143, st0: 0.852, st1: 0.89, fin0: 0.89 };
-  L = [['Screen', 'SCR', 'GLASS + OLED ASSEMBLY', 'Shop screens', 'scr'], ['Frame', 'FRM', 'FRAMES & HOUSINGS', 'Shop frames', 'frm'], ['Flex cables', 'FLX', 'CHARGING & FLEX', 'Shop flex cables', 'flx'], ['Logic board', 'SML:0', 'BOARD COMPONENTS', 'Shop board parts', 'board'], ['Battery', 'BAT', 'BATTERIES', 'Shop batteries', 'bat'], ['Cameras', 'CAM', 'CAMERAS', 'Shop cameras', 'cam'], ['Small parts', 'SML:1', 'PORTS & BUTTONS', 'Shop small parts', 'sml'], ['Back glass', 'BCV', 'BACK COVERS', 'Shop back covers', 'bcv']];
+  L = [['Screen', 'SCR', 'GLASS + OLED ASSEMBLY', 'Shop screens', 'scr'], ['Frame', 'FRM', 'FRAMES & HOUSINGS', 'Shop frames', 'frm'], ['Flex cables', 'FLX', 'CHARGING & FLEX', 'Shop flex cables', 'flx'], ['Logic board', 'SML:0', 'BOARD COMPONENTS', 'Ask us', 'board'], ['Battery', 'BAT', 'BATTERIES', 'Shop batteries', 'bat'], ['Cameras', 'CAM', 'CAMERAS', 'Shop cameras', 'cam'], ['Small parts', 'SML:1', 'PORTS & BUTTONS', 'Shop small parts', 'sml'], ['Back glass', 'BCV', 'BACK COVERS', 'Shop back covers', 'bcv']];
   // desktop steps: Intro · 01–08 · Reassembly · Final call (p on the shared timeline)
   S = [0.15, 0.185, 0.32, 0.375, 0.43, 0.485, 0.54, 0.595, 0.65, 0.668, 0.85, 1];
   opBusy() { return !this.isMob() && this.state.oT < 3.4; }
@@ -211,7 +212,7 @@ class Component extends DCLogic {
     // desktop: three zones (30 · 45 · 25), whole stage pinned
     const si = s.si, NAV = 72, last = this.S.length - 1, finalCall = si === last;
     const z1x = Math.round(Math.max(40, vw * 0.035)), z1w = Math.round(vw * 0.3 - z1x - 8), hf = Math.round(Math.min(86, z1w / 11.4));
-    const gone = finalCall || p > 0.875, chA = Math.round(vh - 112 - 40 - 28 - 31 - hf * 1.96), ch = Math.max(250, Math.min(360, chA)), z1 = { x: z1x, w: z1w, hf, ch, cg: ch >= 340 ? 12 : ch >= 300 ? 8 : 5, nf: Math.round(Math.max(20, Math.min(30, (z1w - 96) / 8.5, (ch - 200) / 4.5))), cp: ch >= 300 ? 22 : 16, o: gone ? 0 : 1, pe: gone ? 'none' : 'auto' };
+    const gone = finalCall || p > 0.875, chA = Math.round(vh - 112 - 40 - 28 - 31 - hf * 1.96), ch = Math.max(250, Math.min(452, chA)) /* R6 §05 C: room for the brand logos at 20px */, z1 = { x: z1x, w: z1w, hf, ch, cg: ch >= 340 ? 12 : ch >= 300 ? 8 : 5, nf: Math.round(Math.max(20, Math.min(30, (z1w - 96) / 8.5, (ch - 200) / 4.5))), cp: ch >= 300 ? 22 : 16, o: gone ? 0 : 1, pe: gone ? 'none' : 'auto' };
     const z3 = { x: Math.round(vw * 0.75 + 12), w: Math.round(vw * 0.25 - 52), o: gone ? 0 : 1, pe: gone ? 'none' : 'auto', gx: gone ? 32 : 0 }; z1.gx = gone ? -32 : 0;
     // R6 Part D: Arabic mirrors the stage with the same distances (title + card on the right, numbered list on the left); the
     // 3D phone's centre, its callouts and the list connector mirror too (public/se-teardown-3d.js), the phone itself is not flipped
@@ -232,7 +233,14 @@ class Component extends DCLogic {
       if (k >= 1 && k <= 8) { const [t, cd, cat, cta, kind] = this.L[k - 1], ss = stat(cd); c = { lab: String(k).padStart(2, '0') + ' / 08 · ' + cat, ng: ss.grades.length + (ss.grades.length === 1 ? ' GRADE' : ' GRADES'), name: t, kind, nums: [{ v: N(ss.stock), t: 'in stock', c: '#FFFFFF' }, { v: N(ss.brands), t: 'brands', c: '#FFFFFF' }, { v: N(ss.grades.length), t: ss.grades.length === 1 ? 'grade' : 'grades', c: '#F7C032' }], grades: ss.grades, fits: fitsOf(ss), fitsLogos: logosOf(ss), cta }; }
       else if (k === 9) c = { lab: 'ALL 8 LAYERS · BACK TOGETHER', ng: all.grades.length + ' GRADES', name: 'One complete phone', kind: 'board', nums: [{ v: N(8), t: 'layers', c: '#FFFFFF' }, { v: N(all.brands), t: 'brands', c: '#FFFFFF' }, { v: N(all.stock), t: 'parts (sample)', c: '#F7C032' }], grades: all.grades, fits: fitsOf(all), fitsLogos: logosOf(all), cta: 'Shop all parts' };
       else c = { lab: '8 LAYERS · EVERY MAJOR BRAND', ng: all.grades.length + ' GRADES', name: 'Every part on the shelf', kind: 'scr', nums: [{ v: N(8), t: 'layers', c: '#FFFFFF' }, { v: N(all.brands), t: 'brands', c: '#FFFFFF' }, { v: N(all.stock), t: 'parts (sample)', c: '#F7C032' }], grades: all.grades, fits: fitsOf(all), fitsLogos: logosOf(all), cta: 'Shop all parts' };
-      return { ...c, key: 'c' + k + (live ? 'L' : 'O'), go: go('models'), out: live ? 'none' : 'tdCardOut .2s cubic-bezier(.4,0,1,1) both', a0: anim(0), a1: anim(1), a2: anim(2), a3: anim(3), a4: anim(4) }; };
+      // R6 §05 C: Shop opens that layer's part family (the Shop page is G17 "Coming soon"; Find My Part meanwhile); the
+      // logic board is not in the owner's Excel, so it is "Ask us" on WhatsApp
+      const fam = k >= 1 && k <= 8 ? this.L[k - 1] : null, catId = fam ? fam[1].split(':')[0] : null;
+      const shopGo = (ev) => { ev && ev.preventDefault && ev.preventDefault();
+        if (fam && fam[4] === 'board') { const D2 = this.state.data; window.open('https://wa.me/' + ((D2 && D2.contact && D2.contact.wa) || '971503420015') + '?text=' + encodeURIComponent('Hi Sam Electronics, do you have logic board parts for my phone?'), '_blank', 'noopener'); return; }
+        const famName = catId && this.state.data ? (this.state.data.categories.find((x) => x.id === catId) || {}).name : '';
+        comingSoon({ title: famName || 'Shop', text: 'The Shop page for ' + (famName ? famName.toLowerCase() : 'every part') + ' is coming soon. Use Find My Part in the meantime.', cta: 'Open Find My Part', act: () => window.dispatchEvent(new CustomEvent('se:fmp', { detail: {} })) }); };
+      return { ...c, key: 'c' + k + (live ? 'L' : 'O'), go: shopGo, out: live ? 'none' : 'tdCardOut .2s cubic-bezier(.4,0,1,1) both', a0: anim(0), a1: anim(1), a2: anim(2), a3: anim(3), a4: anim(4) }; };
     const cmI = (i) => Math.max(0, i - 1), cards = (s.ps >= 0 && cmI(s.ps) !== cmI(si) && s.ps < last ? [cardFor(cmI(s.ps), false)] : []).concat(si < last && oT >= 3.0 ? [cardFor(cmI(si), true)] : []); if (cards.length) cards[cards.length - 1].key = cards[cards.length - 1].key + '-' + (s.ck || 0);
     const actR = si >= 2 && si <= 9 ? si - 2 : -1;
     const rowsD = this.L.map(([t], i) => { const on = i === actR, dn = si >= 10 || (actR >= 0 && i < actR);

@@ -1024,6 +1024,7 @@ export const EXACT: Record<string, string> = {
   // 14 Oct §02
   'Closing soon': 'يغلق قريباً',
   'Opening soon': 'يفتح قريباً',
+  'Flex & ports': 'الفلكسات والمنافذ',
   'Parts shipped today': 'قطع شُحنت اليوم',
   'Straight from the maker’s box.': 'مباشرة من علبة الشركة.',
   'Same-day trade quotes.': 'عروض أسعار الجملة في نفس اليوم.',

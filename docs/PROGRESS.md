@@ -2203,3 +2203,43 @@ DONE WHEN
 
 DONE WHEN
 - 15 logos, equal size, no Sony, no gap, hover card works. **PASS**
+
+## §05 · Teardown
+
+**A · Smoothness:**
+- The 3D renderer now uses a logarithmic depth buffer, on top of the 14 Oct fixes (camera near/far planes from the distance; the back glass with its own solid edge material and polygon offset). Depth precision no longer depends on the camera distance.
+- The step engine: teardown tests 9/9, including Part B's fast pass-through.
+
+**B · The opening:**
+- The title's light is now a real yellow band (#F7C032 with a warm edge) running left → right and leaving the letters white. Before, it was a pale cream that read as missing.
+- One gesture = one step and fast pass-through already hold (Part B tests).
+
+**C · Info card:**
+- No "Fits" label.
+- The Excel qualities for that layer, each with its "i" button.
+- The brands we stock it for, as 20px logos wrapping across the card from the reading start (right in Arabic). The card height cap went from 360 to 452px so the logos and the Shop button fit.
+- Shop opens that layer's family (G17 Coming soon for the Shop page → Find My Part). The logic board, which is not in the Excel, is "Ask us" on WhatsApp.
+
+**D · Arabic:** Part D (mirrored stage, dots on the components' left, callouts mirrored, the phone's final position mirrored).
+
+**E · Final-call ads** (`public/se-td-ad.js`):
+- Sentence case (Screens, Back glass, Every part., All in Deira., Quality · Warranty · Price); "15 brands".
+- Every text is in the visitor's language, and Arabic is drawn as one joined run (no per-letter spacing).
+
+**Not done this round (honest):**
+- The full new film is not built:
+  - beat timings 1.2 / 1.4 / 2.0 / 1.6 / 0.8s;
+  - the spotlight cone;
+  - the frames drawing in the same step as the opening;
+  - the new ad transitions (zoom-through, spin-in, odometer price, alternating exits);
+  - the 8-part finale assembly;
+  - the reviewer ideas (most-searched strip, depth of field).
+- This sandbox renders WebGL at about 1 fps, so I can't check camera timing or flicker frame by frame. These need a real GPU session.
+
+DONE WHEN
+- No edge flicker. **PARTIAL** (log depth + earlier fixes; not verifiable here without a GPU)
+- Never freezes; fast scroll passes. **PASS** (9/9 + Part B)
+- Steps exactly as the film. **NOT DONE**
+- Card: logos, no 'fits'. **PASS**
+- Arabic mirrored correctly. **PASS** (Part D)
+- Final ads: hero typography, real motion, finale assembly, never empty. **PARTIAL** (sentence case, hero font and translation done; motion and finale not)
