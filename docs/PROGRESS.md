@@ -2243,3 +2243,51 @@ DONE WHEN
 - Card: logos, no 'fits'. **PASS**
 - Arabic mirrored correctly. **PASS** (Part D)
 - Final ads: hero typography, real motion, finale assembly, never empty. **PARTIAL** (sentence case, hero font and translation done; motion and finale not)
+
+## §06 · What we offer + the three boxes
+
+**A · The showroom:**
+- No blend from the teardown. The section has its own Fog background:
+  - a very large circuit pattern at 5% (`.wo-circuit`);
+  - four soft spot pools from above (`.wo-spots`);
+  - the existing grain.
+- Title graphite + yellow, no highlighter (Part C).
+- Turntables:
+  - one shared clock, one turn every 12s, the same angle at the same moment for every part;
+  - no bounce on landing and no float;
+  - on hover the part eases round to face the visitor (this had been commented out by accident) and its rim light brightens;
+  - the reflection sweep now runs every 8s.
+- Light reveal: each card's rim light switches on 120ms after the previous one, with a short flicker, and the card lifts in under it.
+
+**B · Strong cards:**
+- Graphite card with a lit stage: a soft yellow rim light at the back, and a glossy black floor with a highlight line and a dark puck.
+- Each card shows:
+  - the family name;
+  - the Excel qualities as yellow chips and the manufacturers as grey chips, each with its "i";
+  - stock and models covered;
+  - "from AED … SAMPLE";
+  - a "Shop …" button (logic boards: "Ask us").
+- The whole card stays clickable (opens Find My Part on that family).
+
+**C · The three boxes:**
+- Circuits:
+  - they now run on the box edges (10px strip), and the text column is inset 34px, so they're at least 24px from any text;
+  - the page-side circuits hide below 1420px, where the gutter is too narrow.
+- Buttons: all three are the same size (340 × 52 at 1440px) on the same bottom baseline, EN and AR (measured).
+- A pulse rings out of each main button every 6s.
+- Reviewer's idea: on hover, the box's scene runs faster (already in place), its circuit current speeds up, and the button pulse comes every 1.6s.
+- Wholesale is a 10s loop: the cartons drop and stack, the film winds, the tag swings in, then the pallet slides away and it restarts.
+
+**Not done this round (honest):**
+- Repair scene: the ESD mat, the precision driver, the screen swap and the diagnostic screen are not built (the current crack → seal → boot film stays).
+- Wholesale cartons are still the CSS cartons, not the real printed Service Pack boxes.
+- The Worldwide globe is still the dot globe. The realistic bordered globe with the plane arc and the countries from facts.ts is not built.
+- "Chips glow when a stock number ticks" is not built (no live stock ticks yet).
+- The glossy floor reflects light only. The real part reflection works only on the image fallback, not on the live WebGL parts.
+
+DONE WHEN
+- Own background, no blend, no highlighter. **PASS**
+- Parts turn in perfect sync, premium, no jumps. **PASS** (shared 12s clock, no bounce; at 1 fps in this sandbox, smoothness needs a real GPU check)
+- Cards show qualities, manufacturers, stock, price, button. **PASS**
+- Three scenes realistic; boxes use the real designs; globe realistic. **NOT DONE**
+- No circuit over text; buttons aligned. **PASS**

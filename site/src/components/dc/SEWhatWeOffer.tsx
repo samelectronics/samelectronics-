@@ -1,6 +1,7 @@
 // Converted from design/project/SE What We Offer.dc.html (12 Oct 2026); maintained by hand since.
 'use client';
 import React from 'react';
+import InfoTip from '@/components/home/InfoTip';
 import { type Vals, createDC, cssToObj, cx, s, t } from '@/dc/runtime';
 import Logic from './SEWhatWeOffer.logic.js';
 
@@ -26,22 +27,16 @@ function render(v: Vals) {
           <div ref={v.host} style={{ position: 'absolute', left: '0', top: '0', width: '100%', height: '100vh', overflow: 'hidden' }}></div>
         </div>
         {'\n\n  '}
-        <div data-w="A" style={{ position: 'relative', padding: 'max(180px, calc(48vh - 70px)) 0 0' }}>
+        <div data-w="A" style={{ position: 'relative', padding: '120px 0 0' }}>
           {'\n    '}
           <div style={{ position: 'absolute', inset: '0', background: 'radial-gradient(60% 50% at 50% 60%,#FAFAF8 0%,#F2F3F4 70%)' }}></div>
           {'\n    '}
-          <div
-            style={{
-              position: 'absolute',
-              left: '0',
-              right: '0',
-              top: '0',
-              // 14 Oct §08: a long eased blend (48vh) from the teardown's floor graphite through #3D3E3F to the light
-              // background; the final call's amber bloom (cut in half by the section edge) continues across the join and fades
-              height: '56vh',
-              background: 'radial-gradient(36% 56vh at 66% 0,rgba(201,138,18,.95) 0%,rgba(247,192,50,.7) 26%,rgba(247,192,50,.21) 56%,rgba(247,192,50,0) 100%),linear-gradient(180deg,rgb(31,32,35) 0.0%,rgb(33,34,37) 4.3%,rgb(38,39,42) 8.6%,rgb(46,47,49) 12.9%,rgb(57,58,59) 17.1%,rgb(68,69,70) 21.4%,rgb(81,82,83) 25.7%,rgb(94,95,96) 30.0%,rgb(109,110,111) 34.3%,rgb(124,125,126) 38.6%,rgb(139,140,141) 42.9%,rgb(155,156,157) 47.1%,rgb(170,171,172) 51.4%,rgb(184,185,186) 55.7%,rgb(198,199,200) 60.0%,rgb(210,211,212) 64.3%,rgb(221,222,223) 68.6%,rgb(230,231,232) 72.9%,rgb(236,237,238) 77.1%,rgb(241,242,243) 81.4%,rgb(242,243,244) 85.7%,rgb(242,243,244) 100%)',
-            }}
-          ></div>
+          {/* R6 §06 A: no blend from the teardown. The showroom has its own light: a very large faint circuit pattern (5%),
+              soft spot pools from above, and the fine grain below */}
+          <div className="wo-circuit" aria-hidden="true"></div>
+          <div className="wo-spots" aria-hidden="true">
+            <i /><i /><i /><i />
+          </div>
           {'\n    '}
           <div
             style={{
@@ -251,7 +246,7 @@ function render(v: Vals) {
                   inset: '0',
                   display: 'grid',
                   gridTemplateColumns: 'repeat(4,minmax(0,300px))',
-                  gridTemplateRows: '330px 330px',
+                  gridTemplateRows: '410px 410px',
                   gap: '24px',
                   justifyContent: 'space-between',
                 }}
@@ -264,113 +259,17 @@ function render(v: Vals) {
                       {'\n            '}
                       <div
                         data-w={`cb${s(v.f?.i)}`}
-                        style={{
-                          position: 'relative',
-                          borderRadius: '16px',
-                          background: 'linear-gradient(180deg,#FFFFFF 0%,#FCFCFB 100%)',
-                          boxShadow: 'inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(38,40,43,.06),0 16px 32px -14px rgba(38,40,43,.24)',
-                        }}
+                        className="wo-card"
+                        style={{ position: 'relative', borderRadius: '16px' }}
                       >
-                        {'\n              '}
-                        <div
-                          style={{
-                            position: 'absolute',
-                            left: '0',
-                            right: '0',
-                            top: '0',
-                            height: '182px',
-                            borderRadius: '16px 16px 0 0',
-                            background: 'radial-gradient(70% 80% at 40% 30%,#FFFFFF,#F1F1EF)',
-                            overflow: 'hidden',
-                          }}
-                        >
-                          {'\n                '}
-                          <span
-                            style={{
-                              position: 'absolute',
-                              left: '50%',
-                              top: '120px',
-                              width: '220px',
-                              height: '80px',
-                              marginLeft: '-110px',
-                              borderRadius: '50%',
-                              background: 'radial-gradient(closest-side,rgba(255,244,214,.9),rgba(255,244,214,0))',
-                            }}
-                          ></span>
-                          {'\n                '}
-                          <span
-                            style={{
-                              position: 'absolute',
-                              left: '50%',
-                              top: '166px',
-                              width: '190px',
-                              height: '22px',
-                              marginLeft: '-95px',
-                              borderRadius: '50%',
-                              background: 'radial-gradient(closest-side,rgba(38,40,43,.28),rgba(38,40,43,0))',
-                              filter: 'blur(3px)',
-                            }}
-                          ></span>
-                          {'\n                '}
-                          <span
-                            style={{
-                              position: 'absolute',
-                              left: '50%',
-                              top: '152px',
-                              width: '150px',
-                              height: '22px',
-                              marginLeft: '-75px',
-                              borderRadius: '0 0 75px 75px / 0 0 11px 11px',
-                              background: 'linear-gradient(90deg,#26282B 0%,#4A4C51 30%,#3A3C40 60%,#1E1F22 100%)',
-                            }}
-                          ></span>
-                          {'\n                '}
-                          <span
-                            data-w={`pr${s(v.f?.i)}`}
-                            style={{
-                              position: 'absolute',
-                              left: '50%',
-                              top: '141px',
-                              width: '150px',
-                              height: '24px',
-                              marginLeft: '-75px',
-                              borderRadius: '50%',
-                              boxShadow: '0 0 0 1.5px rgba(247,192,50,.8),0 0 14px rgba(247,192,50,.55)',
-                              opacity: '0',
-                            }}
-                          ></span>
-                          {'\n                '}
-                          <span
-                            style={{
-                              position: 'absolute',
-                              left: '50%',
-                              top: '141px',
-                              width: '150px',
-                              height: '24px',
-                              marginLeft: '-75px',
-                              borderRadius: '50%',
-                              background: 'radial-gradient(60% 70% at 38% 40%,#6A6C71 0%,#45474C 45%,#2E3034 100%)',
-                              boxShadow: 'inset 0 1px 0 rgba(255,255,255,.22)',
-                            }}
-                          ></span>
-                          {'\n                '}
-                          <span
-                            data-w={`ps${s(v.f?.i)}`}
-                            style={{
-                              position: 'absolute',
-                              left: '50%',
-                              top: '146px',
-                              width: '96px',
-                              height: '12px',
-                              marginLeft: '-48px',
-                              borderRadius: '50%',
-                              background: 'radial-gradient(closest-side,rgba(10,10,12,.75),rgba(10,10,12,0))',
-                              filter: 'blur(1.5px)',
-                            }}
-                          ></span>
-                          {'\n              '}
+                        {/* R6 §06 B: a graphite card with a lit stage: a soft yellow rim light at the back, a glossy black floor */}
+                        <div className="wo-stage">
+                          <span data-w={`lt${s(v.f?.i)}`} className="wo-rim"></span>
+                          <span className="wo-floor"></span>
+                          <span data-w={`pr${s(v.f?.i)}`} className="wo-ring"></span>
+                          <span className="wo-puck"></span>
+                          <span data-w={`ps${s(v.f?.i)}`} className="wo-pshadow"></span>
                         </div>
-                        {'\n              '}
                         <img
                           data-w={`fb${s(v.f?.i)}`}
                           alt=""
@@ -385,7 +284,7 @@ function render(v: Vals) {
                             display: 'none',
                           }}
                         />
-                        {'\n            '}
+                        <img data-w={`fr${s(v.f?.i)}`} alt="" className="wo-refl" style={{ display: 'none' }} />
                       </div>
                       {'\n          '}
                     </React.Fragment>
@@ -400,7 +299,7 @@ function render(v: Vals) {
                   zIndex: '2',
                   display: 'grid',
                   gridTemplateColumns: 'repeat(4,minmax(0,300px))',
-                  gridTemplateRows: '330px 330px',
+                  gridTemplateRows: '410px 410px',
                   gap: '24px',
                   justifyContent: 'space-between',
                 }}
@@ -411,116 +310,48 @@ function render(v: Vals) {
                   return ((v: Vals) => (
                     <React.Fragment key={__i}>
                       {'\n            '}
-                      <a
-                        href="#shop"
+                      <div
                         data-w={`cf${s(v.f?.i)}`}
+                        className="wo-cf"
                         onClick={v.f?.go}
                         onMouseEnter={v.f?.enter}
                         onMouseLeave={v.f?.leave}
-                        style={{ position: 'relative', display: 'block', borderRadius: '16px', cursor: 'pointer', color: '#26282B' }}
                       >
-                        {'\n              '}
-                        <div
-                          data-w={`slot${s(v.f?.i)}`}
-                          style={{ position: 'absolute', left: '40px', right: '40px', top: '4px', height: '162px' }}
-                        ></div>
-                        {'\n              '}
-                        <div
-                          style={{
-                            position: 'absolute',
-                            left: '20px',
-                            right: '20px',
-                            top: '192px',
-                            bottom: '18px',
-                            display: 'flex',
-                            flexDirection: 'column',
-                            gap: '8px',
-                          }}
-                        >
-                          {'\n                '}
-                          <span
-                            style={{
-                              fontFamily: "'Space Grotesk',sans-serif",
-                              fontWeight: '700',
-                              fontSize: '22px',
-                              letterSpacing: '-.02em',
-                              lineHeight: '1.1',
-                            }}
-                          >
-                            {t(v.f?.name)}
-                          </span>
-                          {'\n                '}
-                          <span
-                            style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '13px', color: '#3D3E3F', whiteSpace: 'nowrap' }}
-                          >
+                        <div data-w={`slot${s(v.f?.i)}`} style={{ position: 'absolute', left: '40px', right: '40px', top: '4px', height: '162px' }}></div>
+                        <div className="wo-body">
+                          <span className="wo-name">{t(v.f?.name)}</span>
+                          <span className="wo-meta">
                             <span data-w={`n${s(v.f?.i)}`}>{t(v.f?.stock)}</span>
                             {' in stock · '}
-                            {t(v.f?.brands)}
-                            {' brands'}
+                            {t(v.f?.models)}
+                            {' models'}
                           </span>
-                          {'\n                '}
-                          <span data-w={`ch${s(v.f?.i)}`} style={{ display: 'flex', flexWrap: 'nowrap', gap: '5px', overflow: 'hidden' }}>
-                            {'\n                  '}
-                            {(Array.isArray(v.f?.chips) ? v.f?.chips : []).map((__it: any, __i: number) => {
-                              const v2 = { ...v, c: __it, $index: __i };
-                              return ((v: Vals) => (
-                                <React.Fragment key={__i}>
-                                  <span
-                                    style={{
-                                      flex: 'none',
-                                      padding: '3px 7px',
-                                      borderRadius: '6px',
-                                      background: '#26282B',
-                                      color: '#F7C032',
-                                      fontFamily: "'JetBrains Mono',monospace",
-                                      fontSize: '10px',
-                                      fontWeight: '600',
-                                      whiteSpace: 'nowrap',
-                                    }}
-                                  >
-                                    {t(v.c)}
-                                  </span>
-                                </React.Fragment>
-                              ))(v2);
-                            })}
-                            {'\n                '}
+                          <span data-w={`ch${s(v.f?.i)}`} className="wo-chips">
+                            {(Array.isArray(v.f?.chips) ? v.f?.chips : []).map((c: any, j: number) => (
+                              <span key={j} className={'wo-chip' + (c.k === 'maker' ? ' m' : '')}>
+                                {String(c.n)}
+                                <InfoTip name={c.n} kind={c.k} />
+                              </span>
+                            ))}
                           </span>
-                          {'\n                '}
-                          <span
-                            style={{
-                              marginTop: 'auto',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'space-between',
-                              fontSize: '14px',
-                            }}
-                          >
-                            <span style={{ color: '#3D3E3F', whiteSpace: 'nowrap' }}>
+                          <span className="wo-foot">
+                            <span className="wo-from">
                               {'from '}
-                              <span style={{ fontWeight: '600', color: '#26282B' }}>
+                              <b>
                                 {'AED '}
                                 {t(v.f?.min)}
-                              </span>
+                              </b>
+                              <em>sample</em>
                             </span>
-                            <span style={{ display: 'flex', alignItems: 'center', gap: '6px', fontWeight: '600' }}>
-                              Shop
-                              <svg
-                                data-w={`ar${s(v.f?.i)}`}
-                                width="14"
-                                height="14"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2.4"
-                              >
+                            <a href="#shop" className="wo-shop" onClick={v.f?.go}>
+                              {t(v.f?.shop)}
+                              <svg data-w={`ar${s(v.f?.i)}`} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
                                 <path d="M5 12h14M13 6l6 6-6 6"></path>
                               </svg>
-                            </span>
+                            </a>
                           </span>
-                          {'\n              '}
                         </div>
-                        {'\n            '}
-                      </a>
+                      </div>
                       {'\n          '}
                     </React.Fragment>
                   ))(v2);
@@ -577,7 +408,7 @@ function render(v: Vals) {
               style={{ position: 'absolute', right: '0', top: '0', width: '760px', height: '620px' }}
             ></canvas>
             {'\n      '}
-            <svg
+            <svg className="wo-side" aria-hidden="true"
               viewBox="0 0 60 1000"
               preserveAspectRatio="none"
               style={{ position: 'absolute', left: '0', top: '0', width: '60px', height: '100%', overflow: 'visible' }}
@@ -586,7 +417,7 @@ function render(v: Vals) {
               {'\n        '}
               <path d="M24 0 V420 L40 460 V1000" stroke="rgba(255,255,255,.09)" strokeWidth="1.5" vectorEffect="non-scaling-stroke"></path>
               {'\n        '}
-              <path
+              <path className="wo-flow"
                 d="M24 0 V420 L40 460 V1000"
                 stroke="#F7C032"
                 strokeWidth="2.5"
@@ -598,7 +429,7 @@ function render(v: Vals) {
               {'\n      '}
             </svg>
             {'\n      '}
-            <svg
+            <svg className="wo-side" aria-hidden="true"
               viewBox="0 0 60 1000"
               preserveAspectRatio="none"
               style={{ position: 'absolute', right: '0', top: '0', width: '60px', height: '100%', overflow: 'visible' }}
@@ -607,7 +438,7 @@ function render(v: Vals) {
               {'\n        '}
               <path d="M36 0 V180 L20 220 V1000" stroke="rgba(255,255,255,.09)" strokeWidth="1.5" vectorEffect="non-scaling-stroke"></path>
               {'\n        '}
-              <path
+              <path className="wo-flow"
                 d="M36 0 V180 L20 220 V1000"
                 stroke="#F7C032"
                 strokeWidth="2.5"
@@ -741,7 +572,7 @@ function render(v: Vals) {
                     fontSize: '15px',
                     transition: 'transform .2s,box-shadow .2s',
                   }}
-                  className={cx(undefined, 'scp-6a9c9ea7')}
+                  className={cx(undefined, 'wo-btn wo-btn1 scp-6a9c9ea7')}
                 >
                   <span
                     style={{
@@ -780,7 +611,7 @@ function render(v: Vals) {
                     whiteSpace: 'nowrap',
                     transition: 'transform .2s,border-color .2s',
                   }}
-                  className={cx(undefined, 'scp-8a8c095f')}
+                  className={cx(undefined, 'wo-btn scp-8a8c095f')}
                 >
                   See repair prices
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
@@ -926,7 +757,7 @@ function render(v: Vals) {
               }}
             ></div>
             {'\n      '}
-            <svg
+            <svg className="wo-side" aria-hidden="true"
               viewBox="0 0 60 1000"
               preserveAspectRatio="none"
               style={{ position: 'absolute', right: '0', top: '0', width: '60px', height: '100%', overflow: 'visible' }}
@@ -935,7 +766,7 @@ function render(v: Vals) {
               {'\n        '}
               <path d="M30 0 V300 L44 340 V1000" stroke="rgba(38,40,43,.12)" strokeWidth="1.5" vectorEffect="non-scaling-stroke"></path>
               {'\n        '}
-              <path
+              <path className="wo-flow"
                 d="M30 0 V300 L44 340 V1000"
                 stroke="#FFFFFF"
                 strokeWidth="2.5"
@@ -967,6 +798,7 @@ function render(v: Vals) {
             <div data-w="Wscene" style={{ position: 'relative', height: '560px' }}>
               {'\n        '}
               <span
+                data-w="Wpsh"
                 style={{
                   position: 'absolute',
                   left: '40px',
@@ -980,6 +812,7 @@ function render(v: Vals) {
               ></span>
               {'\n        '}
               <div
+                data-w="Wpal"
                 style={{
                   position: 'absolute',
                   left: '290px',
@@ -1652,7 +1485,7 @@ function render(v: Vals) {
                     whiteSpace: 'nowrap',
                     transition: 'transform .2s,box-shadow .2s',
                   }}
-                  className={cx(undefined, 'scp-077cdbd8')}
+                  className={cx(undefined, 'wo-btn wo-btn1 scp-077cdbd8')}
                 >
                   <span
                     style={{
@@ -1692,7 +1525,7 @@ function render(v: Vals) {
                     whiteSpace: 'nowrap',
                     transition: 'transform .2s',
                   }}
-                  className={cx(undefined, 'scp-b08bac3b')}
+                  className={cx(undefined, 'wo-btn scp-b08bac3b')}
                 >
                   How trade works
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
@@ -1729,7 +1562,7 @@ function render(v: Vals) {
               }}
             ></div>
             {'\n      '}
-            <svg
+            <svg className="wo-side" aria-hidden="true"
               viewBox="0 0 60 1000"
               preserveAspectRatio="none"
               style={{ position: 'absolute', left: '0', top: '0', width: '60px', height: '100%', overflow: 'visible' }}
@@ -1738,7 +1571,7 @@ function render(v: Vals) {
               {'\n        '}
               <path d="M22 0 V560 L38 600 V1000" stroke="rgba(38,40,43,.1)" strokeWidth="1.5" vectorEffect="non-scaling-stroke"></path>
               {'\n        '}
-              <path
+              <path className="wo-flow"
                 d="M22 0 V560 L38 600 V1000"
                 stroke="#F7C032"
                 strokeWidth="2.5"
@@ -1873,7 +1706,7 @@ function render(v: Vals) {
                     fontSize: '15px',
                     transition: 'transform .2s,box-shadow .2s',
                   }}
-                  className={cx(undefined, 'scp-c103143e')}
+                  className={cx(undefined, 'wo-btn wo-btn1 scp-c103143e')}
                 >
                   <span
                     style={{
@@ -1913,7 +1746,7 @@ function render(v: Vals) {
                     whiteSpace: 'nowrap',
                     transition: 'transform .2s',
                   }}
-                  className={cx(undefined, 'scp-b08bac3b')}
+                  className={cx(undefined, 'wo-btn scp-b08bac3b')}
                 >
                   Where we ship
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">

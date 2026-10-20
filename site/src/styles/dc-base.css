@@ -467,3 +467,61 @@ html[dir='rtl'] [style*='seRail3'] { animation-name: seRail3R !important; }
 .td-qc { display: inline-flex; align-items: center; gap: 4px; padding: 3px 4px 3px 8px; border-radius: 6px; background: rgba(26, 27, 29, .5); color: #F7C032; font: 600 11px 'JetBrains Mono', monospace; white-space: nowrap; box-shadow: inset 0 0 0 1px rgba(247, 192, 50, .4); }
 .td-brands { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-start; gap: 10px 16px; min-width: 0; }
 .td-brands { gap: 8px 14px; } .td-q + .td-brands { margin-top: 2px; }
+/* R6 §06 A · the showroom background (What we offer) */
+.wo-circuit { position: absolute; inset: 0; opacity: .05; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='720' height='520' fill='none' stroke='%2326282B' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M0 90h180l40 40h260l40-40h200'/%3E%3Cpath d='M60 520V380l60-60h220l40 40h340'/%3E%3Cpath d='M420 0v120l60 60v120l-40 40'/%3E%3Cpath d='M720 260H560l-40-40H300'/%3E%3Ccircle cx='220' cy='130' r='7'/%3E%3Ccircle cx='480' cy='130' r='7'/%3E%3Ccircle cx='120' cy='320' r='7'/%3E%3Ccircle cx='480' cy='300' r='7'/%3E%3Ccircle cx='300' cy='220' r='7'/%3E%3C/svg%3E");
+  background-size: 1440px 1040px; }
+.wo-spots { position: absolute; left: 0; right: 0; top: 0; height: 900px; pointer-events: none; }
+.wo-spots i { position: absolute; top: -120px; width: 34%; height: 760px; background: radial-gradient(50% 60% at 50% 0%, rgba(255, 248, 230, .95), rgba(255, 248, 230, 0) 70%); mix-blend-mode: soft-light; }
+.wo-spots i:nth-child(1) { left: 2%; } .wo-spots i:nth-child(2) { left: 24%; } .wo-spots i:nth-child(3) { left: 46%; } .wo-spots i:nth-child(4) { left: 68%; }
+/* R6 §06 B · family cards: graphite, a lit stage (yellow rim light at the back, glossy black floor), chips with "i" */
+.wo-card { background: linear-gradient(180deg, #303236 0%, #232427 58%, #1E1F22 100%); }
+.wo-stage { position: absolute; left: 0; right: 0; top: 0; height: 190px; border-radius: 16px 16px 0 0; overflow: hidden;
+  background: radial-gradient(90% 70% at 50% 18%, #2F3135 0%, #1A1B1D 70%); }
+.wo-rim { position: absolute; left: 50%; top: -40px; width: 300px; height: 190px; margin-left: -150px; opacity: 0;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(247, 192, 50, .42), rgba(247, 192, 50, .12) 45%, rgba(247, 192, 50, 0) 72%); }
+.wo-floor { position: absolute; left: 0; right: 0; bottom: 0; height: 64px;
+  background: linear-gradient(180deg, rgba(8, 8, 10, 0) 0%, rgba(8, 8, 10, .85) 30%, #0B0B0D 100%); }
+.wo-floor::after { content: ''; position: absolute; left: 12%; right: 12%; top: 22px; height: 2px; border-radius: 2px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 236, 190, .28), rgba(255, 255, 255, 0)); filter: blur(1px); }
+.wo-ring { position: absolute; left: 50%; top: 141px; width: 150px; height: 24px; margin-left: -75px; border-radius: 50%; opacity: 0;
+  box-shadow: 0 0 0 1.5px rgba(247, 192, 50, .8), 0 0 14px rgba(247, 192, 50, .55); }
+.wo-puck { position: absolute; left: 50%; top: 141px; width: 150px; height: 24px; margin-left: -75px; border-radius: 50%;
+  background: radial-gradient(60% 70% at 50% 30%, #3A3C40 0%, #1C1D20 70%, #0E0F11 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 220, 140, .35), 0 10px 18px -6px rgba(247, 192, 50, .18); }
+.wo-pshadow { position: absolute; left: 50%; top: 146px; width: 96px; height: 12px; margin-left: -48px; border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(0, 0, 0, .8), rgba(0, 0, 0, 0)); filter: blur(1.5px); }
+.wo-refl { position: absolute; left: 50%; top: 160px; width: 140px; height: 140px; margin-left: -70px; object-fit: contain; transform: scaleY(-1);
+  opacity: .22; -webkit-mask-image: linear-gradient(0deg, #000 0%, transparent 22%); mask-image: linear-gradient(0deg, #000 0%, transparent 22%); clip-path: inset(0 0 70% 0); pointer-events: none; }
+.wo-cf { position: relative; display: block; border-radius: 16px; cursor: pointer; color: #F2F3F4; }
+.wo-body { position: absolute; left: 20px; right: 20px; top: 202px; bottom: 18px; display: flex; flex-direction: column; gap: 8px; }
+.wo-name { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px; letter-spacing: -.02em; line-height: 1.1; color: #FFFFFF; }
+.wo-meta { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; color: #B9BBBF; white-space: nowrap; }
+.wo-chips { display: flex; flex-wrap: wrap; gap: 5px; max-height: 80px; overflow: hidden; }
+.wo-chip { flex: none; display: inline-flex; align-items: center; gap: 4px; padding: 3px 4px 3px 7px; border-radius: 6px; background: rgba(247, 192, 50, .14);
+  color: #F7C032; border: 1px solid rgba(247, 192, 50, .32); font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 600; white-space: nowrap; }
+.wo-chip.m { background: rgba(242, 243, 244, .06); color: #D5D7DA; border-color: rgba(242, 243, 244, .16); }
+.wo-chip .se-info { width: 14px; height: 14px; font-size: 9px; }
+.wo-foot { margin-top: auto; display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 14px; }
+.wo-from { color: #B9BBBF; white-space: nowrap; line-height: 1.15; }
+.wo-from b { font-weight: 600; color: #FFFFFF; }
+.wo-from em { display: block; margin-top: 2px; font-style: normal; font-family: 'JetBrains Mono', monospace; font-size: 9px; letter-spacing: .08em; text-transform: uppercase; color: #8C9096; }
+.wo-shop { display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border-radius: 10px; background: #F7C032; color: #26282B;
+  font-weight: 600; font-size: 13px; white-space: nowrap; text-decoration: none; }
+/* R6 §06 C · the three service boxes: the side circuits keep a 24px safe zone from the text (hidden when the gutter is
+   too narrow), both buttons in every box are the same size on one baseline, and a pulse runs into the main button;
+   hovering a box speeds its circuit up and the pulse races to the button */
+@media (max-width: 1420px) { .wo-side { display: none; } }
+.wwo-boxes .wo-side { display: block; width: 10px !important; }
+.wwo-boxes > [data-w] > div[style*='grid-template-columns'] { padding-inline: 34px !important; }
+.wo-btn { position: relative; }
+.wwo-boxes > [data-w='R'], .wwo-boxes > [data-w='W'], .wwo-boxes > [data-w='G'] { display: flex; flex-direction: column; }
+.wwo-boxes > [data-w] > div[style*='grid-template-columns'] { flex: 1 1 auto; align-items: stretch !important; }
+.wwo-boxes > [data-w] > div[style*='grid-template-columns'] > div:not([data-w$='scene']) { flex: 1 1 auto; }
+.wwo-boxes [data-w='Rb'], .wwo-boxes [data-w='Wb'], .wwo-boxes [data-w='Gb'] { margin-top: auto; padding-top: 8px; }
+.wo-btn1::after { content: ''; position: absolute; inset: -1px; border-radius: inherit; pointer-events: none;
+  box-shadow: 0 0 0 0 rgba(247, 192, 50, .55); animation: woBtnPulse 6s 1.2s ease-out infinite; }
+@keyframes woBtnPulse { 0%, 70% { box-shadow: 0 0 0 0 rgba(247, 192, 50, 0); } 74% { box-shadow: 0 0 0 0 rgba(247, 192, 50, .6); } 100% { box-shadow: 0 0 0 14px rgba(247, 192, 50, 0); } }
+[data-w='R']:hover .wo-flow, [data-w='W']:hover .wo-flow, [data-w='G']:hover .wo-flow { animation-duration: 4s !important; }
+[data-w='R']:hover .wo-btn1::after, [data-w='W']:hover .wo-btn1::after, [data-w='G']:hover .wo-btn1::after { animation-duration: 1.6s; }
+@media (prefers-reduced-motion: reduce) { .wo-btn1::after { animation: none; } }

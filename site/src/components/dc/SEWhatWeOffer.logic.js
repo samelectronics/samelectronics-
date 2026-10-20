@@ -36,7 +36,7 @@ class Component extends DCLogic {
       if (this.api) { this.scr = document.createElement('canvas'); this.scr.width = 600; this.scr.height = 1300; this.api.setScreen(this.scr); this.FAM.forEach((f, i) => { const im = this.q('fb' + i); if (im) im.style.display = 'none'; }); } else this.fallback();
     } catch (e) { console.warn('[What we offer] 3D shelf failed', e); this.fallback(); }
   }
-  fallback() { const lib = window.seParts && window.seParts.peek && window.seParts.peek(); if (!lib || !lib.large) { if (window.seParts) window.seParts.get().then(() => this.fallback()); return; } this.FAM.forEach((f, i) => { const im = this.q('fb' + i); if (im) { im.src = lib.large[f[2]]; im.style.display = 'block'; } }); }
+  fallback() { const lib = window.seParts && window.seParts.peek && window.seParts.peek(); if (!lib || !lib.large) { if (window.seParts) window.seParts.get().then(() => this.fallback()); return; } this.FAM.forEach((f, i) => { const im = this.q('fb' + i); if (im) { im.src = lib.large[f[2]]; im.style.display = 'block'; } const rf = this.q('fr' + i); if (rf) { rf.src = lib.large[f[2]]; rf.style.display = 'block'; } }); }
   initDust() { let sd = 9; const r = () => ((sd = (sd * 16807) % 2147483647) / 2147483647); this.dust = Array.from({ length: 70 }, () => ({ x: r(), y: r(), z: r(), s: 0.6 + r() * 1.1, a: 0.1 + r() * 0.2, vx: (r() - 0.5) * 6, vy: 2 + r() * 5, ph: r() * 6 }));
     sd = 21; this.cr = Array.from({ length: 11 }, (_, k) => { let a = (-110 + k * 22 + r() * 10) * Math.PI / 180, x = 0.24, y = 0.8; const pts = [[x, y]]; const n = 4 + Math.floor(r() * 4); for (let j = 0; j < n; j++) { a += (r() - 0.5) * 0.5; const l = 0.05 + r() * 0.09; x += Math.cos(a) * l * 0.9; y += Math.sin(a) * l * 0.42; pts.push([x, y]); if (x < 0 || x > 1 || y < 0 || y > 1) break; } return { pts, o: k / 10 }; }); }
   // 14 Oct (H-G3): the 3D canvas used to be sticky to the screen, so on every scroll the cards moved at once while the
@@ -64,17 +64,20 @@ class Component extends DCLogic {
       const ik = ex((tA - 0.3) / 0.6); set('intro', { opacity: ik.toFixed(3), transform: 'translateY(' + ((1 - ik) * 14).toFixed(1) + 'px)', filter: ik < 1 ? 'blur(' + ((1 - ik) * 6).toFixed(1) + 'px)' : 'none' }); }
     for (let i = 0; i < 8; i++) {
       this.hv[i] = this.hvT[i] ? Math.min(1, this.hv[i] + dt / 0.5) : Math.max(0, this.hv[i] - dt / 0.4); const he = eio(this.hv[i]);
-      const k = cl((tA - 0.4 - i * 0.06) / 0.7), e = ex(k), y = 24 * (1 - e) - 3 * Math.sin(PI * cl((k - 0.55) / 0.45)) - 6 * he, op = cl(k * 2.5).toFixed(3);
-      set('cb' + i, { transform: 'translateY(' + y.toFixed(2) + 'px)', opacity: op, boxShadow: 'inset 0 1px 0 rgba(255,255,255,.6),0 1px 2px rgba(38,40,43,.06),0 ' + (16 + 14 * he).toFixed(1) + 'px ' + (32 + 24 * he).toFixed(1) + 'px -14px rgba(38,40,43,' + (0.24 + 0.04 * he).toFixed(3) + ')' });
-      set('cf' + i, { transform: 'translateY(' + y.toFixed(2) + 'px)', opacity: op }); set('pr' + i, { opacity: (he * 0.9).toFixed(3) }); set('ar' + i, { transform: 'translateX(' + (4 * he).toFixed(1) + 'px)' });
-      const l0 = 0.8 + i * 0.1, d = cl((tA - l0) / 0.45), fall = d * d, s2 = cl((tA - l0 - 0.45) / 0.25), dy = -30 * (1 - fall) - 2.5 * Math.sin(PI * s2);
+      const k = cl((tA - 0.4 - i * 0.06) / 0.7), e = ex(k), y = 24 * (1 - e) - 6 * he, /* R6 §06 A: lifts in under its light, no bounce */ op = cl(k * 2.5).toFixed(3);
+      set('cb' + i, { transform: 'translateY(' + y.toFixed(2) + 'px)', opacity: op, boxShadow: 'inset 0 1px 0 rgba(255,255,255,.08),0 0 0 1px rgba(247,192,50,' + (0.35 * he).toFixed(3) + '),0 ' + (16 + 14 * he).toFixed(1) + 'px ' + (32 + 24 * he).toFixed(1) + 'px -14px rgba(10,10,12,' + (0.45 + 0.1 * he).toFixed(3) + ')' });
+      { const lk = tA - 0.25 - i * 0.12, fl = lk < 0 ? 0 : lk < 0.05 ? 0.7 : lk < 0.09 ? 0.15 : Math.min(1, 0.6 + lk * 2); set('lt' + i, { opacity: (fl * (0.85 + 0.15 * he)).toFixed(3) }); } /* R6 §06 A: lights switch on 120ms apart */
+      set('cf' + i, { transform: 'translateY(' + y.toFixed(2) + 'px)', opacity: op }); set('pr' + i, { opacity: (he * 0.9).toFixed(3) }); { const rt = document.documentElement.dir === 'rtl'; set('ar' + i, { transform: 'translateX(' + (4 * he * (rt ? -1 : 1)).toFixed(1) + 'px)' + (rt ? ' scaleX(-1)' : '') }); }
+      const l0 = 0.8 + i * 0.1, d = cl((tA - l0) / 0.45), fall = d * d, s2 = cl((tA - l0 - 0.45) / 0.25), dy = -30 * (1 - fall); /* R6 §06 A: no bounce */
       set('ps' + i, { opacity: cl((tA - l0 - 0.45) / 0.08).toFixed(3) });
       const nk = eo((tA - 1.4 - i * 0.08) / 0.8), nE = this.q('n' + i), st = (D.fam && D.fam[i] && D.fam[i].raw) || 0; if (nE) { const tx = Math.round(st * nk).toLocaleString('en-US'); if (nE.textContent !== tx) nE.textContent = tx; }
       const ch = this.q('ch' + i); if (ch) Array.from(ch.children).forEach((c, j) => { const p = cl((tA - 1.6 - i * 0.06 - j * 0.09) / 0.25), b = p >= 1 ? 1 : 0.6 + 0.4 * (1 + 2.2 * Math.pow(p - 1, 3) + 1.2 * Math.pow(p - 1, 2)); c.style.opacity = cl(p * 3).toFixed(3); c.style.transform = 'scale(' + b.toFixed(3) + ')'; });
       const slot = this.q('slot' + i); if (!slot || !this.api || d <= 0) continue; const r = slot.getBoundingClientRect(); if (r.bottom < 0 || r.top > vh) continue;
       const L = this.FAM[i][2], inf = this.api.info[L], hh = inf.hh, rxz = Math.hypot(inf.hw, inf.hd), w = r.width, hgt = r.height, kk = Math.min((2.7 * 0.84) / hh, (2.7 * (w / hgt) * 0.86) / rxz);
-      let a = (2 * PI * T) / 30 + (40 * PI / 180) * (1 - fall); // 14 Oct §09: one shared clock and angle for every part (was offset per part) const tgt = -0.55 + 2 * PI * Math.round((a + 0.55) / (2 * PI)); a += (tgt - a) * he;
-      const hs = cl((T - this.hvAt[i]) / 0.6), rs = ((T % 9) / 1.8) - (i % 4) * 0.25, rw = rs > 0 && rs < 1 ? Math.sin(PI * rs) * 0.7 : 0, hw2 = this.hvT[i] && hs < 1 ? Math.sin(PI * hs) : 0;
+      // R6 §06 A: one shared clock, one revolution every 12s, the same angle at the same moment for every part; on hover
+      // the part eases round to face the visitor (it was commented out by accident) and rejoins the shared angle after
+      let a = (2 * PI * T) / 12 + (40 * PI / 180) * (1 - fall); const tgt = -0.55 + 2 * PI * Math.round((a + 0.55) / (2 * PI)); a += (tgt - a) * he;
+      const hs = cl((T - this.hvAt[i]) / 0.6), rs = ((T % 8) / 1.8) /* R6 §06: a slow sweep every 8s */ - (i % 4) * 0.25, rw = rs > 0 && rs < 1 ? Math.sin(PI * rs) * 0.7 : 0, hw2 = this.hvT[i] && hs < 1 ? Math.sin(PI * hs) : 0;
       const sw = Math.max(rw, hw2), sx = hw2 > rw ? -1 + 2 * hs : -1 + 2 * cl(rs), bot = hgt / 2 - ((hh * kk) / 2.7) * (hgt / 2);
       items.push({ L, x: r.left - hr.left, y: r.top - hr.top + bot + dy + y * 0, w, h: hgt, ry: a, rx: -0.06, el: 0.16, k: kk, sw, sx });
     }
@@ -97,14 +100,15 @@ class Component extends DCLogic {
           if (this.scr) { this.drawScreen(t); this.api.screenDirty(); } } }
       const dc = this.q('Rdust'); if (dc) this.drawDust(dc, dt, tR > 0 || this.ov.R != null); }
     // ----- Ad 2 Wholesale -----
-    { const t = tW; (D.boxes || []).forEach((bx, j) => { const s0 = j < 6 ? 0.05 + j * 0.18 : j === 6 ? 3.2 : 3.55, f = cl((t - s0) / 0.28), land = s0 + 0.28, a = t - land, sq = a > 0 && a < 0.22 ? Math.sin(PI * cl(a / 0.22)) : 0, reb = a > 0.22 && a < 0.4 ? Math.sin(PI * cl((a - 0.22) / 0.18)) * 0.25 : 0;
+    // R6 §06 B: a 10s loop: the cartons stack, the film winds, the tag swings in, then the pallet slides away and it restarts
+    { const t = tW < 10 ? tW : (tW - 10) % 10, so = eio(cl((t - 8.7) / 0.9)); set('Wpal', { transform: 'translateX(' + (-560 * so).toFixed(1) + 'px)', opacity: (1 - so).toFixed(3) }); set('Wpsh', { opacity: (1 - so).toFixed(3) }); (D.boxes || []).forEach((bx, j) => { const s0 = j < 6 ? 0.05 + j * 0.18 : j === 6 ? 3.2 : 3.55, f = cl((t - s0) / 0.28), land = s0 + 0.28, a = t - land, sq = a > 0 && a < 0.22 ? Math.sin(PI * cl(a / 0.22)) : 0, reb = a > 0.22 && a < 0.4 ? Math.sin(PI * cl((a - 0.22) / 0.18)) * 0.25 : 0;
         set(bx.id, { opacity: t > s0 ? 1 : 0, transform: 'translateY(' + (-260 * (1 - f * f)).toFixed(1) + 'px) scale3d(' + (1 + 0.05 * sq - 0.01 * reb).toFixed(3) + ',' + (1 - 0.1 * sq + 0.02 * reb).toFixed(3) + ',' + (1 + 0.05 * sq).toFixed(3) + ')' });
         set(bx.sid, { opacity: t > land ? cl(a / 0.05).toFixed(3) : (0.25 * f * f).toFixed(3) }); const pk = cl(a / 0.45); set(bx.pid, { opacity: a > 0 ? ((1 - pk) * 0.7).toFixed(3) : 0, transform: 'translateZ(60px) scale(' + (0.5 + pk * 0.9).toFixed(3) + ')' }); });
       const wk = cl((t - 1.6) / 0.6), we = eio(wk), wrap = this.q('wrap'); if (wrap) Array.from(wrap.children).forEach((f, j) => { const k2 = eio(cl((t - 1.6 - j * 0.12) / 0.48)); f.style.clipPath = 'inset(' + ((1 - k2) * 100).toFixed(1) + '% 0 0 0)'; f.style.opacity = k2 > 0 ? 1 : 0; });
       const ws = t < 2.2 ? we : ((T % 7) / 1.2); set('wsh', { transform: 'translateY(' + ((t < 2.2 ? 1 - we : 0) * -60).toFixed(1) + '%) translateX(' + ((ws < 1 ? -120 + ws * 460 : 400)).toFixed(1) + '%) rotate(25deg)' });
-      const ta = t - 2.2, ang = ta < 0 ? -70 : 55 * Math.exp(-ta * 3.4) * Math.cos(ta * 8.5) + 3 * Math.sin(T * 1.3) * cl(ta); set('tag', { opacity: cl(ta / 0.12).toFixed(3), transform: 'rotate(' + ang.toFixed(2) + 'deg)' });
-      set('tagf', { transform: 'rotateY(' + (180 * eio((t - 2.6) / 0.25)).toFixed(1) + 'deg)' }); const bk = cl((t - 2.85) / 0.15); set('badge', { opacity: cl(bk * 2).toFixed(3), transform: 'rotate(-12deg) scale(' + (1.8 - 0.8 * eo(bk)).toFixed(3) + ')' });
-      const ck = ex((t - 2.95) / 0.3); set('cnt', { opacity: ck.toFixed(3), transform: 'translateY(' + ((1 - ck) * 14).toFixed(1) + 'px)' });
+      const ta = t - 2.2, ang = ta < 0 ? -70 : 55 * Math.exp(-ta * 3.4) * Math.cos(ta * 8.5) + 3 * Math.sin(T * 1.3) * cl(ta); set('tag', { opacity: (cl(ta / 0.12) * (1 - so)).toFixed(3), transform: 'rotate(' + ang.toFixed(2) + 'deg)' });
+      set('tagf', { transform: 'rotateY(' + (180 * eio((t - 2.6) / 0.25)).toFixed(1) + 'deg)' }); const bk = cl((t - 2.85) / 0.15); set('badge', { opacity: (cl(bk * 2) * (1 - so)).toFixed(3), transform: 'rotate(-12deg) scale(' + (1.8 - 0.8 * eo(bk)).toFixed(3) + ')' });
+      const ck = ex((t - 2.95) / 0.3); set('cnt', { opacity: (ck * (1 - so)).toFixed(3), transform: 'translateY(' + ((1 - ck) * 14).toFixed(1) + 'px)' });
       const n = t < 3.2 ? 10 : t < 3.55 ? Math.round(10 + 40 * eo((t - 3.2) / 0.25)) : Math.round(50 + 50 * eo((t - 3.55) / 0.25)), cn = this.q('cntN'); if (cn && cn.textContent !== String(n)) cn.textContent = String(n); }
     // ----- Ad 3 Worldwide -----
     { const g = this.q('glb'); if (g) this.drawGlobe(g, tG, T); }
@@ -160,8 +164,11 @@ class Component extends DCLogic {
   renderVals() {
     const D = this.state.data, P = (D && D.products) || [], GN = ((typeof window !== 'undefined' && window.SE_DATA && window.SE_DATA.gradeNames) || {}) /* R6 Part E: Excel qualities */;
     const MB = {}; ((D && D.models) || []).forEach((m) => (MB[m.id] = m.brand_id || m.brand));
-    const stat = (c) => { const [cat, part] = c.split(':'); let ps = P.filter((x) => x.category === cat); if (part != null) ps = ps.filter((_, i) => i % 2 === Number(part)); const g = ['OR', 'OL', 'IN', 'AQ'].filter((k) => ps.some((x) => x.grade === k)).map((k) => GN[k]); const br = new Set(ps.map((x) => MB[x.model_id]).filter(Boolean)).size; return { stock: Math.max(1, ps.reduce((a, x) => a + x.stock_qty, 0)), brands: br || 1, min: ps.length ? Math.min(...ps.map((x) => x.retail_price)) : 35, grades: g.length ? g : ['Original'] }; };
-    const fam = this.FAM.map(([name, cat], i) => { const s = stat(cat), chips = s.grades.length > 3 ? s.grades.slice(0, 2).concat(['+' + (s.grades.length - 2)]) : s.grades; return { i, name, raw: s.stock, stock: s.stock.toLocaleString('en-US'), brands: s.brands, min: s.min, chips,
+    const MN = ((typeof window !== 'undefined' && window.SE_DATA && window.SE_DATA.makerNames) || {});
+    // R6 §06 B: qualities and manufacturers as chips (each with its "i"), stock, models covered and the sample "from" price
+    const stat = (c) => { const [cat, part] = c.split(':'); let ps = P.filter((x) => x.category === cat); if (part != null) ps = ps.filter((_, i) => i % 2 === Number(part)); const ks = ['OR', 'OL', 'IN', 'AQ'].filter((k) => ps.some((x) => x.grade === k)); const g = ks.map((k) => GN[k]).filter(Boolean), mk = [...new Set(ks.map((k) => MN[k]).filter(Boolean))]; const br = new Set(ps.map((x) => MB[x.model_id]).filter(Boolean)).size; return { stock: Math.max(1, ps.reduce((a, x) => a + x.stock_qty, 0)), brands: br || 1, models: new Set(ps.map((x) => x.model_id)).size || 1, min: ps.length ? Math.min(...ps.map((x) => x.retail_price)) : 35, grades: g.length ? g : ['Original'], makers: mk }; };
+    const SHOP = ['Shop screens', 'Shop frames', 'Shop flex cables', 'Ask us', 'Shop batteries', 'Shop cameras', 'Shop small parts', 'Shop back glass'];
+    const fam = this.FAM.map(([name, cat], i) => { const s = stat(cat), chips = s.grades.map((n) => ({ n, k: 'quality' })).concat(s.makers.map((n) => ({ n, k: 'maker' }))); return { i, name, raw: s.stock, stock: s.stock.toLocaleString('en-US'), brands: s.brands, models: s.models, min: s.min, chips, shop: SHOP[i],
       go: (e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('se:fmp', { detail: { c: cat.split(':')[0] } })); },
       enter: () => { this.hvT[i] = 1; this.hvAt[i] = performance.now() / 1000; }, leave: () => { this.hvT[i] = 0; } }; });
     const SS = (D && D.serviceStats) || {}, col = (b, arr, bd) => arr.map((s, j) => ({ ...s, id: b + 'n' + j, v: s.n >= 1000 && s.n < 3000 ? String(s.n) : s.n.toLocaleString('en-US'), pl: j ? '16px' : '0', bl: j ? '1px solid ' + bd : 'none' }));
