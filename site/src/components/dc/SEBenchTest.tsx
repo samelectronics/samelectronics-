@@ -3,6 +3,7 @@
 import React from 'react';
 import { type Vals, createDC } from '@/dc/runtime';
 import Logic, { TAPS } from './SEBenchTest.logic.js';
+import { comingSoon } from '@/components/g17/ComingSoon';
 
 const WORDS: [string, string, string][] = [
   ['q', 'QUALITY', 'Display and touch passed'],
@@ -33,7 +34,7 @@ function Tile({ k, name, children }: { k: string; name: string; children: React.
 
 function render(v: Vals) {
   return (
-    <section id="quality" ref={v.secRef} className="bt">
+    <section id="quality" ref={v.secRef} className="bt" style={{ ['--sc' as string]: v.sc } as React.CSSProperties}>
       <div className="bt-pin">
         <div className="bt-bg" aria-hidden="true" />
         <div className="bt-box" style={{ ['--sc' as string]: v.sc } as React.CSSProperties}>
@@ -69,6 +70,43 @@ function render(v: Vals) {
                   </div>
                 </div>
               ))}
+            </div>
+            {/* R6 §08: the space under the promise: today's rig counters (SAMPLE), how we test, run it yourself */}
+            <div className="bt-today">
+              <span className="bt-today-h">
+                TODAY ON THE RIG <em>SAMPLE</em>
+              </span>
+              <div className="bt-cnts">
+                {(v.today || []).map((c: any) => (
+                  <span key={c.k} className="bt-cnt">
+                    <b data-b={'tc-' + c.k}>0</b>
+                    <small>
+                      {c.l}
+                      {c.k === 'stickers' ? (
+                        <button type="button" className="se-info light bt-i" aria-label="About the warranty sticker">
+                          i<span role="tooltip">The yellow sticker means this part passed every check on the rig. It seals the part for its warranty: ask us for the period.</span>
+                        </button>
+                      ) : null}
+                    </small>
+                  </span>
+                ))}
+              </div>
+              <div className="bt-acts">
+                <button type="button" className="bt-how" onClick={() => comingSoon({ text: 'A page about how we test every part is coming soon.' })}>
+                  How we test
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </button>
+                <span className="bt-run">
+                  <span>Run the test yourself</span>
+                  {(v.runs || []).map((r: any) => (
+                    <button key={r.g} type="button" className={'bt-rq' + (r.on ? ' on' : '')} onClick={r.go}>
+                      {r.n}
+                    </button>
+                  ))}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -174,7 +212,7 @@ function render(v: Vals) {
                   <span className="bt-string" />
                   <span className="bt-tag">
                     <small>PRICE</small>
-                    <b>AED 330</b>
+                    <b>AED {v.price}</b>
                     <small>sample</small>
                   </span>
                 </div>
@@ -193,7 +231,7 @@ function render(v: Vals) {
                 </div>
                 <div className="bt-o-r">
                   <span>Grade</span>
-                  <span>OLED</span>
+                  <span>{v.grade}</span>
                 </div>
                 <div className="bt-o-r">
                   <span>Warranty</span>
@@ -201,7 +239,7 @@ function render(v: Vals) {
                 </div>
                 <div className="bt-o-r">
                   <span>Price</span>
-                  <span>AED 330 · sample</span>
+                  <span>AED {v.price} · sample</span>
                 </div>
                 <div className="bt-o-bars" aria-hidden="true" />
                 <span className="bt-stamp" data-b="stamp">

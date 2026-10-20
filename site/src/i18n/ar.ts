@@ -1024,6 +1024,17 @@ export const EXACT: Record<string, string> = {
   // 14 Oct §02
   'Closing soon': 'يغلق قريباً',
   'Opening soon': 'يفتح قريباً',
+  // R6 §08 · Bench: Today on the rig
+  'TODAY ON THE RIG': 'اليوم على جهاز الفحص',
+  'Parts tested today': 'قطع فُحصت اليوم',
+  Passed: 'اجتازت',
+  'Sent back to supplier': 'أُعيدت إلى المورّد',
+  'Warranty stickers applied': 'ملصقات ضمان وُضعت',
+  'How we test': 'كيف نفحص',
+  'Run the test yourself': 'شغّل الفحص بنفسك',
+  'About the warranty sticker': 'عن ملصق الضمان',
+  'A page about how we test every part is coming soon.': 'صفحة عن طريقة فحص كل قطعة قادمة قريباً.',
+  'The yellow sticker means this part passed every check on the rig. It seals the part for its warranty: ask us for the period.': 'الملصق الأصفر يعني أن القطعة اجتازت كل فحوص الجهاز، وهو ختم ضمانها: اسألنا عن المدة.',
   'Flex & ports': 'الفلكسات والمنافذ',
   'Parts shipped today': 'قطع شُحنت اليوم',
   'Straight from the maker’s box.': 'مباشرة من علبة الشركة.',

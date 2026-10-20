@@ -1,8 +1,10 @@
 // @ts-nocheck
 /* eslint-disable */
-// Bench Test (Issue 5, rebuilt 13 Oct 2026): a pinned scene (~300vh) where the scroll drives the test rig
-// forward and backward (scrubbed, eased). Every element is a pure function of the progress p (0–1), written
-// straight to the DOM each frame (no React re-render while scrolling), so scrolling up plays it in reverse.
+// Bench Test (Issue 5, rebuilt 13 Oct 2026). Every element is a pure function of the progress p (0–1), written straight
+// to the DOM each frame (no React re-render while it plays).
+// R6 §08: p is no longer scrubbed by a 400vh pinned scroll (the owner had to scroll into an empty stage). The film plays
+// on its own clock once the section is 60% in view: clamps 0.8s → four tests 4s → sticker + receipt 1s, holds, then the
+// next pass. It resets when the section leaves, so it replays on the way back.
 //   0–10% load · 10–30% display · 30–45% touch (QUALITY) · 45–65% True Tone (WARRANTY) · 65–85% battery (PRICE) · 85–100% passed
 import React from 'react';
 import { DCLogic } from '@/dc/runtime';
@@ -15,26 +17,34 @@ export const TAPS = [[22, 20], [50, 20], [78, 20], [22, 50], [50, 50], [78, 50],
 
 class Component extends DCLogic {
   secRef = React.createRef();
-  state = { sc: 1 };
+  state = { sc: 1, g: 'OL' };
   componentDidMount() {
     this.p = 0; this.tp = 0; this.alive = true;
     // R6 Part A: only measured while near the view (it used to read its position every frame for the whole visit)
     this.near = false; this.nearIO = new IntersectionObserver(([e]) => { this.near = e.isIntersecting; }, { rootMargin: '10% 0px 10% 0px' }); setTimeout(() => this.secRef.current && this.nearIO.observe(this.secRef.current), 50);
+    this.t0 = null; this.pass = 0; this.cT0 = null;
+    this.runIO = new IntersectionObserver(([e]) => { if (e.intersectionRatio >= 0.6) { if (this.t0 == null) { this.t0 = performance.now(); if (this.cT0 == null) this.cT0 = this.t0; } } else if (!e.isIntersecting) { this.t0 = null; this.cT0 = null; this.pass = 0; } }, { threshold: [0, 0.6] });
+    setTimeout(() => this.secRef.current && this.runIO.observe(this.secRef.current), 50);
     const loop = () => { if (!this.alive) return; if (this.near) this.frame(); this.raf = requestAnimationFrame(loop); };
     this.raf = requestAnimationFrame(loop);
     this.onResize = () => { const vw = document.documentElement.clientWidth, vh = window.innerHeight, sc = Math.min(vw / 1440, (vh - 72) / 828); if (Math.abs(sc - this.state.sc) > 0.002) this.setState({ sc }); };
     window.addEventListener('resize', this.onResize); this.onResize();
     window.seBench = (p) => { this.ov = p; this.p = p; this.frame(true); };
   }
-  componentWillUnmount() { this.nearIO && this.nearIO.disconnect(); this.alive = false; cancelAnimationFrame(this.raf); window.removeEventListener('resize', this.onResize); }
+  componentWillUnmount() { this.nearIO && this.nearIO.disconnect(); this.runIO && this.runIO.disconnect(); this.alive = false; cancelAnimationFrame(this.raf); window.removeEventListener('resize', this.onResize); }
   q(k) { const R = this.secRef.current; if (!R) return null; this._q = this._q || {}; const c = this._q[k]; if (c && c.isConnected) return c; return (this._q[k] = R.querySelector('[data-b="' + k + '"]')); }
   set(k, s) { const e = this.q(k); if (e) for (const n in s) { const v = s[n]; if (e.style[n] !== v) e.style[n] = v; } return e; }
   frame(force) {
     const R = this.secRef.current; if (!R) return; const r = R.getBoundingClientRect(), vh = window.innerHeight;
     if (!force && (r.bottom < -50 || r.top > vh + 50)) return; // off-screen: nothing to do (G16)
-    const span = Math.max(1, r.height - vh); this.tp = this.ov != null ? this.ov : cl(-r.top / span);
-    if (!force) this.p += (this.tp - this.p) * 0.14; if (Math.abs(this.tp - this.p) < 0.0004) this.p = this.tp; // scrubbed, eased
-    const p = this.p, t = performance.now() / 1000;
+    const now = performance.now(); let el = this.t0 == null ? 0 : (now - this.t0) / 1000;
+    if (el > 9.5) { this.t0 = now; this.pass++; el = 0; } // the next pass on the rig
+    // 0–0.8s clamps (p 0–0.1) · 0.8–4.8s the four tests (p 0.1–0.85) · 4.8–5.8s sticker + receipt (p 0.85–1) · hold
+    this.p = this.ov != null ? this.ov : el < 0.8 ? 0.1 * (el / 0.8) : el < 4.8 ? 0.1 + 0.75 * ((el - 0.8) / 4) : Math.min(1, 0.85 + 0.15 * (el - 4.8));
+    const p = this.p, t = now / 1000;
+    // Today on the rig: rolls up on arrival, then every pass adds one test, one pass and one sticker (the unit on the rig)
+    { const ck = this.cT0 == null ? 0 : eo((now - this.cT0 - 300) / 1400), T = this.today || {}, add = { tested: p >= 0.965 ? 1 : 0, passed: p >= 0.965 ? 1 : 0, stickers: p >= 0.6 ? 1 : 0, returned: 1 };
+      ['tested', 'passed', 'returned', 'stickers'].forEach((k) => { const e = this.q('tc-' + k); if (!e) return; const n = (T[k] || 0) - 1, tx = Math.round(ck < 1 ? n * ck : n + (k === 'returned' ? 1 : this.pass + add[k])).toLocaleString('en-US'); if (e.textContent !== tx) e.textContent = tx; }); }
     // ---- load: phone slides in, clamps close with a click and a 2px shake, LEDs go green, the counter wakes
     const lin = eo(seg(p, 0, 0.06)), clk = seg(p, 0.06, 0.08), shk = p > 0.08 && p < 0.1 ? Math.sin(seg(p, 0.08, 0.1) * Math.PI * 4) * 2 * (1 - seg(p, 0.08, 0.1)) : 0;
     this.set('phone', { transform: 'translate(' + shk.toFixed(2) + 'px,' + ((1 - lin) * 120).toFixed(1) + '%)' });
@@ -84,9 +94,16 @@ class Component extends DCLogic {
     const ok = seg(p, 0.86, 0.94), st = seg(p, 0.94, 0.965), ssh = st > 0 && st < 1 ? Math.sin(st * Math.PI * 5) * 3 * (1 - st) : 0, sway = ok >= 1 ? Math.sin(t * 0.9) * 0.6 : 0;
     this.set('order', { transform: 'translateY(' + (-(1 - eio(ok)) * 100).toFixed(2) + '%) rotate(' + sway.toFixed(2) + 'deg)' });
     this.set('stamp', { opacity: st > 0 ? '1' : '0', transform: 'translate(' + ssh.toFixed(1) + 'px,0) scale(' + (st < 1 ? 1.6 - 0.6 * eo(st) : 1) + ') rotate(-12deg)' });
-    const cnt = p >= 0.965 ? '1,294' : '1,293', c = this.q('count'); if (c && c.dataset.v !== cnt) { c.dataset.v = cnt; c.textContent = cnt; c.classList.remove('roll'); void c.offsetWidth; if (p >= 0.965) c.classList.add('roll'); }
+    const base = ((this.today && this.today.tested) || 1294) - 1 + this.pass, cnt = (p >= 0.965 ? base + 1 : base).toLocaleString('en-US'), c = this.q('count'); if (c && c.dataset.v !== cnt) { c.dataset.v = cnt; c.textContent = cnt; c.classList.remove('roll'); void c.offsetWidth; if (p >= 0.965) c.classList.add('roll'); }
   }
-  renderVals() { return { secRef: this.secRef, sc: this.state.sc }; }
+  renderVals() {
+    const D = typeof window !== 'undefined' ? window.SE_DATA : null, GN = (D && D.gradeNames) || {}, g = this.state.g;
+    this.today = (D && D.benchToday) || { tested: 1294, passed: 1271, returned: 23, stickers: 1271 };
+    const scr = ((D && D.products) || []).filter((x) => x.category === 'SCR' && x.grade === g), price = scr.length ? Math.min(...scr.map((x) => x.retail_price)) : 330;
+    // Reviewer's idea: run the rig again on the quality the visitor picks (the work order and price tag follow it)
+    const runs = ['OR', 'OL', 'IN'].map((k) => ({ g: k, n: GN[k] || k, on: k === g, go: () => { this.setState({ g: k }); this.t0 = performance.now(); if (this.cT0 == null) this.cT0 = this.t0; } }));
+    return { secRef: this.secRef, sc: this.state.sc, today: [{ k: 'tested', l: 'Parts tested today' }, { k: 'passed', l: 'Passed' }, { k: 'returned', l: 'Sent back to supplier' }, { k: 'stickers', l: 'Warranty stickers applied' }], runs, grade: GN[g] || g, price };
+  }
 }
 
 export default Component;

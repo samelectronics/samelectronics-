@@ -2305,3 +2305,26 @@ DONE WHEN
 
 DONE WHEN
 - Side circuits with pulses; rows arrive with the flash. **PASS**
+
+## §08 · Bench test
+
+- **Starts centred:** the section is no longer a 400vh pinned scroll that the visitor had to scroll into. It is one screen tall (the scaled box), and the film plays on its own clock as soon as 60% of it is in view:
+  - clamps close with the click and shake (0.8s);
+  - Display, Touch, True Tone and Battery each turn PASS in order (4s);
+  - the warranty sticker and the receipt with the price stamp (1s);
+  - a hold, then the next pass. The UNITS counter goes up one per pass.
+  - It resets when the section leaves, so it replays.
+- **No line:** the bench band at the bottom, with its highlight line across the yellow, is gone. One continuous yellow.
+- **Today on the rig** (marked SAMPLE):
+  - four counters roll up on arrival: Parts tested today · Passed · Sent back to supplier · Warranty stickers applied;
+  - each pass adds one;
+  - the numbers come from `SE_DATA.benchToday` (or `SE_FACTS.benchToday`), so the Control Room can set them.
+- A "How we test" button (Coming soon card) and an "i" that explains the warranty sticker.
+- **Reviewer's idea, "Run the test yourself":** Original / OLED Soft / Incell. The rig re-runs, and the work order and price tag follow the chosen quality: grade name, and the lowest sample screen price for that quality from the data.
+  - Per-quality test scores are **not shown**. I don't have real numbers for how each quality scores and won't invent them (open question for the owner).
+- Arabic: all new text translated; coverage check shows nothing left in this section.
+
+DONE WHEN
+- Starts centred. **PASS**
+- No line. **PASS**
+- Counter strip + optional interactive. **PASS** (interactive without per-quality scores; see above)

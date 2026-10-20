@@ -137,5 +137,7 @@
 
   window.SE_DATA = { brands, brandGroups: CAT.groups, models, categories, grades, gradeNames, makerNames, qualities, manufacturers, colours, screens: CAT.screens, products, deals, events, shipments, preorders, regions, countries, hours, branches, history, teamRoles, team, customerTypes, tiers, requestTypes, orderStatus, repairs, contact,
     // SAMPLE: owner to confirm (same-day repairs, minimum trade order, number of countries)
-    serviceStats: F ? F.serviceStats : { repairs: 'Same day', tradeMin: 10, countries: 24, sample: true } };
+    serviceStats: F ? F.serviceStats : { repairs: 'Same day', tradeMin: 10, countries: 24, sample: true },
+    // R6 §08 · SAMPLE: 'Today on the rig' counters, to be set from the Control Room
+    benchToday: (F && F.benchToday) || { tested: 1294, passed: 1271, returned: 23, stickers: 1271, sample: true } };
 })();
