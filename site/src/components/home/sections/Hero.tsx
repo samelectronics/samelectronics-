@@ -1799,10 +1799,13 @@ export default function Hero({ v }: { v: Vals }) {
                         alignItems: 'flex-start',
                         gap: '16px',
                         padding: '0 28px',
-                        borderInlineEnd: '1px solid rgba(255,255,255,.07)',
                         cursor: 'pointer',
+                        position: 'relative',
                       }}
+                      onClick={() => v.openFmpAt && v.openFmpAt(v.b?.id)}
                     >
+                      {/* R6 §04: thin dividers only between the owner's groups, drawn as tiny circuit pads */}
+                      {v.b?.grpEnd ? <span className="se-rail-div" aria-hidden="true" /> : null}
                       {'\n              '}
                       <div
                         style={cssToObj(
@@ -1944,6 +1947,7 @@ export default function Hero({ v }: { v: Vals }) {
               {'\n        '}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <SEBrandLogo brand={v.panel?.id} color="#FFFFFF" h="24" />
+                {v.panel?.group ? <span className="se-rail-grp">{v.panel.group}</span> : null /* R6 §04: the brand's group */}
                 <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '12px', color: '#F7C032', whiteSpace: 'nowrap' }}>
                   {t(v.panel?.stock)}
                   {' in stock'}

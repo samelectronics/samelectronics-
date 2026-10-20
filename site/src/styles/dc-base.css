@@ -458,3 +458,7 @@ html[dir='rtl'] [style*='seRail3'] { animation-name: seRail3R !important; }
 [data-hero-group] { animation: heroDepth linear both; animation-timeline: scroll(root); animation-range: 0 900px; }
 @keyframes heroDepth { to { translate: 0 90px; } }
 @media (prefers-reduced-motion: reduce) { #top[data-in] *, [data-hero-group] { animation: none !important; } }
+/* R6 §04 · brand strip: a thin divider between the owner's groups, drawn as a tiny circuit pad */
+.se-rail-div { position: absolute; inset-inline-end: 0; top: 50%; width: 1px; height: 64px; transform: translateY(-50%); background: linear-gradient(180deg, rgba(247, 192, 50, 0), rgba(247, 192, 50, .45) 30%, rgba(247, 192, 50, .45) 70%, rgba(247, 192, 50, 0)); }
+.se-rail-div::after { content: ''; position: absolute; left: -3px; top: calc(50% - 3.5px); width: 5px; height: 5px; border-radius: 50%; border: 1px solid #F7C032; background: #26282B; box-shadow: 0 0 6px rgba(247, 192, 50, .6); }
+.se-rail-grp { align-self: flex-start; padding: 3px 8px; border-radius: 6px; background: rgba(247, 192, 50, .12); color: #F7C032; font: 600 10px 'JetBrains Mono', monospace; letter-spacing: .12em; text-transform: uppercase; }

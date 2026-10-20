@@ -2190,3 +2190,16 @@ DONE WHEN
 - iPad film plays; notifications drop. **PASS**
 - Language pop-up fixed timing, no Samsoom. **PASS**
 - Arabic: same composition. **PASS**
+
+## §04 · Brand stock bar
+
+- **Brands:** the owner's 15 brands in his group order, with the traced newest logos (Part E). Measured in EN and AR: 15 names, one logo height (28px), no Sony; the panel reads "15 brands · 801 models".
+- **Dividers:** only between groups, drawn as tiny circuit pads (standalone brands count as their own group). The light along the strip's top edge already ran; it stays.
+- **Reviewer idea, built:**
+  - hovering pauses the strip and turns the logo its own brand colour;
+  - the card rises with stock by family and the group name ("Xiaomi Group" / "مجموعة شاومي");
+  - clicking the logo or "Find … parts" opens Find My Part on that brand.
+- **Seamless loop:** three copies (14 Oct §06). The no-gap check measured 3,500–5,900px of spare track beyond the window edge at 1440/1920 in EN and AR.
+
+DONE WHEN
+- 15 logos, equal size, no Sony, no gap, hover card works. **PASS**
