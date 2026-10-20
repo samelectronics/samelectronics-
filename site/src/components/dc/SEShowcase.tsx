@@ -14,7 +14,7 @@ function render(v: Vals) {
       <div className="sc-in">
         <header className="sc-top">
           <div>
-            <span className="sc-eb">THE SHOWCASE · SCREENS BY GRADE</span>
+            <span className="sc-eb">THE SHOWCASE · SCREENS BY QUALITY</span>
             <h2 className="sc-h">
               <span>Four qualities of screen.</span>
               <span>One for every budget.</span>
@@ -77,27 +77,21 @@ function render(v: Vals) {
           <div className="sc-r" key={'r' + v.i}>
             <span className="sc-haze a" aria-hidden="true" />
             <span className="sc-haze b" aria-hidden="true" />
-            <span className="sc-shadow" data-s="shadow" aria-hidden="true" />
-            {a.box ? (
-              <div className="sc-box" data-s="box" aria-hidden="true">
-                <span className="sc-box-back" />
-                <span className="sc-box-flap" data-s="flap" />
-                <span className="sc-box-front">
-                  <small>GENUINE</small>
-                  <b>SERVICE PACK</b>
-                  <i />
+            {/* R6 §09: the unboxing: this quality's real box (Part E renders), its lid, the screen from the front and its
+                back standing behind it, each rendered on its own (scripts/productshot/render-showcase.mjs) */}
+            <div className="sc-un" aria-hidden="true">
+              <span className="sc-ubox" data-s="ubox">
+                <img src={v.u.box} srcSet={v.u.box + ' 1x, ' + v.u.box2 + ' 2x'} alt="" />
+                <i className="sc-ulid" data-s="lid" style={{ background: v.u.lid }} />
+              </span>
+              <span className="sc-uback" data-s="uback">
+                <img src={v.u.back} srcSet={v.u.back + ' 1x, ' + v.u.back2 + ' 2x'} alt="" />
+              </span>
+              <span className="sc-ufront" data-s="prod">
+                <img src={v.u.front} srcSet={v.u.front + ' 1x, ' + v.u.front2 + ' 2x'} alt="" />
+                <span className="sc-sheen" style={{ WebkitMask: `url(${v.u.front}) center / contain no-repeat`, mask: `url(${v.u.front}) center / contain no-repeat` }}>
+                  <i data-s="sheen" />
                 </span>
-                <span className="sc-seal" data-s="seal">
-                  SEALED
-                  <br />
-                  GENUINE
-                </span>
-              </div>
-            ) : null}
-            <div className="sc-prod" data-s="prod">
-              {v.hasImg ? <img src={v.img} alt="" style={{ filter: v.look === 'none' ? undefined : v.look + ' drop-shadow(0 20px 22px rgba(110,72,0,.35))' }} /> : null}
-              <span className="sc-sheen" aria-hidden="true" style={v.hasImg ? { WebkitMask: `url(${v.img}) center / contain no-repeat`, mask: `url(${v.img}) center / contain no-repeat` } : undefined}>
-                <i data-s="sheen" />
               </span>
             </div>
             {v.hasPrice ? (

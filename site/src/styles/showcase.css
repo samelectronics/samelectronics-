@@ -65,3 +65,16 @@ html[dir='rtl'] .sc-q li b { transform-origin: right center; }
 .sc-q li em { font: 600 12px 'JetBrains Mono', monospace; font-style: normal; color: #F7C032; text-align: end; }
 .sc-q li.sc-q-note { display: block; font: 600 10px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #8C9096; }
 @keyframes scFill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* R6 §09 · the unboxing: box (left back), the screen's back standing behind (right), the screen in front at 25°.
+   Laid out from the reading start, so Arabic mirrors the arrangement (never the renders). */
+.sc-un { position: absolute; inset: 0; perspective: 1400px; }
+.sc-un > span { position: absolute; display: block; will-change: transform, opacity; opacity: 0; }
+.sc-un img { display: block; height: 100%; width: auto; filter: drop-shadow(0 18px 20px rgba(110, 72, 0, .3)); }
+.sc-ubox { inset-inline-start: 46px; bottom: 96px; height: 286px; z-index: 1; }
+.sc-ulid { position: absolute; left: 0; right: 5%; top: -4px; height: 24px; border-radius: 3px 3px 1px 1px; box-shadow: 0 2px 4px rgba(0, 0, 0, .25), inset 0 1px 0 rgba(255, 255, 255, .5); transform-origin: 20% 100%; }
+.sc-uback { inset-inline-start: 352px; bottom: 100px; height: 300px; z-index: 2; }
+.sc-ufront { inset-inline-start: 186px; bottom: 68px; height: 384px; z-index: 3; transform-style: preserve-3d; }
+.sc-ufront .sc-sheen { position: absolute; inset: 0; }
+html[dir='rtl'] .sc-ulid { transform-origin: 80% 100%; }
+@media (max-width: 900px) { .sc-ubox { inset-inline-start: 16px; height: 220px; } .sc-uback { inset-inline-start: 250px; height: 240px; } .sc-ufront { inset-inline-start: 120px; height: 300px; } }

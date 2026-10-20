@@ -2328,3 +2328,29 @@ DONE WHEN
 - Starts centred. **PASS**
 - No line. **PASS**
 - Counter strip + optional interactive. **PASS** (interactive without per-quality scores; see above)
+
+## §09 · Showcase · screens by quality
+
+- **Never holds the page:** no pin since Part B. Measured: the film plays while a 400px wheel moves the page 400px, EN and AR.
+- Progress segments on top; hovering pauses once the quality is built; clicking a segment jumps.
+- **Real unboxing, every quality different.** New renders from the Part E studio (`scripts/productshot/render-showcase.mjs`, scene `part` / `q` params): for each featured quality, its box, the screen from the front, and the screen's back, each on its own. What differs is physical, not decoration:
+  - **Original · Service Pack:** the white genuine service box; the metal back with its serial sticker.
+  - **OLED:** a true-black front; a black foil back with the copper sheet; blue film tabs.
+    - Its box is still the neutral TEMP box (no photo of the OLED makers' box yet).
+  - **AAA · GX:** the black GX box; a plain dark plate with a coloured film tab.
+  - **Incell:** the blue ZY IN CELL box; a greyer LCD black with the wider lower border; the silver backlight plate.
+- The film, every quality (4.5s + 0.6s change):
+  1. The box slides in from the reading end and its lid lifts.
+  2. The screen rises out and turns to its 25° pose, and its back stands up behind it.
+  3. The quality bars fill and the "from" price lands.
+  4. Everything leaves toward the reading start.
+- Arabic mirrors the arrangement; the renders themselves are never mirrored.
+- Names from the Excel (Original, OLED, AAA, Incell; Service Pack and GX as labels); "Screens by quality", no highlighter.
+
+**Not done (honest):**
+- The reviewer's "Compare" toggle.
+- At the change, the next box comes in after the old one has left, not at the same time.
+
+DONE WHEN
+- Never holds the page. **PASS**
+- Each quality visibly different, real unboxing. **PASS** (the OLED box waits for the owner's photo)

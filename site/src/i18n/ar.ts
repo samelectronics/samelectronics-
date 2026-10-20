@@ -1024,6 +1024,7 @@ export const EXACT: Record<string, string> = {
   // 14 Oct §02
   'Closing soon': 'يغلق قريباً',
   'Opening soon': 'يفتح قريباً',
+  'THE SHOWCASE · SCREENS BY QUALITY': 'المعرض · الشاشات حسب الجودة',
   // R6 §08 · Bench: Today on the rig
   'TODAY ON THE RIG': 'اليوم على جهاز الفحص',
   'Parts tested today': 'قطع فُحصت اليوم',

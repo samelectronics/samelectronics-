@@ -15,13 +15,14 @@ const ex = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * cl(x))), eio = (x) => { x 
 // R6 Part E: the Excel's qualities (High Copy is not one of them and is gone). Featured until the owner chooses: Original
 // (sealed in its Service Pack box, the lead ad), OLED, Incell and AAA. No warranty claims here: periods come per product.
 export const ADS = [
-  { g: 'OR', k: 'ORIGINAL · SERVICE PACK', h: ['The original.', 'Nothing less.'], d: 'Genuine part, sealed in the maker’s service box · best colour, brightness and touch', q: [5, 5, 5, 3], look: 'none', box: true },
-  { g: 'OL', k: 'OLED', h: ['Deep blacks.', 'Fair price.'], d: 'OLED replacement · deep blacks, true colour · great value', q: [4, 4, 4, 4], look: 'saturate(1.08) contrast(1.06)' },
-  { g: 'AQ', k: 'AAA · GX', h: ['Close to', 'the original.'], d: 'High-grade copy · very good colour and touch · lower price', q: [4, 3, 4, 4], look: 'brightness(.97) saturate(.95)' },
-  { g: 'IN', k: 'INCELL', h: ['Best value.', 'Still bright.'], d: 'LCD with built-in touch · good everyday quality · budget friendly', q: [3, 3, 4, 5], look: 'brightness(.94) saturate(.9)' },
+  { g: 'OR', u: 'or', lid: '#F3F3F0', k: 'ORIGINAL · SERVICE PACK', h: ['The original.', 'Nothing less.'], d: 'Genuine part, sealed in the maker’s service box · best colour, brightness and touch', q: [5, 5, 5, 3] },
+  { g: 'OL', u: 'ol', lid: '#F1F1EE', k: 'OLED', h: ['Deep blacks.', 'Fair price.'], d: 'OLED replacement · deep blacks, true colour · great value', q: [4, 4, 4, 4] },
+  { g: 'AQ', u: 'aq', lid: '#141414', k: 'AAA · GX', h: ['Close to', 'the original.'], d: 'High-grade copy · very good colour and touch · lower price', q: [4, 3, 4, 4] },
+  { g: 'IN', u: 'in', lid: '#1D7FE6', k: 'INCELL', h: ['Best value.', 'Still bright.'], d: 'LCD with built-in touch · good everyday quality · budget friendly', q: [3, 3, 4, 5] },
 ];
 export const QL = ['Brightness', 'Colour', 'Touch', 'Value'];
-const DUR = (i) => (ADS[i].box ? 9.5 : 7.5);
+// R6 §09: every quality gets the same unboxing film: 4.5s on stage + 0.6s change
+const DUR = () => 5.1;
 
 class Component extends DCLogic {
   secRef = React.createRef();
@@ -67,7 +68,7 @@ class Component extends DCLogic {
   q(k) { const R = this.secRef.current; if (!R) return null; return R.querySelector('[data-s="' + k + '"]'); }
   set(k, s) { const e = this.q(k); if (e) for (const n in s) if (e.style[n] !== s[n]) e.style[n] = s[n]; }
   frame() {
-    const i = this.state.i, a = ADS[i], D = DUR(i), t = this.t, box = !!a.box, T0 = box ? 1.2 : 0; // the lead ad's product appears after the box opens
+    const i = this.state.i, D = DUR(i), t = this.t;
     const out = seg(t, D - 0.5, 0.5), oe = eio(out);
     // text on graphite
     this.set('eb', { opacity: (ex(seg(t, 0, 0.3)) * (1 - oe)).toFixed(3), transform: 'translateY(' + (-oe * 24).toFixed(1) + 'px)' });
@@ -75,19 +76,19 @@ class Component extends DCLogic {
     R.querySelectorAll('[data-s="w"]').forEach((w, j) => { const k = ex(seg(t, 0.1 + j * 0.06, 0.45)); w.style.opacity = (k * (1 - oe)).toFixed(3); w.style.filter = k < 1 ? 'blur(' + ((1 - k) * 8).toFixed(1) + 'px)' : 'none'; w.style.transform = 'translateY(' + (-oe * 30 - (1 - k) * 6).toFixed(1) + 'px)'; });
     R.querySelectorAll('[data-s="c"]').forEach((c, j) => { const k = seg(t, 1.0 + j * 0.25, 0.25); c.style.opacity = (ex(k) * (1 - oe)).toFixed(3); c.style.transform = 'translateY(' + (-oe * 30).toFixed(1) + 'px)'; c.classList.toggle('on', k > 0.4); });
     this.set('btn', { opacity: (ex(seg(t, 1.2, 0.4)) * (1 - oe)).toFixed(3), transform: 'translateY(' + ((1 - ex(seg(t, 1.2, 0.4))) * 12 - oe * 30).toFixed(1) + 'px)' });
-    // product on yellow: enters with depth (from 70%, slightly turned), 2° overshoot, then a slow ±10° turn; exits backwards
-    const pin = seg(t, 0.3 + T0, 1.1), pe = ex(pin), ov = Math.sin(Math.PI * cl((pin - 0.55) / 0.45)) * 2 * (pin < 1 ? 1 : 0);
-    const turn = t > 1.4 + T0 ? Math.sin((t - 1.4 - T0) * 0.55) * 10 : 0, up = box ? (1 - eio(seg(t, 1.5, 0.9))) * 150 - 70 : 0; // the lead screen rises clear of its box
-    this.set('prod', { opacity: ((box ? cl(seg(t, 1.5, 0.3)) : cl(pin * 2)) * (1 - oe)).toFixed(3), transform: 'translateY(' + (up + oe * 20).toFixed(1) + 'px) scale(' + ((box ? 0.74 + 0.08 * eio(seg(t, 1.5, 0.9)) : 0.7 + 0.3 * pe) * (1 - 0.15 * oe)).toFixed(4) + ') rotateY(' + ((box ? (1 - eio(seg(t, 1.6, 0.9))) * 35 : (1 - pe) * -18) + turn).toFixed(2) + 'deg) rotate(' + ((1 - pe) * -6 + ov).toFixed(2) + 'deg)' });
-    this.set('shadow', { opacity: (cl(pin * 1.5) * (1 - oe) * (box ? cl(seg(t, 2.0, 0.4)) : 1)).toFixed(3), transform: 'scale(' + (0.6 + 0.4 * pe).toFixed(3) + ')' });
-    const sh = t > 2 ? ((t - 2) % 3) / 0.9 : -1; this.set('sheen', { transform: 'translateX(' + (sh >= 0 && sh <= 1 ? -120 + 260 * eio(sh) : -120) + '%)' });
-    // badge stamps on the yellow side
-    const bk = seg(t, 1.6 + (box ? 1.0 : 0), 0.25); this.set('badge', { opacity: (bk > 0 ? 1 - oe : 0).toFixed(3), transform: 'scale(' + (bk < 1 ? 1.6 - 0.6 * ex(bk) : 1).toFixed(3) + ') rotate(-6deg)' });
-    // the Service Pack moment: the sealed box slides in, the flap lifts, the screen slides out and turns, a seal stamps
-    if (box) { const bi = ex(seg(t, 0.3, 0.7)), fl = eio(seg(t, 1.0, 0.5)), sl = seg(t, 2.4, 0.3);
-      this.set('box', { opacity: (cl(bi * 1.5) * (1 - oe)).toFixed(3), transform: 'translateX(' + ((1 - bi) * 160).toFixed(1) + 'px) translateY(' + (oe * 30).toFixed(1) + 'px)' });
-      this.set('flap', { transform: 'rotateX(' + (-fl * 115).toFixed(1) + 'deg)' });
-      this.set('seal', { opacity: sl > 0 ? (1 - oe).toFixed(3) : '0', transform: 'scale(' + (sl < 1 ? 1.7 - 0.7 * ex(sl) : 1).toFixed(3) + ') rotate(-10deg)' }); }
+    // R6 §09 · the unboxing. The box slides in from the reading end, its lid lifts, the screen rises out of it and turns
+    // to its 25° pose, its back stands up behind it, the price lands; at the change everything leaves the other way.
+    const rtl = document.documentElement.dir === 'rtl', sx = rtl ? -1 : 1;
+    const bi = ex(seg(t, 0.05, 0.6)), lid = eio(seg(t, 0.6, 0.45)), rise = eio(seg(t, 1.0, 1.1)), turn = eio(seg(t, 1.4, 0.8)), bk = eio(seg(t, 2.0, 0.8));
+    const xo = -sx * 70 * oe; // leave toward the reading start
+    this.set('ubox', { opacity: (cl(bi * 1.4) * (1 - oe)).toFixed(3), transform: 'translateX(' + (sx * (1 - bi) * 260 + xo).toFixed(1) + 'px)' });
+    this.set('lid', { opacity: (1 - cl(lid * 1.3)).toFixed(3), transform: 'translateY(' + (-lid * 46).toFixed(1) + 'px) rotate(' + (-sx * lid * 14).toFixed(2) + 'deg)' });
+    const idle = t > 2.6 ? Math.sin((t - 2.6) * 1.1) * 3 : 0;
+    this.set('prod', { opacity: (cl(rise * 3) * (1 - oe)).toFixed(3), transform: 'translateX(' + (sx * -(1 - rise) * 150 + xo).toFixed(1) + 'px) translateY(' + ((1 - rise) * 120).toFixed(1) + 'px) scale(' + (0.62 + 0.38 * rise).toFixed(4) + ') rotateY(' + (sx * ((1 - turn) * -55 + idle)).toFixed(2) + 'deg)' });
+    this.set('uback', { opacity: (bk * 0.95 * (1 - oe)).toFixed(3), transform: 'translateX(' + (sx * -(1 - bk) * 90 + xo).toFixed(1) + 'px) scale(' + (0.9 + 0.1 * bk).toFixed(4) + ')' });
+    const sh = t > 2.2 ? ((t - 2.2) % 3) / 0.9 : -1; this.set('sheen', { transform: 'translateX(' + (sh >= 0 && sh <= 1 ? -120 + 260 * eio(sh) : -120) + '%)' });
+    // the 'from' price lands
+    const pk = seg(t, 2.9, 0.25); this.set('badge', { opacity: (pk > 0 ? 1 - oe : 0).toFixed(3), transform: 'scale(' + (pk < 1 ? 1.6 - 0.6 * ex(pk) : 1).toFixed(3) + ') rotate(-6deg)' });
     // story-style progress
     R.querySelectorAll('[data-s="bar"]').forEach((b, j) => { b.style.transform = 'scaleX(' + (j < i ? 1 : j > i ? 0 : cl(t / D)).toFixed(4) + ')'; });
   }
@@ -95,7 +96,7 @@ class Component extends DCLogic {
     const s = this.state, D = s.data, lib = s.lib, a = ADS[s.i];
     const price = (g) => { if (!D) return null; const ps = D.products.filter((p) => p.category === 'SCR' && p.grade === g); return ps.length ? Math.min(...ps.map((p) => p.retail_price)) : null; };
     const pr = price(a.g);
-    const L = window.seI18n; return { isAr: !!(L && L.lang() === 'ar'), tr: (x) => (L ? L.tr(x) : x), secRef: this.secRef, i: s.i, ad: a, ads: ADS.map((x, j) => ({ k: x.k, on: j === s.i, go: () => { if (this.pinOn()) this.goGrade(j); else { this.t = 0.02; this.setState({ i: j }); } } })), spacer: this.pinOn() ? (ADS.length - 1) * 55 + 'vh' : '0px', qual: QL.map((l, j) => ({ l, v: a.q[j], w: (a.q[j] / 5) * 100 + '%', d: j * 0.08 + 's' })), look: a.look, img: lib && lib.large ? lib.large[0] : '', hasImg: !!(lib && lib.large), price: pr ? 'AED ' + pr : '', hasPrice: !!pr,
+    const L = window.seI18n; return { isAr: !!(L && L.lang() === 'ar'), tr: (x) => (L ? L.tr(x) : x), secRef: this.secRef, i: s.i, ad: a, ads: ADS.map((x, j) => ({ k: x.k, on: j === s.i, go: () => { if (this.pinOn()) this.goGrade(j); else { this.t = 0.02; this.setState({ i: j }); } } })), spacer: this.pinOn() ? (ADS.length - 1) * 55 + 'vh' : '0px', qual: QL.map((l, j) => ({ l, v: a.q[j], w: (a.q[j] / 5) * 100 + '%', d: j * 0.08 + 's' })), u: ((q, base) => ({ box: base + q + '-box-480.webp', box2: base + q + '-box-960.webp', front: base + q + '-front-480.webp', front2: base + q + '-front-960.webp', back: base + q + '-back-480.webp', back2: base + q + '-back-960.webp', lid: a.lid }))(a.u, '/assets/shots/sc-'), price: pr ? 'AED ' + pr : '', hasPrice: !!pr,
       enter: () => { this.hov = true; }, leave: () => { this.hov = false; }, prev: () => (this.pinOn() ? this.goGrade(this.state.i - 1) : this.next(-1)), next: () => (this.pinOn() ? this.goGrade(this.state.i + 1) : this.next(1)),
       ts: (e) => { this._tx = e.touches[0].clientX; }, te: (e) => { if (this._tx == null) return; const dx = e.changedTouches[0].clientX - this._tx; this._tx = null; if (Math.abs(dx) > 40) this.next(dx < 0 ? 1 : -1); },
       shop: (e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('se:fmp', { detail: { c: 'SCR' } })); } };
