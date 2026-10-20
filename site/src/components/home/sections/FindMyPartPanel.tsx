@@ -217,7 +217,7 @@ export default function FindMyPartPanel({ v }: { v: Vals }) {
                 <div key={g.name} className={'fm-grade' + (g.out ? ' out' : '') + (i === 0 ? ' top' : '')} style={{ animationDelay: Math.min(i, 14) * 25 + 'ms' }}>
                   <span className="fr part sm">
                     <span className="fr-light" aria-hidden="true" />
-                    <SEPart kind={g.kind} size={92} />
+                    <SEPart kind={g.kind} size={92} shot={g.shot} />
                   </span>
                   {/* R6 Part E + C7: quality and manufacturer, each with its "i" */}
                   <span className="g">

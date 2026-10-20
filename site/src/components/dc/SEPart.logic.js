@@ -16,7 +16,10 @@ class Component extends DCLogic {
   renderVals() {
     const k = this.props.kind || 'scr', px = Number(this.props.size) || 120, lift = !!this.props.lift, dark = this.props.tone === 'dark';
     const f = (x) => k === x, LK = { scr: 0, frm: 1, flx: 2, board: 3, bat: 4, cam: 5, sml: 6, bcv: 7, phone: 8 }, lb = this.state.lib, li = LK[k];
-    const src = lb && li != null ? ((px > 150 && lb.large && lb.large[li]) || (lb.thumb && lb.thumb[li]) || '') : '';
+    // R6 Part E7: a screen is always shown as its product shot (the real box + the LCD, one studio, never mirrored);
+    // `shot` names the box for the brand + manufacturer (public/se-shots.js), otherwise the Apple Service Pack shot
+    const SH = window.SE_SHOTS, shot = k === 'scr' && SH ? (this.props.shot && SH.shots[this.props.shot] ? this.props.shot : 'apple-sp') : null;
+    const src = shot ? SH.url(shot, px * 2) : lb && li != null ? ((px > 150 && lb.large && lb.large[li]) || (lb.thumb && lb.thumb[li]) || '') : '';
     return {
       k, useLib: !!src, useCss: !src, libSrc: src, libShd: dark ? 'drop-shadow(0 10px 12px rgba(0,0,0,.5))' : 'drop-shadow(0 10px 12px rgba(110,92,64,.28))', libLift: lift ? 'translateY(-8px) rotate(-4deg)' : 'none',
       px, sc: (px / 160).toFixed(4), shadow: dark ? 'rgba(0,0,0,.7)' : 'rgba(26,27,29,.32)', shScale: lift ? 0.86 : 1,

@@ -4,6 +4,7 @@ export const DC_TITLE = "Sam Electronics · Every part. Every model. Every grade
 export const DC_SCRIPTS: string[] = [
   "se-perf.js",
   "se-catalog.js",
+  "se-shots.js",
   "se-data.js",
   "image-slot.js",
   "se-parts-lib.js",

@@ -38,7 +38,7 @@ class Component extends DCLogic {
     this.nRaf = requestAnimationFrame(step); }
   renderVals() {
     const s = this.state, lib = s.lib, tk = s.tick;
-    const img = (k) => (lib && lib.large ? lib.large[k] : '');
+    const img = (k) => (k === 0 && window.SE_SHOTS ? window.SE_SHOTS.url('samsung-sp', 480) : lib && lib.large ? lib.large[k] : ''); // R6 E7: screens = box + LCD
     const fmt = (n) => (n >= 1000 ? (n / 1000).toFixed(1) + 'K' : String(n));
     return { secRef: this.secRef, seen: s.seen, phone: img(9), front: lib && lib.front ? lib.front : null, img,
       ch: CH, posts: POSTS.map((p, i) => ({ ...p, img: img(p.k), likes: fmt(p.likes + Math.floor((tk + i * 2) / 3) * (i + 1)) })),

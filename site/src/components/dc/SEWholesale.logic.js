@@ -49,7 +49,7 @@ class Component extends DCLogic {
   pick(id) { const D = this.state.data, p = D && D.products.find((x) => x.id === id); this.setState({ part: id, from: MAXC }); if (p) this.rollKeep(this.keep(this.state.qty, p)); }
   renderVals() {
     const s = this.state, D = s.data, lib = s.lib, p = this.prod(), q = s.qty, ti = tierOf(q), full = q >= 500;
-    const img = (x) => (x && lib && lib.large && LK[x.category] != null ? lib.large[LK[x.category]] : '');
+    const img = (x) => (x && x.shot && window.SE_SHOTS ? window.SE_SHOTS.url(x.shot, 480) /* R6 E7: screens = box + LCD */ : x && lib && lib.large && LK[x.category] != null ? lib.large[LK[x.category]] : '');
     const unit = p ? Math.round(p.retail_price * TIERS[ti].f) : 0, n = cartonsFor(q);
     const ss = (D && D.serviceStats) || { countries: 24, tradeMin: 10 };
     const cartons = Array.from({ length: n }, (_, i) => { const layer = Math.floor(i / 6), r = i % 6, back = r >= 3, col = r % 3; // each layer: the front row first, then the row behind

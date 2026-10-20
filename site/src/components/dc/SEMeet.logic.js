@@ -49,7 +49,7 @@ class Component extends DCLogic {
     return { open, line: today.length ? today.map(([a, b]) => hm(a) + '–' + hm(b)).join(' · ') : 'Closed today', state: open ? 'Open now' : nxt ? 'Opens at ' + hm(nxt[0]) : 'Closed now · see you tomorrow', clock: hm(m) }; }
   renderVals() {
     const s = this.state, D = s.data, lib = s.lib, P = D ? D.products : [], GN = ((typeof window !== 'undefined' && window.SE_DATA && window.SE_DATA.gradeNames) || {}) /* R6 Part E: Excel qualities */;
-    const img = (k) => (lib && lib.large ? lib.large[k] : ''), thumb = (k) => (lib && lib.thumb ? lib.thumb[k] : '');
+    const img = (k) => (k === 0 && window.SE_SHOTS ? window.SE_SHOTS.url('apple-sp', 480) : lib && lib.large ? lib.large[k] : ''), thumb = (k) => (k === 0 && window.SE_SHOTS ? window.SE_SHOTS.url('apple-sp', 240) : lib && lib.thumb ? lib.thumb[k] : ''); // R6 E7: screens = box + LCD
     const bat = P.find((p) => p.id === 'SE-A54-BAT-OR'), scr = P.filter((p) => p.id.startsWith('SE-IP13-SCR')).sort((a, b) => b.retail_price - a.retail_price);
     const card = (k) => k === 'product' ? { k, img: img(4), title: bat ? bat.title : 'Galaxy A54 Battery', grade: GN.OR, price: 'AED ' + (bat ? bat.retail_price : 85), stock: bat ? bat.stock_qty + ' in stock · Deira' : '', add: () => window.dispatchEvent(new CustomEvent('se:cart', { detail: { id: 'SE-A54-BAT-OR' } })) }
       : k === 'grades' ? { k, rows: scr.map((p) => ({ g: GN[p.grade], p: 'AED ' + p.retail_price, img: thumb(0) })) }

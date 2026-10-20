@@ -26,6 +26,7 @@
     "prettier": "^3.9.10",
     "simple-icons": "^16.35.0",
     "svg-path-bbox": "^2.1.0",
+    "three": "^0.160.0",
     "typescript": "5.9"
   }
 }

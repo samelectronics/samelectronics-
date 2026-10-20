@@ -50,7 +50,7 @@ class Component extends DCLogic {
   }
   renderVals() {
     const s = this.state, D = s.data, lib = s.lib, pad = (n) => String(n).padStart(2, '0'), fmt = (n) => Math.round(n).toLocaleString('en-US');
-    const img = (p) => (lib && lib.large && LK[p.category] != null ? lib.large[LK[p.category]] : '');
+    const img = (p) => (p.shot && window.SE_SHOTS ? window.SE_SHOTS.url(p.shot, 480) /* R6 E7: screens = box + LCD */ : lib && lib.large && LK[p.category] != null ? lib.large[LK[p.category]] : '');
     const pool = this.pool(), since = s.seen ? (s.now - s.seenAt) / 1000 : 0;
     const hms = (ms) => { const x = Math.max(0, Math.floor(ms / 1000)); return [Math.floor(x / 3600), Math.floor((x % 3600) / 60), x % 60]; };
     // the flip clock lands digit by digit: each tile shows a few other digits before its real one (entrance)

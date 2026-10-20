@@ -691,7 +691,7 @@ export default function Hero({ v }: { v: Vals }) {
                                 ) : null}
                                 {v.p?.css ? (
                                   <>
-                                    <SEPart kind={v.p?.kind} size={112} />
+                                    <SEPart kind={v.p?.kind} size={112} shot={v.p?.shot} />
                                   </>
                                 ) : null}
                                 {'\n                        '}

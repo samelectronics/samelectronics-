@@ -2076,3 +2076,29 @@ DONE WHEN
 - No script errors; teardown tests 9/9.
 - Arabic product titles cover the Excel model names (`translate.ts`).
 - Screens: Find My Part brand step, model step, quality step with the info card, Also fits (EN + AR).
+
+## Part E · Product system (step 3 of 3: the box + LCD product shot)
+
+**Studio scene** (`site/scripts/productshot/scene.html`, three.js):
+- **Box:** stands upright on the left, front turned 15° left, about 55% of the shot height, printed panels drawn per box design.
+- **LCD:** stands to the right, overlapping the box by about 10%, turned 25° to the right and tilted back 5°, about 65% of the height. Glossy glass; a frame only on the framed originals; red pull-tabs for Huawei / Honor.
+- **Flex:** short, leaving the right edge and curving down-right into its connector.
+- **Light and floor:** key light top-left, rim light right, one soft contact shadow, a transparent background. Never mirrored in Arabic.
+
+**Cached images:** `site/scripts/productshot/render.mjs` renders every pairing once into `public/assets/shots/<id>-240|480|960.webp/.avif` (15 pairings, about 12 KB per 480px image, about 3 min to re-render).
+
+**Which box** (`public/se-shots.js`, chosen by manufacturer + brand, per the owner's photos):
+- Service Pack: Apple white box · Samsung SVC-SEVT · Google / Infinix / Tecno SVC with the yellow sticker · Huawei / Honor red · Oppo / Realme / OnePlus / Vivo green · Xiaomi / Redmi / POCO orange sleeve.
+- GX: black box. ZY: blue IN CELL box.
+- **TEMP**: every maker without a photo (OEM, YK, Taiwan, Refurbished, OLED) and Nokia get a neutral white box with a small Sam Electronics label.
+
+**Updated places:**
+- Every screen shown by the shared part image (`SEPart` kind `scr`): teardown cards, Find My Part (with the product's own box), cart, Samsoom.
+- The hero iPad screen cards and the screen phone ad.
+- Deals, the Wholesale pallet builder, the Samsoom chat cards and the feed.
+- Other part families keep their studio 3D parts.
+
+**Honest status:**
+- The boxes are clean 3D renders with the reference designs (panels, colours, labels, barcodes, QR, SERVICE PACK, GX diamonds, ZY gradient).
+- They are **not yet "indistinguishable from the owner's photos"**: the small print is generic and the card has no real paper texture or glossy edges.
+- The Showcase unboxing per quality is §09.
