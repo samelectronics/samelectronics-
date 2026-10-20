@@ -2029,3 +2029,15 @@ DONE WHEN
 - Teardown connector dots on the left of components in AR, lines never crossing components. **PASS**
 - The menu scrolls in AR. **PASS**
 - Footer hours in the correct order. **PASS**
+
+## Part E · Product system (step 1 of 3: the Excel import)
+
+- `site/scripts/import-catalog.ts` reads `docs/Products.xlsx` (unchanged) and writes `site/src/content/catalog.ts`. Re-run it after any Excel change: `node --experimental-strip-types scripts/import-catalog.ts`.
+- **Imported:**
+  - 6 categories, the fixed 30 parts, 10 qualities, 22 colours, 9 manufacturers;
+  - 809 models in 28 series (same count as the brief);
+  - the Samsung screen example (333 rows: Framed / Frameless × colour);
+  - the MI / Oppo "fit each other" lists and the Huawei "sells in Dubai" list. 64 entries name 2+ models and become **Also fits**.
+- Every entry keeps its raw text. Only customer-visible spelling is fixed (172 fixes, each listed in `docs/CATALOG_CLEANUP.md`, with 13 points for the owner to check).
+- Honor, Redmi, POCO and Realme are filed under their own brands. Duplicates are flagged and shown once, never deleted. No model was added.
+- `site/src/content/offers.ts` is the Control Room contract: per model + part → quality, manufacturer, colour, frame, part number, stock, price. It is empty on purpose (no invented stock or prices).
