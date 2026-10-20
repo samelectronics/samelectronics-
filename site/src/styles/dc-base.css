@@ -327,3 +327,8 @@ body {
 @keyframes seRail3 { from { transform: translateX(0); } to { transform: translateX(-33.3333%); } }
 @keyframes seRail3R { from { transform: translateX(0); } to { transform: translateX(33.3333%); } }
 html[dir='rtl'] [style*='seRail3'] { animation-name: seRail3R !important; }
+/* R6 Part B3 · progress scrubber (over the 2px header line) */
+.se-scrub { position: absolute; left: 0; right: 0; top: -7px; height: 16px; cursor: pointer; z-index: 2; touch-action: none; }
+.se-scrub > i { position: absolute; top: 5px; width: 6px; height: 6px; margin-inline-start: -3px; border-radius: 50%; box-sizing: border-box; border: 1.5px solid rgba(247, 192, 50, .45); background: #26282B; transition: background .25s, border-color .25s, box-shadow .25s; pointer-events: none; }
+.se-scrub > i.on { background: #F7C032; border-color: #F7C032; box-shadow: 0 0 6px rgba(247, 192, 50, .8); }
+.se-scrub-tip { position: absolute; top: 18px; transform: translateX(-50%); padding: 4px 9px; border-radius: 7px; background: #26282B; color: #fff; font: 500 12px Inter, sans-serif; white-space: nowrap; box-shadow: 0 6px 16px rgba(0, 0, 0, .3); pointer-events: none; }

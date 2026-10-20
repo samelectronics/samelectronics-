@@ -55,8 +55,7 @@
 @media (max-width: 900px) { .sc-stage { grid-template-columns: 1fr; height: auto; } .sc-r { height: 460px; } .sc-top { flex-direction: column; align-items: flex-start; } }
 /* 14 Oct §10 · held stage (desktop) and the complete content per grade */
 .sc { overflow: clip; }
-.sc-pin { position: sticky; top: 0; }
-@media (max-width: 900px) { .sc-pin { position: relative; } }
+.sc-pin { position: relative; } /* R6 Part B: not held */
 .sc-d { margin: 2px 0 0; max-width: 460px; font: 500 16px/1.5 Inter, sans-serif; color: #E4E5E7; opacity: 0; }
 .sc-q { list-style: none; margin: 4px 0 0; padding: 0; display: grid; gap: 9px; max-width: 420px; opacity: 0; }
 .sc-q li { display: grid; grid-template-columns: 96px 1fr 30px; align-items: center; gap: 12px; font: 500 13px Inter, sans-serif; color: #D5D7DA; }

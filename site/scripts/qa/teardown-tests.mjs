@@ -48,9 +48,14 @@ const goStep = async (p, i) => { while ((await st(p)).idx < i) { await wheel(p, 
 { const p = await page(); await p.mouse.move(700, 450); const top = await secTop(p);
   for (let k = 0; k < 80 && (await st(p)).mode !== 'film'; k++) { await wheel(p, 60); await p.waitForTimeout(80); }
   await p.waitForTimeout(600); const s = await st(p); ok('1 slow scroll from the hero starts at step 0', s.mode === 'film' && s.idx === 0 && (NO3D || (s.oT > 0 && s.oT < 3.4)) && Math.abs(s.y - top) <= 2, JSON.stringify(s));
-  // 2. fast scroll: one big jump past the pin
+  // 2. (Round 6 Part B, replaces "a big jump is held at step 0"): a jump straight into the teardown is never held; the
+  //    film snaps silently to its end state and the page stays where the visitor sent it. Coming back normally replays it.
   await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(800); await p.evaluate((t) => window.scrollTo(0, t + 700), top); await p.waitForTimeout(800);
-  const s2 = await st(p); ok('2 fast scroll from the hero starts at step 0', s2.mode === 'film' && s2.idx === 0 && (NO3D || s2.oT < 3.4) && Math.abs(s2.y - top) <= 2, JSON.stringify(s2));
+  const s2 = await st(p); ok('2 a fast jump into the teardown passes through (no hold)', s2.mode !== 'film' && s2.p === 1 && Math.abs(s2.y - (top + 700)) <= 2, JSON.stringify(s2));
+  // back to the top, then in again slowly (the film replays from step 0) for tests 4–7
+  await p.evaluate(() => window.scrollTo(0, 0)); await p.waitForTimeout(1500);
+  for (let k = 0; k < 80 && (await st(p)).mode !== 'film'; k++) { await wheel(p, 60); await p.waitForTimeout(80); }
+  await p.waitForTimeout(600); const s2b = await st(p); ok('2b re-entering slowly replays from step 0', s2b.mode === 'film' && s2b.idx === 0, JSON.stringify(s2b));
   // 4–7 at step 03 (layer 03 = engine step 5)
   await idle(p); await goStep(p, 5); let a = await st(p);
   await wheel(p, -10); await p.waitForTimeout(700); let c = await st(p); ok('4 at step 03 a 10px nudge up does nothing', c.idx === 5 && c.p === a.p && c.mode === 'film', JSON.stringify(c));

@@ -8,6 +8,7 @@
 import React from 'react';
 import { DCLogic } from '@/dc/runtime';
 import { onReplay } from '@/components/perf/SectionFX';
+import { stepScroller } from '@/lib/jumpScroll';
 
 const cl = (x) => (x < 0 ? 0 : x > 1 ? 1 : x), seg = (p, a, b) => cl((p - a) / (b - a));
 export const CX = [0.1, 0.3, 0.5, 0.7, 0.9]; // card centres along the line
@@ -26,7 +27,17 @@ class Component extends DCLogic {
     this.offRp = onReplay(() => this.secRef.current, () => { this.setState({ br: false }); }); // 14 Oct · H-G2: replay from the start
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 80);
     this.p = 0; this.alive = true;
-    const loop = () => { if (!this.alive) return; this.frame(); this.raf = requestAnimationFrame(loop); };
+    // R6 Part A: measured only while near the view
+    this.near = false; this.nearIO = new IntersectionObserver(([e]) => { this.near = e.isIntersecting; }, { rootMargin: '10% 0px 10% 0px' }); setTimeout(() => this.secRef.current && this.nearIO.observe(this.secRef.current), 50);
+    const loop = () => { if (!this.alive) return; if (this.near || this.ov != null) this.frame(); this.raf = requestAnimationFrame(loop); };
+    // R6 Part B / §14: one gesture = one year while held (start, each of the five versions, the end); fast scrolling,
+    // the scrollbar and jumps pass straight through
+    const PS = [0, 0.15, 0.2625, 0.375, 0.4875, 0.6, 0.72];
+    const geo = () => { const R = this.secRef.current; if (!R) return null; const top = window.scrollY + R.getBoundingClientRect().top, range = Math.max(1, R.offsetHeight - window.innerHeight); return { top, range }; };
+    this.offStep = stepScroller({ steps: PS.length, ms: 750,
+      region: () => { const g = geo(); return g ? { top: g.top, bottom: g.top + g.range * PS[PS.length - 1] } : null; },
+      yFor: (i) => { const g = geo(); return g ? Math.round(g.top + g.range * PS[i]) : window.scrollY; },
+      index: () => { const g = geo(); if (!g) return 0; const p = (window.scrollY - g.top) / g.range; let bi = 0; PS.forEach((q, i) => { if (Math.abs(q - p) < Math.abs(PS[bi] - p)) bi = i; }); return bi; } });
     this.raf = requestAnimationFrame(loop);
     this.onResize = () => { const vw = document.documentElement.clientWidth, vh = window.innerHeight, sc = Math.min(vw / 1440, (vh - 72) / 800); if (Math.abs(sc - this.state.sc) > 0.002) this.setState({ sc }); };
     window.addEventListener('resize', this.onResize); this.onResize();
@@ -35,7 +46,7 @@ class Component extends DCLogic {
     this.onLang = () => this.forceUpdate(); window.addEventListener('se:lang', this.onLang);
     window.seStory = (p) => { this.ov = p; this.p = p; this.frame(true); };
   }
-  componentWillUnmount() { this.offRp && this.offRp(); this.alive = false; cancelAnimationFrame(this.raf); cancelAnimationFrame(this.nRaf); clearInterval(this.dIv); this.io && this.io.disconnect(); window.removeEventListener('resize', this.onResize); window.removeEventListener('se:lang', this.onLang); }
+  componentWillUnmount() { this.offStep && this.offStep(); this.nearIO && this.nearIO.disconnect(); this.offRp && this.offRp(); this.alive = false; cancelAnimationFrame(this.raf); cancelAnimationFrame(this.nRaf); clearInterval(this.dIv); this.io && this.io.disconnect(); window.removeEventListener('resize', this.onResize); window.removeEventListener('se:lang', this.onLang); }
   q(k) { const R = this.secRef.current; if (!R) return null; this._q = this._q || {}; const c = this._q[k]; if (c && c.isConnected) return c; return (this._q[k] = R.querySelector('[data-s="' + k + '"]')); }
   set(k, s) { const e = this.q(k); if (e) for (const n in s) { const v = s[n]; if (e.style[n] !== v) e.style[n] = v; } return e; }
   frame(force) {

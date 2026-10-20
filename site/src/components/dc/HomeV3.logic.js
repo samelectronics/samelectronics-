@@ -5,6 +5,7 @@
 import React from 'react';
 import { DCLogic, StreamableLogic } from '@/dc/runtime';
 import { shopStatus } from '@/lib/shopStatus';
+import { jumpTo } from '@/lib/jumpScroll'; // R6 Part B: logo, nav links, hours pill: fast jumps that never get held
 import { site as SITE } from '@/content/facts';
 import { fallbackAnswer, emoteFor, isArabic } from '@/components/samsoom/brain';
 
@@ -397,7 +398,7 @@ class Component extends DCLogic {
       days: [6, 1, 2, 3, 4, 5, 0].map((d) => { const sh = (D ? D.hours[d] : []) || [], on = d === g.getDay(); return { day: DAYS[d], short: DAYS[d].slice(0, 3), h: sh.length ? sh.map(([a, b]) => hm(a) + '–' + hm(b)).join(' · ') : 'Closed', bg: on ? (H.open ? 'rgba(26,27,29,.1)' : 'rgba(247,192,50,.14)') : 'transparent', w: on ? 700 : 500, fc: on ? '#F7C032' : '#C9CBCE' }; }) };
     // system map
     const SM = [['Shop parts', 'Every part, every grade', 'offer'], ['Brands & models', 'Every model’s full parts file', 'models'], ['Repair Lab', 'Fixed, tested, guaranteed', 'repair'], ['Wholesale & trade', 'Stock up. Cost down.', 'wholesale'], ['Worldwide network', 'From Deira to the world', 'network'], ['Deals & arrivals', 'Price drops, new stock, incoming shipments', 'deals'], ['Our story', 'Since 2003: branches, team, careers', 'story'], ['Sam Circuit', 'Our membership', 'circuit'], ['Ask Samsoom', 'Your parts assistant', '@chat'], ['My Bench', 'Orders, saved parts, your tier', '@bench'], ['Request & contact', 'Orders, quotes, repairs, visits', 'visit'], ['Home', 'The full system, top to bottom', 'top']];
-    const smGo = (to) => (ev) => { if (ev && ev.preventDefault) ev.preventDefault(); this.setState({ drawerMap: false }); if (to === '@chat') this.setState({ chatOpen: true }); else if (to === '@bench') this.flash('My Bench (account) is designed in a later step.'); else if (to === 'top') window.scrollTo({ top: 0, behavior: 'smooth' }); else this.go(to); };
+    const smGo = (to) => (ev) => { if (ev && ev.preventDefault) ev.preventDefault(); this.setState({ drawerMap: false }); if (to === '@chat') this.setState({ chatOpen: true }); else if (to === '@bench') this.flash('My Bench (account) is designed in a later step.'); else if (to === 'top') jumpTo(0); else this.go(to); };
     const sysMap = SM.map(([t, d, to], i) => ({ n: pad(i + 1), t, d, go: smGo(to) })), sysMapShort = sysMap.filter((_, i) => i < 8);
     // find my part
     const units = (ps) => ps.reduce((t, p) => t + p.stock_qty, 0), kf = (n) => (n >= 1000 ? (n / 1000).toFixed(1).replace('.0', '') + 'k' : String(n));
@@ -514,7 +515,7 @@ class Component extends DCLogic {
       go: () => { close(); if (CAT[kind]) this.openFmpAt(null, null, CAT[kind]); else this.go(kind === 'wld' ? 'network' : kind === 'whs' ? 'wholesale' : 'repair'); } };
   }
   // Issue 1B: the hero bar is the search (Ctrl K focuses it)
-  openSearch() { const el = document.querySelector('.se-hs-input'); if (!el) return; this.setState({ fmpOpen: false }); if (window.scrollY > 200) window.scrollTo({ top: 0, behavior: 'smooth' }); setTimeout(() => el.focus({ preventScroll: true }), 60); }
+  openSearch() { const el = document.querySelector('.se-hs-input'); if (!el) return; this.setState({ fmpOpen: false }); if (window.scrollY > 200) jumpTo(0); setTimeout(() => el.focus({ preventScroll: true }), 60); }
   extD(s, D, P, fmt, KIND) {
     const GN = { OR: 'Original', SP: 'Service Pack', OL: 'OLED', IN: 'Incell', HQ: 'High Copy' };
     const q = (s.spQ || '').trim().toLowerCase(), nq = q.replace(/[\s-]/g, ''), Br = D ? D.brands : [], Mo = D ? D.models : [], Ca = D ? D.categories : [];
@@ -545,7 +546,7 @@ class Component extends DCLogic {
   }
   // Issue 6: the Model File left the home page; "Brands & models" opens Find My Part (browsing by model lives there).
   // G17: any other target that isn't on this page opens the "Coming soon" card instead of doing nothing.
-  go(id) { if (id === 'models') return this.openFmpAt(); const el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 74, behavior: 'smooth' }); else window.dispatchEvent(new CustomEvent('se:soon', { detail: {} })); }
+  go(id) { if (id === 'models') return this.openFmpAt(); const el = document.getElementById(id); if (el) jumpTo(el.getBoundingClientRect().top + window.scrollY - 74); else window.dispatchEvent(new CustomEvent('se:soon', { detail: {} })); }
   renderVals() {
     if (!this._extInit) { this._extInit = true; Object.keys(this.ext).forEach((k) => { if (this.state[k] === undefined) this.state[k] = this.ext[k]; }); }
     const s = this.state, D = s.data, P = D ? D.products : [], fmt = (n) => Math.round(n).toLocaleString('en-US'), cl = (x) => Math.min(1, Math.max(0, x)), pad = (n) => String(n).padStart(2, '0');
@@ -558,7 +559,7 @@ class Component extends DCLogic {
       : { bg: 'linear-gradient(180deg,rgba(255,255,255,.82),rgba(255,255,255,.74))', bd: 'rgba(26,27,29,.08)', ink: '#26282B', sub: '#3D3E3F', pillBg: 'transparent', pillBd: 'rgba(26,27,29,.12)', track: 'rgba(26,27,29,.08)', langOn: '#26282B', langOnInk: '#FFFFFF' };
     nav.showLinks = s.vw >= 1240;
     const stPop = this.statusPop();
-    const st = { pop: stPop, go: (ev) => { ev && ev.preventDefault && ev.preventDefault(); const e = document.getElementById('visit'); if (e) window.scrollTo({ top: e.getBoundingClientRect().top + window.scrollY - 72, behavior: 'smooth' }); }, short: H.short, dot: H.dot, state: H.state, ping: 'sePing 2.2s ease-out infinite', breathe: 'seLive ' + (H.soon ? '3.2s' : '2.2s') + ' cubic-bezier(.45,0,.55,1) infinite' };
+    const st = { pop: stPop, go: (ev) => { ev && ev.preventDefault && ev.preventDefault(); const e = document.getElementById('visit'); if (e) jumpTo(e.getBoundingClientRect().top + window.scrollY - 72); }, short: H.short, dot: H.dot, state: H.state, ping: 'sePing 2.2s ease-out infinite', breathe: 'seLive ' + (H.soon ? '3.2s' : '2.2s') + ' cubic-bezier(.45,0,.55,1) infinite' };
     const noop = (msg) => (e) => { if (e && e.preventDefault) e.preventDefault(); };
     // brand stats
     const stats = this._stats || (this._stats = D ? D.brands.map((b) => { const ids = new Set(D.models.filter((m) => m.brand_id === b.id).map((m) => m.id)), ps = P.filter((p) => ids.has(p.model_id)), cats = {}; ps.forEach((p) => (cats[p.category] = (cats[p.category] || 0) + p.stock_qty)); return { id: b.id, name: b.name, models: ids.size, skus: ps.length, stock: ps.reduce((a, p) => a + p.stock_qty, 0), top: Object.entries(cats).sort((a, c) => c[1] - a[1]).slice(0, 3).map(([c, n]) => ({ name: D.categories.find((x) => x.id === c).name, n: fmt(n) })) }; }) : null) || [];
@@ -633,7 +634,7 @@ class Component extends DCLogic {
     return {
       rootRef: this.rootRef, reelRef: this.reelRef, heroRef: this.heroRef, railRef: this.railRef, tdRef: this.tdRef, offerRef: this.offerRef,
       nav, st,
-      goTop: (ev) => { ev.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }, openFmp: () => this.go('offer'), arabic: () => window.seI18n && window.seI18n.set('ar'), english: () => window.seI18n && window.seI18n.set('en'), isAr: this.state.lang === 'ar', bench: noop(), openCart: noop(), staff: noop(), openMap: noop(), goOffer: (ev) => { ev.preventDefault(); this.go('offer'); },
+      goTop: (ev) => { ev.preventDefault(); jumpTo(0); }, openFmp: () => this.go('offer'), arabic: () => window.seI18n && window.seI18n.set('ar'), english: () => window.seI18n && window.seI18n.set('en'), isAr: this.state.lang === 'ar', bench: noop(), openCart: noop(), staff: noop(), openMap: noop(), goOffer: (ev) => { ev.preventDefault(); this.go('offer'); },
       navLinks: [['Shop', 'offer'], ['Repair', 'repair'], ['Wholesale', 'wholesale'], ['Contact', 'visit']].map(([label, id]) => ({ label, href: '#' + id, go: (ev) => { ev.preventDefault(); this.go(id); } })),
       cartPop: 1, cartCount: 0, 
       z: s.z.toFixed(4), heroH: Math.round(1030 * s.z), glowX: 560, glowY: 420, clock: H.clock, ipQuery: 'Search 1,000+ parts', ipCart: s.ipCart, ipCartN: (s.ipCart || 2) + (s.ipBuys || 0), ipToastO: s.ipToast ? 1 : 0, ipToastY: s.ipToast ? 0 : 48, ipChips, ipCards, ipAnim: this.kf('seIpScroll', Array.from({ length: 7 }, (_, i) => -i * 195), 2.8, 'Y') + ' 16.8s',

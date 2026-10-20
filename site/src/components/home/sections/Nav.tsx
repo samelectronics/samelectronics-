@@ -1,6 +1,7 @@
 // Converted from design/project/Sam Electronics Home v3.dc.html (12 Oct 2026); maintained by hand since.
 // Home v3 section "Nav". Renders against the home page's values (`v`, from HomeV3's logic class).
 'use client';
+import ProgressScrub from '@/components/home/ProgressScrub';
 import React from 'react';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 import SEFMPMenu from '../../dc/SEFMPMenu';
@@ -294,6 +295,7 @@ export default function Nav({ v }: { v: Vals }) {
           }}
           data-prog="end"
         ></span>
+        <ProgressScrub />
         {'\n  '}
       </div>
     </header>

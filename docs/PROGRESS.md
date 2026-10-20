@@ -1900,3 +1900,47 @@ Measured on this sandbox: headless Chromium with **software** rendering, no GPU.
 - **Lighthouse LCP:** Lighthouse doesn't report one, because the hero's text starts invisible (opacity 0) for its entrance. LCP is therefore taken from the page's own observer.
 - **Reviews** (21 → 16.5) and **Who are you?** (25.7 → 23.1) are within run-to-run noise. Their cost is raster: moving cards and big gradients that a GPU composites cheaply.
 - A real-laptop pass (Chrome Performance panel) remains on the owner's side.
+
+## Part B · Scroll engine: never trap the visitor
+Shared rules live in `src/lib/jumpScroll.js`.
+
+**B1 · Two speeds, chosen automatically** (teardown and Our story):
+
+| Visitor does | What happens |
+|---|---|
+| Normal, deliberate scrolling | Step mode, as before: one gesture = one step, never skipping. In Our story one gesture = one year (start, the five versions, end). |
+| Fast scrolling: 3 gestures within 1.4s, one gesture travelling more than 3,500px, or a huge single event | **Pass-through:** nothing holds. The teardown snaps silently to its end state (going down) or start state (going up) and the page scrolls on. |
+| Scrollbar drag, Home/End/PageUp/PageDown, the logo, nav links, hours pill, progress bar | **Jump:** no hold at all. Any scroll that doesn't come from the wheel, touch or the arrow keys counts as a jump. |
+| Coming back later | Replays from step 0 when entered normally from above; enters at the end and steps backwards from below. |
+
+- The 3,500px threshold keeps the protected test "one hard trackpad swipe = exactly one step" (2,200px) intact.
+- A jump that only *lands near* the teardown does nothing; only one that crosses its held stage passes through.
+
+**Showcase:** no longer held (overrides 14 Oct §10). It auto-plays like the ads, with free scrolling.
+
+**B2 · Logo = home:** the logo, nav links and the hours pill use the fast jump (~600ms, instant with reduced motion). Measured from the footer: 0.72–0.83s.
+
+**B3 · Progress bar = scrubber** (`ProgressScrub.tsx`):
+- click anywhere to go there;
+- drag the dot to scrub;
+- hover shows the section name at that point (translated);
+- each section start has a tiny solder pad that lights as you pass it (reviewer idea);
+- right → left in Arabic.
+
+**Tests:**
+- `scripts/qa/scroll-engine-tests.mjs`: 9/9 in EN and 9/9 in AR.
+  - fast wheel top → bottom → top (never stuck);
+  - scrollbar drag through the teardown down and up (no hold);
+  - logo from the footer in under 1s;
+  - progress bar click (50.0%), drag (80.0%) and hover label;
+  - slow scrolling: one gesture = one step.
+- The protected teardown tests pass (9/9). Test 2 used to say "a big jump is held at step 0", which is the opposite of Round 6 Part B. It now checks that the jump passes through, and that re-entering slowly replays from step 0.
+- Our story: slow gestures land exactly on each year (p 0.15 → 0.263 → 0.375 → 0.487 → 0.6 → 0.72, then release). A fast spin passes through.
+- Screens: `scrub.png` (EN + AR, hover label).
+
+DONE WHEN
+- Fast scroll top → bottom and bottom → top: never stuck, EN and AR. **PASS**
+- Dragging the scrollbar through the teardown: no hold. **PASS**
+- Logo click from the footer reaches the top in under 1s. **PASS**
+- The progress bar can be clicked and dragged. **PASS**
+- Slow scrolling still steps one gesture at a time. **PASS**

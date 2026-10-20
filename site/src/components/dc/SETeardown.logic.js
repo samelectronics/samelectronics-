@@ -5,6 +5,7 @@
 import React from 'react';
 import { DCLogic, StreamableLogic } from '@/dc/runtime';
 import { registerScene } from '@/dc/gl-budget';
+import { jumping, jumpTo } from '@/lib/jumpScroll';
 
 class Component extends DCLogic {
   state = { p: 0, data: window.SE_DATA || null, loading: true, vw: document.documentElement.clientWidth || 1440, vh: window.innerHeight || 900, fs: 1, ft: 0, fo: false, si: 0, ps: -1, cT: 1, ent: 0, thumbs: null, oT: 3.4, ck: 0, mag: [0, 0], fmpH: false, shopH: false, hov: -1, lib: null };
@@ -35,6 +36,9 @@ class Component extends DCLogic {
   // starts at step 0 (the page is held at the section top; the empty lit studio holds until the 3D is ready);
   // from below it enters at the final call. While the film runs, the engine owns every scroll input.
   opCheck() { try { if (this.isMob() || this.props.fw) return; const pin = this.pin(), sec = this.secRef.current; if (!pin || !sec) return; const r = pin.getBoundingClientRect(), rs = sec.getBoundingClientRect(), vh = window.innerHeight;
+      if (this.passing) { const out = rs.bottom <= 0 || rs.top >= vh; if (out) { this.side = rs.top >= vh ? 'above' : 'below'; this.passing = 0; if (this.side === 'above') this.opReset(); } return; }
+      // a jump that crosses the held stage passes through (direction from the scroll); one that only lands near it does nothing
+      { const y = window.scrollY, d = y - (this._jy == null ? y : this._jy); this._jy = y; if (jumping() && this.mode !== 'film') { if (r.top <= 1 && r.bottom >= vh - 1) this.pass(d < 0 ? -1 : 1); return; } }
       if (this.mode === 'film') { if (this.waitOp && !this.ready3d && (this.failed3d || performance.now() - this.waitAt > 10000)) { this.waitOp = false; this.opShow('3D not ready'); return; } if (this.waitOp && this.ready3d) { this.waitOp = false; console.info('[SE Teardown] opening started (stage pinned, 3D ready)'); this.opPlay(false); } return; }
       if (rs.top > 1) { if (this.side !== 'above') { this.side = 'above'; this.opReset(); } return; }
       if (rs.bottom < vh - 1) { this.side = 'below'; return; }
@@ -66,8 +70,18 @@ class Component extends DCLogic {
     if (this.props.fw) { this.manual = true; return; }
     // keep the page scroll in step with the film (invisible while pinned) so the two ends release naturally
     const y0 = window.scrollY, y1 = this.yFor(i), t0 = performance.now(); cancelAnimationFrame(this.sraf); this.scrolling = true;
-    const f = (t) => { const k = Math.min(1, (t - t0) / dur), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; window.scrollTo(0, y0 + (y1 - y0) * e); if (k < 1) this.sraf = requestAnimationFrame(f); else this.scrolling = false; };
+    window.__seOwnScroll = true; const f = (t) => { const k = Math.min(1, (t - t0) / dur), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; window.scrollTo(0, y0 + (y1 - y0) * e); if (k < 1) this.sraf = requestAnimationFrame(f); else { this.scrolling = false; window.__seOwnScroll = false; } };
     this.sraf = requestAnimationFrame(f);
+  }
+  // R6 Part B: pass-through. A fast scroll (several gestures quickly, a long flick), a scrollbar drag or any jump (logo,
+  // progress bar, Home/End) never holds the page: the film snaps silently to its end state (going down) or start state
+  // (going up) and the page scrolls on. It replays normally the next time it is entered.
+  pass(dir) {
+    if (this.passing === dir) return; this.passing = dir; this.pend = 0; clearTimeout(this.autoT); cancelAnimationFrame(this.sraf); cancelAnimationFrame(this.twRaf); this.scrolling = false; this.anim = false; window.__seOwnScroll = false;
+    this.mode = 'out'; this.waitOp = false; this.busyUntil = 0;
+    if (dir > 0) { this.opShow(); this.tossEnd(); this.idx = this.FS.length - 1; this.td.faceBack = false; this.td.p = 1; this.setState({ gT: 1.1 }); }
+    else { cancelAnimationFrame(this.oraf); this.opRunning = false; this.tossEnd(); this.idx = 0; this.td.faceBack = true; this.td.p = this.FS[0]; }
+    this.td.snap = true; this.setState({ p: this.td.p });
   }
   busy() { return this.opBusy() || this.anim || performance.now() < (this.busyUntil || 0) || this.revOn; }
   /** One deliberate gesture: a step, or at the two ends a release of the page. */
@@ -80,7 +94,7 @@ class Component extends DCLogic {
   release(dir) {
     const sec = this.secRef.current; if (!sec) return; this.mode = 'out'; this.releasing = performance.now();
     const r = sec.getBoundingClientRect(), y = dir < 0 ? window.scrollY + r.top - Math.round(window.innerHeight * 0.55) : window.scrollY + r.bottom - 72;
-    window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+    jumpTo(Math.max(0, y));
   }
   step(dir) {
     const F = this.FS, last = F.length - 1, cur = this.idx || 0, nx = cur + dir; if (nx < 0 || nx > last) return false;
@@ -98,13 +112,19 @@ class Component extends DCLogic {
     this.unregGL = registerScene({ id: 'teardown', fixed: true, el: () => null, mount: async () => {} });
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 60);
     this.on = () => { if (this.props.fw) { this.manual = true; return; } const vw = document.documentElement.clientWidth, vh = window.innerHeight; if (vw !== this.state.vw || vh !== this.state.vh) this.setState({ vw, vh }); if (this.isMob() || this.manual) return; const pin = this.pin(), sec = this.secRef.current; if (!pin || !sec) return; const r = pin.getBoundingClientRect(), rs = sec.getBoundingClientRect(), ent = Math.max(0, Math.min(1, r.top / vh));
+      if (this.mode === 'film' && !this.scrolling && jumping()) { this.pass(window.scrollY > this.yFor(this.idx || 0) ? 1 : -1); }
       if (this.mode === 'film') { if (!this.inside() && !this.scrolling) { this.mode = 'out'; } else if (!this.scrolling && !this.anim) { const y = this.yFor(this.idx || 0); if (Math.abs(window.scrollY - y) > 2 && Math.abs(window.scrollY - y) < vh * 0.9) window.scrollTo(0, y); } }
-      if (this.mode !== 'film' && !this.opRunning) { const p = rs.bottom < vh * 0.98 && rs.top < 0 ? 1 : this.FS[0]; if (p !== this.td.p && !this.anim) { this.td.p = p; this.td.snap = true; this.td.faceBack = p < 1; } }
+      if (this.mode !== 'film' && !this.opRunning) { const p = this.passing ? (this.passing > 0 ? 1 : this.FS[0]) : rs.bottom < vh * 0.98 && rs.top < 0 ? 1 : this.FS[0]; if (p !== this.td.p && !this.anim) { this.td.p = p; this.td.snap = true; this.td.faceBack = p < 1; } }
       const q = Math.round(this.td.p * 1000) / 1000; if (q !== this.state.p || Math.abs(ent - this.state.ent) > 0.01) this.setState({ p: q, ent }); };
     // one gesture = one step; input while animating (and trackpad inertia) is swallowed; the two ends release the page
     this.gUsed = false; this.lastW = 0;
     this.onWheel = (e) => { if (this.isMob() || this.props.fw || !e.deltaY) return; if (this.mode !== 'film' || !this.inside()) return;
-      e.preventDefault(); const now = performance.now(), quiet = now - (this.lastW || 0) >= 250; this.lastW = now; if (quiet) { this.gAcc = 0; this.gUsed = false; }
+      const now = performance.now(), quiet = now - (this.lastW || 0) >= 250, dy0 = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1);
+      // R6 Part B: three gestures within 1.4s, a big flick or a jump → pass straight through
+      if (quiet) { this.gSum = 0; (this.fresh = this.fresh || []).push(now); while (this.fresh.length && now - this.fresh[0] > 1400) this.fresh.shift(); }
+      this.gSum = (this.gSum || 0) + Math.abs(dy0);
+      if (jumping() || (this.fresh && this.fresh.length >= 3) || this.gSum > 3500 || Math.abs(dy0) > 600) { this.lastW = now; this.pass(Math.sign(dy0)); return; }
+      e.preventDefault(); this.lastW = now; if (quiet) { this.gAcc = 0; this.gUsed = false; }
       if (this.gUsed) return; // momentum of a gesture already used
       const dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1), dir = Math.sign(dy);
       if (Math.sign(this.gAcc || 0) !== dir) this.gAcc = 0; this.gAcc = (this.gAcc || 0) + dy; if (Math.abs(this.gAcc) < 40) return; // tiny nudges never do anything
@@ -233,7 +253,7 @@ class Component extends DCLogic {
       fmpMove: (e) => { const r = e.currentTarget.getBoundingClientRect(), dx = (e.clientX - r.left - r.width / 2) / (r.width / 2), dy = (e.clientY - r.top - r.height / 2) / (r.height / 2); this.setState({ mag: [Math.max(-1, Math.min(1, dx)) * 6, Math.max(-1, Math.min(1, dy)) * 4], fmpH: true }); },
       fmpLeave: () => this.setState({ mag: [0, 0], fmpH: false }),
       shop: { bd: s.shopH ? '#F7C032' : 'rgba(255,255,255,.32)', ty: s.shopH ? -2 : 0, sh: s.shopH ? '0 0 30px rgba(247,192,50,.35)' : '0 0 0 rgba(0,0,0,0)', ax: s.shopH ? 4 : 0 }, shopIn: () => this.setState({ shopH: true }), shopOut: () => this.setState({ shopH: false }), skp: { o: skpOn ? 1 : 0, pe: skpOn ? 'auto' : 'none' },
-      skip: (ev) => { ev && ev.preventDefault && ev.preventDefault(); const el = this.secRef.current; if (!el) return; window.scrollTo({ top: window.scrollY + el.getBoundingClientRect().bottom - NAV, behavior: 'smooth' }); },
+      skip: (ev) => { ev && ev.preventDefault && ev.preventDefault(); const el = this.secRef.current; if (!el) return; jumpTo(window.scrollY + el.getBoundingClientRect().bottom - NAV); },
       mt: { ink: fin > 0.5 ? '#26282B' : '#FFFFFF', sub: fin > 0.5 ? '#26282B' : '#F7C032' }, mRail: fin < 0.5, mFin: fin >= 0.5,
       railFill: (allLit ? 1 : Math.max(0, act) / 7).toFixed(3),
       prev: () => this.goStep(Math.max(-1, act - 1)), next: () => this.goStep(Math.min(7, act + 1)), replay: () => { this.stopAuto(); this.at(0.02); setTimeout(() => this.play(), 200); },

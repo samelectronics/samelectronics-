@@ -1022,6 +1022,18 @@ export const EXACT: Record<string, string> = {
   // 14 Oct §02
   'Closing soon': 'يغلق قريباً',
   'Opening soon': 'يفتح قريباً',
+  // R6 Part B progress scrubber
+  'Page position': 'موضع الصفحة',
+  'Teardown': 'التفكيك',
+  'What we offer': 'ماذا نقدّم',
+  'Live parts board': 'لوحة القطع المباشرة',
+  'Showcase': 'المعرض',
+  'Worldwide': 'حول العالم',
+  'Meet Samsoom': 'تعرّف على سمسوم',
+  'The feed': 'آخر المنشورات',
+  'Reviews': 'التقييمات',
+  'Visit us': 'زورونا',
+  'Quality · Warranty · Price': 'الجودة · الضمان · السعر',
   // 14 Oct §10 showcase grades
   'Genuine part · best colour, brightness and touch · longest warranty': 'قطعة أصلية · أفضل ألوان وسطوع ولمس · أطول ضمان',
   'Manufacturer service part · near-original quality · strong warranty': 'قطعة خدمة من الشركة المصنّعة · جودة قريبة من الأصلي · ضمان قوي',
