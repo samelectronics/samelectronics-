@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
-import { DC_FONT_CSS, DC_SCRIPTS, DC_TITLE } from '@/dc/head';
+import { DC_FONT_CSS, DC_SCRIPTS } from '@/dc/head';
 import { windowFacts } from '@/content/facts';
 import { PRE_PAINT } from '@/i18n/prepaint';
 import '@/styles/arabic.css';
@@ -26,10 +26,10 @@ import '@/styles/boot.css';
 import '@/styles/langpop.css';
 
 export const metadata: Metadata = {
-  title: DC_TITLE ?? 'Sam Electronics',
+  title: 'Sam Electronics - Home', // R6 §01: "Sam Electronics - <page>" (src/components/site/TabTitle.tsx keeps it in the visitor's language)
   description:
     'Sam Electronics L.L.C, Al Murar, Deira, Dubai: wholesale and retail mobile phone spare parts, repairs and worldwide shipping since 2003. Quality · Warranty · Price.',
-  // 14 Oct §01: the two-phones mark in graphite on a Signal Yellow circle
+  // R6 §01: the original round logo with a Signal Yellow ring (scripts/favicon/make-favicons.py); 16px = the two devices
   icons: {
     icon: [
       { url: '/favicon.svg', type: 'image/svg+xml' },

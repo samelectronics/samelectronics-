@@ -2102,3 +2102,15 @@ DONE WHEN
 - The boxes are clean 3D renders with the reference designs (panels, colours, labels, barcodes, QR, SERVICE PACK, GX diamonds, ZY gradient).
 - They are **not yet "indistinguishable from the owner's photos"**: the small print is generic and the card has no real paper texture or glossy edges.
 - The Showcase unboxing per quality is §09.
+
+## §01 · Browser tab: title and favicon
+
+- **Favicon:** the original round logo (white circle, iPad + phone, the name) with a clear Signal Yellow ring, made by `site/scripts/favicon/make-favicons.py`.
+  - 16px uses a simplified mark (the two devices only); 32/48, 180, 192 and 512 use the full logo.
+  - Also `favicon.svg` and `favicon.ico`. The 14 Oct yellow/graphite redesign is gone.
+- **Tab title:** "Sam Electronics - Home", and "سام للإلكترونيات - الرئيسية" in Arabic (`TabTitle`); the 404 page is "Sam Electronics - Page not found".
+- **Reviewer idea, built:** while the visitor is on another tab, the title reads "Sam Electronics - Your part is waiting" ("قطعتك بانتظارك") and the ring dims. Both come back on return (checked in EN and AR).
+
+DONE WHEN
+- Favicon = original logo + yellow ring, readable at 16px on light and dark tabs. **PASS**
+- Every page's tab title follows the pattern, EN and AR. **PASS** (Home and 404 are the only pages so far)
