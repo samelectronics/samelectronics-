@@ -122,9 +122,12 @@ export const facts = {
     ['Libya', 'Libya', 'af'], ['Egypt', 'Egypt', 'af'], ['Saudi Arabia', 'Saudi Arabia', 'me'], ['Oman', 'Oman', 'me'],
     ['Yemen', 'Yemen', 'me'], ['Sudan', 'Sudan', 'af'], ['Eritrea', 'Eritrea', 'af'], ['Ethiopia', 'Ethiopia', 'af'],
     ['Nigeria', 'Nigeria', 'af'], ['Uganda', 'Uganda', 'af'],
+    // R6 §13: added by the owner (Türkiye and Azerbaijan were already listed)
+    ['Russia', 'Russia', 'eu'], ['Ukraine', 'Ukraine', 'eu'], ['India', 'India', 'as'], ['Pakistan', 'Pakistan', 'as'],
+    ['Burkina Faso', 'Burkina Faso', 'af'], ['Senegal', 'Senegal', 'af'],
   ] as [name: string, geo: string, region: string][]),
   exampleCountries: confirmed(
-    'Russia, Iran, Türkiye, Iraq, Syria, Lebanon, Egypt, Yemen, Saudi Arabia, UAE, Oman, Azerbaijan, Libya, Eritrea, Ethiopia, Morocco, Algeria, Tunisia, Uganda, Nigeria, Sudan, Romania, UK, Spain and more',
+    'Russia, Iran, Türkiye, Iraq, Syria, Lebanon, Egypt, Yemen, Saudi Arabia, UAE, Oman, Azerbaijan, Libya, Eritrea, Ethiopia, Morocco, Algeria, Tunisia, Uganda, Nigeria, Sudan, Romania, UK, Spain, Ukraine, India, Pakistan, Burkina Faso, Senegal and more',
   ),
   shippingDetails: toConfirm(null, 'Couriers, delivery times, minimum order, number of countries.'),
 
@@ -230,7 +233,7 @@ export function windowFacts() {
     orderStatus: v(facts.orderStatus),
     regions: v(facts.regions),
     countries: v(facts.mapCountries).map(([name, geo, region]) => ({ name, geo, region })),
-    serviceStats: { ...v(facts.serviceStats), sample: true },
+    serviceStats: { ...v(facts.serviceStats), countries: v(facts.mapCountries).length /* R6 §13: the count is the list */, sample: true },
   };
 }
 

@@ -64,6 +64,8 @@ svg{display:block;width:100%;height:100%}
     grp.append('path').attr('class', 'packet').attr('d', arc(p)).attr('pathLength', 1000).attr('stroke-dasharray', '26 974').style('animation-duration', (2.6 + (i % 7) * 0.45) + 's').style('animation-delay', (-(i * 0.37)) + 's');
     grp.append('circle').attr('class', 'halo').attr('cx', p.x).attr('cy', p.y).attr('r', 4).style('animation-delay', (i * 0.21) + 's');
     grp.append('circle').attr('class', 'pin').attr('cx', p.x).attr('cy', p.y).attr('r', 3.6);
+    // R6 §13: click a country → the page shows its card (delivery time, last shipment, quote on WhatsApp)
+    grp.append('circle').attr('cx', p.x).attr('cy', p.y).attr('r', 14).attr('fill', 'transparent').style('cursor', 'pointer').on('click', () => parent.postMessage({ type: 'se-country', name: p.name, region: p.region, x: p.x / W, y: p.y / H }, '*'));
     const OFF = { Lebanon: [-8, -6, 'end'], Syria: [8, -10, 'start'], Iraq: [9, 12, 'start'], Jordan: [-8, 12, 'end'], 'Saudi Arabia': [-12, 18, 'end'], Kuwait: [8, -6, 'start'], Qatar: [-8, 10, 'end'], Bahrain: [-8, -4, 'end'], Oman: [8, 14, 'start'], Yemen: [8, 16, 'start'], Palestine: [-8, 4, 'end'], Israel: [-8, 4, 'end'] }, o = OFF[p.name] || [7, 4, 'start'];
     grp.append('text').attr('class', 'lbl').attr('x', p.x + o[0]).attr('y', p.y + o[1]).attr('text-anchor', o[2]).attr('data-en', p.name).text(LBL(p.name));
   });

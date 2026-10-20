@@ -97,7 +97,7 @@
     ['Egypt', 'Egypt', 'af'], ['Libya', 'Libya', 'af'], ['Sudan', 'Sudan', 'af'], ['Eritrea', 'Eritrea', 'af'], ['Ethiopia', 'Ethiopia', 'af'], ['Uganda', 'Uganda', 'af'],
     ['Nigeria', 'Nigeria', 'af'], ['Morocco', 'Morocco', 'af'], ['Algeria', 'Algeria', 'af'], ['Tunisia', 'Tunisia', 'af'],
     ['UK', 'United Kingdom', 'eu'], ['Spain', 'Spain', 'eu'], ['Romania', 'Romania', 'eu'], ['Russia', 'Russia', 'eu'],
-    ['Azerbaijan', 'Azerbaijan', 'as']
+    ['Azerbaijan', 'Azerbaijan', 'as'], ['Ukraine', 'Ukraine', 'eu'], ['India', 'India', 'as'], ['Pakistan', 'Pakistan', 'as'], ['Burkina Faso', 'Burkina Faso', 'af'], ['Senegal', 'Senegal', 'af'] /* R6 §13 */
   ].map(([name, geo, region]) => ({ name, geo, region }));
 
   // Dubai time (GST, UTC+4). Minutes from midnight. 0 = Sunday. Owner-provided.

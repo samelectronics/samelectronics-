@@ -1,7 +1,7 @@
 // Converted from design/project/Sam Electronics Home v3.dc.html (12 Oct 2026); maintained by hand since.
 // Home v3 section "Worldwide". Renders against the home page's values (`v`, from HomeV3's logic class).
 'use client';
-import WorldwideBoxes from './WorldwideBoxes';
+import WorldwideBoxes, { CountryCard } from './WorldwideBoxes';
 import React from 'react';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 
@@ -123,6 +123,7 @@ export default function Worldwide({ v }: { v: Vals }) {
               style={{ position: 'absolute', inset: '0', width: '100%', height: '100%', border: '0', background: 'transparent' }}
               loading="lazy"
             ></iframe>
+            <CountryCard />
             {'\n        '}
             <span
               style={{

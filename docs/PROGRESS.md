@@ -2442,3 +2442,22 @@ DONE WHEN
 - Realistic pallet; full pallet → new pallet film. **PASS**
 - Who we supply realistic. **PASS** (real renders for the screen and carton scenes; the tag and the list are CSS objects)
 - Steps light, numbers unchanged. **PASS**
+
+## §13 · Worldwide network
+
+- **Countries.** Russia, Ukraine, India, Pakistan, Burkina Faso and Senegal were added to the single list in `facts.ts`. Türkiye and Azerbaijan were already there; no duplicates.
+  - Regions: India, Pakistan and Azerbaijan → Asia; Russia and Ukraine → Europe; Burkina Faso and Senegal → Africa.
+  - The countries stat is now derived from the list: 28 destinations + the UAE hub.
+  - The network map reads the list. The dot globes are rebuilt from it by `scripts/maps/make-globe-data.mjs` (Natural Earth, same dot grid and style).
+  - The Live board flags and the fallback list were updated too.
+- **The four boxes, rebuilt as real scenes:**
+  - Tracked: a real dot mini-map; the parcel travels DXB → LOS; Packed → Dispatched → In transit → Customs → Delivered light in turn; the tracking number types in.
+  - Packed: the boxed screen (Part E render) slides into the carton, padding fills, the tape seals with a sweep, the label prints and sticks.
+  - Quoted: the slip prints line by line (weight, destination, service, insurance), the total counts up, CONFIRMED stamps.
+  - Regions: the dot globe turns to each region, which lights with its name and its country count (8 · 12 · 5 · 3).
+  - Nothing is cut off any more (the old "SE-4544 · In tra" is gone).
+- **Reviewer's idea:** click a country on the network map → a card with typical delivery (sample by region), last shipment (sample) and "Get a quote for [country]" pre-filled on WhatsApp.
+
+DONE WHEN
+- 8 countries everywhere; counts correct. **PASS**
+- Four realistic scenes; no cut text. **PASS**

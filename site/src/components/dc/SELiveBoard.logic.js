@@ -13,7 +13,7 @@ class Component extends DCLogic {
   secRef = React.createRef();
   GN = ((typeof window !== 'undefined' && window.SE_DATA && window.SE_DATA.gradeNames) || {}) /* R6 Part E: Excel qualities */;
   MAP = { arrival: 'arr', restock: 'arr', low: 'low', drop: 'drop', shipped: 'ship' };
-  ISO = { Nigeria: 'NG', Iraq: 'IQ', Romania: 'RO', Morocco: 'MA', Uganda: 'UG', Algeria: 'DZ', Tunisia: 'TN', Libya: 'LY', Egypt: 'EG', Sudan: 'SD', Eritrea: 'ER', Ethiopia: 'ET', 'Saudi Arabia': 'SA', Oman: 'OM', Yemen: 'YE', Syria: 'SY', Lebanon: 'LB', Iran: 'IR', 'Türkiye': 'TR', Turkey: 'TR', Azerbaijan: 'AZ', UK: 'GB', 'United Kingdom': 'GB', Spain: 'ES', Russia: 'RU', UAE: 'AE' };
+  ISO = { Nigeria: 'NG', Iraq: 'IQ', Romania: 'RO', Morocco: 'MA', Uganda: 'UG', Algeria: 'DZ', Tunisia: 'TN', Libya: 'LY', Egypt: 'EG', Sudan: 'SD', Eritrea: 'ER', Ethiopia: 'ET', 'Saudi Arabia': 'SA', Oman: 'OM', Yemen: 'YE', Syria: 'SY', Lebanon: 'LB', Iran: 'IR', 'Türkiye': 'TR', Turkey: 'TR', Azerbaijan: 'AZ', UK: 'GB', 'United Kingdom': 'GB', Spain: 'ES', Russia: 'RU', UAE: 'AE' , Russia: 'RU', Ukraine: 'UA', India: 'IN', Pakistan: 'PK', 'Burkina Faso': 'BF', Senegal: 'SN'};
   LK = { SCR: 0, FRM: 1, FLX: 2, BAT: 4, CAM: 5, SML: 6, BCV: 7 };
   componentDidMount() {
     this.offRp = onReplay(() => this.secRef.current, () => { cancelAnimationFrame(this.cuR); this.setState({ seen: false, cu: 0 }); }); // 14 Oct · H-G2: replay from the start
