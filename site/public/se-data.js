@@ -125,12 +125,20 @@
   const tiers = F ? F.tiers : ['Connected', 'Charged', 'Supercharged', 'Fully Charged'];
   const requestTypes = F ? F.requestTypes : ['Order parts', 'Bulk quote', 'Book a repair', 'Trade account', 'Shipping quote', 'General'];
   const orderStatus = F ? F.orderStatus : ['New', 'Quoted', 'Confirmed', 'Ready', 'Collected / Shipped', 'Closed'];
-  const repairs = [ // sample bench labour by problem (AED)
-    { id: 'SCR', name: 'Cracked screen', cat: 'SCR', labour: 60, time: '45–90 min' },
-    { id: 'BAT', name: 'Battery drains fast', cat: 'BAT', labour: 40, time: '30–45 min' },
-    { id: 'FLX', name: 'Won’t charge', cat: 'FLX', labour: 50, time: '45–60 min' },
-    { id: 'BCV', name: 'Broken back glass', cat: 'BCV', labour: 80, time: '1–2 hrs' },
-    { id: 'CAM', name: 'Camera blurry', cat: 'CAM', labour: 50, time: '30–60 min' }
+  // R6 §11 · the estimator's problems (owner's list). SAMPLE bench labour (AED) where a part is involved; the rest is
+  // quoted after diagnosis (no part category, no labour figure)
+  const repairs = [
+    { id: 'SCR', name: 'Screen', cat: 'SCR', labour: 60, time: '45–90 min', film: 'scr' },
+    { id: 'BAT', name: 'Battery', cat: 'BAT', labour: 40, time: '30–45 min', film: 'bat' },
+    { id: 'FLX', name: 'Charging port / connector', cat: 'FLX', labour: 50, time: '45–60 min', film: 'port' },
+    { id: 'CAM', name: 'Camera', cat: 'CAM', labour: 50, time: '30–60 min' },
+    { id: 'BCV', name: 'Back glass', cat: 'BCV', labour: 80, time: '1–2 hrs' },
+    { id: 'SPK', name: 'Speaker / mic', cat: null },
+    { id: 'BTN', name: 'Buttons', cat: null },
+    { id: 'WTR', name: 'Water damage', cat: null },
+    { id: 'FID', name: 'Face ID / fingerprint', cat: null },
+    { id: 'SW', name: 'Software', cat: null },
+    { id: 'NS', name: 'Not sure', cat: null },
   ];
 
   const contact = F ? F.contact : { address: 'Al Murar, Deira, Dubai, UAE', plus: '78G4+3H2', phone: '+971 4 273 3031', tel: '+97142733031', mobile: '+971 50 342 0015', wa: '971503420015', email: 'samelectronics.uae@gmail.com', social: '@samelectronics.uae' };

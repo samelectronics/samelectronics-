@@ -4,74 +4,23 @@
 import React from 'react';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 import SEBrandLogo from '../../dc/SEBrandLogo';
-import SERepairSequence from '../../dc/SERepairSequence';
+import RepairFilm, { type RepairKind } from '../RepairFilm';
+import InfoTip from '../InfoTip';
 
 /** Issue 4: fine film grain instead of grids, stripes and tiles. */
 const GRAIN = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'160\' height=\'160\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'.9\' numOctaves=\'2\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")';
 
 export default function RepairLab({ v }: { v: Vals }) {
   return (
-    <section
-      id="repair"
-      data-tone="light"
-      data-screen-label="08 Repair Lab"
-      style={{
-        position: 'relative',
-        overflow: 'hidden',
-        background: 'linear-gradient(180deg,#F2F3F4 0%,#E4E6E9 52%,#C9CDD2 52.2%,#D5D8DC 100%)',
-        padding: 'clamp(80px,8vw,120px) clamp(20px,4vw,64px)',
-      }}
-    >
-      {'\n  '}
-      <div
-        style={{
-          position: 'absolute',
-          left: '0',
-          right: '0',
-          top: '52%',
-          bottom: '0',
-          backgroundImage: GRAIN,
-          opacity: '.05',
-          pointerEvents: 'none',
-        }}
-      ></div>
-      <div
-        style={{
-          position: 'absolute',
-          left: '0',
-          right: '0',
-          top: '52%',
-          height: '10px',
-          background: 'linear-gradient(180deg,rgba(255,255,255,.7),rgba(255,255,255,0))',
-          pointerEvents: 'none',
-        }}
-      ></div>
-      {'\n  '}
-      <div
-        style={{
-          position: 'absolute',
-          inset: '0',
-          backgroundImage: GRAIN,
-          opacity: '.035',
-          WebkitMaskImage: 'radial-gradient(70% 80% at 30% 50%,#000,transparent)',
-          maskImage: 'radial-gradient(70% 80% at 30% 50%,#000,transparent)',
-          pointerEvents: 'none',
-        }}
-      ></div>
-      {'\n  '}
-      <div
-        style={{
-          position: 'absolute',
-          right: '-240px',
-          bottom: '-240px',
-          width: '760px',
-          height: '760px',
-          borderRadius: '50%',
-          background: 'radial-gradient(closest-side,rgba(255,219,110,.45),rgba(255,255,255,0))',
-          pointerEvents: 'none',
-        }}
-      ></div>
-      {'\n  '}
+    <section id="repair" data-tone="dark" data-screen-label="08 Repair Lab" className="rp" style={{ padding: 'clamp(80px,8vw,120px) clamp(20px,4vw,64px)' }}>
+      {/* R6 §11: the bench itself: graphite ESD mat (faint grid), warm light from above, circuit traces in the gutters. No tiles. */}
+      {(['l', 'r'] as const).map((k) => (
+        <svg key={k} className={'rp-trace ' + k} viewBox="0 0 120 1000" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M20 0 V300 L56 336 V700 L28 728 V1000" />
+          <path d="M20 0 V300 L56 336 V700 L28 728 V1000" className="f" pathLength={1} />
+          <path d="M0 520 H34 L56 498" />
+        </svg>
+      ))}
       <div style={{ position: 'relative', maxWidth: '1312px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '32px' }}>
         {'\n    '}
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '24px' }}>
@@ -86,7 +35,7 @@ export default function RepairLab({ v }: { v: Vals }) {
                 fontFamily: "'JetBrains Mono',monospace",
                 fontSize: '12px',
                 letterSpacing: '.14em',
-                color: '#5E6064',
+                color: '#F7C032',
               }}
             >
               <span style={{ width: '28px', height: '2px', background: '#F7C032' }}></span>REPAIR LAB · DEIRA BENCH
@@ -100,6 +49,7 @@ export default function RepairLab({ v }: { v: Vals }) {
                 fontSize: 'clamp(34px,3.4vw,48px)',
                 lineHeight: '1.08',
                 letterSpacing: '-.03em',
+                color: '#FFFFFF',
               }}
             >
               <span>Fixed, tested,</span> <span>guaranteed.</span>
@@ -111,7 +61,7 @@ export default function RepairLab({ v }: { v: Vals }) {
         {'\n    '}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,420px),1fr))', gap: '20px' }}>
           {'\n      '}
-          <SERepairSequence />
+          <RepairFilm kind={(v.re?.film || 'scr') as RepairKind} ticket={v.re?.ticket || { model: '', problems: '' }} />
           {'\n      '}
           <div
             style={{
@@ -161,7 +111,7 @@ export default function RepairLab({ v }: { v: Vals }) {
               </div>
             </div>
             {'\n        '}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px' }}>
               {'\n          '}
               <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span style={{ fontSize: '13px', fontWeight: '600', color: '#3D3E3F' }}>2 · Model</span>
@@ -229,77 +179,22 @@ export default function RepairLab({ v }: { v: Vals }) {
                   </>
                 ) : null}
               </div>
-              <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#3D3E3F' }}>3 · Problem</span>
-                <button
-                  onClick={v.re?.pdd?.toggle}
-                  style={cssToObj(
-                    `display:flex;align-items:center;justify-content:space-between;gap:8px;height:44px;padding:0 12px;border-radius:10px;border:1.5px solid ${s(v.re?.pdd?.bd)};background:#FFFFFF;font-size:15px;font-weight:500;color:#26282B;cursor:pointer;text-align:left`,
-                  )}
-                >
-                  <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t(v.re?.pdd?.cur)}</span>
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#26282B"
-                    strokeWidth="2.4"
-                    style={cssToObj(`flex:none;transform:rotate(${s(v.re?.pdd?.rot)}deg);transition:transform .2s`)}
-                  >
-                    <path d="m6 9 6 6 6-6"></path>
-                  </svg>
-                </button>
-                {v.re?.pdd?.open ? (
-                  <>
-                    <div
-                      style={{
-                        position: 'absolute',
-                        left: '0',
-                        right: '0',
-                        top: '78px',
-                        zIndex: '20',
-                        maxHeight: '240px',
-                        overflowY: 'auto',
-                        padding: '6px',
-                        borderRadius: '12px',
-                        background: '#FFFFFF',
-                        boxShadow: '0 0 0 1px rgba(26,27,29,.08),0 20px 40px rgba(26,27,29,.18)',
-                        animation: 'seRise .2s both',
-                      }}
-                    >
-                      {(Array.isArray(v.re?.pdd?.opts) ? v.re?.pdd?.opts : []).map((__it: any, __i: number) => {
-                        const v2 = { ...v, o: __it, $index: __i };
-                        return ((v: Vals) => (
-                          <React.Fragment key={__i}>
-                            <button
-                              onClick={v.o?.pick}
-                              style={cssToObj(
-                                `display:flex;align-items:center;justify-content:space-between;width:100%;height:36px;padding:0 10px;border:none;border-radius:8px;background:${s(v.o?.bg)};font-size:14px;font-weight:500;color:#26282B;cursor:pointer;text-align:left`,
-                              )}
-                              className={cx(undefined, 'scp-9735d96e')}
-                            >
-                              {t(v.o?.name)}
-                              {v.o?.on ? (
-                                <>
-                                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#C9921A" strokeWidth="3">
-                                    <path d="M5 12l5 5L20 7"></path>
-                                  </svg>
-                                </>
-                              ) : null}
-                            </button>
-                          </React.Fragment>
-                        ))(v2);
-                      })}
-                    </div>
-                  </>
-                ) : null}
-              </div>
               {'\n        '}
             </div>
             {'\n        '}
+            {/* R6 §11: problems are a multi-select (the film follows the first screen / battery / port choice) */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span style={{ fontSize: '13px', fontWeight: '600', color: '#3D3E3F' }}>4 · Grade</span>
+              <span style={{ fontSize: '13px', fontWeight: '600', color: '#3D3E3F' }}>3 · Problem (choose all that apply)</span>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                {(v.re?.probs || []).map((p: any) => (
+                  <button key={p.id} type="button" aria-pressed={p.on} onClick={p.pick} className={'rp-chip lt' + (p.on ? ' on' : '')}>
+                    {p.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <span style={{ fontSize: '13px', fontWeight: '600', color: '#3D3E3F' }}>4 · Quality</span>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                 {(Array.isArray(v.re?.grades) ? v.re?.grades : []).map((__it: any, __i: number) => {
                   const v2 = { ...v, g: __it, $index: __i };
@@ -317,6 +212,18 @@ export default function RepairLab({ v }: { v: Vals }) {
                   ))(v2);
                 })}
               </div>
+              {v.re?.maker ? (
+                <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '13px', color: '#5E6064' }}>
+                  <span>Manufacturer:</span>
+                  <b style={{ color: '#26282B' }}>{v.re.maker}</b>
+                  <InfoTip name={v.re.maker} kind="maker" dark={false} />
+                  <span style={{ marginInlineStart: '8px' }}>Quality:</span>
+                  <b style={{ color: '#26282B' }}>{v.re.grade}</b>
+                  <InfoTip name={v.re.grade} kind="quality" dark={false} />
+                </span>
+              ) : !v.re?.hasParts ? (
+                <span style={{ fontSize: '13px', color: '#5E6064' }}>Quoted after diagnosis.</span>
+              ) : null}
             </div>
             {'\n        '}
             <div
@@ -376,7 +283,7 @@ export default function RepairLab({ v }: { v: Vals }) {
                 </span>
               </span>
               {'\n          '}
-              <span style={{ gridColumn: 'span 2', fontSize: '13px', color: '#C9CBCE' }}>{t(v.re?.note)}</span>
+              <span style={{ gridColumn: 'span 2', display: 'flex', flexWrap: 'wrap', columnGap: '4px', fontSize: '13px', color: '#C9CBCE' }}>{(v.re?.note || []).map((n: string) => <span key={n}>{n}</span>)}</span>
               {'\n        '}
             </div>
             {'\n        '}

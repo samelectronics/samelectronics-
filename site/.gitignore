@@ -7,3 +7,4 @@ next-env.d.ts
 !.env.example
 .codegen-error.tsx
 .vercel
+public/assets/repair/.png/

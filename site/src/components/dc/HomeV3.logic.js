@@ -259,23 +259,33 @@ class Component extends DCLogic {
     const GN = ((typeof window !== 'undefined' && window.SE_DATA && window.SE_DATA.gradeNames) || {}) /* R6 Part E: Excel qualities */;
     // repair estimator
     const reBrand = s.reBrand || 'apple', models = D ? D.models.filter((m) => m.brand_id === reBrand) : [];
-    const reModel = models.some((m) => m.id === s.reModel) ? s.reModel : models[0] ? models[0].id : '';
-    const R = D ? D.repairs : [], prob = R.find((r) => r.id === s.reProb) || R[0] || { cat: 'SCR', labour: 0, time: '' };
-    const parts = P.filter((p) => p.model_id === reModel && p.category === prob.cat);
+    const withParts = models.find((m) => P.some((p) => p.model_id === m.id)), reModel = models.some((m) => m.id === s.reModel) ? s.reModel : withParts ? withParts.id : models[0] ? models[0].id : ''; // R6 §11: start on a model with sample parts
+    // R6 §11: problems are a multi-select; the first one with a part sets the quality chips (Original first), its
+    // manufacturer and the film (screen / battery / charging port); the rest are added or quoted after diagnosis
+    const R = D ? D.repairs : [], sel = (s.reProbs || ['SCR']).map((id) => R.find((r) => r.id === id)).filter(Boolean);
+    const prob = sel.find((r) => r.cat) || sel[0] || R[0] || { cat: 'SCR', labour: 0, time: '' };
+    const ORD = ['OR', 'OL', 'IN', 'AQ'], MN = (D && D.makerNames) || {};
+    const parts = prob.cat ? P.filter((p) => p.model_id === reModel && p.category === prob.cat).sort((a, b) => ORD.indexOf(a.grade) - ORD.indexOf(b.grade)) : [];
     const grade = parts.find((p) => p.grade === s.reGrade) || parts.find((p) => p.stock_qty > 0) || parts[0];
-    const lo = grade ? grade.retail_price + prob.labour : 0, hi = Math.round((lo * 1.15) / 5) * 5;
+    const others = sel.filter((r) => r !== prob), cheap = (cat) => { const ps = P.filter((p) => p.model_id === reModel && p.category === cat); return ps.length ? Math.min(...ps.map((p) => p.retail_price)) : null; };
+    let lo = grade ? grade.retail_price + prob.labour : 0, diag = !prob.cat || !grade;
+    others.forEach((r) => { const c = r.cat ? cheap(r.cat) : null; if (c != null) lo += c + r.labour; else diag = true; });
+    const hi = Math.round((lo * 1.15) / 5) * 5;
     const mm = D && D.models.find((m) => m.id === reModel);
     const val = s.baVal == null ? 50 : s.baVal;
+    const film = (sel.find((r) => r.film) || {}).film || 'scr';
     const re = { val, pos: val + '%', clipR: 100 - val + '%', slide: (e) => this.setState({ baVal: Number(e.target.value) }),
       steps: ['Diagnose', 'Quote', 'Repair', 'Test'].map((t, i) => ({ n: pad(i + 1), t })),
       brands: D ? D.brands.map((b) => { const on = b.id === reBrand; return { id: b.id, name: b.name, bg: on ? '#26282B' : '#F2F3F4', ink: on ? '#FFFFFF' : '#26282B', sh: on ? '0 0 0 2px #F7C032' : 'none', pick: () => this.setState({ reBrand: b.id, reModel: null, reGrade: null }) }; }) : [],
       models: models.map((m) => ({ id: m.id, name: m.name })), model: reModel, pickModel: (e) => this.setState({ reModel: e.target.value, reGrade: null }),
-      probs: R.map((r) => ({ id: r.id, name: r.name })), prob: prob.id,
       mdd: { open: s.reDD === 'm', rot: s.reDD === 'm' ? 180 : 0, bd: s.reDD === 'm' ? '#F7C032' : 'rgba(26,27,29,.15)', cur: mm ? mm.name : '—', toggle: () => this.setState({ reDD: s.reDD === 'm' ? null : 'm' }), opts: models.map((m) => ({ name: m.name, on: m.id === reModel, bg: m.id === reModel ? '#FFF4D1' : 'transparent', pick: () => this.setState({ reModel: m.id, reGrade: null, reDD: null }) })) },
-      pdd: { open: s.reDD === 'p', rot: s.reDD === 'p' ? 180 : 0, bd: s.reDD === 'p' ? '#F7C032' : 'rgba(26,27,29,.15)', cur: prob.name || '—', toggle: () => this.setState({ reDD: s.reDD === 'p' ? null : 'p' }), opts: R.map((r) => ({ name: r.name, on: r.id === prob.id, bg: r.id === prob.id ? '#FFF4D1' : 'transparent', pick: () => this.setState({ reProb: r.id, reGrade: null, reDD: null }) })) }, pickProb: (e) => this.setState({ reProb: e.target.value, reGrade: null }),
+      probs: R.map((r) => { const on = sel.includes(r); return { id: r.id, name: r.name, on, pick: () => { const cur = s.reProbs || ['SCR'], nx = on ? cur.filter((x) => x !== r.id) : r.id === 'NS' ? ['NS'] : cur.filter((x) => x !== 'NS').concat(r.id); this.setState({ reProbs: nx.length ? nx : ['NS'], reGrade: null }); } }; }),
       grades: parts.map((p) => { const on = grade && p.id === grade.id; return { name: GN[p.grade], bg: on ? '#F7C032' : '#F2F3F4', ink: '#26282B', sh: on ? '0 0 0 1.5px #26282B,0 0 16px rgba(247,192,50,.75)' : 'none', pick: () => this.setState({ reGrade: p.grade }) }; }),
-      range: grade ? 'AED ' + fmt(lo) + '–' + fmt(hi) : 'Ask us', rollAnim: (lo % 2 ? 'reRollA' : 'reRollB') + ' .4s cubic-bezier(.2,.8,.2,1) both', time: prob.time || '—', note: grade ? 'Part (' + GN[grade.grade] + ') plus bench work. Final price confirmed after diagnosis.' : 'This part is quoted after diagnosis.',
-      wa: D ? 'https://wa.me/' + D.contact.wa + '?text=' + encodeURIComponent('Hi Sam Electronics, I want to book a repair: ' + (mm ? mm.name : '') + ' · ' + (prob.name || '') + (grade ? ' · ' + GN[grade.grade] : '')) : '#',
+      maker: grade ? MN[grade.grade] || '' : '', grade: grade ? GN[grade.grade] : '', hasParts: parts.length > 0,
+      range: lo ? 'AED ' + fmt(lo) + '–' + fmt(hi) : 'Ask us', rollAnim: (lo % 2 ? 'reRollA' : 'reRollB') + ' .4s cubic-bezier(.2,.8,.2,1) both', time: prob.cat ? prob.time || '—' : 'After diagnosis',
+      note: [grade ? 'The part plus bench work.' : 'Parts quoted after diagnosis.'].concat(diag && grade ? ['Some problems are quoted after diagnosis.'] : [], ['Final price confirmed after diagnosis.']),
+      film, ticket: { model: mm ? mm.name : '', problems: sel.map((r) => r.name).join(' · ') },
+      wa: D ? 'https://wa.me/' + D.contact.wa + '?text=' + encodeURIComponent('Hi Sam Electronics, I want to book a repair: ' + (mm ? mm.name : '') + ' · ' + sel.map((r) => r.name).join(', ') + (grade ? ' · ' + GN[grade.grade] : '')) : '#',
       more: (ev) => { ev.preventDefault(); this.flash('The full Repair Lab page is next in the build.'); } };
     // wholesale
     const WP = ['SE-IP13-SCR-IN', 'SE-A54-BAT-OR', 'SE-RN13-SCR-OR', 'SE-IP15-BCV-HQ'].map((id) => P.find((p) => p.id === id)).filter(Boolean);

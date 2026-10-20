@@ -10,6 +10,7 @@ import '@/styles/live-board.css';
 import '@/styles/bench-test.css';
 import '@/styles/showcase.css';
 import '@/styles/deals.css';
+import '@/styles/repair.css';
 import '@/styles/wholesale.css';
 import '@/styles/worldwide.css';
 import '@/styles/story.css';

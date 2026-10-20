@@ -2376,3 +2376,40 @@ DONE WHEN
 - Rail loops correctly; custom controls; no browser scrollbar. **PASS**
 - Real map, moving plane. **PASS** (the plane moves at the real progress, plus a bob and flowing current)
 - Pre-orders loop. **PASS**
+
+## §11 · Repair Lab
+
+- **Themed background.** The white "ceramic tile" floor is gone. The section is now the bench itself:
+  - a graphite ESD mat with a faint grid;
+  - warm light from above;
+  - circuit traces with current in the gutters (hidden when the gutter is too narrow).
+- Title in white and yellow, no highlighter.
+- **The film is real 3D now.** The cartoon CSS drawing (cracks drawn as lines) is replaced:
+  - `scripts/repairfilm/scene.html` builds the bench in three.js: ESD mat with a heat plate, an iPhone-style housing with logic board, shields, connectors, camera, battery pouch, charging-port flex and screws, the screen (realistic shattered glass, new, and the booting Sam Electronics logo), a suction cup and a pry pick;
+  - it renders each piece as its own layer from one fixed camera (`render.mjs` → `public/assets/repair`, 92KB at 640px), so the layers register exactly;
+  - `RepairFilm.tsx` plays one continuous shot with a slow dolly-in:
+    1. Intake 1.5s (the phone slides onto the mat, the job ticket prints with the model and problems)
+    2. Heat 1.5s (the plate glows orange, the air shimmers, the thermometer climbs to 80°C)
+    3. Opening 2s (the suction cup lands, the pick runs the seam, the screen lifts away)
+    4. Swap 2s (the old part lifts, the new one lowers in, the flex clicks home with a spark)
+    5. Boot 1s
+    6. Tested 1.5s (Touch · Display · Face ID · Speaker tick, the warranty sticker stamps)
+  - Step bar under the stage.
+- **Estimator:**
+  - the 15 brands;
+  - the owner's 11 problems as multi-select chips ("Not sure" clears the others);
+  - Quality chips with Original first, then the Manufacturer of the chosen quality, both with their "i";
+  - the estimate adds every chosen problem that has a part; the rest are "quoted after diagnosis";
+  - it now starts on a model that has sample parts (it used to open on iPhone 4 with "Ask us").
+- **Reviewer's idea (film follows the problem):** choosing Battery switches the film to a battery swap; Charging port switches it to a port-flex swap; Screen shows the cracked screen swap. Checked on frames for all three.
+- Arabic: mirrored and all new text translated.
+
+**Honest notes:**
+- This is a layered render, not a camera move through a live 3D scene (no GPU here). The heat shimmer is a soft CSS blur over the plate.
+- Camera, Back glass and the diagnosis-only problems play the screen film.
+
+DONE WHEN
+- Themed background. **PASS**
+- Six phases realistic. **PASS** (real 3D renders; layered, see notes)
+- Estimator: multi-select, Original, 15 brands. **PASS**
+- Film reacts to the chosen problem. **PASS** (screen / battery / port)
