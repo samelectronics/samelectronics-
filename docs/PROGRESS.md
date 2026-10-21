@@ -2585,3 +2585,24 @@ DONE WHEN
 - One clean button row. **PASS**
 - Showcase: no hover pause, studio environment, new nav. **PASS**
 - Repair: every phase at render quality; no debug boxes. **PASS**
+
+## Urgent 5 · Full-page review (EN + AR), speed, push
+
+- **Full-page captures.** 39 screens per language, taken one language at a time. Gaps seen in a first, parallel run (Wholesale, Who are you, Samsoom, Sam Circuit) were capture timing (screenshots taken mid-glide), confirmed by probing the DOM. They are not bugs.
+- **English inside Arabic, fixed.**
+  - "−15% on batteries." / "THIS WEEK" / "SERVICE PACK SCREENS" (iPad banners).
+  - The "TRADE ONLY" stamp.
+  - The Wholesale tape: it is `data-no-i18n`, so it is now translated at render time, Arabic only.
+  - The Wholesale stat labels: SINCE / QUOTES / COUNTRIES* / MIN. ORDER*.
+  - What remains is product and model names (iPhone 15 Pro, Galaxy A54…) and printed part labels, which stay as written.
+- **Deals.** The Deal-of-the-day price digits were hidden until a CSS roll-in ran, and the price showed as "AED" alone. The digits are now visible by default and the roll-in only animates them.
+- **Speed.**
+  - The hero globe asked the CSS animation for its time 30×/s (`getAnimations` + `getComputedTiming`), which forced a style recalculation every frame. It now reads the reel controller's clock: JS in the hero went from ~280ms to ~110ms per 3s.
+  - `scripts/qa/measure.mjs`: every section is at 60fps with no long tasks, and blocking during load is 402ms.
+  - The hero shows 30fps in this sandbox only because it paints without a GPU.
+
+DONE WHEN
+- Full-page EN/AR screenshots reviewed. **PASS**
+- No English inside Arabic (except product/model names). **PASS**
+- Speed re-measured. **PASS**
+- Pushed; screenshots + live link sent. **PASS**

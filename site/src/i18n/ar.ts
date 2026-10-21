@@ -1022,6 +1022,16 @@ export const EXACT: Record<string, string> = {
   // 14 Oct §02
   'Closing soon': 'يغلق قريباً',
   'Opening soon': 'يفتح قريباً',
+  // Urgent 5 · English left inside Arabic
+  'THIS WEEK': 'هذا الأسبوع',
+  'SERVICE PACK SCREENS': 'شاشات علبة الصيانة',
+  '−15% on batteries.': 'خصم 15% على البطاريات.',
+  'TRADE ONLY': 'للتجار فقط',
+  SINCE: 'منذ',
+  QUOTES: 'عروض الأسعار',
+  'COUNTRIES*': 'دولة*',
+  'MIN. ORDER*': 'الحد الأدنى للطلب*',
+  'SAM ELECTRONICS · WHOLESALE · TRADE': 'سام للإلكترونيات · جملة · تجارة',
   // Urgent 4 · Repair Lab caption
   'On the bench': 'على طاولة الصيانة',
   'Heating the seal': 'تسخين اللاصق',

@@ -130,7 +130,7 @@ function render(v: Vals) {
     <span className="wf-tape-t">
       {Array.from({ length: 12 }, (_, i) => (
         <React.Fragment key={i}>
-          <b>{TAPE}</b>
+          <b>{v.tape || TAPE}</b>
           <i>◆</i>
         </React.Fragment>
       ))}

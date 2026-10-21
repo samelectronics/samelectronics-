@@ -1,15 +1,183 @@
 {
   "url": "http://localhost:3100/",
   "viewport": "1440x900",
-  "loadMs": 8414,
-  "loadBlockingMs": 880,
+  "loadMs": 8321,
+  "loadBlockingMs": 402,
   "sections": [
     {
-      "section": "#showcase",
+      "section": "#top",
+      "frames": 131,
+      "fps": 30,
+      "avgFps": 33.1,
+      "p95ms": 33.4,
+      "longTasks": 0,
+      "longMs": 0,
+      "liveWebGL": 0
+    },
+    {
+      "section": "[data-sc-name=\"SE Teardown\"]",
+      "frames": 227,
+      "fps": 59.9,
+      "avgFps": 58.9,
+      "p95ms": 16.8,
+      "longTasks": 0,
+      "longMs": 0,
+      "liveWebGL": 0
+    },
+    {
+      "section": "[data-sc-name=\"SE What We Offer\"]",
+      "frames": 213,
+      "fps": 59.9,
+      "avgFps": 54,
+      "p95ms": 33.3,
+      "longTasks": 0,
+      "longMs": 0,
+      "liveWebGL": 0
+    },
+    {
+      "section": "[data-sc-name=\"SE Live Board\"]",
+      "frames": 227,
+      "fps": 59.9,
+      "avgFps": 59.8,
+      "p95ms": 16.8,
+      "longTasks": 0,
+      "longMs": 0,
+      "liveWebGL": 0
+    },
+    {
+      "section": "[data-sc-name=\"SE Bench Test\"]",
+      "frames": 221,
+      "fps": 59.9,
+      "avgFps": 59.1,
+      "p95ms": 16.8,
+      "longTasks": 0,
+      "longMs": 0,
+      "liveWebGL": 0
+    },
+    {
+      "section": "[data-sc-name=\"SE Home Models\"]",
+      "missing": true
+    },
+    {
+      "section": "[data-sc-name=\"SE Home Deals\"]",
+      "frames": 220,
+      "fps": 59.9,
+      "avgFps": 58.8,
+      "p95ms": 16.8,
+      "longTasks": 0,
+      "longMs": 0,
+      "liveWebGL": 0
+    },
+    {
+      "section": "#repair",
+      "frames": 213,
+      "fps": 59.9,
+      "avgFps": 55.6,
+      "p95ms": 33.3,
+      "longTasks": 0,
+      "longMs": 0,
+      "liveWebGL": 0
+    },
+    {
+      "section": "#wholesale",
+      "frames": 215,
+      "fps": 59.9,
+      "avgFps": 56.7,
+      "p95ms": 33.3,
+      "longTasks": 0,
+      "longMs": 0,
+      "liveWebGL": 0
+    },
+    {
+      "section": "#network",
+      "frames": 223,
+      "fps": 59.9,
+      "avgFps": 58.7,
+      "p95ms": 16.8,
+      "longTasks": 0,
+      "longMs": 0,
+      "liveWebGL": 0
+    },
+    {
+      "section": "#story",
+      "frames": 225,
+      "fps": 59.9,
+      "avgFps": 59.7,
+      "p95ms": 16.7,
+      "longTasks": 0,
+      "longMs": 0,
+      "liveWebGL": 0
+    },
+    {
+      "section": "#team",
+      "frames": 217,
+      "fps": 59.9,
+      "avgFps": 57.2,
+      "p95ms": 33.2,
+      "longTasks": 0,
+      "longMs": 0,
+      "liveWebGL": 0
+    },
+    {
+      "section": "#everyone",
+      "frames": 217,
+      "fps": 59.9,
+      "avgFps": 58,
+      "p95ms": 16.8,
+      "longTasks": 0,
+      "longMs": 0,
+      "liveWebGL": 0
+    },
+    {
+      "section": "#circuit",
+      "frames": 225,
+      "fps": 59.9,
+      "avgFps": 59.3,
+      "p95ms": 16.7,
+      "longTasks": 0,
+      "longMs": 0,
+      "liveWebGL": 0
+    },
+    {
+      "section": "[data-sc-name=\"SE Home Samsoom\"]",
+      "missing": true
+    },
+    {
+      "section": "#social",
+      "frames": 205,
+      "fps": 59.9,
+      "avgFps": 54.1,
+      "p95ms": 33.3,
+      "longTasks": 0,
+      "longMs": 0,
+      "liveWebGL": 0
+    },
+    {
+      "section": "#visit",
+      "frames": 224,
+      "fps": 59.9,
+      "avgFps": 59,
+      "p95ms": 16.8,
+      "longTasks": 0,
+      "longMs": 0,
+      "liveWebGL": 0
+    },
+    {
+      "section": "[data-sc-name=\"SE Finale\"]",
       "frames": 219,
       "fps": 59.9,
-      "avgFps": 57.5,
-      "p95ms": 16.8,
+      "avgFps": 57.3,
+      "p95ms": 33.2,
+      "longTasks": 0,
+      "longMs": 0,
+      "liveWebGL": 0
+    },
+    {
+      "section": "footer",
+      "frames": 226,
+      "fps": 59.9,
+      "avgFps": 60,
+      "p95ms": 16.7,
       "longTasks": 0,
       "longMs": 0,
       "liveWebGL": 0
@@ -22,6 +190,6 @@
     "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
     "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
     "Failed to load resource: net::ERR_TUNNEL_CONNECTION_FAILED",
-    "Failed to load resource: net::ERR_FAILED"
+    "pageerror: TypeError: Failed to fetch"
   ]
 }

@@ -34,7 +34,7 @@
 .dl-seen .dl-old i { animation: dlStrike .3s 1.1s ease-out both; }
 .dl-new > em { font-style: normal; margin-inline-end: 10px; }
 .dl-new { display: inline-flex; align-items: baseline; gap: 1px; overflow: hidden; font: 700 40px/1.1 'Space Grotesk', sans-serif; color: #F7C032; }
-.dl-digit { display: inline-block; transform: translateY(-110%); opacity: 0; }
+.dl-digit { display: inline-block; } /* Urgent 5: visible by default; the roll-in (dlRoll, fill both) hides it only while it plays */
 .dl-seen .dl-digit { animation: dlRoll .45s cubic-bezier(.34, 1.4, .64, 1) both; }
 .dl-clock { display: flex; align-items: center; gap: 12px; }
 .dl-clock-l { font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .14em; color: #9DA1A6; }
@@ -121,7 +121,7 @@
 @keyframes dlTurn { 0%, 100% { transform: none; } 25% { transform: rotateY(-10deg); } 75% { transform: rotateY(10deg); } }
 @keyframes dlStamp { to { opacity: 1; transform: scale(1) rotate(-8deg); } }
 @keyframes dlStrike { to { transform: scaleX(1); } }
-@keyframes dlRoll { to { transform: none; opacity: 1; } }
+@keyframes dlRoll { from { transform: translateY(-110%); opacity: 0; } to { transform: none; opacity: 1; } }
 @keyframes dlFlap { from { transform: rotateX(-90deg); filter: brightness(.6); } to { transform: none; filter: none; } }
 @keyframes dlFill { from { transform: scaleX(0); } 70% { transform: scaleX(calc(var(--k) + .06)); } to { transform: scaleX(var(--k)); } }
 @keyframes dlPulse { 0% { filter: brightness(1.6); } 100% { filter: none; } }

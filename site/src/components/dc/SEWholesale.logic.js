@@ -52,6 +52,7 @@ class Component extends DCLogic {
     this.setState({ qty: q, from: palletsFor(q) !== palletsFor(s.qty) ? 0 : cartonsFor(s.qty), flash: now !== was ? s.flash + 1 : s.flash, roll: moved ? s.roll + 1 : s.roll }); this.rollKeep(this.keep(q, p)); }
   pick(id) { const D = this.state.data, p = D && D.products.find((x) => x.id === id); this.setState({ part: id, from: MAXC }); if (p) this.rollKeep(this.keep(this.state.qty, p)); }
   renderVals() {
+    const L = typeof window !== 'undefined' ? window.seI18n : null, tape = L && L.lang() === 'ar' ? L.tr('SAM ELECTRONICS · WHOLESALE · TRADE') : null; // Urgent 5: the tape is data-no-i18n (the walker skips it), so it is translated here
     const s = this.state, D = s.data, lib = s.lib, p = this.prod(), q = s.qty, ti = tierOf(q), full = onPallet(q) >= PER_PALLET, rowN = palletsFor(q);
     const img = (x) => (x && x.shot && window.SE_SHOTS ? window.SE_SHOTS.url(x.shot, 480) /* R6 E7: screens = box + LCD */ : x && lib && lib.large && LK[x.category] != null ? lib.large[LK[x.category]] : '');
     const unit = p ? Math.round(p.retail_price * TIERS[ti].f) : 0, n = cartonsFor(q);
@@ -60,7 +61,7 @@ class Component extends DCLogic {
       const fresh = i >= s.from; return { key: rowN + '-' + i, i, layer, back, col, z: (back ? 0 : 100) + layer * 10 + col, drop: fresh, dl: (s.from === 0 ? (s.roll ? 1.3 + i * 0.06 : 1.7 + i * 0.28) : (i - s.from) * 0.09).toFixed(2) + 's', code: 'SE-' + (2611 + i * 7) }; });
     const wa = D ? 'https://wa.me/' + D.contact.wa + '?text=' + encodeURIComponent('Hi Sam Electronics, I have a bulk list for a trade quote.') : '#';
     const soon = (title, text) => (ev) => { ev && ev.preventDefault && ev.preventDefault(); window.dispatchEvent(new CustomEvent('se:soon', { detail: { title, text } })); };
-    return {
+    return { tape,
       secRef: this.secRef, keepRef: this.keepRef, seen: s.seen, countries: ss.countries, tradeMin: ss.tradeMin,
       parts: (PARTS.includes(s.part) ? PARTS : [s.part].concat(PARTS.slice(0, 3))).map((id) => D && D.products.find((x) => x.id === id)).filter(Boolean).map((x) => ({ id: x.id, name: x.title, grade: GN[x.grade], img: img(x), on: x.id === s.part, pick: () => this.pick(x.id) })),
       qty: q, qtyTxt: q.toLocaleString('en-US'), maxQ: MAXQ, setQty: (e) => this.setQty(Number(e.target.value)), fill: (((q - 10) / (MAXQ - 10)) * 100).toFixed(2) + '%',
