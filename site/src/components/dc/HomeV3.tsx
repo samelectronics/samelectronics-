@@ -13,7 +13,7 @@ import SETeardown from './SETeardown';
 import BootIntro from '../home/sections/BootIntro';
 import Nav from '../home/sections/Nav';
 import Hero from '../home/sections/Hero';
-import FindMyPartPanel from '../home/sections/FindMyPartPanel';
+import FindMyPart from '../home/FindMyPart';
 import SystemMapDrawer from '../home/sections/SystemMapDrawer';
 import CartDrawer from '../home/sections/CartDrawer';
 import SamsoomChat from '../home/sections/SamsoomChat';
@@ -38,7 +38,7 @@ function render(v: Vals) {
             <HomeRest v={v} />
           </>
         ) : null}
-        <FindMyPartPanel v={v} />
+        <FindMyPart open={!!v.fmp?.open} init={v.fmp?.init || {}} onClose={v.fmp?.close} onShop={v.fmp?.shop} />
         <SystemMapDrawer v={v} />
         <CartDrawer v={v} />
         {v.chat?.closed ? (

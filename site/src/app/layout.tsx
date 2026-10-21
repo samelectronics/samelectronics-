@@ -22,6 +22,7 @@ import '@/styles/feed.css';
 import '@/styles/visit.css';
 import '@/styles/finale.css';
 import '@/styles/fmp.css';
+import '@/styles/fmp2.css';
 import '@/styles/titles.css';
 import '@/styles/boot.css';
 import '@/styles/langpop.css';

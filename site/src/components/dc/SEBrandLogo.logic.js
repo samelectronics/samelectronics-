@@ -4,6 +4,7 @@
 // and webpackIgnore on runtime imports. Converted 12 Oct 2026; maintained by hand since.
 import React from 'react';
 import { DCLogic, StreamableLogic } from '@/dc/runtime';
+import LM from '@/content/logoMetrics.json';
 
 // Logo slot: drop a monochrome SVG at assets/brands/<brand>.svg (it is re-coloured to `color`).
 // Until official files arrive, each brand is a typographic stand-in approximating its own wordmark
@@ -40,9 +41,13 @@ class Component extends DCLogic {
     const wm = { t: d.t, f: d.f, w: d.w, st: d.st || 'normal', ls: d.ls, fs: Math.round(h * d.fs * 0.82 * 10) / 10, dy: Math.round(h * (d.dy || 0) * 10) / 10 };
     // Urgent 2 · fit="W×H": every logo gets the same visual AREA inside the same invisible box, so a long wordmark (HONOR,
     // HUAWEI) and a short one (OPPO, vivo) carry equal optical weight, and nothing is ever cut off
-    let boxH = h, logoW = Math.round(h * this.state.ar);
-    if (this.props.fit) { const [FW, FH] = String(this.props.fit).split('x').map(Number), ar = this.state.ar, A = FW * FH * 0.42; let w = Math.sqrt(A * ar), hh = w / ar; if (w > FW) { w = FW; hh = w / ar; } if (hh > FH) { hh = FH; w = hh * ar; } boxH = Math.round(hh * 10) / 10; logoW = Math.round(w); }
-    return { boxH, label: d.t, color: this.props.color || '#FFFFFF', hasLogo: ok, noLogo: !ok, wm, logoW, mask: "url('assets/brands/" + b + ".svg') left center / contain no-repeat" };
+    // Hero 4 (owner): logos were still different sizes. The SVGs are now trimmed to their ink (scripts/qa/logo-metrics.mjs)
+    // and every logo gets the same optical size: equal AREA in its box, then heavier marks (POCO, Samsung) a touch smaller
+    // and lighter ones (realme, vivo) a touch larger, by their measured ink density. Same rule everywhere a logo appears.
+    const M = LM[b], ar = M ? M.ar : this.state.ar;
+    let boxH = h, logoW = Math.round(h * ar);
+    { const [FW, FH] = String(this.props.fit || Math.round(h * 4.3) + 'x' + h).split('x').map(Number), A = FW * FH * 0.38, k = 1; /* measured ink density misleads on all-caps marks (SAMSUNG fills its box): equal area on the trimmed ink only */ let w = Math.sqrt(A * ar) * k, hh = w / ar; if (w > FW) { w = FW; hh = w / ar; } if (hh > FH) { hh = FH; w = hh * ar; } boxH = Math.round(hh * 10) / 10; logoW = Math.round(w); }
+    return { boxH, label: d.t, color: this.props.color || '#FFFFFF', hasLogo: ok, noLogo: !ok, wm, logoW, mask: "url('/assets/brands/" + b + ".svg') center / 100% 100% no-repeat" };
   }
 }
 
