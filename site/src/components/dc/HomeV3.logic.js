@@ -48,7 +48,7 @@ class Component extends DCLogic {
     setTimeout(() => [this.railRef, this.offerRef, this.storyRef, ...(this.extraObs || [])].forEach((r) => r.current && this.io.observe(r.current)), 300);
     try { document.fonts && document.fonts.load('700 20px "Space Grotesk"').then(() => { if (!this.dead) { this._hl = {}; this.forceUpdate(); } }); } catch (e) {}
   }
-  componentWillUnmount() { this.gIO && this.gIO.disconnect(); window.removeEventListener('se:lang', this.onLang); this.dead = true; clearInterval(this._reelSync); cancelAnimationFrame(this.reelRAF); this.reelIO && this.reelIO.disconnect(); [this.dIv, this.t, this.buyIv, this.offIv].forEach(clearInterval); this.offIO && this.offIO.disconnect(); this.busOff && this.busOff(); window.removeEventListener('keydown', this.onKey); ['se:cart', 'se:flash', 'se:go', 'se:fmp', 'se:chat', 'se:search'].forEach((n) => window.removeEventListener(n, this.bus)); this.playIO && this.playIO.disconnect(); if (this._kfEl) this._kfEl.remove(); clearTimeout(this.toastT2); clearTimeout(this.hideT); clearTimeout(this.toastT); window.removeEventListener('scroll', this.onScroll); window.removeEventListener('resize', this.onScroll); this.io && this.io.disconnect(); }
+  componentWillUnmount() { this.gIO && this.gIO.disconnect(); window.removeEventListener('se:lang', this.onLang); this.dead = true; clearInterval(this._reelSync); if (this._reelOnStart) document.removeEventListener('animationstart', this._reelOnStart, true); this._reelVio && this._reelVio.disconnect(); cancelAnimationFrame(this.reelRAF); this.reelIO && this.reelIO.disconnect(); [this.dIv, this.t, this.buyIv, this.offIv].forEach(clearInterval); this.offIO && this.offIO.disconnect(); this.busOff && this.busOff(); window.removeEventListener('keydown', this.onKey); ['se:cart', 'se:flash', 'se:go', 'se:fmp', 'se:chat', 'se:search'].forEach((n) => window.removeEventListener(n, this.bus)); this.playIO && this.playIO.disconnect(); if (this._kfEl) this._kfEl.remove(); clearTimeout(this.toastT2); clearTimeout(this.hideT); clearTimeout(this.toastT); window.removeEventListener('scroll', this.onScroll); window.removeEventListener('resize', this.onScroll); this.io && this.io.disconnect(); }
   TYPED = ['iPhone 15 Pro screen', 'Galaxy A54 battery', 'SM-A546 back cover', 'Redmi Note 13 charging flex', 'Pixel 8 Pro camera', 'Honor Magic6 Pro frame', 'Tecno Camon 30 screen', 'A2849 battery', 'Vivo V30 back glass', 'POCO X6 Pro charging port', 'Infinix Note 40 screen', 'Huawei P60 Pro camera'];
   measure() {
     const de = document.documentElement, vw = de.clientWidth || window.innerWidth, vh = window.innerHeight, z = Math.max(0.5, vw / 1440);
@@ -481,20 +481,28 @@ class Component extends DCLogic {
     if (this._rc) return this._rc;
     const D = 32000, STEP = 3200, tl = () => document.timeline.currentTime || performance.now();
     const anims = () => { const r = document.querySelector('[data-se-reel]'), sw = document.querySelector('[data-se-sweep]'); const L = (r ? r.getAnimations({ subtree: true }) : []).concat(sw && !(r && r.contains(sw)) ? sw.getAnimations({ subtree: true }) : []); return L.filter((a) => /^hr/.test(a.animationName || '')); }; // R6 §03 C: + the glass sweep
-    let off = tl(), pausedAt = null, hov = false, holdT = 0, lastGo = 0, el = null, ty = null, rev = false;
-    const master = () => (pausedAt != null ? pausedAt : (((tl() - off) % D) + D) % D);
-    const sync = () => { if (rev) return; const m = master(); anims().forEach((a) => { const c = (((a.currentTime || 0) % D) + D) % D; if (Math.abs(c - m) > 40) a.currentTime = m; if (pausedAt != null) { if (a.playState !== 'paused') a.pause(); } else if (a.playState === 'paused') a.play(); }); };
+    // Hero 1: the reel used to flicker (ads jumping up and down) at load and every 1.6s, because the CSS animations ran on
+    // their own clocks and a timer kept yanking their currentTime back to the master. Now every reel animation shares ONE
+    // startTime on the document timeline, so they cannot drift and are never corrected mid-motion; animations that start
+    // later (React re-renders) are locked the moment they start (animationstart), before they are seen.
+    let S = tl(), pausedAt = null, hov = false, holdT = 0, lastGo = 0, el = null, ty = null, rev = false;
+    const master = () => (pausedAt != null ? pausedAt : (((tl() - S) % D) + D) % D);
+    const lock = (a) => { if (pausedAt != null) { if (a.playState !== 'paused') a.pause(); if (Math.abs((a.currentTime || 0) - pausedAt) > 1) a.currentTime = pausedAt; } else if (a.startTime !== S || a.playState === 'paused') a.startTime = S; };
+    const sync = () => { if (rev) return; anims().forEach(lock); };
+    const onStart = (e) => { if (rev || !/^hr/.test(e.animationName || '')) return; (e.target.getAnimations ? e.target.getAnimations() : []).forEach((a) => { if (a.animationName === e.animationName) lock(a); }); };
+    document.addEventListener('animationstart', onStart, true); this._reelOnStart = onStart;
+    const vio = new IntersectionObserver(([e]) => { if (e.isIntersecting) requestAnimationFrame(sync); }); this._reelVio = vio; // off-screen sections pause their animations: re-lock the moment the hero is back
     const pause = () => { if (pausedAt == null) pausedAt = master(); sync(); };
-    const resume = () => { if (pausedAt != null) { off = tl() - pausedAt; pausedAt = null; } sync(); };
+    const resume = () => { if (pausedAt != null) { S = tl() - pausedAt; pausedAt = null; } sync(); };
     const go = (dir) => {
       const cur = Math.floor(master() / STEP), tgt = ((cur + dir + 10) % 10) * STEP; // the start of that ad's scroll-in
       if (dir < 0) { // R6 §03 C: previous = the feed moves DOWN: the same 600ms scroll, played backwards, then hold that ad
-        clearTimeout(holdT); const base = cur * STEP; off = tl() - (base + 600); pausedAt = null; sync(); rev = true;
+        clearTimeout(holdT); const base = cur * STEP; S = tl() - (base + 600); pausedAt = null; sync(); rev = true;
         anims().forEach((a) => { a.currentTime = base + 600; a.playbackRate = -1; if (a.playState === 'paused') a.play(); });
-        holdT = setTimeout(() => { anims().forEach((a) => (a.playbackRate = 1)); rev = false; off = tl() - (tgt + 1250); pausedAt = null; sync(); if (hov) pause(); }, 600);
+        holdT = setTimeout(() => { anims().forEach((a) => (a.playbackRate = 1)); rev = false; S = tl() - (tgt + 1250); pausedAt = null; sync(); if (hov) pause(); }, 600);
         return;
       }
-      clearTimeout(holdT); off = tl() - tgt; pausedAt = null; sync();
+      clearTimeout(holdT); S = tl() - tgt; pausedAt = null; sync();
       if (hov) holdT = setTimeout(() => { if (hov) pause(); }, 1250); // the 600ms feed motion + the ad's own entrance, then hold it
     };
     // 14 Oct §05 B: one wheel gesture (events until 250ms of quiet) or one swipe = one ad; the page never scrolls meanwhile
@@ -505,10 +513,10 @@ class Component extends DCLogic {
     const wheel = (e) => { e.preventDefault(); freeze(); const n = Date.now(); if (n - lastW > 250) { acc = 0; fired = false; } lastW = n; if (fired || n < busyUntil) return; acc += e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * 400 : e.deltaY; if (Math.abs(acc) >= 30) { fired = true; busyUntil = n + 650; go(acc > 0 ? 1 : -1); } };
     const pmove = () => freeze();
     const ts = (e) => { ty = e.touches[0].clientY; hov = true; clearTimeout(this._rcLeave); pause(); }, tm = (e) => { if (ty != null) e.preventDefault(); }, te = (e) => { if (ty == null) return; const dy = e.changedTouches[0].clientY - ty; ty = null; if (Math.abs(dy) > 30) { e.preventDefault(); this._swiped = Date.now(); go(dy < 0 ? 1 : -1); } clearTimeout(this._rcLeave); this._rcLeave = setTimeout(() => { hov = false; resume(); }, 3000); };
-    this._reelSync = setInterval(() => !this.dead && !document.hidden && sync(), 1600);
+    this._reelSync = setInterval(() => !this.dead && !document.hidden && sync(), 4000); // a safety net only: with one shared startTime nothing moves
     window.seReel = { pause, resume, go, master, sync, at: (ms) => { pausedAt = ((ms % D) + D) % D; sync(); } };
     return (this._rc = {
-      ref: (n) => { if (el) { el.removeEventListener('pointermove', pmove); el.removeEventListener('wheel', wheel); el.removeEventListener('touchstart', ts); el.removeEventListener('touchmove', tm); el.removeEventListener('touchend', te); } el = n; if (n) { n.addEventListener('pointermove', pmove, { passive: true }); n.addEventListener('wheel', wheel, { passive: false }); n.addEventListener('touchstart', ts, { passive: true }); n.addEventListener('touchmove', tm, { passive: false }); n.addEventListener('touchend', te, { passive: false }); } },
+      ref: (n) => { if (el) { el.removeEventListener('pointermove', pmove); el.removeEventListener('wheel', wheel); el.removeEventListener('touchstart', ts); el.removeEventListener('touchmove', tm); el.removeEventListener('touchend', te); } el = n; if (n) { vio.disconnect(); vio.observe(n); requestAnimationFrame(() => { sync(); requestAnimationFrame(() => n.classList.add('se-reel-on')); }); n.addEventListener('pointermove', pmove, { passive: true }); n.addEventListener('wheel', wheel, { passive: false }); n.addEventListener('touchstart', ts, { passive: true }); n.addEventListener('touchmove', tm, { passive: false }); n.addEventListener('touchend', te, { passive: false }); } },
       enter: () => { hov = true; clearTimeout(holdT); clearTimeout(this._rcLeave); pause(); }, // 14 Oct §05 B: stops at once, the progress segment freezes
       leave: () => { clearTimeout(holdT); clearTimeout(this._rcLeave); this._rcLeave = setTimeout(() => { hov = false; resume(); }, 3000); }, // R6 §03 C: resumes 3s after the pointer leaves
       prev: (e) => { e && e.stopPropagation(); go(-1); },
@@ -622,8 +630,8 @@ class Component extends DCLogic {
     // Issue 1B: fixed colour order, no two neighbouring ads alike (the last is white so the loop back to yellow never repeats)
     const ORDER = ['yel', 'light', 'dark', 'yel', 'light', 'dark', 'yel', 'light', 'dark', 'light']; ads.forEach((a, i) => (a[1] = ORDER[i]));
     // Urgent 1: the reel shows THE pose for every part (carton behind, product in front), not the bare library renders
-    const POSE = window.SE_SHOTS ? (this._pose = this._pose || { large: [0, 1, 2, 3, 4, 5, 6, 7].map((i) => window.SE_SHOTS.byIndex(i, 480)) }) : null;
-    const REEL_D = 32, LIB = POSE ? POSE.large : s.lib && s.lib.large && s.lib.large.length >= 8 ? s.lib.large : null, LK = { scr: 0, frm: 1, flx: 2, board: 3, bat: 4, cam: 5, sml: 6, bcv: 7 };
+    const POSE = window.SE_SHOTS ? (this._pose = this._pose || { large: [0, 1, 2, 3, 4, 5, 6, 7].map((i) => window.SE_SHOTS.byIndex(i, 480)).concat(window.SE_SHOTS.url('rep-crack', 480)) } /* Hero 1: [8] the broken phone, one still render */) : null;
+    const REEL_D = 32, LIB = POSE ? POSE.large : s.lib && s.lib.large && s.lib.large.length >= 8 ? s.lib.large : null, LK = { scr: 0, frm: 1, flx: 2, board: 3, bat: 4, cam: 5, sml: 6, bcv: 7, rep: 8 };
     { const src = POSE || s.lib; if (src && src !== this._bbLib) { this._bbLib = src; this.computeBB(src); } }
     const r1 = (v) => Math.round(v * 10) / 10, BB = s.bb || {}, bbFit = (bb, W, H, cx, cy) => { const [x0, y0, bw, bh, ar] = bb || [0.1, 0.1, 0.8, 0.8, 1], Wi = Math.min(W / bw, H / (bh * ar)), Hi = Wi * ar; return { l: r1(cx - (x0 + bw / 2) * Wi), t: r1(cy - (y0 + bh / 2) * Hi), w: r1(Wi), h: r1(Hi), pw: bw * Wi, ph: bh * Hi }; };
     const EO = 'cubic-bezier(.16,1,.3,1)', IO = 'cubic-bezier(.45,0,.55,1)', lk = (n, fr) => this.tlK('hrK' + n, REEL_D, 0, fr), dl = (i) => ' ' + (-((REEL_D - i * 3.2) % REEL_D)).toFixed(2) + 's';
@@ -645,16 +653,16 @@ class Component extends DCLogic {
     const swFr = (lag, par) => { const fr = [[0, SW0 + ';opacity:0']]; ads.forEach((a, i) => { if (i % 2 !== par) return; const t0 = i * 3.2 + 0.9 + lag, o = SWO[a[1]]; if (t0 + 1.12 > REEL_D) return; fr.push([t0, SW0 + ';opacity:' + o, IO], [t0 + 1.1, SW1 + ';opacity:' + o], [t0 + 1.11, SW0 + ';opacity:0']); }); fr.push([REEL_D, SW0 + ';opacity:0']); return fr; };
     const sweepPh = this.tlK('hrSweep2', REEL_D, 0, swFr(0, 0)), sweepIp = this.tlK('ipSweep2', REEL_D, 0, swFr(0, 1));
     const iRep = ads.findIndex((a) => a[0] === 'rep'), iWhs = ads.findIndex((a) => a[0] === 'whs');
-    const rqLib = s.lib && s.lib.large && s.lib.large[9] ? s.lib : null, rq = this.hrFilm((rqLib && rqLib.front) || { ph: [0.27, 0.04, 0.46, 0.92], scr: [0.045, 0.022, 0.91, 0.956] }, REEL_D, iRep * 3.2 + 0.9, rqLib ? rqLib.large[9] : '');
+    const rq = null; // Hero 1: the drawn crack film (and its 60+ keyframe animations) is gone
     const boxes = [[55, 259], [81, 259], [107, 259], [68, 232], [94, 232], [81, 205]].map(([x, y], j) => { const t = 0.6 + j * 0.1; return { x, y, an: this.tlK('hrC' + j, REEL_D, iWhs * 3.2, [[0, 'opacity:0;transform:translateY(-40px)'], [t, 'opacity:0;transform:translateY(-40px)'], [t + 0.01, 'opacity:1;transform:translateY(-40px)', 'cubic-bezier(.3,.6,.4,1)'], [t + 0.37, 'opacity:1;transform:translateY(0) scale(1)', 'ease-in-out'], [t + 0.43, 'opacity:1;transform:translateY(0) scale(1.02,.97)', 'ease-in-out'], [t + 0.53, 'opacity:1;transform:translateY(0) scale(1)'], [3.85, 'opacity:1;transform:translateY(0) scale(1)'], [3.9, 'opacity:0;transform:translateY(-40px)']]) }; });
     const GL = { dark: ['rgba(255,226,150,.42)', 'rgba(255,226,150,.16)'], yel: ['rgba(255,250,228,.8)', 'rgba(255,250,228,.3)'], light: ['rgba(255,206,96,.3)', 'rgba(255,206,96,.11)'] };
     if (!this._gRef) this._gRef = (el) => { this._gcv = el; if (el) { this._gDrawn = 0; this.loadGlobe(); this.drawGlobe(); } };
     // 14 Oct §05 A: products sit centred between the title (bottom ≈121px) and the description (top 302px): 211.5 vs 228.8
     const PROD_DY = -17.3;
     const reelAll = ads.map(([kind, th, k, t, d, c], i) => { const lib = !!LIB && LK[kind] != null && kind !== 'scr', f = lib ? bbFit(BB[LK[kind]], 96, 137.3, 96, 228.8) : null;
-      const pw = kind === 'scr' ? 64.2 : kind === 'rep' ? rq.pw : kind === 'wld' ? 96 : kind === 'whs' ? 90 : lib ? f.pw : 88, ph = kind === 'scr' ? 137.3 : kind === 'rep' ? rq.ph : kind === 'wld' ? 96 : kind === 'whs' ? 99.5 : lib ? f.ph : 120, Lp = Math.max(pw, ph), gD = r1(Lp * 1.3), cy = 228.8;
+      const pw = kind === 'scr' ? 64.2 : kind === 'wld' ? 96 : kind === 'whs' ? 90 : lib ? f.pw : 88, ph = kind === 'scr' ? 137.3 : kind === 'wld' ? 96 : kind === 'whs' ? 99.5 : lib ? f.ph : 120, Lp = Math.max(pw, ph), gD = r1(Lp * 1.3), cy = 228.8;
       const [l1, l2] = t.split('\n'), G = GL[th];
-      return { ...TH[th], kind, k, l1, l2, d, c, straight: lib && BB[LK[kind]] && BB[LK[kind]][5] ? 'rotate(' + BB[LK[kind]][5].toFixed(1) + 'deg)' : 'none', so: f ? r1(96 - f.l) + 'px ' + r1(228.8 - f.t) + 'px' : '50% 50%', isLib: lib, isCss: !LIB && !['scr', 'rep', 'whs', 'wld'].includes(kind), isScr: kind === 'scr', isRep: kind === 'rep', isWhs: kind === 'whs', isWld: kind === 'wld', f: f || { l: 0, t: 0, w: 0, h: 0 }, img: lib ? LIB[LK[kind]] : '', rq, boxes: kind === 'whs' ? boxes : [], gRef: this._gRef,
+      return { ...TH[th], kind, k, l1, l2, d, c, straight: lib && BB[LK[kind]] && BB[LK[kind]][5] ? 'rotate(' + BB[LK[kind]][5].toFixed(1) + 'deg)' : 'none', so: f ? r1(96 - f.l) + 'px ' + r1(228.8 - f.t) + 'px' : '50% 50%', isLib: lib, isCss: !LIB && !['scr', 'rep', 'whs', 'wld'].includes(kind), isScr: kind === 'scr', isRep: false /* Hero 1: the repair ad shows the still broken-phone render (no drawn cracks, no seal, no boot logo) */, isWhs: kind === 'whs', isWld: kind === 'wld', f: f || { l: 0, t: 0, w: 0, h: 0 }, img: lib ? LIB[LK[kind]] : '', rq, boxes: kind === 'whs' ? boxes : [], gRef: this._gRef,
         gD, gL: r1(96 - gD / 2), gT: r1(cy - gD / 2), glow: 'radial-gradient(closest-side,' + G[0] + ' 0%,' + G[1] + ' 50%,rgba(255,255,255,0) 100%)', sW: r1(pw * 0.8), sL: r1(96 - pw * 0.4), sT: r1(228.8 + ph / 2 - 4),
         aCard: K.card + dl(i), aEb: K.eb + dl(i), aL1: K.l1 + dl(i), aL2: K.l2 + dl(i), aProd: K.prod + dl(i), aFade: K.fade + dl(i), aBot: K.bot + dl(i), aHold: K.hold + dl(i), aSheen: 'none', aSheenR: 'none', dy: PROD_DY }; }); // 14 Oct §05 C: no light on the products (only the glass shines)
     const PG = { dark: ['rgba(255,255,255,.16)', 'rgba(255,255,255,.8)'], yel: ['rgba(38,40,43,.16)', 'rgba(38,40,43,.72)'], light: ['rgba(38,40,43,.14)', 'rgba(38,40,43,.62)'] };

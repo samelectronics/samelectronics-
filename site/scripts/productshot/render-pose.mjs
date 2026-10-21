@@ -17,6 +17,7 @@ global.window = {}; require(path.join(ROOT, 'public/se-shots.js'));
 const JOBS = {};
 for (const [id, s] of Object.entries(window.SE_SHOTS.shots)) JOBS[id] = { item: 'scr', box: s.box, lcd: s.lcd, label: s.label || '' };
 for (const it of ['bat', 'bcv', 'flx', 'cam', 'sml', 'frm', 'board']) JOBS['part-' + it] = { item: it, box: 'white', lcd: 'plain', label: '' };
+JOBS['rep-crack'] = { item: 'crack', box: 'white', lcd: 'plain', label: '' };
 const only = args.only ? args.only.split(',') : args.shot ? [args.shot] : Object.keys(JOBS);
 const OUT = path.join(ROOT, 'public/assets/pose'), PNG = path.join(OUT, '.png'); fs.mkdirSync(PNG, { recursive: true });
 const b = await pw.chromium.launch({ args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
