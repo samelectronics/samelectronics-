@@ -67,7 +67,10 @@ html[dir='rtl'] .rv-track, html[dir='rtl'] .wf-tick-row { animation-name: seMarq
    middle of the devices, 808–1412), so it only changes side: same overlap, same angles, same light, no flipped objects.
    The text block moves to the right at the mirrored distance (80px from the edge). */
 html[dir='rtl'] [data-hero-scene] { scale: -1 1; }
-html[dir='rtl'] [data-hero-group] { scale: -1 1; transform-origin: 1110px 50%; }
+/* Hero 2 (owner): in Arabic the devices must face the headline like they do in English. The device group is no longer
+   flipped back: the scene's mirror moves AND mirrors it (positions, tilts, shadows, light), and only the two screens are
+   flipped back so the store and the ads read normally. */
+html[dir='rtl'] [data-hero-screen] { scale: -1 1; }
 html[dir='rtl'] [data-hero-text] { left: 720px !important; }
 /* Bench Test: words on the right, the rig on the left (the rig itself is a device and keeps its own layout). */
 html[dir='rtl'] .bt-left { left: 768px; }

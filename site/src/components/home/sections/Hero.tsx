@@ -432,7 +432,7 @@ export default function Hero({ v }: { v: Vals }) {
                 }}
               ></span>
               {'\n          '}
-              <div style={{ position: 'absolute', inset: '4px', borderRadius: '28px', background: '#08090A', overflow: 'hidden' }}>
+              <div data-hero-screen="" style={{ position: 'absolute', inset: '4px', borderRadius: '28px', background: '#08090A', overflow: 'hidden' }}>
                 {/* 14 Oct §05 C/D: the iPad sweeps first (phone 2.7s later, never together); real glass on top */}
                 <span className="se-glass" style={{ zIndex: 5 }}></span>
                 <span className="se-glass-sweep" style={{ zIndex: 6, animationDelay: '0s', ['--d' as string]: '300px', ['--sw' as string]: v.sweepIp } as React.CSSProperties}></span>
@@ -896,7 +896,7 @@ export default function Hero({ v }: { v: Vals }) {
                 }}
               ></span>
               {'\n          '}
-              <div style={{ position: 'absolute', inset: '3px', borderRadius: '35px', background: '#08090A', overflow: 'hidden' }}>
+              <div data-hero-screen="" style={{ position: 'absolute', inset: '3px', borderRadius: '35px', background: '#08090A', overflow: 'hidden' }}>
                 {'\n            '}
                 <div style={{ position: 'absolute', inset: '7px', borderRadius: '29px', overflow: 'hidden', background: '#26282B' }}>
                   {'\n              '}
@@ -1809,13 +1809,16 @@ export default function Hero({ v }: { v: Vals }) {
                         alignItems: 'flex-start',
                         gap: '16px',
                         padding: '0 28px',
+                        width: '196px',
+                        boxSizing: 'border-box',
+                        flex: 'none',
                         cursor: 'pointer',
                         position: 'relative',
                       }}
                       onClick={() => v.openFmpAt && v.openFmpAt(v.b?.id)}
                     >
-                      {/* R6 §04: thin dividers only between the owner's groups, drawn as tiny circuit pads */}
-                      {v.b?.grpEnd ? <span className="se-rail-div" aria-hidden="true" /> : null}
+                      {/* Hero 2 (owner): every brand has its own divider, family or not; all items are the same width */}
+                      <span className="se-rail-div" aria-hidden="true" />
                       {'\n              '}
                       <div
                         style={cssToObj(
