@@ -1,6 +1,7 @@
 // Converted from design/project/Sam Electronics Home v3.dc.html (12 Oct 2026); maintained by hand since.
 // Home v3 section "Hero". Renders against the home page's values (`v`, from HomeV3's logic class).
 'use client';
+import PalletDrop from '../PalletDrop';
 import React from 'react';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 import SEBrandLogo from '../../dc/SEBrandLogo';
@@ -985,6 +986,12 @@ export default function Hero({ v }: { v: Vals }) {
                                           )}
                                         />
                                         {'\n                              '}
+                                        {v.a?.fix ? (
+                                          <>
+                                            <img className="se-rep-fix" src={v.a.fix} alt="" style={{ animation: v.a.aFix, filter: v.a.shd }} />
+                                            <span className="se-rep-beam" style={{ animation: v.a.aBeam }} />
+                                          </>
+                                        ) : null /* owner (27 Oct): cracked → yellow repair sweep → repaired phone boots */}
                                         <span
                                           style={cssToObj(
                                             `position:absolute;inset:0;overflow:hidden;-webkit-mask-image:url('${s(v.a?.img)}');mask-image:url('${s(v.a?.img)}');-webkit-mask-size:100% 100%;mask-size:100% 100%`,
@@ -1250,193 +1257,7 @@ export default function Hero({ v }: { v: Vals }) {
                                   {'\n                        '}
                                 </div>
                                 {'\n                        '}
-                                {v.a?.isWhs ? (
-                                  <>
-                                    <div
-                                      style={{
-                                        position: 'absolute',
-                                        inset: '0',
-                                        transformOrigin: '96px 246.5px',
-                                        transform: 'translateY(-17.7px) scale(1.07)',
-                                      }}
-                                    >
-                                      {'\n                          '}
-                                      <div style={{ position: 'absolute', left: '54px', top: '281px', width: '84px', height: '12px' }}>
-                                        {'\n                            '}
-                                        <span
-                                          style={{
-                                            position: 'absolute',
-                                            left: '0',
-                                            right: '0',
-                                            top: '0',
-                                            height: '4px',
-                                            borderRadius: '1px',
-                                            background: 'repeating-linear-gradient(90deg,#D9B27A 0 20px,#C99F66 20px 21px)',
-                                            boxShadow: 'inset 0 0 0 .5px rgba(90,60,25,.4)',
-                                          }}
-                                        ></span>
-                                        {'\n                            '}
-                                        <span
-                                          style={{
-                                            position: 'absolute',
-                                            left: '3px',
-                                            top: '4px',
-                                            width: '10px',
-                                            height: '5px',
-                                            background: '#9E7340',
-                                          }}
-                                        ></span>
-                                        <span
-                                          style={{
-                                            position: 'absolute',
-                                            left: '37px',
-                                            top: '4px',
-                                            width: '10px',
-                                            height: '5px',
-                                            background: '#9E7340',
-                                          }}
-                                        ></span>
-                                        <span
-                                          style={{
-                                            position: 'absolute',
-                                            right: '3px',
-                                            top: '4px',
-                                            width: '10px',
-                                            height: '5px',
-                                            background: '#9E7340',
-                                          }}
-                                        ></span>
-                                        {'\n                            '}
-                                        <span
-                                          style={{
-                                            position: 'absolute',
-                                            left: '0',
-                                            right: '0',
-                                            top: '9px',
-                                            height: '3px',
-                                            borderRadius: '1px',
-                                            background: 'linear-gradient(180deg,#C9A06A,#A97E47)',
-                                          }}
-                                        ></span>
-                                        {'\n                          '}
-                                      </div>
-                                      {'\n                          '}
-                                      {(Array.isArray(v.a?.boxes) ? v.a?.boxes : []).map((__it: any, __i: number) => {
-                                        const v2 = { ...v, b: __it, $index: __i };
-                                        return ((v: Vals) => (
-                                          <React.Fragment key={__i}>
-                                            {'\n                            '}
-                                            <span
-                                              style={cssToObj(
-                                                `position:absolute;left:${s(v.b?.x)}px;top:${s(v.b?.y)}px;width:26px;height:22px;opacity:0;transform-origin:50% 100%;animation:${s(v.b?.an)}`,
-                                              )}
-                                            >
-                                              {'\n                              '}
-                                              <span
-                                                style={{
-                                                  position: 'absolute',
-                                                  left: '0',
-                                                  top: '-5px',
-                                                  width: '26px',
-                                                  height: '5px',
-                                                  transformOrigin: '0 100%',
-                                                  transform: 'skewX(-45deg)',
-                                                  background: 'linear-gradient(90deg,#E6BF88,#D8AD72)',
-                                                  boxShadow: 'inset 0 0 0 .5px rgba(90,60,25,.35)',
-                                                }}
-                                              >
-                                                <span
-                                                  style={{
-                                                    position: 'absolute',
-                                                    left: '10px',
-                                                    top: '0',
-                                                    bottom: '0',
-                                                    width: '6px',
-                                                    background: '#F2C14A',
-                                                  }}
-                                                ></span>
-                                              </span>
-                                              {'\n                              '}
-                                              <span
-                                                style={{
-                                                  position: 'absolute',
-                                                  left: '26px',
-                                                  top: '0',
-                                                  width: '5px',
-                                                  height: '22px',
-                                                  transformOrigin: '0 0',
-                                                  transform: 'skewY(-45deg)',
-                                                  background: 'repeating-linear-gradient(90deg,#A87A44 0 .8px,#8E6334 .8px 1.6px)',
-                                                }}
-                                              ></span>
-                                              {'\n                              '}
-                                              <span
-                                                style={{
-                                                  position: 'absolute',
-                                                  inset: '0',
-                                                  borderRadius: '1px',
-                                                  background: 'linear-gradient(180deg,#D4A266,#BA8749)',
-                                                  boxShadow: 'inset 0 0 0 .5px rgba(80,52,18,.45)',
-                                                }}
-                                              >
-                                                {'\n                                '}
-                                                <span
-                                                  style={{
-                                                    position: 'absolute',
-                                                    left: '0',
-                                                    right: '0',
-                                                    top: '0',
-                                                    height: '1.5px',
-                                                    background: 'repeating-linear-gradient(90deg,#9E7340 0 .8px,#E2BC86 .8px 1.6px)',
-                                                  }}
-                                                ></span>
-                                                {'\n                                '}
-                                                <span
-                                                  style={{
-                                                    position: 'absolute',
-                                                    left: '10px',
-                                                    top: '0',
-                                                    width: '6px',
-                                                    height: '8px',
-                                                    background: '#E9B42E',
-                                                  }}
-                                                ></span>
-                                                {'\n                                '}
-                                                <span
-                                                  style={{
-                                                    position: 'absolute',
-                                                    right: '3px',
-                                                    bottom: '3px',
-                                                    width: '11px',
-                                                    height: '8px',
-                                                    borderRadius: '1px',
-                                                    background: '#F6F4EF',
-                                                  }}
-                                                >
-                                                  <span
-                                                    style={{
-                                                      position: 'absolute',
-                                                      left: '1.5px',
-                                                      right: '1.5px',
-                                                      top: '1.5px',
-                                                      height: '3.5px',
-                                                      background:
-                                                        'repeating-linear-gradient(90deg,#26282B 0 .6px,transparent .6px 1.3px,#26282B 1.3px 1.6px,transparent 1.6px 2.4px)',
-                                                    }}
-                                                  ></span>
-                                                </span>
-                                                {'\n                              '}
-                                              </span>
-                                              {'\n                            '}
-                                            </span>
-                                            {'\n                          '}
-                                          </React.Fragment>
-                                        ))(v2);
-                                      })}
-                                    </div>
-                                    {'\n                        '}
-                                  </>
-                                ) : null}
+                                {v.a?.isWhs ? <PalletDrop style={{ left: '16px', width: '160px', top: '167px' }} /> : null /* owner (27 Oct): the real pallet, cartons dropping on repeat */}
                                 {'\n                        '}
                                 {v.a?.isWld ? (
                                   <>

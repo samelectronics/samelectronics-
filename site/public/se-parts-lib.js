@@ -37,8 +37,8 @@ async function build() {
 // H5: dedicated replacement-screen render (own scene; the teardown model is not touched).
 // 3/4 angle, cover glass with visible thickness, thin black border, metal backplate edge, softbox reflection, copper flex tail folding back into a connector with gold contacts.
 async function screenPart(OS) {
-  const THREE = await import('https://esm.sh/three@0.160.0');
-  const { RoundedBoxGeometry } = await import('https://esm.sh/three@0.160.0/examples/jsm/geometries/RoundedBoxGeometry.js');
+  const THREE = await import('/vendor/three/three.module.min.js' /* owner (27 Oct): self-hosted, it used to come from esm.sh (slow, and the teardown skipped itself when that site failed) */);
+  const { RoundedBoxGeometry } = await import('/vendor/three/RoundedBoxGeometry.js');
   const R = 1024, cv = document.createElement('canvas'); cv.width = cv.height = R;
   const rd = new THREE.WebGLRenderer({ canvas: cv, antialias: true, alpha: true, preserveDrawingBuffer: true });
   rd.setPixelRatio(1); rd.setSize(R, R, false); rd.outputColorSpace = THREE.SRGBColorSpace; rd.toneMapping = THREE.ACESFilmicToneMapping; rd.toneMappingExposure = 1.0; rd.setClearColor(0x000000, 0);

@@ -637,3 +637,27 @@ html.se-intro-done #top [data-hero-text] > *, html.se-intro-done #top [data-hero
 .se-bp-logo { display: flex; align-items: center; min-width: 0; max-width: 190px; overflow: hidden; }
 .se-bp-stock { flex: none; font: 12px 'JetBrains Mono', monospace; color: #F7C032; white-space: nowrap; }
 .se-bp-grp { margin-top: -4px; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+/* owner (27 Oct) · the real pallet with cartons dropping on it, on repeat (hero wholesale ad + its poster) */
+.se-pd { position: absolute; aspect-ratio: 1200 / 1008; }
+.se-pd > img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; pointer-events: none; }
+.se-pd > .se-pd-c { transform: translate(var(--x), calc(var(--y) - 30%)); opacity: 0; animation: sePdDrop var(--pd, 3.6s) linear infinite both; }
+@keyframes sePdDrop {
+  0% { transform: translate(var(--x), calc(var(--y) - 30%)); opacity: 0; animation-timing-function: cubic-bezier(.55, 0, .85, .4); }
+  4% { opacity: 1; }
+  12% { transform: translate(var(--x), calc(var(--y) + .7%)); animation-timing-function: ease-out; }
+  15%, 84% { transform: translate(var(--x), var(--y)); opacity: 1; }
+  92%, 100% { transform: translate(var(--x), var(--y)); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .se-pd > .se-pd-c { animation: none; opacity: 1; transform: translate(var(--x), var(--y)); } }
+/* owner (27 Oct) · the repair ad: the cracked phone, a yellow repair light sweeps across, the repaired phone boots */
+.se-rep-fix { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.se-rep-beam { position: absolute; top: 4%; bottom: 4%; width: 10%; margin-left: -5%; background: linear-gradient(90deg, rgba(247, 192, 50, 0), rgba(255, 219, 110, .95), rgba(247, 192, 50, 0)); filter: blur(2px); mix-blend-mode: screen; pointer-events: none; }
+.se-rep-poster { position: relative; display: block; height: 100%; aspect-ratio: 1; }
+.se-rep-poster > img:first-child { position: absolute; inset: 0; width: 100%; height: 100%; max-height: none !important; }
+.se-rep-fix.se-rep-loop { animation: seRepFix 4.6s cubic-bezier(.45, 0, .55, 1) infinite both; }
+.se-rep-beam.se-rep-loop { animation: seRepBeam 4.6s cubic-bezier(.45, 0, .55, 1) infinite both; }
+@keyframes seRepFix { 0%, 30% { clip-path: inset(0 100% 0 0); } 48%, 92% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
+@keyframes seRepBeam { 0%, 29% { left: 0; opacity: 0; } 30% { left: 0; opacity: 1; } 48% { left: 100%; opacity: 1; } 53%, 100% { left: 100%; opacity: 0; } }
+html[dir='rtl'] .se-rep-fix.se-rep-loop { animation-name: seRepFixR; } html[dir='rtl'] .se-rep-beam.se-rep-loop { animation-name: seRepBeamR; }
+@keyframes seRepFixR { 0%, 30% { clip-path: inset(0 0 0 100%); } 48%, 92% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
+@keyframes seRepBeamR { 0%, 29% { left: 100%; opacity: 0; } 30% { left: 100%; opacity: 1; } 48% { left: 0; opacity: 1; } 53%, 100% { left: 0; opacity: 0; } }

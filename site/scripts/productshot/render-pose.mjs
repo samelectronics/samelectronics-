@@ -16,22 +16,25 @@ const args = Object.fromEntries(process.argv.slice(2).reduce((a, x, i, all) => (
 global.window = {}; require(path.join(ROOT, 'public/se-shots.js'));
 const JOBS = {};
 for (const [id, s] of Object.entries(window.SE_SHOTS.shots)) JOBS[id] = { item: 'scr', box: s.box, lcd: s.lcd, label: s.label || '' };
-for (const it of ['bat', 'bcv', 'flx', 'cam', 'sml', 'frm', 'board']) JOBS['part-' + it] = { item: it, box: 'white', lcd: 'plain', label: '' };
+for (const it of ['bat', 'bcv', 'flx', 'cam', 'sml', 'aud', 'frm', 'board']) JOBS['part-' + it] = { item: it, box: 'white', lcd: 'plain', label: '' };
 JOBS['rep-crack'] = { item: 'crack', box: 'white', lcd: 'plain', label: '' };
+JOBS['rep-fixed'] = { item: 'fixed', box: 'white', lcd: 'plain', label: '' };
+// owner (27 Oct): an Arabic set, the carton peeking out on the RIGHT (rendered, so its print stays readable): <id>-ar-<w>.webp
+for (const id of Object.keys(JOBS)) JOBS[id + '-ar'] = { ...JOBS[id], ar: '1' };
 const only = args.only ? args.only.split(',') : args.shot ? [args.shot] : Object.keys(JOBS);
 const OUT = path.join(ROOT, 'public/assets/pose'), PNG = path.join(OUT, '.png'); fs.mkdirSync(PNG, { recursive: true });
 const b = await pw.chromium.launch({ args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
-const p = await b.newPage({ viewport: { width: 2500, height: 2000 } });
+const p = await b.newPage({ viewport: { width: 2500, height: 2500 } });
 await p.route('http://shot.local/**', (r) => {
   const u = new URL(r.request().url()).pathname;
-  const file = u.startsWith('/three/') ? path.join(ROOT, 'node_modules', u) : path.join(ROOT, 'scripts/productshot', u);
+  const file = u.startsWith('/three/') ? path.join(ROOT, 'node_modules', u) : u.startsWith('/assets/') ? path.join(ROOT, 'public', u) : path.join(ROOT, 'scripts/productshot', u);
   if (!fs.existsSync(file)) return r.fulfill({ status: 404, body: '' });
   r.fulfill({ status: 200, body: fs.readFileSync(file), headers: { 'content-type': file.endsWith('.js') ? 'application/javascript' : file.endsWith('.jpg') ? 'image/jpeg' : file.endsWith('.json') ? 'application/json' : file.endsWith('.png') ? 'image/png' : 'text/html' } });
 });
 p.on('pageerror', (e) => console.error('page error', e.message));
 for (const id of only) {
   const j = JOBS[id]; if (!j) { console.error('no job', id); continue; }
-  await p.goto('http://shot.local/pose.html?' + new URLSearchParams({ ...j, w: '2400' }));
+  await p.goto('http://shot.local/pose.html?' + new URLSearchParams({ ...j, w: args.w || '2400' }));
   await p.waitForFunction(() => window.__done, null, { timeout: 300000 });
   const png = path.join(PNG, id + '.png');
   await p.locator('canvas').screenshot({ path: png, omitBackground: true });
@@ -39,10 +42,8 @@ for (const id of only) {
   execFileSync('python3', ['-I', '-c', `
 import sys
 from PIL import Image
-im=Image.open(sys.argv[1]).convert('RGBA'); bb=im.split()[3].point(lambda v:255 if v>24 else 0).getbbox()
-im=im.crop((max(0,bb[0]-14),max(0,bb[1]-14),min(im.width,bb[2]+14),min(im.height,bb[3]+14)))
-# square canvas so every place can show the shot at the same scale
-s=max(im.width,im.height); sq=Image.new('RGBA',(s,s),(0,0,0,0)); sq.alpha_composite(im,((s-im.width)//2,s-im.height))
+# owner (27 Oct): the frame is NOT cropped per item: the stage and camera are fixed, so every shot lines up with every other
+sq=Image.open(sys.argv[1]).convert('RGBA')
 for w in (240,480,960):
     # owner (26 Oct): crystal clear. Rendered at 2400px, so every size is a supersampled downscale, never an upscale
     r=sq.resize((w,w),Image.LANCZOS)

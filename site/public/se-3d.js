@@ -2,9 +2,9 @@
 let _T;
 async function T() {
   if (_T) return _T;
-  const THREE = await import('https://esm.sh/three@0.160.0');
-  const { RoomEnvironment } = await import('https://esm.sh/three@0.160.0/examples/jsm/environments/RoomEnvironment.js');
-  const { RoundedBoxGeometry } = await import('https://esm.sh/three@0.160.0/examples/jsm/geometries/RoundedBoxGeometry.js');
+  const THREE = await import('/vendor/three/three.module.min.js' /* owner (27 Oct): self-hosted, it used to come from esm.sh (slow, and the teardown skipped itself when that site failed) */);
+  const { RoomEnvironment } = await import('/vendor/three/RoomEnvironment.js');
+  const { RoundedBoxGeometry } = await import('/vendor/three/RoundedBoxGeometry.js');
   return (_T = { THREE, RoomEnvironment, RoundedBoxGeometry });
 }
 function stage(canvas, { THREE, RoomEnvironment }, opts = {}) {

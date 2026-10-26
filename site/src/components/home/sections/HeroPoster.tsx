@@ -2,6 +2,7 @@
 // details (a short paragraph, key points, the stock line), in the phone ad's colours and type. An X at the
 // top right, Esc and a click outside close it; the page behind dims and blurs.
 'use client';
+import PalletDrop from '../PalletDrop';
 import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import type { Vals } from '@/dc/runtime';
 
@@ -20,9 +21,9 @@ const globeShot = () => {
   }
 };
 
-/** Wholesale: the real wrapped pallet (scripts/palletfilm), not drawn cartons. */
+/** Wholesale: the real pallet, cartons dropping onto it on repeat (owner, 27 Oct: same as the ad). */
 function Cartons() {
-  return <img src="/assets/pallet/full-600.webp" srcSet="/assets/pallet/full-600.webp 1x, /assets/pallet/full-1200.webp 2x" alt="" />;
+  return <PalletDrop style={{ position: 'relative', width: '100%', maxHeight: '92%' }} />;
 }
 
 export default function HeroPoster({ v }: { v: Vals }) {
@@ -105,7 +106,13 @@ export default function HeroPoster({ v }: { v: Vals }) {
         </div>
         <div className="se-poster-art">
           <span className="se-poster-glow" style={{ background: `radial-gradient(closest-side,${c.glow},rgba(255,255,255,0))` }} />
-          {p.hasImg ? <img src={p.img} alt="" /> : p.isWld ? <img src={globeShot()} alt="" style={{ borderRadius: '50%' }} /> : <Cartons />}
+          {p.hasImg && p.fix ? (
+            <span className="se-rep-poster">
+              <img src={p.img} alt="" />
+              <img className="se-rep-fix se-rep-loop" src={p.fix} alt="" />
+              <span className="se-rep-beam se-rep-loop" />
+            </span>
+          ) /* owner (27 Oct): the same cracked → repaired phone as the ad */ : p.hasImg ? <img src={p.img} alt="" /> : p.isWld ? <img src={globeShot()} alt="" style={{ borderRadius: '50%' }} /> : <Cartons />}
         </div>
       </div>
     </div>

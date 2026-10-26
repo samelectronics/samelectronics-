@@ -10,9 +10,9 @@ export function layout(w, h, mob) {
   return { mob, rtl, ppu, cx: w * (rtl ? 0.475 : 0.525), fx: w * (rtl ? 0.25 : 0.75), top, aW: w * 0.45 - 40, floorY, Hs: Math.min(h * 0.75, floorY - top - 6) };
 }
 export async function mount(host, state) {
-  const THREE = await import('https://esm.sh/three@0.160.0');
-  const { RoomEnvironment } = await import('https://esm.sh/three@0.160.0/examples/jsm/environments/RoomEnvironment.js');
-  const { RoundedBoxGeometry } = await import('https://esm.sh/three@0.160.0/examples/jsm/geometries/RoundedBoxGeometry.js');
+  const THREE = await import('/vendor/three/three.module.min.js' /* owner (27 Oct): self-hosted, it used to come from esm.sh (slow, and the teardown skipped itself when that site failed) */);
+  const { RoomEnvironment } = await import('/vendor/three/RoomEnvironment.js');
+  const { RoundedBoxGeometry } = await import('/vendor/three/RoundedBoxGeometry.js');
   try { await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1500))]); } catch (e) {}
   const PI = Math.PI;
   const canvas = host.querySelector('canvas');
@@ -528,6 +528,8 @@ export async function mount(host, state) {
     const done = () => { adReady = true; setTimeout(renderThumbs, 50); }; let pr; try { pr = renderer.compileAsync ? Promise.all([renderer.compileAsync(adS, adCam), renderer.compileAsync(ovS, ovC), renderer.compileAsync(ovB, ovC)]) : (renderer.compile(adS, adCam), renderer.compile(ovS, ovC), Promise.resolve()); } catch (e) { pr = Promise.resolve(); }
     renderer.setRenderTarget(null); vis.forEach(([o, v]) => (o.visible = v)); pr.then(done, done); };
   if (!state.shelf) setTimeout(precompile, 1200);
+  // owner (27 Oct): the main stage's shaders too (they used to compile on the first visible frame = a stall on arrival)
+  if (!state.shelf && renderer.compileAsync) { const idle = window.requestIdleCallback || ((f) => setTimeout(f, 300)); idle(() => { try { renderer.compileAsync(scene, cam).catch(() => {}); } catch (e) {} }); }
   state.renderLib = (TS) => renderThumbs(TS, true);
   // final-call ad = Template B of the shared phone-ad engine (se-phone-ad.js); 3D renderAd stays as fallback
   let ad2 = null, ad2Cv = null, ad2Tex = null, ad2Wait = 0;
@@ -553,6 +555,7 @@ export async function mount(host, state) {
   const clO = Array.from({ length: 3 }, () => { const d = document.createElement('div'); d.style.cssText = 'position:absolute;left:0;top:0;font-family:"JetBrains Mono",monospace;font-size:11px;font-weight:600;letter-spacing:.1em;color:rgba(255,255,255,.9);white-space:nowrap;pointer-events:none;opacity:0;will-change:transform,opacity'; host.appendChild(d); const ln = document.createElementNS('http://www.w3.org/2000/svg', 'path'); ln.setAttribute('fill', 'none'); ln.setAttribute('stroke', 'rgba(255,255,255,.55)'); ln.setAttribute('stroke-width', '1'); const dt = document.createElementNS('http://www.w3.org/2000/svg', 'circle'); dt.setAttribute('r', '2.5'); dt.setAttribute('fill', '#F7C032'); return { d, ln, dt }; });
   const CLP = [[[-0.5, 1.2], [-0.75, 0], [0, -1.3]], [[-0.75, 0.62], [0.75, 0.98], [0, -1.55]], [[0, -1.42], [0.02, 0.28], [-0.69, 0.6]], [[0.06, 0.95], [0.04, 0.66], [-0.22, 0.33]], [[0, -0.2], [0, -1.0], [0.36, 0.3]], [[0.45, 1.25], [0.45, 0.95], [0.45, 0.65]], [[0, 1.02], [0, -0.42], [-0.5, 1.3]], [[0, 0.6], [0, -0.32], [0.45, 0.95]]];
   const SPEC0 = [['OLED · INCELL', 'COVER GLASS', 'TOUCH LAYER'], ['ALUMINIUM', 'SIDE KEYS', 'ANTENNA BANDS'], ['CHARGING PORT', 'BOARD-TO-BOARD', 'COAX LINE'], ['PROCESSOR', 'POWER IC', 'STORAGE'], ['LI-ION', 'CHARGE LEVEL', 'CONNECTOR'], ['WIDE', 'ULTRA WIDE', 'MACRO'], ['SIM TRAY', 'SPEAKER', 'SCREWS'], ['BACK GLASS', 'WIRELESS COIL', 'CAMERA RING']];
+  let warmed = false, warmAt = 0; // see tick()
   let p = 0, alive = true, visible = true, w = 0, hgt = 0, LY = null, camD = 10, dpr = 1, zMin = 1, zS = 0, upp = 0.01, mx = 0, my = 0, tmx = 0, tmy = 0, adClock = 0, lastT = 0;
   const ray = new THREE.Raycaster(), plane0 = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), V = new THREE.Vector3(), A = new THREE.Vector3(), B = new THREE.Vector3(), C = new THREE.Vector3();
   const worldAt = (sx, sy, out) => { ray.setFromCamera({ x: (sx / w) * 2 - 1, y: -(sy / hgt) * 2 + 1 }, cam); ray.ray.intersectPlane(plane0, out); return out; };
@@ -601,7 +604,10 @@ export async function mount(host, state) {
   window.addEventListener('pointermove', onMove, { passive: true });
   const tick = () => {
     if (!alive) return; if (document.hidden) setTimeout(tick, 60); else requestAnimationFrame(tick);
-    { const r = host.getBoundingClientRect(); visible = r.bottom > 0 && r.top < (window.innerHeight || 1000) && r.width > 0; } if (!visible) return;
+    { const r = host.getBoundingClientRect(), vh = window.innerHeight || 1000; visible = r.bottom > 0 && r.top < vh && r.width > 0;
+      // owner (27 Oct): warm-up. Until it has drawn once, the stage draws one frame (off-screen, invisible) as soon as it is
+      // within ~3 screens, so textures upload and shaders link BEFORE the visitor arrives, not on the first scroll into it
+      if (!visible) { if (!warmed && r.width > 0 && r.top < vh * 3 && r.bottom > -vh * 3 && performance.now() - warmAt > 700) { warmAt = performance.now(); try { frame(); warmed = true; } catch (e) {} } return; } }
     const f0 = performance.now(); try { frame(); window.__tdFt = performance.now() - f0; } catch (e) { if (!window.__tdErr) { window.__tdErr = e.message; console.error('teardown', e); } }
   };
   const frame = () => {
@@ -744,7 +750,7 @@ export async function mount(host, state) {
         if (wA > 0.003) { dx.globalAlpha = Math.min(1, wA); dx.drawImage(sw.w, X * dpr - R2, Y * dpr - R2, R2 * 2, R2 * 2); }
         if (gA > 0.003) { dx.globalAlpha = Math.min(1, gA); dx.drawImage(sw.g, X * dpr - R2, Y * dpr - R2, R2 * 2, R2 * 2); }
         dx.globalAlpha = 1; });
-      if (false && gk > 0.004) { /* Urgent 3: no bokeh circles over the phone */ if (!BKD || BKD.w !== w || BKD.h !== hgt) BKD = mkBK(); const ek = eio(gk);
+      if (gk > 0.004) { /* owner (27 Oct): the dust that turns into the big soft yellow circles is back. It is drawn on the canvas BEHIND the 3D canvas, so the circles always pass behind the phone, never over it */ if (!BKD || BKD.w !== w || BKD.h !== hgt) BKD = mkBK(); const ek = eio(gk);
         BKD.forEach((b2) => { const th = b2.th + 0.9 * Math.sin(t * b2.om + b2.ph); b2.x += Math.cos(th) * b2.v * dt; b2.y += (Math.sin(th) * 0.8 - 0.25) * b2.v * dt; if (b2.x < -b2.r) b2.x = w + b2.r; if (b2.x > w + b2.r) b2.x = -b2.r; if (b2.y < -b2.r) b2.y = hgt + b2.r; if (b2.y > hgt + b2.r) b2.y = -b2.r; });
         for (let i = 0; i < BKD.length; i++) for (let j = i + 1; j < BKD.length; j++) { const p1 = BKD[i], p2 = BKD[j], ddx = p2.x - p1.x, ddy = p2.y - p1.y, dd = Math.hypot(ddx, ddy) || 1, ov = p1.r + p2.r + 24 - dd; if (ov > 0) { const k2 = Math.min(ov, 30) * dt * 0.8 / dd; p1.x -= ddx * k2; p1.y -= ddy * k2; p2.x += ddx * k2; p2.y += ddy * k2; } }
         BKD.forEach((b2, j) => { const hd = DP[9 + j] || DP[j], X = lerp(hd.px == null ? b2.x : hd.px, b2.x, ek), Y = lerp(hd.py == null ? b2.y : hd.py, b2.y, ek), r = lerp(hd.r * 3, b2.r, ek) * dpr, A = b2.a * (1 + 0.2 * Math.sin((t * PI * 2) / b2.bp + b2.ph)) * cl(gk * 1.2), c3 = b2.c.join(',');

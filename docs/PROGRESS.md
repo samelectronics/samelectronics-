@@ -2680,3 +2680,38 @@ DONE WHEN
   - The paragraph, search, buttons and ticks follow.
   - The iPad glides in from the outer edge, then the phone lands with a turn, then the brand bar rises.
   - Mirrored in Arabic. It is never replayed by a language switch or by scrolling back. Reduced motion skips it.
+
+## Final hero round · 27 Oct
+- **Phone ads, control.**
+  - Hover holds the feed only once the ad is fully shown; a scroll or entrance in progress finishes first.
+  - One trackpad swipe or wheel notch = one ad. Momentum tails (shrinking deltas) are ignored until a new push or 250ms of quiet.
+  - Touch: the feed follows the finger; release past 20% (or flick) = one ad, else it springs back.
+  - Leaving resumes at once. Tested: hover mid-scroll held at 1.3s of the ad; a 78-event swipe moved exactly 1 ad, both ways.
+- **Globe.** It runs on its own real-time clock; feed scrubbing no longer freezes it.
+- **Standard stage** (`scripts/productshot/pose.html`):
+  - Fixed camera; every part is scaled to one height (wide parts capped by width; the camera set capped).
+  - Part and carton share one turn (20°) and lean (5°). The carton sits directly behind the part, ~70% showing left (right in the `-ar` set).
+  - No per-image crop; ads and the iPad use one fixed fit (`SE_SHOTS.STD`).
+  - Cartons print the real round logo and wordmark in Space Grotesk / Inter / JetBrains Mono.
+- **New parts.**
+  - Screen assembly with metal back plate and side flex + connector.
+  - Glossy glass back cover.
+  - Camera set (rear + front module).
+  - Small-parts and audio kits in black foam service trays.
+  - Repaired phone (`rep-fixed`, boot logo).
+- **Ads.**
+  - Screen ad = Service Pack box.
+  - Repair ad = cracked → yellow repair sweep → booted phone (poster too).
+  - Wholesale ad and poster = the real pallet with cartons dropping on repeat (`PalletDrop`).
+  - Arabic pages swap every pose to its `-ar` twin.
+- **Hero details.** The nav-edge circuit nodes moved below the nav. The brand pop-up has logo + stock on row 1 and the group on row 2.
+- **Teardown.**
+  - three.js is self-hosted (`public/vendor/three`), no esm.sh.
+  - The main scene's shaders compile in the background, and one warm-up frame draws before arrival.
+  - A failed load retries when the visitor returns.
+  - The gold bokeh is back, behind the 3D canvas (never over the phone).
+- **Teardown ad** (`public/se-td-ad.js`, ~17s).
+  - Opens on the logo.
+  - Then 6 Find My Part groups. Each has its own transition (push / circle / whip / zoom-through) and colour (yellow / graphite / white), plus kinetic titles, the pose render, items with stock dots and a Shop pill.
+  - Then a montage, "Get yours today.", "In stock in Deira." and a particle logo close.
+  - Brand fonts; RTL in Arabic.

@@ -13,6 +13,7 @@
 <head>
 <meta charset="utf-8" />
 <style>html,body{margin:0;background:transparent}canvas{display:block}</style>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=block" />
 <script type="importmap">{ "imports": { "three": "/three/build/three.module.js", "three/addons/": "/three/examples/jsm/" } }</script>
 </head>
 <body>
@@ -22,8 +23,12 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
 import { buildStack } from './stack.js';
 
 const Q = new URLSearchParams(location.search);
-const ITEM = Q.get('item') || 'scr', BOX = Q.get('box') || (ITEM === 'scr' ? 'temp' : 'white'), LCD = Q.get('lcd') || 'plain', LABEL = Q.get('label') || '', W = +(Q.get('w') || 960), H = Math.round(W * 0.75);
+const ITEM = Q.get('item') || 'scr', BOX = Q.get('box') || (ITEM === 'scr' ? 'temp' : 'white'), LCD = Q.get('lcd') || 'plain', LABEL = Q.get('label') || '', W = +(Q.get('w') || 960), H = W, SIDE = Q.get('ar') ? 1 : -1; // SIDE: where the carton peeks out (-1 left in English, +1 right in Arabic)
 const PI = Math.PI;
+// owner (27 Oct): the cartons print in the brand's own type (Space Grotesk / Inter / JetBrains Mono) and the real round logo
+await Promise.all(['600 40px "Space Grotesk"', '700 40px "Space Grotesk"', '500 40px Inter', '600 40px Inter', '600 40px "JetBrains Mono"'].map((f) => document.fonts.load(f).catch(() => 0)));
+const LOGO = await new Promise((res) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = '/assets/se-logo.png'; });
+const SG = '"Space Grotesk", Arial', IN = 'Inter, Arial', JB = '"JetBrains Mono", monospace';
 
 // ---------- renderer + the teardown's studio (same environment panels, same light rig) ----------
 const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true, logarithmicDepthBuffer: true });
@@ -58,10 +63,31 @@ const barcode = (x, X, Y, w, h, seed = 7) => { x.fillStyle = '#111'; let r = see
 const qr = (x, X, Y, s, seed = 3) => { const n = 25, c = s / n; let r = seed; x.fillStyle = '#111'; for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) { r = (r * 9301 + 49297) % 233280; if (r % 2) x.fillRect(X + i * c, Y + j * c, c + 0.3, c + 0.3); } [[0, 0], [n - 7, 0], [0, n - 7]].forEach(([a, b]) => { x.fillStyle = '#111'; x.fillRect(X + a * c, Y + b * c, 7 * c, 7 * c); x.fillStyle = '#fff'; x.fillRect(X + (a + 1) * c, Y + (b + 1) * c, 5 * c, 5 * c); x.fillStyle = '#111'; x.fillRect(X + (a + 2) * c, Y + (b + 2) * c, 3 * c, 3 * c); }); };
 const rshape = (w, h, r) => { const s = new THREE.Shape(), x0 = -w / 2, y0 = -h / 2; s.moveTo(x0 + r, y0); s.lineTo(x0 + w - r, y0); s.absarc(x0 + w - r, y0 + r, r, -PI / 2, 0); s.lineTo(x0 + w, y0 + h - r); s.absarc(x0 + w - r, y0 + h - r, r, 0, PI / 2); s.lineTo(x0 + r, y0 + h); s.absarc(x0 + r, y0 + h - r, r, PI / 2, PI); s.lineTo(x0, y0 + r); s.absarc(x0 + r, y0 + r, r, PI, PI * 1.5); return s; };
 
+// small builders for the kit parts (owner, 27 Oct)
+const RB = (w, h, d, r, m) => new THREE.Mesh(new RoundedBoxGeometry(w, h, d, 4, Math.min(r, d / 2 - 0.0005, w / 2 - 0.0005, h / 2 - 0.0005)), m);
+const CY = (r, d, m, seg = 40) => { const c = new THREE.Mesh(new THREE.CylinderGeometry(r, r, d, seg), m); c.rotation.x = PI / 2; return c; };
+const mMetal = (c = 0xb8bcc2, r = 0.32) => new THREE.MeshPhysicalMaterial({ color: c, metalness: 0.9, roughness: r, clearcoat: 0.3, envMapIntensity: 1.4 });
+const mBlack = (r = 0.55) => new THREE.MeshPhysicalMaterial({ color: 0x141517, roughness: r, metalness: 0.1, envMapIntensity: 0.9 });
+const mGold = () => new THREE.MeshPhysicalMaterial({ color: 0xd9a441, metalness: 1, roughness: 0.25, envMapIntensity: 1.5 });
+const meshTex = (w, h) => { const t = cv(256, 256, (x, W2, H2) => { x.fillStyle = '#0b0b0c'; x.fillRect(0, 0, W2, H2); x.fillStyle = '#3a3c40'; for (let i = 6; i < W2; i += 12) for (let j = 6; j < H2; j += 12) { x.beginPath(); x.arc(i + ((j / 12) % 2) * 6, j, 3.2, 0, 7); x.fill(); } }); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(w * 8, h * 8); return new THREE.MeshPhysicalMaterial({ map: t, roughness: 0.6, metalness: 0.4 }); };
+const flexTex = () => cv(512, 128, (x, w, h) => { const g = x.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#D88A2A'); g.addColorStop(1, '#B9701C'); x.fillStyle = g; x.fillRect(0, 0, w, h); x.strokeStyle = 'rgba(255,214,140,.55)'; x.lineWidth = 3; for (let i = 0; i < 9; i++) { x.beginPath(); x.moveTo(0, 14 + i * 12.5); x.lineTo(w, 14 + i * 12.5); x.stroke(); } });
+const mFlex = () => new THREE.MeshPhysicalMaterial({ map: flexTex(), roughness: 0.35, clearcoat: 0.8, clearcoatRoughness: 0.15, envMapIntensity: 1.2 });
+const connector = (w = 0.26) => { const c = new THREE.Group(); const st = RB(w, 0.16, 0.035, 0.008, mBlack(0.4)); c.add(st); const pins = RB(w * 0.8, 0.05, 0.01, 0.003, mGold()); pins.position.z = 0.02; c.add(pins); return c; };
+// a black ESD foam service tray, the way small parts are really sold and stored: neat pockets, nothing see-through
+function foamTray(items) { const t = new THREE.Group();
+  const foamT = cv(256, 512, (x, w, h) => paper(x, w, h, '#202124', 14)); const foam = new THREE.MeshPhysicalMaterial({ map: foamT, roughness: 0.96, metalness: 0, envMapIntensity: 0.4 });
+  const base = RB(1.75, 2.9, 0.16, 0.07, foam); base.position.z = -0.08; t.add(base);
+  const lip = RB(1.75, 2.9, 0.02, 0.07, new THREE.MeshPhysicalMaterial({ color: 0x2b2d31, roughness: 0.8 })); lip.position.z = -0.17; t.add(lip);
+  const pocketM = new THREE.MeshPhysicalMaterial({ color: 0x0f1012, roughness: 1 });
+  items.forEach(([obj, x, y, pw2, ph2]) => { const pk = RB(pw2, ph2, 0.02, 0.03, pocketM); pk.position.set(x, y, 0.001); t.add(pk); obj.position.x += x; obj.position.y += y; obj.position.z += 0.03; t.add(obj); });
+  const tag = cv(512, 96, (x, w, h) => { x.fillStyle = '#F7C032'; x.fillRect(0, 0, w, h); x.fillStyle = '#26282B'; x.font = `700 46px ${SG}`; x.fillText('SAM ELECTRONICS', 22, 64); }); const tg = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.17), new THREE.MeshPhysicalMaterial({ map: tag, roughness: 0.5 })); tg.position.set(-0.3, 1.27, 0.002); t.add(tg);
+  return t; }
+
 // ---------- the parts: the teardown's own ----------
 const S = await buildStack(THREE, RoundedBoxGeometry, renderer);
 S.phone.traverse((m) => { if (m.isMesh && m.material === S.M.emblem) m.visible = false; }); // no shop logo on a part
 const PW = S.W, PH = S.H; // 1.5 × 3.1
+const PH0 = 3.0, PWMAX = 1.95, CH0 = 3.3, CW0 = 2.15; // the standard stage: part height, max part width, carton size
 // the cracked glass (the same shard method as the Repair Lab): radial cracks, ring breaks, every shard tilted in the bump map
 const CRACK = (() => { let s2 = 31; const r = () => ((s2 = (s2 * 16807) % 2147483647) / 2147483647);
   const ix = 0.3, iy = 0.72, N = 19, rad = [], rings = [0.03, 0.07, 0.12, 0.19, 0.29, 0.43, 0.65];
@@ -81,7 +107,7 @@ function drawCrack(x, w, h, bump) { const C = CRACK, ox = C.ix * w, oy = C.iy * 
 
 function product() {
   const g = new THREE.Group(), take = (o) => { const c = o.clone(true); c.position.set(0, 0, 0); return c; };
-  if (ITEM === 'scr' || ITEM === 'crack') {
+  if (ITEM === 'scr' || ITEM === 'crack' || ITEM === 'fixed') {
     // the screen assembly: cover glass + OLED with its punch hole; per box: the iPhone island, a metal frame behind, red tabs
     const sc = new THREE.Group(); [S.SG[0], S.SG[1]].forEach((sg) => sc.add(sg.clone(true))); g.add(sc);
     const offTex = cv(512, 1060, (x, w, h) => { const g = x.createLinearGradient(0, 0, w, h); g.addColorStop(0, '#15161a'); g.addColorStop(0.55, '#060607'); g.addColorStop(1, '#0d0e10'); x.fillStyle = g; x.fillRect(0, 0, w, h);
@@ -89,14 +115,29 @@ function product() {
     const black = new THREE.MeshPhysicalMaterial({ map: offTex, roughness: 0.04, metalness: 0.05, clearcoat: 1, clearcoatRoughness: 0.02, envMapIntensity: 1.8 });
     sc.traverse((m) => { if (!m.isMesh) return; if (m.material === S.M.screen) m.material = black; else if (Array.isArray(m.material) && m.material[0] === S.M.screen) m.material = [black, m.material[1]]; });
     if (LCD === 'iphone') { sc.traverse((m) => { if (m.isMesh && (m.geometry.type === 'CircleGeometry' || m.geometry.type === 'RingGeometry') && m.position.y > PH / 2 - 0.2) m.visible = false; }); const isl = new THREE.Mesh(new RoundedBoxGeometry(0.4, 0.11, 0.004, 8, 0.0549), new THREE.MeshStandardMaterial({ color: 0x000000, roughness: 0.35 })); isl.position.set(0, PH / 2 - 0.13, 0.024); g.add(isl); }
-    if (LCD === 'frame' || ITEM === 'crack') { const f = take(S.L[1]); f.position.z = -0.075; g.add(f); }
+    if (LCD === 'frame' || ITEM === 'crack' || ITEM === 'fixed') { const f = take(S.L[1]); f.position.z = -0.075; g.add(f); }
     if (LCD === 'tabs') { const red = new THREE.MeshStandardMaterial({ color: 0xe8382f, roughness: 0.55 }); [-0.34, 0.06, 0.3].forEach((xx) => { const t = new THREE.Mesh(new RoundedBoxGeometry(0.14, 0.2, 0.004, 2, 0.01), red); t.position.set(xx, PH / 2 + 0.05, 0.02); g.add(t); }); const t2 = new THREE.Mesh(new RoundedBoxGeometry(0.2, 0.1, 0.004, 2, 0.01), red); t2.position.set(-PW / 2 - 0.06, -0.9, 0.02); g.add(t2); }
+    if (ITEM === 'scr') {
+      // owner (27 Oct): a real screen assembly, not a black slab: a metal back plate behind the panel (its edge shows) and
+      // the display flex folding out of the side the carton is on, ending in its board connector
+      if (LCD !== 'frame') { const bp = RB(PW - 0.05, PH - 0.05, 0.03, 0.17, mMetal(0x9ca1a7, 0.45)); bp.position.z = -0.045; g.add(bp); }
+      const fx = SIDE * (PW / 2 + (LCD === 'frame' ? 0.03 : 0)), fl = new THREE.Group(); const r1 = RB(0.42, 0.2, 0.006, 0.01, mFlex()); r1.position.set(SIDE * 0.12, 0, 0); fl.add(r1);
+      const r2 = RB(0.34, 0.2, 0.006, 0.01, mFlex()); r2.position.set(SIDE * 0.43, 0, 0.05); r2.rotation.y = SIDE * -0.35; fl.add(r2);
+      const cn = connector(0.24); cn.position.set(SIDE * 0.66, 0, 0.12); cn.rotation.y = SIDE * -0.35; fl.add(cn);
+      fl.position.set(fx, -0.95, -0.065); (g.userData.late = g.userData.late || []).push(fl); } // added after sizing: the flex never shrinks the screen
+    if (ITEM === 'fixed') { const b = take(S.L[7]); b.position.z = -0.14; g.add(b);
+      // repaired: the screen is on, showing the boot logo
+      const boot = cv(768, 1588, (x, w, h) => { x.fillStyle = '#050506'; x.fillRect(0, 0, w, h); const gl = x.createRadialGradient(w / 2, h * 0.46, 0, w / 2, h * 0.46, w * 0.6); gl.addColorStop(0, 'rgba(247,192,50,.22)'); gl.addColorStop(1, 'rgba(247,192,50,0)'); x.fillStyle = gl; x.fillRect(0, 0, w, h);
+        const r = w * 0.2; if (LOGO) { x.save(); x.beginPath(); x.arc(w / 2, h * 0.44, r, 0, 7); x.clip(); x.drawImage(LOGO, w / 2 - r, h * 0.44 - r, r * 2, r * 2); x.restore(); }
+        x.fillStyle = '#FFFFFF'; x.textAlign = 'center'; x.font = `600 ${Math.round(w * 0.06)}px ${SG}`; if ('letterSpacing' in x) x.letterSpacing = `${Math.round(w * 0.012)}px`; x.fillText('SAM ELECTRONICS', w / 2, h * 0.44 + r + w * 0.12); x.fillStyle = '#F7C032'; x.font = `500 ${Math.round(w * 0.03)}px ${IN}`; x.fillText('QUALITY · WARRANTY · PRICE', w / 2, h * 0.44 + r + w * 0.18); });
+      const on = new THREE.MeshPhysicalMaterial({ map: boot, emissive: 0xffffff, emissiveMap: boot, emissiveIntensity: 0.9, roughness: 0.05, clearcoat: 1, clearcoatRoughness: 0.02 });
+      sc.traverse((m) => { if (!m.isMesh) return; if (m.material === black) m.material = on; else if (Array.isArray(m.material) && m.material[0] === black) m.material = [on, m.material[1]]; }); g.userData.noBox = true; }
     if (ITEM === 'crack') { const b = take(S.L[7]); b.position.z = -0.14; g.add(b);
       const ct = cv(768, 1588, (x, w, h) => { x.fillStyle = '#060607'; x.fillRect(0, 0, w, h); drawCrack(x, w, h, false); }), cb = cv(768, 1588, (x, w, h) => drawCrack(x, w, h, true)); cb.colorSpace = THREE.NoColorSpace;
       const glass = new THREE.MeshPhysicalMaterial({ map: ct, bumpMap: cb, bumpScale: 3, roughness: 0.1, clearcoat: 0.35, clearcoatRoughness: 0.04, envMapIntensity: 1.7 });
       const pg = new THREE.ShapeGeometry(rshape(PW - 0.03, PH - 0.03, S.R - 0.015), 32); { const p = pg.attributes.position, uv = pg.attributes.uv; for (let i = 0; i < p.count; i++) uv.setXY(i, p.getX(i) / PW + 0.5, p.getY(i) / PH + 0.5); }
       const pane = new THREE.Mesh(pg, glass); pane.position.z = 0.0215; g.add(pane); }
-    g.userData.size = [PW, PH];
+    g.userData.size = [PW, PH]; if (ITEM === 'crack') g.userData.noBox = true;
   } else if (ITEM === 'bcv') { const b = take(S.L[7]); b.rotation.y = PI; g.add(b); g.userData.size = [PW, PH];
     // owner (26 Oct): the back cover read as one flat colour. Now real frosted glass: a titanium-blue tone that shifts
     // across the panel, a fine etched grain in the roughness (the frost), a clear coat that catches the softbox, and sheen.
@@ -104,16 +145,33 @@ function product() {
       const id = x.getImageData(0, 0, w, h), d = id.data; for (let i = 0; i < d.length; i += 4) { const n = (rnd() - 0.5) * 7; d[i] += n; d[i + 1] += n; d[i + 2] += n; } x.putImageData(id, 0, 0);
       const sh = x.createLinearGradient(0, 0, w, h * 0.6); sh.addColorStop(0, 'rgba(255,255,255,.10)'); sh.addColorStop(0.35, 'rgba(255,255,255,0)'); x.fillStyle = sh; x.fillRect(0, 0, w, h); });
     const rg = cv(256, 512, (x, w, h) => paper(x, w, h, '#8a8a8a', 60)); rg.colorSpace = THREE.NoColorSpace;
-    const frost = new THREE.MeshPhysicalMaterial({ map: fz, roughnessMap: rg, roughness: 0.62, metalness: 0.15, clearcoat: 0.9, clearcoatRoughness: 0.32, sheen: 0.35, sheenColor: new THREE.Color(0xc8d4ea), sheenRoughness: 0.5, envMapIntensity: 1.5, specularIntensity: 0.8 });
+    // owner (27 Oct): glossy glass, like a real Galaxy back: deep colour under a mirror clear coat that catches the studio softbox
+    const frost = new THREE.MeshPhysicalMaterial({ map: fz, roughness: 0.14, metalness: 0.05, clearcoat: 1, clearcoatRoughness: 0.03, sheen: 0.2, sheenColor: new THREE.Color(0xc8d4ea), envMapIntensity: 2.1, specularIntensity: 1, iridescence: 0.12 });
     b.traverse((m) => { if (!m.isMesh) return; if (m.material === S.M.frost) m.material = frost; else if (Array.isArray(m.material) && m.material[0] === S.M.frost) m.material = [frost, m.material[1]]; }); }
   else if (ITEM === 'frm') { g.add(take(S.L[1])); g.userData.size = [PW, PH]; }
   else if (ITEM === 'bat') { const b = take(S.L[4]); b.position.y = 0.51; g.add(b); g.userData.size = [1.06, 1.6]; }
   else if (ITEM === 'board') { const b = take(S.L[3]); b.position.set(0.23, -0.81, 0); g.add(b); g.userData.size = [0.9, 1.24]; }
-  else if (ITEM === 'cam') { const b = take(S.L[5]); b.position.set(-0.45, -0.95, 0); g.add(b); g.userData.size = [0.62, 1.12]; }
+  else if (ITEM === 'cam') { const b = take(S.L[5]); b.position.set(-0.45, -0.95, 0); g.add(b);
+    // + the front camera module on its own flex, so the set reads as "cameras"; the set is capped below the standard height
+    const fc = new THREE.Group(), body = RB(0.3, 0.3, 0.12, 0.04, mBlack(0.35)); fc.add(body); const ln = CY(0.09, 0.02, new THREE.MeshPhysicalMaterial({ color: 0x05060a, roughness: 0.05, clearcoat: 1, envMapIntensity: 2 })); ln.position.z = 0.065; fc.add(ln); const rg2 = CY(0.11, 0.012, mMetal(0x8c9096, 0.25)); rg2.position.z = 0.058; fc.add(rg2);
+    const fr = RB(0.14, 0.42, 0.006, 0.01, mFlex()); fr.position.set(0, -0.36, -0.02); fc.add(fr); const cn = connector(0.2); cn.position.set(0, -0.6, 0); fc.add(cn); fc.position.set(0.32, -0.55, 0.02); g.add(fc);
+    g.userData.size = [0.62, 1.12]; g.userData.maxK = 2.1; }
   else if (ITEM === 'flx') { // the charging-port flex as it is sold: the port board and its one ribbon (no coax, no second ribbon)
     const f = take(S.L[2]); const drop = []; f.traverse((m) => { if (!m.isMesh) return; if (m.geometry.type === 'TubeGeometry') drop.push(m); else if (m.position.x < -0.45 && m.position.y > -1.15) drop.push(m); else if (m.geometry.type === 'CylinderGeometry' && m.position.x < -0.6) drop.push(m); }); drop.forEach((m) => m.parent.remove(m));
     f.position.set(-0.1, 0.4, 0); g.add(f); g.userData.size = [1.4, 2.0]; }
-  else { g.add(take(S.L[6])); g.userData.size = [PW, PH]; } // small parts on their clear tray
+  else if (ITEM === 'aud') { // audio & sensors kit: loudspeaker, earpiece, two microphones, proximity sensor flex
+    const ls = new THREE.Group(); const lb = RB(0.9, 0.42, 0.12, 0.05, mBlack(0.5)); ls.add(lb); const gr = RB(0.62, 0.22, 0.01, 0.04, meshTex(0.62, 0.22)); gr.position.z = 0.062; ls.add(gr); const pd = RB(0.14, 0.08, 0.01, 0.01, mGold()); pd.position.set(0.32, -0.12, 0.062); ls.add(pd);
+    const ep = new THREE.Group(); const eb = RB(0.8, 0.13, 0.07, 0.05, mBlack(0.45)); ep.add(eb); const em = RB(0.6, 0.05, 0.01, 0.02, meshTex(0.6, 0.05)); em.position.z = 0.04; ep.add(em);
+    const mic = () => { const m = new THREE.Group(); const f = RB(0.5, 0.11, 0.006, 0.02, mFlex()); m.add(f); const c = RB(0.13, 0.11, 0.06, 0.02, mMetal(0xa7abb0, 0.3)); c.position.set(-0.2, 0, 0.03); m.add(c); const h = CY(0.018, 0.01, mBlack(0.9), 16); h.position.set(-0.2, 0, 0.065); m.add(h); const k = connector(0.16); k.scale.setScalar(0.7); k.position.set(0.22, 0, 0.01); m.add(k); return m; };
+    const prx = new THREE.Group(); const pf = RB(0.62, 0.16, 0.006, 0.03, mFlex()); prx.add(pf); const sn = RB(0.16, 0.1, 0.05, 0.02, mBlack(0.2)); sn.position.set(-0.18, 0, 0.03); prx.add(sn); const k2 = connector(0.18); k2.scale.setScalar(0.75); k2.position.set(0.24, 0, 0.01); prx.add(k2);
+    g.add(foamTray([[ls, 0, 0.62, 1.12, 0.62], [ep, 0, -0.08, 1.0, 0.3], [mic(), -0.35, -0.6, 0.66, 0.24], [mic(), 0.38, -0.6, 0.66, 0.24], [prx, 0, -1.05, 0.9, 0.28]])); g.userData.size = [1.75, 2.9]; }
+  else { // small parts kit: SIM tray, side buttons, vibration motor, charging port, screws, all in their foam pockets
+    const sim = new THREE.Group(); const sb = RB(1.1, 0.16, 0.03, 0.06, mMetal(0xc2c6cb, 0.28)); sim.add(sb); const cut = RB(0.5, 0.11, 0.012, 0.02, mBlack(0.8)); cut.position.set(-0.05, 0, 0.012); sim.add(cut); const ph2 = CY(0.016, 0.03, mBlack(0.9), 16); ph2.position.set(0.45, 0, 0.012); sim.add(ph2);
+    const btn = (w) => RB(w, 0.075, 0.06, 0.035, mMetal(0xb3b7bc, 0.22)); const bts = new THREE.Group(); const b1 = btn(0.5); b1.position.y = 0.08; bts.add(b1); const b2 = btn(0.32); b2.position.set(-0.09, -0.06, 0); bts.add(b2); const b3 = btn(0.32); b3.position.set(0.25, -0.06, 0); bts.add(b3);
+    const tap = new THREE.Group(); const tb = RB(0.78, 0.3, 0.1, 0.04, mMetal(0x9da2a8, 0.4)); tap.add(tb); const lab = new THREE.Mesh(new THREE.PlaneGeometry(0.4, 0.14), new THREE.MeshPhysicalMaterial({ map: cv(256, 96, (x, w, h) => { x.fillStyle = '#1c1d1f'; x.fillRect(0, 0, w, h); x.fillStyle = '#d5d7da'; x.font = `600 26px ${JB}`; x.fillText('TAPTIC 3.1', 18, 40); x.font = `500 18px ${JB}`; x.fillText('SE-VB-0815', 18, 70); }), roughness: 0.6 })); lab.position.set(-0.12, 0, 0.051); tap.add(lab); const tf = RB(0.18, 0.1, 0.006, 0.01, mFlex()); tf.position.set(0.47, -0.05, -0.02); tap.add(tf);
+    const port = new THREE.Group(); const pb = RB(0.7, 0.24, 0.006, 0.03, mFlex()); port.add(pb); const uc = RB(0.34, 0.12, 0.09, 0.055, mMetal(0xc9ccd0, 0.2)); uc.position.set(0, 0.02, 0.05); port.add(uc); const hole = RB(0.27, 0.06, 0.02, 0.03, mBlack(0.9)); hole.position.set(0, 0.02, 0.09); port.add(hole);
+    const scr2 = new THREE.Group(); for (let i = 0; i < 6; i++) { const sh = CY(0.045, 0.03, mMetal(0x8f9399, 0.3), 24); sh.position.set(-0.4 + i * 0.16, 0, 0); scr2.add(sh); const x1 = RB(0.06, 0.012, 0.01, 0.004, mBlack(0.9)); x1.position.set(-0.4 + i * 0.16, 0, 0.018); scr2.add(x1); const x2 = x1.clone(); x2.rotation.z = PI / 2; scr2.add(x2); }
+    g.add(foamTray([[sim, 0, 0.98, 1.3, 0.3], [bts, 0, 0.55, 0.8, 0.3], [tap, 0, 0.02, 1.25, 0.46], [port, 0, -0.55, 0.92, 0.38], [scr2, 0, -1.02, 1.12, 0.22]])); g.userData.size = [1.75, 2.9]; }
   g.traverse((m) => { if (m.isMesh && !(Array.isArray(m.material) ? m.material : [m.material]).some((mt) => mt.transparent)) { m.castShadow = true; m.receiveShadow = true; } });
   return g;
 }
@@ -127,19 +185,24 @@ async function carton(prodW, prodH) {
   const B = BOXES[BOX];
   let faceTex, ar, depth, side, topC, radius = 0.025;
   if (B) {
-    const im = await img('./boxes/' + BOX + '.jpg'); ar = SIZES[BOX][0] / SIZES[BOX][1]; depth = B.d; side = B.side; topC = B.top; radius = B.r || 0.025;
+    const im = await img('./boxes/' + BOX + '.jpg'); ar = SIZES[BOX][0] / SIZES[BOX][1]; depth = Math.max(0.3, B.d * 1.4); side = B.side; topC = B.top; radius = B.r || 0.025;
     faceTex = cv(im.width, im.height, (x, w, h) => { x.drawImage(im, 0, 0, w, h);
       // GX / ZY print the model: blur the photo's "XS MAX" away (keeps the box's real colour and gradient) and print this label
       if (BOX === 'gx' && LABEL) { x.save(); x.beginPath(); x.rect(0, h * 0.27, w, h * 0.08); x.clip(); x.filter = 'blur(24px)'; x.drawImage(im, 0, 0, w, h); x.restore(); x.fillStyle = '#E2E2E0'; x.font = `600 ${Math.round(w * 0.085)}px Arial`; x.textAlign = 'center'; x.fillText(LABEL, w / 2, h * 0.33); }
       if (BOX === 'zy' && LABEL) { x.save(); x.beginPath(); x.rect(0, h * 0.42, w, h * 0.45); x.clip(); x.filter = 'blur(60px)'; x.drawImage(im, 0, 0, w, h); x.restore(); x.fillStyle = 'rgba(232,236,255,.88)'; x.textAlign = 'center'; let fz = w * 0.36; x.font = `bold ${fz}px Arial`; const tw = x.measureText(LABEL).width; if (tw > w * 0.82) { fz *= (w * 0.82) / tw; x.font = `bold ${fz}px Arial`; } x.fillText(LABEL, w / 2, h * 0.64 + fz * 0.35); } });
   } else { // the plain white carton (every non-screen part, and screens without an owner photo yet): real paper, a crisp label
-    ar = Math.max(0.42, Math.min(1.2, (prodW * 1.14) / (prodH * 1.06))); depth = { bat: 0.3, bcv: 0.22, flx: 0.2, cam: 0.34, sml: 0.28, frm: 0.24, board: 0.22, scr: 0.26 }[ITEM] || 0.24; side = '#EEEEEB'; topC = '#F2F2EF';
+    ar = CW0 / CH0; depth = 0.42; side = '#EEEEEB'; topC = '#F2F2EF';
     const fw = 900, fh = Math.round(900 / ar);
-    faceTex = cv(fw, fh, (x, w, h) => { paper(x, w, h, '#F6F6F3', 5);
-      x.strokeStyle = '#F7C032'; x.lineWidth = Math.max(5, w * 0.012); x.beginPath(); x.arc(w * 0.16, h * 0.12, Math.min(w, h) * 0.05, 0, 7); x.stroke(); x.fillStyle = '#26282B'; x.font = `bold ${Math.round(Math.min(w, h) * 0.045)}px Arial`; x.fillText('SAM ELECTRONICS', w * 0.25, h * 0.12 + Math.min(w, h) * 0.017); });
+    faceTex = cv(fw, fh, (x, w, h) => { paper(x, w, h, '#F6F6F3', 5); if (SIDE > 0) { x.translate(w * 0.25, h * 0.02); x.scale(0.8, 0.8); } // Arabic: the print sits on the visible (right) part
+      const u = w / 900, lr = 62 * u; if (LOGO) { x.save(); x.beginPath(); x.arc(w * 0.13 + lr, h * 0.08 + lr, lr, 0, 7); x.clip(); x.drawImage(LOGO, w * 0.13, h * 0.08, lr * 2, lr * 2); x.restore(); x.strokeStyle = 'rgba(38,40,43,.18)'; x.lineWidth = 2 * u; x.beginPath(); x.arc(w * 0.13 + lr, h * 0.08 + lr, lr, 0, 7); x.stroke(); }
+      x.fillStyle = '#26282B'; x.font = `600 ${Math.round(44 * u)}px ${SG}`; if ('letterSpacing' in x) x.letterSpacing = `${Math.round(7 * u)}px`; x.fillText('SAM ELECTRONICS', w * 0.13 + lr * 2 + 26 * u, h * 0.08 + lr - 4 * u);
+      x.fillStyle = '#6B6E73'; x.font = `500 ${Math.round(19 * u)}px ${IN}`; if ('letterSpacing' in x) x.letterSpacing = `${Math.round(4 * u)}px`; x.fillText('QUALITY · WARRANTY · PRICE', w * 0.13 + lr * 2 + 28 * u, h * 0.08 + lr + 30 * u); if ('letterSpacing' in x) x.letterSpacing = '0px';
+      x.fillStyle = '#F7C032'; x.fillRect(w * 0.13, h * 0.08 + lr * 2 + 34 * u, w * 0.74, 6 * u);
+      x.fillStyle = '#26282B'; x.font = `700 ${Math.round(64 * u)}px ${SG}`; x.fillText(({ bat: 'BATTERY', bcv: 'BACK COVER', flx: 'CHARGING FLEX', cam: 'CAMERA', sml: 'SMALL PARTS', aud: 'AUDIO PARTS', frm: 'FRAME', board: 'BOARD', scr: 'DISPLAY' })[ITEM] || 'MOBILE PART', w * 0.13, h * 0.08 + lr * 2 + 120 * u);
+      x.fillStyle = '#6B6E73'; x.font = `500 ${Math.round(24 * u)}px ${IN}`; x.fillText('Genuine · tested before it ships', w * 0.13, h * 0.08 + lr * 2 + 160 * u); });
   }
-  // sized to the product: a screen box is a touch taller than the screen it holds; a part box frames its part
-  const bh = ITEM === 'scr' ? prodH * 1.07 : prodH * 1.04, bw = bh * ar;
+  // owner (27 Oct): ONE carton size for every part (height CH0; photo boxes keep their own proportions)
+  const bh = CH0, bw = bh * ar;
   // owner (26 Oct): the cartons read flat. Real folding-carton details: a fold crease near each end of the sides, the
   // tuck flap on top with its seam and thumb notch, darker worn edges where the board bends, and rounder corners.
   const crease = (x, y, w) => { x.fillStyle = 'rgba(0,0,0,.10)'; x.fillRect(0, y, w, 2); x.fillStyle = 'rgba(255,255,255,.35)'; x.fillRect(0, y + 2, w, 1.5); };
@@ -157,33 +220,33 @@ async function carton(prodW, prodH) {
   const sticker = (w, h, tex, gloss = 0.5) => { const m = new THREE.Mesh(new RoundedBoxGeometry(w, h, 0.004, 2, 0.0018), [0, 0, 0, 0, 0, 0].map((_, i) => new THREE.MeshPhysicalMaterial(i === 4 ? { map: tex, roughness: 0.38, clearcoat: gloss, clearcoatRoughness: 0.25, envMapIntensity: 0.7 } : { color: 0xf4f4f2, roughness: 0.5 }))); m.castShadow = true; m.receiveShadow = true; return m; };
   { const lw = Math.min(bw * (B ? 0.5 : 0.78), 0.92), lh = lw * 0.42;
     const lt = cv(840, 352, (x, w, h) => { paper(x, w, h, '#FFFFFF', 3); barcode(x, w * 0.06, h * 0.12, w * 0.56, h * 0.4, 19); qr(x, w * 0.7, h * 0.1, h * 0.6, 7);
-      x.fillStyle = '#1d1e20'; x.font = `600 ${Math.round(h * 0.12)}px Arial`; x.fillText(LABEL || 'SAM ELECTRONICS', w * 0.06, h * 0.7); x.font = `${Math.round(h * 0.095)}px Arial`; x.fillStyle = '#55585c'; x.fillText('MOBILE PART · 1 PC · QC PASSED', w * 0.06, h * 0.86);
+      x.fillStyle = '#1d1e20'; x.font = `600 ${Math.round(h * 0.12)}px ${SG}`; x.fillText(LABEL || 'SAM ELECTRONICS', w * 0.06, h * 0.7); x.font = `500 ${Math.round(h * 0.085)}px ${JB}`; x.fillStyle = '#55585c'; x.fillText('MOBILE PART · 1 PC · QC PASSED', w * 0.06, h * 0.86);
       x.fillStyle = '#F7C032'; x.fillRect(0, 0, w * 0.018, h); });
     if (!B) { const st = sticker(lw, lh, lt); st.position.set(0, -bh * 0.5 + lh * 0.5 + bh * 0.1, depth / 2 + 0.0022); box.add(st); } } // the owner's box photos already carry their real printed label
-  { const sw = Math.min(bw * 0.26, 0.34), sl = 0.17, seal = new THREE.MeshPhysicalMaterial({ map: cv(256, 128, (x, w, h) => { x.fillStyle = 'rgba(255,255,255,.55)'; x.fillRect(0, 0, w, h); x.fillStyle = 'rgba(30,30,30,.55)'; x.font = '600 20px Arial'; x.textAlign = 'center'; x.fillText('SEALED', w / 2, h * 0.45); x.font = '13px Arial'; x.fillText('SAM ELECTRONICS', w / 2, h * 0.72); }), transparent: true, roughness: 0.12, clearcoat: 1, clearcoatRoughness: 0.05, envMapIntensity: 1.2 });
+  { const sw = Math.min(bw * 0.26, 0.34), sl = 0.17, seal = new THREE.MeshPhysicalMaterial({ map: cv(256, 128, (x, w, h) => { x.fillStyle = 'rgba(255,255,255,.55)'; x.fillRect(0, 0, w, h); x.fillStyle = 'rgba(30,30,30,.55)'; x.font = `600 20px ${SG}`; x.textAlign = 'center'; x.fillText('SEALED', w / 2, h * 0.45); x.font = `500 12px ${JB}`; x.fillText('SAM ELECTRONICS', w / 2, h * 0.72); }), transparent: true, roughness: 0.12, clearcoat: 1, clearcoatRoughness: 0.05, envMapIntensity: 1.2 });
     const f = new THREE.Mesh(new THREE.PlaneGeometry(sw, sl), seal); f.position.set(0, bh / 2 - sl / 2 - 0.006, depth / 2 + 0.0012); box.add(f);
     const tl = Math.min(sl, depth * 0.7), t = new THREE.Mesh(new THREE.PlaneGeometry(sw, tl), seal); t.rotation.x = -PI / 2; t.position.set(0, bh / 2 + 0.0012, depth / 2 - tl / 2 - 0.006); box.add(t); }
   return box;
 }
 
-// ---------- the pose ----------
-const ANG = 22 * PI / 180;
-const prod = product(), stand = new THREE.Group(); stand.add(prod); scene.add(stand);
-const [pw, ph] = prod.userData.size;
-prod.position.y = ph / 2;
-stand.rotation.set(-5 * PI / 180, ANG, 0); stand.position.set(0.3, 0, 0.3);
-stand.updateMatrixWorld(true); { const bb = new THREE.Box3().setFromObject(stand); stand.position.y -= bb.min.y; }
+// ---------- the pose: ONE standard stage for every product (owner, 27 Oct) ----------
+// Fixed camera; every part scaled to the same height (wide parts limited by width); part and carton share the same turn
+// (20°) and lean (5° back); the carton stands directly behind the part and shows ~70% of itself to the left (right in
+// Arabic). Nothing is framed per item, so every render lines up with every other.
+const prod = product(), stand = new THREE.Group(), body = new THREE.Group(); body.add(prod); stand.add(body); scene.add(stand);
+{ prod.updateMatrixWorld(true); const bb = new THREE.Box3().setFromObject(prod), sz = bb.getSize(new THREE.Vector3()), k = Math.min(PH0 / sz.y, PWMAX / sz.x, prod.userData.maxK || 9);
+  (prod.userData.late || []).forEach((o) => prod.add(o)); prod.scale.setScalar(k); prod.updateMatrixWorld(true); const late = prod.userData.late || []; late.forEach((o) => prod.remove(o)); prod.updateMatrixWorld(true); const b2 = new THREE.Box3().setFromObject(prod), c2 = b2.getCenter(new THREE.Vector3()); prod.position.x -= c2.x; prod.position.y -= b2.min.y; prod.position.z -= b2.max.z - 0.02; prod.userData.pw = b2.max.x - b2.min.x; prod.userData.pd = b2.max.z - b2.min.z; late.forEach((o) => prod.add(o)); }
+const pw = prod.userData.pw, pd = prod.userData.pd;
 let box = null;
-if (ITEM !== 'crack') {
-  box = await carton(pw, ph); box.rotation.y = ANG + 22 * PI / 180; scene.add(box);
-  // ~70% of the carton shows beside and above the product; its right part hides behind the product's left part
-  const pb = new THREE.Box3().setFromObject(stand), cw = box.userData.bw * Math.cos(ANG + 22 * PI / 180), hide = Math.min(0.3 * cw, 0.42 * (pb.max.x - pb.min.x));
-  box.position.set(pb.min.x + hide - cw / 2, box.userData.bh / 2, -0.35);
+if (!prod.userData.noBox) {
+  box = await carton(pw, PH0); stand.add(box);
+  const cw = box.userData.bw; box.position.set(SIDE * (pw / 2 + 0.2 * cw), box.userData.bh / 2, -pd - 0.08 - box.userData.depth / 2);
 }
-// frame the pair
-{ const bb = new THREE.Box3().setFromObject(stand); if (box) bb.union(new THREE.Box3().setFromObject(box)); const c = bb.getCenter(new THREE.Vector3()), sz = bb.getSize(new THREE.Vector3());
-  const d = Math.max(sz.y, sz.x * H / W) / (2 * Math.tan((cam.fov * PI / 180) / 2)) * 1.22; cam.position.set(c.x + 0.05, c.y + d * 0.24, c.z + d); cam.lookAt(c);
-  key.target.position.copy(c); scene.add(key.target); }
+stand.rotation.set(-5 * PI / 180, -SIDE * 20 * PI / 180, 0);
+stand.updateMatrixWorld(true); { const bb = new THREE.Box3().setFromObject(stand); stand.position.y -= bb.min.y; }
+// the fixed camera: same for every render
+{ const c = new THREE.Vector3(SIDE * 0.62, 1.78, -0.3), d = 4.7 / (2 * Math.tan((cam.fov * PI / 180) / 2)); cam.position.set(c.x + SIDE * 0.1, c.y + d * 0.2, c.z + d); cam.lookAt(c);
+  key.target.position.copy(c); scene.add(key.target); if (SIDE > 0) { key.position.x *= -1; rimR.position.x *= -1; rimL.position.x *= -1; } }
 renderer.render(scene, cam);
 window.__done = true;
 </script>
