@@ -632,3 +632,8 @@ html.se-intro #top[data-in] [data-hero-rail] { animation: seInUp .9s 1.55s cubic
 @media (prefers-reduced-motion: reduce) { html.se-intro #top[data-in] * { animation: none !important; } }
 /* after the opening has played, these stay still (the older per-visit rise would otherwise restart from opacity 0) */
 html.se-intro-done #top [data-hero-text] > *, html.se-intro-done #top [data-hero-text] h1 > span, html.se-intro-done #top [data-ipad], html.se-intro-done #top .se-reel[data-hero-dev], html.se-intro-done #top [data-hero-rail] { animation: none; }
+/* owner (27 Oct) · the brand stock pop-up: logo + stock on one line, the group on its own line below */
+.se-bp-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 28px; }
+.se-bp-logo { display: flex; align-items: center; min-width: 0; max-width: 190px; overflow: hidden; }
+.se-bp-stock { flex: none; font: 12px 'JetBrains Mono', monospace; color: #F7C032; white-space: nowrap; }
+.se-bp-grp { margin-top: -4px; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }

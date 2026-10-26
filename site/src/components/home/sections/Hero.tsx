@@ -113,7 +113,7 @@ export default function Hero({ v }: { v: Vals }) {
               {'\n          '}
               <path d="M760 640 V660 L780 680 H800" strokeWidth="2"></path>
               {'\n          '}
-              <path d="M760 96 V150 L790 180 H820 L850 210 V260" strokeWidth="2"></path>
+              <path d="M760 104 V150 L790 180 H820 L850 210 V260" strokeWidth="2"></path>
               {'\n          '}
               <path d="M790 300 H810 L830 280 V200" strokeWidth="1.5"></path>
               {'\n          '}
@@ -146,9 +146,9 @@ export default function Hero({ v }: { v: Vals }) {
               <path d="M1300 812 L1314 826 V860" strokeWidth="2.5"></path>
               {'\n          '}
               <path d="M1440 620 H1420 L1404 636 V700" strokeWidth="1"></path>
-              <path d="M1020 0 V40 L1050 70 H1240" strokeWidth="1.5"></path>
+              <path d="M1020 0 V98 L1048 126 H1240" strokeWidth="1.5"></path>
               {'\n          '}
-              <path d="M1440 60 H1340" strokeWidth="1"></path>
+              <path d="M1440 100 H1340" strokeWidth="1"></path>
               <path d="M1440 770 H1380 L1360 790 V860" strokeWidth="4" stroke="rgba(26,27,29,.12)"></path>
               {'\n        '}
             </g>
@@ -192,7 +192,7 @@ export default function Hero({ v }: { v: Vals }) {
               {'\n          '}
               <path
                 pathLength="1000"
-                d="M760 96 V150 L790 180 H820 L850 210 V260"
+                d="M760 104 V150 L790 180 H820 L850 210 V260"
                 strokeWidth="2.5"
                 style={{ animation: 'sePulse 2.7s .3s linear infinite' }}
               ></path>
@@ -238,7 +238,7 @@ export default function Hero({ v }: { v: Vals }) {
               {'\n          '}
               <path
                 pathLength="1000"
-                d="M1020 0 V40 L1050 70 H1240"
+                d="M1020 0 V98 L1048 126 H1240"
                 strokeWidth="2"
                 style={{ animation: 'sePulse 3.9s 2.4s linear infinite' }}
               ></path>
@@ -252,7 +252,7 @@ export default function Hero({ v }: { v: Vals }) {
               <circle cx="760" cy="600" r="5"></circle>
               <circle cx="810" cy="580" r="4"></circle>
               <circle cx="800" cy="680" r="4"></circle>
-              <circle cx="760" cy="96" r="4"></circle>
+              <circle cx="760" cy="104" r="4"></circle>
               <circle cx="790" cy="180" r="3.5"></circle>
               <circle cx="850" cy="260" r="4"></circle>
               <circle cx="830" cy="200" r="4"></circle>
@@ -275,9 +275,9 @@ export default function Hero({ v }: { v: Vals }) {
               <circle cx="1030" cy="806" r="4.5"></circle>
               <circle cx="1300" cy="812" r="4.5"></circle>
               <circle cx="1404" cy="636" r="3.5"></circle>
-              <circle cx="1050" cy="70" r="3.5"></circle>
-              <circle cx="1240" cy="70" r="3.5"></circle>
-              <circle cx="1340" cy="60" r="3"></circle>
+              <circle cx="1048" cy="126" r="3.5"></circle>
+              <circle cx="1240" cy="126" r="3.5"></circle>
+              <circle cx="1340" cy="100" r="3"></circle>
               <circle cx="1360" cy="790" r="3.5"></circle>
               {'\n        '}
             </g>
@@ -1801,6 +1801,7 @@ export default function Hero({ v }: { v: Vals }) {
                   <React.Fragment key={__i}>
                     {'\n            '}
                     <div
+                      data-brand-item=""
                       onMouseEnter={v.b?.enter}
                       onMouseLeave={v.b?.leave}
                       style={{
@@ -1955,18 +1956,20 @@ export default function Hero({ v }: { v: Vals }) {
               onMouseEnter={v.panelEnter}
               onMouseLeave={v.panelLeave}
               style={cssToObj(
-                `position:absolute;left:${s(v.panel?.x)}px;top:620px;width:320px;box-sizing:border-box;z-index:7;display:flex;flex-direction:column;gap:12px;padding:18px;border-radius:16px;background:rgba(26,27,29,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(247,192,50,.55);box-shadow:0 0 40px rgba(247,192,50,.22),0 24px 48px rgba(0,0,0,.45);animation:seRise .25s cubic-bezier(.2,.8,.2,1)`,
+                `position:absolute;left:${s(v.panel?.x)}px;top:620px;width:340px;box-sizing:border-box;z-index:7;display:flex;flex-direction:column;gap:12px;padding:18px;border-radius:16px;background:rgba(26,27,29,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(247,192,50,.55);box-shadow:0 0 40px rgba(247,192,50,.22),0 24px 48px rgba(0,0,0,.45);animation:seRise .25s cubic-bezier(.2,.8,.2,1)`,
               )}
             >
               {'\n        '}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <SEBrandLogo brand={v.panel?.id} color="#FFFFFF" h="24" />
-                {v.panel?.group ? <span className="se-rail-grp">{v.panel.group}</span> : null /* R6 §04: the brand's group */}
-                <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '12px', color: '#F7C032', whiteSpace: 'nowrap' }}>
+              {/* owner (27 Oct): one layout for every brand. Row 1: the logo (capped width, never squeezed) and the stock;
+                  row 2: the brand's group on its own line, so long logos (OnePlus…) never collide or wrap. */}
+              <div className="se-bp-head">
+                <span className="se-bp-logo"><SEBrandLogo brand={v.panel?.id} color="#FFFFFF" h="24" /></span>
+                <span className="se-bp-stock">
                   {t(v.panel?.stock)}
                   {' in stock'}
                 </span>
               </div>
+              {v.panel?.group ? <span className="se-rail-grp se-bp-grp">{v.panel.group}</span> : null /* R6 §04: the brand's group */}
               {'\n        '}
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
                 <span

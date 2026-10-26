@@ -146,8 +146,9 @@ class Component extends DCLogic {
   drawGlobe() { const cv = this._gcv, G = window.SE_GLOBE; if (!cv || !cv.isConnected || !G) return; let t = 1.5;
     // owner (26 Oct): the globe has its own clock. Its turn-in restarts each time its ad enters (read from the reel clock,
     // at the worldwide ad's own position), then it keeps turning slowly in real time, also while the phone is hovered.
-    if (this._gOv != null) t = this._gOv; else { const now = performance.now() / 1000, R = window.seReel, lt = R && R.master ? ((((R.master() - (this._wldI || 0) * 3200) % 32000) + 32000) % 32000) / 1000 : 1.5;
-      if (this._gLt == null || lt < this._gLt - 0.5) this._gTc = Math.min(lt, 3.2); else this._gTc += Math.min(0.1, now - (this._gNow || now)); this._gLt = lt; this._gNow = now; t = this._gTc; }
+    // owner (27 Oct): it used to freeze when the feed was scrolled back and forth (each step reset its clock). Now it simply
+    // turns on real time, always, whatever the feed or the pointer does.
+    if (this._gOv != null) t = this._gOv; else { const now = performance.now() / 1000; if (this._gT0 == null) this._gT0 = now; t = 3.9 + (now - this._gT0); }
     this._gDrawn = 1; const x = cv.getContext('2d'), N = cv.width, R = N / 2 - 5, C = N / 2, D = Math.PI / 180, l0 = (55.27 - 15 * Math.min(t, 3.9) - 6 * Math.max(0, t - 3.9)) * D, p0 = 22 * D, sp0 = Math.sin(p0), cp0 = Math.cos(p0);
     const pj = (lon, lat, h) => { const l = lon * D - l0, f = lat * D, cf = Math.cos(f), sf = Math.sin(f), cl = Math.cos(l), r = R * (h || 1); return [C + r * cf * Math.sin(l), C - r * (cp0 * sf - sp0 * cf * cl), sp0 * sf + cp0 * cf * cl]; };
     x.clearRect(0, 0, N, N);
@@ -508,8 +509,7 @@ class Component extends DCLogic {
     const vio = new IntersectionObserver(([e]) => { if (e.isIntersecting) requestAnimationFrame(sync); }); this._reelVio = vio; // off-screen sections pause their animations: re-lock the moment the hero is back
     const pause = () => { if (pausedAt == null) pausedAt = master(); sync(); };
     const resume = () => { if (pausedAt != null) { S = tl() - pausedAt; pausedAt = null; } sync(); };
-    let fpos = null, snapT = 0, snapRaf = 0;
-    const go = (dir) => { fpos = null; cancelAnimationFrame(snapRaf); clearTimeout(snapT);
+    const go = (dir) => {
       const cur = Math.floor(master() / STEP), tgt = ((cur + dir + 10) % 10) * STEP; // the start of that ad's scroll-in
       if (dir < 0) { // R6 §03 C: previous = the feed moves DOWN: the same 600ms scroll, played backwards, then hold that ad
         clearTimeout(holdT); const base = cur * STEP; S = tl() - (base + 600); pausedAt = null; sync(); rev = true;
@@ -527,23 +527,44 @@ class Component extends DCLogic {
     // real phone: it follows the scroll continuously, stops wherever you stop, and settles softly on the nearest ad when you
     // let go. (Products keep their own idle float; only the feed is paused.) Feed position f: ad i fully in view at f = i;
     // between i and i+1 the feed is mid-scroll, which is the first 600ms of ad i+1 on the reel clock.
+    // owner (27 Oct): the visitor is in control and the phone never fights them.
+    // · Pointer on the phone: the feed holds, but only once the current ad is FULLY showing. If it is mid-scroll or its
+    //   entrance is still playing, that finishes first (never a frozen half-and-half frame). Floats + globe keep living.
+    // · Wheel / trackpad: one gesture = exactly one ad, up or down. Everything else in that gesture (trackpad momentum,
+    //   extra notches) is ignored until the wheel goes quiet AND the move has finished, so it can never skip several ads.
+    // · Finger: the feed follows the finger; let go past 20% (or flick) = one ad that way, otherwise it springs back.
+    // · Pointer leaves: it carries on at once, smoothly from where it is (no dead wait).
     const SCR = 600, HOLD = 1250, N = 10;
     const posOf = (m) => { const i = Math.floor(m / STEP), r = m - i * STEP; return r < SCR ? i - 1 + r / SCR : i; };
     const mOf = (f) => { f = ((f % N) + N) % N; const i = Math.floor(f + 1e-6), fr = f - i; return fr < 1e-3 ? i * STEP + HOLD : (((i + 1) % N) * STEP + fr * SCR) % D; };
-    const drag = (df) => { if (rev) return; clearTimeout(holdT); cancelAnimationFrame(snapRaf); if (fpos == null) fpos = posOf(master()); fpos += df; pausedAt = ((mOf(fpos) % D) + D) % D; sync(); clearTimeout(snapT); snapT = setTimeout(settle, 220); };
-    const settle = () => { if (fpos == null) return; const a = fpos, b = Math.round(fpos), t0 = performance.now(), dur = 280;
-      const stepF = (n) => { const k = Math.min(1, (n - t0) / dur), e = 1 - Math.pow(1 - k, 3); fpos = a + (b - a) * e; pausedAt = ((mOf(fpos) % D) + D) % D; sync(); if (k < 1) snapRaf = requestAnimationFrame(stepF); else { fpos = b; if (!hov) { fpos = null; resume(); } } }; snapRaf = requestAnimationFrame(stepF); };
-    const freeze = () => { if (!hov) { hov = true; clearTimeout(holdT); clearTimeout(this._rcLeave); pause(); } };
-    const wheel = (e) => { e.preventDefault(); freeze(); const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * 400 : e.deltaY; drag(dy / 260); };
-    const pmove = () => freeze();
-    let tLast = null;
-    const ts = (e) => { ty = tLast = e.touches[0].clientY; hov = true; clearTimeout(this._rcLeave); pause(); }, tm = (e) => { if (ty == null) return; e.preventDefault(); const y = e.touches[0].clientY; drag((tLast - y) / 220); tLast = y; }, te = (e) => { if (ty == null) return; if (Math.abs(e.changedTouches[0].clientY - ty) > 8) { e.preventDefault(); this._swiped = Date.now(); } ty = tLast = null; clearTimeout(this._rcLeave); this._rcLeave = setTimeout(() => { hov = false; fpos = null; resume(); }, 3000); };
+    const holdWhenShown = () => { clearTimeout(holdT); if (rev) return; const r = master() % STEP; if (pausedAt != null || r >= HOLD) pause(); else { if (pausedAt != null) resume(); holdT = setTimeout(() => { if (hov) pause(); }, HOLD - r + 16); } };
+    const enterH = () => { clearTimeout(this._rcLeave); if (hov) return; hov = true; holdWhenShown(); };
+    const leaveH = () => { hov = false; clearTimeout(holdT); cancelAnimationFrame(snapRaf); fpos = null; if (!rev) resume(); };
+    // A gesture ends after 250ms of quiet. Trackpad momentum is a tail of SHRINKING deltas, so while the wheel keeps going it
+    // only counts as a new push when the delta grows again (a real new swipe), and never before the last move has finished.
+    let wAcc = 0, wArmed = true, wQuiet = 0, wDone = 0, wLast = 0;
+    const wheel = (e) => { e.preventDefault(); enterH(); const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * 400 : e.deltaY, ad = Math.abs(dy), now = performance.now();
+      clearTimeout(wQuiet); wQuiet = setTimeout(() => { wAcc = 0; wArmed = true; wLast = 0; }, 250);
+      if (!wArmed && now >= wDone && ad > wLast * 1.6 + 6) { wArmed = true; wAcc = 0; }
+      wLast = ad;
+      if (!wArmed) return; wAcc += dy; if (Math.abs(wAcc) < 24) return;
+      wArmed = false; wDone = now + 650; go(wAcc > 0 ? 1 : -1); wAcc = 0; };
+    // touch: drag the feed with the finger, max one ad per swipe
+    let tStart = null, tY0 = 0, tT0 = 0, tH = 400;
+    const animTo = (to, then) => { cancelAnimationFrame(snapRaf); const a = fpos, t0 = performance.now(), dur = 320;
+      const stepF = (n) => { const k = Math.min(1, (n - t0) / dur), e = 1 - Math.pow(1 - k, 3); fpos = a + (to - a) * e; pausedAt = ((mOf(fpos) % D) + D) % D; sync(); if (k < 1) snapRaf = requestAnimationFrame(stepF); else { fpos = null; then && then(); } }; snapRaf = requestAnimationFrame(stepF); };
+    const ts = (e) => { if (rev) return; clearTimeout(this._rcLeave); clearTimeout(holdT); hov = true; cancelAnimationFrame(snapRaf); if (pausedAt == null) pause(); tStart = Math.round(posOf(master())); fpos = posOf(master()); tY0 = e.touches[0].clientY; tT0 = performance.now(); tH = (el && el.getBoundingClientRect().height) || 400; };
+    const tm = (e) => { if (tStart == null) return; e.preventDefault(); const d = (tY0 - e.touches[0].clientY) / (tH * 0.8); fpos = tStart + Math.max(-1, Math.min(1, d)); pausedAt = ((mOf(fpos) % D) + D) % D; sync(); };
+    const te = (e) => { if (tStart == null) return; const dy = tY0 - e.changedTouches[0].clientY, d = fpos - tStart, v = dy / Math.max(1, performance.now() - tT0); if (Math.abs(dy) > 8) { e.preventDefault(); this._swiped = Date.now(); }
+      const dir = Math.abs(d) > 0.2 || Math.abs(v) > 0.5 ? Math.sign(d || dy) : 0; const to = tStart + dir; tStart = null;
+      animTo(to, () => { pausedAt = (((((to % N) + N) % N) * STEP + HOLD) % D); sync(); clearTimeout(this._rcLeave); this._rcLeave = setTimeout(leaveH, 1500); }); };
+    let fpos = null, snapRaf = 0;
     this._reelSync = setInterval(() => !this.dead && !document.hidden && sync(), 4000); // a safety net only: with one shared startTime nothing moves
     window.seReel = { pause, resume, go, master, sync, at: (ms) => { pausedAt = ((ms % D) + D) % D; sync(); } };
     return (this._rc = {
-      ref: (n) => { if (el) { el.removeEventListener('pointermove', pmove); el.removeEventListener('wheel', wheel); el.removeEventListener('touchstart', ts); el.removeEventListener('touchmove', tm); el.removeEventListener('touchend', te); } el = n; if (n) { vio.disconnect(); vio.observe(n); requestAnimationFrame(() => { sync(); requestAnimationFrame(() => { const r = document.querySelector('[data-se-reel]'); if (r) r.classList.add('se-reel-on'); }); }); n.addEventListener('pointermove', pmove, { passive: true }); n.addEventListener('wheel', wheel, { passive: false }); n.addEventListener('touchstart', ts, { passive: true }); n.addEventListener('touchmove', tm, { passive: false }); n.addEventListener('touchend', te, { passive: false }); } },
-      enter: () => { hov = true; clearTimeout(holdT); clearTimeout(this._rcLeave); pause(); }, // 14 Oct §05 B: stops at once, the progress segment freezes
-      leave: () => { clearTimeout(holdT); clearTimeout(this._rcLeave); this._rcLeave = setTimeout(() => { hov = false; fpos = null; cancelAnimationFrame(snapRaf); resume(); }, 3000); }, // R6 §03 C: resumes 3s after the pointer leaves
+      ref: (n) => { if (el) { el.removeEventListener('pointermove', enterH); el.removeEventListener('wheel', wheel); el.removeEventListener('touchstart', ts); el.removeEventListener('touchmove', tm); el.removeEventListener('touchend', te); } el = n; if (n) { vio.disconnect(); vio.observe(n); requestAnimationFrame(() => { sync(); requestAnimationFrame(() => { const r = document.querySelector('[data-se-reel]'); if (r) r.classList.add('se-reel-on'); }); }); n.addEventListener('pointermove', enterH, { passive: true }); n.addEventListener('wheel', wheel, { passive: false }); n.addEventListener('touchstart', ts, { passive: true }); n.addEventListener('touchmove', tm, { passive: false }); n.addEventListener('touchend', te, { passive: false }); } },
+      enter: enterH, // owner (27 Oct): holds once the ad is fully shown, never mid-transition
+      leave: leaveH, // owner (27 Oct): carries on at once
       prev: (e) => { e && e.stopPropagation(); go(-1); },
       next: (e) => { e && e.stopPropagation(); go(1); },
       poster: () => { if (this._swiped && Date.now() - this._swiped < 400) return; this.setState({ posterI: Math.floor(master() / STEP) % 10 }); },
@@ -719,7 +740,7 @@ class Component extends DCLogic {
       typedWords, trust: ['Tested before it ships', 'Warranty on every grade', 'Trusted since 2003'],
       heroBtns: [{ label: 'Browse all parts', href: '#offer', target: '_self', go: (ev) => { ev.preventDefault(); this.go('offer'); }, bg: '#F7C032', bd: '#F7C032', ink: '#26282B', iconBg: 'rgba(26,27,29,.12)', iSearch: true }, { label: 'Trade prices', href: '#wholesale', target: '_self', go: (ev) => { ev.preventDefault(); this.go('wholesale'); }, bg: 'rgba(255,255,255,.04)', bd: 'rgba(255,255,255,.32)', ink: '#FFFFFF', iconBg: 'rgba(247,192,50,.14)', iTag: true }, { label: 'Book a repair', href: '#repair', target: '_self', go: (ev) => { ev.preventDefault(); this.go('repair'); }, bg: 'rgba(255,255,255,.04)', bd: 'rgba(255,255,255,.32)', ink: '#FFFFFF', iconBg: 'rgba(247,192,50,.14)', iWrench: true }, { label: 'WhatsApp us', href: 'https://wa.me/' + SITE.contact.whatsapp, target: '_blank', go: () => {}, bg: 'rgba(255,255,255,.04)', bd: 'rgba(255,255,255,.32)', ink: '#FFFFFF', iconBg: 'rgba(247,192,50,.14)', iWa: true }],
       rail, railPlay: s.hover ? 'paused' : 'running', totalRaw: total, brandCount: stats.length, modelCount: D ? D.models.length : 0, hasHover: !!hb,
-      panel: hb ? { id: hb.id, x: Math.min(1100, Math.max(20, s.hover.x - 160)), name: hb.name, group: BG[hb.id] && BG[hb.id] !== 'standalone' ? GRP[BG[hb.id]] : '', models: hb.models, skus: hb.skus, stock: fmt(hb.stock), top: hb.top, go: () => this.openFmpAt(hb.id) } : { id: 'apple', x: 0, name: '', group: '', models: 0, skus: 0, stock: '0', top: [], go: () => {} },
+      panel: hb ? { id: hb.id, x: Math.min(1080, Math.max(20, s.hover.x - 170)), name: hb.name, group: BG[hb.id] && BG[hb.id] !== 'standalone' ? GRP[BG[hb.id]] : '', models: hb.models, skus: hb.skus, stock: fmt(hb.stock), top: hb.top, go: () => this.openFmpAt(hb.id) } : { id: 'apple', x: 0, name: '', group: '', models: 0, skus: 0, stock: '0', top: [], go: () => {} },
       panelEnter: () => clearTimeout(this.hideT), panelLeave: () => { this.hideT = setTimeout(() => this.setState({ hover: null }), 220); },
       offer, services,
       ...this.memo('A', s, () => this.extA(s, D, P, fmt, cl, pad, bars, KIND)),
