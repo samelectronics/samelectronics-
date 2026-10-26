@@ -26,7 +26,7 @@ await p.route('http://shot.local/**', (r) => {
   const u = new URL(r.request().url()).pathname;
   const file = u.startsWith('/three/') ? path.join(ROOT, 'node_modules', u) : path.join(ROOT, 'scripts/productshot', u);
   if (!fs.existsSync(file)) return r.fulfill({ status: 404, body: '' });
-  r.fulfill({ status: 200, body: fs.readFileSync(file), headers: { 'content-type': file.endsWith('.js') ? 'application/javascript' : 'text/html' } });
+  r.fulfill({ status: 200, body: fs.readFileSync(file), headers: { 'content-type': file.endsWith('.js') ? 'application/javascript' : file.endsWith('.jpg') ? 'image/jpeg' : file.endsWith('.json') ? 'application/json' : file.endsWith('.png') ? 'image/png' : 'text/html' } });
 });
 p.on('pageerror', (e) => console.error('page error', e.message));
 for (const id of only) {

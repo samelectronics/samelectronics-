@@ -2606,3 +2606,50 @@ DONE WHEN
 - No English inside Arabic (except product/model names). **PASS**
 - Speed re-measured. **PASS**
 - Pushed; screenshots + live link sent. **PASS**
+
+---
+
+# Hero, section by section with the owner (26 Oct)
+
+## Hero 1 · Phone reel glitch, broken-phone ad
+- **Flicker fixed.** The ad cards used to flicker (jumping up and down) at load and every 1.6s, because a timer kept yanking 200 CSS animations back to a master clock.
+  - Every reel animation now shares one start time on the document timeline, so they cannot drift and are never corrected mid-motion.
+  - Animations that start later are locked the moment they start.
+  - The phone screen lights up only once everything is locked.
+- **Broken-phone ad.** The drawn crack film (lines, seal, flash, boot logo) is replaced by one still render of a broken phone: real shard cracks, no logo.
+- **Check.** A 32s untouched watch shows one card at a time, moving only upward.
+
+## Hero 2 · Arabic tilt, iPad cart, brand-bar dividers
+- **Arabic devices.** The device group is mirrored with the scene (positions, tilts, shadows) and only the two screens are flipped back, so the iPad and phone face the Arabic headline.
+- **iPad cart.** Add-to-cart flies inside the iPad screen, clipped by its glass, to the iPad's own cart icon. It never crosses the header or the hours pill.
+- **Brand bar.** Every brand in the stock bar has its own divider and the same width.
+
+## Hero 3 · Language pop-up
+- **Battery.** A segmented green battery with a lightning bolt charges 0→100%, with a counting percentage and a progress line, then becomes a drawn green tick.
+- **Card.** It fits its text, the icon sits at the reading start, and it has real colour.
+
+## Hero 4 · Find My Part on the boss's Excel
+- **Picker steps.** Catalog tabs (the Excel's 6 categories), then:
+  - **Brand:** one identical card per brand. Honor is its own brand; there are no family headings.
+  - **Device:** phones / tablets / watches.
+  - **Models:** multi-select, with series filters and search; in-stock first, the rest "On request".
+  - **Parts:** the Excel's 30 parts in six groups, multi-select.
+  - **Specs:** quality / manufacturer / colour, multi-select.
+  - **Result:** a live count, then open in the shop.
+- **Header menu.** One brand per row, each with its own divider; device tabs; device icons; in-stock first.
+- **Logos.** Every logo SVG is trimmed to its ink (`scripts/qa/logo-metrics.mjs`), and all are sized by equal area everywhere.
+- **Arabic.** Every word of the picker and the menu is translated, with numbers kept outside the words.
+
+## Hero 5 · Boxes and parts re-rendered
+- **Parts.** Every part is the teardown's own 3D part: `scripts/productshot/stack.js` is copied from `public/se-teardown-3d.js` by `sync-stack.mjs`. They render under the teardown's studio light, with no shop logo on any part.
+- **Screen cartons.** Each is the owner's real box photo (PDF p19–20, cut and squared into `scripts/productshot/boxes/`) on a real 3D box. The box height follows the product.
+  - GX and ZY print each product's own model label.
+- **Other parts.** They stand in front of a plain white carton with a crisp barcode, QR and label, sized to the part.
+- **Pose and output.** One pose, light and shadow for all 23 renders (15 screen-box pairings, 7 parts, the broken phone). They are used everywhere the pose is used (hero iPad and phone, cards, deals…).
+
+DONE WHEN
+- Reel never flickers; broken-phone ad is still and has no logo. **PASS**
+- Arabic devices face the headline; cart stays inside the iPad; a divider on every brand. **PASS**
+- Language pop-up: battery with %, tick, fitted card. **PASS**
+- Find My Part follows the Excel; equal logos; multi-select; fully Arabic. **PASS**
+- Every box and part realistic, sized to the product, same pose. **PASS**
