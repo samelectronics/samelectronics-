@@ -21,7 +21,7 @@ JOBS['rep-crack'] = { item: 'crack', box: 'white', lcd: 'plain', label: '' };
 const only = args.only ? args.only.split(',') : args.shot ? [args.shot] : Object.keys(JOBS);
 const OUT = path.join(ROOT, 'public/assets/pose'), PNG = path.join(OUT, '.png'); fs.mkdirSync(PNG, { recursive: true });
 const b = await pw.chromium.launch({ args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
-const p = await b.newPage({ viewport: { width: 1400, height: 1400 } });
+const p = await b.newPage({ viewport: { width: 2500, height: 2000 } });
 await p.route('http://shot.local/**', (r) => {
   const u = new URL(r.request().url()).pathname;
   const file = u.startsWith('/three/') ? path.join(ROOT, 'node_modules', u) : path.join(ROOT, 'scripts/productshot', u);
@@ -31,7 +31,7 @@ await p.route('http://shot.local/**', (r) => {
 p.on('pageerror', (e) => console.error('page error', e.message));
 for (const id of only) {
   const j = JOBS[id]; if (!j) { console.error('no job', id); continue; }
-  await p.goto('http://shot.local/pose.html?' + new URLSearchParams({ ...j, w: '1200' }));
+  await p.goto('http://shot.local/pose.html?' + new URLSearchParams({ ...j, w: '2400' }));
   await p.waitForFunction(() => window.__done, null, { timeout: 300000 });
   const png = path.join(PNG, id + '.png');
   await p.locator('canvas').screenshot({ path: png, omitBackground: true });
@@ -44,8 +44,9 @@ im=im.crop((max(0,bb[0]-14),max(0,bb[1]-14),min(im.width,bb[2]+14),min(im.height
 # square canvas so every place can show the shot at the same scale
 s=max(im.width,im.height); sq=Image.new('RGBA',(s,s),(0,0,0,0)); sq.alpha_composite(im,((s-im.width)//2,s-im.height))
 for w in (240,480,960):
-    r=sq.resize((w,w),Image.LANCZOS) if w<s else sq
-    r.save(sys.argv[2]+'-%d.webp'%w,quality=86,method=6)
+    # owner (26 Oct): crystal clear. Rendered at 2400px, so every size is a supersampled downscale, never an upscale
+    r=sq.resize((w,w),Image.LANCZOS)
+    r.save(sys.argv[2]+'-%d.webp'%w,quality=90,method=6)
 `, png, path.join(OUT, id)]);
   console.log('rendered', id);
 }

@@ -3,10 +3,8 @@
 import React from 'react';
 import { type Vals, createDC, cssToObj, cx, s, t } from '@/dc/runtime';
 import Logic from './SEFMPMenu.logic.js';
-const DEV: Record<string, string> = { phone: 'M8 2.5h8a2 2 0 0 1 2 2v15a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-15a2 2 0 0 1 2-2zM10.5 5h3', tablet: 'M5 2.5h14a2 2 0 0 1 2 2v15a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-15a2 2 0 0 1 2-2zM11 18.5h2', watch: 'M8.5 6h7a2.5 2.5 0 0 1 2.5 2.5v7a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 6 15.5v-7A2.5 2.5 0 0 1 8.5 6zM9 6l.8-3.5h4.4L15 6M9 18l.8 3.5h4.4L15 18' };
-const DevIcon = ({ d }: { d: string }) => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={DEV[d] || DEV.phone} /></svg>
-);
+import DeviceIcon from '@/components/home/DeviceIcon';
+const DevIcon = ({ d }: { d: string }) => <DeviceIcon kind={d} size={18} />;
 import SEBrandLogo from './SEBrandLogo';
 
 function render(v: Vals) {

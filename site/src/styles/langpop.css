@@ -94,3 +94,17 @@
 .lp2-meta em { font: 600 12px/1 'JetBrains Mono', monospace; font-style: normal; color: #5BE08F; min-width: 36px; text-align: end; }
 .lp-done .lp2-meta em { color: #5BE08F; }
 .lp-done .lp2-bar i { background: #2BB673; }
+
+/* owner (26 Oct): one smooth charge, no segment lines: the fill grows and its colour runs red → orange → yellow → green
+   (a hue shift on one gradient, driven by --p). The tick's shadow sits on a round wrapper: an SVG drop-shadow drew a
+   square behind the circle. */
+.lp2-cell { display: block; }
+.lp2-cell .lp2-fill { display: block; position: absolute; inset: 3px; border-radius: 4px; transform-origin: left center; transform: scaleX(var(--p, 0));
+  background: linear-gradient(90deg, hsl(calc(var(--p, 0) * 140), 78%, 52%), hsl(calc(var(--p, 0) * 140 + 12), 82%, 60%));
+  box-shadow: 0 0 10px hsla(calc(var(--p, 0) * 140), 80%, 55%, .55); }
+[dir='rtl'] .lp2-cell .lp2-fill { transform-origin: right center; }
+.lp2-okc { filter: none !important; }
+.lp2-ok { border-radius: 50%; box-shadow: 0 4px 14px rgba(43, 182, 115, .45); overflow: visible; }
+.lp2-cell .lp2-fill::after { content: none; }
+.lp2-bar i { background: linear-gradient(90deg, hsl(calc(var(--p, 0) * 140), 78%, 50%), hsl(calc(var(--p, 0) * 140 + 12), 82%, 60%)); }
+.lp2-meta em { color: hsl(calc(var(--p, 0) * 140), 75%, 60%); transition: color .12s linear; }

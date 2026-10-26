@@ -26,6 +26,10 @@ class Component extends DCLogic {
     scan(); this.offIv = setInterval(scan, 3000);
     false && setTimeout(() => { const r = this.rootRef.current; if (r) import(/* webpackIgnore: true */ new URL('./se-bus.js', document.baseURI).href).then((m) => { if (!this.dead) this.busOff = m.mount(r); }).catch((e) => console.warn('bus', e && e.message)); }, 300);
     try { if (!sessionStorage.getItem('se-booted') && !matchMedia('(prefers-reduced-motion: reduce)').matches) { sessionStorage.setItem('se-booted', '1'); this.setState({ bootOn: true }); /* 14 Oct §01: BootIntro decides when to leave (real loading, 1.5–5s) */ } } catch (e) {}
+    // owner (26 Oct): the opening entrance (title in stages, iPad then phone slide in, brand bar rises) plays once, when the
+    // page opens: html.se-intro gates it, and it is removed once the hero has played, so a language switch or scrolling back
+    // never replays it.
+    try { const H = document.documentElement; H.classList.add('se-intro'); const wait = () => { const top = document.getElementById('top'); if (top && top.hasAttribute('data-in')) this.introT = setTimeout(() => { H.classList.add('se-intro-done'); H.classList.remove('se-intro'); }, 3600); else this.introR = requestAnimationFrame(wait); }; wait(); } catch (e) {}
     this.buyIv = setInterval(() => { if (document.hidden || window.scrollY > 600 || this.state.fmpOpen) return; const D = this.state.data; if (!D) return; const p = D.products.find((x) => x.stock_qty > 3 && x.category === 'SCR'); if (!p) return; this.flyToCart(); }, 12000);
     this.onKey = (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); this.openSearch(); } else if (e.key === 'Escape') this.setState({ posterI: null, spOpen: false, fmpOpen: false, drawerMap: false, drawerCart: false }); };
     window.addEventListener('keydown', this.onKey);
@@ -139,8 +143,12 @@ class Component extends DCLogic {
   tlK(name, D, T0, fr) { this.kf('__init', [0, 0], 1, 'Y'); if (!this._kfs[name]) { this._kfs[name] = 1; const pc = (t) => Math.min(100, Math.max(0, ((T0 + t) / D) * 100)).toFixed(3) + '%'; let f = '0%{' + fr[0][1] + '}'; fr.forEach(([t, css, e]) => { f += pc(t) + '{' + css + (e ? ';animation-timing-function:' + e : '') + '}'; }); f += '100%{' + fr[fr.length - 1][1] + '}'; this.kfAdd('@keyframes ' + name + '{' + f + '}'); } return name + ' ' + D + 's linear infinite'; }
   computeBB(lib) { const out = {}; Promise.all((lib.large || []).slice(0, 10).map((src, i) => new Promise((res) => { if (!src) return res(); const im = new Image(); im.onload = () => { try { const N = 160, ar = im.naturalHeight / im.naturalWidth, c = document.createElement('canvas'); c.width = N; c.height = Math.round(N * ar); const x = c.getContext('2d'); x.drawImage(im, 0, 0, c.width, c.height); const d = x.getImageData(0, 0, c.width, c.height).data; let x0 = c.width, y0 = c.height, x1 = -1, y1 = -1; for (let y = 0; y < c.height; y++) for (let xx = 0; xx < c.width; xx++) if (d[(y * c.width + xx) * 4 + 3] > 24) { if (xx < x0) x0 = xx; if (xx > x1) x1 = xx; if (y < y0) y0 = y; if (y > y1) y1 = y; } if (x1 >= 0) { let n = 0, sx = 0, sy = 0, xx2 = 0, yy2 = 0, xy = 0; for (let y = 0; y < c.height; y++) for (let q = 0; q < c.width; q++) if (d[(y * c.width + q) * 4 + 3] > 24) { n++; sx += q; sy += y; xx2 += q * q; yy2 += y * y; xy += q * y; } const mx = sx / n, my = sy / n, cxx = xx2 / n - mx * mx, cyy = yy2 / n - my * my, cxy = xy / n - mx * my, th = 0.5 * Math.atan2(2 * cxy, cxx - cyy); let tilt = 90 - (th * 180) / Math.PI; if (tilt > 90) tilt -= 180; out[i] = [x0 / c.width, y0 / c.height, (x1 - x0 + 1) / c.width, (y1 - y0 + 1) / c.height, ar, Math.abs(tilt) < 20 ? tilt : 0]; } } catch (e) {} res(); }; im.onerror = () => res(); im.src = src; }))).then(() => { if (!this.dead) this.setState({ bb: out }); }); }
   loadGlobe() {}
-  drawGlobe() { const cv = this._gcv, G = window.SE_GLOBE; if (!cv || !cv.isConnected || !G) return; let t = 1.5; if (this._gOv != null) t = this._gOv; else { try { /* Urgent 5 (speed): the globe follows the reel's 32s clock. Reading it from the reel controller costs nothing; asking the CSS animation (getAnimations / getComputedTiming) forced a style recalc 30×/s. */ if (this._rc) t = this._rc.master() / 1000; else { const sh = cv.closest('[data-card]'), an = sh && sh.getAnimations()[0], p = an && an.effect.getComputedTiming().progress; if (p != null) t = p * 32; } } catch (e) {} if (t > 3.9 && this._gDrawn) return; }
-    this._gDrawn = 1; const x = cv.getContext('2d'), N = cv.width, R = N / 2 - 5, C = N / 2, D = Math.PI / 180, l0 = (55.27 - 15 * t) * D, p0 = 22 * D, sp0 = Math.sin(p0), cp0 = Math.cos(p0);
+  drawGlobe() { const cv = this._gcv, G = window.SE_GLOBE; if (!cv || !cv.isConnected || !G) return; let t = 1.5;
+    // owner (26 Oct): the globe has its own clock. Its turn-in restarts each time its ad enters (read from the reel clock,
+    // at the worldwide ad's own position), then it keeps turning slowly in real time, also while the phone is hovered.
+    if (this._gOv != null) t = this._gOv; else { const now = performance.now() / 1000, R = window.seReel, lt = R && R.master ? ((((R.master() - (this._wldI || 0) * 3200) % 32000) + 32000) % 32000) / 1000 : 1.5;
+      if (this._gLt == null || lt < this._gLt - 0.5) this._gTc = Math.min(lt, 3.2); else this._gTc += Math.min(0.1, now - (this._gNow || now)); this._gLt = lt; this._gNow = now; t = this._gTc; }
+    this._gDrawn = 1; const x = cv.getContext('2d'), N = cv.width, R = N / 2 - 5, C = N / 2, D = Math.PI / 180, l0 = (55.27 - 15 * Math.min(t, 3.9) - 6 * Math.max(0, t - 3.9)) * D, p0 = 22 * D, sp0 = Math.sin(p0), cp0 = Math.cos(p0);
     const pj = (lon, lat, h) => { const l = lon * D - l0, f = lat * D, cf = Math.cos(f), sf = Math.sin(f), cl = Math.cos(l), r = R * (h || 1); return [C + r * cf * Math.sin(l), C - r * (cp0 * sf - sp0 * cf * cl), sp0 * sf + cp0 * cf * cl]; };
     x.clearRect(0, 0, N, N);
     const bg = x.createRadialGradient(C - R * 0.3, C - R * 0.35, R * 0.1, C, C, R); bg.addColorStop(0, '#3A3C41'); bg.addColorStop(0.7, '#25272B'); bg.addColorStop(1, '#1A1B1E'); x.beginPath(); x.arc(C, C, R, 0, 7); x.fillStyle = bg; x.fill();
@@ -500,7 +508,8 @@ class Component extends DCLogic {
     const vio = new IntersectionObserver(([e]) => { if (e.isIntersecting) requestAnimationFrame(sync); }); this._reelVio = vio; // off-screen sections pause their animations: re-lock the moment the hero is back
     const pause = () => { if (pausedAt == null) pausedAt = master(); sync(); };
     const resume = () => { if (pausedAt != null) { S = tl() - pausedAt; pausedAt = null; } sync(); };
-    const go = (dir) => {
+    let fpos = null, snapT = 0, snapRaf = 0;
+    const go = (dir) => { fpos = null; cancelAnimationFrame(snapRaf); clearTimeout(snapT);
       const cur = Math.floor(master() / STEP), tgt = ((cur + dir + 10) % 10) * STEP; // the start of that ad's scroll-in
       if (dir < 0) { // R6 §03 C: previous = the feed moves DOWN: the same 600ms scroll, played backwards, then hold that ad
         clearTimeout(holdT); const base = cur * STEP; S = tl() - (base + 600); pausedAt = null; sync(); rev = true;
@@ -514,17 +523,27 @@ class Component extends DCLogic {
     // 14 Oct §05 B: one wheel gesture (events until 250ms of quiet) or one swipe = one ad; the page never scrolls meanwhile
     // Urgent 2: a gesture's deltas add up and fire ONE ad at 30px (trackpads start with tiny deltas, which used to swallow
     // the whole gesture); any wheel or pointer move over the phone also freezes it (the pointer may already be there)
-    let lastW = 0, busyUntil = 0, acc = 0, fired = false;
+    // owner (26 Oct): with the pointer on the phone the ads stop advancing, and the wheel / a finger DRAG the feed like a
+    // real phone: it follows the scroll continuously, stops wherever you stop, and settles softly on the nearest ad when you
+    // let go. (Products keep their own idle float; only the feed is paused.) Feed position f: ad i fully in view at f = i;
+    // between i and i+1 the feed is mid-scroll, which is the first 600ms of ad i+1 on the reel clock.
+    const SCR = 600, HOLD = 1250, N = 10;
+    const posOf = (m) => { const i = Math.floor(m / STEP), r = m - i * STEP; return r < SCR ? i - 1 + r / SCR : i; };
+    const mOf = (f) => { f = ((f % N) + N) % N; const i = Math.floor(f + 1e-6), fr = f - i; return fr < 1e-3 ? i * STEP + HOLD : (((i + 1) % N) * STEP + fr * SCR) % D; };
+    const drag = (df) => { if (rev) return; clearTimeout(holdT); cancelAnimationFrame(snapRaf); if (fpos == null) fpos = posOf(master()); fpos += df; pausedAt = ((mOf(fpos) % D) + D) % D; sync(); clearTimeout(snapT); snapT = setTimeout(settle, 220); };
+    const settle = () => { if (fpos == null) return; const a = fpos, b = Math.round(fpos), t0 = performance.now(), dur = 280;
+      const stepF = (n) => { const k = Math.min(1, (n - t0) / dur), e = 1 - Math.pow(1 - k, 3); fpos = a + (b - a) * e; pausedAt = ((mOf(fpos) % D) + D) % D; sync(); if (k < 1) snapRaf = requestAnimationFrame(stepF); else { fpos = b; if (!hov) { fpos = null; resume(); } } }; snapRaf = requestAnimationFrame(stepF); };
     const freeze = () => { if (!hov) { hov = true; clearTimeout(holdT); clearTimeout(this._rcLeave); pause(); } };
-    const wheel = (e) => { e.preventDefault(); freeze(); const n = Date.now(); if (n - lastW > 250) { acc = 0; fired = false; } lastW = n; if (fired || n < busyUntil) return; acc += e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * 400 : e.deltaY; if (Math.abs(acc) >= 30) { fired = true; busyUntil = n + 650; go(acc > 0 ? 1 : -1); } };
+    const wheel = (e) => { e.preventDefault(); freeze(); const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * 400 : e.deltaY; drag(dy / 260); };
     const pmove = () => freeze();
-    const ts = (e) => { ty = e.touches[0].clientY; hov = true; clearTimeout(this._rcLeave); pause(); }, tm = (e) => { if (ty != null) e.preventDefault(); }, te = (e) => { if (ty == null) return; const dy = e.changedTouches[0].clientY - ty; ty = null; if (Math.abs(dy) > 30) { e.preventDefault(); this._swiped = Date.now(); go(dy < 0 ? 1 : -1); } clearTimeout(this._rcLeave); this._rcLeave = setTimeout(() => { hov = false; resume(); }, 3000); };
+    let tLast = null;
+    const ts = (e) => { ty = tLast = e.touches[0].clientY; hov = true; clearTimeout(this._rcLeave); pause(); }, tm = (e) => { if (ty == null) return; e.preventDefault(); const y = e.touches[0].clientY; drag((tLast - y) / 220); tLast = y; }, te = (e) => { if (ty == null) return; if (Math.abs(e.changedTouches[0].clientY - ty) > 8) { e.preventDefault(); this._swiped = Date.now(); } ty = tLast = null; clearTimeout(this._rcLeave); this._rcLeave = setTimeout(() => { hov = false; fpos = null; resume(); }, 3000); };
     this._reelSync = setInterval(() => !this.dead && !document.hidden && sync(), 4000); // a safety net only: with one shared startTime nothing moves
     window.seReel = { pause, resume, go, master, sync, at: (ms) => { pausedAt = ((ms % D) + D) % D; sync(); } };
     return (this._rc = {
       ref: (n) => { if (el) { el.removeEventListener('pointermove', pmove); el.removeEventListener('wheel', wheel); el.removeEventListener('touchstart', ts); el.removeEventListener('touchmove', tm); el.removeEventListener('touchend', te); } el = n; if (n) { vio.disconnect(); vio.observe(n); requestAnimationFrame(() => { sync(); requestAnimationFrame(() => { const r = document.querySelector('[data-se-reel]'); if (r) r.classList.add('se-reel-on'); }); }); n.addEventListener('pointermove', pmove, { passive: true }); n.addEventListener('wheel', wheel, { passive: false }); n.addEventListener('touchstart', ts, { passive: true }); n.addEventListener('touchmove', tm, { passive: false }); n.addEventListener('touchend', te, { passive: false }); } },
       enter: () => { hov = true; clearTimeout(holdT); clearTimeout(this._rcLeave); pause(); }, // 14 Oct §05 B: stops at once, the progress segment freezes
-      leave: () => { clearTimeout(holdT); clearTimeout(this._rcLeave); this._rcLeave = setTimeout(() => { hov = false; resume(); }, 3000); }, // R6 §03 C: resumes 3s after the pointer leaves
+      leave: () => { clearTimeout(holdT); clearTimeout(this._rcLeave); this._rcLeave = setTimeout(() => { hov = false; fpos = null; cancelAnimationFrame(snapRaf); resume(); }, 3000); }, // R6 §03 C: resumes 3s after the pointer leaves
       prev: (e) => { e && e.stopPropagation(); go(-1); },
       next: (e) => { e && e.stopPropagation(); go(1); },
       poster: () => { if (this._swiped && Date.now() - this._swiped < 400) return; this.setState({ posterI: Math.floor(master() / STEP) % 10 }); },
@@ -636,7 +655,7 @@ class Component extends DCLogic {
     // Issue 1B: fixed colour order, no two neighbouring ads alike (the last is white so the loop back to yellow never repeats)
     const ORDER = ['yel', 'light', 'dark', 'yel', 'light', 'dark', 'yel', 'light', 'dark', 'light']; ads.forEach((a, i) => (a[1] = ORDER[i]));
     // Urgent 1: the reel shows THE pose for every part (carton behind, product in front), not the bare library renders
-    const POSE = window.SE_SHOTS ? (this._pose = this._pose || { large: [0, 1, 2, 3, 4, 5, 6, 7].map((i) => window.SE_SHOTS.byIndex(i, 480)).concat(window.SE_SHOTS.url('rep-crack', 480)) } /* Hero 1: [8] the broken phone, one still render */) : null;
+    const POSE = window.SE_SHOTS ? (this._pose = this._pose || { large: [0, 1, 2, 3, 4, 5, 6, 7].map((i) => window.SE_SHOTS.byIndex(i, 960)).concat(window.SE_SHOTS.url('rep-crack', 960)) } /* Hero 1: [8] the broken phone, one still render */) : null;
     const REEL_D = 32, LIB = POSE ? POSE.large : s.lib && s.lib.large && s.lib.large.length >= 8 ? s.lib.large : null, LK = { scr: 0, frm: 1, flx: 2, board: 3, bat: 4, cam: 5, sml: 6, bcv: 7, rep: 8 };
     { const src = POSE || s.lib; if (src && src !== this._bbLib) { this._bbLib = src; this.computeBB(src); } }
     const r1 = (v) => Math.round(v * 10) / 10, BB = s.bb || {}, bbFit = (bb, W, H, cx, cy) => { const [x0, y0, bw, bh, ar] = bb || [0.1, 0.1, 0.8, 0.8, 1], Wi = Math.min(W / bw, H / (bh * ar)), Hi = Wi * ar; return { l: r1(cx - (x0 + bw / 2) * Wi), t: r1(cy - (y0 + bh / 2) * Hi), w: r1(Wi), h: r1(Hi), pw: bw * Wi, ph: bh * Hi }; };
@@ -658,17 +677,17 @@ class Component extends DCLogic {
     // Urgent 2: ONE diagonal sweep, alternating devices (phone on even ads, iPad on odd ads): they never shine together
     const swFr = (lag, par) => { const fr = [[0, SW0 + ';opacity:0']]; ads.forEach((a, i) => { if (i % 2 !== par) return; const t0 = i * 3.2 + 0.9 + lag, o = SWO[a[1]]; if (t0 + 1.12 > REEL_D) return; fr.push([t0, SW0 + ';opacity:' + o, IO], [t0 + 1.1, SW1 + ';opacity:' + o], [t0 + 1.11, SW0 + ';opacity:0']); }); fr.push([REEL_D, SW0 + ';opacity:0']); return fr; };
     const sweepPh = this.tlK('hrSweep2', REEL_D, 0, swFr(0, 0)), sweepIp = this.tlK('ipSweep2', REEL_D, 0, swFr(0, 1));
-    const iRep = ads.findIndex((a) => a[0] === 'rep'), iWhs = ads.findIndex((a) => a[0] === 'whs');
+    const iRep = ads.findIndex((a) => a[0] === 'rep'), iWhs = ads.findIndex((a) => a[0] === 'whs'); this._wldI = ads.findIndex((a) => a[0] === 'wld');
     const rq = null; // Hero 1: the drawn crack film (and its 60+ keyframe animations) is gone
     const boxes = [[55, 259], [81, 259], [107, 259], [68, 232], [94, 232], [81, 205]].map(([x, y], j) => { const t = 0.6 + j * 0.1; return { x, y, an: this.tlK('hrC' + j, REEL_D, iWhs * 3.2, [[0, 'opacity:0;transform:translateY(-40px)'], [t, 'opacity:0;transform:translateY(-40px)'], [t + 0.01, 'opacity:1;transform:translateY(-40px)', 'cubic-bezier(.3,.6,.4,1)'], [t + 0.37, 'opacity:1;transform:translateY(0) scale(1)', 'ease-in-out'], [t + 0.43, 'opacity:1;transform:translateY(0) scale(1.02,.97)', 'ease-in-out'], [t + 0.53, 'opacity:1;transform:translateY(0) scale(1)'], [3.85, 'opacity:1;transform:translateY(0) scale(1)'], [3.9, 'opacity:0;transform:translateY(-40px)']]) }; });
     const GL = { dark: ['rgba(255,226,150,.42)', 'rgba(255,226,150,.16)'], yel: ['rgba(255,250,228,.8)', 'rgba(255,250,228,.3)'], light: ['rgba(255,206,96,.3)', 'rgba(255,206,96,.11)'] };
     if (!this._gRef) this._gRef = (el) => { this._gcv = el; if (el) { this._gDrawn = 0; this.loadGlobe(); this.drawGlobe(); } };
     // 14 Oct §05 A: products sit centred between the title (bottom ≈121px) and the description (top 302px): 211.5 vs 228.8
     const PROD_DY = -17.3;
-    const reelAll = ads.map(([kind, th, k, t, d, c], i) => { const lib = !!LIB && LK[kind] != null && kind !== 'scr', f = lib ? bbFit(BB[LK[kind]], 96, 137.3, 96, 228.8) : null;
-      const pw = kind === 'scr' ? 64.2 : kind === 'wld' ? 96 : kind === 'whs' ? 90 : lib ? f.pw : 88, ph = kind === 'scr' ? 137.3 : kind === 'wld' ? 96 : kind === 'whs' ? 99.5 : lib ? f.ph : 120, Lp = Math.max(pw, ph), gD = r1(Lp * 1.3), cy = 228.8;
+    const reelAll = ads.map(([kind, th, k, t, d, c], i) => { const lib = !!LIB && LK[kind] != null /* owner: the screen ad uses the same pose render as every other ad (it was a flat CSS phone) */, f = lib ? bbFit(BB[LK[kind]], 96, 137.3, 96, 228.8) : null;
+      const pw = lib ? f.pw : kind === 'scr' ? 64.2 : kind === 'wld' ? 96 : kind === 'whs' ? 90 : lib ? f.pw : 88, ph = lib ? f.ph : kind === 'scr' ? 137.3 : kind === 'wld' ? 96 : kind === 'whs' ? 99.5 : lib ? f.ph : 120, Lp = Math.max(pw, ph), gD = r1(Lp * 1.3), cy = 228.8;
       const [l1, l2] = t.split('\n'), G = GL[th];
-      return { ...TH[th], kind, k, l1, l2, d, c, straight: lib && BB[LK[kind]] && BB[LK[kind]][5] ? 'rotate(' + BB[LK[kind]][5].toFixed(1) + 'deg)' : 'none', so: f ? r1(96 - f.l) + 'px ' + r1(228.8 - f.t) + 'px' : '50% 50%', isLib: lib, isCss: !LIB && !['scr', 'rep', 'whs', 'wld'].includes(kind), isScr: kind === 'scr', isRep: false /* Hero 1: the repair ad shows the still broken-phone render (no drawn cracks, no seal, no boot logo) */, isWhs: kind === 'whs', isWld: kind === 'wld', f: f || { l: 0, t: 0, w: 0, h: 0 }, img: lib ? LIB[LK[kind]] : '', rq, boxes: kind === 'whs' ? boxes : [], gRef: this._gRef,
+      return { ...TH[th], kind, k, l1, l2, d, c, straight: 'none' /* owner: one pose for every ad: no per-product straightening angle (it tilted each part differently) */, so: f ? r1(96 - f.l) + 'px ' + r1(228.8 - f.t) + 'px' : '50% 50%', isLib: lib, isCss: !LIB && !['scr', 'rep', 'whs', 'wld'].includes(kind), isScr: kind === 'scr' && !lib, isRep: false /* Hero 1: the repair ad shows the still broken-phone render (no drawn cracks, no seal, no boot logo) */, isWhs: kind === 'whs', isWld: kind === 'wld', f: f || { l: 0, t: 0, w: 0, h: 0 }, img: lib ? LIB[LK[kind]] : '', rq, boxes: kind === 'whs' ? boxes : [], gRef: this._gRef,
         gD, gL: r1(96 - gD / 2), gT: r1(cy - gD / 2), glow: 'radial-gradient(closest-side,' + G[0] + ' 0%,' + G[1] + ' 50%,rgba(255,255,255,0) 100%)', sW: r1(pw * 0.8), sL: r1(96 - pw * 0.4), sT: r1(228.8 + ph / 2 - 4),
         aCard: K.card + dl(i), aEb: K.eb + dl(i), aL1: K.l1 + dl(i), aL2: K.l2 + dl(i), aProd: K.prod + dl(i), aFade: K.fade + dl(i), aBot: K.bot + dl(i), aHold: K.hold + dl(i), aSheen: 'none', aSheenR: 'none', dy: PROD_DY }; }); // 14 Oct §05 C: no light on the products (only the glass shines)
     const PG = { dark: ['rgba(255,255,255,.16)', 'rgba(255,255,255,.8)'], yel: ['rgba(38,40,43,.16)', 'rgba(38,40,43,.72)'], light: ['rgba(38,40,43,.14)', 'rgba(38,40,43,.62)'] };

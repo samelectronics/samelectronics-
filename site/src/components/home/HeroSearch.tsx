@@ -128,7 +128,7 @@ export default function HeroSearch({ examples, openFmp }: { examples: string[]; 
       className="se-search-glow"
       role="search"
       style={{
-        position: 'relative', width: '620px', display: 'flex', alignItems: 'center', gap: '12px', height: '64px', boxSizing: 'border-box',
+        position: 'relative', zIndex: open ? 60 : 'auto' /* owner: the suggestions open OVER the buttons below, never mixed with them */, width: '620px', display: 'flex', alignItems: 'center', gap: '12px', height: '64px', boxSizing: 'border-box',
         padding: '0 7px 0 20px', borderRadius: '10px', background: '#FFFFFF', color: '#26282B', textAlign: 'left', cursor: 'text',
         boxShadow: '0 0 0 2px rgba(247,192,50,.4),0 0 30px rgba(247,192,50,.18)',
       }}

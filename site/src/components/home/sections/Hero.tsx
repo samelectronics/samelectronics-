@@ -424,12 +424,11 @@ export default function Hero({ v }: { v: Vals }) {
                 style={{
                   position: 'absolute',
                   right: '64px',
-                  top: '-2px',
+                  top: '-3.5px',
                   width: '46px',
-                  height: '3px',
-                  borderRadius: '2px',
-                  background: '#9DA1A6',
+                  height: '4px',
                 }}
+                className="se-hwb se-hwb-t"
               ></span>
               {'\n          '}
               <div data-hero-screen="" style={{ position: 'absolute', inset: '4px', borderRadius: '28px', background: '#08090A', overflow: 'hidden' }}>
@@ -876,24 +875,22 @@ export default function Hero({ v }: { v: Vals }) {
               <span
                 style={{
                   position: 'absolute',
-                  right: '-2px',
+                  right: '-3.5px',
                   top: '112px',
-                  width: '3px',
+                  width: '4px',
                   height: '56px',
-                  borderRadius: '2px',
-                  background: '#8E939A',
                 }}
+                className="se-hwb se-hwb-r"
               ></span>
               <span
                 style={{
                   position: 'absolute',
-                  left: '-2px',
+                  left: '-3.5px',
                   top: '96px',
-                  width: '3px',
+                  width: '4px',
                   height: '30px',
-                  borderRadius: '2px',
-                  background: '#8E939A',
                 }}
+                className="se-hwb se-hwb-l"
               ></span>
               {'\n          '}
               <div data-hero-screen="" style={{ position: 'absolute', inset: '3px', borderRadius: '35px', background: '#08090A', overflow: 'hidden' }}>
@@ -915,6 +912,7 @@ export default function Hero({ v }: { v: Vals }) {
                           >
                             {'\n                    '}
                             <span
+                              className="se-ad-k"
                               style={cssToObj(
                                 `position:absolute;left:9%;top:62px;font-family:'JetBrains Mono',monospace;font-size:8.6px;font-weight:600;letter-spacing:.15em;line-height:1;white-space:nowrap;color:${s(v.a?.kick)};opacity:${s(v.a?.kickO)}`,
                               )}
@@ -923,6 +921,7 @@ export default function Hero({ v }: { v: Vals }) {
                             </span>
                             {'\n                    '}
                             <div
+                              className="se-ad-t"
                               style={{
                                 position: 'absolute',
                                 left: '9%',
@@ -965,6 +964,7 @@ export default function Hero({ v }: { v: Vals }) {
                               <div style={cssToObj(`position:absolute;inset:0;transform-origin:96px 229px;animation:${s(v.a?.aHold)}`)}>
                                 {'\n                        '}
                                 <div
+                                  className="se-idle"
                                   style={{ position: 'absolute', inset: '0', transformOrigin: '96px 229px', transform: 'none' }}
                                 >
                                   {'\n                          '}
@@ -1711,6 +1711,7 @@ export default function Hero({ v }: { v: Vals }) {
         </div>
         {'\n\n    '}
         <div
+          data-hero-rail=""
           ref={v.railRef}
           style={{
             position: 'absolute',

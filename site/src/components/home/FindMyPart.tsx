@@ -5,6 +5,7 @@
 // Every brand is its own card (Honor is a brand of its own; no family headings), every logo has the same optical size.
 // Stock and prices are sample data from SE_DATA; a model with nothing in stock says "On request", never "0 in stock".
 'use client';
+import DeviceIcon from './DeviceIcon';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useScrollLock, stopWheel } from '@/lib/scrollLock';
 import SEBrandLogo from '../dc/SEBrandLogo';
@@ -45,11 +46,6 @@ const SWATCH: Record<string, string> = { black: '#1d1d1f', white: '#f4f4f2', blu
 const Icon = ({ d, s = 22 }: { d: string; s?: number }) => (
   <svg width={s} height={s} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={d} /></svg>
 );
-const DEV_ICON: Record<string, string> = {
-  phone: 'M8 2.5h8a2 2 0 0 1 2 2v15a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2v-15a2 2 0 0 1 2-2zM10.5 5h3',
-  tablet: 'M5 2.5h14a2 2 0 0 1 2 2v15a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-15a2 2 0 0 1 2-2zM11 18.5h2',
-  watch: 'M8.5 6h7a2.5 2.5 0 0 1 2.5 2.5v7a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 6 15.5v-7A2.5 2.5 0 0 1 8.5 6zM9 6l.8-3.5h4.4L15 6M9 18l.8 3.5h4.4L15 18M18 11h1',
-};
 const CHECK = 'M5 12.5l4.5 4.5L19 7.5';
 const k = (n: number) => (n >= 1000 ? (n / 1000).toFixed(1).replace('.0', '') + 'k' : String(n));
 const toggle = (a: string[], x: string) => (a.includes(x) ? a.filter((y) => y !== x) : [...a, x]);
@@ -192,7 +188,7 @@ export default function FindMyPart({ open, init, onClose, onShop }: { open: bool
                 const n = devCount(d.id), sers = [...new Set(bModels.filter((m) => m.device === d.id).map((m) => m.series).filter(Boolean))];
                 return (
                   <button key={d.id} type="button" className={'fp-dev' + (dev === d.id ? ' on' : '')} disabled={!n} onClick={() => { if (d.id !== dev) { setSer(null); setMs([]); } setDev(d.id); go(2); }}>
-                    <span className="fp-dev-ic"><Icon d={DEV_ICON[d.id]} s={34} /></span>
+                    <span className="fp-dev-ic"><DeviceIcon kind={d.id} size={34} /></span>
                     <b>{T(d.name)}</b>
                     <span>{n ? n + ' ' + T('models') : T('None listed')}</span>
                     {sers.length ? <small>{sers.join(' · ')}</small> : null}
@@ -224,7 +220,7 @@ export default function FindMyPart({ open, init, onClose, onShop }: { open: bool
                     return (
                       <button key={m.id} type="button" className={'fp-model' + (on ? ' on' : '')} aria-pressed={on} onClick={() => setMs(toggle(ms, m.id))}>
                         <span className="fp-ck">{on ? <Icon d={CHECK} s={12} /> : null}</span>
-                        <span className="fp-mic"><Icon d={DEV_ICON[m.device]} s={20} /></span>
+                        <span className="fp-mic"><DeviceIcon kind={m.device} size={20} /></span>
                         <span className="fp-mt">
                           <b data-no-i18n="">{m.name}</b>
                           <small className={st ? 'in' : ''}>{st ? st + ' ' + T('parts in stock') : T('On request')}</small>

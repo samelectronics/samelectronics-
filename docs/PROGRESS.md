@@ -2653,3 +2653,30 @@ DONE WHEN
 - Language pop-up: battery with %, tick, fitted card. **PASS**
 - Find My Part follows the Excel; equal logos; multi-select; fully Arabic. **PASS**
 - Every box and part realistic, sized to the product, same pose. **PASS**
+
+## Home fixes · 26 Oct (owner's 10 points + entrance)
+- **1 Search.** The suggestions open over the buttons below (the form lifts to z 60 while open).
+- **2/5/9 Boxes, parts, sharpness.** `scripts/productshot/pose.html`:
+  - The carton turns 22° further than the product and the camera sits higher, so a side face and the top always show.
+  - Deeper cartons; fold creases on the sides; a tuck flap with a thumb notch on top; worn darker edges; rounder corners.
+  - A raised 3D QC sticker (barcode, QR, part) on the white cartons. The owner's photo boxes keep their own real printed label. A clear "SEALED" tape wraps the top edge of every box.
+  - Back cover: frosted titanium-blue glass (tone shift, etched grain, clear coat, sheen), not one flat colour.
+  - Rendered at 2400px and always downscaled (Lanczos, q90). The hero phone reel uses the 960 tier.
+- **3 Phone ads.** Hover holds the feed only:
+  - The product float (`.se-idle`) and the globe (its own clock) keep moving.
+  - The wheel or touch drags the feed freely and settles on the nearest ad; leaving resumes after 3s.
+- **4 Consistent poses.** Every ad uses the same pose render, at the same size and turn (the CSS screen and the per-product "straight" turn are gone).
+- **6 Arabic ad titles.** Eyebrow and title sit right-aligned in Arabic.
+- **7 Logos and icons.**
+  - The Apple icon now spans exactly the letter height (top of leaf to bottom of apple = cap top to baseline). The other logos are untouched.
+  - The phone, tablet and watch icons (`DeviceIcon.tsx`) are small product drawings: metal body, glossy screen, island, buttons, strap and crown.
+- **8 Grey half-dots.** The device buttons were flat grey bars half-hidden behind the frame. They are now machined metal buttons, fully outside the frame.
+- **10 Language pop-up.**
+  - One smooth battery charge: red → orange → yellow → green, no segments. The bar and the % share the colour.
+  - The tick has no square behind it.
+  - The switch runs first, then the battery charges for 1.6s, and the card stays until the tick has played.
+- **Entrance (first open only, `html.se-intro`).**
+  - The eyebrow wipes in, and the three title lines slide in from the reading side one after another; "Every grade." glows.
+  - The paragraph, search, buttons and ticks follow.
+  - The iPad glides in from the outer edge, then the phone lands with a turn, then the brand bar rises.
+  - Mirrored in Arabic. It is never replayed by a language switch or by scrolling back. Reduced motion skips it.
