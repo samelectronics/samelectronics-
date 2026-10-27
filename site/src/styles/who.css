@@ -176,3 +176,4 @@ html[dir='rtl'] .ws-doc { right: auto; left: 7%; transform: translateY(-50%) rot
 .ws-doc .st { position: absolute; right: 12px; bottom: -14px; padding: 4px 10px; border-radius: 4px; color: #1D8A55; box-shadow: inset 0 0 0 2px #1D8A55; background: #fff; font: 800 13px 'Space Grotesk', sans-serif; letter-spacing: .12em; transform: rotate(-10deg); animation: wsStamp .35s 2.6s cubic-bezier(.2, 1.4, .4, 1) both; }
 @keyframes wsStamp { from { opacity: 0; transform: rotate(-10deg) scale(1.8); } }
 @media (max-width: 700px) { .ws-globe { transform: scale(.6); transform-origin: 0 50%; } .ws-doc { width: 180px; } .ws-grades span { min-width: 0; } }
+.ws-film { position: absolute; inset: 0 0 0 0; z-index: 1; }

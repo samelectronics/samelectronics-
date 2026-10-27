@@ -10,9 +10,9 @@ import InfoTip from '../InfoTip';
 /** Issue 4: fine film grain instead of grids, stripes and tiles. */
 const GRAIN = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'160\' height=\'160\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'.9\' numOctaves=\'2\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")';
 
-export default function RepairLab({ v }: { v: Vals }) {
+export default function RepairLab({ v, full = false }: { v: Vals; full?: boolean }) {
   return (
-    <section id="repair" data-tone="light" data-screen-label="08 Repair Lab" className="rp" style={{ padding: 'clamp(80px,8vw,120px) clamp(20px,4vw,64px)' }}>
+    <section id={full ? 'repair-lab' : 'repair'} data-tone="light" data-screen-label="08 Repair Lab" className="rp" style={{ padding: 'clamp(80px,8vw,120px) clamp(20px,4vw,64px)' }}>
       {/* R6 §11: the bench itself: graphite ESD mat (faint grid), warm light from above, circuit traces in the gutters. No tiles. */}
       {/* owner (27 Oct): no flat lines; the section's own branching circuits come from SectionLife, in the gutters */}
       <div style={{ position: 'relative', maxWidth: '1312px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '32px' }}>
@@ -55,7 +55,7 @@ export default function RepairLab({ v }: { v: Vals }) {
         {'\n    '}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,420px),1fr))', gap: '20px' }}>
           {'\n      '}
-          <RepairScene ticket={v.re?.ticket || { model: '', problems: '' }} />
+          <RepairScene ticket={v.re?.ticket || { model: '', problems: '' }} full={full} />
           {'\n      '}
           <div
             style={{
@@ -185,6 +185,14 @@ export default function RepairLab({ v }: { v: Vals }) {
             {/* R6 §11: problems are a multi-select (the film follows the first screen / battery / port choice) */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <span style={{ fontSize: '13px', fontWeight: '600', color: '#3D3E3F' }}>3 · What needs fixing? (choose all that apply)</span>
+              {!full ? (
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                  {(v.re?.groups || []).flatMap((g: any) => g.items).slice(0, 9).map((p: any) => (
+                    <button key={p.id} type="button" aria-pressed={p.on} onClick={p.pick} className={'rp-chip lt' + (p.on ? ' on' : '')}>{p.name}</button>
+                  ))}
+                  <button type="button" className="rp-chip lt rp-more" onClick={v.re?.more}>All repairs →</button>
+                </div>
+              ) : (
               <div className="rp-groups">
                 {(v.re?.groups || []).map((g: any) => (
                   <div key={g.g} className="rp-grp">
@@ -197,8 +205,9 @@ export default function RepairLab({ v }: { v: Vals }) {
                   </div>
                 ))}
               </div>
+              )}
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {full ? <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <span style={{ fontSize: '13px', fontWeight: '600', color: '#3D3E3F' }}>4 · Quality</span>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
                 {(Array.isArray(v.re?.grades) ? v.re?.grades : []).map((__it: any, __i: number) => {
@@ -230,7 +239,7 @@ export default function RepairLab({ v }: { v: Vals }) {
               ) : !v.re?.hasParts ? (
                 <span style={{ fontSize: '13px', color: '#5E6064' }}>Quoted after diagnosis.</span>
               ) : null}
-            </div>
+            </div> : null}
             {'\n        '}
             <div
               style={{
@@ -294,7 +303,7 @@ export default function RepairLab({ v }: { v: Vals }) {
             </div>
             {'\n        '}
             {/* owner (27 Oct): the visit is optional; everything goes to WhatsApp as one tidy booking message */}
-            <div className="rp-when">
+            {full ? <div className="rp-when">
               <span style={{ fontSize: "13px", fontWeight: "600", color: "#3D3E3F" }}><span>5 · When can you come?</span> <em>optional</em></span>
               <div>
                 <input type="date" value={v.re?.date || ''} onChange={v.re?.setDate} aria-label="Preferred day" />
@@ -303,7 +312,7 @@ export default function RepairLab({ v }: { v: Vals }) {
                 </select>
               </div>
               <textarea defaultValue={v.re?.noteTxt || ''} onChange={v.re?.setNote} rows={2} placeholder="Anything else? (colour, password-free check, pickup…)" aria-label="Notes" />
-            </div>
+            </div> : null}
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               {'\n          '}
               <a
@@ -326,7 +335,7 @@ export default function RepairLab({ v }: { v: Vals }) {
                 }}
                 className={cx(undefined, 'scp-fe3982c3')}
               >
-                Send booking on WhatsApp
+                {full ? 'Send booking on WhatsApp' : 'Book on WhatsApp'}
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
                   <path d="M5 12h14M13 6l6 6-6 6"></path>
                 </svg>
@@ -334,7 +343,7 @@ export default function RepairLab({ v }: { v: Vals }) {
               {'\n          '}
               <a
                 href="#repair"
-                onClick={v.re?.more}
+                onClick={full ? (e: React.MouseEvent) => { e.preventDefault(); v.re?.close(); } : v.re?.more}
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -348,7 +357,7 @@ export default function RepairLab({ v }: { v: Vals }) {
                 }}
                 className={cx(undefined, 'scp-8a3ebd05')}
               >
-                See all repairs
+                {full ? 'Close the Repair Lab' : 'Open the full Repair Lab'}
               </a>
               {'\n        '}
             </div>

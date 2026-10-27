@@ -27,6 +27,8 @@ JOBS['line-all'] = { item: 'line', boxes: 'zy,gx,xiaomi-sp,huawei-sp,apple-sp,sa
 for (const it of ['scr', 'bat', 'bcv', 'flx', 'cam', 'sml', 'aud', 'frm', 'board']) JOBS['solo-' + it] = { item: it, box: 'white', lcd: 'plain', label: '', nobox: '1' };
 // owner (27 Oct): an Arabic set, the carton peeking out on the RIGHT (rendered, so its print stays readable): <id>-ar-<w>.webp
 for (const id of Object.keys(JOBS).filter((k) => !k.startsWith('solo-'))) JOBS[id + '-ar'] = { ...JOBS[id], ar: '1' };
+// owner (28 Oct): the repair film, 48 frames of one continuous 3D repair (crack → open → swap → close → boot); no text, no Arabic twin
+const FILM_N = 48; for (let i = 0; i < FILM_N; i++) JOBS['film-' + String(i).padStart(2, '0')] = { item: 'film', box: 'white', lcd: 'plain', label: '', f: (i / (FILM_N - 1)).toFixed(4) };
 const only = args.only ? args.only.split(',') : args.shot ? [args.shot] : Object.keys(JOBS);
 const OUT = path.join(ROOT, 'public/assets/pose'), PNG = path.join(OUT, '.png'); fs.mkdirSync(PNG, { recursive: true });
 const b = await pw.chromium.launch({ args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });

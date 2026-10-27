@@ -5,6 +5,7 @@ import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SEWholesale.logic.js';
 import DotGlobe from '@/components/home/DotGlobe';
 import PalletDrop from '@/components/home/PalletDrop';
+import RepairFlip from '@/components/home/RepairFlip';
 import { PALLET_CELLS, PALLET_FRAME } from '@/content/palletCells';
 
 const PL = (l: string) => `/assets/pallet/${l}-600.webp`;
@@ -67,7 +68,7 @@ function Scene({ k }: { k: string }) {
   if (k === 'rep')
     return (
       <div className="wf-sc wf-sc3" aria-hidden="true">
-        <img className="wf-sc3-img" src={pose('rep-open')} alt="" />
+        <div className="wf-sc3-film"><RepairFlip w={480} zoom={1.5} /></div>
       </div>
     );
   if (k === 'trd')

@@ -220,13 +220,7 @@ function render(v: Vals) {
                     </span>
                   </Tile>
                 </div>
-                <div className="bt-ptag" data-b="ptag" aria-hidden="true">
-                  <span className="bt-string" />
-                  <span className="bt-tag">
-                    <small>PRICE</small>
-                    <b>AED {v.price}</b>
-                  </span>
-                </div>
+                {/* owner (28 Oct): no hanging price tag; the price is on the work order */}
               </div>
               <div className="bt-slot" aria-hidden="true" />
             </div>

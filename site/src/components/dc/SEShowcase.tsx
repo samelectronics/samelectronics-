@@ -5,6 +5,21 @@ import React from 'react';
 import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SEShowcase.logic.js';
 
+// owner (28 Oct): the Original slide plays EVERY manufacturer: each sealed service-pack box takes the stage in turn,
+// with its makers named underneath (the rendered boxes cover all the brands we carry)
+const MAKERS: [string, string][] = [['apple-sp', 'Apple'], ['samsung-sp', 'Samsung'], ['huawei-sp', 'Huawei · Honor'], ['xiaomi-sp', 'Xiaomi · Redmi · POCO'], ['bbk-sp', 'Oppo · Vivo · Realme · OnePlus'], ['google-sp', 'Google Pixel']];
+function MakerCycle() {
+  const [i, setI] = React.useState(0);
+  React.useEffect(() => { const iv = window.setInterval(() => setI((n) => (n + 1) % MAKERS.length), 1300); return () => clearInterval(iv); }, []);
+  const u = (id: string) => (typeof window !== 'undefined' && (window as unknown as { SE_SHOTS?: { url: (a: string, w: number) => string } }).SE_SHOTS ? (window as unknown as { SE_SHOTS: { url: (a: string, w: number) => string } }).SE_SHOTS.url(id, 960) : '');
+  return (
+    <>
+      {MAKERS.map(([id], j) => <img key={id} className={'sc-pose sc-mk' + (j === i ? ' on' : '')} src={u(id)} alt="" />)}
+      <span className="sc-makers">{MAKERS.map(([, n], j) => <i key={n} className={j === i ? 'on' : ''}>{n}</i>)}</span>
+    </>
+  );
+}
+
 function render(v: Vals) {
   const a = v.ad || { k: '', h: ['', ''], c: [] };
   return (
@@ -81,7 +96,7 @@ function render(v: Vals) {
             {/* owner (27 Oct): each quality shows its REAL boxes from the standard stage (same renders as the hero):
                 Original = every Service Pack box we carry lined up (each ~70% showing) with the screen in front */}
             <div className="sc-un" aria-hidden="true">
-              <img key={'p' + v.i} className={'sc-pose' + (v.poseWide ? ' wide' : '')} src={v.pose} alt="" />
+              {v.ad?.g === 'OR' ? <MakerCycle key={'m' + v.i} /> : <img key={'p' + v.i} className="sc-pose" src={v.pose} alt="" />}
             </div>
             {v.hasPrice ? (
               <span className="sc-badge" data-s="badge">

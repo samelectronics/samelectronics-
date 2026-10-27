@@ -101,3 +101,13 @@
 .vs-f textarea:focus { box-shadow: inset 0 0 0 1.5px #F7C032, 0 0 0 4px rgba(247, 192, 50, .15); }
 .vs-f textarea::placeholder { color: #6B6E73; }
 .vs-f input[type='date'] { color-scheme: dark; }
+/* owner (28 Oct) */
+.vs-h span { display: block; }
+.vs-fullbtn { display: flex; align-items: center; justify-content: space-between; height: 46px; padding: 0 16px; border: none; border-radius: 11px; background: rgba(255, 255, 255, .08); color: #fff; font: 600 14px Inter, sans-serif; cursor: pointer; box-shadow: inset 0 0 0 1.5px rgba(247, 192, 50, .6); transition: background .2s; }
+.vs-fullbtn:hover { background: rgba(247, 192, 50, .14); }
+.vs-con.vs-full { position: fixed; inset: 3vh max(16px, calc(50vw - 560px)); z-index: 2500; overflow-y: auto; overscroll-behavior: contain; box-shadow: 0 0 0 100vmax rgba(20, 21, 23, .6), 0 40px 80px rgba(0, 0, 0, .5); animation: rpFullIn .4s cubic-bezier(.2, .9, .3, 1) both; }
+.vs-close { position: sticky; top: 0; float: right; z-index: 3; height: 36px; padding: 0 14px; border: none; border-radius: 10px; background: #F7C032; color: #26282B; font: 600 13px Inter, sans-serif; cursor: pointer; }
+html[dir='rtl'] .vs-close { float: left; }
+/* the day bar fills up to now; the opening hours are outlined, not solid yellow blocks */
+.vs-tl-bar i { background: none !important; box-shadow: inset 0 0 0 1.5px rgba(201, 138, 18, .7); }
+.vs-tl-bar .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 7px; background: linear-gradient(90deg, rgba(38, 40, 43, .15), rgba(38, 40, 43, .45)); transition: width 1s linear; }

@@ -16,9 +16,10 @@ function render(v: Vals) {
     <section id="visit" ref={v.secRef} data-tone="light" data-screen-label="Request & visit" className={'vs' + (v.seen ? ' vs-seen' : '')}>
       <div className="vs-in">
         {/* ---------- the request console ---------- */}
-        <div className="vs-con">
+        <div className={'vs-con' + (v.full ? ' vs-full' : '')}>
+          {v.full ? <button type="button" className="vs-close" onClick={v.closeFull} aria-label="Close the full form">Close ×</button> : null}
           <span className="vs-eb">REQUEST CONSOLE</span>
-          <h2 className="vs-h"><span>Tell us what you need.</span> <span>We print the work order.</span></h2>
+          <h2 className="vs-h"><span>Tell us what you need.</span> <span>We print the work order.</span></h2>{/* owner (28 Oct): two lines, the second on its own */}
           <div className="vs-tabs" role="tablist">
             {(v.types || []).map((t: any) => (
               <button key={t.name} type="button" role="tab" aria-selected={t.on} className={t.on ? 'on' : ''} onClick={t.pick}>
@@ -46,10 +47,16 @@ function render(v: Vals) {
                   </label>
                 )
               ))}
-              <label className="vs-f vs-note">
+              {!v.full && v.more ? (
+                <button type="button" className="vs-fullbtn" onClick={v.openFull}>
+                  Open the full form · every detail
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+                </button>
+              ) : null}
+              {v.full ? <label className="vs-f vs-note">
                 <span>Comment <em>optional</em></span>
                 <textarea key={'n' + v.rt} defaultValue={v.note} onChange={v.setNote} placeholder="Anything else we should know?" rows={2} />
-              </label>
+              </label> : null}
               <div className="vs-prog">
                 <span className="bar">
                   <i style={{ transform: 'scaleX(' + (v.total ? v.filled / v.total : 0) + ')' }} />
@@ -133,6 +140,7 @@ function render(v: Vals) {
               {(v.shifts || []).map((s: any) => (
                 <i key={s.t} style={{ left: s.l, width: s.w }} />
               ))}
+              <em className="fill" style={{ width: v.nowAt }} />
               <b className="now" style={{ left: v.nowAt }} />
             </span>
             <span className="vs-tl-l" aria-hidden="true" data-no-i18n="">

@@ -22,7 +22,7 @@ export const ADS = [
 ];
 export const QL = ['Brightness', 'Colour', 'Touch', 'Value'];
 // R6 §09: every quality gets the same unboxing film: 4.5s on stage + 0.6s change
-const DUR = () => 5.1;
+const DUR = (i) => (i === 0 ? 8.4 : 5.1); // owner (28 Oct): the Original slide is longer: every manufacturer's box gets its moment
 
 class Component extends DCLogic {
   secRef = React.createRef();

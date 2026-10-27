@@ -101,3 +101,16 @@
 .rs-prom > div { display: flex; align-items: center; gap: 10px; }
 .rs-prom svg { flex: none; }
 .rs-prom > div > span { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+/* owner (28 Oct): the stage is the 3D repair film on a studio floor (reflective, like the teardown) */
+.rs-stage { height: 440px !important; background: radial-gradient(70% 55% at 50% 38%, #3E4044, #2A2C2F 60%, #1F2023) !important; }
+.rs-stage .se-rflip { position: absolute; inset: 0; z-index: 1; }
+.rs-floor { position: absolute; left: 0; right: 0; bottom: 0; height: 34%; background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .035) 30%, rgba(0, 0, 0, .25)); border-top: 1px solid rgba(255, 255, 255, .05); }
+.rs-tag { z-index: 2; }
+.rs:not(.full) { align-self: start; }
+.rp-more { background: transparent !important; box-shadow: inset 0 0 0 1.5px #26282B !important; font-weight: 600 !important; }
+/* the full Repair Lab: its own place, over the page */
+.rp-full { position: fixed; inset: 0; z-index: 2500; overflow-y: auto; overscroll-behavior: contain; background: #F2F3F4; animation: rpFullIn .45s cubic-bezier(.2, .9, .3, 1) both; }
+@keyframes rpFullIn { from { opacity: 0; transform: translateY(24px); } }
+.rp-full-bar { position: sticky; top: 0; z-index: 3; display: flex; align-items: center; justify-content: space-between; padding: 14px clamp(20px, 4vw, 64px); background: rgba(242, 243, 244, .92); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(38, 40, 43, .08); }
+.rp-full-bar b { font: 700 16px 'Space Grotesk', sans-serif; color: #26282B; }
+.rp-full-bar button { height: 40px; padding: 0 16px; border: none; border-radius: 10px; background: #26282B; color: #fff; font: 600 14px Inter, sans-serif; cursor: pointer; }

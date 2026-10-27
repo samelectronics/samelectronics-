@@ -4,6 +4,7 @@ import React from 'react';
 import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SEWho.logic.js';
 import DotGlobe from '../home/DotGlobe';
+import RepairFlip from '../home/RepairFlip';
 import PalletDrop from '../home/PalletDrop';
 
 // owner (27 Oct): icons redrawn in the site's line style (1.8 stroke, rounded, the same 24 grid as the nav and FMP icons)
@@ -36,7 +37,7 @@ function Scene({ id, v }: { id: string; v: Vals }) {
     return (
       <div className="ws ws-rep">
         <span className="ws-key" />
-        {shot('rep-open') ? <img className="ws-hero" src={shot('rep-open')} alt="" /> : null}
+        <div className="ws-film"><RepairFlip w={960} zoom={1.4} /></div>
         <span className="ws-floor" />
         <div className="ws-grades">
           {(v.grades || []).map((g: any, k: number) => (

@@ -110,7 +110,7 @@ function drawCrack(x, w, h, bump) { const C = CRACK, ox = C.ix * w, oy = C.iy * 
 
 function product() {
   const g = new THREE.Group(), take = (o) => { const c = o.clone(true); c.position.set(0, 0, 0); return c; };
-  if (ITEM === 'scr' || ITEM === 'crack' || ITEM === 'fixed' || ITEM === 'open') {
+  if (ITEM === 'scr' || ITEM === 'crack' || ITEM === 'fixed' || ITEM === 'open' || ITEM === 'film') {
     // the screen assembly: cover glass + OLED with its punch hole; per box: the iPhone island, a metal frame behind, red tabs
     const sc = new THREE.Group(); [S.SG[0], S.SG[1]].forEach((sg) => sc.add(sg.clone(true))); g.add(sc);
     const offTex = cv(512, 1060, (x, w, h) => { const g = x.createLinearGradient(0, 0, w, h); g.addColorStop(0, '#15161a'); g.addColorStop(0.55, '#060607'); g.addColorStop(1, '#0d0e10'); x.fillStyle = g; x.fillRect(0, 0, w, h);
@@ -118,7 +118,7 @@ function product() {
     const black = new THREE.MeshPhysicalMaterial({ map: offTex, roughness: 0.04, metalness: 0.05, clearcoat: 1, clearcoatRoughness: 0.02, envMapIntensity: 1.8 });
     sc.traverse((m) => { if (!m.isMesh) return; if (m.material === S.M.screen) m.material = black; else if (Array.isArray(m.material) && m.material[0] === S.M.screen) m.material = [black, m.material[1]]; });
     if (LCD === 'iphone') { sc.traverse((m) => { if (m.isMesh && (m.geometry.type === 'CircleGeometry' || m.geometry.type === 'RingGeometry') && m.position.y > PH / 2 - 0.2) m.visible = false; }); const isl = new THREE.Mesh(new RoundedBoxGeometry(0.4, 0.11, 0.004, 8, 0.0549), new THREE.MeshStandardMaterial({ color: 0x000000, roughness: 0.35 })); isl.position.set(0, PH / 2 - 0.13, 0.024); g.add(isl); }
-    if (LCD === 'frame' || ITEM === 'crack' || ITEM === 'fixed' || ITEM === 'open') { const f = take(S.L[1]); f.position.z = -0.075; g.add(f); }
+    if (LCD === 'frame' || ITEM === 'crack' || ITEM === 'fixed' || ITEM === 'open' || ITEM === 'film') { const f = take(S.L[1]); f.position.z = -0.075; g.add(f); }
     if (ITEM === 'open') { // owner (27 Oct): the repair, opened: the new screen lifted off on its hinge, the insides (battery, board, flex) showing
       const b = take(S.L[7]); b.position.z = -0.14; g.add(b); [3, 4, 2].forEach((k) => { const l = take(S.L[k]); l.position.z = -0.1; g.add(l); });
       const hinge = new THREE.Group(); hinge.position.set(-PW / 2, 0, 0.02); sc.position.set(PW / 2, 0, 0.03); g.remove(sc); hinge.add(sc); hinge.rotation.y = -1.15; g.add(hinge); /* opened like a book, out toward the viewer */ g.userData.noBox = true; }
@@ -143,6 +143,32 @@ function product() {
       const glass = new THREE.MeshPhysicalMaterial({ map: ct, bumpMap: cb, bumpScale: 3, roughness: 0.1, clearcoat: 0.35, clearcoatRoughness: 0.04, envMapIntensity: 1.7 });
       const pg = new THREE.ShapeGeometry(rshape(PW - 0.03, PH - 0.03, S.R - 0.015), 32); { const p = pg.attributes.position, uv = pg.attributes.uv; for (let i = 0; i < p.count; i++) uv.setXY(i, p.getX(i) / PW + 0.5, p.getY(i) / PH + 0.5); }
       const pane = new THREE.Mesh(pg, glass); pane.position.z = 0.0215; g.add(pane); }
+    if (ITEM === 'film') { // owner (28 Oct): the repair as a FILM (frames rendered one by one, ?f=0..1): the cracked phone opens
+      // like a book, the cracked screen slides out, the new screen slides in, it closes and boots. Real parts, no cartoon tools.
+      const b = take(S.L[7]); b.position.z = -0.14; g.add(b); [3, 4, 2].forEach((k) => { const l = take(S.L[k]); l.position.z = -0.1; g.add(l); });
+      const ct = cv(768, 1588, (x, w, h) => { x.fillStyle = '#060607'; x.fillRect(0, 0, w, h); drawCrack(x, w, h, false); }), cb = cv(768, 1588, (x, w, h) => drawCrack(x, w, h, true)); cb.colorSpace = THREE.NoColorSpace;
+      const glass = new THREE.MeshPhysicalMaterial({ map: ct, bumpMap: cb, bumpScale: 3, roughness: 0.1, clearcoat: 0.35, clearcoatRoughness: 0.04, envMapIntensity: 1.7 });
+      const pg = new THREE.ShapeGeometry(rshape(PW - 0.03, PH - 0.03, S.R - 0.015), 32); { const pp = pg.attributes.position, uv = pg.attributes.uv; for (let i = 0; i < pp.count; i++) uv.setXY(i, pp.getX(i) / PW + 0.5, pp.getY(i) / PH + 0.5); }
+      const pane = new THREE.Mesh(pg, glass); pane.position.z = 0.0215;
+      const scNew = sc.clone(true); sc.add(pane); g.remove(sc);
+      const boot = cv(768, 1588, (x, w, h) => { x.fillStyle = '#050506'; x.fillRect(0, 0, w, h); const gl = x.createRadialGradient(w / 2, h * 0.46, 0, w / 2, h * 0.46, w * 0.6); gl.addColorStop(0, 'rgba(247,192,50,.22)'); gl.addColorStop(1, 'rgba(247,192,50,0)'); x.fillStyle = gl; x.fillRect(0, 0, w, h);
+        const r = w * 0.2; if (LOGO) { x.save(); x.beginPath(); x.arc(w / 2, h * 0.44, r, 0, 7); x.clip(); x.drawImage(LOGO, w / 2 - r, h * 0.44 - r, r * 2, r * 2); x.restore(); }
+        x.fillStyle = '#FFFFFF'; x.textAlign = 'center'; x.font = `600 ${Math.round(w * 0.06)}px ${SG}`; if ('letterSpacing' in x) x.letterSpacing = `${Math.round(w * 0.012)}px`; x.fillText('SAM ELECTRONICS', w / 2, h * 0.44 + r + w * 0.12); x.fillStyle = '#F7C032'; x.font = `500 ${Math.round(w * 0.03)}px ${IN}`; x.fillText('QUALITY · WARRANTY · PRICE', w / 2, h * 0.44 + r + w * 0.18); });
+      const on = new THREE.MeshPhysicalMaterial({ map: boot, emissive: 0xffffff, emissiveMap: boot, emissiveIntensity: 0, roughness: 0.05, clearcoat: 1, clearcoatRoughness: 0.02 });
+      scNew.traverse((m) => { if (!m.isMesh) return; if (m.material === black) m.material = on; else if (Array.isArray(m.material) && m.material[0] === black) m.material = [on, m.material[1]]; });
+      const hinge = new THREE.Group(); hinge.position.set(-PW / 2, 0, 0.02); sc.position.set(PW / 2, 0, 0.03); scNew.position.set(PW / 2, 0, 0.03); hinge.add(sc); hinge.add(scNew); g.add(hinge);
+      g.userData.noBox = true;
+      const cl = (v) => Math.max(0, Math.min(1, v)), seg = (f, a, d) => cl((f - a) / d), eio = (v) => (v < 0.5 ? 4 * v * v * v : 1 - Math.pow(-2 * v + 2, 3) / 2);
+      g.userData.film = (F, stand) => {
+        const open = eio(seg(F, 0.12, 0.16)) * (1 - eio(seg(F, 0.62, 0.16))), out = eio(seg(F, 0.3, 0.14)), inn = eio(seg(F, 0.45, 0.15)), boot2 = seg(F, 0.8, 0.14);
+        hinge.rotation.y = -1.2 * open;
+        sc.visible = F < 0.46; scNew.visible = F >= 0.44;
+        sc.position.set(PW / 2 + out * 2.6, out * 0.6, 0.03 + out * 0.5); sc.rotation.z = out * 0.25;
+        scNew.position.set(PW / 2 + (1 - inn) * 2.6, (1 - inn) * 0.6, 0.03 + (1 - inn) * 0.5); scNew.rotation.z = (1 - inn) * 0.25;
+        on.emissiveIntensity = 0.95 * boot2; on.color.setScalar(0.04 + 0.96 * boot2);
+        if (stand) stand.rotation.y += Math.sin(F * Math.PI * 2) * 0.07; // the phone turns a little on the bench, so it is alive
+      };
+    }
     g.userData.size = [PW, PH]; if (ITEM === 'crack' || ITEM === 'open') g.userData.noBox = true;
   } else if (ITEM === 'bcv') { const b = take(S.L[7]); b.rotation.y = PI; g.add(b); g.userData.size = [PW, PH];
     // owner (26 Oct): the back cover read as one flat colour. Now real frosted glass: a titanium-blue tone that shifts
@@ -191,12 +217,37 @@ const BOXES = { 'apple-sp': { d: 0.32, side: '#F1F1EE', top: '#F4F4F1' }, 'samsu
   'huawei-sp': { d: 0.18, side: '#F6F6F4', top: '#F6F6F4', band: '#E8382F' }, 'bbk-sp': { d: 0.18, side: '#F6F6F4', top: '#F6F6F4', band: '#3EC54A' }, 'xiaomi-sp': { d: 0.24, side: '#FF6A13', top: '#FF6A13' },
   gx: { d: 0.26, side: '#141414', top: '#161616' }, zy: { d: 0.3, side: '#1B4FD8', top: '#1D63E2', r: 0.14 } };
 const SIZES = await (await fetch('./boxes/sizes.json')).json();
+function drawGX(x, w, h, label) {
+  const g = x.createLinearGradient(0, 0, w * 0.4, h); g.addColorStop(0, '#202022'); g.addColorStop(0.5, '#121213'); g.addColorStop(1, '#0A0A0B'); x.fillStyle = g; x.fillRect(0, 0, w, h);
+  for (let i = 0; i < 9000; i++) { x.fillStyle = `rgba(255,255,255,${(Math.random() * 0.025).toFixed(3)})`; x.fillRect(Math.random() * w, Math.random() * h, 2, 2); } // matte card
+  const sh = x.createLinearGradient(0, 0, w, h * 0.6); sh.addColorStop(0, 'rgba(255,255,255,.08)'); sh.addColorStop(0.35, 'rgba(255,255,255,0)'); x.fillStyle = sh; x.fillRect(0, 0, w, h);
+  // the GX mark: a squared G in warm silver, a red X
+  const lx = w / 2, ly = h * 0.15, fs = w * 0.13; x.textBaseline = 'middle'; x.font = `700 ${fs}px "Space Grotesk"`; x.textAlign = 'right'; x.fillStyle = '#CDBB9C'; x.fillText('G', lx - fs * 0.02, ly); x.textAlign = 'left'; x.fillStyle = '#E0342F'; x.fillText('X', lx + fs * 0.02, ly);
+  x.font = `600 ${fs * 0.22}px Inter`; x.fillStyle = '#CDBB9C'; x.fillText('®', lx + fs * 0.66, ly - fs * 0.32);
+  x.textAlign = 'center'; x.fillStyle = '#E4E4E1'; x.font = `600 ${Math.round(w * 0.085)}px "Space Grotesk"`; if ('letterSpacing' in x) x.letterSpacing = `${Math.round(w * 0.006)}px`; x.fillText(label || 'GX', w / 2, h * 0.31); if ('letterSpacing' in x) x.letterSpacing = '0px';
+  // the diamond pattern at the foot, in four greys
+  const sq = w * 0.115, cols = ['#3A3A3C', '#2A2A2C', '#4B4B4E', '#1E1E20']; let k = 7;
+  for (let r = 0; r < 4; r++) for (let c = -1; c < 9; c++) { k = (k * 31 + r * 7 + c * 3) % 97; if (k % 3 === 0) continue; const cx = c * sq * 1.0 + (r % 2) * sq * 0.5, cy = h - sq * 0.5 - r * sq * 0.5; x.save(); x.translate(cx, cy); x.rotate(Math.PI / 4); x.fillStyle = cols[k % 4]; x.fillRect(-sq * 0.34, -sq * 0.34, sq * 0.68, sq * 0.68); x.restore(); }
+  x.textAlign = 'right'; x.fillStyle = 'rgba(255,255,255,.45)'; x.font = `500 ${Math.round(w * 0.022)}px Inter`; x.fillText('Made in China', w * 0.93, h * 0.955);
+}
+function drawZY(x, w, h, label) {
+  const r = w * 0.09; x.beginPath(); x.moveTo(r, 0); x.arcTo(w, 0, w, h, r); x.arcTo(w, h, 0, h, r); x.arcTo(0, h, 0, 0, r); x.arcTo(0, 0, w, 0, r); x.closePath(); x.clip();
+  const g = x.createLinearGradient(0, 0, w, h); g.addColorStop(0, '#1D46D6'); g.addColorStop(0.35, '#2F7DF0'); g.addColorStop(0.62, '#1A4FDB'); g.addColorStop(1, '#2C2AB8'); x.fillStyle = g; x.fillRect(0, 0, w, h);
+  const sh = x.createRadialGradient(w * 0.2, h * 0.1, 0, w * 0.2, h * 0.1, w * 1.1); sh.addColorStop(0, 'rgba(255,255,255,.28)'); sh.addColorStop(0.5, 'rgba(255,255,255,0)'); x.fillStyle = sh; x.fillRect(0, 0, w, h);
+  const sw = x.createLinearGradient(0, h * 0.55, w, h * 0.35); sw.addColorStop(0, 'rgba(120,230,255,0)'); sw.addColorStop(0.5, 'rgba(120,230,255,.18)'); sw.addColorStop(1, 'rgba(120,230,255,0)'); x.fillStyle = sw; x.fillRect(0, 0, w, h);
+  // the red ZY badge
+  const bw = w * 0.22, bh = w * 0.1, bx = w / 2 - bw / 2, by = h * 0.1; x.fillStyle = '#C8302B'; x.fillRect(bx, by, bw, bh); x.fillStyle = '#FFFFFF'; x.font = `700 ${bh * 0.78}px "Space Grotesk"`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText('ZY', w / 2, by + bh * 0.54);
+  x.fillStyle = 'rgba(236,236,255,.95)'; x.font = `800 ${w * 0.14}px "Space Grotesk"`; x.fillText('IN CELL', w / 2, h * 0.3);
+  x.fillStyle = 'rgba(232,236,255,.9)'; let fz = w * 0.36; x.font = `700 ${fz}px "Space Grotesk"`; const t = label || 'iPhone', tw = x.measureText(t).width; if (tw > w * 0.82) { fz *= (w * 0.82) / tw; x.font = `700 ${fz}px "Space Grotesk"`; } x.fillText(t, w / 2, h * 0.64);
+}
 async function carton(prodW, prodH, BX = BOX) {
   const B = BOXES[BX];
   let faceTex, ar, depth, side, topC, radius = 0.025;
   if (B) {
     const im = await img('./boxes/' + BX + '.jpg'); ar = SIZES[BX][0] / SIZES[BX][1]; depth = Math.max(0.3, B.d * 1.4); side = B.side; topC = B.top; radius = B.r || 0.025;
-    faceTex = cv(im.width, im.height, (x, w, h) => { x.drawImage(im, 0, 0, w, h);
+    // owner (28 Oct): the GX and ZY (Incell) boxes are drawn crisp at 2× (the photos were soft); the others stay photos
+    if (BX === 'gx' || BX === 'zy') { faceTex = cv(im.width * 2, im.height * 2, (x, w, h) => (BX === 'gx' ? drawGX : drawZY)(x, w, h, LABEL)); faceTex.anisotropy = 8; }
+    else faceTex = cv(im.width, im.height, (x, w, h) => { x.drawImage(im, 0, 0, w, h);
       // GX / ZY print the model: blur the photo's "XS MAX" away (keeps the box's real colour and gradient) and print this label
       if (BX === 'gx' && LABEL) { x.save(); x.beginPath(); x.rect(0, h * 0.27, w, h * 0.08); x.clip(); x.filter = 'blur(24px)'; x.drawImage(im, 0, 0, w, h); x.restore(); x.fillStyle = '#E2E2E0'; x.font = `600 ${Math.round(w * 0.085)}px Arial`; x.textAlign = 'center'; x.fillText(LABEL, w / 2, h * 0.33); }
       if (BX === 'zy' && LABEL) { x.save(); x.beginPath(); x.rect(0, h * 0.42, w, h * 0.45); x.clip(); x.filter = 'blur(60px)'; x.drawImage(im, 0, 0, w, h); x.restore(); x.fillStyle = 'rgba(232,236,255,.88)'; x.textAlign = 'center'; let fz = w * 0.36; x.font = `bold ${fz}px Arial`; const tw = x.measureText(LABEL).width; if (tw > w * 0.82) { fz *= (w * 0.82) / tw; x.font = `bold ${fz}px Arial`; } x.fillText(LABEL, w / 2, h * 0.64 + fz * 0.35); } });
@@ -267,6 +318,7 @@ if (ITEM === 'crack' || ITEM === 'fixed' || ITEM === 'open') { // owner (27 Oct)
   tools.traverse((m) => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; } }); scene.add(tools); }
 stand.rotation.set(-5 * PI / 180, -SIDE * 20 * PI / 180, 0);
 stand.updateMatrixWorld(true); { const bb = new THREE.Box3().setFromObject(stand); stand.position.y -= bb.min.y; }
+if (prod.userData.film) prod.userData.film(+(Q.get('f') || 0), stand); // after sizing and grounding: the frame never changes the scale
 // the fixed camera: same for every render
 { const noBox = !!prod.userData.noBox, c = new THREE.Vector3(noBox ? 0 : LINE ? SIDE * 3.3 : SIDE * 0.62, LINE ? 1.75 : 1.78, -0.3), d = (LINE ? 6.4 : 5.35) / (2 * Math.tan((cam.fov * PI / 180) / 2)); cam.position.set(c.x + SIDE * 0.1, c.y + d * 0.2, c.z + d); cam.lookAt(c);
   key.target.position.copy(c); scene.add(key.target); if (SIDE > 0) { key.position.x *= -1; rimR.position.x *= -1; rimL.position.x *= -1; } }

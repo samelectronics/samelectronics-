@@ -1,5 +1,6 @@
 // Converted from design/project/SE What We Offer.dc.html (12 Oct 2026); maintained by hand since.
 'use client';
+import RepairFlip from '../home/RepairFlip';
 import React from 'react';
 import InfoTip from '@/components/home/InfoTip';
 import PalletDrop from '@/components/home/PalletDrop';
@@ -31,7 +32,7 @@ function render(v: Vals) {
         {'\n\n  '}
         <div data-w="A" style={{ position: 'relative', padding: '120px 0 0' }}>
           {'\n    '}
-          <div style={{ position: 'absolute', inset: '0', background: 'radial-gradient(60% 50% at 50% 60%,#FAFAF8 0%,#F2F3F4 70%)' }}></div>
+          <div style={{ position: 'absolute', inset: '0', background: '#F2F3F4' }}></div>
           {'\n    '}
           {/* R6 §06 A: no blend from the teardown. The showroom has its own light: a very large faint circuit pattern (5%),
               soft spot pools from above, and the fine grain below */}
@@ -43,7 +44,7 @@ function render(v: Vals) {
             style={{
               position: 'absolute',
               inset: '0',
-              opacity: '.035',
+              opacity: '0', /* owner (28 Oct): no grain: the showroom is clean fog, no grey band */
               backgroundImage:
                 "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E\")",
             }}
@@ -65,6 +66,7 @@ function render(v: Vals) {
             viewBox="0 0 60 1000"
             preserveAspectRatio="none"
             style={{
+              display: 'none', /* owner (28 Oct): circuits only like the hero (SectionLife corners), no gutter line */
               position: 'absolute',
               left: '0',
               top: '180px',
@@ -606,10 +608,8 @@ function render(v: Vals) {
             {'\n      '}
             <div data-w="Rscene" style={{ position: 'relative', height: '560px' }}>
               {/* owner (27 Oct): the repair: the SAME cracked phone as the hero ad, a yellow repair light sweeps across, it boots */}
-              <span className="se-rep-poster wo-rep" aria-hidden="true">
-                <img src={v.repA} alt="" />
-                <img className="se-rep-fix se-rep-loop" src={v.repB} alt="" />
-                <span className="se-rep-beam se-rep-loop" />
+              <span className="wo-rep wo-rflip" aria-hidden="true">{/* owner (28 Oct): the real 3D repair film, not a still */}
+                <RepairFlip w={960} zoom={1.5} />
               </span>
             </div>
             {'\n    '}

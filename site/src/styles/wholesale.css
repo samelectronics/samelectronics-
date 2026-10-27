@@ -363,3 +363,4 @@ html[dir='rtl'] .wf-row img { right: auto !important; left: calc(4% + var(--i) *
 .wf-sc3-trd .tag .p2 { position: static; font: 800 15px 'Space Grotesk', sans-serif; color: #26282B; opacity: 1; animation: none; }
 /* steps: the base state without !important so the light-up animation can win */
 .wf .wf-steps li .node { background: rgba(38, 40, 43, .08); color: #26282B; box-shadow: inset 0 0 0 2px rgba(38, 40, 43, .5); }
+.wf-sc3-film { position: absolute; inset: 0; }

@@ -2,7 +2,8 @@
 // Owner (27 Oct): the Repair Lab's scene, at the hero / teardown quality (the same 3D renders): the cracked phone, then
 // opened on the bench (screen off like a book, the insides showing, real tools), then repaired and booting. Under it, the
 // four steps light up one by one with the scene, and the ticket shows what the visitor picked. Loops on its own clock.
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import RepairFlip from './RepairFlip';
 
 const STEPS = [
   ['Diagnose', 'Free check on the bench'],
@@ -17,29 +18,18 @@ const PROMISES = [
   ['M7 11V7a5 5 0 0 1 10 0v4M5 11h14v10H5z', 'Your data stays yours', 'No reset unless you ask'],
   ['M4 7h16M4 12h16M4 17h10', 'No fix, no fee', 'Diagnosis is always free'],
 ];
-const TODAY = [
-  ['iPhone 13 Pro', 'Screen · Original', 'Ready'],
-  ['Galaxy S23 Ultra', 'Back glass', 'Testing'],
-  ['iPhone 12', 'Battery', 'Ready'],
-  ['Redmi Note 12', 'Charging port', 'On the bench'],
-  ['iPad 9th gen', 'Touch glass', 'Diagnose'],
-];
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const url = (id: string) => (typeof window !== 'undefined' && (window as unknown as { SE_SHOTS?: { url: (i: string, w: number) => string } }).SE_SHOTS ? (window as unknown as { SE_SHOTS: { url: (i: string, w: number) => string } }).SE_SHOTS.url(id, 960) : '');
 
-export default function RepairScene({ ticket }: { ticket: { model: string; problems: string } }) {
-  const [k, setK] = useState(0), [, setReady] = useState(0);
-  // the image urls depend on window.SE_SHOTS (and the page language), so render them after mount and again on a language switch
-  useEffect(() => { const r = () => setReady((n) => n + 1); r(); window.addEventListener('se:lang', r); const t = window.setTimeout(r, 1200); return () => { window.removeEventListener('se:lang', r); clearTimeout(t); }; }, []);
-  useEffect(() => { const iv = window.setInterval(() => setK((n) => (n + 1) % 4), 2200); return () => clearInterval(iv); }, []);
-  const img = ['rep-crack', 'rep-open', 'rep-open', 'rep-fixed'];
+export default function RepairScene({ ticket, full = false }: { ticket: { model: string; problems: string }; full?: boolean }) {
+  // owner (28 Oct): the stage is the real 3D repair film; the four steps light with the film's own phases
+  const [k, setK] = useState(0);
   return (
-    <div className="rs">
+    <div className={'rs' + (full ? ' full' : '')}>
       <div className="rs-stage" aria-hidden="true">
-        {['rep-crack', 'rep-open', 'rep-fixed'].map((id) => (
-          url(id) ? <img key={id} src={url(id)} alt="" className={img[k] === id ? 'on' : ''} /> : null
-        ))}
-        {k === 3 ? <span className="rs-sweep" key={'s' + k} /> : null}
-        <span className="rs-tag" key={'t' + k}>{['Cracked screen', 'On the bench', 'New screen fitted', 'Tested · ready'][k]}</span>
+        <span className="rs-floor" />
+        <RepairFlip w={960} zoom={1.55} onPhase={setK} />
+        <span className="rs-tag" key={'t' + k}>{['Cracked screen', 'Opened on the bench', 'New screen fitted', 'Tested · ready'][k]}</span>
       </div>
       <ol className="rs-steps">
         {STEPS.map(([t, d], i) => (
@@ -50,24 +40,16 @@ export default function RepairScene({ ticket }: { ticket: { model: string; probl
           </li>
         ))}
       </ol>
-      <div className="rs-prom">
-        {PROMISES.map(([d, t, sub]) => (
-          <div key={t}>
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d={d} /></svg>
-            <span><b>{t}</b><small>{sub}</small></span>
-          </div>
-        ))}
-      </div>
-      <div className="rs-today">
-        <div className="rs-today-h"><span className="dot" />TODAY ON THE DEIRA BENCH</div>
-        {TODAY.map(([m, j, st], i) => (
-          <div key={m} className="rs-today-r" style={{ ['--i' as string]: i } as React.CSSProperties}>
-            <b>{m}</b>
-            <small>{j}</small>
-            <em data-st={st === 'Ready' ? 'ok' : st === 'Testing' ? 'test' : undefined}>{st}</em>
-          </div>
-        ))}
-      </div>
+      {full ? (
+        <div className="rs-prom">
+          {PROMISES.map(([d, t, sub]) => (
+            <div key={t}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d={d} /></svg>
+              <span><b>{t}</b><small>{sub}</small></span>
+            </div>
+          ))}
+        </div>
+      ) : null}
       <div className="rs-ticket">
         <span>YOUR TICKET</span>
         <b>{ticket.model || 'Choose your model'}</b>

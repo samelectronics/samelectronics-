@@ -41,8 +41,12 @@ class Component extends DCLogic {
     // hold and the passed state stays for the rest. The phone is already clamped on arrival (p starts at 0.1), so the
     // stage is never empty. 'Run the test yourself' plays one 5.8s pass on its own clock, then scroll takes over again.
     const travel = Math.max(1, R.offsetHeight - (this.q('pin') ? this.q('pin').offsetHeight : vh)), sp = cl(-r.top / (travel * 0.85));
-    let el = this.runAt == null ? -1 : (now - this.runAt) / 1000; if (el > 7.5) { this.runAt = null; el = -1; }
-    this.p = this.ov != null ? this.ov : el >= 0 ? (el < 0.8 ? 0.1 * (el / 0.8) : el < 4.8 ? 0.1 + 0.75 * ((el - 0.8) / 4) : Math.min(1, 0.85 + 0.15 * (el - 4.8))) : 0.1 + 0.9 * sp;
+    // owner (28 Oct): the test plays ON ITS OWN, smoothly, in ~4s, as soon as the rig is in view (scroll no longer drives it,
+    // which made it slow and jerky); it replays every time the section comes back into view
+    if (r.top > vh || r.bottom < 0) this.played = false;
+    if (!this.played && this.runAt == null && r.top < vh * 0.45 && r.bottom > vh * 0.55) { this.played = true; this.runAt = now; }
+    let el = this.runAt == null ? -1 : (now - this.runAt) / 1000; if (el > 5) { this.runAt = null; el = -1; }
+    void sp; this.p = this.ov != null ? this.ov : el >= 0 ? (el < 0.6 ? 0.1 * (el / 0.6) : el < 3.2 ? 0.1 + 0.75 * ((el - 0.6) / 2.6) : Math.min(1, 0.85 + 0.15 * ((el - 3.2) / 0.8))) : this.played ? 1 : 0.1;
     const p = this.p, t = now / 1000;
     // Today on the rig: rolls up on arrival, then every pass adds one test, one pass and one sticker (the unit on the rig)
     { const ck = this.cT0 == null ? 0 : eo((now - this.cT0 - 300) / 1400), T = this.today || {}, add = { tested: p >= 0.965 ? 1 : 0, passed: p >= 0.965 ? 1 : 0, stickers: p >= 0.88 ? 1 : 0, returned: 1 };

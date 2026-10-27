@@ -67,7 +67,7 @@ class Component extends DCLogic {
     const count = cur ? 'Closes in ' + dur(left) : nxt ? 'Opens in ' + dur(left) : '';
     const week = [6, 1, 2, 3, 4, 5, 0].map((x) => ({ day: DAYS[x], on: x === day, h: (H[x] || []).length ? H[x].map(([a, b]) => hm(a) + '–' + hm(b)).join(' · ') : 'Closed' }));
     return { secRef: this.secRef, seen: s.seen,
-      types: RT.map((t) => ({ name: t, on: t === rt, pick: () => this.setState({ type: t }) })), rt, fields, filled, total: fields.length, no, note, setNote,
+      types: RT.map((t) => ({ name: t, on: t === rt, pick: () => this.setState({ type: t }) })), rt, fields: s.full ? fields : fields.slice(0, 3), filled, total: fields.length, no, note, setNote, full: !!s.full, more: fields.length > 3, openFull: () => this.setState({ full: true }), closeFull: () => this.setState({ full: false }), // owner (28 Oct): the home shows the first questions; the full form opens on its own
       lines: fields.filter((f) => f.val.trim()).map((f) => ({ k: f.label.toUpperCase(), v: f.val })).concat(note.trim() ? [{ k: 'COMMENT', v: note.trim() }] : []), sent: s.sent, sentN: s.sentN,
       sendWa: (e) => { e.preventDefault(); this.send('wa', wa + '?text=' + encodeURIComponent(body)); },
       sendMail: (e) => { e.preventDefault(); this.send('mail', 'mailto:' + email + '?subject=' + encodeURIComponent(no + ' · ' + rt) + '&body=' + encodeURIComponent(body)); },

@@ -699,3 +699,29 @@ h2[data-se-rise][data-se-on] { animation-name: seSecTitle; animation-duration: .
 .se-net .tx { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .se-net b { font: 600 14px Inter, sans-serif; } .se-net small { font: 400 12.5px/1.4 Inter, sans-serif; color: #C9CBCE; }
 .se-net button { flex: none; width: 28px; height: 28px; border: none; border-radius: 8px; background: rgba(255, 255, 255, .08); color: #fff; font-size: 18px; cursor: pointer; }
+.wo-rflip { position: absolute; left: 50%; top: 50%; width: 560px; height: 560px; transform: translate(-50%, -50%); }
+/* owner (28 Oct): each of the three boxes has its own stage: a lit studio backdrop with a reflective floor and a soft
+   horizon, so the visuals clearly live in their own space (like the teardown's floor), not on a flat colour */
+.wwo-boxes [data-w='Rscene'], .wwo-boxes [data-w='Wscene'], .wwo-boxes [data-w='Gscene'] { isolation: isolate; margin-top: 40px !important; width: calc(100% * 2 - 80px) !important; border-radius: 40px; overflow: hidden; }
+.wwo-boxes [data-w='Rscene']::before, .wwo-boxes [data-w='Wscene']::before, .wwo-boxes [data-w='Gscene']::before { content: ''; position: absolute; inset: 0; z-index: -1; }
+.wwo-boxes [data-w='Rscene']::after, .wwo-boxes [data-w='Wscene']::after, .wwo-boxes [data-w='Gscene']::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 30%; z-index: -1; border-top: 2px solid rgba(255, 255, 255, .08); }
+.wwo-boxes [data-w='Rscene']::before { background: radial-gradient(70% 60% at 50% 30%, #45474C, #2A2C2F 60%, #1F2023); }
+.wwo-boxes [data-w='Rscene']::after { background: linear-gradient(180deg, rgba(255, 255, 255, .05), rgba(0, 0, 0, .35)); }
+.wwo-boxes [data-w='Wscene']::before { background: radial-gradient(70% 60% at 50% 30%, #FFE7A0, #F7C032 60%, #E8AE22); }
+.wwo-boxes [data-w='Wscene']::after { background: linear-gradient(180deg, rgba(255, 255, 255, .25), rgba(120, 80, 0, .18)); border-top-color: rgba(255, 255, 255, .45); }
+.wwo-boxes [data-w='Gscene']::before { background: radial-gradient(70% 60% at 50% 30%, #FFFFFF, #EEF0F2 60%, #E2E4E7); }
+.wwo-boxes [data-w='Gscene']::after { background: linear-gradient(180deg, rgba(255, 255, 255, .7), rgba(38, 40, 43, .08)); border-top-color: rgba(38, 40, 43, .06); }
+/* owner (28 Oct): the three offer boxes: the stage is drawn on the CARD (behind its scene), lit backdrop + reflective floor */
+.wwo-boxes [data-w='Rscene'], .wwo-boxes [data-w='Wscene'], .wwo-boxes [data-w='Gscene'] { margin-top: 0 !important; width: 712px !important; border-radius: 0; overflow: visible; isolation: auto; }
+.wwo-boxes [data-w='Rscene']::before, .wwo-boxes [data-w='Wscene']::before, .wwo-boxes [data-w='Gscene']::before, .wwo-boxes [data-w='Rscene']::after, .wwo-boxes [data-w='Wscene']::after, .wwo-boxes [data-w='Gscene']::after { content: none !important; }
+.wwo-boxes > [data-w='R'], .wwo-boxes > [data-w='W'], .wwo-boxes > [data-w='G'] { isolation: isolate; overflow: hidden !important; }
+.wwo-boxes > [data-w='R']::before, .wwo-boxes > [data-w='W']::before, .wwo-boxes > [data-w='G']::before { content: ''; position: absolute; left: 14px; right: 14px; top: 14px; height: 264px; border-radius: 18px; z-index: 1; pointer-events: none; }
+.wwo-boxes > [data-w='R']::after, .wwo-boxes > [data-w='W']::after, .wwo-boxes > [data-w='G']::after { content: ''; position: absolute; left: 14px; right: 14px; top: 200px; height: 78px; border-radius: 0 0 18px 18px; z-index: 1; pointer-events: none; }
+.wwo-boxes > [data-w] > * { z-index: 0; }
+.wwo-boxes > [data-w] > div[style*='grid-template-columns'] { position: relative; z-index: 2; }
+.wwo-boxes > [data-w='R']::before { background: radial-gradient(70% 60% at 50% 30%, #4A4C51, #2E3034 62%, #232427); }
+.wwo-boxes > [data-w='R']::after { background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(0, 0, 0, .3)); border-top: 1px solid rgba(255, 255, 255, .09); }
+.wwo-boxes > [data-w='W']::before { background: radial-gradient(70% 60% at 50% 30%, #FFE8A6, #F7C032 62%, #EAB12A); }
+.wwo-boxes > [data-w='W']::after { background: linear-gradient(180deg, rgba(255, 255, 255, .28), rgba(130, 85, 0, .16)); border-top: 1px solid rgba(255, 255, 255, .5); }
+.wwo-boxes > [data-w='G']::before { background: radial-gradient(70% 60% at 50% 30%, #FFFFFF, #EFF1F3 62%, #E3E5E8); }
+.wwo-boxes > [data-w='G']::after { background: linear-gradient(180deg, rgba(255, 255, 255, .8), rgba(38, 40, 43, .07)); border-top: 1px solid rgba(38, 40, 43, .07); }

@@ -19,6 +19,7 @@ import SETeam from './SETeam';
 import SEWho from './SEWho';
 import SECircuit from './SECircuit';
 import RepairLab from '../home/sections/RepairLab';
+import RepairLabFull from '../home/RepairLabFull';
 import Worldwide from '../home/sections/Worldwide';
 import Footer from '../home/sections/Footer';
 
@@ -35,6 +36,7 @@ export default function HomeRest({ v }: { v: Vals }) {
       <SEHomeDeals />
       <SEWholesale />
       <RepairLab v={v} />
+      <RepairLabFull v={v} />
       <Worldwide v={v} />
       <SECircuit />
       <SEStory todayHours={v.todayHours} dirLink={v.dirLink} wa={v.visit?.wa} notify={v.story?.notify} />
