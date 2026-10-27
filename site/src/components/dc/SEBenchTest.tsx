@@ -98,14 +98,15 @@ function render(v: Vals) {
                     <path d="M5 12h14M13 6l6 6-6 6" />
                   </svg>
                 </button>
-                <span className="bt-run">
-                  <span>Run the test yourself</span>
-                  {(v.runs || []).map((r: any) => (
-                    <button key={r.g} type="button" className={'bt-rq' + (r.on ? ' on' : '')} onClick={r.go}>
-                      {r.n}
-                    </button>
-                  ))}
-                </span>
+                {/* owner (27 Oct): one clear invitation instead of three quality buttons; the full "test your own screen"
+                    experience (pick your exact screen, watch it run on the rig, get its quality report) comes as its own page */}
+                <button type="button" className="bt-try" onClick={() => comingSoon({ title: 'Test your screen', text: 'Pick your exact screen, watch it run on our rig and get its quality report. Opening soon.' })}>
+                  <span className="bt-try-i" aria-hidden="true">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><rect x="6" y="2.5" width="12" height="19" rx="2.5" /><path d="M10 18h4" /></svg>
+                  </span>
+                  Test your screen on our rig
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+                </button>
               </div>
             </div>
           </div>
@@ -114,10 +115,21 @@ function render(v: Vals) {
           <div className="bt-rigwrap">
             <div className="bt-shadow" aria-hidden="true" />
             <svg className="bt-cable" viewBox="0 0 120 220" fill="none" aria-hidden="true">
-              <path d="M30 0 C 30 70, 90 80, 90 150 V200" stroke="#1F2023" strokeWidth="9" strokeLinecap="round" />
-              <path d="M30 0 C 30 70, 90 80, 90 150 V200" stroke="#4A4D52" strokeWidth="2.5" strokeLinecap="round" opacity=".6" />
-              <rect x="78" y="190" width="24" height="30" rx="4" fill="#C9CCD0" stroke="#5E6064" strokeWidth="1.5" />
-              <rect x="83" y="210" width="14" height="10" rx="1.5" fill="#26282B" />
+              <defs>
+                <linearGradient id="btCab" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#0E0F11" /><stop offset=".45" stopColor="#3A3D42" /><stop offset=".6" stopColor="#24262A" /><stop offset="1" stopColor="#0E0F11" /></linearGradient>
+                <linearGradient id="btMet" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#7E8389" /><stop offset=".35" stopColor="#F2F3F5" /><stop offset=".55" stopColor="#B9BDC2" /><stop offset="1" stopColor="#6C7076" /></linearGradient>
+                <pattern id="btBraid" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="6" height="6" fill="none" /><path d="M0 3h6" stroke="rgba(255,255,255,.08)" strokeWidth="1.2" /></pattern>
+              </defs>
+              {/* owner (27 Oct): a real braided cable (shaded round body, weave, highlight), a machined ferrule and a USB-C plug */}
+              <path d="M30 0 C 30 70, 90 80, 90 150 V186" stroke="rgba(0,0,0,.25)" strokeWidth="12" strokeLinecap="round" transform="translate(3 4)" />
+              <path d="M30 0 C 30 70, 90 80, 90 150 V186" stroke="url(#btCab)" strokeWidth="10" strokeLinecap="round" />
+              <path d="M30 0 C 30 70, 90 80, 90 150 V186" stroke="url(#btBraid)" strokeWidth="10" strokeLinecap="round" />
+              <path d="M28 0 C 28 70, 88 80, 88 150 V186" stroke="rgba(255,255,255,.22)" strokeWidth="1.6" strokeLinecap="round" />
+              <rect x="80" y="180" width="20" height="12" rx="3" fill="url(#btMet)" />
+              <rect x="77" y="190" width="26" height="22" rx="4" fill="url(#btMet)" stroke="#5E6064" strokeWidth=".8" />
+              <rect x="77.5" y="191" width="25" height="3" rx="1.5" fill="rgba(255,255,255,.55)" />
+              <rect x="83" y="210" width="14" height="9" rx="4.5" fill="url(#btMet)" stroke="#4A4D52" strokeWidth=".8" />
+              <rect x="85.5" y="213" width="9" height="3" rx="1.5" fill="#1A1B1D" />
             </svg>
             <div className="bt-rig">
               <div className="bt-top">

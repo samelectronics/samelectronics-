@@ -81,7 +81,7 @@ export default function SectionLife() {
       io = io || new IntersectionObserver((es) => es.forEach((e) => { const el = e.target as HTMLElement; if (e.isIntersecting && e.intersectionRatio > 0.08) el.setAttribute('data-se-vis', ''); else if (!e.isIntersecting) el.removeAttribute('data-se-vis'); }), { threshold: [0, 0.08, 0.2] });
       secs.forEach((sec, k) => {
         markEntries(sec); io!.observe(sec);
-        if (window.innerWidth >= 1100 && !sec.querySelector(':scope > .se-gut')) { const t = tone(sec), e = contentEdges(sec); if (getComputedStyle(sec).position === 'static') sec.style.position = 'relative'; gutter(sec, e.l, 1, t, 101 + k * 37); gutter(sec, e.r, -1, t, 207 + k * 53); }
+        if (window.innerWidth >= 1100 && !sec.querySelector(':scope > .se-gut') && !sec.querySelector('.se-cfield')) { const t = tone(sec), e = contentEdges(sec); if (getComputedStyle(sec).position === 'static') sec.style.position = 'relative'; gutter(sec, e.l, 1, t, 101 + k * 37); gutter(sec, e.r, -1, t, 207 + k * 53); }
       });
     } catch (err) { console.warn('[SectionLife]', err); } };
     (window as unknown as { __seLife?: () => void }).__seLife = run;

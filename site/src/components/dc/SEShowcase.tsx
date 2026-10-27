@@ -1,6 +1,7 @@
 // The Showcase (Issue 6): screen adverts on a graphite | yellow stage. Replaces the Model File on the home page.
 // Styles in src/styles/showcase.css.
 'use client';
+import CircuitField from '@/components/home/CircuitField';
 import React from 'react';
 import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SEShowcase.logic.js';
@@ -9,6 +10,7 @@ function render(v: Vals) {
   const a = v.ad || { k: '', h: ['', ''], c: [] };
   return (
     <section id="showcase" ref={v.secRef} className="sc">
+      <CircuitField tone="light" seed={23} /> {/* owner (27 Oct): a live circuit board behind the showcase */}
       {/* 14 Oct §10: the stage is held (sticky) while the qualities play; the spacer is the scroll it holds for */}
       <div className="sc-pin">
       <div className="sc-in">
@@ -78,19 +80,10 @@ function render(v: Vals) {
             <span className="sc-floor" aria-hidden="true" />
             {/* R6 §09: the unboxing: this quality's real box (Part E renders), its lid, the screen from the front and its
                 back standing behind it, each rendered on its own (scripts/productshot/render-showcase.mjs) */}
+            {/* owner (27 Oct): each quality shows its REAL boxes from the standard stage (same renders as the hero):
+                Original = every Service Pack box we carry lined up (each ~70% showing) with the screen in front */}
             <div className="sc-un" aria-hidden="true">
-              <span className="sc-ubox" data-s="ubox">
-                <img src={v.u.box} srcSet={v.u.box + ' 1x, ' + v.u.box2 + ' 2x'} alt="" />
-              </span>
-              <span className="sc-uback" data-s="uback">
-                <img src={v.u.back} srcSet={v.u.back + ' 1x, ' + v.u.back2 + ' 2x'} alt="" />
-              </span>
-              <span className="sc-ufront" data-s="prod">
-                <img src={v.u.front} srcSet={v.u.front + ' 1x, ' + v.u.front2 + ' 2x'} alt="" />
-                <span className="sc-sheen" style={{ WebkitMask: `url(${v.u.front}) center / contain no-repeat`, mask: `url(${v.u.front}) center / contain no-repeat` }}>
-                  <i data-s="sheen" />
-                </span>
-              </span>
+              <img key={'p' + v.i} className={'sc-pose' + (v.poseWide ? ' wide' : '')} src={v.pose} alt="" />
             </div>
             {v.hasPrice ? (
               <span className="sc-badge" data-s="badge">

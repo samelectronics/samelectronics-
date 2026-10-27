@@ -97,3 +97,11 @@ html[dir='rtl'] .sc-nav { right: auto; left: 24px; }
 .sc-nav button:hover { transform: translateY(-2px); background: #34363A; }
 .sc-nav button:focus-visible { outline: 2px solid #26282B; outline-offset: 3px; }
 html[dir='rtl'] .sc-nav svg { transform: scaleX(-1); }
+/* owner (27 Oct) · the quality's real boxes, from the standard stage (one picture, enters from the side, then floats) */
+.sc-un { position: absolute; inset: 0; display: grid; place-items: center; }
+.sc-pose { position: relative; z-index: 2; width: 92%; max-height: 92%; object-fit: contain; filter: drop-shadow(0 22px 26px rgba(110, 72, 0, .28)); animation: scPoseIn .9s cubic-bezier(.16, 1, .3, 1) both, scPoseFloat 5s 1s ease-in-out infinite; }
+.sc-pose.wide { width: 104%; max-width: none; }
+@keyframes scPoseIn { from { opacity: 0; translate: 60px 10px; scale: .96; } to { opacity: 1; translate: 0 0; scale: 1; } }
+@keyframes scPoseFloat { 0%, 100% { translate: 0 0; } 50% { translate: 0 -6px; } }
+html[dir='rtl'] .sc-pose { animation-name: scPoseInR, scPoseFloat; }
+@keyframes scPoseInR { from { opacity: 0; translate: -60px 10px; scale: .96; } to { opacity: 1; translate: 0 0; scale: 1; } }

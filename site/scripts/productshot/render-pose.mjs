@@ -20,6 +20,7 @@ for (const it of ['bat', 'bcv', 'flx', 'cam', 'sml', 'aud', 'frm', 'board']) JOB
 JOBS['rep-crack'] = { item: 'crack', box: 'white', lcd: 'plain', label: '' };
 JOBS['rep-fixed'] = { item: 'fixed', box: 'white', lcd: 'plain', label: '' };
 // owner (27 Oct): the box lineups (every box of a range behind the screen, ~70% of each showing), for the iPad banners and the Showcase
+JOBS['line-or'] = { item: 'line', boxes: 'bbk-sp,huawei-sp,xiaomi-sp,svc-yellow,apple-sp,samsung-sp', box: 'samsung-sp', lcd: 'plain', label: '', aspect: '2' }; // every Original (Service Pack) box we carry
 JOBS['line-all'] = { item: 'line', boxes: 'zy,gx,xiaomi-sp,huawei-sp,apple-sp,samsung-sp', box: 'samsung-sp', lcd: 'plain', label: '', aspect: '2' };
 // owner (27 Oct): every part on its own, no carton (solo-<kind>), same stage and size
 for (const it of ['scr', 'bat', 'bcv', 'flx', 'cam', 'sml', 'aud', 'frm', 'board']) JOBS['solo-' + it] = { item: it, box: 'white', lcd: 'plain', label: '', nobox: '1' };

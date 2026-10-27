@@ -39,7 +39,14 @@ function render(v: Vals) {
       <div className="dl-in">
         <header className="dl-top">
           <div>
-            <span className="dl-eb">DEALS & ARRIVALS</span>
+            {/* owner (27 Oct): the live count sits in the eyebrow line above the title, not as a loose chip by the button */}
+            <span className="dl-eb">
+              DEALS & ARRIVALS
+              <span className="dl-live" aria-live="polite">
+                <i />
+                <b key={v.live}>{v.live}</b> live deals
+              </span>
+            </span>
             <h2 className="dl-h">
               <span>
                 <span>Prices drop. Clocks tick.</span>
@@ -50,11 +57,6 @@ function render(v: Vals) {
             </h2>
           </div>
           <div className="dl-side">
-          {/* R6 §10: the live count is live data at the side, not part of the title */}
-          <span className="dl-live" aria-live="polite">
-            <i />
-            <b key={v.live}>{v.live}</b> live deals
-          </span>
           <a href="#deals" className="dl-all" onClick={v.all}>
             See every deal
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
@@ -240,7 +242,7 @@ function render(v: Vals) {
                   <text x={B[0]} y={B[1] + 20} textAnchor="middle" className="dl-city">
                     DUBAI · DEIRA
                   </text>
-                  <g transform={`translate(${plx.toFixed(1)} ${ply.toFixed(1)}) rotate(${ang.toFixed(1)})`}>
+                  <g style={{ transform: `translate(${plx.toFixed(2)}px, ${ply.toFixed(2)}px) rotate(${ang.toFixed(1)}deg)`, transition: 'transform 1s linear' }}> {/* owner (27 Oct): the plane glides on the real clock (updated every second), never jumps */}
                     <g className="dl-plane">
                       <path d="M-9 0 L6 -1.6 L9 0 L6 1.6 Z M-2 0 L-6 -6 L-3 -6 L3 0 L-3 6 L-6 6 Z M-8 0 L-10 -3 L-8.5 -3 L-6 0 L-8.5 3 L-10 3 Z" fill="#FFFFFF" />
                     </g>

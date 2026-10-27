@@ -182,6 +182,7 @@ class Component extends DCLogic {
     const boxes = [[-134, 0], [0, 0], [134, 0], [-134, -92], [0, -92], [134, -92], [-67, -184], [67, -184]].map(([bx, by], j) => ({ x: bx, y: by, id: 'ct' + j, sid: 'cs' + j, pid: 'pf' + j }));
     const C = (D && D.contact) || {}, quoteHref = 'https://wa.me/' + (C.wa || '971503420015') + '?text=' + encodeURIComponent('Hi Sam Electronics, I would like a shipping quote. Destination: … · Parts and quantity: …'); // 14 Oct §09
     const v = { root: this.root, host: this.host, quoteHref, fam, stR, stW, stG, boxes, chk: ['Touch', 'Display', 'Face ID', 'Speaker'].map((t, j) => ({ t, id: 'rc' + j })), steps: ['Packed', 'In transit', 'Delivered'].map((t, j) => ({ t, id: 'gs' + j, cid: 'gc' + j })) };
+    v.repA = window.SE_SHOTS ? window.SE_SHOTS.url('rep-crack', 960) : ''; v.repB = window.SE_SHOTS ? window.SE_SHOTS.url('rep-fixed', 960) : ''; // owner (27 Oct): the hero ad's repair
     this.vals = v; return v;
   }
 }

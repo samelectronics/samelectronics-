@@ -78,7 +78,10 @@
   ];
 
   // Incoming shipments are set by admin (sample).
-  const shipments = [{ id: 'SH-2611', label: 'Screens & batteries · 2,400 parts', origin: 'Shenzhen', lands: now + (3 * 24 + 4.3) * 36e5, sample: true }];
+  // owner (27 Oct): a real schedule, the same for every visitor: the weekly air freight from Shenzhen lands every Thursday
+  // at 14:00 Dubai time, so the countdown and the plane are consistent across reloads and devices
+  const nextLanding = (() => { const d = new Date(now + 4 * 36e5); /* in Dubai time */ const day = d.getUTCDay(), base = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate(), 14) - 4 * 36e5; let k = (4 - day + 7) % 7; let t = base + k * 864e5; if (t <= now) t += 7 * 864e5; return t; })();
+  const shipments = [{ id: 'SH-2611', label: 'Screens & batteries · 2,400 parts', origin: 'Shenzhen', lands: nextLanding }];
   const preorders = [
     // Neutral placeholders — real model names are set by the owner in the Control Room (Pre-orders panel).
     { model: 'Next Galaxy Ultra', parts: 'Screens · Batteries · Back covers', status: 'Coming soon', placeholder: true, editable: 'control-room', sample: true },

@@ -5,7 +5,7 @@
 .bt-pin { position: relative; height: calc(72px + 828px * var(--sc, 1)); overflow: hidden; }
 /* Urgent 4: held again, and scroll drives the tests (display → touch → True Tone → battery → sticker): the stage sticks for
    160vh of scroll; a fast scroll simply passes through. The stage is already filled on arrival (the phone is on the rig). */
-.bt { height: calc(72px + 828px * var(--sc, 1) + 160vh); }
+.bt { height: calc(72px + 828px * var(--sc, 1) + 240vh); } /* owner (27 Oct): a longer scroll for the same show, so it plays smoothly instead of rushing */
 .bt-pin { position: sticky; top: 0; }
 .bt-bg { position: absolute; inset: 0; background: radial-gradient(70% 70% at 45% 40%, #F7C032 0%, #F7C032 55%, #F7C032 100%); }
 .bt-bg::before { content: ''; position: absolute; inset: 0; opacity: .04; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
@@ -145,3 +145,16 @@
 .bt-rq { height: 32px; padding: 0 12px; border: 0; border-radius: 7px; background: transparent; color: #26282B; font: 600 12px 'JetBrains Mono', monospace; cursor: pointer; transition: background .2s, border-color .2s; }
 .bt-rq:hover { background: rgba(38, 40, 43, .1); }
 .bt-rq.on { background: #26282B; border-color: #26282B; color: #F7C032; }
+
+/* owner (27 Oct) · one invitation to test your own screen (replaces the three quality buttons) */
+.bt-acts { flex-wrap: wrap; row-gap: 12px; }
+.bt-try { display: inline-flex; align-items: center; gap: 10px; height: 46px; padding: 0 18px 0 8px; border-radius: 12px; border: 1.5px solid #26282B; background: #26282B; color: #F7C032; font: 600 14.5px Inter, sans-serif; cursor: pointer; box-shadow: 0 10px 24px -12px rgba(38, 40, 43, .6); transition: transform .2s, box-shadow .2s; }
+.bt-try:hover { transform: translateY(-2px); box-shadow: 0 16px 30px -12px rgba(38, 40, 43, .7); }
+.bt-try-i { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 8px; background: #F7C032; color: #26282B; }
+.bt-try > svg:last-child { margin-inline-start: 2px; }
+html[dir='rtl'] .bt-try > svg:last-child { transform: scaleX(-1); }
+.bt-today { margin-top: 30px; padding-top: 18px; }
+.bt-cnts { row-gap: 14px; }
+/* the rig's platform: machined aluminium (a soft anisotropic highlight band, bevelled edge, four screws) */
+.bt-rig::before { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: linear-gradient(105deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, .45) 42%, rgba(255, 255, 255, 0) 55%); mix-blend-mode: soft-light; }
+.bt-rig::after { content: ''; position: absolute; inset: 7px; border-radius: 22px; pointer-events: none; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -1px 0 rgba(0, 0, 0, .15); background: radial-gradient(circle at 18px 18px, #8E9298 2.4px, #E7E9EC 3px, transparent 4.6px), radial-gradient(circle at calc(100% - 18px) 18px, #8E9298 2.4px, #E7E9EC 3px, transparent 4.6px), radial-gradient(circle at 18px calc(100% - 18px), #8E9298 2.4px, #E7E9EC 3px, transparent 4.6px), radial-gradient(circle at calc(100% - 18px) calc(100% - 18px), #8E9298 2.4px, #E7E9EC 3px, transparent 4.6px); }
