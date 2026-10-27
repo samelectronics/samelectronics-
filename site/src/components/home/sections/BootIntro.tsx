@@ -16,7 +16,7 @@ const LINES: { en: string; ar: string; icon: string }[] = [
   { en: 'Waking Samsoom up…', ar: 'نوقظ سمسوم…', icon: 'samsoom' },
 ];
 const WAKE = 1.4; // s for Samsoom: asleep → yawn → blink → wave
-const MIN = 1.5, MAX = 5, R = 92; // ring radius = 80 (logo) + 12
+const MIN = 1.5, MAX = 5, DUR = 4.8, R = 92; // owner (28 Oct): the loading screen always runs the same ~5s (DUR), from when it appears; // ring radius = 80 (logo) + 12
 
 function Icon({ k }: { k: string }) {
   const p = { fill: 'none', stroke: '#F7C032', strokeWidth: 1.8, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
@@ -65,7 +65,7 @@ export default function BootIntro({ v }: { v: Vals }) {
     // times are measured from navigation start (performance.now), so the 1.5–5s window includes the time before React
     // mounted; the line cadence shrinks if the mount came late, so all five lines and the wake-up still fit
     const m0 = performance.now() / 1000, timers: number[] = [];
-    const step = Math.max(0.45, Math.min(0.9, (MAX - 0.4 - WAKE - 0.3 - m0) / (LINES.length - 1)));
+    const step = Math.max(0.45, (DUR - 0.4 - WAKE - 0.3) / (LINES.length - 1));
     // real loading: each task flips to done; the ring eases toward the done fraction
     const tasks = { fonts: false, page: false, globe: false, parts: false };
     const W = window as unknown as { SE_GLOBE?: unknown; seParts?: { peek?: () => unknown } };
@@ -82,13 +82,13 @@ export default function BootIntro({ v }: { v: Vals }) {
       if (!tasks.globe && W.SE_GLOBE) tasks.globe = true;
       if (!tasks.parts && W.seParts && W.seParts.peek && W.seParts.peek()) tasks.parts = true;
       const vals = Object.values(tasks), frac = vals.filter(Boolean).length / vals.length;
-      const ready = frac === 1 && t >= MIN;
+      const ready = frac === 1 && tm >= MIN;
       // status lines: one every `step`; the last one wakes Samsoom
       const want = Math.min(LINES.length - 1, Math.floor(Math.max(0, tm - 0.3) / step));
       if (tm >= 0.3 && want !== lineN) { lineN = want; setLine(want); if (want === LINES.length - 1) wakeAt = t; }
       if (wakeAt) { const w = t - wakeAt; setMood(w < 0.25 ? 'sleep' : w < 0.75 ? 'yawn' : w < 1.05 ? 'blink' : 'wave'); }
       const woke = wakeAt > 0 && t - wakeAt >= WAKE;
-      if (!exitAt && ((ready && woke) || t >= MAX - 0.4)) { exitAt = t; setLeaving(true); }
+      if (!exitAt && tm >= DUR - 0.4 && ((ready && woke) || tm >= DUR + 1.2)) { exitAt = t; setLeaving(true); }
       // ring: follows loading, never sits at 0, completes on exit
       const target = exitAt ? 1 : Math.min(0.94, 0.08 + frac * 0.86);
       shown += (target - shown) * (exitAt ? 0.25 : 0.06);
@@ -99,7 +99,7 @@ export default function BootIntro({ v }: { v: Vals }) {
       raf = requestAnimationFrame(frame);
     };
     raf = requestAnimationFrame(frame);
-    timers.push(window.setTimeout(() => done.current && done.current(), Math.max(0.5, MAX + 0.3 - m0) * 1000)); // hard stop
+    timers.push(window.setTimeout(() => done.current && done.current(), (DUR + 2) * 1000)); // hard stop
     return () => {
       cancelAnimationFrame(raf);
       timers.forEach(clearTimeout);

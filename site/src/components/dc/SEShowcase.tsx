@@ -1,7 +1,6 @@
 // The Showcase (Issue 6): screen adverts on a graphite | yellow stage. Replaces the Model File on the home page.
 // Styles in src/styles/showcase.css.
 'use client';
-import CircuitField from '@/components/home/CircuitField';
 import React from 'react';
 import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SEShowcase.logic.js';
@@ -10,7 +9,6 @@ function render(v: Vals) {
   const a = v.ad || { k: '', h: ['', ''], c: [] };
   return (
     <section id="showcase" ref={v.secRef} className="sc">
-      <CircuitField tone="light" seed={23} /> {/* owner (27 Oct): a live circuit board behind the showcase */}
       {/* 14 Oct §10: the stage is held (sticky) while the qualities play; the spacer is the scroll it holds for */}
       <div className="sc-pin">
       <div className="sc-in">

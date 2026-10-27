@@ -29,37 +29,35 @@ function contentEdges(sec: HTMLElement) {
   return { l, r: sr.width - r, w: sr.width, h: sr.height };
 }
 
-function traces(w: number, h: number, side: 1 | -1, s0: number) {
-  // orthogonal runs with 45° chamfers, a few branches, ring nodes and pads (like the hero's board)
-  seed = s0; const paths: string[] = [], nodes: [number, number, number][] = [];
-  const X = (x: number) => (side > 0 ? x : w - x);
-  const lanes = Math.max(2, Math.min(5, Math.floor(w / 26)));
-  for (let k = 0; k < lanes; k++) {
-    let x = 10 + k * ((w - 20) / lanes) + rnd() * 8, y = -10 - rnd() * 60; let d = `M${X(x).toFixed(1)} ${y.toFixed(1)}`;
-    while (y < h + 20) {
-      const run = 90 + rnd() * 260; y += run; d += ` V${y.toFixed(1)}`;
-      if (rnd() < 0.55) { const dx = (rnd() < 0.5 ? -1 : 1) * (10 + rnd() * 18), nx = Math.max(6, Math.min(w - 6, x + dx)); const ch = Math.abs(nx - x); y += ch; x = nx; d += ` L${X(x).toFixed(1)} ${y.toFixed(1)}`; }
-      if (rnd() < 0.35) { // a branch ending in a ring node
-        const bl = 14 + rnd() * 26, bx = Math.max(6, Math.min(w - 6, x + (rnd() < 0.5 ? -1 : 1) * bl)); paths.push(`M${X(x).toFixed(1)} ${y.toFixed(1)} L${X(bx).toFixed(1)} ${(y + Math.abs(bx - x)).toFixed(1)} V${(y + Math.abs(bx - x) + 20 + rnd() * 40).toFixed(1)}`);
-        nodes.push([X(bx), y + Math.abs(bx - x) + 20 + rnd() * 40, 3.2]);
-      }
-      if (rnd() < 0.25) nodes.push([X(x), y, 2.2]);
-    }
-    paths.push(d);
+// owner (28 Oct): NOT continuous gutters any more. Circuits are used the way the hero uses them: a few short traces that
+// come in from the section's edge into ONE empty corner, with 45° chamfers, pads where they end and a short light pulse
+// running along them. Two small clusters per section (top on one side, bottom on the other, alternating by section).
+function cluster(gw: number, side: 1 | -1, s0: number) {
+  seed = s0; const W = Math.min(190, gw - 18), paths: string[] = [], pads: [number, number, number][] = [];
+  const X = (x: number) => (side > 0 ? x : W - x);
+  const n = 3 + Math.floor(rnd() * 2);
+  for (let k = 0; k < n; k++) {
+    let y = 20 + k * (34 + rnd() * 18), x = 0, d = `M${X(0)} ${y.toFixed(0)}`;
+    const len = W * (0.45 + rnd() * 0.5);
+    x = len * (0.3 + rnd() * 0.3); d += ` H${X(x).toFixed(0)}`;
+    const dy = (rnd() < 0.5 ? -1 : 1) * (14 + rnd() * 22); x += Math.abs(dy); y += dy; d += ` L${X(x).toFixed(0)} ${y.toFixed(0)}`;
+    if (rnd() < 0.6) { x = Math.min(W - 8, len); d += ` H${X(x).toFixed(0)}`; }
+    else { const v = 20 + rnd() * 40; y += v; d += ` V${y.toFixed(0)}`; }
+    paths.push(d); pads.push([X(x), y, k % 2 ? 3.5 : 4.5]);
   }
-  return { paths, nodes };
+  return { W, H: 20 + n * 52 + 60, paths, pads };
 }
 
 const NS = 'http://www.w3.org/2000/svg';
-function gutter(sec: HTMLElement, gw: number, side: 1 | -1, t: string, s0: number) {
-  const h = sec.getBoundingClientRect().height, w = Math.min(150, gw - 22); if (w < 40) return;
+function gutter(sec: HTMLElement, gw: number, side: 1 | -1, t: string, s0: number, top: boolean) {
+  if (gw < 70) return;
+  const { W, H, paths, pads } = cluster(gw, side, s0), h = sec.getBoundingClientRect().height; if (h < H + 80) return;
   const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'se-gut se-gut-' + t); svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('width', String(w)); svg.setAttribute('height', String(h)); svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
-  svg.style.cssText = `position:absolute;top:0;${side > 0 ? 'left' : 'right'}:0;width:${w}px;height:${h}px;pointer-events:none;z-index:0;overflow:visible`;
-  const { paths, nodes } = traces(w, h, side, s0);
+  svg.setAttribute('width', String(W)); svg.setAttribute('height', String(H)); svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.style.cssText = `position:absolute;${top ? 'top:' + Math.round(h * 0.12) : 'bottom:' + Math.round(h * 0.1)}px;${side > 0 ? 'left' : 'right'}:0;width:${W}px;height:${H}px;pointer-events:none;z-index:0;overflow:visible`;
   paths.forEach((d, i) => { const p = document.createElementNS(NS, 'path'); p.setAttribute('d', d); p.setAttribute('class', 'tr'); svg.appendChild(p);
-    const f = document.createElementNS(NS, 'path'); f.setAttribute('d', d); f.setAttribute('class', 'fl'); f.style.animationDuration = (5 + (i % 4) * 1.7).toFixed(1) + 's'; f.style.animationDelay = -(i * 1.3).toFixed(1) + 's'; svg.appendChild(f); });
-  nodes.forEach(([x, y, r]) => { const c = document.createElementNS(NS, 'circle'); c.setAttribute('cx', x.toFixed(1)); c.setAttribute('cy', y.toFixed(1)); c.setAttribute('r', String(r)); c.setAttribute('class', 'nd'); svg.appendChild(c); });
+    const f = document.createElementNS(NS, 'path'); f.setAttribute('d', d); f.setAttribute('class', 'fl'); f.setAttribute('pathLength', '1000'); f.style.animationDuration = (2.8 + (i % 3) * 0.9).toFixed(1) + 's'; f.style.animationDelay = (i * 0.7).toFixed(1) + 's'; svg.appendChild(f); });
+  pads.forEach(([x, y, r]) => { const c = document.createElementNS(NS, 'circle'); c.setAttribute('cx', x.toFixed(1)); c.setAttribute('cy', y.toFixed(1)); c.setAttribute('r', String(r)); c.setAttribute('class', 'nd'); svg.appendChild(c); });
   sec.prepend(svg);
 }
 
@@ -75,20 +73,23 @@ function markEntries(sec: HTMLElement) {
 
 export default function SectionLife() {
   useEffect(() => {
-    let io: IntersectionObserver | null = null, t1 = 0, t2 = 0;
+    let io: IntersectionObserver | null = null, eio: IntersectionObserver | null = null, t1 = 0, t2 = 0;
     const run = () => { try {
       const secs = Array.from(document.querySelectorAll('section[id]')).filter((s) => !SKIP.has(s.id) && !s.parentElement?.closest('section')) as HTMLElement[];
       io = io || new IntersectionObserver((es) => es.forEach((e) => { const el = e.target as HTMLElement; if (e.isIntersecting && e.intersectionRatio > 0.08) el.setAttribute('data-se-vis', ''); else if (!e.isIntersecting) el.removeAttribute('data-se-vis'); }), { threshold: [0, 0.08, 0.2] });
+      // owner (28 Oct): each marked element plays its entrance when IT comes into view (not when the section's top edge does),
+      // so long sections never finish their entrance off-screen; fully out of view resets it so it plays again next time
+      eio = eio || new IntersectionObserver((es) => es.forEach((e) => { const el = e.target as HTMLElement; if (e.isIntersecting && e.intersectionRatio > 0.12) el.setAttribute('data-se-on', ''); else if (!e.isIntersecting) el.removeAttribute('data-se-on'); }), { threshold: [0, 0.12, 0.3] });
       secs.forEach((sec, k) => {
-        markEntries(sec); io!.observe(sec);
-        if (window.innerWidth >= 1100 && !sec.querySelector(':scope > .se-gut') && !sec.querySelector('.se-cfield')) { const t = tone(sec), e = contentEdges(sec); if (getComputedStyle(sec).position === 'static') sec.style.position = 'relative'; gutter(sec, e.l, 1, t, 101 + k * 37); gutter(sec, e.r, -1, t, 207 + k * 53); }
+        markEntries(sec); io!.observe(sec); sec.querySelectorAll('[data-se-rise]').forEach((el) => { if (!(el as HTMLElement).dataset.seObs) { (el as HTMLElement).dataset.seObs = '1'; eio!.observe(el); } });
+        if (window.innerWidth >= 1100 && !sec.querySelector(':scope > .se-gut') && !sec.querySelector('.se-cfield') && !sec.querySelector('.se-own-circ')) { const t = tone(sec), e = contentEdges(sec); if (getComputedStyle(sec).position === 'static') sec.style.position = 'relative'; gutter(sec, e.l, 1, t, 101 + k * 37, k % 2 === 0); gutter(sec, e.r, -1, t, 207 + k * 53, k % 2 === 1); }
       });
     } catch (err) { console.warn('[SectionLife]', err); } };
     (window as unknown as { __seLife?: () => void }).__seLife = run;
     // the sections arrive late (the home page renders in the browser): keep checking for the first 30s; already-done
     // sections are skipped, so each pass is cheap
     let n = 0; t1 = window.setInterval(() => { run(); if (++n > 15) clearInterval(t1); }, 2000); t2 = window.setTimeout(run, 600);
-    return () => { clearInterval(t1); clearTimeout(t2); io && io.disconnect(); };
+    return () => { clearInterval(t1); clearTimeout(t2); io && io.disconnect(); eio && eio.disconnect(); };
   }, []);
   return null;
 }

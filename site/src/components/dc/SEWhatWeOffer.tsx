@@ -2,7 +2,6 @@
 'use client';
 import React from 'react';
 import InfoTip from '@/components/home/InfoTip';
-import CircuitField from '@/components/home/CircuitField';
 import PalletDrop from '@/components/home/PalletDrop';
 import DotGlobe from '@/components/home/DotGlobe';
 import { type Vals, createDC, cssToObj, cx, s, t } from '@/dc/runtime';
@@ -36,7 +35,6 @@ function render(v: Vals) {
           {'\n    '}
           {/* R6 §06 A: no blend from the teardown. The showroom has its own light: a very large faint circuit pattern (5%),
               soft spot pools from above, and the fine grain below */}
-          <CircuitField tone="light" seed={11} /> {/* owner (27 Oct): a live circuit board (pulses, lights up near the pointer) instead of the grey static lines */}
           <div className="wo-spots" aria-hidden="true">
             <i /><i /><i /><i />
           </div>

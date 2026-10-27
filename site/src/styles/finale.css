@@ -131,3 +131,6 @@
 @media (max-width: 700px) { .fz-stage, .fz-circ { height: 300px; } .fz-logo { top: 150px; width: 150px; height: 150px; margin: -75px 0 0 -75px; } .fz-words { gap: 10px; } .fz-words span { font-size: 11px; letter-spacing: .2em; } .fz-stats span { padding: 0 14px; } .fz-stats b { font-size: 24px; } }
 @media (prefers-reduced-motion: reduce) { .fz * { animation: none !important; } .fz-logo, .fz-h span, .fz-acts, .fz-stats { opacity: 1 !important; filter: none !important; transform: none !important; } .fz-ring { stroke-dashoffset: 0; } .fz-words span { color: #F7C032; } }
 .fz-h { text-wrap: balance; max-width: 1000px; }
+/* owner (28 Oct): the ending is GREY (the site's graphite), never black; same grey carries into the footer and below it */
+.fz { background: radial-gradient(60% 55% at 50% 30%, #3E4044, #33353A 60%, #2E3033) !important; }
+html:has(#finale), html:has(#finale) body { background-color: #34363A; }

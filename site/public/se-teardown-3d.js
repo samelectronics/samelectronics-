@@ -16,7 +16,7 @@ export async function mount(host, state) {
   try { await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1500))]); } catch (e) {}
   const PI = Math.PI;
   const canvas = host.querySelector('canvas');
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true, logarithmicDepthBuffer: true }); // R6 §05 A: no depth fighting on the back-cover edge at any distance
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: false, logarithmicDepthBuffer: true }); renderer.debug.checkShaderErrors = false; // owner (28 Oct, lag): no buffer copy each frame, no shader-log stalls // R6 §05 A: no depth fighting on the back-cover edge at any distance
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5) /* R6 Part A: 1.5× max */);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -526,7 +526,7 @@ export async function mount(host, state) {
         urls.push(o.toDataURL('image/png')); state.libFront = { ar: bw / bh, ph: [ox0 / OS, oy0 / OS, (bw * k) / OS, (bh * k) / OS], scr: [(Q[0] - P[0]) / bw, (Q[1] - P[1]) / bh, (Q[2] - Q[0]) / bw, (Q[3] - Q[1]) / bh] }; pv.visible = false; }
       renderer.setRenderTarget(null); renderer.setClearColor(cc, ca); adS.background = bg0; adCam.aspect = AW / AH; adCam.updateProjectionMatrix(); parts.forEach((q) => (q.visible = false)); parts.asm.visible = false; trt.dispose(); if (quiet) return urls; state.thumbs = urls; state.onThumbs && state.onThumbs(urls); return urls; } catch (e) { console.warn('thumbs', e && e.message); } };
   const precompile = () => { ensureData(); const vis = []; [adS, ovS, ovB].forEach((sc) => sc.traverse((o) => { vis.push([o, o.visible]); o.visible = true; })); renderer.setRenderTarget(rt);
-    const done = () => { adReady = true; setTimeout(renderThumbs, 50); }; let pr; try { pr = renderer.compileAsync ? Promise.all([renderer.compileAsync(adS, adCam), renderer.compileAsync(ovS, ovC), renderer.compileAsync(ovB, ovC)]) : (renderer.compile(adS, adCam), renderer.compile(ovS, ovC), Promise.resolve()); } catch (e) { pr = Promise.resolve(); }
+    const done = () => { adReady = true; }; // owner (28 Oct, lag): the chip thumbnails ship as files (SE_SHOTS); never read pixels back in the visitor's browser let pr; try { pr = renderer.compileAsync ? Promise.all([renderer.compileAsync(adS, adCam), renderer.compileAsync(ovS, ovC), renderer.compileAsync(ovB, ovC)]) : (renderer.compile(adS, adCam), renderer.compile(ovS, ovC), Promise.resolve()); } catch (e) { pr = Promise.resolve(); }
     renderer.setRenderTarget(null); vis.forEach(([o, v]) => (o.visible = v)); pr.then(done, done); };
   if (!state.shelf) setTimeout(precompile, 1200);
   // owner (27 Oct): the main stage's shaders too (they used to compile on the first visible frame = a stall on arrival)
@@ -603,12 +603,15 @@ export async function mount(host, state) {
   const tmp = document.createElement('canvas'), tx2 = tmp.getContext('2d'), lo = document.createElement('canvas'), lx = lo.getContext('2d');
   const onMove = (e) => { tmx = (e.clientX / (window.innerWidth || 1)) * 2 - 1; tmy = (e.clientY / (window.innerHeight || 1)) * 2 - 1; };
   window.addEventListener('pointermove', onMove, { passive: true });
+  let ioV = null, ioN = null, inView = false, nearV = false;
   const tick = () => {
     if (!alive) return; if (document.hidden) setTimeout(tick, 60); else requestAnimationFrame(tick);
-    { const r = host.getBoundingClientRect(), vh = window.innerHeight || 1000; visible = r.bottom > 0 && r.top < vh && r.width > 0;
+    // owner (28 Oct, lag): visibility comes from IntersectionObservers, never from measuring the page every frame
+    { if (!ioV) { ioV = new IntersectionObserver(([e]) => { inView = e.isIntersecting && e.boundingClientRect.width > 0; }); ioV.observe(host); ioN = new IntersectionObserver(([e]) => { nearV = e.isIntersecting; }, { rootMargin: '300% 0px 300% 0px' }); ioN.observe(host); }
+      visible = inView; const r = { width: nearV ? 1 : 0, top: 0, bottom: 0 }, vh = 1;
       // owner (27 Oct): warm-up. Until it has drawn once, the stage draws one frame (off-screen, invisible) as soon as it is
       // within ~3 screens, so textures upload and shaders link BEFORE the visitor arrives, not on the first scroll into it
-      if (!visible) { if (!warmed && r.width > 0 && r.top < vh * 3 && r.bottom > -vh * 3 && performance.now() - warmAt > 700) { warmAt = performance.now(); try { frame(); warmed = true; } catch (e) {} } return; } }
+      if (!visible) { if (!warmed && nearV && performance.now() - warmAt > 700) { warmAt = performance.now(); try { frame(); warmed = true; } catch (e) {} } return; } }
     const f0 = performance.now(); try { frame(); window.__tdFt = performance.now() - f0; } catch (e) { if (!window.__tdErr) { window.__tdErr = e.message; console.error('teardown', e); } }
   };
   const frame = () => {
@@ -810,8 +813,8 @@ export async function mount(host, state) {
           const y = H2 - it.y - it.h; renderer.setViewport(it.x, y, it.w, it.h); renderer.setScissor(it.x, y, it.w, it.h); renderer.render(adS, adCam); });
         renderer.setScissorTest(false); adS.background = bg0; parts.forEach((q) => (q.visible = false)); parts.asm.visible = false; } };
     state.shelfApi = api; state.onShelf && state.onShelf(api);
-    return () => { alive = false; window.removeEventListener('se:lang', onAdLang); window.removeEventListener('pointermove', onMove); renderer.dispose(); pmrem.dispose(); svg.remove(); refl.remove(); shd.remove(); dust.remove(); clO.forEach((c) => c.d.remove()); tag.remove(); };
+    return () => { alive = false; ioV && ioV.disconnect(); ioN && ioN.disconnect(); window.removeEventListener('se:lang', onAdLang); window.removeEventListener('pointermove', onMove); renderer.dispose(); pmrem.dispose(); svg.remove(); refl.remove(); shd.remove(); dust.remove(); clO.forEach((c) => c.d.remove()); tag.remove(); };
   }
   tick();
-  return () => { alive = false; window.removeEventListener('se:lang', onAdLang); window.removeEventListener('pointermove', onMove); rt.dispose(); renderer.dispose(); pmrem.dispose(); svg.remove(); refl.remove(); shd.remove(); dust.remove(); clO.forEach((c) => c.d.remove()); tag.remove(); };
+  return () => { alive = false; ioV && ioV.disconnect(); ioN && ioN.disconnect(); window.removeEventListener('se:lang', onAdLang); window.removeEventListener('pointermove', onMove); rt.dispose(); renderer.dispose(); pmrem.dispose(); svg.remove(); refl.remove(); shd.remove(); dust.remove(); clO.forEach((c) => c.d.remove()); tag.remove(); };
 }

@@ -7,9 +7,9 @@ import { jumpTo, markJump } from '@/lib/jumpScroll';
 
 const NAMES: [string, string][] = [
   ['top', 'Home'], ['teardown', 'Teardown'], ['families', 'What we offer'], ['board', 'Live parts board'], ['quality', 'Bench test'],
-  ['showcase', 'Showcase'], ['deals', 'Deals & arrivals'], ['repair', 'Repair Lab'], ['wholesale', 'Wholesale'], ['network', 'Worldwide'],
-  ['story', 'Our story'], ['team', 'Team'], ['everyone', 'Who are you?'], ['circuit', 'Sam Circuit'], ['samsoom', 'Meet Samsoom'],
-  ['social', 'The feed'], ['reviews', 'Reviews'], ['visit', 'Visit us'], ['finale', 'Quality · Warranty · Price'],
+  ['showcase', 'Showcase'], ['deals', 'Deals & arrivals'], ['wholesale', 'Wholesale'], ['repair', 'Repair Lab'], ['network', 'Worldwide'],
+  ['circuit', 'Sam Circuit'], ['story', 'Our story'], ['team', 'Team'], ['samsoom', 'Meet Samsoom'], ['everyone', 'Who are you?'],
+  ['social', 'The feed'], ['visit', 'Visit us'], ['reviews', 'Reviews'], ['finale', 'Quality · Warranty · Price'],
 ];
 const T = (s: string) => (typeof window !== 'undefined' && window.seI18n ? window.seI18n.t(s) : s);
 

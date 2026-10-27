@@ -46,14 +46,16 @@ class Component extends DCLogic {
     const s = this.state, D = s.data, RT = D ? D.requestTypes : ['Order parts', 'Bulk quote', 'Book a repair', 'Trade account', 'Shipping quote', 'General'], rt = s.type || RT[0];
     const C = (D && D.contact) || {}, wa = 'https://wa.me/' + (C.wa || '971503420015'), email = C.email || 'samelectronics.uae@gmail.com';
     const put = (k, v) => this.setState((st) => ({ vals: { ...st.vals, [k]: v } }));
+    // owner (28 Oct, INP): typed fields are uncontrolled and commit after a short pause, so a key press never blocks
+    const putLater = (k, v) => { this.tv = this.tv || {}; clearTimeout(this.tv[k]); this.tv[k] = setTimeout(() => put(k, v), 300); };
     const fields = (FL[rt] || FL.General).map(([label, kind, o], i) => {
       const k = rt + label, raw = s.vals[k] || '', sel = raw ? raw.split('|') : [], other = s.vals[k + ':o'] || '';
       const shown = sel.map((x) => (x === 'Other' ? (other.trim() ? other.trim() : 'Other') : x)).join(', ');
       const opts = Array.isArray(o) ? o.map((x) => ({ x, on: sel.includes(x), pick: () => put(k, kind === 'many' ? (sel.includes(x) ? sel.filter((y) => y !== x) : [...sel, x]).join('|') : sel[0] === x ? '' : x) })) : [];
-      return { label, kind, i, ph: Array.isArray(o) ? '' : o, opts, otherOn: sel.includes('Other'), other, setOther: (e) => put(k + ':o', e.target.value),
-        val: kind === 'one' || kind === 'many' ? shown : raw, set: (e) => put(k, e.target.value) };
+      return { label, kind, i, ph: Array.isArray(o) ? '' : o, opts, otherOn: sel.includes('Other'), other, setOther: (e) => putLater(k + ':o', e.target.value),
+        val: kind === 'one' || kind === 'many' ? shown : raw, set: (e) => putLater(k, e.target.value) };
     });
-    const note = s.vals[rt + ':note'] || '', setNote = (e) => put(rt + ':note', e.target.value);
+    const note = s.vals[rt + ':note'] || '', setNote = (e) => putLater(rt + ':note', e.target.value);
     const filled = fields.filter((f) => f.val.trim()).length;
     const no = 'SE-REQ-' + (2600 + ((s.now / 864e5) | 0) % 900);
     const body = '*' + rt.toUpperCase() + ' · SAM ELECTRONICS*\nWork order ' + no + '\n\n' + fields.filter((f) => f.val.trim()).map((f) => '• ' + f.label + ': ' + f.val).join('\n') + (note.trim() ? '\n\nComment: ' + note.trim() : '') + '\n\nSent from the Sam Electronics website';

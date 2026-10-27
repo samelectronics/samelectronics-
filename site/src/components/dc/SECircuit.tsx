@@ -3,7 +3,6 @@
 import React from 'react';
 import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SECircuit.logic.js';
-import CircuitField from '../home/CircuitField';
 
 const ICON = [
   // plug → bolt → double bolt → full battery
@@ -18,7 +17,6 @@ function render(v: Vals) {
   const T = v.tiers || [];
   return (
     <section id="circuit" ref={v.secRef} data-tone="dark" data-screen-label="Sam Circuit" className={'cs' + (v.seen ? ' cs-seen' : '') + (v.on ? '' : ' cs-off')}>
-      <CircuitField tone="dark" seed={31} />
       <div className="cs-in">
         <header className="cs-top">
           <div>

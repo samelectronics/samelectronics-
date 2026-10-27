@@ -302,7 +302,7 @@ export default function RepairLab({ v }: { v: Vals }) {
                   {(v.re?.times || []).map(([k, l]: [string, string]) => <option key={k} value={k}>{l}</option>)}
                 </select>
               </div>
-              <textarea value={v.re?.noteTxt || ''} onChange={v.re?.setNote} rows={2} placeholder="Anything else? (colour, password-free check, pickup…)" aria-label="Notes" />
+              <textarea defaultValue={v.re?.noteTxt || ''} onChange={v.re?.setNote} rows={2} placeholder="Anything else? (colour, password-free check, pickup…)" aria-label="Notes" />
             </div>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               {'\n          '}

@@ -25,22 +25,25 @@ import Footer from '../home/sections/Footer';
 export default function HomeRest({ v }: { v: Vals }) {
   return (
     <>
+      {/* owner (28 Oct): strict colour rotation, white → grey → yellow, never the same colour twice before the other two:
+          W families · G board · Y quality · W showcase · G deals · Y wholesale · W repair · G network · Y circuit ·
+          W story · G team · Y samsoom · W everyone · G feed · Y request & visit · W reviews · G finale + footer */}
       <SEWhatWeOffer />
       <SELiveBoard />
       <SEBenchTest />
       <SEShowcase />
       <SEHomeDeals />
-      <RepairLab v={v} />
       <SEWholesale />
+      <RepairLab v={v} />
       <Worldwide v={v} />
+      <SECircuit />
       <SEStory todayHours={v.todayHours} dirLink={v.dirLink} wa={v.visit?.wa} notify={v.story?.notify} />
       <SETeam />
-      <SEWho />
-      <SECircuit />
       <SEMeet />
+      <SEWho />
       <SEFeed />
-      <SEReviews />
       <SEVisit />
+      <SEReviews />
       <SEFinale />
       <Footer v={v} />
     </>

@@ -671,22 +671,31 @@ html[dir='rtl'] .se-rep-fix.se-rep-loop { animation-name: seRepFixR; } html[dir=
 
 /* owner (27 Oct) · site-wide entry: every section's eyebrow, title, text and cards rise in, one after another, each time
    the section comes into view (SectionFX toggles data-se-vis; leaving resets it so it replays) */
-section:not([data-se-vis]) [data-se-rise] { opacity: 0; }
-section[data-se-vis] [data-se-rise] { animation: seSecIn .85s cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(var(--i, 0) * 85ms + 60ms); animation-play-state: running !important; }
-section[data-se-vis] h2[data-se-rise] { animation-name: seSecTitle; animation-duration: 1s; }
+[data-se-rise]:not([data-se-on]) { opacity: 0; }
+[data-se-rise][data-se-on] { animation: seSecIn .8s cubic-bezier(.16, 1, .3, 1) both; animation-delay: calc(min(var(--i, 0), 6) * 80ms + 40ms); animation-play-state: running !important; }
+h2[data-se-rise][data-se-on] { animation-name: seSecTitle; animation-duration: .95s; }
 @keyframes seSecIn { from { opacity: 0; translate: 0 30px; } to { opacity: 1; translate: 0 0; } }
 @keyframes seSecTitle { from { opacity: 0; translate: 0 40px; clip-path: inset(0 0 100% 0); } to { opacity: 1; translate: 0 0; clip-path: inset(-20% -5% -20% -5%); } }
 @media (prefers-reduced-motion: reduce) { section [data-se-rise] { opacity: 1 !important; animation: none !important; } }
 /* owner (27 Oct) · each section's own circuits, in its side gutters */
-.se-gut .tr { fill: none; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
-.se-gut .fl { fill: none; stroke-width: 2; stroke-linecap: round; stroke-dasharray: 46 520; animation: seGutFlow 6s linear infinite; }
-.se-gut .nd { fill: none; stroke-width: 1.4; }
-.se-gut-dark .tr, .se-gut-dark .nd { stroke: rgba(247, 192, 50, .2); } .se-gut-dark .fl { stroke: rgba(255, 219, 110, .75); filter: drop-shadow(0 0 4px rgba(247, 192, 50, .8)); }
-.se-gut-light .tr, .se-gut-light .nd { stroke: rgba(38, 40, 43, .13); } .se-gut-light .fl { stroke: rgba(247, 192, 50, .95); filter: drop-shadow(0 0 3px rgba(247, 192, 50, .6)); }
-.se-gut-yel .tr, .se-gut-yel .nd { stroke: rgba(38, 40, 43, .2); } .se-gut-yel .fl { stroke: rgba(255, 255, 255, .9); filter: drop-shadow(0 0 3px rgba(255, 255, 255, .7)); }
-@keyframes seGutFlow { from { stroke-dashoffset: 566; } to { stroke-dashoffset: 0; } }
+.se-gut .tr { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.se-gut .fl { fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: 70 930; animation: sePulse 3.4s linear infinite; }
+.se-gut .nd { stroke-width: 2; }
+.se-gut-dark .tr { stroke: rgba(247, 192, 50, .22); } .se-gut-dark .nd { fill: #26282B; stroke: #F7C032; } .se-gut-dark .fl { stroke: #F7C032; }
+.se-gut-light .tr { stroke: rgba(38, 40, 43, .16); } .se-gut-light .nd { fill: #F2F3F4; stroke: rgba(38, 40, 43, .5); } .se-gut-light .fl { stroke: #F7C032; }
+.se-gut-yel .tr { stroke: rgba(38, 40, 43, .2); } .se-gut-yel .nd { fill: #F7C032; stroke: #26282B; } .se-gut-yel .fl { stroke: #26282B; }
 @media (prefers-reduced-motion: reduce) { .se-gut .fl { animation: none; opacity: 0; } }
 /* owner (27 Oct) · What we offer: the service panels show the hero ad's own elements */
 .wo-rep.se-rep-poster { position: absolute; left: 50%; top: 50%; width: 640px; height: 640px; transform: translate(-50%, -50%); filter: drop-shadow(0 24px 40px rgba(0, 0, 0, .45)); }
 .wo-rep > img { position: absolute; inset: 0; width: 100%; height: 100%; }
 .wo-globe { position: absolute !important; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+/* owner (28 Oct): connection notice */
+.se-net { position: fixed; left: 50%; bottom: 22px; z-index: 9000; display: flex; align-items: center; gap: 12px; max-width: min(440px, calc(100vw - 32px)); padding: 12px 14px; border-radius: 16px; background: #2E3033; color: #fff; box-shadow: 0 18px 40px -12px rgba(0, 0, 0, .55), inset 0 0 0 1px rgba(255, 255, 255, .1); transform: translateX(-50%); animation: seNetIn .45s cubic-bezier(.2, 1.2, .4, 1) both; }
+@keyframes seNetIn { from { opacity: 0; transform: translate(-50%, 20px); } }
+.se-net .ic { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 12px; background: rgba(247, 192, 50, .15); color: #F7C032; }
+.se-net.off .ic { background: rgba(229, 72, 77, .16); color: #FF7A7E; animation: seNetPulse 1.6s ease-in-out infinite; }
+.se-net.back .ic { background: rgba(43, 182, 115, .16); color: #5FD39B; }
+@keyframes seNetPulse { 50% { transform: scale(.9); opacity: .7; } }
+.se-net .tx { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.se-net b { font: 600 14px Inter, sans-serif; } .se-net small { font: 400 12.5px/1.4 Inter, sans-serif; color: #C9CBCE; }
+.se-net button { flex: none; width: 28px; height: 28px; border: none; border-radius: 8px; background: rgba(255, 255, 255, .08); color: #fff; font-size: 18px; cursor: pointer; }

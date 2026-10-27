@@ -3,7 +3,6 @@
 import React from 'react';
 import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SEFeed.logic.js';
-import CircuitField from '../home/CircuitField';
 
 export const GLYPH: Record<string, React.ReactNode> = {
   ig: (
@@ -134,7 +133,6 @@ function render(v: Vals) {
   const scr = { left: (f.ph[0] + f.scr[0] * f.ph[2]) * 100 + '%', top: (f.ph[1] + f.scr[1] * f.ph[3]) * 100 + '%', width: f.scr[2] * f.ph[2] * 100 + '%', height: f.scr[3] * f.ph[3] * 100 + '%' };
   return (
     <section id="social" ref={v.secRef} data-tone="dark" data-screen-label="The Feed" className={'fd' + (v.seen ? ' fd-seen' : '')}>
-      <CircuitField tone="dark" seed={23} />
       <span className="fd-aura" aria-hidden="true" />
       <div className="fd-in">
         {/* owner (27 Oct): one phone (not three), the follow buttons and all three QR codes at once, the week's drops */}

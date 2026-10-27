@@ -19,12 +19,15 @@ class Component extends DCLogic {
     /* Urgent 3: every part is a still pose now, nothing is drawn in 3D: the WebGL shelf is no longer mounted (speed) */ this.unreg = null; false && registerScene({ id: 'offer-shelf', el: () => this.root.current || this.host.current, mount: async () => { await this.mountShelf(); return () => this.unmountShelf(); } });
     // R6 Part A: visibility comes from an IntersectionObserver; the loop used to measure the section every frame for the whole visit (a forced layout per frame: the biggest cost while scrolling)
     this.near = false; this.nearIO = new IntersectionObserver(([e]) => { this.near = e.isIntersecting; }, { rootMargin: '25% 0px 25% 0px' }); setTimeout(() => this.root.current && this.nearIO.observe(this.root.current), 50);
-    const loop = () => { if (!this.alive) return; if (!this.near) { this._raf = requestAnimationFrame(loop); return; } try { this.frame(performance.now() / 1000); } catch (e) { if (!this._fe) { this._fe = 1; console.warn('[What we offer]', e); } } this._raf = requestAnimationFrame(loop); }; loop();
+    window.addEventListener('resize', () => { this._W0 = 0; }, { passive: true }); const loop = () => { if (!this.alive) return; if (!this.near) { this._raf = requestAnimationFrame(loop); return; } try { this.frame(performance.now() / 1000); } catch (e) { if (!this._fe) { this._fe = 1; console.warn('[What we offer]', e); } } this._raf = requestAnimationFrame(loop); }; loop();
     window.seWwo = { at: (b, t) => { this.ov[b] = t; this.frame(performance.now() / 1000); }, hover: (i) => { this.hvT.fill(0); this.hv.fill(0); if (i != null && i >= 0) { this.hvT[i] = 1; this.hv[i] = 1; this.hvAt[i] = performance.now() / 1000 - 0.7; } this.frame(performance.now() / 1000); }, clear: () => { this.ov = {}; }, gl: () => this.glCanvas };
   }
   componentDidUpdate() { this._q = {}; }
   componentWillUnmount() { this.nearIO && this.nearIO.disconnect(); this.alive = false; cancelAnimationFrame(this._raf); clearInterval(this.dIv); clearTimeout(this.fbT); try { this.unreg && this.unreg(); } catch (e) {} }
   unmountShelf() { clearTimeout(this.fbT); try { this.mo && this.mo.disconnect(); this.disp && this.disp(); } catch (e) {} const h = this.host.current; if (h) { loseContexts(h); h.querySelectorAll('canvas').forEach((c) => c.remove()); } this.mo = null; this.disp = null; this.api = null; this.glCanvas = null; this.scr = null; this.fallback(); }
+  // owner (28 Oct, lag): every box is measured ONCE per frame (before any style is written), so a frame never forces
+  // the browser to re-lay-out the page several times
+  rc(k, el) { if (this._rcT !== this.lastT) { this._rcT = this.lastT; this._rcm = {}; } return this._rcm[k] || (this._rcm[k] = el.getBoundingClientRect()); }
   q(k) { const c = this._q[k]; if (c && c.isConnected) return c; const R = this.root.current; return (this._q[k] = R ? R.querySelector('[data-w="' + k + '"]') : null); }
   async mountShelf() {
     const h = this.host.current; if (!h) return; const cv = document.createElement('canvas'); cv.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;display:block'; h.appendChild(cv);
@@ -45,7 +48,7 @@ class Component extends DCLogic {
   // parts waited for the next WebGL frame: they rode along with the scroll, then snapped back. The canvas now sits IN the
   // page over the region whose parts are on screen (the parts grid, or the Repair box's phone), so the browser scrolls
   // the rendered parts together with their cards. It only moves between regions while the other one is off-screen.
-  placeHost(vh) { const h = this.host.current, R = this.root.current; if (!h || !R) return; const rr = R.getBoundingClientRect();
+  placeHost(vh) { const h = this.host.current, R = this.root.current; if (!h || !R || !this.api) return; /* owner (28 Oct, lag): nothing 3D to place any more */ const rr = R.getBoundingClientRect();
     const box = (els, pad) => { let t = 1e9, b = -1e9; els.forEach((e) => { if (!e) return; const r = e.getBoundingClientRect(); if (r.height) { t = Math.min(t, r.top); b = Math.max(b, r.bottom); } }); return t < b ? { t: t - pad, b: b + pad } : null; };
     const A = box(this.FAM.map((_, i) => this.q('slot' + i)), 60), Rb = box([this.q('Rslot')], 90);
     const vis = (g) => (g ? Math.max(0, Math.min(g.b, vh) - Math.max(g.t, 0)) : -1), g = vis(Rb) > vis(A) ? Rb : A; if (!g) return;
@@ -56,7 +59,7 @@ class Component extends DCLogic {
     if (!this._posed) { this.poses(); this._posed = this.FAM.every((f, i) => { const im = this.q('fb' + i); return im && im.src; }); } // the pose shows at once, not after the 3D engine
     const R = this.root.current; if (!R) return; const dt = Math.min(0.05, Math.max(0, T - (this.lastT || T))); this.lastT = T; const vh = window.innerHeight;
     const cl = (x) => (x < 0 ? 0 : x > 1 ? 1 : x), ex = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * cl(x))), eo = (x) => 1 - Math.pow(1 - cl(x), 3), eio = (x) => { x = cl(x); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }, PI = Math.PI;
-    const clk = (b, frac) => { if (this.ov[b] != null) return this.ov[b]; const el = this.q(b); if (!el) return 0; const r = el.getBoundingClientRect(); if (r.bottom < 0 || r.top > vh) { this.ck[b] = null; return 0; } if (this.ck[b] == null && r.top < vh * frac) this.ck[b] = T; if (this.ck[b] != null && b.length === 1 && b !== 'A' && el.matches(':hover')) this.ck[b] -= dt * 0.3; /* Issue 2: a hovered box's scene runs a little faster */ return this.ck[b] == null ? 0 : T - this.ck[b]; };
+    const clk = (b, frac) => { if (this.ov[b] != null) return this.ov[b]; const el = this.q(b); if (!el) return 0; const r = this.rc(b, el); if (r.bottom < 0 || r.top > vh) { this.ck[b] = null; return 0; } if (this.ck[b] == null && r.top < vh * frac) this.ck[b] = T; if (this.ck[b] != null && b.length === 1 && b !== 'A' && el.matches(':hover')) this.ck[b] -= dt * 0.3; /* Issue 2: a hovered box's scene runs a little faster */ return this.ck[b] == null ? 0 : T - this.ck[b]; };
     const set = (k, s) => { const e = this.q(k); if (e) Object.assign(e.style, s); return e; };
     this.placeHost(vh);
     const D = this.vals || {}; const items = [], hr = this.host.current ? this.host.current.getBoundingClientRect() : { left: 0, top: 0 };
@@ -86,7 +89,7 @@ class Component extends DCLogic {
       items.push({ L, x: r.left - hr.left, y: r.top - hr.top + bot + dy + y * 0, w, h: hgt, ry: a, rx: -0.06, el: 0.16, k: kk, sw, sx });
     }
     // ----- band wipes + text films -----
-    const W0 = R.clientWidth; ['R', 'W', 'G'].forEach((b) => { const el = this.q(b), wp = this.q(b + 'wipe'); if (!el || !wp) return; const r = el.getBoundingClientRect(), H = r.height, k = this.ov[b] != null ? 1 : cl((vh - r.top) / (vh * 0.6)), o = H * 0.268, X = -o + k * (W0 + o * 2); wp.style.clipPath = 'none'; /* Issue 2: boxes, not full-width bands: no wipe across the page */ });
+    const W0 = this._W0 || (this._W0 = R.clientWidth); ['R', 'W', 'G'].forEach((b) => { const el = this.q(b), wp = this.q(b + 'wipe'); if (!el || !wp) return; const r = this.rc(b, el), H = r.height, k = this.ov[b] != null ? 1 : cl((vh - r.top) / (vh * 0.6)), o = H * 0.268, X = -o + k * (W0 + o * 2); wp.style.clipPath = 'none'; /* Issue 2: boxes, not full-width bands: no wipe across the page */ });
     const tR = clk('R', 0.6), tW = clk('W', 0.6), tG = clk('G', 0.6);
     const txt = (b, t) => { const k1 = ex((t - 0.4) / 0.5); set(b + 'eb', { transform: 'translateX(' + ((1 - k1) * -100).toFixed(1) + '%)' }); [0, 1].forEach((i) => set(b + 'h' + i, { transform: 'translateY(' + ((1 - ex((t - 0.55 - i * 0.1) / 0.6)) * 110).toFixed(2) + '%)' }));
       const pk = ex((t - 0.9) / 0.6); set(b + 'p', { opacity: pk.toFixed(3), transform: 'translateY(' + ((1 - pk) * 16).toFixed(1) + 'px)', filter: pk < 1 ? 'blur(' + ((1 - pk) * 6).toFixed(1) + 'px)' : 'none' });
