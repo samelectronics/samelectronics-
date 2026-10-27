@@ -16,7 +16,7 @@ export async function mount(host, state) {
   try { await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1500))]); } catch (e) {}
   const PI = Math.PI;
   const canvas = host.querySelector('canvas');
-  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: false, logarithmicDepthBuffer: true }); renderer.debug.checkShaderErrors = false; // owner (28 Oct, lag): no buffer copy each frame, no shader-log stalls // R6 §05 A: no depth fighting on the back-cover edge at any distance
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: false, logarithmicDepthBuffer: true }); renderer.debug.checkShaderErrors = false; /* owner (28 Oct, lag): no buffer copy each frame, no shader-log stalls */ // R6 §05 A: no depth fighting on the back-cover edge at any distance
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5) /* R6 Part A: 1.5× max */);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -526,7 +526,7 @@ export async function mount(host, state) {
         urls.push(o.toDataURL('image/png')); state.libFront = { ar: bw / bh, ph: [ox0 / OS, oy0 / OS, (bw * k) / OS, (bh * k) / OS], scr: [(Q[0] - P[0]) / bw, (Q[1] - P[1]) / bh, (Q[2] - Q[0]) / bw, (Q[3] - Q[1]) / bh] }; pv.visible = false; }
       renderer.setRenderTarget(null); renderer.setClearColor(cc, ca); adS.background = bg0; adCam.aspect = AW / AH; adCam.updateProjectionMatrix(); parts.forEach((q) => (q.visible = false)); parts.asm.visible = false; trt.dispose(); if (quiet) return urls; state.thumbs = urls; state.onThumbs && state.onThumbs(urls); return urls; } catch (e) { console.warn('thumbs', e && e.message); } };
   const precompile = () => { ensureData(); const vis = []; [adS, ovS, ovB].forEach((sc) => sc.traverse((o) => { vis.push([o, o.visible]); o.visible = true; })); renderer.setRenderTarget(rt);
-    const done = () => { adReady = true; }; // owner (28 Oct, lag): the chip thumbnails ship as files (SE_SHOTS); never read pixels back in the visitor's browser let pr; try { pr = renderer.compileAsync ? Promise.all([renderer.compileAsync(adS, adCam), renderer.compileAsync(ovS, ovC), renderer.compileAsync(ovB, ovC)]) : (renderer.compile(adS, adCam), renderer.compile(ovS, ovC), Promise.resolve()); } catch (e) { pr = Promise.resolve(); }
+    const done = () => { adReady = true; }; /* owner (28 Oct, lag): the chip thumbnails ship as files (SE_SHOTS); never read pixels back in the visitor's browser */ let pr; try { pr = renderer.compileAsync ? Promise.all([renderer.compileAsync(adS, adCam), renderer.compileAsync(ovS, ovC), renderer.compileAsync(ovB, ovC)]) : (renderer.compile(adS, adCam), renderer.compile(ovS, ovC), Promise.resolve()); } catch (e) { pr = Promise.resolve(); }
     renderer.setRenderTarget(null); vis.forEach(([o, v]) => (o.visible = v)); pr.then(done, done); };
   if (!state.shelf) setTimeout(precompile, 1200);
   // owner (27 Oct): the main stage's shaders too (they used to compile on the first visible frame = a stall on arrival)

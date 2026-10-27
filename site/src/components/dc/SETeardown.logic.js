@@ -50,7 +50,7 @@ class Component extends DCLogic {
       this.opReset(); this.enterFilm(false); window.scrollTo(0, this.yFor(0));
       if (this.ready3d) { console.info('[SE Teardown] opening started (stage pinned, 3D ready)'); this.opPlay(false); } else if (this.failed3d) this.opShow('3D failed to load'); else { this.waitOp = true; this.waitAt = performance.now(); }
     } catch (e) { this.opShow('opCheck error: ' + (e && e.message)); } }
-  measureTitle() { const h = this.h2Ref.current, pin = this.pin(); if (!h || !pin) return; const l1 = h.firstElementChild; if (!l1) return; let st = this._stage; if (!st || !st.contains(h)) { st = h.parentElement; while (st && st !== pin && !/sticky|fixed/.test(getComputedStyle(st).position)) st = st.parentElement; this._stage = st = st || pin; } const r = h.getBoundingClientRect(), pr = st.getBoundingClientRect(); const tl = { l: r.left - pr.left, t: r.top - pr.top, w: l1.offsetWidth, h: l1.offsetHeight }; /* measured against the sticky stage the title lives in, not the tall scrolling wrapper: otherwise any page scroll during the toss threw the title off the top */ const o = this.tl; if (!o || Math.abs(o.l - tl.l) > 0.5 || Math.abs(o.t - tl.t) > 0.5 || Math.abs(o.w - tl.w) > 0.5) { this.tl = tl; this.forceUpdate(); } }
+  measureTitle() { const h = this.h2Ref.current, pin = this.pin(); if (!h || !pin) return; const l1 = h.firstElementChild; if (!l1) return; let st = this._stage; if (!st || !st.contains(h)) { st = h.parentElement; while (st && st !== pin && !/sticky|fixed/.test(getComputedStyle(st).position)) st = st.parentElement; this._stage = st = st || pin; } const r = h.getBoundingClientRect(), pr = st.getBoundingClientRect(); const tl = { l: (document.documentElement.dir === 'rtl' ? r.right - l1.offsetWidth : r.left) - pr.left, t: r.top - pr.top, w: l1.offsetWidth, h: l1.offsetHeight }; /* owner (28 Oct): in Arabic the line starts at the RIGHT, so the centred title was off */ /* measured against the sticky stage the title lives in, not the tall scrolling wrapper: otherwise any page scroll during the toss threw the title off the top */ const o = this.tl; if (!o || Math.abs(o.l - tl.l) > 0.5 || Math.abs(o.t - tl.t) > 0.5 || Math.abs(o.w - tl.w) > 0.5) { this.tl = tl; this.forceUpdate(); } }
   isMob() { return !!this.props.mob || (this.props.fw || this.state.vw) < 768; }
   pin() { const el = this.secRef.current; return el && el.firstElementChild; }
   SH() { return Math.round(window.innerHeight * 0.6); }
@@ -85,6 +85,13 @@ class Component extends DCLogic {
     else { cancelAnimationFrame(this.oraf); this.opRunning = false; this.tossEnd(); this.idx = 0; this.td.faceBack = true; this.td.p = this.FS[0]; }
     this.td.snap = true; this.setState({ p: this.td.p });
   }
+  // owner (28 Oct): a fast scroll no longer skips the teardown silently: the whole film plays super quickly (~1.3s, the same
+  // animations), then the page is released past the section, so nobody has to scroll through a held final call
+  quick(dir) {
+    if (dir < 0 || jumping()) return this.pass(dir); if (this.quicking) return; this.quicking = true; this.q = []; clearTimeout(this.autoT);
+    const last = this.FS.length - 1; if (this.opBusy()) this.opShow(); this.tossEnd(); this.td.faceBack = false; this.busyUntil = performance.now() + 1500;
+    this.goTo(last, 1300); setTimeout(() => { this.quicking = false; this.busyUntil = 0; this.release(1); }, 1350);
+  }
   busy() { return this.opBusy() || this.anim || performance.now() < (this.busyUntil || 0) || this.revOn; }
   /** Urgent 3: never freeze the page: end a stalled opening / tween and accept input again. */
   unstick() { console.warn('[teardown] unstick'); if (this.opBusy()) this.opShow('unstick'); cancelAnimationFrame(this.twRaf); this.anim = false; this.busyUntil = 0; this.revOn = false; this.pend = 0; }
@@ -102,12 +109,13 @@ class Component extends DCLogic {
   }
   step(dir) {
     const F = this.FS, last = F.length - 1, cur = this.idx || 0, nx = cur + dir; if (nx < 0 || nx > last) return false;
-    const now = performance.now();
-    if (cur === 0 && nx === 1) { this.busyUntil = now + 2100; this.tossStart(false); this.goTo(1, 1100); return true; } // step 3 + 3b (automatic)
-    if (cur === 1 && nx === 0) { this.busyUntil = now + 2700; this.tossRev(); this.goTo(0, 1300); return true; } // the phone flips back to show its back
-    if (nx === last - 1 && dir > 0) { this.busyUntil = now + 2900; this.goTo(nx, 1200); clearTimeout(this.autoT); this.autoT = setTimeout(() => { if (this.idx === last - 1 && this.mode === 'film') { this.busyUntil = performance.now() + 1500; this.goTo(last, 1400); } }, 1300); return true; } // step 13, then 14 automatically
-    if (cur === last && dir < 0) { this.busyUntil = now + 1500; this.goTo(last - 1, 1400); return true; }
-    this.busyUntil = now + 700; this.goTo(nx, 900); return true; // 14 Oct §07 A: input opens again once the step has visibly landed
+    const now = performance.now(), k = (this.q && this.q.length) ? 0.42 : 1; // owner (28 Oct): queued steps play quicker
+    const goTo0 = this.goTo.bind(this), goTo = (i, ms) => goTo0(i, Math.round(ms * k));
+    if (cur === 0 && nx === 1) { this.busyUntil = now + Math.round(2100 * k); this.tossStart(false); goTo(1, 1100); return true; } // step 3 + 3b (automatic)
+    if (cur === 1 && nx === 0) { this.busyUntil = now + Math.round(2700 * k); this.tossRev(); goTo(0, 1300); return true; } // the phone flips back to show its back
+    if (nx === last - 1 && dir > 0) { this.busyUntil = now + Math.round(2900 * k); goTo(nx, 1200); clearTimeout(this.autoT); this.autoT = setTimeout(() => { if (this.idx === last - 1 && this.mode === 'film') { this.busyUntil = performance.now() + 1500; goTo(last, 1400); } }, 1300); return true; } // step 13, then 14 automatically
+    if (cur === last && dir < 0) { this.busyUntil = now + Math.round(1500 * k); goTo(last - 1, 1400); return true; }
+    this.busyUntil = now + Math.round(700 * k); goTo(nx, 900); return true; // 14 Oct §07 A: input opens again once the step has visibly landed
   }
   /** Enter the film at step 0 (from above) or at the final call (from below). */
   enterFilm(atEnd) { this.mode = 'film'; this.gUsed = true; this.lastW = performance.now(); if (atEnd) { const last = this.FS.length - 1; this.idx = last; this.td.faceBack = false; this.td.p = 1; this.td.snap = true; this.setState({ p: 1 }); window.scrollTo(0, this.yFor(last)); } else { this.idx = 0; this.td.faceBack = true; this.td.p = this.FS[0]; this.td.snap = true; this.setState({ p: this.FS[0] }); } }
@@ -116,7 +124,7 @@ class Component extends DCLogic {
     this.unregGL = registerScene({ id: 'teardown', fixed: true, el: () => null, mount: async () => {} });
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 60);
     this.on = () => { if (this.props.fw) { this.manual = true; return; } const vw = document.documentElement.clientWidth, vh = window.innerHeight; if (vw !== this.state.vw || vh !== this.state.vh) this.setState({ vw, vh }); if (this.isMob() || this.manual) return; const pin = this.pin(), sec = this.secRef.current; if (!pin || !sec) return; const r = pin.getBoundingClientRect(), rs = sec.getBoundingClientRect(), ent = Math.max(0, Math.min(1, r.top / vh));
-      if (this.mode === 'film' && !this.scrolling && jumping()) { this.pass(window.scrollY > this.yFor(this.idx || 0) ? 1 : -1); }
+      if (this.mode === 'film' && jumping() && (!this.scrolling || (window.__seJumpForced || 0) > performance.now())) { cancelAnimationFrame(this.sraf); this.scrolling = false; window.__seOwnScroll = false; this.pass(window.scrollY > this.yFor(this.idx || 0) ? 1 : -1); } /* owner (28 Oct): the logo / any jump passes at once, even mid-step */
       if (this.mode === 'film') { if (!this.inside() && !this.scrolling) { this.mode = 'out'; } else if (!this.scrolling && !this.anim) { const y = this.yFor(this.idx || 0); if (Math.abs(window.scrollY - y) > 2 && Math.abs(window.scrollY - y) < vh * 0.9) window.scrollTo(0, y); } }
       if (this.mode !== 'film' && !this.opRunning) { const p = this.passing ? (this.passing > 0 ? 1 : this.FS[0]) : rs.bottom < vh * 0.98 && rs.top < 0 ? 1 : this.FS[0]; if (p !== this.td.p && !this.anim) { this.td.p = p; this.td.snap = true; this.td.faceBack = p < 1; } }
       const q = Math.round(this.td.p * 1000) / 1000; if (q !== this.state.p || Math.abs(ent - this.state.ent) > 0.01) this.setState({ p: q, ent }); };
@@ -130,24 +138,24 @@ class Component extends DCLogic {
       const quiet = gap >= 300 && !(decaying && gap < 600); this.lastDy = dy0;
       // R6 Part B: three gestures within 1.4s, a big flick or a jump → pass straight through
       if (quiet) { this.gSum = 0; (this.fresh = this.fresh || []).push(now); while (this.fresh.length && now - this.fresh[0] > 1400) this.fresh.shift(); }
-      this.gSum = (this.gSum || 0) + Math.abs(dy0);
-      if (jumping() || (this.fresh && this.fresh.length >= 5) || this.gSum > 3500 || Math.abs(dy0) > 600) /* Urgent 3: 3 unhurried wheel notches used to count as 'fast' and skip the whole film */ { this.lastW = now; this.pass(Math.sign(dy0)); return; }
+      this.gSum = (this.gSum || 0) + Math.abs(dy0); const VW = (this.vw = this.vw || []); VW.push([now, Math.abs(dy0)]); while (VW.length && now - VW[0][0] > 600) VW.shift(); const v6 = VW.reduce((a2, x2) => a2 + x2[1], 0); /* owner (28 Oct): 'fast' = speed (px in the last 0.6s), not the total of a long steady scroll */
+      if (jumping() || (this.fresh && this.fresh.length >= 6) || v6 > 2600 || Math.abs(dy0) > 700) /* Urgent 3: 3 unhurried wheel notches used to count as 'fast' and skip the whole film */ { this.lastW = now; e.preventDefault(); this.quick(Math.sign(dy0)); return; }
       e.preventDefault(); this.lastW = now; if (quiet) { this.gAcc = 0; this.gUsed = false; }
-      if (this.gUsed) return; // momentum of a gesture already used
+      // owner (28 Oct): the visitor drives it. Every ~260px of continuous scroll (the first push of a gesture: 40px) is one
+      // step; steps asked for while one is playing are QUEUED (up to 3) and everything speeds up, so nobody waits for a
+      // step to finish, and nobody has to pause before scrolling again. Trackpad momentum still counts, but slowly.
       const dy = e.deltaY * (e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? window.innerHeight : 1), dir = Math.sign(dy);
-      if (Math.sign(this.gAcc || 0) !== dir) this.gAcc = 0; this.gAcc = (this.gAcc || 0) + dy; if (Math.abs(this.gAcc) < 40) return; // tiny nudges never do anything
-      this.gUsed = true; this.gAcc = 0;
-      // Urgent 3: one gesture = one step, always. A gesture made while a step is still playing is spent, so slow wheel
-      // notches or trackpad momentum can never add a second step. Only a gesture made during the opening is held.
-      // If input stays blocked for 3s (a stalled opening), unstick instead of freezing.
-      if (this.busy()) {
-        if (!this.blockedAt) this.blockedAt = now; if (now - this.blockedAt > 3000) { this.unstick(); this.blockedAt = 0; this.gesture(dir); return; }
-        if (this.opBusy()) { this.pend = dir; this.pendAt = now; } return; }
+      if (Math.sign(this.gAcc || 0) !== dir) this.gAcc = 0; this.gAcc = (this.gAcc || 0) + dy;
+      const need = this.gUsed ? (decaying ? 420 : 260) : 40; if (Math.abs(this.gAcc) < need) return;
+      this.gUsed = true; this.gAcc = 0; this.ask(dir); };
+    this.ask = (dir) => { const now = performance.now();
+      if (this.busy()) { if (!this.blockedAt) this.blockedAt = now; if (now - this.blockedAt > 3000 && !this.opBusy()) { this.unstick(); this.blockedAt = 0; this.gesture(dir); return; }
+        const Q = (this.q = this.q || []); if (Q.length && Q[Q.length - 1] !== dir) Q.length = 0; if (Q.length < 3) Q.push(dir); this.pendAt = now; return; }
       this.blockedAt = 0; this.gesture(dir); };
     // 14 Oct §07 A: root cause of 'scroll over and over': a gesture made during the opening or a step was dropped AND marked
     // its whole scroll stream as used, so it took a new pause + scroll to react. Now it is held (one deep) and played as soon as
     // the step lands; trackpad momentum still never counts twice.
-    this.pendIv = setInterval(() => { if (!this.pend) return; if (this.mode !== 'film' || performance.now() - this.pendAt > 2500) { this.pend = 0; return; } if (!this.busy()) { const d = this.pend; this.pend = 0; this.gesture(d); } }, 40);
+    this.pendIv = setInterval(() => { if (this.pend) { this.q = (this.q || []).concat([this.pend]); this.pend = 0; } const Q = this.q || []; if (!Q.length) return; if (this.mode !== 'film' || performance.now() - this.pendAt > 4000) { Q.length = 0; return; } if (!this.busy()) { const d = Q.shift(); this.gesture(d); } }, 30);
     this.onKey = (e) => { if (this.isMob() || this.props.fw || this.mode !== 'film' || !this.inside()) return; const k = e.key, dir = k === 'ArrowDown' || k === 'PageDown' || (k === ' ' && !e.shiftKey) ? 1 : k === 'ArrowUp' || k === 'PageUp' || (k === ' ' && e.shiftKey) ? -1 : 0; if (!dir) return; const tg = e.target && e.target.tagName; if (tg === 'INPUT' || tg === 'TEXTAREA') return; e.preventDefault(); if (this.busy() || e.repeat) return; this.gesture(dir); };
     this.onTS = (e) => { this.ty = e.touches[0].clientY; this.tUsed = false; };
     this.onTM = (e) => { if (this.isMob() || this.props.fw || this.mode !== 'film' || !this.inside() || this.ty == null) return; e.preventDefault(); if (this.busy() || this.tUsed) return; const dy = this.ty - e.touches[0].clientY; if (Math.abs(dy) >= 40) { this.tUsed = true; this.gesture(Math.sign(dy)); } };
@@ -156,6 +164,7 @@ class Component extends DCLogic {
     this.onS = () => { if (this._onR || !this.tdNear) return; this._onR = requestAnimationFrame(() => { this._onR = 0; this.on(); }); }; /* R6 Part A: at most once per frame (it measures the page) */ window.addEventListener('scroll', this.onS, { passive: true }); window.addEventListener('resize', this.onS); window.addEventListener('wheel', this.onWheel, { passive: false }); window.addEventListener('keydown', this.onKey); window.addEventListener('touchstart', this.onTS, { passive: true }); window.addEventListener('touchmove', this.onTM, { passive: false }); this.on();
     this.onLogo = () => { const el = this.secRef.current, b = el && el.querySelector('[data-td-fmp]'); if (b && b.animate) b.animate([{ transform: 'scale(1)', boxShadow: '0 0 0 0 rgba(247,192,50,.7)' }, { transform: 'scale(1.05)', boxShadow: '0 0 0 10px rgba(247,192,50,.28)', offset: 0.35 }, { transform: 'scale(1)', boxShadow: '0 0 0 22px rgba(247,192,50,0)' }], { duration: 900, easing: 'cubic-bezier(.2,.8,.2,1)' }); };
     window.addEventListener('se:td-logo', this.onLogo); this.onMM = () => { this.lastMM = performance.now(); }; window.addEventListener('mousemove', this.onMM, { passive: true });
+    window.__tdDbg = () => ({ mode: this.mode, idx: this.idx, passing: this.passing, q: (this.q || []).length, busy: this.busy(), side: this.side, quick: !!this.quicking, p: this.td.p });
     window.seTd = (p) => { this.manual = true; this.stopAuto(); this.td.p = p; this.td.snap = true; this.setState({ p }); };
     this.onLib = (e) => this.setState({ lib: e.detail }); window.addEventListener('se:parts-lib', this.onLib); if (window.seParts) { const lb = window.seParts.peek(); if (lb) this.setState({ lib: lb }); } this.td.onThumbs = (u) => this.setState({ thumbs: u }); if (this.td.thumbs) this.setState({ thumbs: this.td.thumbs });
     window.seOp = (t) => { cancelAnimationFrame(this.oraf); const oT = Math.max(0, Math.min(3.4, t)); this.td.oT = oT >= 3.4 ? null : oT; this.td.lt = this.lightAt(oT); this.setState({ oT, cT: oT >= 3.0 ? Math.min(1, (oT - 3.0) / 0.35) : 0 }); const r = this.td.renderNow; if (r) for (let k = 0; k < 6; k++) r(); };

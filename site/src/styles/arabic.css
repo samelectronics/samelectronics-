@@ -86,3 +86,6 @@ html[lang='ar'] p, html[lang='ar'] li, html[lang='ar'] dd, html[lang='ar'] small
 /* owner (26 Oct): in the phone ads the eyebrow and the title read from the right, like every other text in Arabic */
 html[dir='rtl'] .se-ad-k, html[dir='rtl'] .se-ad-t { left: auto !important; right: 9% !important; direction: rtl; text-align: right; }
 html[dir='rtl'] .se-ad-t { align-items: stretch; } html[dir='rtl'] .se-ad-t > span, html[dir='rtl'] .se-ad-t > span > span { text-align: right; } /* owner (27 Oct): flex-end means LEFT in right-to-left, so short lines hugged the left; both lines now start from the right */
+/* owner (28 Oct): the teardown title in Arabic: the letters' tails were clipped by the word masks (built for Latin) */
+html[dir='rtl'] #teardown h2 { line-height: 1.3 !important; }
+html[dir='rtl'] #teardown h2 span[style*='overflow: hidden'] { padding: .25em .08em .55em !important; margin: -.25em -.08em -.55em !important; }

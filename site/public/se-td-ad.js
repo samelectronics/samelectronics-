@@ -34,8 +34,11 @@
   function create(cv, opts) {
     // owner (27 Oct): a real safe area. The ad is drawn on an off-screen canvas and placed INSIDE the screen (clear of the
     // rounded corners, the island and the edges); the margin is filled with the ad's own edge colour, so it reads as a screen
-    const out = cv.getContext('2d'), off = document.createElement('canvas'); off.width = cv.width; off.height = cv.height;
-    const x = off.getContext('2d'), W = cv.width, H = cv.height, u = W / 100, M = 9 * u, SAFE = { s: 0.86, top: 0.07 };
+    // owner (28 Oct): no more 'video cut out and pasted in'. The ad IS the phone's screen: its colours run edge to edge under
+    // the glass, the status bar (time, signal, battery) sits at the top beside the island like a real phone, and only the
+    // ad's CONTENT is kept inside a safe area (a little smaller, below the status bar), never touching corners or edges.
+    const out = cv.getContext('2d'), x = out, W = cv.width, H = cv.height, u = W / 100, M = 9 * u, SAFE = { s: 0.9, top: 0.06 };
+    const FULL = [-W * 0.2, -H * 0.2, W * 1.4, H * 1.4]; // any full-screen fill bleeds past the safe area to the real edges
     let lang = null, imgs = [];
     const load = () => { lang = AR(); imgs = SCN.map((q) => { const im = new Image(); im.decoding = 'async'; im.src = window.SE_SHOTS ? window.SE_SHOTS.url(q.id, 960) : ''; return im; }); };
     load();
@@ -44,7 +47,7 @@
     const PN = 180, PT = Array.from({ length: PN }, (_, i) => { const a = Math.random() * Math.PI * 2, e = Math.random(); const side = i % 4; const sx = side === 0 ? -0.1 : side === 1 ? 1.1 : Math.random(), sy = side === 2 ? -0.1 : side === 3 ? 1.1 : Math.random(); return { sx, sy, a, r: 0.86 + e * 0.14, s: 0.5 + Math.random() * 1.4, d: Math.random() * 0.35, sw: (Math.random() - 0.5) * 1.6 }; });
     const ok = (im) => im && im.complete && im.naturalWidth;
     // ---------- pieces ----------
-    function bg(th, a = 1) { const c = TH[th].bg, g = x.createRadialGradient(W / 2, H * 0.36, 0, W / 2, H * 0.36, H * 0.75); g.addColorStop(0, c[0]); g.addColorStop(0.52, c[1]); g.addColorStop(1, c[2]); x.globalAlpha = a; x.fillStyle = g; x.fillRect(0, 0, W, H); x.globalAlpha = 1; }
+    function bg(th, a = 1) { const c = TH[th].bg, g = x.createRadialGradient(W / 2, H * 0.36, 0, W / 2, H * 0.36, H * 0.75); g.addColorStop(0, c[0]); g.addColorStop(0.52, c[1]); g.addColorStop(1, c[2]); x.globalAlpha = a; x.fillStyle = g; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); x.globalAlpha = 1; }
     function dashes(i, th, k) { // the progress dashes under the island, like the hero reel
       const n = SCN.length, gw = 1.6 * u, w = (W - 2 * M - gw * (n - 1)) / n, y = 10.5 * u, ar = AR();
       for (let j = 0; j < n; j++) { const X = ar ? W - M - (j + 1) * w - j * gw : M + j * (w + gw); x.fillStyle = TH[th].dot; rr(x, X, y, w, 0.55 * u, 0.27 * u); x.fill(); const f = j < i ? 1 : j === i ? k : 0; if (f > 0) { x.fillStyle = TH[th].ink; rr(x, ar ? X + w * (1 - f) : X, y, w * f, 0.55 * u, 0.27 * u); x.fill(); } } }
@@ -53,7 +56,7 @@
       const q = SCN[i], th = TH[q.th], ar = AR(), al = ar ? 'right' : 'left', X0 = ar ? W - M : M, dir = ar ? -1 : 1;
       bg(q.th);
       // a soft glow behind the product
-      { const g = x.createRadialGradient(W / 2, H * 0.47, 0, W / 2, H * 0.47, W * 0.55); g.addColorStop(0, th.glow); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, W, H); }
+      { const g = x.createRadialGradient(W / 2, H * 0.47, 0, W / 2, H * 0.47, W * 0.55); g.addColorStop(0, th.glow); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); }
       dashes(i, q.th, cl(lt / SD));
       x.textBaseline = 'alphabetic';
       // kicker: number + group, slides in from the reading side
@@ -98,18 +101,18 @@
       const n = SCN.length, d = MONT / n, j = Math.min(n - 1, Math.floor(lt / d)), l = lt - j * d, th = ['yel', 'dark', 'light'][j % 3];
       bg(th); const im = imgs[j], s = W * (1.08 + 0.12 * eo(l / d)); if (ok(im)) x.drawImage(im, W / 2 - s / 2, H * 0.48 - s / 2, s, s);
       x.textAlign = AR() ? 'right' : 'left'; x.globalAlpha = 0.9; text(T(SCN[j].k), AR() ? W - M : M, 21 * u, '600 ' + 3.3 * u + 'px ' + F.jb, TH[th].kick, AR() ? 'right' : 'left'); x.globalAlpha = 1;
-      const fl = 1 - cl(l / 0.07); if (fl > 0) { x.globalAlpha = fl * 0.85; x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, W, H); x.globalAlpha = 1; } }
+      const fl = 1 - cl(l / 0.07); if (fl > 0) { x.globalAlpha = fl * 0.85; x.fillStyle = '#FFFFFF'; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); x.globalAlpha = 1; } }
     function call(lt) { // "Get yours today." on yellow, then "In stock in Deira." on graphite
       const ar = AR(), dir = ar ? -1 : 1, al = ar ? 'right' : 'left', X0 = ar ? W - M : M;
       if (lt < 1.15) { bg('yel'); x.textBaseline = 'alphabetic';
         [['Get', -1, 0], ['yours', 1, 0.08], ['today.', -1, 0.16]].forEach(([w2, from, d], j) => { const k = K(lt, 0.05 + d, 0.3), e = back(k), s = lerp(1.5, 1, eo(k)); if (k <= 0) return; x.save(); x.globalAlpha = cl(k * 2.5); x.translate(X0 + from * dir * 20 * u * (1 - e), H * 0.4 + j * 16 * u); x.scale(s, s); text(T(w2), 0, 0, '700 ' + 17 * u + 'px ' + F.sg, G, al); x.restore(); });
         const lk = eo(K(lt, 0.55, 0.35)); x.fillStyle = G; x.fillRect(ar ? X0 - 40 * u * lk : X0, H * 0.4 + 36 * u, 40 * u * lk, 1.4 * u);
-        const fl = K(lt, 1.0, 0.15); if (fl > 0) { x.globalAlpha = fl; x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, W, H); x.globalAlpha = 1; } return; }
+        const fl = K(lt, 1.0, 0.15); if (fl > 0) { x.globalAlpha = fl; x.fillStyle = '#FFFFFF'; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); x.globalAlpha = 1; } return; }
       const l = lt - 1.15; bg('dark'); const fl = 1 - cl(l / 0.15);
       [['In stock', '#FFFFFF'], ['in Deira.', Y]].forEach(([w2, c], j) => { const k = K(l, 0.05 + j * 0.12, 0.35), e = eo5(k); if (k <= 0) return; x.save(); x.beginPath(); x.rect(0, H * 0.36 + j * 15 * u - 14 * u, W, 17 * u); x.clip(); x.globalAlpha = 1; text(T(w2), X0, H * 0.36 + j * 15 * u + (1 - e) * 15 * u, '700 ' + 14.5 * u + 'px ' + F.sg, c, al); x.restore(); });
       const mk = eo(K(l, 0.45, 0.35)); x.globalAlpha = mk; text(T('AL MURAR · DEIRA · DUBAI'), X0, H * 0.36 + 30 * u, '600 ' + 3.2 * u + 'px ' + F.jb, '#D5D7DA', al);
       text(T('14 brands · shipped worldwide'), X0, H * 0.36 + 36 * u, '500 ' + 3.6 * u + 'px ' + F.in, '#9DA1A6', al); x.globalAlpha = 1;
-      if (fl > 0) { x.globalAlpha = fl; x.fillStyle = '#FFFFFF'; x.fillRect(0, 0, W, H); x.globalAlpha = 1; } }
+      if (fl > 0) { x.globalAlpha = fl; x.fillStyle = '#FFFFFF'; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); x.globalAlpha = 1; } }
     function close(lt) { // particles gather into the logo, the wordmark, the slogan, the Find My Part pill
       bg('dark'); const cx = W / 2, cy = H * 0.4, r = W * 0.19, ar = AR();
       const gk = K(lt, 0, 0.95);
@@ -120,28 +123,25 @@
       const wk = eo(K(lt, 1.05, 0.45)); x.globalAlpha = wk; x.textAlign = 'center'; x.fillStyle = '#FFFFFF'; x.font = '600 ' + 6 * u + 'px ' + F.sg; if ('letterSpacing' in x) x.letterSpacing = lerp(2.4, 0.9, wk) * u + 'px'; x.fillText(ar ? T('SAM ELECTRONICS') : 'SAM ELECTRONICS', cx, cy + r + 13 * u); if ('letterSpacing' in x) x.letterSpacing = '0px';
       x.fillStyle = Y; x.font = '500 ' + 3.4 * u + 'px ' + F.jb; x.fillText(T('QUALITY · WARRANTY · PRICE'), cx, cy + r + 20 * u); x.globalAlpha = 1;
       const pk = eo(K(lt, 1.4, 0.4)), pulse = 1 + 0.03 * Math.sin(Math.max(0, lt - 1.8) * 7) * cl(lt - 1.8); x.globalAlpha = pk; x.save(); x.translate(cx, H - 22 * u); x.scale(pulse, pulse); x.fillStyle = Y; rr(x, -30 * u, -5 * u, 60 * u, 10 * u, 5 * u); x.fill(); text(T('Find My Part') + (ar ? '  ←' : '  →'), 0, 1.5 * u, '600 ' + 4 * u + 'px ' + F.in, G, 'center'); x.restore(); x.globalAlpha = 1;
-      const out = K(lt, CLOSE - 0.25, 0.25); if (out > 0) { x.globalAlpha = out; x.fillStyle = '#000'; x.fillRect(0, 0, W, H); x.globalAlpha = 1; } }
-    function status(dark) { // the status bar: the time, signal and battery, in the screen's ink
-      const d = new Date(), hh = String(d.getHours()).padStart(2, '0'), mm = String(d.getMinutes()).padStart(2, '0'), c = dark ? '#FFFFFF' : G;
-      x.globalAlpha = 0.9; x.fillStyle = c; x.textAlign = 'left'; x.textBaseline = 'middle'; x.font = '600 ' + 3.4 * u + 'px ' + F.in; x.fillText(hh + ':' + mm, M, 5.6 * u);
+      const out = K(lt, CLOSE - 0.25, 0.25); if (out > 0) { x.globalAlpha = out; x.fillStyle = '#000'; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); x.globalAlpha = 1; } }
+    function status(dark) { // the status bar: the time, signal and battery, in the screen's ink (in the 'ears' beside the island, clear of the corners)
+      const M = 15 * u; const d = new Date(), hh = String(d.getHours()).padStart(2, '0'), mm = String(d.getMinutes()).padStart(2, '0'), c = dark ? '#FFFFFF' : G;
+      x.globalAlpha = 0.9; x.fillStyle = c; x.textAlign = 'left'; x.textBaseline = 'middle'; x.font = '600 ' + 3.4 * u + 'px ' + F.in; x.fillText(hh + ':' + mm, M, 6.4 * u);
       for (let j = 0; j < 4; j++) x.fillRect(W - M - 11.5 * u + j * 1.3 * u, 6.6 * u - (j + 1) * 0.55 * u, 0.85 * u, (j + 1) * 0.55 * u);
       x.strokeStyle = c; x.lineWidth = 0.3 * u; rr(x, W - M - 5.6 * u, 4.6 * u, 5 * u, 2.4 * u, 0.6 * u); x.stroke(); x.fillRect(W - M - 5.1 * u, 5.1 * u, 3.6 * u, 1.4 * u); x.globalAlpha = 1; x.textBaseline = 'alphabetic'; }
     function draw(t) {
       if (AR() !== lang) load();
       t = ((t % TOT) + TOT) % TOT; x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, W, H);
+      const inset = () => x.setTransform(SAFE.s, 0, 0, SAFE.s, (W - W * SAFE.s) / 2, H * SAFE.top); inset();
       let dark = true;
       if (t < S0) open(t);
       else if (t < M0) { const i = Math.floor((t - S0) / SD), lt = t - S0 - i * SD; dark = SCN[i].th === 'dark';
-        if (i === 0) { if (lt < 0.3) { x.fillStyle = Y; x.fillRect(0, 0, W, H); x.globalAlpha = 1 - lt / 0.3; open(OPEN); x.globalAlpha = 1; x.save(); x.globalAlpha = eo(lt / 0.3); scene(0, lt); x.restore(); } else scene(0, lt); }
+        if (i === 0) { if (lt < 0.3) { x.fillStyle = Y; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); x.globalAlpha = 1 - lt / 0.3; open(OPEN); x.globalAlpha = 1; x.save(); x.globalAlpha = eo(lt / 0.3); scene(0, lt); x.restore(); } else scene(0, lt); }
         else into(i, lt, () => scene(i - 1, SD + lt)); }
       else if (t < C0) { montage(t - M0); dark = ['yel', 'dark', 'light'][Math.min(5, Math.floor((t - M0) / (MONT / 6))) % 3] === 'dark'; }
       else if (t < L0) { call(t - C0); dark = t - C0 >= 1.15; }
       else close(t - L0);
-      status(dark);
-      // place it in the safe area: margin colour = the ad's edge colour (top and bottom), then the ad itself
-      const px = (yy) => { const d = x.getImageData(4, yy, 1, 1).data; return 'rgb(' + d[0] + ',' + d[1] + ',' + d[2] + ')'; };
-      const g = out.createLinearGradient(0, 0, 0, H); g.addColorStop(0, px(4)); g.addColorStop(1, px(H - 5)); out.setTransform(1, 0, 0, 1, 0, 0); out.fillStyle = g; out.fillRect(0, 0, W, H);
-      const sw = W * SAFE.s, sh = H * SAFE.s; out.drawImage(off, (W - sw) / 2, H * SAFE.top, sw, sh);
+      x.setTransform(1, 0, 0, 1, 0, 0); status(dark);
     }
     return { draw, dur: TOT, logoT: LOGO_T, setLib: () => {} };
   }

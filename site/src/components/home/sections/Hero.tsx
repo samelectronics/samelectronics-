@@ -159,6 +159,9 @@ export default function Hero({ v }: { v: Vals }) {
                 <polygon points="0,0 960,0 660,860 0,860"></polygon>
               </clipPath>
             </defs>
+            <line x1="960" y1="0" x2="660" y2="860" stroke="#F7C032" strokeWidth="16" opacity=".14" style={{ animation: 'seEdgeGlow 4s ease-in-out infinite' }}></line>
+            <line x1="960" y1="0" x2="660" y2="860" stroke="#F7C032" strokeWidth="7" opacity=".3" style={{ animation: 'seEdgeGlow 4s ease-in-out infinite' }}></line
+            >
             <line
               x1="960"
               y1="0"
@@ -167,18 +170,55 @@ export default function Hero({ v }: { v: Vals }) {
               stroke="#F7C032"
               strokeWidth="3"
               style={{
-                filter: 'drop-shadow(0 0 8px #F7C032) drop-shadow(0 0 20px rgba(247,192,50,.8))',
                 animation: 'seEdgeGlow 4s ease-in-out infinite',
               }}
             ></line>
             {'\n        '}
-            <g
-              clipPath="url(#seDarkSide)"
-              stroke="#F7C032"
-              strokeWidth="3.5"
-              strokeDasharray="70 930"
-              style={{ filter: 'drop-shadow(0 0 5px #F7C032) drop-shadow(0 0 12px rgba(247,192,50,.8))' }}
-            >
+            {/* owner (28 Oct, lag): the glow is a soft wide copy of each pulse, not a drop-shadow filter (a filter over the whole
+                board was re-rendered every frame and was most of the hero's cost) */}
+            <g clipPath="url(#seDarkSide)" stroke="#F7C032" strokeWidth="11" strokeDasharray="70 930" strokeLinecap="round" opacity=".22">
+              {'\n          '}
+              <path className="se-glowcopy" pathLength="1000" d="M36 78 V112 L22 126 V560 L36 574" style={{ animation: 'sePulse 3.2s linear infinite' }}></path>
+              {'\n          '}
+              <path className="se-glowcopy" pathLength="1000" d="M760 600 H790 L810 580 H850" style={{ animation: 'sePulse 2.2s .9s linear infinite' }}></path>
+              {'\n          '}
+              <path
+                pathLength="1000"
+                d="M760 640 V660 L780 680 H800"
+                strokeWidth="2.5"
+                style={{ animation: 'sePulse 4.1s 1.4s linear infinite' }}
+              ></path>
+              {'\n          '}
+              <path
+                pathLength="1000"
+                d="M760 104 V150 L790 180 H820 L850 210 V260"
+                strokeWidth="2.5"
+                style={{ animation: 'sePulse 2.7s .3s linear infinite' }}
+              ></path>
+              {'\n          '}
+              <path
+                pathLength="1000"
+                d="M790 300 H810 L830 280 V200"
+                strokeWidth="2"
+                style={{ animation: 'sePulse 4.8s 2s linear infinite' }}
+              ></path>
+              {'\n          '}
+              <path
+                pathLength="1000"
+                d="M0 810 H140 L170 780 H430 L460 810 H620 L650 780 H700"
+                strokeWidth="3"
+                style={{ animation: 'sePulse 5.2s .6s linear infinite' }}
+              ></path>
+              {'\n          '}
+              <path
+                pathLength="1000"
+                d="M0 250 H18 L30 262 V440"
+                strokeWidth="2"
+                style={{ animation: 'sePulse 3.6s 1.1s linear infinite' }}
+              ></path>
+              {'\n        '}
+            </g>
+            <g clipPath="url(#seDarkSide)" stroke="#F7C032" strokeWidth="3.5" strokeDasharray="70 930">
               {'\n          '}
               <path pathLength="1000" d="M36 78 V112 L22 126 V560 L36 574" style={{ animation: 'sePulse 3.2s linear infinite' }}></path>
               {'\n          '}
@@ -1134,7 +1174,7 @@ export default function Hero({ v }: { v: Vals }) {
                                                 width: '100%',
                                                 height: '100%',
                                                 display: 'block',
-                                                filter: 'drop-shadow(0 10px 12px rgba(0,0,0,.45))',
+                                                /* owner (28 Oct): no extra drop-shadow; the render has its own soft floor shadow (the filter doubled it into a dark line) */
                                               }}
                                             />
                                           </>

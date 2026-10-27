@@ -17,7 +17,7 @@ export function jumpTo(y, ms = 600) {
   cancelAnimationFrame(raf);
   const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight), y1 = Math.max(0, Math.min(max, y)), y0 = window.scrollY;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  markJump(ms + 500);
+  markJump(ms + 500); window.__seJumpForced = performance.now() + ms + 300; // owner (28 Oct): a real jump (logo, links) beats any held section at once
   if (reduce || Math.abs(y1 - y0) < 2) { window.scrollTo(0, y1); return; }
   const t0 = performance.now();
   const f = (t) => { const k = Math.min(1, (t - t0) / ms); window.scrollTo(0, y0 + (y1 - y0) * EASE(k)); markJump(400); if (k < 1) raf = requestAnimationFrame(f); };

@@ -52,7 +52,7 @@ class Component extends DCLogic {
     setTimeout(() => [this.railRef, this.offerRef, this.storyRef, ...(this.extraObs || [])].forEach((r) => r.current && this.io.observe(r.current)), 300);
     try { document.fonts && document.fonts.load('700 20px "Space Grotesk"').then(() => { if (!this.dead) { this._hl = {}; this.forceUpdate(); } }); } catch (e) {}
   }
-  componentWillUnmount() { this.gIO && this.gIO.disconnect(); window.removeEventListener('se:lang', this.onLang); this.dead = true; clearInterval(this._reelSync); if (this._reelOnStart) document.removeEventListener('animationstart', this._reelOnStart, true); this._reelVio && this._reelVio.disconnect(); cancelAnimationFrame(this.reelRAF); this.reelIO && this.reelIO.disconnect(); [this.dIv, this.t, this.buyIv, this.offIv].forEach(clearInterval); this.offIO && this.offIO.disconnect(); this.busOff && this.busOff(); window.removeEventListener('keydown', this.onKey); ['se:cart', 'se:flash', 'se:go', 'se:fmp', 'se:chat', 'se:search'].forEach((n) => window.removeEventListener(n, this.bus)); this.playIO && this.playIO.disconnect(); if (this._kfEl) this._kfEl.remove(); clearTimeout(this.toastT2); clearTimeout(this.hideT); clearTimeout(this.toastT); window.removeEventListener('scroll', this.onScroll); window.removeEventListener('resize', this.onScroll); this.io && this.io.disconnect(); }
+  componentWillUnmount() { this.gIO && this.gIO.disconnect(); window.removeEventListener('se:lang', this.onLang); this.dead = true; clearInterval(this._reelSync); this._reelRaf && this._reelRaf(); if (this._reelOnStart) document.removeEventListener('animationstart', this._reelOnStart, true); this._reelVio && this._reelVio.disconnect(); cancelAnimationFrame(this.reelRAF); this.reelIO && this.reelIO.disconnect(); [this.dIv, this.t, this.buyIv, this.offIv].forEach(clearInterval); this.offIO && this.offIO.disconnect(); this.busOff && this.busOff(); window.removeEventListener('keydown', this.onKey); ['se:cart', 'se:flash', 'se:go', 'se:fmp', 'se:chat', 'se:search'].forEach((n) => window.removeEventListener(n, this.bus)); this.playIO && this.playIO.disconnect(); if (this._kfEl) this._kfEl.remove(); clearTimeout(this.toastT2); clearTimeout(this.hideT); clearTimeout(this.toastT); window.removeEventListener('scroll', this.onScroll); window.removeEventListener('resize', this.onScroll); this.io && this.io.disconnect(); }
   TYPED = ['iPhone 15 Pro screen', 'Galaxy A54 battery', 'SM-A546 back cover', 'Redmi Note 13 charging flex', 'Pixel 8 Pro camera', 'Honor Magic6 Pro frame', 'Tecno Camon 30 screen', 'A2849 battery', 'Vivo V30 back glass', 'POCO X6 Pro charging port', 'Infinix Note 40 screen', 'Huawei P60 Pro camera'];
   measure() {
     const de = document.documentElement, vw = de.clientWidth || window.innerWidth, vh = window.innerHeight, z = Math.max(0.5, vw / 1440);
@@ -502,80 +502,62 @@ class Component extends DCLogic {
   // over the phone, and browses with the arrows, the wheel or a swipe using the same scroll-in movement.
   reelCtl() {
     if (this._rc) return this._rc;
-    const D = 32000, STEP = 3200, tl = () => document.timeline.currentTime || performance.now();
-    const anims = () => { const r = document.querySelector('[data-se-reel]'), sw = document.querySelector('[data-se-sweep]'); const L = (r ? r.getAnimations({ subtree: true }) : []).concat(sw && !(r && r.contains(sw)) ? sw.getAnimations({ subtree: true }) : []); return L.filter((a) => /^hr/.test(a.animationName || '')); }; // R6 §03 C: + the glass sweep
-    // Hero 1: the reel used to flicker (ads jumping up and down) at load and every 1.6s, because the CSS animations ran on
-    // their own clocks and a timer kept yanking their currentTime back to the master. Now every reel animation shares ONE
-    // startTime on the document timeline, so they cannot drift and are never corrected mid-motion; animations that start
-    // later (React re-renders) are locked the moment they start (animationstart), before they are seen.
-    let S = tl(), pausedAt = null, hov = false, holdT = 0, lastGo = 0, el = null, ty = null, rev = false;
-    const master = () => (pausedAt != null ? pausedAt : (((tl() - S) % D) + D) % D);
-    const lock = (a) => { if (pausedAt != null) { if (a.playState !== 'paused') a.pause(); if (Math.abs((a.currentTime || 0) - pausedAt) > 1) a.currentTime = pausedAt; } else if (a.startTime !== S || a.playState === 'paused') a.startTime = S; };
-    const sync = () => { if (rev) return; anims().forEach(lock); };
-    const onStart = (e) => { if (rev || !/^hr/.test(e.animationName || '')) return; (e.target.getAnimations ? e.target.getAnimations() : []).forEach((a) => { if (a.animationName === e.animationName) lock(a); }); };
-    document.addEventListener('animationstart', onStart, true); this._reelOnStart = onStart;
-    const vio = new IntersectionObserver(([e]) => { if (e.isIntersecting) requestAnimationFrame(sync); }); this._reelVio = vio; // off-screen sections pause their animations: re-lock the moment the hero is back
-    const pause = () => { if (pausedAt == null) pausedAt = master(); sync(); };
-    const resume = () => { if (pausedAt != null) { S = tl() - pausedAt; pausedAt = null; } sync(); };
-    const go = (dir) => {
-      const cur = Math.floor(master() / STEP), tgt = ((cur + dir + 10) % 10) * STEP; // the start of that ad's scroll-in
-      if (dir < 0) { // R6 §03 C: previous = the feed moves DOWN: the same 600ms scroll, played backwards, then hold that ad
-        clearTimeout(holdT); const base = cur * STEP; S = tl() - (base + 600); pausedAt = null; sync(); rev = true;
-        anims().forEach((a) => { a.currentTime = base + 600; a.playbackRate = -1; if (a.playState === 'paused') a.play(); });
-        holdT = setTimeout(() => { anims().forEach((a) => (a.playbackRate = 1)); rev = false; S = tl() - (tgt + 1250); pausedAt = null; sync(); if (hov) pause(); }, 600);
-        return;
-      }
-      clearTimeout(holdT); S = tl() - tgt; pausedAt = null; sync();
-      if (hov) holdT = setTimeout(() => { if (hov) pause(); }, 1250); // the 600ms feed motion + the ad's own entrance, then hold it
-    };
-    // 14 Oct §05 B: one wheel gesture (events until 250ms of quiet) or one swipe = one ad; the page never scrolls meanwhile
-    // Urgent 2: a gesture's deltas add up and fire ONE ad at 30px (trackpads start with tiny deltas, which used to swallow
-    // the whole gesture); any wheel or pointer move over the phone also freezes it (the pointer may already be there)
-    // owner (26 Oct): with the pointer on the phone the ads stop advancing, and the wheel / a finger DRAG the feed like a
-    // real phone: it follows the scroll continuously, stops wherever you stop, and settles softly on the nearest ad when you
-    // let go. (Products keep their own idle float; only the feed is paused.) Feed position f: ad i fully in view at f = i;
-    // between i and i+1 the feed is mid-scroll, which is the first 600ms of ad i+1 on the reel clock.
-    // owner (27 Oct): the visitor is in control and the phone never fights them.
-    // · Pointer on the phone: the feed holds, but only once the current ad is FULLY showing. If it is mid-scroll or its
-    //   entrance is still playing, that finishes first (never a frozen half-and-half frame). Floats + globe keep living.
-    // · Wheel / trackpad: one gesture = exactly one ad, up or down. Everything else in that gesture (trackpad momentum,
-    //   extra notches) is ignored until the wheel goes quiet AND the move has finished, so it can never skip several ads.
-    // · Finger: the feed follows the finger; let go past 20% (or flick) = one ad that way, otherwise it springs back.
-    // · Pointer leaves: it carries on at once, smoothly from where it is (no dead wait).
-    const SCR = 600, HOLD = 1250, N = 10;
-    const posOf = (m) => { const i = Math.floor(m / STEP), r = m - i * STEP; return r < SCR ? i - 1 + r / SCR : i; };
+    // owner (28 Oct): ONE controller for the whole page. The page logic can be instantiated twice; two controllers each
+    // drove the same animations and fought (that was the 'suddenly another ad' glitch and the double-skip on scroll)
+    if (window.__seRC) return (this._rc = window.__seRC);
+    // owner (28 Oct): the reel is driven by ONE virtual clock (V, ms on the 32s loop) that this code advances itself; every
+    // reel animation stays paused and is set to V on each frame. Nothing runs on its own timeline any more, so no ad can
+    // ever jump, restart or drift (the old shared-startTime scheme glitched whenever the browser paused / restarted an
+    // animation). The glass sweep runs on real time and is never held or interrupted by the mouse or a finger.
+    const D = 32000, STEP = 3200, SCR = 600, HOLD = 1250, N = 10;
+    let V = 0, lastV = -1, last = performance.now(), held = false, hov = false, tw = null, el = null, vis = true, raf = 0, list = [], sw = [], listAt = 0, fpos = null;
+    const T0 = performance.now();
+    const isSweep = (a) => /Sweep/.test(a.animationName || '');
+    const collect = () => { const r = document.querySelector('[data-se-reel]'), s2 = document.querySelector('[data-se-sweep]'); const L = (r ? r.getAnimations({ subtree: true }) : []).concat(s2 && !(r && r.contains(s2)) ? s2.getAnimations({ subtree: true }) : []).filter((a) => /^hr/.test(a.animationName || '')); list = L.filter((a) => !isSweep(a)); sw = L.filter(isSweep); L.forEach((a) => a.pause()); listAt = performance.now(); };
+    const apply = () => { const now = performance.now(); if (now - listAt > 1000) { collect(); lastV = -1; } const vv = ((V % D) + D) % D, rt = (now - T0) % D;
+      // write only (never read an animation's state per frame: each read forces a style recalculation)
+      if (vv !== lastV) { lastV = vv; for (let i = 0; i < list.length; i++) list[i].currentTime = vv; }
+      for (let i = 0; i < sw.length; i++) sw[i].currentTime = rt; };
+    const posOf = (m) => { m = ((m % D) + D) % D; const i = Math.floor(m / STEP), r = m - i * STEP; return r < SCR ? i - 1 + r / SCR : i; };
     const mOf = (f) => { f = ((f % N) + N) % N; const i = Math.floor(f + 1e-6), fr = f - i; return fr < 1e-3 ? i * STEP + HOLD : (((i + 1) % N) * STEP + fr * SCR) % D; };
-    const holdWhenShown = () => { clearTimeout(holdT); if (rev) return; const r = master() % STEP; if (pausedAt != null || r >= HOLD) pause(); else { if (pausedAt != null) resume(); holdT = setTimeout(() => { if (hov) pause(); }, HOLD - r + 16); } };
-    const enterH = () => { clearTimeout(this._rcLeave); if (hov) return; hov = true; holdWhenShown(); };
-    const leaveH = () => { hov = false; clearTimeout(holdT); cancelAnimationFrame(snapRaf); fpos = null; if (!rev) resume(); };
-    // A gesture ends after 250ms of quiet. Trackpad momentum is a tail of SHRINKING deltas, so while the wheel keeps going it
-    // only counts as a new push when the delta grows again (a real new swipe), and never before the last move has finished.
+    const loop = (now) => { raf = requestAnimationFrame(loop); const dt = Math.min(100, now - last); last = now; if (!vis || document.hidden) return;
+      if (tw) { const k = Math.min(1, (now - tw.t0) / tw.dur), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; V = tw.a + (tw.b - tw.a) * e; if (k >= 1) { const then = tw.then; tw = null; then && then(); } }
+      else if (fpos == null && !held) { V += dt; if (hov && ((V % STEP) + STEP) % STEP >= HOLD) held = true; /* hold exactly where it is (never snap back) */ }
+      apply(); };
+    raf = requestAnimationFrame(loop);
+    const onStart = (e) => { if (!/^hr/.test(e.animationName || '')) return; listAt = 0; lastV = -1; }; // a new card mounted: pick it up next frame
+    document.addEventListener('animationstart', onStart, true); this._reelOnStart = onStart;
+    const vio = new IntersectionObserver(([e]) => { vis = e.isIntersecting; last = performance.now(); }); this._reelVio = vio;
+    this._reelSync = 0; this._reelRaf = () => cancelAnimationFrame(raf);
+    const master = () => ((V % D) + D) % D;
+    const pause = () => { held = true; }, resume = () => { held = false; };
+    const go = (dir) => { if (tw) return; const cur = Math.round(posOf(master())); held = false;
+      if (dir > 0) { const tgt = ((cur + 1) % N) * STEP; V = tgt - (tgt > master() + STEP ? D : 0); /* the scroll-in of the next ad plays naturally from here */ tw = null; }
+      else { const a = master(), i = Math.floor(a / STEP), b = i * STEP; /* the scroll-in of the shown ad, played backwards: the previous ad slides back down */ tw = { a, b, t0: performance.now(), dur: Math.max(260, Math.min(620, (a - b) * 0.6)), then: () => { V = mOf(i - 1); if (hov) held = true; } }; } };
+    const enterH = () => { clearTimeout(this._rcLeave); hov = true; };
+    const leaveH = () => { hov = false; held = false; fpos = null; };
+    // wheel / trackpad: one gesture = one ad; momentum tails are ignored until quiet
     let wAcc = 0, wArmed = true, wQuiet = 0, wDone = 0, wLast = 0;
     const wheel = (e) => { e.preventDefault(); enterH(); const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaMode === 2 ? e.deltaY * 400 : e.deltaY, ad = Math.abs(dy), now = performance.now();
-      clearTimeout(wQuiet); wQuiet = setTimeout(() => { wAcc = 0; wArmed = true; wLast = 0; }, 250);
-      if (!wArmed && now >= wDone && ad > wLast * 1.6 + 6) { wArmed = true; wAcc = 0; }
-      wLast = ad;
-      if (!wArmed) return; wAcc += dy; if (Math.abs(wAcc) < 24) return;
-      wArmed = false; wDone = now + 650; go(wAcc > 0 ? 1 : -1); wAcc = 0; };
-    // touch: drag the feed with the finger, max one ad per swipe
+      clearTimeout(wQuiet); const quiet = () => { if (performance.now() < wDone) { wQuiet = setTimeout(quiet, wDone - performance.now() + 20); return; } wAcc = 0; wArmed = true; wLast = 0; }; wQuiet = setTimeout(quiet, 260); /* re-arms only after quiet AND after the move finished */
+      if (!wArmed && now >= wDone && ad > wLast * 2 + 10) { wArmed = true; wAcc = 0; }
+      wLast = ad; if (!wArmed) return; wAcc += dy; if (Math.abs(wAcc) < 28) return;
+      wArmed = false; wDone = now + 900; go(wAcc > 0 ? 1 : -1); wAcc = 0; };
+    // finger: the feed follows the finger, max one ad per swipe, then springs to the nearest ad
     let tStart = null, tY0 = 0, tT0 = 0, tH = 400;
-    const animTo = (to, then) => { cancelAnimationFrame(snapRaf); const a = fpos, t0 = performance.now(), dur = 320;
-      const stepF = (n) => { const k = Math.min(1, (n - t0) / dur), e = 1 - Math.pow(1 - k, 3); fpos = a + (to - a) * e; pausedAt = ((mOf(fpos) % D) + D) % D; sync(); if (k < 1) snapRaf = requestAnimationFrame(stepF); else { fpos = null; then && then(); } }; snapRaf = requestAnimationFrame(stepF); };
-    const ts = (e) => { if (rev) return; clearTimeout(this._rcLeave); clearTimeout(holdT); hov = true; cancelAnimationFrame(snapRaf); if (pausedAt == null) pause(); tStart = Math.round(posOf(master())); fpos = posOf(master()); tY0 = e.touches[0].clientY; tT0 = performance.now(); tH = (el && el.getBoundingClientRect().height) || 400; };
-    const tm = (e) => { if (tStart == null) return; e.preventDefault(); const d = (tY0 - e.touches[0].clientY) / (tH * 0.8); fpos = tStart + Math.max(-1, Math.min(1, d)); pausedAt = ((mOf(fpos) % D) + D) % D; sync(); };
+    const ts = (e) => { clearTimeout(this._rcLeave); hov = true; tw = null; tStart = Math.round(posOf(master())); fpos = posOf(master()); tY0 = e.touches[0].clientY; tT0 = performance.now(); tH = (el && el.getBoundingClientRect().height) || 400; };
+    const tm = (e) => { if (tStart == null) return; e.preventDefault(); const d = (tY0 - e.touches[0].clientY) / (tH * 0.8); fpos = tStart + Math.max(-1, Math.min(1, d)); V = mOf(fpos); };
     const te = (e) => { if (tStart == null) return; const dy = tY0 - e.changedTouches[0].clientY, d = fpos - tStart, v = dy / Math.max(1, performance.now() - tT0); if (Math.abs(dy) > 8) { e.preventDefault(); this._swiped = Date.now(); }
-      const dir = Math.abs(d) > 0.2 || Math.abs(v) > 0.5 ? Math.sign(d || dy) : 0; const to = tStart + dir; tStart = null;
-      animTo(to, () => { pausedAt = (((((to % N) + N) % N) * STEP + HOLD) % D); sync(); clearTimeout(this._rcLeave); this._rcLeave = setTimeout(leaveH, 1500); }); };
-    let fpos = null, snapRaf = 0;
-    this._reelSync = setInterval(() => !this.dead && !document.hidden && sync(), 4000); // a safety net only: with one shared startTime nothing moves
-    window.seReel = { pause, resume, go, master, sync, at: (ms) => { pausedAt = ((ms % D) + D) % D; sync(); } };
-    return (this._rc = {
-      ref: (n) => { if (el) { el.removeEventListener('pointermove', enterH); el.removeEventListener('wheel', wheel); el.removeEventListener('touchstart', ts); el.removeEventListener('touchmove', tm); el.removeEventListener('touchend', te); } el = n; if (n) { vio.disconnect(); vio.observe(n); requestAnimationFrame(() => { sync(); requestAnimationFrame(() => { const r = document.querySelector('[data-se-reel]'); if (r) r.classList.add('se-reel-on'); }); }); n.addEventListener('pointermove', enterH, { passive: true }); n.addEventListener('wheel', wheel, { passive: false }); n.addEventListener('touchstart', ts, { passive: true }); n.addEventListener('touchmove', tm, { passive: false }); n.addEventListener('touchend', te, { passive: false }); } },
-      enter: enterH, // owner (27 Oct): holds once the ad is fully shown, never mid-transition
-      leave: leaveH, // owner (27 Oct): carries on at once
+      const dir = Math.abs(d) > 0.2 || Math.abs(v) > 0.5 ? Math.sign(d || dy) : 0, to = tStart + dir, a = fpos; tStart = null;
+      const t0 = performance.now(), stepF = (n) => { const k = Math.min(1, (n - t0) / 320), e2 = 1 - Math.pow(1 - k, 3); fpos = a + (to - a) * e2; V = mOf(fpos); if (k < 1) requestAnimationFrame(stepF); else { fpos = null; V = mOf(to); held = true; this._rcLeave = setTimeout(leaveH, 1500); } }; requestAnimationFrame(stepF); };
+    window.seReel = { pause, resume, go, master, sync: apply, at: (ms) => { V = ms; held = true; apply(); } };
+    return (this._rc = window.__seRC = {
+      ref: (n) => { if (el) { el.removeEventListener('wheel', wheel); el.removeEventListener('touchstart', ts); el.removeEventListener('touchmove', tm); el.removeEventListener('touchend', te); } el = n; if (n) { vio.disconnect(); vio.observe(n); requestAnimationFrame(() => { collect(); apply(); requestAnimationFrame(() => { const r = document.querySelector('[data-se-reel]'); if (r) r.classList.add('se-reel-on'); }); }); n.addEventListener('wheel', wheel, { passive: false }); n.addEventListener('touchstart', ts, { passive: true }); n.addEventListener('touchmove', tm, { passive: false }); n.addEventListener('touchend', te, { passive: false }); } },
+      enter: enterH, leave: leaveH,
       prev: (e) => { e && e.stopPropagation(); go(-1); },
       next: (e) => { e && e.stopPropagation(); go(1); },
-      poster: () => { if (this._swiped && Date.now() - this._swiped < 400) return; this.setState({ posterI: Math.floor(master() / STEP) % 10 }); },
+      // owner (28 Oct): the poster opens the ad that is ON SCREEN (the nearest ad to the feed position), never the next one
+      poster: () => { if (this._swiped && Date.now() - this._swiped < 400) return; this.setState({ posterI: ((Math.round(posOf(master())) % N) + N) % N }); },
     });
   }
   // Issue 1B: the ad poster: the same ad, bigger, with a short paragraph, key points and the stock line
