@@ -117,6 +117,7 @@ html[dir='rtl'] .sc-pose { animation-name: scPoseInR, scPoseFloat; }
 @keyframes scPoseFloat2 { 50% { transform: translate(-50%, -51.5%); } }
 .sc-mk { opacity: 0; transition: opacity .5s ease, transform .6s cubic-bezier(.16, 1, .3, 1); animation: none !important; transform: translate(-50%, -46%) scale(.96); }
 .sc-mk.on { opacity: 1; transform: translate(-50%, -50%); }
-.sc-makers { position: absolute; left: 0; right: 0; bottom: 18px; z-index: 4; display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; padding: 0 18px; }
+.sc-makers { position: absolute; left: 24px; right: 150px; bottom: 26px; z-index: 4; display: flex; flex-wrap: wrap; justify-content: flex-start; gap: 6px; }
 .sc-makers i { padding: 5px 10px; border-radius: 999px; background: rgba(38, 40, 43, .12); color: rgba(38, 40, 43, .7); font: 600 11.5px Inter, sans-serif; font-style: normal; transition: background .3s, color .3s; }
 .sc-makers i.on { background: #26282B; color: #F7C032; }
+html[dir='rtl'] .sc-makers { left: 150px; right: 24px; }

@@ -133,7 +133,6 @@ function render(v: Vals) {
   const scr = { left: (f.ph[0] + f.scr[0] * f.ph[2]) * 100 + '%', top: (f.ph[1] + f.scr[1] * f.ph[3]) * 100 + '%', width: f.scr[2] * f.ph[2] * 100 + '%', height: f.scr[3] * f.ph[3] * 100 + '%' };
   return (
     <section id="social" ref={v.secRef} data-tone="dark" data-screen-label="The Feed" className={'fd' + (v.seen ? ' fd-seen' : '')}>
-      <span className="fd-aura" aria-hidden="true" />
       <div className="fd-in">
         {/* owner (27 Oct): one phone (not three), the follow buttons and all three QR codes at once, the week's drops */}
         <div className="fd-grid">
@@ -155,13 +154,7 @@ function render(v: Vals) {
 
           <div className="fd-stage" onMouseEnter={() => v.hover(true)} onMouseLeave={() => v.hover(false)}>
             <span className="fd-pool" aria-hidden="true" />
-            <div className="fd-sw" role="tablist">
-              {(v.ch || []).map((c: any) => (
-                <button key={c.id} type="button" role="tab" aria-selected={c.on} className={c.on ? 'on' : ''} onClick={c.pick}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">{GLYPH[c.id]}</svg>{c.name}
-                </button>
-              ))}
-            </div>
+            <span className="fd-chan" key={v.cur}>{(v.ch || []).find((c: any) => c.on)?.name}</span>
             <a href={(v.ch || []).find((c: any) => c.on)?.href} target="_blank" rel="noopener noreferrer" className="fd-ph one">
               <span className="fd-ph-in">
                 <span className="fd-refl" aria-hidden="true">{v.phone ? <img src={v.phone} alt="" /> : null}</span>

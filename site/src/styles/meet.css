@@ -149,3 +149,13 @@ html[dir='rtl'] .mt-asks button:hover { transform: translateX(-4px); } html[dir=
 .mt-ask { position: relative; z-index: 2; }
 @media (max-width: 700px) { .mt-stage2 { grid-template-columns: 1fr; justify-items: center; } .mt-facts { grid-template-columns: 1fr 1fr 1fr; } .mt-facts b { font-size: 18px; } }
 .mt-card .tx strong { color: #26282B !important; } .mt-card .tx small em { color: #9A6F00 !important; }
+/* owner (28 Oct): avatars in the chat, and the tried question is highlighted */
+.mt-row { display: flex; align-items: flex-end; gap: 8px; max-width: 92%; animation: mtIn .35s cubic-bezier(.2, 1, .3, 1) both; }
+.mt-row.me { align-self: flex-end; flex-direction: row-reverse; }
+.mt-row.bot { align-self: flex-start; }
+.mt-row .mt-m { max-width: none; animation: none; }
+.mt-av { flex: none; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; overflow: hidden; }
+.mt-av.me { background: #26282B; color: #F7C032; }
+.mt-av.bot { background: #F7C032; box-shadow: 0 0 0 2px #fff; }
+.mt-av.bot > div { transform: translateY(3px); }
+.mt-asks button.on { background: #26282B !important; color: #F7C032 !important; }

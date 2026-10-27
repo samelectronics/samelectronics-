@@ -16,7 +16,7 @@ class Component extends DCLogic {
     if (this.rm) this.setState({ mood: 'happy', open: true });
     else {
       // G8: every face change goes through the emote scheduler (3s emotes, never cut off, no repeats)
-      this.sch = createScheduler({ onMood: (mood) => !this.dead && this.setState({ mood }), emotes: UNIVERSAL.filter((e) => e !== 'wave') });
+      this.sch = createScheduler({ onMood: (mood) => !this.dead && this.setState({ mood }), auto: true, rest: 5000, emotes: ['wave', 'happy', 'think', 'kiss', 'dabke', 'yawn', 'celebrate', 'wink', 'sleep', 'blush'] }); // owner (28 Oct): he never just sits there: an emote every ~5s (wave, smile, think, kiss, dance, sleepy…), eyes on the visitor in between
       this.later(1200, () => this.cycle());
       this.mm = (e) => { if (this.state.mood !== 'idle') return; const n = performance.now(); if (n - (this._t || 0) < 90) return; this._t = n; const r = this.rootRef.current && this.rootRef.current.getBoundingClientRect(); if (!r) return; const cl = (v) => Math.max(-1, Math.min(1, v)); const lx = Math.round(cl((e.clientX - (r.left + 28)) / 420) * 10) / 10, ly = Math.round(cl((e.clientY - (r.top + 28)) / 420) * 10) / 10; if (lx !== this.state.lx || ly !== this.state.ly) this.setState({ lx, ly }); };
       window.addEventListener('mousemove', this.mm, { passive: true });
@@ -31,7 +31,7 @@ class Component extends DCLogic {
   // plays the next emote from the bag (3s) → collapse → repeat. Each emote is followed by a 5s rest.
   // After 3 ignored cycles he yawns once and rests (still blinking and following the cursor).
   cycle() {
-    if (this.ign >= 3) { this.setState({ open: false }); this.sch.play('yawn'); return; }
+    if (this.ign >= 3) { this.setState({ open: false }); this.ign = 0; this.later(16000, () => this.cycle()); return; } // keeps living: the scheduler goes on emoting
     const sub = 1 + (this.alt++ % 4);
     this.setState({ open: false });
     this.sch.play('wave');

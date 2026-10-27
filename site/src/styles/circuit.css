@@ -149,3 +149,55 @@
 .cs-seen .cs-how-r { animation: seRise .5s calc(1.8s + var(--i) * .12s) both; }
 .cs-how-r i { grid-row: span 2; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: rgba(247, 192, 50, .14); color: #F7C032; font: 700 13px 'JetBrains Mono', monospace; font-style: normal; }
 .cs-how-r b { font: 600 14px 'Space Grotesk', sans-serif; color: #fff; } .cs-how-r small { font: 400 12.5px Inter, sans-serif; color: #9DA1A6; }
+/* ===== owner (28 Oct): Sam Circuit rebuilt: two cards you make your own, on the hero's yellow ===== */
+.cx { position: relative; overflow: hidden; background: #F7C032; color: #26282B; padding: clamp(80px, 8vw, 120px) clamp(20px, 4vw, 64px); }
+.cx-in { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 56px; align-items: center; max-width: 1272px; margin: 0 auto; }
+.cx-eb { font: 600 12px 'JetBrains Mono', monospace; letter-spacing: .16em; color: rgba(38, 40, 43, .75); }
+.cx-h { margin: 14px 0 0; font: 700 clamp(38px, 4vw, 54px)/1.04 'Space Grotesk', sans-serif; letter-spacing: -.035em; }
+.cx-h span { display: block; } .cx-h span:last-child { color: #FFFFFF; text-shadow: 0 2px 0 rgba(38, 40, 43, .12); }
+.cx-p { margin: 14px 0 0; max-width: 460px; font: 400 16px/1.55 Inter, sans-serif; color: rgba(38, 40, 43, .82); }
+.cx-pick { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 24px; }
+.cx-pick button { display: flex; flex-direction: column; gap: 3px; padding: 14px 16px; border: none; border-radius: 16px; background: rgba(255, 255, 255, .45); color: #26282B; text-align: start; cursor: pointer; transition: background .25s, transform .25s, box-shadow .25s; }
+.cx-pick button b { font: 700 16px 'Space Grotesk', sans-serif; letter-spacing: .06em; } .cx-pick button small { font: 400 12.5px Inter, sans-serif; color: rgba(38, 40, 43, .7); }
+.cx-pick button.on { background: #26282B; color: #F7C032; box-shadow: 0 14px 28px -14px rgba(38, 40, 43, .6); transform: translateY(-2px); } .cx-pick button.on small { color: #C9CBCE; }
+.cx-form { display: flex; flex-direction: column; gap: 12px; margin-top: 18px; padding: 18px; border-radius: 18px; background: rgba(255, 255, 255, .5); box-shadow: inset 0 0 0 1px rgba(38, 40, 43, .06); }
+.cx-form label { display: flex; flex-direction: column; gap: 6px; } .cx-form label > span, .cx-row > span { font: 600 12.5px Inter, sans-serif; color: rgba(38, 40, 43, .75); }
+.cx-form input { height: 46px; padding: 0 14px; border: none; border-radius: 11px; background: #fff; color: #26282B; font: 500 15px Inter, sans-serif; box-shadow: inset 0 0 0 1px rgba(38, 40, 43, .1); outline: none; }
+.cx-form input:focus { box-shadow: inset 0 0 0 2px #26282B; }
+.cx-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.cx-sw { display: flex; gap: 8px; } .cx-sw button { width: 30px; height: 30px; border: none; border-radius: 50%; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .15); transition: transform .2s; }
+.cx-sw button.on { transform: scale(1.12); box-shadow: 0 0 0 3px #fff, 0 0 0 5px #26282B; }
+.cx-sw .f-gold { background: linear-gradient(135deg, #F9E3A1, #D9A72C 55%, #B5841A); } .cx-sw .f-graphite { background: linear-gradient(135deg, #5A5D63, #2B2D31); } .cx-sw .f-pearl { background: linear-gradient(135deg, #FFFFFF, #E7E3DA); }
+.cx-sw .f-black { background: linear-gradient(135deg, #3A3B3F, #0E0F11); } .cx-sw .f-steel { background: linear-gradient(135deg, #E6E9EC, #9DA3AA); }
+.cx-lv { display: flex; flex-wrap: wrap; gap: 6px; } .cx-lv button { height: 32px; padding: 0 12px; border: none; border-radius: 9px; background: #fff; color: #26282B; font: 600 12.5px Inter, sans-serif; cursor: pointer; box-shadow: inset 0 0 0 1px rgba(38, 40, 43, .1); }
+.cx-lv button.on { background: #26282B; color: #F7C032; box-shadow: none; }
+.cx-btn { display: inline-flex; align-items: center; gap: 10px; height: 52px; margin-top: 18px; padding: 0 22px; border-radius: 12px; background: #26282B; color: #F7C032; font: 600 16px Inter, sans-serif; text-decoration: none; box-shadow: 0 14px 28px -14px rgba(38, 40, 43, .7); transition: transform .2s; }
+.cx-btn:hover { transform: translateY(-2px); } html[dir='rtl'] .cx-btn svg { transform: scaleX(-1); }
+.cx-r { position: relative; display: flex; flex-direction: column; align-items: center; gap: 28px; perspective: 1100px; padding: 30px 0 10px; }
+.cx-floor { position: absolute; left: 6%; right: 6%; top: 52%; height: 90px; border-radius: 50%; background: radial-gradient(closest-side, rgba(90, 55, 0, .32), rgba(90, 55, 0, 0)); filter: blur(4px); }
+.cx-card { --lx: 30%; --ly: 20%; position: relative; width: min(100%, 460px); aspect-ratio: 1.586; border-radius: 22px; overflow: hidden; transform-style: preserve-3d; transition: transform .35s cubic-bezier(.2, .9, .3, 1); box-shadow: 0 40px 60px -26px rgba(60, 35, 0, .6), inset 0 1px 0 rgba(255, 255, 255, .4); animation: cxIn .7s cubic-bezier(.2, 1.2, .4, 1) both; }
+@keyframes cxIn { from { opacity: 0; transform: rotateY(-35deg) translateY(16px); } }
+.cx-card.f-gold { background: linear-gradient(135deg, #FBE7AE, #E2B13D 40%, #B9861B 75%, #E5BC55); color: #2B2008; }
+.cx-card.f-graphite { background: linear-gradient(135deg, #5A5D63, #33363B 45%, #1F2124); color: #fff; }
+.cx-card.f-pearl { background: linear-gradient(135deg, #FFFFFF, #F1EEE7 50%, #DDD8CD); color: #26282B; }
+.cx-card.f-black { background: linear-gradient(135deg, #3A3B3F, #17181A 45%, #0B0B0C); color: #fff; }
+.cx-card.f-steel { background: linear-gradient(135deg, #F3F5F7, #C3C8CE 45%, #8E949B); color: #1E2023; }
+.cx-holo { position: absolute; inset: 0; background: radial-gradient(120% 90% at var(--lx) var(--ly), rgba(255, 255, 255, .55), rgba(255, 255, 255, 0) 45%), linear-gradient(115deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, .25) 48%, rgba(255, 255, 255, 0) 60%); mix-blend-mode: soft-light; pointer-events: none; }
+.cx-trace { position: absolute; inset: 0; opacity: .32; pointer-events: none; } .cx-trace svg { width: 100%; height: 100%; }
+.cx-trace path { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-dasharray: 60 540; animation: cxTrace 4s linear infinite; }
+.cx-card.k-grid .cx-trace path { stroke: #F7C032; }
+@keyframes cxTrace { from { stroke-dashoffset: 600; } to { stroke-dashoffset: 0; } }
+.cx-card-in { position: relative; box-sizing: border-box; height: 100%; display: flex; flex-direction: column; padding: 22px 26px; }
+.cx-card .top { display: flex; justify-content: space-between; align-items: center; } .cx-card .top b { font: 700 18px 'Space Grotesk', sans-serif; letter-spacing: .14em; }
+.cx-card .top svg { fill: #F7C032; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .25)); } .cx-card.f-gold .top svg { fill: #26282B; }
+.cx-card .chip { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; width: 46px; height: 34px; margin-top: 18px; padding: 4px; border-radius: 7px; background: linear-gradient(135deg, #F3DC9C, #C9A043); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .2); }
+.cx-card .chip i { border-radius: 2px; box-shadow: inset 0 0 0 1px rgba(90, 60, 0, .35); }
+.cx-card .nm { margin-top: auto; font: 600 22px 'JetBrains Mono', monospace; letter-spacing: .06em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-transform: uppercase; }
+.cx-card .sh { font: 500 12px Inter, sans-serif; opacity: .75; min-height: 15px; }
+.cx-card .bot { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 10px; }
+.cx-card .bot small { display: block; font: 600 9px 'JetBrains Mono', monospace; letter-spacing: .16em; opacity: .7; } .cx-card .bot b { font: 700 16px 'Space Grotesk', sans-serif; }
+.cx-card .no { font: 500 12px 'JetBrains Mono', monospace; letter-spacing: .12em; opacity: .8; }
+.cx-perks { display: flex; flex-direction: column; gap: 8px; width: min(100%, 460px); padding: 16px 18px; border-radius: 16px; background: #26282B; color: #fff; animation: seRise .45s both; }
+.cx-perks small { font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .12em; color: #F7C032; text-transform: uppercase; }
+.cx-perks span { display: flex; align-items: center; gap: 10px; font: 500 14px Inter, sans-serif; } .cx-perks i { flex: none; width: 7px; height: 7px; border-radius: 50%; background: #F7C032; }
+@media (max-width: 1000px) { .cx-in { grid-template-columns: 1fr; } }

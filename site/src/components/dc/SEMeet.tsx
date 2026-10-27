@@ -116,8 +116,8 @@ function render(v: Vals) {
             <div className="mt-bot"><SESamsoom mood={v.mood} size={220} /></div>
             <div className="mt-asks">
               <span className="mt-k">TRY ASKING</span>
-              {['Do you have an iPhone 13 screen?', 'What is the difference between OLED and Incell?', 'Are you open now?', 'Can you ship 200 batteries to Lagos?', 'How much is a Galaxy S23 back glass?'].map((q) => (
-                <button key={q} type="button" onClick={v.ask}>{q}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button>
+              {(v.tries || []).map((t: any) => (
+                <button key={t.q} type="button" className={t.on ? 'on' : ''} onClick={t.go}>{t.q}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button>
               ))}
             </div>
           </div>
@@ -144,15 +144,18 @@ function render(v: Vals) {
           <div className="mt-msgs">
             {(v.msgs || []).map((m: any) =>
               m.who === 'typing' ? (
-                <div key={m.id} className="mt-m bot typing" aria-label="Samsoom is typing">
+                <div key={m.id} className="mt-row bot"><span className="mt-av bot" aria-hidden="true"><SESamsoom mood="think" size={30} still={true} /></span><div className="mt-m bot typing" aria-label="Samsoom is typing">
                   <i />
                   <i />
                   <i />
-                </div>
+                </div></div>
               ) : (
-                <div key={m.id} className={'mt-m ' + m.who}>
-                  {m.t ? <span className="bub">{m.t}</span> : null}
-                  {m.card ? <Card c={m.card} /> : null}
+                <div key={m.id} className={'mt-row ' + m.who}>
+                  {m.who === 'me' ? <span className="mt-av me" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4.2" /><path d="M3.5 21c.8-4.4 4.2-7 8.5-7s7.7 2.6 8.5 7z" /></svg></span> : <span className="mt-av bot" aria-hidden="true"><SESamsoom mood="happy" size={30} still={true} /></span>}
+                  <div className={'mt-m ' + m.who}>
+                    {m.t ? <span className="bub">{m.t}</span> : null}
+                    {m.card ? <Card c={m.card} /> : null}
+                  </div>
                 </div>
               ),
             )}

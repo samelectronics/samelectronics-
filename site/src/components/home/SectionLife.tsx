@@ -71,6 +71,9 @@ function markEntries(sec: HTMLElement) {
   groups.forEach((p) => { Array.from(p.children).slice(0, 12).forEach((k, j) => mark(k, Math.min(12, i + 1 + j))); });
 }
 
+// owner (28 Oct): the small corner circuits stay only where the owner kept them; every other section is clean
+const GUT = new Set(['families', 'quality', 'wholesale', 'reviews', 'board']);
+
 export default function SectionLife() {
   useEffect(() => {
     let io: IntersectionObserver | null = null, eio: IntersectionObserver | null = null, t1 = 0, t2 = 0;
@@ -82,7 +85,7 @@ export default function SectionLife() {
       eio = eio || new IntersectionObserver((es) => es.forEach((e) => { const el = e.target as HTMLElement; if (e.isIntersecting && e.intersectionRatio > 0.12) el.setAttribute('data-se-on', ''); else if (!e.isIntersecting) el.removeAttribute('data-se-on'); }), { threshold: [0, 0.12, 0.3] });
       secs.forEach((sec, k) => {
         markEntries(sec); io!.observe(sec); sec.querySelectorAll('[data-se-rise]').forEach((el) => { if (!(el as HTMLElement).dataset.seObs) { (el as HTMLElement).dataset.seObs = '1'; eio!.observe(el); } });
-        if (window.innerWidth >= 1100 && !sec.querySelector(':scope > .se-gut') && !sec.querySelector('.se-cfield') && !sec.querySelector('.se-own-circ')) { const t = tone(sec), e = contentEdges(sec); if (getComputedStyle(sec).position === 'static') sec.style.position = 'relative'; gutter(sec, e.l, 1, t, 101 + k * 37, k % 2 === 0); gutter(sec, e.r, -1, t, 207 + k * 53, k % 2 === 1); }
+        if (window.innerWidth >= 1100 && GUT.has(sec.id) && !sec.querySelector(':scope > .se-gut') && !sec.querySelector('.se-cfield') && !sec.querySelector('.se-own-circ')) { const t = tone(sec), e = contentEdges(sec); if (getComputedStyle(sec).position === 'static') sec.style.position = 'relative'; gutter(sec, e.l, 1, t, 101 + k * 37, k % 2 === 0); gutter(sec, e.r, -1, t, 207 + k * 53, k % 2 === 1); }
       });
     } catch (err) { console.warn('[SectionLife]', err); } };
     (window as unknown as { __seLife?: () => void }).__seLife = run;

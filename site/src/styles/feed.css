@@ -194,3 +194,13 @@
 @media (max-width: 1180px) { .fd-grid { grid-template-columns: 1fr; } .fd-stage { height: 520px !important; } }
 @media (max-width: 600px) { .fd-follow { grid-template-columns: 1fr 1fr 1fr; gap: 6px; } .fd-fl .qr { width: 72px; height: 72px; } .fd-ph.one { transform: scale(.78) !important; transform-origin: top center; } }
 .fd-ph.one .fd-on { opacity: 1; }
+/* ===== owner (28 Oct): a calmer feed: one graphite with a soft spotlight on the phone, no colour washes, no switcher on top
+   of the phone (the follow cards choose the channel), the three scan lines move together ===== */
+.fd { background: radial-gradient(42% 60% at 50% 55%, #3E4045, #2A2C2F 70%) !important; }
+.fd-aura { display: none !important; }
+.fd-fl .qr .scan, .fd-fl:nth-child(2) .qr .scan, .fd-fl:nth-child(3) .qr .scan { animation: fdScan 2.6s ease-in-out infinite !important; animation-delay: 0s !important; }
+.fd-chan { position: relative; z-index: 3; display: inline-flex; align-items: center; height: 28px; padding: 0 12px; border-radius: 999px; background: rgba(255, 255, 255, .08); color: #E4E5E7; font: 600 12px 'JetBrains Mono', monospace; letter-spacing: .1em; text-transform: uppercase; animation: seRise .4s both; }
+.fd-grid { align-items: start; }
+.fd-info, .fd-drops { padding-top: 10px; }
+.fd-follow { margin-top: 30px; }
+.fd-fl { background: rgba(255, 255, 255, .04); }

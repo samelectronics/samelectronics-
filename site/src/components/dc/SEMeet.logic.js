@@ -63,7 +63,9 @@ class Component extends DCLogic {
     if (st >= 1) push(s.ci, st);
     const c = CONVOS[s.ci], mood = !s.seen ? 'idle' : st <= 1 ? 'idle' : st === 2 ? 'think' : st === 3 ? 'found' : st === 4 ? c.land : st === 5 && s.t > DUR - 1.2 ? 'idle' : c.land === 'found' ? 'happy' : c.land;
     return { secRef: this.secRef, seen: s.seen, mood: s.seen && this.t < 0.2 && this.ov == null ? 'wave' : mood, front: lib && lib.front ? lib.front : null, phone: img(9), msgs, ci: s.ci, n: CONVOS.length, flyQ: st === 1 ? c.q : '',
-      ask: () => window.dispatchEvent(new CustomEvent('se:chat', { detail: {} })), drift: DRIFT };
+      ask: () => window.dispatchEvent(new CustomEvent('se:chat', { detail: {} })), drift: DRIFT,
+      // owner (28 Oct): a 'try asking' question plays right here in the chat on screen (typed in, answered), not in a new window
+      tries: CONVOS.map((c, j) => ({ q: c.q, on: j === s.ci, go: () => { this.ov = null; this.t = 0; this._st = null; this.setState({ ci: j, t: 0, seen: true }); } })) };
   }
 }
 
