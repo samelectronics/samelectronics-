@@ -79,3 +79,55 @@
 .fn-on .fn-stats { animation: lbFade .6s 3.3s both; }
 .fn-stats b { font: 700 26px 'Space Grotesk', sans-serif; color: #fff; }
 @media (max-width: 900px) { .fn-neon { font-size: 34px; } .fn-words { gap: 14px; } .fn-stage { transform: scale(.8); } }
+/* ===== owner (27 Oct): the ending, rebuilt ===== */
+.fz { position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; padding: 72px 24px 80px; background: radial-gradient(60% 55% at 50% 30%, #303236, #232427 60%, #1E1F22); color: #fff; text-align: center; }
+.fz::after { content: ''; position: absolute; left: 50%; bottom: 0; width: min(900px, 80%); height: 1px; transform: translateX(-50%); background: linear-gradient(90deg, rgba(247, 192, 50, 0), rgba(247, 192, 50, .6), rgba(247, 192, 50, 0)); }
+.fz-stage { position: relative; width: 100%; height: 400px; }
+.fz-circ { position: absolute; left: 50%; top: 0; width: max(100%, 1440px); height: 400px; transform: translateX(-50%); }
+.fz-circ .base { fill: none; stroke: rgba(247, 192, 50, .16); stroke-width: 1.6; stroke-linejoin: round; }
+.fz-circ .cur { fill: none; stroke: #F7C032; stroke-width: 2.2; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: .12 1; stroke-dashoffset: 1.12; filter: drop-shadow(0 0 6px rgba(247, 192, 50, .9)); opacity: 0; }
+.fz-on .fz-circ .cur { animation: fzCur 1.1s calc(.15s + var(--i) * .12s) cubic-bezier(.5, 0, .6, 1) both, fzCurLoop 3.6s calc(2.4s + var(--i) * .5s) linear infinite; }
+@keyframes fzCur { 0% { opacity: 1; stroke-dashoffset: 1.12; } 100% { opacity: 1; stroke-dashoffset: 0; stroke-dasharray: 1 0; } }
+@keyframes fzCurLoop { 0% { stroke-dasharray: .08 1; stroke-dashoffset: 1.08; opacity: 1; } 60% { stroke-dashoffset: 0; opacity: 1; } 61%, 100% { opacity: 0; } }
+.fz-circ .pad { fill: #26282B; stroke: rgba(247, 192, 50, .5); stroke-width: 1.4; }
+.fz-track { fill: none; stroke: rgba(247, 192, 50, .14); stroke-width: 8; }
+.fz-ring { fill: none; stroke: #F7C032; stroke-width: 3; stroke-linecap: round; filter: drop-shadow(0 0 8px rgba(247, 192, 50, .8)); }
+.fz-on .fz-ring { animation: fzRing 1.1s 1s cubic-bezier(.6, 0, .2, 1) forwards; }
+@keyframes fzRing { to { stroke-dashoffset: 0; } }
+.fz-halo { opacity: 0; transform-origin: 720px 200px; }
+.fz-on .fz-halo { animation: fzHalo 1s 1.9s ease-out both, fzBreath 4s 2.9s ease-in-out infinite; }
+@keyframes fzHalo { from { opacity: 0; transform: scale(.6); } to { opacity: 1; transform: none; } }
+@keyframes fzBreath { 50% { opacity: .6; } }
+.fz-logo { position: absolute; left: 50%; top: 200px; width: 196px; height: 196px; margin: -98px 0 0 -98px; border-radius: 50%; overflow: hidden; opacity: .18; filter: grayscale(1) brightness(.6); transform: scale(.94); }
+.fz-logo img { display: block; width: 100%; height: 100%; }
+.fz-on .fz-logo { animation: fzLogo .9s 1.9s cubic-bezier(.2, 1.3, .4, 1) forwards; }
+@keyframes fzLogo { to { opacity: 1; filter: none; transform: none; } }
+.fz-glow { position: absolute; inset: 0; border-radius: 50%; box-shadow: inset 0 0 0 3px rgba(247, 192, 50, .9); z-index: 1; }
+.fz-shine { position: absolute; top: -20%; bottom: -20%; left: -60%; width: 40%; z-index: 2; background: linear-gradient(100deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .55), rgba(255, 255, 255, 0)); transform: skewX(-12deg); }
+.fz-on .fz-shine { animation: fzShine 1.1s 2.5s ease-in-out both, fzShine 1.1s 8s ease-in-out infinite; }
+@keyframes fzShine { from { left: -60%; } to { left: 130%; } }
+.fz-words { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 8px; }
+.fz-words span { font: 600 15px 'JetBrains Mono', monospace; letter-spacing: .32em; color: rgba(255, 255, 255, .22); }
+.fz-on .fz-words span { animation: fzWord .5s calc(2.6s + var(--i) * .28s) ease-out forwards; }
+@keyframes fzWord { 40% { color: #FFF4D1; text-shadow: 0 0 18px rgba(247, 192, 50, .9); } 100% { color: #F7C032; text-shadow: 0 0 10px rgba(247, 192, 50, .35); } }
+.fz-words i { width: 5px; height: 5px; border-radius: 50%; background: rgba(247, 192, 50, .6); }
+.fz-h { margin: 26px 0 0; max-width: 900px; font: 700 clamp(30px, 4.4vw, 52px)/1.1 'Space Grotesk', sans-serif; letter-spacing: -.03em; color: #fff; }
+.fz-h span { display: inline-block; opacity: 0; transform: translateY(14px); }
+.fz-on .fz-h span { animation: fzUp .6s calc(3.3s + var(--i) * .06s) cubic-bezier(.2, 1, .3, 1) forwards; }
+.fz-h span:nth-last-child(-n+3) { color: #F7C032; }
+@keyframes fzUp { to { opacity: 1; transform: none; } }
+.fz-acts { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 30px; opacity: 0; transform: translateY(14px); }
+.fz-on .fz-acts { animation: fzUp .6s 3.9s cubic-bezier(.2, 1, .3, 1) forwards; }
+.fz-btn { display: inline-flex; align-items: center; gap: 8px; height: 50px; padding: 0 22px; border-radius: 12px; font: 600 15px Inter, sans-serif; text-decoration: none; transition: transform .2s, box-shadow .2s; }
+.fz-btn.yel { background: #F7C032; color: #26282B; box-shadow: 0 10px 24px -10px rgba(247, 192, 50, .7); }
+.fz-btn.line { color: #fff; box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, .22); }
+.fz-btn:hover { transform: translateY(-2px); } .fz-btn.line:hover { box-shadow: inset 0 0 0 1.5px #F7C032; }
+.fz-stats { display: grid; grid-template-columns: repeat(3, auto); margin-top: 40px; opacity: 0; transform: translateY(14px); }
+.fz-on .fz-stats { animation: fzUp .6s 4.1s cubic-bezier(.2, 1, .3, 1) forwards; }
+.fz-stats span { display: flex; flex-direction: column; gap: 2px; padding: 0 34px; }
+.fz-stats span + span { border-inline-start: 1px solid rgba(255, 255, 255, .12); }
+.fz-stats b { font: 700 34px 'Space Grotesk', sans-serif; color: #fff; } .fz-stats em { font-style: normal; }
+.fz-stats small { font: 500 11px 'JetBrains Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: #8C9096; }
+@media (max-width: 700px) { .fz-stage, .fz-circ { height: 300px; } .fz-logo { top: 150px; width: 150px; height: 150px; margin: -75px 0 0 -75px; } .fz-words { gap: 10px; } .fz-words span { font-size: 11px; letter-spacing: .2em; } .fz-stats span { padding: 0 14px; } .fz-stats b { font-size: 24px; } }
+@media (prefers-reduced-motion: reduce) { .fz * { animation: none !important; } .fz-logo, .fz-h span, .fz-acts, .fz-stats { opacity: 1 !important; filter: none !important; transform: none !important; } .fz-ring { stroke-dashoffset: 0; } .fz-words span { color: #F7C032; } }
+.fz-h { text-wrap: balance; max-width: 1000px; }

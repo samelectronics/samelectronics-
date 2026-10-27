@@ -19,7 +19,7 @@ const fmt = (n) => Math.round(n).toLocaleString('en-US');
 class Component extends DCLogic {
   secRef = React.createRef();
   cardRef = React.createRef();
-  state = { seen: false, spend: DEMO, tier: -1, pop: 0, flash: 0, pulse: 0, on: true };
+  state = { seen: false, spend: DEMO, tier: -1, pop: 0, flash: 0, pulse: 0, on: true, name: '', shop: '', pick: null };
   componentDidMount() {
     this.offRp = onReplay(() => this.secRef.current, () => { cancelAnimationFrame(this.tRaf); this.lv = 0; this.paint(); this.setState({ seen: false, tier: -1, on: true, spend: 2920 }); }); // 14 Oct · H-G2: replay from the start
     this.lv = 0; this.alive = true;
@@ -47,7 +47,11 @@ class Component extends DCLogic {
     const tiers = TN.map((name, i) => { const need = MARKS[i + 1][0], togo = Math.max(0, need - s.spend), un = i <= s.tier;
       const prev = MARKS[i][0], prog = un ? 1 : Math.max(0, Math.min(1, (s.spend - prev) / (need - prev)));
       return { name, i, req: REQ[i], un, cur: i === s.tier, next: i === nextI, chip: un ? 'Unlocked' : togo ? 'AED ' + fmt(togo) + ' to go' : 'Charging…', prog: prog.toFixed(3), perks: PERKS[i] }; });
-    return { secRef: this.secRef, cardRef: this.cardRef, seen: s.seen, on: s.on, tiers, tierName: s.tier >= 0 ? TN[s.tier] : 'Not connected yet', popName: s.tier >= 0 ? TN[s.tier] : '', pop: s.pop, flash: s.flash, pulse: s.pulse,
+    return { secRef: this.secRef, cardRef: this.cardRef, seen: s.seen, on: s.on, tiers, tierName: s.pick != null ? TN[s.pick] : s.tier >= 0 ? TN[s.tier] : 'Not connected yet',
+      // owner (27 Oct): the visitor loads their own card; the member number follows the name
+      name: s.name, shop: s.shop, pick: s.pick, setName: (e) => this.setState({ name: e.target.value }), setShop: (e) => this.setState({ shop: e.target.value }), setPick: (i) => this.setState({ pick: s.pick === i ? null : i }),
+      memNo: (() => { let h = 7; for (const ch of (s.name || 'SAM').toUpperCase()) h = (h * 31 + ch.charCodeAt(0)) % 99991; return 'SC ' + String(1000 + (h % 9000)) + ' ' + String(h).padStart(5, '0').slice(-4); })(),
+      invite: 'https://wa.me/' + (((window.SE_DATA && window.SE_DATA.contact) || {}).wa || '971503420015') + '?text=' + encodeURIComponent('*SAM CIRCUIT · MEMBERSHIP REQUEST*\n\nName: ' + (s.name.trim() || '—') + (s.shop.trim() ? '\nShop / company: ' + s.shop.trim() : '') + (s.pick != null ? '\nInterested in: ' + TN[s.pick] : '') + '\n\nPlease send me an invitation to Sam Circuit.\nSent from the Sam Electronics website'), popName: s.tier >= 0 ? TN[s.tier] : '', pop: s.pop, flash: s.flash, pulse: s.pulse,
       spend: 'AED ' + fmt(s.spend), level: Math.round(lv * 100) + '%',
       add: (n) => () => this.add(n), reset: () => this.reset(),
       join: () => window.dispatchEvent(new CustomEvent('se:soon', { detail: { title: 'Sam Circuit', text: 'Sam Circuit accounts open with My Bench, coming soon.' } })),

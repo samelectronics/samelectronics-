@@ -13,7 +13,7 @@ class Component extends DCLogic {
   secRef = React.createRef();
   componentDidMount() {
     this.offRp = onReplay(() => this.secRef.current, () => { clearTimeout(this.cT); cancelAnimationFrame(this.raf); this.setState({ on: false }); }); // 14 Oct · H-G2: replay from the start
-    this.io = new IntersectionObserver(([e]) => { if (e.isIntersecting && !this.state.on) { this.setState({ on: true }); clearTimeout(this.cT); this.cT = setTimeout(() => this.count(), 2600); } }, { threshold: 0.3 });
+    this.io = new IntersectionObserver(([e]) => { if (e.isIntersecting && !this.state.on) { this.setState({ on: true }); clearTimeout(this.cT); this.cT = setTimeout(() => this.count(), 2900); } }, { threshold: 0.3 });
     setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
     this.onLang = () => this.forceUpdate(); window.addEventListener('se:lang', this.onLang);
     window.seFinale = (t) => { this.setState({ on: true }, () => { const R = this.secRef.current; if (!R) return; R.getAnimations({ subtree: true }).forEach((a) => { a.pause(); a.currentTime = t * 1000 + (a.effect && a.effect.getTiming ? 0 : 0); }); if (t > 3) R.querySelectorAll('[data-fn]').forEach((el) => (el.textContent = Number(el.getAttribute('data-fn')).toLocaleString('en-US'))); }); };

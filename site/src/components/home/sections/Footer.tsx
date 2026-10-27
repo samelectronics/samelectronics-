@@ -12,7 +12,7 @@ export default function Footer({ v }: { v: Vals }) {
       style={{
         position: 'relative',
         overflow: 'hidden',
-        background: 'linear-gradient(180deg,#3D3E3F,#26282B 40%)',
+        background: '#1E1F22', /* owner (27 Oct): continues the finale's graphite, one ending */
         color: '#FFFFFF',
         padding: '72px clamp(20px,4vw,64px) 28px',
       }}

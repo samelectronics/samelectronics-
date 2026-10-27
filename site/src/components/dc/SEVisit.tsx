@@ -31,7 +31,7 @@ function render(v: Vals) {
               {(v.fields || []).map((f: any) => (
                 f.kind === 'one' || f.kind === 'many' ? (
                   <div key={f.label} className="vs-f vs-opt" style={{ animationDelay: f.i * 0.06 + 's' }}>
-                    <span>{f.label}{f.kind === 'many' ? <em> · choose any</em> : null}</span>
+                    <span>{f.label}{f.kind === 'many' ? <> · <em>choose any</em></> : null}</span>
                     <div className="vs-chips">
                       {f.opts.map((o: any) => (
                         <button key={o.x} type="button" className={o.on ? 'on' : ''} aria-pressed={o.on} onClick={o.pick}>{o.x}</button>

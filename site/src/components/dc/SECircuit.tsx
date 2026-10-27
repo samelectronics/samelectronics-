@@ -3,6 +3,7 @@
 import React from 'react';
 import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SECircuit.logic.js';
+import CircuitField from '../home/CircuitField';
 
 const ICON = [
   // plug → bolt → double bolt → full battery
@@ -17,6 +18,7 @@ function render(v: Vals) {
   const T = v.tiers || [];
   return (
     <section id="circuit" ref={v.secRef} data-tone="dark" data-screen-label="Sam Circuit" className={'cs' + (v.seen ? ' cs-seen' : '') + (v.on ? '' : ' cs-off')}>
+      <CircuitField tone="dark" seed={31} />
       <div className="cs-in">
         <header className="cs-top">
           <div>
@@ -45,6 +47,8 @@ function render(v: Vals) {
             <svg className="cs-cable" viewBox="0 0 300 180" aria-hidden="true">
               <path d={CABLE} className="jacket" />
               <path d={CABLE} className="core" />
+              <path d={CABLE} className="braid" />
+              <path d={CABLE} className="hl" transform="translate(-2.5 -1)" />
               <path d={CABLE} className="flow" />
               {v.pulse ? (
                 <circle key={v.pulse} r="7" className="pulse">
@@ -133,6 +137,12 @@ function render(v: Vals) {
                 </div>
               ))}
             <p className="cs-note">Spend so far: <b data-no-i18n="">{v.spend}</b></p>
+            <div className="cs-how">
+              <span className="cs-k">HOW YOUR CHARGE GROWS</span>
+              {[['AED 1 = 1 point', 'Every part, every repair, in the shop or online'], ['Trade orders count double', 'Approved trade accounts charge twice as fast'], ['Your charge never drains', 'Points stay on your card; levels are for life']].map(([b, d], i) => (
+                <span key={b} className="cs-how-r" style={{ ['--i' as string]: i } as React.CSSProperties}><i>{i + 1}</i><b>{b}</b><small>{d}</small></span>
+              ))}
+            </div>
           </div>
 
           {/* ---------- the member card ---------- */}
@@ -148,7 +158,8 @@ function render(v: Vals) {
                   </svg>
                 </span>
                 <span className="cs-chip" aria-hidden="true" />
-                <span className="cs-name">Your name here</span>
+                <span className="cs-name" data-no-i18n={v.name ? '' : undefined}>{v.name || 'Your name here'}</span>
+                <span className="cs-no" data-no-i18n="">{v.memNo}</span>
                 <span className="cs-card-b">
                   <span>
                     <small>TIER</small>
@@ -161,7 +172,19 @@ function render(v: Vals) {
                 </span>
               </div>
             </div>
-            <span className="cs-card-cap">Move your mouse over the card</span>
+            {/* owner (27 Oct): load your own card: type your name, the card updates; register by invitation on WhatsApp */}
+            <div className="cs-load">
+              <span className="cs-k">LOAD YOUR CARD</span>
+              <input value={v.name} onChange={v.setName} placeholder="Your name" maxLength={22} aria-label="Your name" />
+              <input value={v.shop} onChange={v.setShop} placeholder="Shop or company (optional)" maxLength={30} aria-label="Shop or company" />
+              <div className="cs-load-tiers">
+                {T.map((t: any) => (
+                  <button key={t.i} type="button" className={v.pick === t.i ? 'on' : ''} onClick={() => v.setPick(t.i)}>{t.name}</button>
+                ))}
+              </div>
+              <a className="cs-btn yel" href={v.invite} target="_blank" rel="noopener noreferrer">Register by invitation on WhatsApp</a>
+              <small>Membership opens by invitation. We confirm your card on WhatsApp.</small>
+            </div>
           </div>
         </div>
 
@@ -186,7 +209,6 @@ function render(v: Vals) {
                       <li key={p}>{p}</li>
                     ))}
                   </ul>
-                  <small>Example perks · to be confirmed</small>
                 </div>
               </div>
             </div>
