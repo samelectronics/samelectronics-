@@ -322,7 +322,6 @@ function render(v: Vals) {
                                 {'AED '}
                                 {t(v.f?.min)}
                               </b>
-                              <em>sample</em>
                             </span>
                             <a href="#shop" className="wo-shop" onClick={v.f?.go}>
                               {t(v.f?.shop)}

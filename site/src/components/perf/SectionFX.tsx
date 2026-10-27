@@ -12,7 +12,8 @@ import { useEffect } from 'react';
  */
 const SKIP = new Set(['top', 'teardown']);
 /** Sections whose content had no entrance of its own: the generic one is applied there. */
-const GENERIC = new Set(['repair', 'network', 'everyone', 'social', 'reviews', 'visit']);
+// owner (27 Oct): the entrances now come from home/SectionLife for EVERY section; this keeps only the reset + se:replay
+const GENERIC = new Set<string>([]);
 const EASE = 'cubic-bezier(0.22, 1, 0.36, 1)';
 
 function animated(el: Element, stop: Element) {

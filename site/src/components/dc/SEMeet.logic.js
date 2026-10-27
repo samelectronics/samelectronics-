@@ -55,7 +55,7 @@ class Component extends DCLogic {
       : k === 'grades' ? { k, rows: scr.map((p) => ({ g: GN[p.grade], p: 'AED ' + p.retail_price, img: thumb(0) })) }
       : k === 'hours' ? { k, ...this.hours() }
       : k === 'trade' ? { k, tiers: [['10+', '−12%'], ['50+', '−18%'], ['100+', '−22%'], ['500+', '−28%']], go: () => window.dispatchEvent(new CustomEvent('se:go', { detail: { id: 'wholesale' } })) }
-      : { k, from: 'Dubai · Deira', to: 'Baghdad, Iraq', eta: '3–5 days · sample' };
+      : { k, from: 'Dubai · Deira', to: 'Baghdad, Iraq', eta: '3–5 days' };
     // the chat: a welcome line, the previous conversation (complete) and the current one up to its stage
     const st = this.stage(s.t), msgs = [{ id: 'w', who: 'bot', t: 'Hi, I’m Samsoom. Ask me about a part, a grade, shipping, or our hours.' }];
     const push = (ci, upto) => { const c = CONVOS[ci]; msgs.push({ id: 'q' + ci, who: 'me', t: c.q }); if (upto >= 2 && upto < 3) msgs.push({ id: 'ty' + ci, who: 'typing' }); if (upto >= 3) msgs.push({ id: 'a' + ci, who: 'bot', t: c.card === 'hours' ? '' : c.a, card: upto >= 4 ? card(c.card) : null }); };

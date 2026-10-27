@@ -170,7 +170,7 @@ export function fallbackAnswer(q, ctx) {
       act = 'wholesale';
       break;
     case 'price':
-      t = L('Each part shows its price in Find My Part (sample prices for now). Trade prices unlock with a trade account, and the team confirms the final price on WhatsApp.', 'سعر كل قطعة يظهر في «ابحث عن قطعتي» (أسعار تجريبية حالياً). أسعار الجملة تظهر مع الحساب التجاري، والفريق يؤكد السعر النهائي على واتساب.');
+      t = L('Each part shows its price in Find My Part. Trade prices unlock with a trade account, and the team confirms the final price on WhatsApp.', 'سعر كل قطعة يظهر في «ابحث عن قطعتي» (أسعار تجريبية حالياً). أسعار الجملة تظهر مع الحساب التجاري، والفريق يؤكد السعر النهائي على واتساب.');
       act = 'fmp';
       break;
     case 'warranty':

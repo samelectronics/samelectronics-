@@ -123,7 +123,7 @@ function Quoted() {
     <div className="nwq" ref={ref} aria-hidden="true">
       <span className="qs-slot" />
       <div className="qs">
-        <b className="qs-h">SHIPPING QUOTE · SAMPLE</b>
+        <b className="qs-h">SHIPPING QUOTE</b>
         {SLIP.map(([k, v]) => (
           <span key={k} className="qs-ln"><small>{k}</small><span>{v}</span></span>
         ))}
@@ -182,9 +182,9 @@ export function CountryCard() {
       <b>{T(c.name)}</b>
       <dl>
         <dt>{T('Typical delivery')}</dt>
-        <dd>{T(ETA[c.region] || 'Ask us')} <small>{T('sample')}</small></dd>
+        <dd>{T(ETA[c.region] || 'Ask us')}</dd>
         <dt>{T('Last shipment')}</dt>
-        <dd><span data-no-i18n="">SE-{4000 + h}</span> · {(h % 6) + 1} {T('days ago')} <small>{T('sample')}</small></dd>
+        <dd><span data-no-i18n="">SE-{4000 + h}</span> · {(h % 6) + 1} {T('days ago')}</dd>
       </dl>
       <a href={wa} target="_blank" rel="noopener noreferrer">{T('Get a quote for')} {T(c.name)}</a>
     </div>

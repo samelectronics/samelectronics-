@@ -196,7 +196,7 @@ export default function CartDrawer({ v }: { v: Vals }) {
                 </span>
                 {'\n      '}
                 <span style={{ fontSize: '12px', color: '#5E6064' }}>
-                  Sample prices. Our team confirms stock, delivery and final price on WhatsApp.
+                  Our team confirms stock, delivery and final price on WhatsApp.
                 </span>
                 {'\n      '}
                 <a

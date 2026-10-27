@@ -5,6 +5,7 @@ import HScrollArrows from '@/components/perf/HScrollArrows';
 import CircuitSurge from '@/components/perf/CircuitSurge';
 import SectionFX from '@/components/perf/SectionFX';
 import LangPop from '@/components/home/LangPop';
+import SectionLife from '@/components/home/SectionLife';
 import { installI18n } from '@/i18n/lang';
 
 // G9: the language is applied before the home page renders, so nothing flashes in the other language.
@@ -23,6 +24,7 @@ export default function Home() {
       <CircuitSurge />
       <SectionFX />
       <LangPop />
+      <SectionLife />
     </div>
   );
 }

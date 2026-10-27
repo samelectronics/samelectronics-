@@ -284,7 +284,7 @@ export default function FindMyPart({ open, init, onClose, onShop }: { open: bool
             ))}
           </div>
           <div className="fp-act">
-            <span className="fp-count"><b>{result.length}</b> {T('results')} <small>{T('sample data')}</small></span>
+            <span className="fp-count"><b>{result.length}</b> {T('results')}</span>
             {step > 0 && c0.detailed ? <button type="button" className="fp-back" onClick={() => go(step - 1)}>{T('Back')}</button> : null}
             {step < 4 && c0.detailed ? (
               <button type="button" className="fp-btn" disabled={!canNext} onClick={() => go(step + 1)}>{T('Next')}</button>

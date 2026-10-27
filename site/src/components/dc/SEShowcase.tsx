@@ -49,7 +49,7 @@ function render(v: Vals) {
             <p className="sc-d" data-s="c">
               {a.d}
             </p>
-            <ul className="sc-q" data-s="c" aria-label={v.tr('Quality (sample)')}>
+            <ul className="sc-q" data-s="c" aria-label={v.tr('Quality')}>
               {(v.qual || []).map((q: any) => (
                 <li key={q.l}>
                   <span>{q.l}</span>
@@ -59,7 +59,6 @@ function render(v: Vals) {
                   <em>{q.v}/5</em>
                 </li>
               ))}
-              <li className="sc-q-note">{'SAMPLE'}</li>
             </ul>
             <a href="#fmp" className="sc-btn" data-s="btn" onClick={v.shop}>
               <span className="sc-btn-i">
@@ -97,7 +96,6 @@ function render(v: Vals) {
               <span className="sc-badge" data-s="badge">
                 <small>from</small>
                 <b>{v.price}</b>
-                <small>sample</small>
               </span>
             ) : null}
             <div className="sc-nav">

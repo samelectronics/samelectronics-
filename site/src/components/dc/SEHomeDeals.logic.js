@@ -70,7 +70,7 @@ class Component extends DCLogic {
   step() { const c = this.beltRef.current && this.beltRef.current.querySelector('.dl-card'); return c ? c.getBoundingClientRect().width + 16 : 300; }
   renderVals() {
     const s = this.state, D = s.data, lib = s.lib, pad = (n) => String(n).padStart(2, '0'), fmt = (n) => Math.round(n).toLocaleString('en-US');
-    const img = (p) => (p.shot && window.SE_SHOTS ? window.SE_SHOTS.url(p.shot, 480) /* R6 E7: screens = box + LCD */ : lib && lib.large && LK[p.category] != null ? lib.large[LK[p.category]] : '');
+    const img = (p) => (window.SE_SHOTS ? window.SE_SHOTS.url(p.shot || window.SE_SHOTS.forCat(p.category), 480) /* owner (27 Oct): every part is its standard pose */ : lib && lib.large && LK[p.category] != null ? lib.large[LK[p.category]] : '');
     const pool = this.pool(), since = s.seen ? (s.now - s.seenAt) / 1000 : 0;
     const hms = (ms) => { const x = Math.max(0, Math.floor(ms / 1000)); return [Math.floor(x / 3600), Math.floor((x % 3600) / 60), x % 60]; };
     // the flip clock lands digit by digit: each tile shows a few other digits before its real one (entrance)
@@ -93,7 +93,7 @@ class Component extends DCLogic {
     const stage = prog >= 1 ? 4 : prog >= 0.85 ? 3 : prog >= 0.2 ? 2 : prog >= 0.08 ? 1 : 0, [dh, dm, ds] = hms(rem);
     const L = window.seI18n, ar = !!(L && L.lang() === 'ar'), eta = sh ? new Date(sh.lands).toLocaleString(ar ? 'ar-AE' : 'en-GB', { timeZone: 'Asia/Dubai', weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + ' GST' : '';
     const ship = sh ? { id: sh.id, label: sh.label, eta, pct: Math.round(prog * 100) + '%', prog, clock: [[Math.floor(dh / 24), 'DAYS'], [dh % 24, 'HRS'], [dm, 'MIN']].map(([v, u]) => ({ v: pad(v), u })), stages: STAGES.map((t, i) => ({ t, on: i <= stage, cur: i === stage })),
-      notify: () => window.dispatchEvent(new CustomEvent('se:flash', { detail: { t: 'We’ll message you when ' + sh.id + ' lands (sample).' } })) } : null;
+      notify: () => window.dispatchEvent(new CustomEvent('se:flash', { detail: { t: 'We’ll message you when ' + sh.id + ' lands.' } })) } : null;
     const pre = D ? D.preorders.map((p, i) => ({ ...p, k: i, reserve: () => window.dispatchEvent(new CustomEvent('se:soon', { detail: { title: 'Pre-orders', text: 'Reserving a pre-order opens with the shop. Ask us on WhatsApp in the meantime.' } })) })) : [];
     return { secRef: this.secRef, trackRef: this.trackRef, beltRef: this.beltRef, seen: s.seen, spot, cards, belt, loop, tabs, ship, pre, waiting: s.waiting, live: pool.filter((d) => d.ends > s.now).length, map: s.map,
       prev: () => { this.glide = { t0: performance.now(), from: this.bx, by: -this.step() }; }, next: () => { this.glide = { t0: performance.now(), from: this.bx, by: this.step() }; },

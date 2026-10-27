@@ -347,7 +347,7 @@ class Component extends DCLogic {
     const m = D.models.find((x) => nt.includes(x.name.toLowerCase().replace(/[\s-]/g, '')) || x.model_numbers.some((n) => nt.includes(n.toLowerCase().replace(/[\s-]/g, ''))) || nt.includes(x.name.toLowerCase().replace(/^(galaxy|iphone|xiaomi|redmi|realme|oppo|huawei|pixel|xperia)\s*/, '').replace(/[\s-]/g, '')));
     if (m) { const W = { SCR: ['screen', 'lcd', 'oled', 'display', 'شاشه', 'شاشة'], BAT: ['battery', 'batt', 'بطاريه', 'بطارية'], FLX: ['flex', 'charging', 'cable', 'شحن'], BCV: ['back', 'cover', 'غطاء'], CAM: ['camera', 'كاميرا'], FRM: ['frame', 'housing', 'فريم'], SML: ['port', 'button', 'speaker', 'سماعه'] };
       const cat = Object.keys(W).find((k) => W[k].some((w) => t.includes(w))); const ps = D.products.filter((p) => p.model_id === m.id && (!cat || p.category === cat) && p.stock_qty > 0);
-      if (ps.length) { const best = ps.sort((a, b) => a.retail_price - b.retail_price); return { t: (ar ? 'وجدت ' + ps.length + ' قطعة متوفرة لـ ' + m.name + ':\n' : 'Found ' + ps.length + ' in-stock part' + (ps.length > 1 ? 's' : '') + ' for the ' + m.name + ':\n') + best.slice(0, 3).map((p) => '· ' + p.title + ' · ' + GN[p.grade] + ' · AED ' + p.retail_price).join('\n') + (ar ? '\n(أسعار تجريبية)' : '\n(sample prices)'), act: () => this.openFmpAt(m.brand_id, m.id, cat || null), lbl: ar ? 'افتح في «ابحث عن قطعتي»' : 'Open in Find My Part', emote: 'part', own: ar }; }
+      if (ps.length) { const best = ps.sort((a, b) => a.retail_price - b.retail_price); return { t: (ar ? 'وجدت ' + ps.length + ' قطعة متوفرة لـ ' + m.name + ':\n' : 'Found ' + ps.length + ' in-stock part' + (ps.length > 1 ? 's' : '') + ' for the ' + m.name + ':\n') + best.slice(0, 3).map((p) => '· ' + p.title + ' · ' + GN[p.grade] + ' · AED ' + p.retail_price).join('\n') + (ar ? '\n(أسعار تجريبية)' : ''), act: () => this.openFmpAt(m.brand_id, m.id, cat || null), lbl: ar ? 'افتح في «ابحث عن قطعتي»' : 'Open in Find My Part', emote: 'part', own: ar }; }
       return { t: ar ? 'لا توجد قطعة ' + m.name + ' لهذا الطلب حالياً. أستطيع أن أسأل الفريق على واتساب.' : 'We have no ' + m.name + ' part in stock for that right now. I can ask the team on WhatsApp.', ...this.chatAct('whatsapp', ar), emote: 'low', own: ar }; }
     const tr = (en) => (window.seI18n && window.seI18n.tr ? window.seI18n.tr(en) : en);
     const fb = fallbackAnswer(text, { D, H, tr });
@@ -397,7 +397,7 @@ class Component extends DCLogic {
     // samsoom section
     const MO = ['idle', 'think', 'happy', 'found', 'low', 'wave'], ML = ['Idle', 'Thinking', 'Answering', 'Found it', 'Not sure', 'Hello'];
     const mood = s.ssMood || 'idle';
-    const SCRIPT = [['me', 'Do you have a Galaxy A54 battery?'], ['bot', 'Yes. Original grade, in stock in Deira. AED ' + ((P.find((p) => p.id === 'SE-A54-BAT-OR') || {}).retail_price || 0) + ' (sample).'], ['me', 'Are you open right now?'], ['bot', H.short + '. Dubai time.']];
+    const SCRIPT = [['me', 'Do you have a Galaxy A54 battery?'], ['bot', 'Yes. Original grade, in stock in Deira. AED ' + ((P.find((p) => p.id === 'SE-A54-BAT-OR') || {}).retail_price || 0) + '.'], ['me', 'Are you open right now?'], ['bot', H.short + '. Dubai time.']];
     
     const ss = { mood, typing: false,
       moods: MO.map((m, i) => ({ name: ML[i], bg: mood === m ? '#F7C032' : '#FFFFFF', pick: () => this.setState({ ssMood: s.ssMood === m ? null : m }) })),
@@ -454,7 +454,7 @@ class Component extends DCLogic {
     const scope = lvl === 1 ? P : lvl === 2 ? bProds : lvl === 3 ? mp : fgr, count = scope.length, stockU = units(scope);
     const pathTxt = [bName, mObj && mObj.name, cObj && cObj.name].filter(Boolean).join(' › ') || 'All parts';
     const goShop = (gp) => { this.setState({ fmpOpen: false }); this.flash('Shop · ' + pathTxt + (gp ? ' · ' + GN[gp.grade] + ' highlighted' : '') + ' · ' + count + ' results (Shop page comes in Part C).'); };
-    const fmp = { init: this._fmpInit = (this._fmpInit && this._fmpInit.b === fb && this._fmpInit.m === fm && this._fmpInit.c === fc && this._fmpInit.q === s.fmpQ ? this._fmpInit : { b: fb, m: fm, c: fc, q: s.fmpQ || '' }), shop: this._fmpShop = this._fmpShop || ((sum, n) => { this.setState({ fmpOpen: false }); this.flash('Shop · ' + sum + ' · ' + n + ' results (sample data). The Shop page comes next.'); }), open: !!s.fmpOpen, s1: lvl === 1, s2: lvl === 2, s3: lvl === 3, s4: lvl === 4, path, q: s.fmpQ || '', setQ: (e) => this.setState({ fmpQ: e.target.value }), close: () => this.setState({ fmpOpen: false }),
+    const fmp = { init: this._fmpInit = (this._fmpInit && this._fmpInit.b === fb && this._fmpInit.m === fm && this._fmpInit.c === fc && this._fmpInit.q === s.fmpQ ? this._fmpInit : { b: fb, m: fm, c: fc, q: s.fmpQ || '' }), shop: this._fmpShop = this._fmpShop || ((sum, n) => { this.setState({ fmpOpen: false }); this.flash('Shop · ' + sum + ' · ' + n + ' results.'); }), open: !!s.fmpOpen, s1: lvl === 1, s2: lvl === 2, s3: lvl === 3, s4: lvl === 4, path, q: s.fmpQ || '', setQ: (e) => this.setState({ fmpQ: e.target.value }), close: () => this.setState({ fmpOpen: false }),
       slide: (lvl % 2 ? 'fmSlideA' : 'fmSlideB') + ' .3s cubic-bezier(.2,.8,.2,1) both', brands: brandsF,
       series: [{ name: 'All', id: null }, ...SER.map((x) => ({ name: x, id: x }))].map((x) => ({ name: x.name, bg: ser === x.id ? '#F7C032' : 'rgba(255,255,255,.07)', ink: ser === x.id ? '#26282B' : '#FFFFFF', pick: () => this.setState({ fmpSer: x.id }) })),
       quick: (fb ? bm.slice(0, 2) : []).map((m, i) => ({ t: (i ? 'Most searched · ' : 'Recently viewed · ') + m.name, pick: () => this.setState({ fmpM: m.id }) })),
@@ -464,7 +464,7 @@ class Component extends DCLogic {
       cats: Ca.filter((c) => mp.some((p) => p.category === c.id)).map((c, i) => { const cp = mp.filter((p) => p.category === c.id), qq = cp.reduce((t, p) => t + p.stock_qty, 0); return { name: c.name, kind: KIND[c.id], d: dl(i), n: cp.length + ' grades · from AED ' + Math.min(...cp.map((p) => p.retail_price)), o: qq ? 1 : 0.7, tag: kf(qq) + ' in stock', has: !!qq, out: !qq, slot: 'fmp-part-' + fm + '-' + c.id, notify: (ev) => { ev.stopPropagation(); this.flash('We’ll message you when ' + c.name.toLowerCase() + ' for this model are back. (demo)'); }, pick: () => this.setState({ fmpC: c.id }) }; }),
       grades: fgr.map((p, i) => { const out = p.stock_qty === 0; return { code: GN[p.grade], name: GN[p.grade], maker: ((D && D.makerNames) || {})[p.grade] || '', shot: p.shot, best: BEST[p.grade] || '', warranty: WAR[p.grade] || '', d: dl(i), price: 'AED ' + fmt(p.retail_price), stock: out ? 'Restocking' : p.stock_qty >= 4 ? 'In stock' : 'Only ' + p.stock_qty + ' left', bars: fbar(p.stock_qty), o: out ? 0.55 : 1, bd: i === 0 ? 'rgba(247,192,50,.5)' : 'rgba(255,255,255,.1)', kind: KIND[p.category], slot: 'fmp-grade-' + p.id, inStock: !out, out, shop: () => goShop(p), add: (ev) => { ev.stopPropagation(); out ? this.flash('We’ll message you when it’s back. (demo)') : this.addToCart(p.id, ev); } }; }),
       summary: [bName, mObj && mObj.name, cObj && cObj.name].filter(Boolean).join(' · ') || 'Pick a brand to start',
-      foot: fmt(stockU) + ' parts in stock · ' + count + ' listings' + (lvl === 2 ? ' · ' + fModels.length + ' models' : '') + ' · sample data', count, countF: fmt(count), roll: (count % 2 ? 'fmRollA' : 'fmRollB') + ' .35s cubic-bezier(.2,.8,.2,1) both',
+      foot: fmt(stockU) + ' parts in stock · ' + count + ' listings' + (lvl === 2 ? ' · ' + fModels.length + ' models' : '') + '', count, countF: fmt(count), roll: (count % 2 ? 'fmRollA' : 'fmRollB') + ' .35s cubic-bezier(.2,.8,.2,1) both',
       shop: () => goShop(null) };
     // cart
     const cart = (s.cart || []).filter((c) => P.find((p) => p.id === c.id));
@@ -587,7 +587,7 @@ class Component extends DCLogic {
       sml: ['The small parts that finish the job: buttons, ports, speakers, SIM trays and board components.', ['Buttons and ports', 'Speakers and SIM trays', 'Board components']],
     }[kind] || ['', []];
     const st = CAT[kind] ? cs(CAT[kind]) : null;
-    const stock = st ? fmt(st.stock) + ' in stock · sample data' : kind === 'wld' ? 'Ships to the Middle East, Africa, Europe and Asia' : kind === 'whs' ? 'Trade account required' : 'Same-day slots depend on the part · team confirms';
+    const stock = st ? fmt(st.stock) + ' in stock' : kind === 'wld' ? 'Ships to the Middle East, Africa, Europe and Asia' : kind === 'whs' ? 'Trade account required' : 'Same-day slots depend on the part · team confirms';
     const shop = { scr: 'Shop screens', bat: 'Shop batteries', bcv: 'Shop back covers', cam: 'Shop cameras', frm: 'Shop frames', flx: 'Shop flex cables', sml: 'Shop small parts', wld: 'Shipping info', whs: 'Wholesale prices', rep: 'Book a repair' }[kind];
     const close = () => this.setState({ posterI: null });
     const wa = 'https://wa.me/' + ((D && D.contact && D.contact.wa) || SITE.contact.whatsapp) + '?text=' + encodeURIComponent('Hi, I saw your ' + k.toLowerCase() + ' ad. ');
@@ -616,7 +616,7 @@ class Component extends DCLogic {
     groups.forEach((g) => g.items.forEach((it) => { const idx = k++; flat.push(it); it.bg = idx === sel ? '#FFF4D1' : 'transparent'; it.d = Math.min(idx, 8) * 25 + 'ms'; it.hover = () => this.setState({ spI: idx }); }));
     const rc = this.recent();
     const POP = ['iPhone 13 screen', 'Galaxy A54 battery', 'iPhone 11 battery', 'Redmi Note 13 screen', 'iPhone 15 Pro back glass', 'Tecno Camon 30 screen'];
-    const sp = { open: !!s.spOpen, q: s.spQ || '', ref: this.spRef, empty: !q, none: !!q && !flat.length, count: q ? flat.length + ' results · sample data' : 'Type to search ' + fmt(P.length) + ' parts', wa: D ? 'https://wa.me/' + D.contact.wa + '?text=' + encodeURIComponent('Hi, do you have: ' + (s.spQ || '')) : '#',
+    const sp = { open: !!s.spOpen, q: s.spQ || '', ref: this.spRef, empty: !q, none: !!q && !flat.length, count: q ? flat.length + ' results' : 'Type to search ' + fmt(P.length) + ' parts', wa: D ? 'https://wa.me/' + D.contact.wa + '?text=' + encodeURIComponent('Hi, do you have: ' + (s.spQ || '')) : '#',
       recentLbl: 'THIS SESSION', recent: rc.map((x) => ({ q: x, go: () => this.setState({ spQ: x, spI: 0 }) })), noRecent: !rc.length,
       popular: POP.map((x, i) => ({ q: x, n: String(i + 1).padStart(2, '0'), go: () => this.setState({ spQ: x, spI: 0 }) })),
       cats: Ca.map((c) => ({ name: c.name, go: () => this.setState({ spQ: c.one, spI: 0 }) })), groups, close,

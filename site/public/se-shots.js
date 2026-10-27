@@ -35,9 +35,9 @@
   const forCat = (cat, brand, maker) => (cat === 'SCR' ? pick(brand, maker) : PART[cat] || 'part-sml');
   // owner (27 Oct): every pose has an Arabic twin (<id>-ar), the carton peeking out on the right; chosen by the page language
   const isAr = () => typeof document !== 'undefined' && document.documentElement.lang === 'ar';
-  const url = (id, w) => '/assets/pose/' + id + (isAr() ? '-ar' : '') + '-' + (w <= 240 ? 240 : w <= 480 ? 480 : 960) + '.webp';
+  const url = (id, w) => '/assets/pose/' + id + (isAr() && !/^solo-/.test(id) ? '-ar' : '') + '-' + (w <= 240 ? 240 : w <= 480 ? 480 : 960) + '.webp';
   // switching language swaps every pose image already on the page (new ones read the language through url())
-  if (typeof window !== 'undefined' && window.addEventListener) window.addEventListener('se:lang', () => { const ar = isAr(), fix = (u) => u.replace(/\/assets\/pose\/([a-z0-9-]+?)(-ar)?-(240|480|960)\.webp/g, (m, id, _a, w) => '/assets/pose/' + id + (ar ? '-ar' : '') + '-' + w + '.webp');
+  if (typeof window !== 'undefined' && window.addEventListener) window.addEventListener('se:lang', () => { const ar = isAr(), fix = (u) => u.replace(/\/assets\/pose\/([a-z0-9-]+?)(-ar)?-(240|480|960)\.webp/g, (m, id, _a, w) => '/assets/pose/' + id + (ar && !/^solo-/.test(id) ? '-ar' : '') + '-' + w + '.webp');
     document.querySelectorAll('img[src*="/assets/pose/"], img[srcset*="/assets/pose/"]').forEach((im) => { if (im.getAttribute('src')) im.setAttribute('src', fix(im.getAttribute('src'))); if (im.getAttribute('srcset')) im.setAttribute('srcset', fix(im.getAttribute('srcset'))); });
     document.querySelectorAll('[style*="/assets/pose/"]').forEach((el) => el.setAttribute('style', fix(el.getAttribute('style')))); });
   // the parts-library index (0 Screen · 1 Frame · 2 Flex · 3 Board · 4 Battery · 5 Cameras · 6 Small parts · 7 Back glass) → its pose

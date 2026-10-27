@@ -54,7 +54,7 @@ class Component extends DCLogic {
   renderVals() {
     const L = typeof window !== 'undefined' ? window.seI18n : null, tape = L && L.lang() === 'ar' ? L.tr('SAM ELECTRONICS · WHOLESALE · TRADE') : null; // Urgent 5: the tape is data-no-i18n (the walker skips it), so it is translated here
     const s = this.state, D = s.data, lib = s.lib, p = this.prod(), q = s.qty, ti = tierOf(q), full = onPallet(q) >= PER_PALLET, rowN = palletsFor(q);
-    const img = (x) => (x && x.shot && window.SE_SHOTS ? window.SE_SHOTS.url(x.shot, 480) /* R6 E7: screens = box + LCD */ : x && lib && lib.large && LK[x.category] != null ? lib.large[LK[x.category]] : '');
+    const img = (x) => (x && window.SE_SHOTS ? window.SE_SHOTS.url(x.shot || window.SE_SHOTS.forCat(x.category), 480) /* owner (27 Oct): every part is its standard pose */ : x && lib && lib.large && LK[x.category] != null ? lib.large[LK[x.category]] : '');
     const unit = p ? Math.round(p.retail_price * TIERS[ti].f) : 0, n = cartonsFor(q);
     const ss = (D && D.serviceStats) || { countries: 24, tradeMin: 10 };
     const cartons = Array.from({ length: n }, (_, i) => { const layer = Math.floor(i / 6), r = i % 6, back = r >= 3, col = r % 3; // each layer: the front row first, then the row behind

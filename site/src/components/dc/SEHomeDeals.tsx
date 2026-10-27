@@ -39,7 +39,7 @@ function render(v: Vals) {
       <div className="dl-in">
         <header className="dl-top">
           <div>
-            <span className="dl-eb">DEALS & ARRIVALS · SAMPLE PRICES</span>
+            <span className="dl-eb">DEALS & ARRIVALS</span>
             <h2 className="dl-h">
               <span>
                 <span>Prices drop. Clocks tick.</span>
@@ -206,7 +206,7 @@ function render(v: Vals) {
               <div className="dl-ship-h">
                 <div>
                   <span className="dl-k">
-                    INCOMING SHIPMENT · <span data-no-i18n="">{ship.id}</span> · SAMPLE
+                    INCOMING SHIPMENT · <span data-no-i18n="">{ship.id}</span>
                   </span>
                   <h4>{ship.label}</h4>
                 </div>
@@ -273,7 +273,7 @@ function render(v: Vals) {
           <article className="dl-pre">
             <div className="dl-ship-h">
               <div>
-                <span className="dl-k">PRE-ORDERS · NEXT GENERATION · SAMPLE</span>
+                <span className="dl-k">PRE-ORDERS · NEXT GENERATION</span>
                 <h4>Reserve the parts before the phones land.</h4>
               </div>
               <span className="dl-wait">

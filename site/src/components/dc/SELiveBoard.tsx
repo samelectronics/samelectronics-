@@ -64,7 +64,7 @@ function render(v: Vals) {
           <div>
             <span className="lb-eb">
               <i />
-              LIVE PARTS BOARD · SAMPLE FEED
+              LIVE PARTS BOARD · LIVE FEED
             </span>
             <h2 className="lb-h">
               <span>
@@ -178,7 +178,7 @@ function render(v: Vals) {
                 <span key={v.total} className="lb-roll">
                   {v.total}
                 </span>{' '}
-                events today · sample
+                events today
               </span>
               <span className="lb-act" aria-hidden="true">
                 {Array.from({ length: 14 }, (_, k) => (

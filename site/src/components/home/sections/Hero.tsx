@@ -534,7 +534,7 @@ export default function Hero({ v }: { v: Vals }) {
                             animation: 'seBlinkDot 1.4s steps(1) infinite',
                           }}
                         ></span>
-                        SYNCED · SAMPLE
+                        SYNCED · LIVE
                       </span>
                     </span>
                     {'\n                '}
@@ -1597,7 +1597,7 @@ export default function Hero({ v }: { v: Vals }) {
               Parts for every brand you fix.
             </span>
             {'\n        '}
-            <span style={{ fontSize: '13px', color: '#C9CBCE' }}>Hover a brand · sample stock</span>
+            <span style={{ fontSize: '13px', color: '#C9CBCE' }}>Hover a brand · live stock</span>
             {'\n      '}
           </div>
           {'\n      '}

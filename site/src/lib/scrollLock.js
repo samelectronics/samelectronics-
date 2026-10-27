@@ -4,13 +4,21 @@
 // nothing shifts sideways.
 import { useEffect } from 'react';
 
-let n = 0;
+let n = 0, off = null;
+// owner (27 Oct): opening a panel (Find My Part…) must never move the page. Locking the root's overflow made this page
+// jump to the top, so the page is no longer frozen by overflow: while a layer is open, wheel / touch / scroll keys that
+// happen OUTSIDE the layer are cancelled (the layers stop their own events with stopWheel, so they still scroll inside).
+const KEYS = new Set(['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' ', 'Spacebar']);
 export function lockScroll() {
   if (typeof document === 'undefined') return () => {};
-  const h = document.documentElement;
-  if (n++ === 0) { const sb = window.innerWidth - h.clientWidth; h.style.overflow = 'hidden'; if (sb > 0) h.style.paddingInlineEnd = sb + 'px'; }
+  if (n++ === 0) {
+    const block = (e) => e.preventDefault();
+    const key = (e) => { const t = e.target; if (KEYS.has(e.key) && !(t && (t.closest && t.closest('input,textarea,select,[contenteditable]')))) e.preventDefault(); };
+    window.addEventListener('wheel', block, { passive: false }); window.addEventListener('touchmove', block, { passive: false }); window.addEventListener('keydown', key);
+    off = () => { window.removeEventListener('wheel', block); window.removeEventListener('touchmove', block); window.removeEventListener('keydown', key); };
+  }
   let done = false;
-  return () => { if (done) return; done = true; if (--n === 0) { h.style.overflow = ''; h.style.paddingInlineEnd = ''; } };
+  return () => { if (done) return; done = true; if (--n === 0 && off) { off(); off = null; } };
 }
 export function useScrollLock(open) {
   useEffect(() => (open ? lockScroll() : undefined), [open]);

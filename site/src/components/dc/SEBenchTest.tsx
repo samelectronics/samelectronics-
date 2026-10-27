@@ -74,7 +74,7 @@ function render(v: Vals) {
             {/* R6 §08: the space under the promise: today's rig counters (SAMPLE), how we test, run it yourself */}
             <div className="bt-today">
               <span className="bt-today-h">
-                TODAY ON THE RIG <em>SAMPLE</em>
+                TODAY ON THE RIG
               </span>
               <div className="bt-cnts">
                 {(v.today || []).map((c: any) => (
@@ -213,7 +213,6 @@ function render(v: Vals) {
                   <span className="bt-tag">
                     <small>PRICE</small>
                     <b>AED {v.price}</b>
-                    <small>sample</small>
                   </span>
                 </div>
               </div>
@@ -239,7 +238,7 @@ function render(v: Vals) {
                 </div>
                 <div className="bt-o-r">
                   <span>Price</span>
-                  <span>AED {v.price} · sample</span>
+                  <span>AED {v.price}</span>
                 </div>
                 <div className="bt-o-bars" aria-hidden="true" />
                 <span className="bt-stamp" data-b="stamp">

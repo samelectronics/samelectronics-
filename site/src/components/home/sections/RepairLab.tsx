@@ -86,7 +86,7 @@ export default function RepairLab({ v }: { v: Vals }) {
               }}
             >
               <span>REPAIR ESTIMATOR</span>
-              <span>SAMPLE PRICES</span>
+              <span>TYPICAL PRICES</span>
             </span>
             {'\n        '}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>

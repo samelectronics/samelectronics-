@@ -219,7 +219,7 @@ function render(v: Vals) {
           <div className="wf-ctl">
             <div className="wf-ctl-h">
               <span className="wf-k">PALLET BUILDER</span>
-              <span className="wf-k dim">SAMPLE TRADE PRICES</span>
+              <span className="wf-k dim">TRADE PRICES</span>
             </div>
             {/* R6 §12: search the whole catalogue */}
             <div className="wf-search">
@@ -393,7 +393,7 @@ function render(v: Vals) {
       <div className="wf-tick">
         <span className="wf-tick-k">
           <i />
-          TRADE TICKER · SAMPLE
+          TRADE TICKER
         </span>
         <div className="wf-tick-vp">
           <div className="wf-tick-row">
@@ -434,7 +434,6 @@ function render(v: Vals) {
             </svg>
           </a>
         </div>
-        <p className="wf-note">* Sample figures, to be confirmed. Trade prices shown are samples.</p>
       </div>
     </section>
   );

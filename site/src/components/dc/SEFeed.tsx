@@ -167,7 +167,6 @@ function render(v: Vals) {
                   <small>followers</small>
                 </span>
               ))}
-              <small className="fd-sample">Sample counts · the owner confirms the real numbers</small>
             </span>
           </div>
         </header>

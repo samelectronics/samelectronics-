@@ -100,7 +100,7 @@ function render(v: Vals) {
             <b data-fn="14">14</b> <small>brands</small>
           </span>
           <span>
-            <b data-fn="9000">9,000</b>+ <small>parts · sample</small>
+            <b data-fn="9000">9,000</b>+ <small>parts</small>
           </span>
         </div>
       </div>

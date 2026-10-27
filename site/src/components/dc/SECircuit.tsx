@@ -90,7 +90,7 @@ function render(v: Vals) {
               ) : null}
             </div>
             <div className="cs-sim">
-              <span className="cs-k">SIMULATOR · SAMPLE</span>
+              <span className="cs-k">SIMULATOR</span>
               <div className="cs-sim-b">
                 <button type="button" onClick={v.add(200)}>
                   + Screen · <span data-no-i18n="">AED 200</span>
@@ -132,7 +132,7 @@ function render(v: Vals) {
                   <span className="chip">{t.chip}</span>
                 </div>
               ))}
-            <p className="cs-note">Spend so far: <b data-no-i18n="">{v.spend}</b> · sample thresholds, to be confirmed.</p>
+            <p className="cs-note">Spend so far: <b data-no-i18n="">{v.spend}</b></p>
           </div>
 
           {/* ---------- the member card ---------- */}

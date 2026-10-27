@@ -250,7 +250,6 @@ function render(v: Vals) {
             <span>Shipped from Deira</span>
           </div>
         </div>
-        <p className="st-note">* Sample figure, to be confirmed.</p>
       </div>
     </section>
   );
