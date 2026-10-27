@@ -1,6 +1,7 @@
 // Converted from design/project/Sam Electronics Home v3.dc.html (12 Oct 2026); maintained by hand since.
 // Home v3 section "Worldwide". Renders against the home page's values (`v`, from HomeV3's logic class).
 'use client';
+import CircuitField from '../CircuitField';
 import WorldwideBoxes, { CountryCard } from './WorldwideBoxes';
 import React from 'react';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
@@ -21,16 +22,8 @@ export default function Worldwide({ v }: { v: Vals }) {
       }}
     >
       {'\n  '}
-      <div
-        style={{
-          position: 'absolute',
-          inset: '0',
-          backgroundImage:
-            'linear-gradient(rgba(247,192,50,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(247,192,50,.06) 1px,transparent 1px),linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px)',
-          backgroundSize: '120px 120px,120px 120px,24px 24px,24px 24px',
-          pointerEvents: 'none',
-        }}
-      ></div>
+      {/* owner (27 Oct): no grid lines; the section's own live circuit board instead */}
+      <CircuitField tone="dark" seed={11} />
       {'\n  '}
       <div style={{ position: 'relative', maxWidth: '1312px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '28px' }}>
         {'\n    '}
@@ -136,7 +129,7 @@ export default function Worldwide({ v }: { v: Vals }) {
                 pointerEvents: 'none',
               }}
             >
-              Example destinations · owner-provided
+              Click a country for delivery times
             </span>
             {'\n      '}
           </div>

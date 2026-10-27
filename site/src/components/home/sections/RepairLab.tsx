@@ -4,7 +4,7 @@
 import React from 'react';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 import SEBrandLogo from '../../dc/SEBrandLogo';
-import RepairFilm, { type RepairKind } from '../RepairFilm';
+import RepairScene from '../RepairScene';
 import InfoTip from '../InfoTip';
 
 /** Issue 4: fine film grain instead of grids, stripes and tiles. */
@@ -12,15 +12,9 @@ const GRAIN = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg
 
 export default function RepairLab({ v }: { v: Vals }) {
   return (
-    <section id="repair" data-tone="dark" data-screen-label="08 Repair Lab" className="rp" style={{ padding: 'clamp(80px,8vw,120px) clamp(20px,4vw,64px)' }}>
+    <section id="repair" data-tone="light" data-screen-label="08 Repair Lab" className="rp" style={{ padding: 'clamp(80px,8vw,120px) clamp(20px,4vw,64px)' }}>
       {/* R6 §11: the bench itself: graphite ESD mat (faint grid), warm light from above, circuit traces in the gutters. No tiles. */}
-      {(['l', 'r'] as const).map((k) => (
-        <svg key={k} className={'rp-trace ' + k} viewBox="0 0 120 1000" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M20 0 V300 L56 336 V700 L28 728 V1000" />
-          <path d="M20 0 V300 L56 336 V700 L28 728 V1000" className="f" pathLength={1} />
-          <path d="M0 520 H34 L56 498" />
-        </svg>
-      ))}
+      {/* owner (27 Oct): no flat lines; the section's own branching circuits come from SectionLife, in the gutters */}
       <div style={{ position: 'relative', maxWidth: '1312px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '32px' }}>
         {'\n    '}
         <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between', alignItems: 'flex-end', gap: '24px' }}>
@@ -49,10 +43,10 @@ export default function RepairLab({ v }: { v: Vals }) {
                 fontSize: 'clamp(34px,3.4vw,48px)',
                 lineHeight: '1.08',
                 letterSpacing: '-.03em',
-                color: '#FFFFFF',
+                color: '#26282B',
               }}
             >
-              <span>Fixed, tested,</span> <span>guaranteed.</span>
+              <span>Fixed, tested,</span> <span style={{ color: '#C98A12' }}>guaranteed.</span>
             </h2>
             {'\n      '}
           </div>
@@ -61,7 +55,7 @@ export default function RepairLab({ v }: { v: Vals }) {
         {'\n    '}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(min(100%,420px),1fr))', gap: '20px' }}>
           {'\n      '}
-          <RepairFilm kind={(v.re?.film || 'scr') as RepairKind} ticket={v.re?.ticket || { model: '', problems: '' }} />
+          <RepairScene ticket={v.re?.ticket || { model: '', problems: '' }} />
           {'\n      '}
           <div
             style={{
@@ -114,7 +108,12 @@ export default function RepairLab({ v }: { v: Vals }) {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px' }}>
               {'\n          '}
               <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                <span style={{ fontSize: '13px', fontWeight: '600', color: '#3D3E3F' }}>2 · Model</span>
+                <span style={{ fontSize: '13px', fontWeight: '600', color: '#3D3E3F' }}>2 · Device and model</span>
+                <div className="rp-devs">
+                  {(v.re?.devs || []).map((d: any) => (
+                    <button key={d.id} type="button" className={'rp-chip lt' + (d.on ? ' on' : '')} aria-pressed={d.on} onClick={d.pick}>{d.n}</button>
+                  ))}
+                </div>
                 <button
                   onClick={v.re?.mdd?.toggle}
                   style={cssToObj(
@@ -141,7 +140,7 @@ export default function RepairLab({ v }: { v: Vals }) {
                         position: 'absolute',
                         left: '0',
                         right: '0',
-                        top: '78px',
+                        top: '122px',
                         zIndex: '20',
                         maxHeight: '240px',
                         overflowY: 'auto',
@@ -152,6 +151,7 @@ export default function RepairLab({ v }: { v: Vals }) {
                         animation: 'seRise .2s both',
                       }}
                     >
+                      <input className="rp-search" value={v.re?.q || ''} onChange={v.re?.setQ} placeholder="Search your model…" autoFocus aria-label="Search your model" />
                       {(Array.isArray(v.re?.mdd?.opts) ? v.re?.mdd?.opts : []).map((__it: any, __i: number) => {
                         const v2 = { ...v, o: __it, $index: __i };
                         return ((v: Vals) => (
@@ -184,12 +184,17 @@ export default function RepairLab({ v }: { v: Vals }) {
             {'\n        '}
             {/* R6 §11: problems are a multi-select (the film follows the first screen / battery / port choice) */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span style={{ fontSize: '13px', fontWeight: '600', color: '#3D3E3F' }}>3 · Problem (choose all that apply)</span>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                {(v.re?.probs || []).map((p: any) => (
-                  <button key={p.id} type="button" aria-pressed={p.on} onClick={p.pick} className={'rp-chip lt' + (p.on ? ' on' : '')}>
-                    {p.name}
-                  </button>
+              <span style={{ fontSize: '13px', fontWeight: '600', color: '#3D3E3F' }}>3 · What needs fixing? (choose all that apply)</span>
+              <div className="rp-groups">
+                {(v.re?.groups || []).map((g: any) => (
+                  <div key={g.g} className="rp-grp">
+                    <small>{g.g}</small>
+                    <div>
+                      {g.items.map((p: any) => (
+                        <button key={p.id} type="button" aria-pressed={p.on} onClick={p.pick} className={'rp-chip lt' + (p.on ? ' on' : '')}>{p.name}</button>
+                      ))}
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -203,10 +208,11 @@ export default function RepairLab({ v }: { v: Vals }) {
                       <button
                         onClick={v.g?.pick}
                         style={cssToObj(
-                          `height:36px;padding:0 14px;border-radius:10px;border:none;background:${s(v.g?.bg)};color:${s(v.g?.ink)};box-shadow:${s(v.g?.sh)};font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap`,
+                          `display:inline-flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:1px;height:44px;padding:0 14px;border-radius:10px;border:none;background:${s(v.g?.bg)};color:${s(v.g?.ink)};box-shadow:${s(v.g?.sh)};font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap`,
                         )}
                       >
                         {t(v.g?.name)}
+                        <small className="rp-gsub">{v.g?.sub}</small>
                       </button>
                     </React.Fragment>
                   ))(v2);
@@ -287,6 +293,17 @@ export default function RepairLab({ v }: { v: Vals }) {
               {'\n        '}
             </div>
             {'\n        '}
+            {/* owner (27 Oct): the visit is optional; everything goes to WhatsApp as one tidy booking message */}
+            <div className="rp-when">
+              <span style={{ fontSize: "13px", fontWeight: "600", color: "#3D3E3F" }}><span>5 · When can you come?</span> <em>optional</em></span>
+              <div>
+                <input type="date" value={v.re?.date || ''} onChange={v.re?.setDate} aria-label="Preferred day" />
+                <select value={v.re?.time || 'any'} onChange={v.re?.setTime} aria-label="Preferred time">
+                  {(v.re?.times || []).map(([k, l]: [string, string]) => <option key={k} value={k}>{l}</option>)}
+                </select>
+              </div>
+              <textarea value={v.re?.noteTxt || ''} onChange={v.re?.setNote} rows={2} placeholder="Anything else? (colour, password-free check, pickup…)" aria-label="Notes" />
+            </div>
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               {'\n          '}
               <a
@@ -309,7 +326,7 @@ export default function RepairLab({ v }: { v: Vals }) {
                 }}
                 className={cx(undefined, 'scp-fe3982c3')}
               >
-                Book this repair
+                Send booking on WhatsApp
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
                   <path d="M5 12h14M13 6l6 6-6 6"></path>
                 </svg>

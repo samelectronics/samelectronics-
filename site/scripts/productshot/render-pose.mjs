@@ -19,6 +19,7 @@ for (const [id, s] of Object.entries(window.SE_SHOTS.shots)) JOBS[id] = { item: 
 for (const it of ['bat', 'bcv', 'flx', 'cam', 'sml', 'aud', 'frm', 'board']) JOBS['part-' + it] = { item: it, box: 'white', lcd: 'plain', label: '' };
 JOBS['rep-crack'] = { item: 'crack', box: 'white', lcd: 'plain', label: '' };
 JOBS['rep-fixed'] = { item: 'fixed', box: 'white', lcd: 'plain', label: '' };
+JOBS['rep-open'] = { item: 'open', box: 'white', lcd: 'plain', label: '' };
 // owner (27 Oct): the box lineups (every box of a range behind the screen, ~70% of each showing), for the iPad banners and the Showcase
 JOBS['line-or'] = { item: 'line', boxes: 'bbk-sp,huawei-sp,xiaomi-sp,svc-yellow,apple-sp,samsung-sp', box: 'samsung-sp', lcd: 'plain', label: '', aspect: '2' }; // every Original (Service Pack) box we carry
 JOBS['line-all'] = { item: 'line', boxes: 'zy,gx,xiaomi-sp,huawei-sp,apple-sp,samsung-sp', box: 'samsung-sp', lcd: 'plain', label: '', aspect: '2' };

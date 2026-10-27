@@ -40,3 +40,64 @@
 .rf-now > span { grid-area: 1 / 1; opacity: 0; transform: translateY(6px); transition: opacity .15s, transform .15s; }
 .rf-now > span.on { opacity: 1; transform: none; transition: opacity .3s .15s, transform .4s .15s cubic-bezier(.2, .8, .2, 1); }
 .rf-steps { grid-template-columns: repeat(6, 1fr); }
+
+/* owner (27 Oct) · Repair Lab on fog (no two dark sections in a row), with the hero-quality scene and the full booking form */
+.rp { background: #F2F3F4 !important; color: #26282B !important; }
+.rp .rp-trace { display: none !important; }
+.rs { display: flex; flex-direction: column; gap: 14px; padding: 20px; border-radius: 24px; background: linear-gradient(160deg, #2E3034, #1E1F22); color: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, .08), 0 24px 48px -20px rgba(38, 40, 43, .5); }
+.rs-stage { position: relative; height: 380px; border-radius: 18px; overflow: hidden; background: radial-gradient(70% 60% at 50% 55%, #3A3C41, #24262A 70%); }
+.rs-stage img { position: absolute; left: 50%; top: 52%; width: 440px; height: 440px; transform: translate(-50%, -50%) scale(.98); opacity: 0; transition: opacity .6s ease, transform .9s cubic-bezier(.16, 1, .3, 1); filter: drop-shadow(0 20px 26px rgba(0, 0, 0, .5)); }
+.rs-stage img.on { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.rs-sweep { position: absolute; top: 8%; bottom: 8%; width: 14%; left: -14%; background: linear-gradient(90deg, rgba(247, 192, 50, 0), rgba(255, 219, 110, .9), rgba(247, 192, 50, 0)); filter: blur(3px); mix-blend-mode: screen; animation: rsSweep 1s cubic-bezier(.45, 0, .55, 1) both; }
+@keyframes rsSweep { to { left: 100%; } }
+.rs-tag { position: absolute; left: 16px; top: 14px; padding: 6px 10px; border-radius: 999px; background: rgba(247, 192, 50, .14); border: 1px solid rgba(247, 192, 50, .45); color: #F7C032; font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .1em; text-transform: uppercase; animation: seRise .4s both; }
+.rs-steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 0; padding: 0; list-style: none; }
+.rs-steps li { display: flex; flex-direction: column; gap: 3px; padding: 12px; border-radius: 12px; background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .07); transition: background .4s, border-color .4s; }
+.rs-steps li i { font: 600 11px 'JetBrains Mono', monospace; font-style: normal; color: #7E8389; }
+.rs-steps li b { font: 700 15px 'Space Grotesk', sans-serif; }
+.rs-steps li small { font-size: 12px; color: #B9BCC0; line-height: 1.35; }
+.rs-steps li.on { background: rgba(247, 192, 50, .12); border-color: rgba(247, 192, 50, .5); }
+.rs-steps li.on i { color: #F7C032; }
+.rs-ticket { display: grid; grid-template-columns: auto 1fr; column-gap: 12px; align-items: baseline; padding: 12px 14px; border-radius: 12px; background: #F7C032; color: #26282B; }
+.rs-ticket span { grid-row: span 2; font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .12em; }
+.rs-ticket b { font: 700 16px 'Space Grotesk', sans-serif; }
+.rs-ticket small { font-size: 13px; }
+.rp-devs { display: flex; gap: 6px; }
+.rp-search { display: block; width: 100%; height: 38px; margin-bottom: 6px; padding: 0 12px; box-sizing: border-box; border-radius: 9px; border: 1.5px solid rgba(26, 27, 29, .14); font: 500 14px Inter, sans-serif; outline: none; }
+.rp-search:focus { border-color: #F7C032; box-shadow: 0 0 0 3px rgba(247, 192, 50, .25); }
+.rp-groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 14px; }
+.rp-grp small { display: block; margin-bottom: 5px; font: 600 10.5px 'JetBrains Mono', monospace; letter-spacing: .12em; color: #8C9096; text-transform: uppercase; }
+.rp-grp > div { display: flex; flex-wrap: wrap; gap: 5px; }
+.rp-grp .rp-chip { height: 32px; font-size: 13px; }
+.rp-gsub { font: 500 11px 'JetBrains Mono', monospace; color: #5E6064; }
+.rp-when { display: flex; flex-direction: column; gap: 8px; }
+.rp-when em { font-style: normal; font-weight: 500; color: #8C9096; }
+.rp-when > div { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.rp-when input, .rp-when select, .rp-when textarea { height: 42px; padding: 0 12px; border-radius: 10px; border: 1.5px solid rgba(26, 27, 29, .15); background: #fff; font: 500 14px Inter, sans-serif; color: #26282B; box-sizing: border-box; width: 100%; }
+.rp-when textarea { height: auto; padding: 10px 12px; resize: vertical; }
+@media (max-width: 700px) { .rs-steps { grid-template-columns: repeat(2, 1fr); } .rp-groups { grid-template-columns: 1fr; } .rs-stage img { width: 340px; height: 340px; } }
+/* the column's lower half: bench promises + today's bench (owner, 27 Oct: no empty space under the scene) */
+.rs-stage { height: 420px; }
+.rs-stage img { width: 520px; height: 520px; }
+.rs-prom { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+.rs-prom > div { display: grid; grid-template-columns: 34px 1fr; column-gap: 10px; align-items: center; padding: 12px; border-radius: 12px; background: rgba(255, 255, 255, .04); border: 1px solid rgba(255, 255, 255, .06); }
+.rs-prom svg { grid-row: span 2; width: 34px; height: 34px; padding: 7px; border-radius: 10px; background: rgba(247, 192, 50, .14); fill: none; stroke: #F7C032; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.rs-prom b { font: 700 14px 'Space Grotesk', sans-serif; }
+.rs-prom small { font-size: 12px; color: #B9BCC0; }
+.rs-today { padding: 14px; border-radius: 14px; background: rgba(0, 0, 0, .22); border: 1px solid rgba(255, 255, 255, .06); }
+.rs-today-h { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .12em; color: #B9BCC0; }
+.rs-today-h .dot { width: 8px; height: 8px; border-radius: 50%; background: #2BB673; box-shadow: 0 0 0 0 rgba(43, 182, 115, .6); animation: rsPing 1.8s infinite; }
+@keyframes rsPing { 70% { box-shadow: 0 0 0 8px rgba(43, 182, 115, 0); } 100% { box-shadow: 0 0 0 0 rgba(43, 182, 115, 0); } }
+.rs-today-r { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; padding: 9px 2px; border-top: 1px solid rgba(255, 255, 255, .06); }
+.rs-today-r b { font: 600 14px 'Space Grotesk', sans-serif; }
+.rs-today-r small { font-size: 12px; color: #B9BCC0; }
+.rs-today-r em { font: 600 10.5px 'JetBrains Mono', monospace; font-style: normal; letter-spacing: .08em; text-transform: uppercase; padding: 4px 8px; border-radius: 999px; background: rgba(255, 255, 255, .07); color: #D6D8DB; min-width: 92px; text-align: center; }
+.rs-today-r em[data-st='ok'] { background: rgba(43, 182, 115, .16); color: #5FD39B; }
+.rs-today-r em[data-st='test'] { background: rgba(247, 192, 50, .16); color: #F7C032; }
+[data-se-vis='1'] .rs-today-r { animation: seRise .5s calc(var(--i) * .12s + .2s) both; }
+@media (max-width: 700px) { .rs-prom { grid-template-columns: 1fr; } .rs-today-r small { display: none; } }
+.rs-stage { height: 470px; } .rs-stage img { width: 580px; height: 580px; } .rs-today { flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; }
+.rs-prom svg { grid-column: 1; grid-row: 1 / span 2; } .rs-prom b, .rs-prom small { grid-column: 2; }
+.rs-prom > div { display: flex; align-items: center; gap: 10px; }
+.rs-prom svg { flex: none; }
+.rs-prom > div > span { display: flex; flex-direction: column; gap: 2px; min-width: 0; }

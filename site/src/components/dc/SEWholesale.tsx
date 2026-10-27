@@ -3,6 +3,8 @@
 import React from 'react';
 import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SEWholesale.logic.js';
+import DotGlobe from '@/components/home/DotGlobe';
+import PalletDrop from '@/components/home/PalletDrop';
 import { PALLET_CELLS, PALLET_FRAME } from '@/content/palletCells';
 
 const PL = (l: string) => `/assets/pallet/${l}-600.webp`;
@@ -58,54 +60,41 @@ const WHO: [string, string, string][] = [
   ['blk', 'Bulk buyers', 'Send a bulk list, get a quote the same day.'],
 ];
 
-/** Who-we-supply scenes: small animated objects (CSS in wholesale.css). */
+/** Who-we-supply scenes. Owner (27 Oct): ONE look for all four, the same real renders as the hero (standard stage),
+ *  each the same size in its card, each with one small live motion. */
+const pose = (id: string) => (typeof window !== 'undefined' && (window as unknown as { SE_SHOTS?: { url: (i: string, w: number) => string } }).SE_SHOTS ? (window as unknown as { SE_SHOTS: { url: (i: string, w: number) => string } }).SE_SHOTS.url(id, 480) : '');
 function Scene({ k }: { k: string }) {
   if (k === 'rep')
     return (
-      <div className="wf-sc wf-sc-rep" aria-hidden="true">
-        {/* R6 §12: the real bench renders: a new screen lowers and clicks into the phone */}
-        <span className="rph">
-          <img src="/assets/repair/body-640.webp" alt="" />
-          <img className="rbat" src="/assets/repair/bat-new-640.webp" alt="" />
-          <img className="rscr" src="/assets/repair/screen-new-640.webp" alt="" />
-        </span>
-        <i className="click" />
+      <div className="wf-sc wf-sc3" aria-hidden="true">
+        <img className="wf-sc3-img" src={pose('rep-open')} alt="" />
       </div>
     );
   if (k === 'trd')
     return (
-      <div className="wf-sc wf-sc-trd" aria-hidden="true">
+      <div className="wf-sc wf-sc3 wf-sc3-trd" aria-hidden="true">
+        <img className="wf-sc3-img" src="/assets/pallet/single-600.webp" alt="" />
         <span className="tag"><i className="hole" /><b className="p1">AED 96</b><b className="p2">AED 84</b></span>
         <span className="str" />
       </div>
     );
   if (k === 'exp')
     return (
-      <div className="wf-sc wf-sc-exp" aria-hidden="true">
-        <svg viewBox="0 0 200 110">
-          <path d="M20 92 Q100 -6 180 70" className="arc" />
+      <div className="wf-sc wf-sc3 wf-sc3-exp" aria-hidden="true">
+        <DotGlobe size={150} speed={9} />
+        <svg viewBox="0 0 200 150" className="wf-sc3-fly">
+          <path d="M18 120 Q100 -10 182 96" className="arc" />
           <g className="pl">
             <path d="M-8 0 L6 -1.5 L8 0 L6 1.5 Z M-2 0 L-6 -6 L-3 -6 L3 0 L-3 6 L-6 6 Z" />
-            <animateMotion dur="3.6s" repeatCount="indefinite" rotate="auto" path="M20 92 Q100 -6 180 70" />
+            <animateMotion dur="4.2s" repeatCount="indefinite" rotate="auto" path="M18 120 Q100 -10 182 96" />
           </g>
         </svg>
-        <span className="box3">
-          <img src="/assets/pallet/single-600.webp" alt="" />
-          <i className="lbl3">SE-2611 · LOS</i>
-        </span>
       </div>
     );
   return (
-    <div className="wf-sc wf-sc-blk" aria-hidden="true">
-      <span className="clip">
-        {[0, 1, 2, 3].map((i) => (
-          <span key={i} className="ln" style={{ ['--i' as string]: i } as React.CSSProperties}>
-            <i />
-            <b />
-          </span>
-        ))}
-        <em className="qstamp">QUOTED</em>
-      </span>
+    <div className="wf-sc wf-sc3" aria-hidden="true">
+      <PalletDrop style={{ position: 'absolute', left: '50%', top: '50%', width: '190px', transform: 'translate(-50%, -50%)' }} />
+      <em className="qstamp">QUOTED</em>
     </div>
   );
 }
@@ -247,6 +236,7 @@ function render(v: Vals) {
                 </ul>
               ) : null}
             </div>
+            {v.hasRecent ? <span className="wf-recent-h">Your recent searches</span> : <span className="wf-recent-h">Search a model above to build your pallet</span>}
             <div className="wf-chips" role="radiogroup" aria-label="Part">
               {(v.parts || []).map((p: any) => (
                 <button key={p.id} type="button" role="radio" aria-checked={p.on} className={p.on ? 'on' : ''} onClick={p.pick}>
@@ -307,16 +297,35 @@ function render(v: Vals) {
             </div>
             <div className="wf-keep">
               {/* reviewer's idea: the savings meter swings into the green as the order grows */}
+              {/* owner (27 Oct): a proper savings gauge (graded scale, tick marks, a machined needle), not a flat grey half-circle */}
               <svg className="wf-meter" viewBox="0 0 120 70" aria-hidden="true">
+                <defs>
+                  <linearGradient id="wfMg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#E5484D" /><stop offset=".45" stopColor="#F7C032" /><stop offset="1" stopColor="#2BB673" /></linearGradient>
+                  <linearGradient id="wfNd" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#8E939A" /><stop offset=".5" stopColor="#F2F3F5" /><stop offset="1" stopColor="#8E939A" /></linearGradient>
+                </defs>
                 <path d="M12 62 A48 48 0 0 1 108 62" className="trk" />
-                <path d="M12 62 A48 48 0 0 1 108 62" className="grn" pathLength={1} />
+                <path d="M12 62 A48 48 0 0 1 108 62" stroke="url(#wfMg)" strokeWidth="7" fill="none" strokeLinecap="round" opacity=".9" />
+                {Array.from({ length: 9 }, (_, i) => { const a = Math.PI * (1 - i / 8), r0 = 36, r1 = i % 2 ? 39 : 41; return <path key={i} d={`M${(60 + Math.cos(a) * r0).toFixed(1)} ${(62 - Math.sin(a) * r0).toFixed(1)} L${(60 + Math.cos(a) * r1).toFixed(1)} ${(62 - Math.sin(a) * r1).toFixed(1)}`} className="tk" />; })}
                 <g style={{ transform: `rotate(${v.meter?.ang || -80}deg)` }} className="ndl">
-                  <path d="M60 62 L60 20" />
-                  <circle cx="60" cy="62" r="5" />
+                  <path d="M58.6 62 L60 22 L61.4 62 Z" fill="url(#wfNd)" stroke="#26282B" strokeWidth=".6" />
+                  <circle cx="60" cy="62" r="6" fill="#26282B" />
+                  <circle cx="60" cy="62" r="2.4" fill="#F7C032" />
                 </g>
               </svg>
               <span>You keep</span>
               <b ref={v.keepRef}>{v.keepInit}</b>
+            </div>
+            {/* owner (27 Oct): several models in one request, sent to WhatsApp as one message; above 1,000 units it is a quote */}
+            {v.enq ? <p className="wf-enq">Above 1,000 units we quote you directly: send the request on WhatsApp.</p> : null}
+            <div className="wf-list">
+              {(v.list || []).map((it: any) => (
+                <span key={it.k} className="wf-li"><b data-no-i18n="">{it.name}</b><small>{it.grade} · × {it.qty}</small><button type="button" onClick={it.del} aria-label="Remove">×</button></span>
+              ))}
+              <div className="wf-li-acts">
+                <button type="button" className="wf-add" onClick={v.addLine}>+ Add to request</button>
+                <a className="wf-send" href={v.send} target="_blank" rel="noopener">Send request on WhatsApp</a>
+              </div>
+              <p className="wf-acct">This is a preview of our trade tools. For the full trade catalogue and live trade prices, <a href="#wholesale" onClick={v.apply}>apply for an approved trade account</a>.</p>
             </div>
           </div>
 
@@ -325,7 +334,7 @@ function render(v: Vals) {
             {/* the warehouse row: every full pallet glides back here */}
             <div className="wf-row" aria-hidden="true">
               {(v.row || []).map((i: number) => (
-                <img key={i} src={PL('full')} alt="" style={{ ['--i' as string]: i } as React.CSSProperties} />
+                <img key={(v.rowN || 0) - i} src={PL('full')} alt="" style={{ ['--i' as string]: i } as React.CSSProperties} />
               ))}
             </div>
             <div className="wf-stage3" key={'p' + v.rowN} data-roll={v.roll ? '1' : undefined} aria-label={v.n + ' cartons on the pallet'}>

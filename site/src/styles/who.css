@@ -135,3 +135,44 @@
 .wh-ben .wh-cta { grid-column: 2; grid-row: 1 / span 3; align-self: center; margin: 0; }
 .ret-pin { top: 404px; }
 .rep-mat { bottom: 128px; }
+/* ===== owner (27 Oct): Who are you, rebuilt ===== one title colour, one dark studio stage for every visitor (same light as the hero ad / teardown) */
+.wh-light { display: none !important; }
+.wh-stage, .wh-stage.ret, .wh-stage.rep, .wh-stage.exp, .wh-stage.blk { background: radial-gradient(70% 60% at 50% 38%, #3A3C41, #26282B 62%, #1A1B1E) !important; box-shadow: 0 40px 80px -40px rgba(20, 20, 22, .55), inset 0 0 0 1px rgba(255, 255, 255, .06) !important; }
+.wh-scene .wh-ben { background: rgba(20, 21, 23, .78) !important; color: #fff !important; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1) !important; backdrop-filter: blur(8px); }
+.wh-scene .wh-cta { background: #F7C032 !important; color: #26282B !important; }
+.wh-tab .ic svg { width: 24px; height: 24px; stroke-width: 1.8; }
+.wh-tab.on .ic { background: #26282B; color: #F7C032; box-shadow: 0 6px 14px rgba(38, 40, 43, .3); }
+.ws { position: absolute; inset: 0 0 90px; overflow: hidden; }
+.ws-key { position: absolute; left: 50%; top: -18%; width: 80%; height: 80%; margin-left: -40%; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 236, 190, .16), rgba(255, 236, 190, 0)); pointer-events: none; }
+.ws-floor { position: absolute; left: 50%; bottom: 6%; width: 56%; height: 34px; margin-left: -28%; border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 0, 0, .55), rgba(0, 0, 0, 0)); }
+.ws-hero { position: absolute; left: 50%; top: 52%; width: min(78%, 470px); transform: translate(-50%, -50%); filter: drop-shadow(0 26px 30px rgba(0, 0, 0, .5)); animation: wsHero 1s cubic-bezier(.16, 1, .3, 1) both, wsFloat 6s 1s ease-in-out infinite; z-index: 1; }
+@keyframes wsHero { from { opacity: 0; transform: translate(-50%, -44%) scale(.92); } }
+@keyframes wsFloat { 50% { transform: translate(-50%, -52%); } }
+.ws-search { position: absolute; left: 50%; top: 26px; z-index: 3; display: flex; align-items: center; gap: 10px; width: 290px; margin-left: -145px; padding: 11px 16px; border-radius: 999px; background: #fff; color: #26282B; font: 600 14px Inter, sans-serif; box-shadow: 0 14px 30px rgba(0, 0, 0, .35); animation: seRise .6s .2s both; }
+.ws-type { overflow: hidden; white-space: nowrap; width: 0; animation: wsType 1.4s .7s steps(16) forwards; }
+@keyframes wsType { to { width: 16ch; } }
+.ws-caret { width: 2px; height: 16px; background: #F7C032; animation: wsBlink 1s steps(1) infinite; }
+@keyframes wsBlink { 50% { opacity: 0; } }
+.ws-tag { position: absolute; right: 9%; top: 34%; z-index: 3; padding: 10px 16px; border-radius: 12px; background: #F7C032; color: #26282B; box-shadow: 0 14px 26px rgba(0, 0, 0, .35); transform: rotate(4deg); animation: wsPop .6s 2.2s cubic-bezier(.2, 1.4, .4, 1) both; }
+.ws-tag b { font: 800 20px 'Space Grotesk', sans-serif; }
+@keyframes wsPop { from { opacity: 0; transform: rotate(4deg) scale(.6); } }
+.ws-pin { position: absolute; left: 7%; bottom: 14%; z-index: 3; display: flex; align-items: center; gap: 8px; padding: 8px 14px 8px 10px; border-radius: 999px; background: rgba(255, 255, 255, .1); color: #fff; font: 600 13px Inter, sans-serif; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); animation: seRise .6s 2.8s both; }
+html[dir='rtl'] .ws-pin { left: auto; right: 7%; } html[dir='rtl'] .ws-tag { right: auto; left: 9%; }
+.ws-grades { position: absolute; left: 50%; bottom: 2%; z-index: 3; display: flex; gap: 8px; transform: translateX(-50%); }
+.ws-grades span { display: flex; flex-direction: column; gap: 2px; min-width: 92px; padding: 9px 12px; border-radius: 12px; background: rgba(20, 21, 23, .85); color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); animation: seRise .5s calc(1.2s + var(--k) * .15s) both; }
+.ws-grades b { font: 700 13px 'Space Grotesk', sans-serif; }
+.ws-grades s { font: 500 10.5px 'JetBrains Mono', monospace; color: #7E8389; }
+.ws-grades em { font: 700 13px 'JetBrains Mono', monospace; font-style: normal; color: #F7C032; }
+.ws-chip { position: absolute; left: 24px; top: 22px; z-index: 3; padding: 6px 12px; border-radius: 999px; background: rgba(247, 192, 50, .14); color: #F7C032; box-shadow: inset 0 0 0 1px rgba(247, 192, 50, .45); font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .1em; text-transform: uppercase; animation: seRise .5s .4s both; }
+html[dir='rtl'] .ws-chip { left: auto; right: 24px; }
+.ws-globe { position: absolute !important; left: 8%; top: 50%; margin-top: -180px; animation: wsHero 1s cubic-bezier(.16, 1, .3, 1) both; }
+html[dir='rtl'] .ws-globe { left: auto; right: 8%; }
+.ws-doc { position: absolute; right: 7%; top: 50%; z-index: 3; width: 230px; display: flex; flex-direction: column; gap: 7px; padding: 16px 16px 20px; border-radius: 6px; background: linear-gradient(180deg, #F4F2EC, #fff 30%); color: #26282B; box-shadow: 0 24px 40px rgba(0, 0, 0, .45); transform: translateY(-50%) rotate(-3deg); animation: wsDoc .8s .6s cubic-bezier(.16, 1, .3, 1) both; }
+html[dir='rtl'] .ws-doc { right: auto; left: 7%; transform: translateY(-50%) rotate(3deg); }
+@keyframes wsDoc { from { opacity: 0; margin-top: 40px; } }
+.ws-doc .h { display: flex; justify-content: space-between; padding-bottom: 6px; border-bottom: 1px dashed rgba(38, 40, 43, .3); font: 600 10px 'JetBrains Mono', monospace; letter-spacing: .1em; }
+.ws-doc .r { display: flex; justify-content: space-between; font: 500 12px Inter, sans-serif; animation: seRise .4s calc(1.2s + var(--k) * .18s) both; }
+.ws-doc .r b { font: 700 12px 'JetBrains Mono', monospace; }
+.ws-doc .st { position: absolute; right: 12px; bottom: -14px; padding: 4px 10px; border-radius: 4px; color: #1D8A55; box-shadow: inset 0 0 0 2px #1D8A55; background: #fff; font: 800 13px 'Space Grotesk', sans-serif; letter-spacing: .12em; transform: rotate(-10deg); animation: wsStamp .35s 2.6s cubic-bezier(.2, 1.4, .4, 1) both; }
+@keyframes wsStamp { from { opacity: 0; transform: rotate(-10deg) scale(1.8); } }
+@media (max-width: 700px) { .ws-globe { transform: scale(.6); transform-origin: 0 50%; } .ws-doc { width: 180px; } .ws-grades span { min-width: 0; } }

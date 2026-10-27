@@ -106,3 +106,18 @@ html[dir='rtl'] .nwr canvas { left: auto; right: 12px; } html[dir='rtl'] .nwr .r
 .nwc dd small { font: 600 9px 'JetBrains Mono', monospace; color: #8C9096; letter-spacing: .08em; text-transform: uppercase; }
 .nwc a { display: flex; align-items: center; justify-content: center; height: 38px; border-radius: 9px; background: #F7C032; color: #26282B; font: 600 13px Inter, sans-serif; text-decoration: none; }
 .nwc .x { position: absolute; top: 8px; inset-inline-end: 8px; width: 26px; height: 26px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, .08); color: #fff; font-size: 16px; line-height: 1; cursor: pointer; }
+/* owner (27 Oct): the four boxes on one solid surface (no gradients, no grid lines), every scene centred like Quoted */
+.nwb { background: #26282B !important; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .07), 0 10px 24px rgba(0, 0, 0, .25) !important; }
+.nwb::before, .nwb::after, .nwb-art::before, .nwb-art::after { display: none !important; }
+.nwb-art { background: #1C1D20 !important; background-image: none !important; }
+.nwt { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 0 12px; }
+.nwt .nwt-globe { flex: none; }
+.nwt-side { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.nwt-num { position: static !important; }
+.nwt-st { position: static !important; display: flex !important; flex-direction: column; gap: 3px !important; font-size: 9.5px !important; }
+.nwt-st li { flex-direction: row !important; align-items: center; gap: 6px !important; }
+.nwt-st i { width: 14px; height: 4px !important; flex: none; }
+.nwr { display: flex; align-items: center; justify-content: center; gap: 14px; }
+.nwr canvas { position: static !important; margin: 0 !important; width: 124px !important; height: 124px !important; flex: none; }
+.nwr .rg-l { position: static !important; transform: none !important; }
+.nwt-num { white-space: nowrap; } .nwt .nwt-globe { width: 112px !important; height: 112px !important; }

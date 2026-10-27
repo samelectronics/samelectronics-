@@ -130,18 +130,30 @@
   const orderStatus = F ? F.orderStatus : ['New', 'Quoted', 'Confirmed', 'Ready', 'Collected / Shipped', 'Closed'];
   // R6 §11 · the estimator's problems (owner's list). SAMPLE bench labour (AED) where a part is involved; the rest is
   // quoted after diagnosis (no part category, no labour figure)
+  // owner (27 Oct): every repair we do, grouped like Find My Part (the Excel's part groups)
   const repairs = [
-    { id: 'SCR', name: 'Screen', cat: 'SCR', labour: 60, time: '45–90 min', film: 'scr' },
-    { id: 'BAT', name: 'Battery', cat: 'BAT', labour: 40, time: '30–45 min', film: 'bat' },
-    { id: 'FLX', name: 'Charging port / connector', cat: 'FLX', labour: 50, time: '45–60 min', film: 'port' },
-    { id: 'CAM', name: 'Camera', cat: 'CAM', labour: 50, time: '30–60 min' },
-    { id: 'BCV', name: 'Back glass', cat: 'BCV', labour: 80, time: '1–2 hrs' },
-    { id: 'SPK', name: 'Speaker / mic', cat: null },
-    { id: 'BTN', name: 'Buttons', cat: null },
-    { id: 'WTR', name: 'Water damage', cat: null },
-    { id: 'FID', name: 'Face ID / fingerprint', cat: null },
-    { id: 'SW', name: 'Software', cat: null },
-    { id: 'NS', name: 'Not sure', cat: null },
+    { id: 'SCR', g: 'Display', name: 'Screen (display)', cat: 'SCR', labour: 60, time: '45–90 min', film: 'scr' },
+    { id: 'TCH', g: 'Display', name: 'Touch glass only', cat: 'SCR', labour: 70, time: '1–2 hrs', film: 'scr' },
+    { id: 'BAT', g: 'Power & charging', name: 'Battery', cat: 'BAT', labour: 40, time: '30–45 min', film: 'bat' },
+    { id: 'FLX', g: 'Power & charging', name: 'Charging port / connector', cat: 'FLX', labour: 50, time: '45–60 min', film: 'port' },
+    { id: 'PWR', g: 'Power & charging', name: 'Not charging / no power', cat: null },
+    { id: 'BCV', g: 'Housing', name: 'Back glass / back cover', cat: 'BCV', labour: 80, time: '1–2 hrs' },
+    { id: 'FRM', g: 'Housing', name: 'Frame / housing', cat: 'FRM', labour: 120, time: '2–3 hrs' },
+    { id: 'BTN', g: 'Housing', name: 'Buttons', cat: null },
+    { id: 'CAM', g: 'Cameras', name: 'Rear camera', cat: 'CAM', labour: 50, time: '30–60 min' },
+    { id: 'FCM', g: 'Cameras', name: 'Front camera', cat: 'CAM', labour: 50, time: '30–60 min' },
+    { id: 'LNS', g: 'Cameras', name: 'Camera lens glass', cat: null },
+    { id: 'EAR', g: 'Audio & sensors', name: 'Earpiece speaker', cat: null },
+    { id: 'SPK', g: 'Audio & sensors', name: 'Loudspeaker / buzzer', cat: null },
+    { id: 'MIC', g: 'Audio & sensors', name: 'Microphone', cat: null },
+    { id: 'SNS', g: 'Audio & sensors', name: 'Proximity / sensors', cat: null },
+    { id: 'SIM', g: 'Flex & small parts', name: 'SIM tray / reader', cat: 'SML', labour: 30, time: '20–30 min' },
+    { id: 'FID', g: 'Flex & small parts', name: 'Face ID / fingerprint', cat: null },
+    { id: 'VOL', g: 'Flex & small parts', name: 'Volume / power flex', cat: null },
+    { id: 'WTR', g: 'Other', name: 'Water damage', cat: null },
+    { id: 'SW', g: 'Other', name: 'Software / update', cat: null },
+    { id: 'DAT', g: 'Other', name: 'Data transfer', cat: null },
+    { id: 'NS', g: 'Other', name: 'Not sure', cat: null },
   ];
 
   const contact = F ? F.contact : { address: 'Al Murar, Deira, Dubai, UAE', plus: '78G4+3H2', phone: '+971 4 273 3031', tel: '+97142733031', mobile: '+971 50 342 0015', wa: '971503420015', email: 'samelectronics.uae@gmail.com', social: '@samelectronics.uae' };

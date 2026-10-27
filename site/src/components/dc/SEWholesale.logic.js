@@ -14,7 +14,8 @@ const PARTS = ['SE-IP13-SCR-IN', 'SE-A54-BAT-OR', 'SE-RN13-SCR-OR', 'SE-IP15-BCV
 // sample trade tiers: share of the retail price paid per unit
 export const TIERS = [{ min: 10, f: 0.88 }, { min: 50, f: 0.82 }, { min: 100, f: 0.78 }, { min: 500, f: 0.72 }, { min: 1000, f: 0.68 }];
 export const PER_PALLET = 500; // SAMPLE: units on one full pallet
-export const MAXQ = 5000;
+export const MAXQ = 1500; // owner (27 Oct): above 1,000 units the order is quoted on WhatsApp
+export const ENQ = 1000;
 export const MAXC = 18; // 3 columns × 2 rows deep × 3 layers
 const fmt = (n) => Math.round(n).toLocaleString('en-US');
 const tierOf = (q) => TIERS.reduce((a, t, i) => (q >= t.min ? i : a), 0);
@@ -25,7 +26,9 @@ const palletsFor = (q) => Math.floor((q - 1) / PER_PALLET); // full pallets alre
 class Component extends DCLogic {
   secRef = React.createRef();
   keepRef = React.createRef();
-  state = { part: PARTS[0], qty: 50, from: 0, seen: false, lib: null, data: window.SE_DATA || null, flash: 0, q: '', open: false, roll: 0 };
+  // owner (27 Oct): no preset models; the visitor searches, and their last searches are kept (this browser only). Several
+  // models can go into one request list, sent to WhatsApp as one message.
+  state = { part: PARTS[0], qty: 50, from: 0, seen: false, lib: null, data: window.SE_DATA || null, flash: 0, q: '', open: false, roll: 0, recent: [], list: [] };
   componentDidMount() {
     this.offRp = onReplay(() => this.secRef.current, () => { this.setState({ seen: false, from: 0 }); }); // 14 Oct · H-G2: replay from the start
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 80);
@@ -35,6 +38,7 @@ class Component extends DCLogic {
     setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
     this.onLang = () => this.forceUpdate(); window.addEventListener('se:lang', this.onLang);
     this.shown = this.keep();
+    try { const r = JSON.parse(localStorage.getItem('se-whs-recent') || '[]'); if (Array.isArray(r) && r.length) this.setState({ recent: r.slice(0, 4), part: r[0] }); } catch (e) {}
     window.seWhs = (q, part) => this.setState({ seen: true, qty: q, part: part || this.state.part, from: MAXC }, () => this.paintKeep(this.keep()));
   }
   componentWillUnmount() { this.offRp && this.offRp(); clearInterval(this.dIv); this.io && this.io.disconnect(); cancelAnimationFrame(this.kRaf); cancelAnimationFrame(this.nRaf); window.removeEventListener('se:parts-lib', this.onLib); window.removeEventListener('se:lang', this.onLang); }
@@ -50,7 +54,8 @@ class Component extends DCLogic {
       if (k < 1) this.nRaf = requestAnimationFrame(step); }; this.nRaf = requestAnimationFrame(step); }
   setQty(q) { const s = this.state; if (q === s.qty) return; const was = tierOf(s.qty), now = tierOf(q), p = this.prod(), moved = palletsFor(q) > palletsFor(s.qty);
     this.setState({ qty: q, from: palletsFor(q) !== palletsFor(s.qty) ? 0 : cartonsFor(s.qty), flash: now !== was ? s.flash + 1 : s.flash, roll: moved ? s.roll + 1 : s.roll }); this.rollKeep(this.keep(q, p)); }
-  pick(id) { const D = this.state.data, p = D && D.products.find((x) => x.id === id); this.setState({ part: id, from: MAXC }); if (p) this.rollKeep(this.keep(this.state.qty, p)); }
+  remember(id) { const r = [id].concat(this.state.recent.filter((x) => x !== id)).slice(0, 4); this.setState({ recent: r }); try { localStorage.setItem('se-whs-recent', JSON.stringify(r)); } catch (e) {} }
+  pick(id) { this.remember(id); const D = this.state.data, p = D && D.products.find((x) => x.id === id); this.setState({ part: id, from: MAXC }); if (p) this.rollKeep(this.keep(this.state.qty, p)); }
   renderVals() {
     const L = typeof window !== 'undefined' ? window.seI18n : null, tape = L && L.lang() === 'ar' ? L.tr('SAM ELECTRONICS · WHOLESALE · TRADE') : null; // Urgent 5: the tape is data-no-i18n (the walker skips it), so it is translated here
     const s = this.state, D = s.data, lib = s.lib, p = this.prod(), q = s.qty, ti = tierOf(q), full = onPallet(q) >= PER_PALLET, rowN = palletsFor(q);
@@ -63,7 +68,10 @@ class Component extends DCLogic {
     const soon = (title, text) => (ev) => { ev && ev.preventDefault && ev.preventDefault(); window.dispatchEvent(new CustomEvent('se:soon', { detail: { title, text } })); };
     return { tape,
       secRef: this.secRef, keepRef: this.keepRef, seen: s.seen, countries: ss.countries, tradeMin: ss.tradeMin,
-      parts: (PARTS.includes(s.part) ? PARTS : [s.part].concat(PARTS.slice(0, 3))).map((id) => D && D.products.find((x) => x.id === id)).filter(Boolean).map((x) => ({ id: x.id, name: x.title, grade: GN[x.grade], img: img(x), on: x.id === s.part, pick: () => this.pick(x.id) })),
+      parts: s.recent.map((id) => D && D.products.find((x) => x.id === id)).filter(Boolean).map((x) => ({ id: x.id, name: x.title, grade: GN[x.grade], img: img(x), on: x.id === s.part, pick: () => this.pick(x.id) })), hasRecent: s.recent.length > 0,
+      enq: q > ENQ, list: s.list.map((it, j) => { const x = D && D.products.find((y) => y.id === it.id); return x ? { k: it.id + j, name: x.title, grade: GN[x.grade], qty: it.qty.toLocaleString('en-US'), del: () => this.setState({ list: s.list.filter((_, i) => i !== j) }) } : null; }).filter(Boolean),
+      addLine: () => { if (!p) return; this.setState({ list: s.list.filter((it) => it.id !== p.id).concat({ id: p.id, qty: q }) }); },
+      send: D ? 'https://wa.me/' + D.contact.wa + '?text=' + encodeURIComponent(['*TRADE REQUEST · SAM ELECTRONICS*', ''].concat((s.list.length ? s.list : p ? [{ id: p.id, qty: q }] : []).map((it, j) => { const x = D.products.find((y) => y.id === it.id); return (j + 1) + '. ' + (x ? x.title + ' · ' + (GN[x.grade] || '') : it.id) + ' × ' + it.qty.toLocaleString('en-US'); }), ['', 'Please send trade prices and availability.', 'Sent from the Sam Electronics website']).join('\n')) : '#',
       qty: q, qtyTxt: q.toLocaleString('en-US'), maxQ: MAXQ, setQty: (e) => this.setQty(Number(e.target.value)), fill: (((q - 10) / (MAXQ - 10)) * 100).toFixed(2) + '%',
       // R6 §12: search the whole catalogue (any product, any brand)
       search: { q: s.q, open: s.open && s.q.trim().length > 0, on: (e) => this.setState({ q: e.target.value, open: true }), focus: () => this.setState({ open: true }), blur: () => setTimeout(() => this.setState({ open: false }), 150),

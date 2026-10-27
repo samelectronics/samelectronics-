@@ -8,6 +8,7 @@
 // Styles in src/styles/worldwide.css.
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
+import DotGlobe from '../DotGlobe';
 
 const STAGES = ['Packed', 'Dispatched', 'In transit', 'Customs', 'Delivered'];
 const REG = [{ id: 'me', name: 'Middle East', lon: 46 }, { id: 'af', name: 'Africa', lon: 14 }, { id: 'eu', name: 'Europe', lon: 22 }, { id: 'as', name: 'Asia', lon: 72 }];
@@ -42,39 +43,24 @@ function Box({ k, t, d, children }: { k: string; t: string; d: string; children:
 }
 
 /* ---------- Tracked ---------- */
-const MAP = { lon0: -20, lon1: 75, lat0: -12, lat1: 58, w: 260, h: 150 };
-const mp = (lon: number, lat: number): [number, number] => [((lon - MAP.lon0) / (MAP.lon1 - MAP.lon0)) * MAP.w, ((MAP.lat1 - lat) / (MAP.lat1 - MAP.lat0)) * MAP.h];
+// owner (27 Oct): the flat dot map is replaced by the site's real globe (same as the hero ad), parcels flying its routes;
+// beside it the tracking number types in and the five stages light one after the other
 function Tracked() {
   const ref = useRef<HTMLDivElement>(null);
-  const [dots, setDots] = useState<[number, number][]>([]);
-  useEffect(() => { const Gl = glob(); if (!Gl) return; const out: [number, number][] = []; for (const arr of [Gl.land, Gl.hi]) for (let i = 0; i < arr.length; i += 2) { const lo = arr[i], la = arr[i + 1]; if (lo >= MAP.lon0 && lo <= MAP.lon1 && la >= MAP.lat0 && la <= MAP.lat1) out.push(mp(lo, la)); } setDots(out); }, []);
-  const A = mp(55.3, 25.27), B = mp(3.38, 6.52), C: [number, number] = [(A[0] + B[0]) / 2, Math.min(A[1], B[1]) - 46];
-  const bez = (k: number) => [(1 - k) * (1 - k) * A[0] + 2 * (1 - k) * k * C[0] + k * k * B[0], (1 - k) * (1 - k) * A[1] + 2 * (1 - k) * k * C[1] + k * k * B[1]];
   const NUM = 'SE-4544-LOS';
   useClock(ref, 8, React.useCallback((t: number) => {
     const R = ref.current; if (!R) return;
-    const k = eio(seg(t, 0.8, 5.2)), [x, y] = bez(k), [x2, y2] = bez(Math.min(1, k + 0.01)), a = Math.atan2(y2 - y, x2 - x) * 180 / Math.PI;
-    const pc = R.querySelector<SVGGElement>('.parcel'); if (pc) pc.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${a.toFixed(1)})`);
-    const tr = R.querySelector<SVGPathElement>('.done'); if (tr) tr.style.strokeDashoffset = String(1 - k);
-    const st = t < 0.8 ? 0 : k < 0.1 ? 1 : k < 0.75 ? 2 : k < 1 ? 3 : 4;
+    const k = seg(t, 0.8, 5.6), st = t < 0.8 ? 0 : Math.min(4, Math.floor(k * 4.999));
     R.querySelectorAll('.nwt-st li').forEach((li, i) => { li.classList.toggle('on', i <= st); li.classList.toggle('cur', i === st); });
     const n = R.querySelector('.nwt-num b'); const s = NUM.slice(0, Math.round(cl(t / 0.8) * NUM.length)); if (n && n.textContent !== s) n.textContent = s;
-    const pin = R.querySelector<SVGCircleElement>('.dst'); if (pin) pin.style.opacity = String(k >= 1 ? 1 : 0.5);
-  }, [])); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []));
   return (
     <div className="nwt" ref={ref} aria-hidden="true">
-      <svg viewBox={`0 0 ${MAP.w} ${MAP.h}`}>
-        {dots.map(([x, y], i) => <rect key={i} x={x - 1} y={y - 1} width="2" height="2" className="d" />)}
-        <path d={`M${A[0]} ${A[1]} Q${C[0]} ${C[1]} ${B[0]} ${B[1]}`} className="rt" />
-        <path d={`M${A[0]} ${A[1]} Q${C[0]} ${C[1]} ${B[0]} ${B[1]}`} className="done" pathLength={1} />
-        <circle cx={A[0]} cy={A[1]} r="3.5" className="hub" />
-        <circle cx={B[0]} cy={B[1]} r="3.5" className="dst" />
-        <text x={A[0] + 6} y={A[1] + 3} className="lb">DXB</text>
-        <text x={B[0] + 6} y={B[1] + 3} className="lb">LOS</text>
-        <g className="parcel"><rect x="-5" y="-4" width="10" height="8" rx="1.2" /><path d="M-1 -4v8" /></g>
-      </svg>
-      <span className="nwt-num">TRACKING <b data-no-i18n="" /></span>
-      <ol className="nwt-st">{STAGES.map((s) => <li key={s}><i />{s}</li>)}</ol>
+      <DotGlobe size={124} speed={8} className="nwt-globe" style={{ filter: 'drop-shadow(0 10px 18px rgba(0,0,0,.5))' }} />
+      <div className="nwt-side">
+        <span className="nwt-num">TRACKING <b data-no-i18n="" /></span>
+        <ol className="nwt-st">{STAGES.map((s) => <li key={s}><i />{s}</li>)}</ol>
+      </div>
     </div>
   );
 }

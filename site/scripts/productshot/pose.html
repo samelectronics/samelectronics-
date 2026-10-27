@@ -110,7 +110,7 @@ function drawCrack(x, w, h, bump) { const C = CRACK, ox = C.ix * w, oy = C.iy * 
 
 function product() {
   const g = new THREE.Group(), take = (o) => { const c = o.clone(true); c.position.set(0, 0, 0); return c; };
-  if (ITEM === 'scr' || ITEM === 'crack' || ITEM === 'fixed') {
+  if (ITEM === 'scr' || ITEM === 'crack' || ITEM === 'fixed' || ITEM === 'open') {
     // the screen assembly: cover glass + OLED with its punch hole; per box: the iPhone island, a metal frame behind, red tabs
     const sc = new THREE.Group(); [S.SG[0], S.SG[1]].forEach((sg) => sc.add(sg.clone(true))); g.add(sc);
     const offTex = cv(512, 1060, (x, w, h) => { const g = x.createLinearGradient(0, 0, w, h); g.addColorStop(0, '#15161a'); g.addColorStop(0.55, '#060607'); g.addColorStop(1, '#0d0e10'); x.fillStyle = g; x.fillRect(0, 0, w, h);
@@ -118,7 +118,10 @@ function product() {
     const black = new THREE.MeshPhysicalMaterial({ map: offTex, roughness: 0.04, metalness: 0.05, clearcoat: 1, clearcoatRoughness: 0.02, envMapIntensity: 1.8 });
     sc.traverse((m) => { if (!m.isMesh) return; if (m.material === S.M.screen) m.material = black; else if (Array.isArray(m.material) && m.material[0] === S.M.screen) m.material = [black, m.material[1]]; });
     if (LCD === 'iphone') { sc.traverse((m) => { if (m.isMesh && (m.geometry.type === 'CircleGeometry' || m.geometry.type === 'RingGeometry') && m.position.y > PH / 2 - 0.2) m.visible = false; }); const isl = new THREE.Mesh(new RoundedBoxGeometry(0.4, 0.11, 0.004, 8, 0.0549), new THREE.MeshStandardMaterial({ color: 0x000000, roughness: 0.35 })); isl.position.set(0, PH / 2 - 0.13, 0.024); g.add(isl); }
-    if (LCD === 'frame' || ITEM === 'crack' || ITEM === 'fixed') { const f = take(S.L[1]); f.position.z = -0.075; g.add(f); }
+    if (LCD === 'frame' || ITEM === 'crack' || ITEM === 'fixed' || ITEM === 'open') { const f = take(S.L[1]); f.position.z = -0.075; g.add(f); }
+    if (ITEM === 'open') { // owner (27 Oct): the repair, opened: the new screen lifted off on its hinge, the insides (battery, board, flex) showing
+      const b = take(S.L[7]); b.position.z = -0.14; g.add(b); [3, 4, 2].forEach((k) => { const l = take(S.L[k]); l.position.z = -0.1; g.add(l); });
+      const hinge = new THREE.Group(); hinge.position.set(-PW / 2, 0, 0.02); sc.position.set(PW / 2, 0, 0.03); g.remove(sc); hinge.add(sc); hinge.rotation.y = -1.15; g.add(hinge); /* opened like a book, out toward the viewer */ g.userData.noBox = true; }
     if (LCD === 'tabs') { const red = new THREE.MeshStandardMaterial({ color: 0xe8382f, roughness: 0.55 }); [-0.34, 0.06, 0.3].forEach((xx) => { const t = new THREE.Mesh(new RoundedBoxGeometry(0.14, 0.2, 0.004, 2, 0.01), red); t.position.set(xx, PH / 2 + 0.05, 0.02); g.add(t); }); const t2 = new THREE.Mesh(new RoundedBoxGeometry(0.2, 0.1, 0.004, 2, 0.01), red); t2.position.set(-PW / 2 - 0.06, -0.9, 0.02); g.add(t2); }
     if (ITEM === 'scr') {
       // owner (27 Oct): a real screen assembly, not a black slab: a metal back plate behind the panel (its edge shows) and
@@ -140,7 +143,7 @@ function product() {
       const glass = new THREE.MeshPhysicalMaterial({ map: ct, bumpMap: cb, bumpScale: 3, roughness: 0.1, clearcoat: 0.35, clearcoatRoughness: 0.04, envMapIntensity: 1.7 });
       const pg = new THREE.ShapeGeometry(rshape(PW - 0.03, PH - 0.03, S.R - 0.015), 32); { const p = pg.attributes.position, uv = pg.attributes.uv; for (let i = 0; i < p.count; i++) uv.setXY(i, p.getX(i) / PW + 0.5, p.getY(i) / PH + 0.5); }
       const pane = new THREE.Mesh(pg, glass); pane.position.z = 0.0215; g.add(pane); }
-    g.userData.size = [PW, PH]; if (ITEM === 'crack') g.userData.noBox = true;
+    g.userData.size = [PW, PH]; if (ITEM === 'crack' || ITEM === 'open') g.userData.noBox = true;
   } else if (ITEM === 'bcv') { const b = take(S.L[7]); b.rotation.y = PI; g.add(b); g.userData.size = [PW, PH];
     // owner (26 Oct): the back cover read as one flat colour. Now real frosted glass: a titanium-blue tone that shifts
     // across the panel, a fine etched grain in the roughness (the frost), a clear coat that catches the softbox, and sheen.
@@ -252,7 +255,7 @@ if (!prod.userData.noBox) {
 }
 if (LINE) { // owner (27 Oct): every box of a range, lined up behind each other (each ~70% showing), the screen in front
   let prev = box; for (let j = BOXL.length - 2; j >= 0; j--) { const b2 = await carton(pw, PH0, BOXL[j]); stand.add(b2); const cw2 = b2.userData.bw; b2.position.set(prev.position.x + SIDE * (prev.userData.bw / 2 + cw2 / 2 - 0.3 * cw2), b2.userData.bh / 2, prev.position.z - prev.userData.depth / 2 - b2.userData.depth / 2 - 0.05); prev = b2; } }
-if (ITEM === 'crack' || ITEM === 'fixed') { // owner (27 Oct): the repair ad: the phone centred, real tools leaning beside it
+if (ITEM === 'crack' || ITEM === 'fixed' || ITEM === 'open') { // owner (27 Oct): the repair ad: the phone centred, real tools leaning beside it
   const tools = new THREE.Group(), sd = new THREE.Group();
   const hdl = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.085, 0.62, 32), new THREE.MeshPhysicalMaterial({ color: 0x1c1d1f, roughness: 0.55 })); hdl.position.y = 0.31 + 0.62; sd.add(hdl);
   const band = new THREE.Mesh(new THREE.CylinderGeometry(0.102, 0.102, 0.12, 32), new THREE.MeshPhysicalMaterial({ color: 0xf7c032, roughness: 0.4 })); band.position.y = 0.62 + 0.5; sd.add(band);
