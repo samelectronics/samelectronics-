@@ -32,7 +32,10 @@
   const S0 = OPEN, M0 = S0 + SCN.length * SD, C0 = M0 + MONT, L0 = C0 + CALL, TOT = L0 + CLOSE, LOGO_T = L0 + 0.9;
   function rr(x, X, Yy, w, h, r) { x.beginPath(); x.moveTo(X + r, Yy); x.arcTo(X + w, Yy, X + w, Yy + h, r); x.arcTo(X + w, Yy + h, X, Yy + h, r); x.arcTo(X, Yy + h, X, Yy, r); x.arcTo(X, Yy, X + w, Yy, r); x.closePath(); }
   function create(cv, opts) {
-    const x = cv.getContext('2d'), W = cv.width, H = cv.height, u = W / 100, M = 9 * u;
+    // owner (27 Oct): a real safe area. The ad is drawn on an off-screen canvas and placed INSIDE the screen (clear of the
+    // rounded corners, the island and the edges); the margin is filled with the ad's own edge colour, so it reads as a screen
+    const out = cv.getContext('2d'), off = document.createElement('canvas'); off.width = cv.width; off.height = cv.height;
+    const x = off.getContext('2d'), W = cv.width, H = cv.height, u = W / 100, M = 9 * u, SAFE = { s: 0.86, top: 0.07 };
     let lang = null, imgs = [];
     const load = () => { lang = AR(); imgs = SCN.map((q) => { const im = new Image(); im.decoding = 'async'; im.src = window.SE_SHOTS ? window.SE_SHOTS.url(q.id, 960) : ''; return im; }); };
     load();
@@ -135,6 +138,10 @@
       else if (t < L0) { call(t - C0); dark = t - C0 >= 1.15; }
       else close(t - L0);
       status(dark);
+      // place it in the safe area: margin colour = the ad's edge colour (top and bottom), then the ad itself
+      const px = (yy) => { const d = x.getImageData(4, yy, 1, 1).data; return 'rgb(' + d[0] + ',' + d[1] + ',' + d[2] + ')'; };
+      const g = out.createLinearGradient(0, 0, 0, H); g.addColorStop(0, px(4)); g.addColorStop(1, px(H - 5)); out.setTransform(1, 0, 0, 1, 0, 0); out.fillStyle = g; out.fillRect(0, 0, W, H);
+      const sw = W * SAFE.s, sh = H * SAFE.s; out.drawImage(off, (W - sw) / 2, H * SAFE.top, sw, sh);
     }
     return { draw, dur: TOT, logoT: LOGO_T, setLib: () => {} };
   }

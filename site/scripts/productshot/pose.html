@@ -23,7 +23,7 @@ import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.j
 import { buildStack } from './stack.js';
 
 const Q = new URLSearchParams(location.search);
-const ITEM = Q.get('item') || 'scr', BOX = Q.get('box') || (ITEM === 'scr' ? 'temp' : 'white'), LCD = Q.get('lcd') || 'plain', LABEL = Q.get('label') || '', W = +(Q.get('w') || 960), H = W, SIDE = Q.get('ar') ? 1 : -1; // SIDE: where the carton peeks out (-1 left in English, +1 right in Arabic)
+const ITEM0 = Q.get('item') || 'scr', LINE = ITEM0 === 'line', ITEM = LINE ? 'scr' : ITEM0, BOXL = (Q.get('boxes') || '').split(',').filter(Boolean), ASP = +(Q.get('aspect') || 1), BOX = Q.get('box') || (ITEM === 'scr' ? 'temp' : 'white'), LCD = Q.get('lcd') || 'plain', LABEL = Q.get('label') || '', W = +(Q.get('w') || 960), H = Math.round(W / ASP), SIDE = Q.get('ar') ? 1 : -1; // SIDE: where the carton peeks out (-1 left in English, +1 right in Arabic)
 const PI = Math.PI;
 // owner (27 Oct): the cartons print in the brand's own type (Space Grotesk / Inter / JetBrains Mono) and the real round logo
 await Promise.all(['600 40px "Space Grotesk"', '700 40px "Space Grotesk"', '500 40px Inter', '600 40px Inter', '600 40px "JetBrains Mono"'].map((f) => document.fonts.load(f).catch(() => 0)));
@@ -45,7 +45,7 @@ const scene = new THREE.Scene();
   scene.environment = pmrem.fromScene(envS, 0.02).texture; }
 const cam = new THREE.PerspectiveCamera(20, W / H, 0.1, 80);
 scene.add(new THREE.HemisphereLight(0xffffff, 0x3a3b3e, 0.55));
-const key = new THREE.DirectionalLight(0xffffff, 2.4); key.position.set(-3.2, 8.5, 5.5); key.castShadow = true;
+const key = new THREE.DirectionalLight(0xffffff, 2.4); key.position.set(-2.6, 12, 5.0); key.castShadow = true;
 key.shadow.mapSize.set(2048, 2048); key.shadow.radius = 12; key.shadow.blurSamples = 25; key.shadow.bias = -0.0005; key.shadow.normalBias = 0.02;
 Object.assign(key.shadow.camera, { left: -6, right: 6, top: 7, bottom: -3, near: 0.5, far: 30 }); scene.add(key);
 const rimR = new THREE.DirectionalLight(0xfff0dc, 1.6); rimR.position.set(6, 3, -3); scene.add(rimR);
@@ -74,6 +74,9 @@ const flexTex = () => cv(512, 128, (x, w, h) => { const g = x.createLinearGradie
 const mFlex = () => new THREE.MeshPhysicalMaterial({ map: flexTex(), roughness: 0.35, clearcoat: 0.8, clearcoatRoughness: 0.15, envMapIntensity: 1.2 });
 const connector = (w = 0.26) => { const c = new THREE.Group(); const st = RB(w, 0.16, 0.035, 0.008, mBlack(0.4)); c.add(st); const pins = RB(w * 0.8, 0.05, 0.01, 0.003, mGold()); pins.position.z = 0.02; c.add(pins); return c; };
 // a black ESD foam service tray, the way small parts are really sold and stored: neat pockets, nothing see-through
+// owner (27 Oct): no tray. The parts themselves, separated, each with its own slight turn, as if just lifted off the bench
+function floatKit(items) { const t = new THREE.Group(); let r = 5; const rr2 = () => ((r = (r * 16807) % 2147483647) / 2147483647 - 0.5);
+  items.forEach(([obj, x, y]) => { obj.scale.multiplyScalar(1.22); x *= 1.25; obj.position.x += x; obj.position.y += y; obj.rotation.z += rr2() * 0.22; obj.rotation.y += rr2() * 0.35; obj.rotation.x += rr2() * 0.2; t.add(obj); }); return t; }
 function foamTray(items) { const t = new THREE.Group();
   const foamT = cv(256, 512, (x, w, h) => paper(x, w, h, '#202124', 14)); const foam = new THREE.MeshPhysicalMaterial({ map: foamT, roughness: 0.96, metalness: 0, envMapIntensity: 0.4 });
   const base = RB(1.75, 2.9, 0.16, 0.07, foam); base.position.z = -0.08; t.add(base);
@@ -147,7 +150,10 @@ function product() {
     const rg = cv(256, 512, (x, w, h) => paper(x, w, h, '#8a8a8a', 60)); rg.colorSpace = THREE.NoColorSpace;
     // owner (27 Oct): glossy glass, like a real Galaxy back: deep colour under a mirror clear coat that catches the studio softbox
     const frost = new THREE.MeshPhysicalMaterial({ map: fz, roughness: 0.14, metalness: 0.05, clearcoat: 1, clearcoatRoughness: 0.03, sheen: 0.2, sheenColor: new THREE.Color(0xc8d4ea), envMapIntensity: 2.1, specularIntensity: 1, iridescence: 0.12 });
-    b.traverse((m) => { if (!m.isMesh) return; if (m.material === S.M.frost) m.material = frost; else if (Array.isArray(m.material) && m.material[0] === S.M.frost) m.material = [frost, m.material[1]]; }); }
+    b.traverse((m) => { if (!m.isMesh) return; if (m.material === S.M.frost) m.material = frost; else if (Array.isArray(m.material) && m.material[0] === S.M.frost) m.material = [frost, m.material[1]]; if (m.material === S.M.emblem) m.visible = true; });
+    // owner (27 Oct): the shop's logo built into the glass (as on the teardown phone) and the purple protective film every new back cover ships with on its lenses
+    const film = new THREE.MeshPhysicalMaterial({ color: 0x8a5cf0, transparent: true, opacity: 0.55, roughness: 0.18, clearcoat: 1, clearcoatRoughness: 0.05, iridescence: 0.6, envMapIntensity: 1.6, side: THREE.DoubleSide });
+    (S.LENS || []).forEach(([lx, ly, lr]) => { const f = new THREE.Mesh(new THREE.CircleGeometry(lr * 1.18, 48), film); f.position.set(lx, ly, -0.052); f.rotation.y = PI; b.add(f); const tab = RB(0.1, 0.05, 0.002, 0.01, film); tab.position.set(lx + lr * 1.2, ly - lr * 0.4, -0.052); tab.rotation.z = -0.5; b.add(tab); }); }
   else if (ITEM === 'frm') { g.add(take(S.L[1])); g.userData.size = [PW, PH]; }
   else if (ITEM === 'bat') { const b = take(S.L[4]); b.position.y = 0.51; g.add(b); g.userData.size = [1.06, 1.6]; }
   else if (ITEM === 'board') { const b = take(S.L[3]); b.position.set(0.23, -0.81, 0); g.add(b); g.userData.size = [0.9, 1.24]; }
@@ -164,14 +170,15 @@ function product() {
     const ep = new THREE.Group(); const eb = RB(0.8, 0.13, 0.07, 0.05, mBlack(0.45)); ep.add(eb); const em = RB(0.6, 0.05, 0.01, 0.02, meshTex(0.6, 0.05)); em.position.z = 0.04; ep.add(em);
     const mic = () => { const m = new THREE.Group(); const f = RB(0.5, 0.11, 0.006, 0.02, mFlex()); m.add(f); const c = RB(0.13, 0.11, 0.06, 0.02, mMetal(0xa7abb0, 0.3)); c.position.set(-0.2, 0, 0.03); m.add(c); const h = CY(0.018, 0.01, mBlack(0.9), 16); h.position.set(-0.2, 0, 0.065); m.add(h); const k = connector(0.16); k.scale.setScalar(0.7); k.position.set(0.22, 0, 0.01); m.add(k); return m; };
     const prx = new THREE.Group(); const pf = RB(0.62, 0.16, 0.006, 0.03, mFlex()); prx.add(pf); const sn = RB(0.16, 0.1, 0.05, 0.02, mBlack(0.2)); sn.position.set(-0.18, 0, 0.03); prx.add(sn); const k2 = connector(0.18); k2.scale.setScalar(0.75); k2.position.set(0.24, 0, 0.01); prx.add(k2);
-    g.add(foamTray([[ls, 0, 0.62, 1.12, 0.62], [ep, 0, -0.08, 1.0, 0.3], [mic(), -0.35, -0.6, 0.66, 0.24], [mic(), 0.38, -0.6, 0.66, 0.24], [prx, 0, -1.05, 0.9, 0.28]])); g.userData.size = [1.75, 2.9]; }
+    g.add(floatKit([[ls, 0, 0.7], [ep, 0.1, 0.08], [mic(), -0.32, -0.42], [mic(), 0.36, -0.62], [prx, -0.05, -1.08]])); g.userData.size = [1.3, 2.4]; }
   else { // small parts kit: SIM tray, side buttons, vibration motor, charging port, screws, all in their foam pockets
     const sim = new THREE.Group(); const sb = RB(1.1, 0.16, 0.03, 0.06, mMetal(0xc2c6cb, 0.28)); sim.add(sb); const cut = RB(0.5, 0.11, 0.012, 0.02, mBlack(0.8)); cut.position.set(-0.05, 0, 0.012); sim.add(cut); const ph2 = CY(0.016, 0.03, mBlack(0.9), 16); ph2.position.set(0.45, 0, 0.012); sim.add(ph2);
     const btn = (w) => RB(w, 0.075, 0.06, 0.035, mMetal(0xb3b7bc, 0.22)); const bts = new THREE.Group(); const b1 = btn(0.5); b1.position.y = 0.08; bts.add(b1); const b2 = btn(0.32); b2.position.set(-0.09, -0.06, 0); bts.add(b2); const b3 = btn(0.32); b3.position.set(0.25, -0.06, 0); bts.add(b3);
     const tap = new THREE.Group(); const tb = RB(0.78, 0.3, 0.1, 0.04, mMetal(0x9da2a8, 0.4)); tap.add(tb); const lab = new THREE.Mesh(new THREE.PlaneGeometry(0.4, 0.14), new THREE.MeshPhysicalMaterial({ map: cv(256, 96, (x, w, h) => { x.fillStyle = '#1c1d1f'; x.fillRect(0, 0, w, h); x.fillStyle = '#d5d7da'; x.font = `600 26px ${JB}`; x.fillText('TAPTIC 3.1', 18, 40); x.font = `500 18px ${JB}`; x.fillText('SE-VB-0815', 18, 70); }), roughness: 0.6 })); lab.position.set(-0.12, 0, 0.051); tap.add(lab); const tf = RB(0.18, 0.1, 0.006, 0.01, mFlex()); tf.position.set(0.47, -0.05, -0.02); tap.add(tf);
     const port = new THREE.Group(); const pb = RB(0.7, 0.24, 0.006, 0.03, mFlex()); port.add(pb); const uc = RB(0.34, 0.12, 0.09, 0.055, mMetal(0xc9ccd0, 0.2)); uc.position.set(0, 0.02, 0.05); port.add(uc); const hole = RB(0.27, 0.06, 0.02, 0.03, mBlack(0.9)); hole.position.set(0, 0.02, 0.09); port.add(hole);
     const scr2 = new THREE.Group(); for (let i = 0; i < 6; i++) { const sh = CY(0.045, 0.03, mMetal(0x8f9399, 0.3), 24); sh.position.set(-0.4 + i * 0.16, 0, 0); scr2.add(sh); const x1 = RB(0.06, 0.012, 0.01, 0.004, mBlack(0.9)); x1.position.set(-0.4 + i * 0.16, 0, 0.018); scr2.add(x1); const x2 = x1.clone(); x2.rotation.z = PI / 2; scr2.add(x2); }
-    g.add(foamTray([[sim, 0, 0.98, 1.3, 0.3], [bts, 0, 0.55, 0.8, 0.3], [tap, 0, 0.02, 1.25, 0.46], [port, 0, -0.55, 0.92, 0.38], [scr2, 0, -1.02, 1.12, 0.22]])); g.userData.size = [1.75, 2.9]; }
+    const spk = new THREE.Group(); { const lb = RB(0.62, 0.3, 0.1, 0.04, mBlack(0.5)); spk.add(lb); const gr = RB(0.42, 0.15, 0.01, 0.03, meshTex(0.42, 0.15)); gr.position.z = 0.052; spk.add(gr); const pd = RB(0.1, 0.06, 0.01, 0.01, mGold()); pd.position.set(0.22, -0.08, 0.052); spk.add(pd); }
+    g.add(floatKit([[sim, 0.05, 1.12], [bts, -0.38, 0.72], [spk, 0.35, 0.62], [tap, 0, 0.12], [port, -0.12, -0.5], [scr2, 0.08, -1.05]])); g.userData.size = [1.3, 2.4]; }
   g.traverse((m) => { if (m.isMesh && !(Array.isArray(m.material) ? m.material : [m.material]).some((mt) => mt.transparent)) { m.castShadow = true; m.receiveShadow = true; } });
   return g;
 }
@@ -181,15 +188,15 @@ const BOXES = { 'apple-sp': { d: 0.32, side: '#F1F1EE', top: '#F4F4F1' }, 'samsu
   'huawei-sp': { d: 0.18, side: '#F6F6F4', top: '#F6F6F4', band: '#E8382F' }, 'bbk-sp': { d: 0.18, side: '#F6F6F4', top: '#F6F6F4', band: '#3EC54A' }, 'xiaomi-sp': { d: 0.24, side: '#FF6A13', top: '#FF6A13' },
   gx: { d: 0.26, side: '#141414', top: '#161616' }, zy: { d: 0.3, side: '#1B4FD8', top: '#1D63E2', r: 0.14 } };
 const SIZES = await (await fetch('./boxes/sizes.json')).json();
-async function carton(prodW, prodH) {
-  const B = BOXES[BOX];
+async function carton(prodW, prodH, BX = BOX) {
+  const B = BOXES[BX];
   let faceTex, ar, depth, side, topC, radius = 0.025;
   if (B) {
-    const im = await img('./boxes/' + BOX + '.jpg'); ar = SIZES[BOX][0] / SIZES[BOX][1]; depth = Math.max(0.3, B.d * 1.4); side = B.side; topC = B.top; radius = B.r || 0.025;
+    const im = await img('./boxes/' + BX + '.jpg'); ar = SIZES[BX][0] / SIZES[BX][1]; depth = Math.max(0.3, B.d * 1.4); side = B.side; topC = B.top; radius = B.r || 0.025;
     faceTex = cv(im.width, im.height, (x, w, h) => { x.drawImage(im, 0, 0, w, h);
       // GX / ZY print the model: blur the photo's "XS MAX" away (keeps the box's real colour and gradient) and print this label
-      if (BOX === 'gx' && LABEL) { x.save(); x.beginPath(); x.rect(0, h * 0.27, w, h * 0.08); x.clip(); x.filter = 'blur(24px)'; x.drawImage(im, 0, 0, w, h); x.restore(); x.fillStyle = '#E2E2E0'; x.font = `600 ${Math.round(w * 0.085)}px Arial`; x.textAlign = 'center'; x.fillText(LABEL, w / 2, h * 0.33); }
-      if (BOX === 'zy' && LABEL) { x.save(); x.beginPath(); x.rect(0, h * 0.42, w, h * 0.45); x.clip(); x.filter = 'blur(60px)'; x.drawImage(im, 0, 0, w, h); x.restore(); x.fillStyle = 'rgba(232,236,255,.88)'; x.textAlign = 'center'; let fz = w * 0.36; x.font = `bold ${fz}px Arial`; const tw = x.measureText(LABEL).width; if (tw > w * 0.82) { fz *= (w * 0.82) / tw; x.font = `bold ${fz}px Arial`; } x.fillText(LABEL, w / 2, h * 0.64 + fz * 0.35); } });
+      if (BX === 'gx' && LABEL) { x.save(); x.beginPath(); x.rect(0, h * 0.27, w, h * 0.08); x.clip(); x.filter = 'blur(24px)'; x.drawImage(im, 0, 0, w, h); x.restore(); x.fillStyle = '#E2E2E0'; x.font = `600 ${Math.round(w * 0.085)}px Arial`; x.textAlign = 'center'; x.fillText(LABEL, w / 2, h * 0.33); }
+      if (BX === 'zy' && LABEL) { x.save(); x.beginPath(); x.rect(0, h * 0.42, w, h * 0.45); x.clip(); x.filter = 'blur(60px)'; x.drawImage(im, 0, 0, w, h); x.restore(); x.fillStyle = 'rgba(232,236,255,.88)'; x.textAlign = 'center'; let fz = w * 0.36; x.font = `bold ${fz}px Arial`; const tw = x.measureText(LABEL).width; if (tw > w * 0.82) { fz *= (w * 0.82) / tw; x.font = `bold ${fz}px Arial`; } x.fillText(LABEL, w / 2, h * 0.64 + fz * 0.35); } });
   } else { // the plain white carton (every non-screen part, and screens without an owner photo yet): real paper, a crisp label
     ar = CW0 / CH0; depth = 0.42; side = '#EEEEEB'; topC = '#F2F2EF';
     const fw = 900, fh = Math.round(900 / ar);
@@ -213,7 +220,7 @@ async function carton(prodW, prodH) {
   const backTex = cv(256, 512, (x, w, h) => { paper(x, w, h, side, 5); wear(x, w, h); });
   { const raw = faceTex.image, x = raw.getContext('2d'); wear(x, raw.width, raw.height, 0.8); faceTex.needsUpdate = true; }
   radius = Math.max(radius, 0.04);
-  const mat = (t) => new THREE.MeshPhysicalMaterial({ map: t, roughness: 0.62, clearcoat: BOX === 'gx' || BOX === 'zy' ? 0.45 : 0.12, clearcoatRoughness: 0.4, envMapIntensity: 0.6 });
+  const mat = (t) => new THREE.MeshPhysicalMaterial({ map: t, roughness: 0.62, clearcoat: BX === 'gx' || BX === 'zy' ? 0.45 : 0.12, clearcoatRoughness: 0.4, envMapIntensity: 0.6 });
   const box = new THREE.Mesh(new RoundedBoxGeometry(bw, bh, depth, 10, Math.min(radius, depth / 2 - 0.002)), [mat(sideTex), mat(sideTex), mat(topTex), mat(topTex), mat(faceTex), mat(backTex)]);
   box.castShadow = true; box.receiveShadow = true; box.userData = { bw, bh, depth };
   // raised stickers, real 3D: a white QC label (barcode, QR, the part) on the face and a clear seal tape over the top edge
@@ -236,16 +243,29 @@ async function carton(prodW, prodH) {
 const prod = product(), stand = new THREE.Group(), body = new THREE.Group(); body.add(prod); stand.add(body); scene.add(stand);
 { prod.updateMatrixWorld(true); const bb = new THREE.Box3().setFromObject(prod), sz = bb.getSize(new THREE.Vector3()), k = Math.min(PH0 / sz.y, PWMAX / sz.x, prod.userData.maxK || 9);
   (prod.userData.late || []).forEach((o) => prod.add(o)); prod.scale.setScalar(k); prod.updateMatrixWorld(true); const late = prod.userData.late || []; late.forEach((o) => prod.remove(o)); prod.updateMatrixWorld(true); const b2 = new THREE.Box3().setFromObject(prod), c2 = b2.getCenter(new THREE.Vector3()); prod.position.x -= c2.x; prod.position.y -= b2.min.y; prod.position.z -= b2.max.z - 0.02; prod.userData.pw = b2.max.x - b2.min.x; prod.userData.pd = b2.max.z - b2.min.z; late.forEach((o) => prod.add(o)); }
+if (Q.get('nobox')) prod.userData.noBox = true; // owner (27 Oct): the part on its own (Live Parts Board)
 const pw = prod.userData.pw, pd = prod.userData.pd;
 let box = null;
 if (!prod.userData.noBox) {
   box = await carton(pw, PH0); stand.add(box);
   const cw = box.userData.bw; box.position.set(SIDE * (pw / 2 + 0.2 * cw), box.userData.bh / 2, -pd - 0.08 - box.userData.depth / 2);
 }
+if (LINE) { // owner (27 Oct): every box of a range, lined up behind each other (each ~70% showing), the screen in front
+  let prev = box; for (let j = BOXL.length - 2; j >= 0; j--) { const b2 = await carton(pw, PH0, BOXL[j]); stand.add(b2); const cw2 = b2.userData.bw; b2.position.set(prev.position.x + SIDE * (prev.userData.bw / 2 + cw2 / 2 - 0.3 * cw2), b2.userData.bh / 2, prev.position.z - prev.userData.depth / 2 - b2.userData.depth / 2 - 0.05); prev = b2; } }
+if (ITEM === 'crack' || ITEM === 'fixed') { // owner (27 Oct): the repair ad: the phone centred, real tools leaning beside it
+  const tools = new THREE.Group(), sd = new THREE.Group();
+  const hdl = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.085, 0.62, 32), new THREE.MeshPhysicalMaterial({ color: 0x1c1d1f, roughness: 0.55 })); hdl.position.y = 0.31 + 0.62; sd.add(hdl);
+  const band = new THREE.Mesh(new THREE.CylinderGeometry(0.102, 0.102, 0.12, 32), new THREE.MeshPhysicalMaterial({ color: 0xf7c032, roughness: 0.4 })); band.position.y = 0.62 + 0.5; sd.add(band);
+  const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.1, 0.06, 32), mMetal(0xb8bcc2, 0.3)); cap.position.y = 0.62 + 0.65; sd.add(cap);
+  const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.62, 16), mMetal(0xd5d8dc, 0.18)); shaft.position.y = 0.31; sd.add(shaft);
+  const tip = new THREE.Mesh(new THREE.ConeGeometry(0.022, 0.06, 4), mMetal(0xd5d8dc, 0.18)); tip.rotation.x = PI; tip.position.y = -0.02; sd.add(tip);
+  sd.scale.setScalar(1.7); sd.position.set(SIDE * 1.15, 0.03, 0.3); sd.rotation.z = SIDE * -0.3; tools.add(sd);
+  const sp = RB(0.09, 1.3, 0.025, 0.02, new THREE.MeshPhysicalMaterial({ color: 0x18191b, roughness: 0.45 })); sp.position.set(-SIDE * 1.0, 0.66, 0.15); sp.rotation.z = SIDE * 0.28; tools.add(sp);
+  tools.traverse((m) => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; } }); scene.add(tools); }
 stand.rotation.set(-5 * PI / 180, -SIDE * 20 * PI / 180, 0);
 stand.updateMatrixWorld(true); { const bb = new THREE.Box3().setFromObject(stand); stand.position.y -= bb.min.y; }
 // the fixed camera: same for every render
-{ const c = new THREE.Vector3(SIDE * 0.62, 1.78, -0.3), d = 4.7 / (2 * Math.tan((cam.fov * PI / 180) / 2)); cam.position.set(c.x + SIDE * 0.1, c.y + d * 0.2, c.z + d); cam.lookAt(c);
+{ const noBox = !!prod.userData.noBox, c = new THREE.Vector3(noBox ? 0 : LINE ? SIDE * 3.3 : SIDE * 0.62, LINE ? 1.75 : 1.78, -0.3), d = (LINE ? 6.4 : 5.35) / (2 * Math.tan((cam.fov * PI / 180) / 2)); cam.position.set(c.x + SIDE * 0.1, c.y + d * 0.2, c.z + d); cam.lookAt(c);
   key.target.position.copy(c); scene.add(key.target); if (SIDE > 0) { key.position.x *= -1; rimR.position.x *= -1; rimL.position.x *= -1; } }
 renderer.render(scene, cam);
 window.__done = true;

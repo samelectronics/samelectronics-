@@ -19,8 +19,12 @@ for (const [id, s] of Object.entries(window.SE_SHOTS.shots)) JOBS[id] = { item: 
 for (const it of ['bat', 'bcv', 'flx', 'cam', 'sml', 'aud', 'frm', 'board']) JOBS['part-' + it] = { item: it, box: 'white', lcd: 'plain', label: '' };
 JOBS['rep-crack'] = { item: 'crack', box: 'white', lcd: 'plain', label: '' };
 JOBS['rep-fixed'] = { item: 'fixed', box: 'white', lcd: 'plain', label: '' };
+// owner (27 Oct): the box lineups (every box of a range behind the screen, ~70% of each showing), for the iPad banners and the Showcase
+JOBS['line-all'] = { item: 'line', boxes: 'zy,gx,xiaomi-sp,huawei-sp,apple-sp,samsung-sp', box: 'samsung-sp', lcd: 'plain', label: '', aspect: '2' };
+// owner (27 Oct): every part on its own, no carton (solo-<kind>), same stage and size
+for (const it of ['scr', 'bat', 'bcv', 'flx', 'cam', 'sml', 'aud', 'frm', 'board']) JOBS['solo-' + it] = { item: it, box: 'white', lcd: 'plain', label: '', nobox: '1' };
 // owner (27 Oct): an Arabic set, the carton peeking out on the RIGHT (rendered, so its print stays readable): <id>-ar-<w>.webp
-for (const id of Object.keys(JOBS)) JOBS[id + '-ar'] = { ...JOBS[id], ar: '1' };
+for (const id of Object.keys(JOBS).filter((k) => !k.startsWith('solo-'))) JOBS[id + '-ar'] = { ...JOBS[id], ar: '1' };
 const only = args.only ? args.only.split(',') : args.shot ? [args.shot] : Object.keys(JOBS);
 const OUT = path.join(ROOT, 'public/assets/pose'), PNG = path.join(OUT, '.png'); fs.mkdirSync(PNG, { recursive: true });
 const b = await pw.chromium.launch({ args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
@@ -46,7 +50,7 @@ from PIL import Image
 sq=Image.open(sys.argv[1]).convert('RGBA')
 for w in (240,480,960):
     # owner (26 Oct): crystal clear. Rendered at 2400px, so every size is a supersampled downscale, never an upscale
-    r=sq.resize((w,w),Image.LANCZOS)
+    r=sq.resize((w,round(w*sq.height/sq.width)),Image.LANCZOS)
     r.save(sys.argv[2]+'-%d.webp'%w,quality=90,method=6)
 `, png, path.join(OUT, id)]);
   console.log('rendered', id);

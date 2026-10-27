@@ -640,7 +640,7 @@ html.se-intro-done #top [data-hero-text] > *, html.se-intro-done #top [data-hero
 /* owner (27 Oct) · the real pallet with cartons dropping on it, on repeat (hero wholesale ad + its poster) */
 .se-pd { position: absolute; aspect-ratio: 1200 / 1008; }
 .se-pd > img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; user-select: none; pointer-events: none; }
-.se-pd > .se-pd-c { transform: translate(var(--x), calc(var(--y) - 30%)); opacity: 0; animation: sePdDrop var(--pd, 3.6s) linear infinite both; }
+.se-pd > .se-pd-c { transform: translate(var(--x), calc(var(--y) - 30%)); opacity: 0; animation: sePdDrop 4.2s linear infinite both; }
 @keyframes sePdDrop {
   0% { transform: translate(var(--x), calc(var(--y) - 30%)); opacity: 0; animation-timing-function: cubic-bezier(.55, 0, .85, .4); }
   4% { opacity: 1; }
@@ -661,3 +661,10 @@ html.se-intro-done #top [data-hero-text] > *, html.se-intro-done #top [data-hero
 html[dir='rtl'] .se-rep-fix.se-rep-loop { animation-name: seRepFixR; } html[dir='rtl'] .se-rep-beam.se-rep-loop { animation-name: seRepBeamR; }
 @keyframes seRepFixR { 0%, 30% { clip-path: inset(0 0 0 100%); } 48%, 92% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
 @keyframes seRepBeamR { 0%, 29% { left: 100%; opacity: 0; } 30% { left: 100%; opacity: 1; } 48% { left: 0; opacity: 1; } 53%, 100% { left: 0; opacity: 0; } }
+/* owner (27 Oct) · the iPad's wide banner shows the whole lineup of boxes, so the picture takes most of the width */
+.ipb.line { grid-template-columns: 38% 1fr; gap: 2px; }
+.ipb.line img { height: 150px; }
+/* owner (27 Oct) · the teardown no longer cuts straight into What we offer: a breathing space after its buttons that
+   fades from the studio graphite into the next section's fog */
+#teardown::after { content: ''; display: block; height: 140px; background: linear-gradient(180deg, #232427 0%, #2E3033 35%, #C9CBCE 82%, #F2F3F4 100%); pointer-events: none; }
+@media (max-width: 860px) { #teardown::after { height: 90px; } }

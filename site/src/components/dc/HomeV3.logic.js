@@ -660,7 +660,7 @@ class Component extends DCLogic {
     // tall, both columns), then scroll away with the grid. Products only, graphite or brand yellow, the product in its pose.
     // One period = 2 rows · banner · 2 rows · banner · 2 rows (8 rows); the first 4 rows repeat after it so the loop is seamless.
     { const scr = P.filter((p) => p.category === 'SCR' && p.grade === 'OR'), bat = P.filter((p) => p.category === 'BAT'), mn = (a) => (a.length ? Math.min(...a.map((x) => x.retail_price)) : null);
-      const B1 = { banner: true, tone: 'dark', k: 'SERVICE PACK SCREENS', h: 'Straight from the maker’s box.', l: mn(scr) != null ? 'from AED ' + fmt(mn(scr)) : 'In stock', img: window.SE_SHOTS ? window.SE_SHOTS.url('samsung-sp', 480) : '' };
+      const B1 = { banner: true, line: true, tone: 'dark', k: 'SERVICE PACK SCREENS', h: 'Straight from the maker’s box.', l: mn(scr) != null ? 'from AED ' + fmt(mn(scr)) : 'In stock', img: window.SE_SHOTS ? window.SE_SHOTS.url('line-all', 960) /* owner (27 Oct): every maker's box lined up behind the screen */ : '' };
       const B2 = { banner: true, tone: 'yel', k: 'THIS WEEK', h: '−15% on batteries.', l: mn(bat) != null ? 'from AED ' + fmt(Math.round(mn(bat) * 0.85)) : 'In stock', img: window.SE_SHOTS ? window.SE_SHOTS.url('part-bat', 480) : '' };
       const c = ipCards.slice(0, 12); this._ipSeq = [...c.slice(0, 4), B1, ...c.slice(4, 8), B2, ...c.slice(8, 12)]; this._ipSeq = [...this._ipSeq, ...this._ipSeq.slice(0, 7)]; }
     const ipChips = ['All', 'Screens', 'Batteries', 'Covers', 'Cameras'].map((c, i) => { const on = i === 0; return { c, bg: on ? '#26282B' : '#FFFFFF', ink: on ? '#FFFFFF' : '#3D3E3F' }; });

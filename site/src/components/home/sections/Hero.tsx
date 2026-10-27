@@ -656,7 +656,7 @@ export default function Hero({ v }: { v: Vals }) {
                         const v2 = { ...v, p: __it, $index: __i };
                         if (__it && __it.banner)
                           return (
-                            <div key={__i} className={'ipb ' + __it.tone} aria-hidden="true">
+                            <div key={__i} className={'ipb ' + __it.tone + (__it.line ? ' line' : '')} aria-hidden="true">
                               <span className="ipb-t">
                                 <small>{__it.k}</small>
                                 <b>{__it.h}</b>
@@ -1257,7 +1257,7 @@ export default function Hero({ v }: { v: Vals }) {
                                   {'\n                        '}
                                 </div>
                                 {'\n                        '}
-                                {v.a?.isWhs ? <PalletDrop style={{ left: '16px', width: '160px', top: '167px' }} /> : null /* owner (27 Oct): the real pallet, cartons dropping on repeat */}
+                                {v.a?.isWhs ? <PalletDrop style={{ left: '28px', width: '136px', top: '172px' }} /> : null /* owner (27 Oct): the real pallet, cartons dropping on repeat */}
                                 {'\n                        '}
                                 {v.a?.isWld ? (
                                   <>

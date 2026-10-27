@@ -85,4 +85,4 @@ html[dir='rtl'] [data-drawer] { animation-name: seSlideInR !important; box-shado
 html[lang='ar'] p, html[lang='ar'] li, html[lang='ar'] dd, html[lang='ar'] small { line-height: 1.5; }
 /* owner (26 Oct): in the phone ads the eyebrow and the title read from the right, like every other text in Arabic */
 html[dir='rtl'] .se-ad-k, html[dir='rtl'] .se-ad-t { left: auto !important; right: 9% !important; direction: rtl; text-align: right; }
-html[dir='rtl'] .se-ad-t { align-items: flex-end; }
+html[dir='rtl'] .se-ad-t { align-items: stretch; } html[dir='rtl'] .se-ad-t > span, html[dir='rtl'] .se-ad-t > span > span { text-align: right; } /* owner (27 Oct): flex-end means LEFT in right-to-left, so short lines hugged the left; both lines now start from the right */
