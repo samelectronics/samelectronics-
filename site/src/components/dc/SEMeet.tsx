@@ -123,7 +123,7 @@ function render(v: Vals) {
           </div>
           <div className="mt-facts">
             <span><b>24/7</b><small>Answers any time</small></span>
-            <span><b>4,000+</b><small>Parts it knows</small></span>
+            <span><b>9,000+</b><small>Parts it knows</small></span>
             <span><b>1 tap</b><small>To a person on WhatsApp</small></span>
           </div>
         </div>
