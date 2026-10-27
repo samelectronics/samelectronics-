@@ -6,4 +6,6 @@
 #circuit h2 .se-acc, #social h2 > span:last-child, #visit h2 > span:last-child { color: #F7C032; }
 /* light backgrounds */
 #families h2 > span:last-child > span, #showcase h2 > span:last-child, #story h2 > span:last-child,
-#repair h2 > span:last-child, #everyone h2 > span:last-child, #reviews h2 > span:last-child { color: #F7C032 !important; }
+#repair h2 > span:last-child { color: #F7C032 !important; }
+/* owner (27 Oct): Who are you and Reviews read as one calm title (graphite, second line softer), like Story and Showcase */
+#everyone h2 > span:last-child, #reviews h2 > span:last-child { color: #5E6064 !important; }

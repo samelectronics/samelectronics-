@@ -3,7 +3,7 @@
 import React from 'react';
 import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SEMeet.logic.js';
-import SamsoomLED from './SamsoomLED';
+import SESamsoom from './SESamsoom';
 
 function Card({ c }: { c: any }) {
   if (c.k === 'product')
@@ -94,13 +94,6 @@ function render(v: Vals) {
   return (
     <section id="samsoom" ref={v.secRef} data-tone="light" data-screen-label="Meet Samsoom" className={'mt' + (v.seen ? ' mt-seen' : '')}>
       <div className="mt-vig" aria-hidden="true" />
-      <div className="mt-drift" aria-hidden="true">
-        {(v.drift || []).map((q: string, i: number) => (
-          <span key={q} style={{ ['--i' as string]: i } as React.CSSProperties}>
-            {q}
-          </span>
-        ))}
-      </div>
       <div className="mt-in">
         <div className="mt-left">
           <span className="mt-eb">
@@ -117,23 +110,31 @@ function render(v: Vals) {
           <p className="mt-p">
             Samsoom knows our catalogue, grades, hours and shipping. It finds the part, explains the grade, and hands you to a person on WhatsApp the second you need one.
           </p>
-          <div className="mt-stage">
-            <span className="mt-pool" aria-hidden="true" />
-            <div className="mt-fly">
-              <SamsoomLED mood={v.mood} img={v.phone} front={v.front} />
+          {/* owner (27 Oct): the same Samsoom as the launcher on the right, big; under it what you can ask (fills the space) */}
+          <div className="mt-stage2">
+            <span className="mt-glow" aria-hidden="true" />
+            <div className="mt-bot"><SESamsoom mood={v.mood} size={220} /></div>
+            <div className="mt-asks">
+              <span className="mt-k">TRY ASKING</span>
+              {['Do you have an iPhone 13 screen?', 'What is the difference between OLED and Incell?', 'Are you open now?', 'Can you ship 200 batteries to Lagos?', 'How much is a Galaxy S23 back glass?'].map((q) => (
+                <button key={q} type="button" onClick={v.ask}>{q}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button>
+              ))}
             </div>
+          </div>
+          <div className="mt-facts">
+            <span><b>24/7</b><small>Answers any time</small></span>
+            <span><b>4,000+</b><small>Parts it knows</small></span>
+            <span><b>1 tap</b><small>To a person on WhatsApp</small></span>
           </div>
         </div>
 
         <div className="mt-chat">
           <div className="mt-chat-h">
-            <span className="av">
-              <span />
-            </span>
+            <span className="av"><SESamsoom mood="idle" size={40} still={true} /></span>
             <span className="nm">
               <b>Samsoom</b>
               <small>
-                <i /> Online · live demo
+                <i /> Online · replies in seconds
               </small>
             </span>
             <span className="ct" data-no-i18n="">

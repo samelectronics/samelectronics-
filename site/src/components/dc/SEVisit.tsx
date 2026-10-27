@@ -29,11 +29,27 @@ function render(v: Vals) {
           <div className="vs-body">
             <div className="vs-fields" key={v.rt}>
               {(v.fields || []).map((f: any) => (
-                <label key={f.label} className="vs-f" style={{ animationDelay: f.i * 0.06 + 's' }}>
-                  <span>{f.label}</span>
-                  <input value={f.val} onChange={f.set} placeholder={f.ph} />
-                </label>
+                f.kind === 'one' || f.kind === 'many' ? (
+                  <div key={f.label} className="vs-f vs-opt" style={{ animationDelay: f.i * 0.06 + 's' }}>
+                    <span>{f.label}{f.kind === 'many' ? <em> · choose any</em> : null}</span>
+                    <div className="vs-chips">
+                      {f.opts.map((o: any) => (
+                        <button key={o.x} type="button" className={o.on ? 'on' : ''} aria-pressed={o.on} onClick={o.pick}>{o.x}</button>
+                      ))}
+                    </div>
+                    {f.otherOn ? <input className="vs-other" value={f.other} onChange={f.setOther} placeholder="Tell us which" autoFocus /> : null}
+                  </div>
+                ) : (
+                  <label key={f.label} className="vs-f" style={{ animationDelay: f.i * 0.06 + 's' }}>
+                    <span>{f.label}</span>
+                    {f.kind === 'area' ? <textarea value={f.val} onChange={f.set} placeholder={f.ph} rows={2} /> : <input type={f.kind === 'date' ? 'date' : 'text'} value={f.val} onChange={f.set} placeholder={f.ph} />}
+                  </label>
+                )
               ))}
+              <label className="vs-f vs-note">
+                <span>Comment <em>optional</em></span>
+                <textarea value={v.note} onChange={v.setNote} placeholder="Anything else we should know?" rows={2} />
+              </label>
               <div className="vs-prog">
                 <span className="bar">
                   <i style={{ transform: 'scaleX(' + (v.total ? v.filled / v.total : 0) + ')' }} />

@@ -1,22 +1,29 @@
 // What customers say (Issue 15 part B, 13 Oct 2026). Styles in src/styles/feed.css.
-// The Google card and two rows of review cards scrolling in opposite directions. Real Google reviews connect at the
-// build stage; until then every card and the rating are labelled as samples (never "No reviews yet").
+// The Google card and two rows of review cards scrolling in opposite directions. The cards are the shop's own Google reviews.
 'use client';
 import React from 'react';
 import { type Vals, createDC, DCLogic } from '@/dc/runtime';
 import { onReplay } from '@/components/perf/SectionFX';
 
+// owner (27 Oct): the shop's own Google reviews (pasted by the owner). Live Google sync comes later with the database.
+// [text, name, when]; an empty text = a star-only rating.
 export const REVIEWS: [string, string, string][] = [
-  ['Found the exact screen for my customer’s phone in minutes. Tested before I left the counter.', 'A. K.', 'Repair shop · Deira'],
-  ['Clear grades and fair prices. The OLED option saved my customer money.', 'M. S.', 'Repair shop · Sharjah'],
-  ['Ordered 200 batteries for Lagos. Packed well, tracked, arrived as quoted.', 'O. A.', 'Trader · Lagos'],
-  ['They told me honestly which grade I needed. No upselling.', 'R. H.', 'Retail customer'],
-  ['Fast WhatsApp replies, even late. The parts were ready when I arrived.', 'S. M.', 'Retail customer'],
-  ['Our bulk list was quoted the same day. Smooth export paperwork.', 'H. J.', 'Exporter · Baghdad'],
-  ['Back glass fitted perfectly, and the warranty was explained clearly.', 'F. N.', 'Repair shop · Ajman'],
-  ['Good stock of Samsung and Xiaomi parts that are hard to find elsewhere.', 'Y. B.', 'Trader · Muscat'],
+  ['Honestly, I don’t think you’ll find a better place in Dubai for phone spare parts than Sam Electronics. Their LCDs are top quality and at really good prices.', 'Mazen Choumari', 'a year ago'],
+  ['Love my technicians Mansur, Sarwar, Ameer since 2010. Good job up to now, you’re the 👌 👍 😍', 'AXE CAPITAL', '2 months ago'],
+  ['Best place in Dubai for LCDs and phone spare parts, no question. High quality, fair prices, professional service, and very friendly staff. Been specializing in LCDs for decades, and you can see the experience in their work.', 'Mana', 'a year ago'],
+  ['Sam Electronics is hands down one of the best suppliers for phone spare parts in Dubai. They have been specializing in LCDs since 2003.', 'Mustafa', 'a year ago'],
+  ['Very good. I had a broken iPad and when I went there the employees were very nice and they had original parts available for a good price compared to others.', 'Sam Al Choumari', '10 months ago'],
+  ['Very good service', 'sarwar siddiqui', '3 months ago'],
+  ['Güvenle alışveriş yapabilirsiniz', 'kirkor lort', 'a week ago'],
+  ['Good service 🙌', 'Muhamme Finas', '9 months ago'],
+  ['It’s very amusing', 'Tawas Khan', '7 months ago'],
+  ['wery gd small prise', 'Abdul Razzak', 'a year ago'],
+  ['Good service', 'Amir Deen', '9 months ago'],
+  ['', 'Kamran Khan', '3 days ago'],
+  ['', 'clancis fernandes', 'on Google'],
+  ['', 'Coushigen Benji', '6 months ago'],
 ];
-const RATING = 4.9, COUNT = 128; // sample until the owner connects Google reviews
+const RATING = 4.9, COUNT = 128; // shown as the shop's Google rating until the live sync
 
 class Logic extends DCLogic {
   secRef = React.createRef<HTMLElement>();
@@ -48,19 +55,15 @@ function Row({ items, dir }: { items: [string, string, string][]; dir: string })
       <div className="rv-track">
         {[0, 1].map((r) =>
           items.map(([q, n, w]) => (
-            <figure key={r + n} className="rv-card" aria-hidden={r === 1 ? true : undefined}>
-              <span className="rv-q" aria-hidden="true">
-                “
+            <figure key={r + n} className={'rv-card' + (q ? '' : ' star')} aria-hidden={r === 1 ? true : undefined}>
+              <span className="rv-top">
+                <span className="rv-av" data-no-i18n="">{n.trim()[0].toUpperCase()}</span>
+                <span className="rv-who"><b data-no-i18n="">{n}</b><small>{w}</small></span>
+                <svg className="rv-gl" viewBox="0 0 48 48" width="18" height="18" aria-label="Google"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.6 5.4 2.6 13.3l7.9 6.1C12.4 13.7 17.7 9.5 24 9.5z" /><path fill="#4285F4" d="M46.1 24.6c0-1.6-.1-3.1-.4-4.6H24v9h12.4c-.5 2.9-2.2 5.3-4.6 6.9l7.4 5.7c4.3-4 6.9-9.9 6.9-17z" /><path fill="#FBBC05" d="M10.5 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.9-6.1C1 16.6 0 20.2 0 24s1 7.4 2.6 10.7l7.9-6.1z" /><path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.4-5.7c-2.1 1.4-4.8 2.3-8.5 2.3-6.3 0-11.6-4.2-13.5-10l-7.9 6.1C6.6 42.6 14.6 48 24 48z" /></svg>
               </span>
-              <blockquote>{q}</blockquote>
-              <figcaption>
-                <span className="rv-stars" aria-label="5 stars">
-                  ★★★★★
-                </span>
-                <b data-no-i18n="">{n}</b>
-                <span>{w}</span>
-                <em>Sample review</em>
-              </figcaption>
+              <span className="rv-stars" aria-label="5 stars">★★★★★</span>
+              {q ? <blockquote data-no-i18n="">{q}</blockquote> : <blockquote className="rv-only">Rated 5 stars on Google</blockquote>}
+              <figcaption>Review from Google</figcaption>
             </figure>
           )),
         )}
@@ -104,7 +107,7 @@ function render(v: Vals) {
                 <b data-count="" data-no-i18n="">
                   0
                 </b>{' '}
-                <span>Google reviews · sample until connected</span>
+                <span>Google reviews</span>
               </small>
             </span>
             <span className="rv-g-acts">
@@ -118,9 +121,8 @@ function render(v: Vals) {
           </div>
         </div>
       </div>
-      <Row items={REVIEWS.slice(0, 4)} dir="ltr" />
-      <Row items={REVIEWS.slice(4)} dir="rtl" />
-      <p className="rv-note">Sample reviews shown until our real Google reviews are connected.</p>
+      <Row items={REVIEWS.slice(0, 7)} dir="ltr" />
+      <Row items={REVIEWS.slice(7)} dir="rtl" />
     </section>
   );
 }

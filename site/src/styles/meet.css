@@ -118,3 +118,34 @@
 .mt-msgs { position: relative; }
 .mt-chat-h { position: relative; z-index: 2; }
 .mt-chat-h::after { content: ''; position: absolute; left: 0; right: 0; top: 100%; height: 40px; background: linear-gradient(180deg, #2C2E31, rgba(44, 46, 49, 0)); pointer-events: none; }
+/* ===== owner (27 Oct): Meet Samsoom rebuilt: the launcher's Samsoom, no drifting chats, a light real-looking chat ===== */
+.mt-drift { display: none !important; }
+.mt-in { align-items: stretch; }
+.mt-stage2 { position: relative; display: grid; grid-template-columns: 240px 1fr; gap: 24px; align-items: center; margin-top: 28px; }
+.mt-glow { position: absolute; left: -20px; top: 50%; width: 280px; height: 280px; margin-top: -140px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 255, 255, .55), rgba(255, 255, 255, 0)); pointer-events: none; }
+.mt-bot { position: relative; display: grid; place-items: center; animation: mtBob 4s ease-in-out infinite; filter: drop-shadow(0 24px 30px rgba(90, 60, 0, .35)); }
+@keyframes mtBob { 50% { transform: translateY(-10px); } }
+.mt-asks { display: flex; flex-direction: column; gap: 8px; }
+.mt-k { font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .14em; color: rgba(38, 40, 43, .7); }
+.mt-asks button { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 11px 14px; border: none; border-radius: 14px; background: rgba(255, 255, 255, .72); color: #26282B; font: 500 14px Inter, sans-serif; text-align: start; cursor: pointer; box-shadow: 0 6px 16px -10px rgba(90, 60, 0, .5); transition: background .2s, transform .2s; }
+.mt-asks button:hover { background: #fff; transform: translateX(4px); }
+html[dir='rtl'] .mt-asks button:hover { transform: translateX(-4px); } html[dir='rtl'] .mt-asks svg { transform: scaleX(-1); }
+.mt-seen .mt-asks button { animation: seRise .5s both; } .mt-seen .mt-asks button:nth-of-type(2) { animation-delay: .1s; } .mt-seen .mt-asks button:nth-of-type(3) { animation-delay: .2s; } .mt-seen .mt-asks button:nth-of-type(4) { animation-delay: .3s; } .mt-seen .mt-asks button:nth-of-type(5) { animation-delay: .4s; }
+.mt-facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 24px; }
+.mt-facts span { display: flex; flex-direction: column; gap: 2px; padding: 14px 16px; border-radius: 16px; background: #26282B; color: #fff; }
+.mt-facts b { font: 700 24px 'Space Grotesk', sans-serif; color: #F7C032; } .mt-facts small { font: 400 13px Inter, sans-serif; color: #C9CBCE; }
+/* the chat: light, like a real messaging app */
+.mt-chat { background: #F4F1EA !important; color: #26282B !important; box-shadow: 0 30px 60px -30px rgba(90, 60, 0, .55), inset 0 0 0 1px rgba(38, 40, 43, .08) !important; }
+.mt-chat::before { content: ''; position: absolute; inset: 0; opacity: .5; background: radial-gradient(circle at 1px 1px, rgba(38, 40, 43, .07) 1px, transparent 1.5px) 0 0 / 18px 18px; pointer-events: none; }
+.mt-chat-h { background: #fff; border-bottom: 1px solid rgba(38, 40, 43, .08) !important; }
+.mt-chat-h::after { background: linear-gradient(180deg, rgba(244, 241, 234, 1), rgba(244, 241, 234, 0)) !important; }
+.mt-chat-h .av { width: 44px !important; height: 44px !important; border-radius: 50% !important; background: #F7C032 !important; box-shadow: none !important; overflow: hidden; }
+.mt-chat-h .nm b { color: #26282B; } .mt-chat-h .nm small, .mt-chat-h .ct { color: #5E6064 !important; }
+.mt-m .bub { background: #fff !important; color: #26282B !important; box-shadow: 0 1px 1.5px rgba(0, 0, 0, .12); }
+.mt-m.me .bub { background: #F7C032 !important; color: #26282B !important; }
+.mt-m.typing { background: #fff !important; box-shadow: 0 1px 1.5px rgba(0, 0, 0, .12); }
+.mt-card { background: #fff !important; color: #26282B !important; box-shadow: 0 1px 2px rgba(0, 0, 0, .12), inset 0 0 0 1px rgba(38, 40, 43, .06) !important; }
+.mt-card small, .mt-card em { color: #5E6064 !important; }
+.mt-ask { position: relative; z-index: 2; }
+@media (max-width: 700px) { .mt-stage2 { grid-template-columns: 1fr; justify-items: center; } .mt-facts { grid-template-columns: 1fr 1fr 1fr; } .mt-facts b { font-size: 18px; } }
+.mt-card .tx strong { color: #26282B !important; } .mt-card .tx small em { color: #9A6F00 !important; }

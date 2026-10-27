@@ -19,16 +19,24 @@ export const POSTS = [
   { k: 5, t: 'Pixel 8 Pro cameras, tested', m: 'Bench test', bg: 'w', likes: 187 },
 ];
 
+// owner (27 Oct): the useful side of the feed: what dropped this week (pretend live)
+const DROPS = [
+  { t: 'iPhone 15 Pro OLED screens', m: '12 boxes landed in Deira', ago: '2h ago', tag: 'Stock drop' },
+  { t: 'Galaxy A54 batteries', m: 'Back in stock · all grades', ago: 'Yesterday', tag: 'Restock' },
+  { t: 'Back glass −18%', m: 'Offer ends Friday', ago: '2 days ago', tag: 'Offer' },
+  { t: 'Pixel 8 Pro cameras', m: 'Bench tested before sale', ago: '3 days ago', tag: 'Bench test' },
+];
+
 class Component extends DCLogic {
   secRef = React.createRef();
-  state = { seen: false, tick: 0, lib: null };
+  state = { seen: false, tick: 0, lib: null, chI: 0, hold: false };
   componentDidMount() {
     this.offRp = onReplay(() => this.secRef.current, () => { cancelAnimationFrame(this.nRaf); this.setState({ seen: false }); }); // 14 Oct · H-G2: replay from the start
     const sp = window.seParts, pk = sp && sp.peek && sp.peek(); if (pk) this.setState({ lib: pk });
     this.onLib = (e) => this.setState({ lib: e.detail }); window.addEventListener('se:parts-lib', this.onLib);
     this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) { this.setState({ seen: true }); this.roll(); } }, { threshold: 0.25 });
     setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
-    this.iv = setInterval(() => { if (this.vis && !document.hidden) this.setState({ tick: this.state.tick + 1 }); }, 1600);
+    this.iv = setInterval(() => { if (this.vis && !document.hidden) { const t = this.state.tick + 1; this.setState({ tick: t, ...(t % 4 === 0 && !this.state.hold ? { chI: (this.state.chI + 1) % CH.length } : {}) }); } }, 1600); // owner (27 Oct): one phone, switching channel every ~6s
     this.onLang = () => this.forceUpdate(); window.addEventListener('se:lang', this.onLang);
   }
   componentWillUnmount() { this.offRp && this.offRp(); clearInterval(this.iv); cancelAnimationFrame(this.nRaf); this.io && this.io.disconnect(); window.removeEventListener('se:parts-lib', this.onLib); window.removeEventListener('se:lang', this.onLang); }
@@ -41,7 +49,8 @@ class Component extends DCLogic {
     const img = (k) => (k === 0 && window.SE_SHOTS ? window.SE_SHOTS.url('samsung-sp', 480) : (window.SE_SHOTS && window.SE_SHOTS.byIndex(k)) || (lib && lib.large ? lib.large[k] : '')); /* Urgent 1: the pose */ // R6 E7: screens = box + LCD
     const fmt = (n) => (n >= 1000 ? (n / 1000).toFixed(1) + 'K' : String(n));
     return { secRef: this.secRef, seen: s.seen, phone: img(9), front: lib && lib.front ? lib.front : null, img,
-      ch: CH, posts: POSTS.map((p, i) => ({ ...p, img: img(p.k), likes: fmt(p.likes + Math.floor((tk + i * 2) / 3) * (i + 1)) })),
+      ch: CH.map((c, i) => ({ ...c, on: i === s.chI, pick: () => this.setState({ chI: i, hold: true }), qr: '/assets/qr/' + c.id + '.svg' })), cur: CH[s.chI].id, hover: (h) => this.setState({ hold: h }),
+      drops: DROPS, posts: POSTS.map((p, i) => ({ ...p, img: img(p.k), likes: fmt(p.likes + Math.floor((tk + i * 2) / 3) * (i + 1)) })),
       tt: { likes: fmt(3200 + tk * 7), com: fmt(146 + Math.floor(tk / 2)), share: fmt(88 + Math.floor(tk / 4)) },
       qr: 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&color=26-27-29&data=' + encodeURIComponent(CH[0].href) };
   }

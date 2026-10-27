@@ -10,7 +10,21 @@ import { DCLogic } from '@/dc/runtime';
 import { onReplay } from '@/components/perf/SectionFX';
 import { shopStatus } from '@/lib/shopStatus';
 
-const FL = { 'Order parts': [['Model', 'e.g. iPhone 15 Pro'], ['Part & grade', 'e.g. Screen · OLED'], ['Quantity', '1']], 'Bulk quote': [['Company', 'Your shop or company'], ['Parts list', 'Paste models and quantities'], ['Country', 'e.g. Nigeria']], 'Book a repair': [['Model', 'e.g. Galaxy A54'], ['Problem', 'e.g. cracked screen'], ['Preferred time', 'e.g. Saturday evening']], 'Trade account': [['Business name', 'Your shop or company'], ['Customer type', 'Repair shop · Trader · Bulk buyer'], ['Country', 'e.g. UAE']], 'Shipping quote': [['Destination', 'City, country'], ['Parts & quantity', 'e.g. 50 screens'], ['Deadline', 'e.g. next week']], General: [['Your name', 'Name'], ['Message', 'How can we help?']] };
+// owner (27 Oct): every request type asks with the same options as Find My Part (brands, parts, grades, colours,
+// quantities, a date for repairs), always with "Other" (opens a small box) and a free comment, all sent to WhatsApp.
+// field: [label, kind, options | placeholder]; kinds: text, area, date, one (single choice), many (multi choice)
+const BR = ['Apple', 'Samsung', 'Xiaomi', 'Redmi', 'POCO', 'Huawei', 'Honor', 'Oppo', 'Realme', 'OnePlus', 'Vivo', 'Infinix', 'Tecno', 'Pixel', 'Nokia', 'Other'];
+const PT = ['Screen', 'Battery', 'Back cover', 'Charging port', 'Camera', 'Frame', 'Speaker', 'Flex cable', 'Other'];
+const GR = ['Original', 'Service Pack', 'OLED Soft', 'OLED Hard', 'Incell', 'AAA', 'Not sure', 'Other'];
+const CO = ['Black', 'White', 'Gold', 'Silver', 'Blue', 'Purple', 'Other'];
+const FL = {
+  'Order parts': [['Brand', 'one', BR], ['Model', 'text', 'e.g. iPhone 15 Pro'], ['Part', 'many', PT], ['Grade', 'one', GR], ['Colour', 'one', CO], ['Quantity', 'one', ['1', '2–5', '6–10', '10–50', '50+', 'Other']]],
+  'Bulk quote': [['Company', 'text', 'Your shop or company'], ['Country', 'text', 'e.g. Nigeria'], ['Brands', 'many', BR], ['Parts', 'many', PT], ['Grades', 'many', GR], ['Quantity', 'one', ['50+', '100+', '500+', '1,000+', 'Other']], ['Parts list', 'area', 'Paste models and quantities']],
+  'Book a repair': [['Brand', 'one', BR], ['Model', 'text', 'e.g. Galaxy A54'], ['Problem', 'many', ['Screen', 'Touch glass', 'Battery', 'Back glass', 'Charging port', 'Camera', 'Water damage', 'Software', 'Not sure', 'Other']], ['Quality', 'one', ['Original', 'OLED', 'Incell', 'Not sure', 'Other']], ['Date', 'date', ''], ['Time', 'one', ['Morning', 'Afternoon', 'Evening', 'Any time']]],
+  'Trade account': [['Business name', 'text', 'Your shop or company'], ['Customer type', 'one', ['Repair shop', 'Trader', 'Exporter', 'Bulk buyer', 'Other']], ['Country', 'text', 'e.g. UAE'], ['Monthly volume', 'one', ['Under 100 units', '100–500', '500–1,000', '1,000+']], ['Main brands', 'many', BR]],
+  'Shipping quote': [['Destination', 'text', 'City, country'], ['Parts', 'many', PT], ['Quantity', 'one', ['Under 50', '50–200', '200–1,000', '1,000+', 'Other']], ['Service', 'one', ['Express', 'Economy', 'Not sure']], ['Needed by', 'date', '']],
+  General: [['Your name', 'text', 'Name'], ['Topic', 'one', ['Stock question', 'Prices', 'Warranty', 'Partnership', 'Other']], ['Message', 'area', 'How can we help?']],
+};
 const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const pad = (n) => String(n).padStart(2, '0'), hm = (x) => pad(Math.floor(x / 60)) + ':' + pad(x % 60);
 
@@ -31,9 +45,18 @@ class Component extends DCLogic {
   renderVals() {
     const s = this.state, D = s.data, RT = D ? D.requestTypes : ['Order parts', 'Bulk quote', 'Book a repair', 'Trade account', 'Shipping quote', 'General'], rt = s.type || RT[0];
     const C = (D && D.contact) || {}, wa = 'https://wa.me/' + (C.wa || '971503420015'), email = C.email || 'samelectronics.uae@gmail.com';
-    const fields = (FL[rt] || FL.General).map(([label, ph], i) => ({ label, ph, i, val: s.vals[rt + label] || '', set: (e) => { const v = e.target.value; this.setState((st) => ({ vals: { ...st.vals, [rt + label]: v } })); } }));
+    const put = (k, v) => this.setState((st) => ({ vals: { ...st.vals, [k]: v } }));
+    const fields = (FL[rt] || FL.General).map(([label, kind, o], i) => {
+      const k = rt + label, raw = s.vals[k] || '', sel = raw ? raw.split('|') : [], other = s.vals[k + ':o'] || '';
+      const shown = sel.map((x) => (x === 'Other' ? (other.trim() ? other.trim() : 'Other') : x)).join(', ');
+      const opts = Array.isArray(o) ? o.map((x) => ({ x, on: sel.includes(x), pick: () => put(k, kind === 'many' ? (sel.includes(x) ? sel.filter((y) => y !== x) : [...sel, x]).join('|') : sel[0] === x ? '' : x) })) : [];
+      return { label, kind, i, ph: Array.isArray(o) ? '' : o, opts, otherOn: sel.includes('Other'), other, setOther: (e) => put(k + ':o', e.target.value),
+        val: kind === 'one' || kind === 'many' ? shown : raw, set: (e) => put(k, e.target.value) };
+    });
+    const note = s.vals[rt + ':note'] || '', setNote = (e) => put(rt + ':note', e.target.value);
     const filled = fields.filter((f) => f.val.trim()).length;
-    const no = 'SE-REQ-' + (2600 + ((s.now / 864e5) | 0) % 900), body = 'Work order ' + no + '\nType: ' + rt + '\n' + fields.map((f) => f.label + ': ' + (f.val || '—')).join('\n');
+    const no = 'SE-REQ-' + (2600 + ((s.now / 864e5) | 0) % 900);
+    const body = '*' + rt.toUpperCase() + ' · SAM ELECTRONICS*\nWork order ' + no + '\n\n' + fields.filter((f) => f.val.trim()).map((f) => '• ' + f.label + ': ' + f.val).join('\n') + (note.trim() ? '\n\nComment: ' + note.trim() : '') + '\n\nSent from the Sam Electronics website';
     // Dubai time, G7 status and today's shifts
     const d = new Date(s.now), g = new Date(d.getTime() + d.getTimezoneOffset() * 6e4 + 4 * 36e5), day = g.getDay(), m = g.getHours() * 60 + g.getMinutes(), sec = g.getSeconds();
     const H = D ? D.hours : {}, sh = H[day] || [], cur = sh.find(([a, b]) => m >= a && m < b), nxt = sh.find(([a]) => a > m), SS = shopStatus(H, s.now), soon = SS.soon; // 14 Oct §02: shared 4-state status
@@ -42,8 +65,8 @@ class Component extends DCLogic {
     const count = cur ? 'Closes in ' + dur(left) : nxt ? 'Opens in ' + dur(left) : '';
     const week = [6, 1, 2, 3, 4, 5, 0].map((x) => ({ day: DAYS[x], on: x === day, h: (H[x] || []).length ? H[x].map(([a, b]) => hm(a) + '–' + hm(b)).join(' · ') : 'Closed' }));
     return { secRef: this.secRef, seen: s.seen,
-      types: RT.map((t) => ({ name: t, on: t === rt, pick: () => this.setState({ type: t }) })), rt, fields, filled, total: fields.length, no,
-      lines: fields.filter((f) => f.val.trim()).map((f) => ({ k: f.label.toUpperCase(), v: f.val })), sent: s.sent, sentN: s.sentN,
+      types: RT.map((t) => ({ name: t, on: t === rt, pick: () => this.setState({ type: t }) })), rt, fields, filled, total: fields.length, no, note, setNote,
+      lines: fields.filter((f) => f.val.trim()).map((f) => ({ k: f.label.toUpperCase(), v: f.val })).concat(note.trim() ? [{ k: 'COMMENT', v: note.trim() }] : []), sent: s.sent, sentN: s.sentN,
       sendWa: (e) => { e.preventDefault(); this.send('wa', wa + '?text=' + encodeURIComponent(body)); },
       sendMail: (e) => { e.preventDefault(); this.send('mail', 'mailto:' + email + '?subject=' + encodeURIComponent(no + ' · ' + rt) + '&body=' + encodeURIComponent(body)); },
       clock: hm(m) + ':' + pad(sec), open: !!cur, soon, dot: SS.dot, state: SS.state, status, sub, count, today: DAYS[day],

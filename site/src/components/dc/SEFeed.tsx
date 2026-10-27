@@ -3,6 +3,7 @@
 import React from 'react';
 import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SEFeed.logic.js';
+import CircuitField from '../home/CircuitField';
 
 export const GLYPH: Record<string, React.ReactNode> = {
   ig: (
@@ -133,68 +134,60 @@ function render(v: Vals) {
   const scr = { left: (f.ph[0] + f.scr[0] * f.ph[2]) * 100 + '%', top: (f.ph[1] + f.scr[1] * f.ph[3]) * 100 + '%', width: f.scr[2] * f.ph[2] * 100 + '%', height: f.scr[3] * f.ph[3] * 100 + '%' };
   return (
     <section id="social" ref={v.secRef} data-tone="dark" data-screen-label="The Feed" className={'fd' + (v.seen ? ' fd-seen' : '')}>
+      <CircuitField tone="dark" seed={23} />
+      <span className="fd-aura" aria-hidden="true" />
       <div className="fd-in">
-        <header className="fd-top">
-          <div>
+        {/* owner (27 Oct): one phone (not three), the follow buttons and all three QR codes at once, the week's drops */}
+        <div className="fd-grid">
+          <div className="fd-info">
             <span className="fd-eb">THE FEED · @SAMELECTRONICS.UAE</span>
             <h2 className="fd-h"><span>Follow @samelectronics.uae</span> <span>for daily stock drops.</span></h2>
-            <div className="fd-links">
+            <p className="fd-p">New stock, offers and bench tests go up first on our channels. Scan a code or tap Follow.</p>
+            <div className="fd-follow">
               {(v.ch || []).map((c: any) => (
-                <a key={c.id} href={c.href} target="_blank" rel="noopener noreferrer">
-                  <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-                    {GLYPH[c.id]}
-                  </svg>
-                  {c.name}
+                <a key={c.id} href={c.href} target="_blank" rel="noopener noreferrer" className={'fd-fl ' + c.id + (c.on ? ' on' : '')} onMouseEnter={c.pick}>
+                  <span className="qr"><img src={c.qr} alt={'QR code for ' + c.name} width={96} height={96} loading="lazy" /><i className="scan" aria-hidden="true" /></span>
+                  <span className="nm"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">{GLYPH[c.id]}</svg>{c.name}</span>
+                  <span className="ct"><b data-n={c.followers} data-no-i18n="">0</b> <small>followers</small></span>
+                  <span className="btn">Follow</span>
                 </a>
               ))}
             </div>
           </div>
-          <div className="fd-qr">
-            <span className="fd-qr-code">
-              <img src={v.qr} alt="QR code for Instagram" width={112} height={112} />
-              <i className="scan" aria-hidden="true" />
-            </span>
-            <span className="fd-qr-t">
-              <span className="fd-k">SCAN TO FOLLOW</span>
-              {(v.ch || []).map((c: any) => (
-                <span key={c.id} className="fd-cnt">
-                  <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
-                    {GLYPH[c.id]}
-                  </svg>
-                  <b data-n={c.followers} data-no-i18n="">
-                    0
-                  </b>
-                  <small>followers</small>
-                </span>
-              ))}
-            </span>
-          </div>
-        </header>
 
-        <div className="fd-stage">
-          <span className="fd-pool" aria-hidden="true" />
-          <div className="fd-phones">
-            {(v.ch || []).map((c: any, i: number) => (
-              <a key={c.id} href={c.href} target="_blank" rel="noopener noreferrer" className={'fd-ph p' + i}>
-                <span className="fd-ph-in">
-                  <span className="fd-refl" aria-hidden="true">
-                    {v.phone ? <img src={v.phone} alt="" /> : null}
-                  </span>
-                  {v.phone ? <img className="fd-body" src={v.phone} alt="" draggable={false} /> : null}
-                  <span className="fd-scr" style={scr}>
-                    <span className="fd-on">{v.seen ? <Screen id={c.id} v={v} /> : null}</span>
-                    <span className="fd-glass" aria-hidden="true" />
-                  </span>
-                  <span className="fd-rim" aria-hidden="true" />
+          <div className="fd-stage" onMouseEnter={() => v.hover(true)} onMouseLeave={() => v.hover(false)}>
+            <span className="fd-pool" aria-hidden="true" />
+            <div className="fd-sw" role="tablist">
+              {(v.ch || []).map((c: any) => (
+                <button key={c.id} type="button" role="tab" aria-selected={c.on} className={c.on ? 'on' : ''} onClick={c.pick}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">{GLYPH[c.id]}</svg>{c.name}
+                </button>
+              ))}
+            </div>
+            <a href={(v.ch || []).find((c: any) => c.on)?.href} target="_blank" rel="noopener noreferrer" className="fd-ph one">
+              <span className="fd-ph-in">
+                <span className="fd-refl" aria-hidden="true">{v.phone ? <img src={v.phone} alt="" /> : null}</span>
+                {v.phone ? <img className="fd-body" src={v.phone} alt="" draggable={false} /> : null}
+                <span className="fd-scr" style={scr}>
+                  <span className="fd-on" key={v.cur}>{v.seen ? <Screen id={v.cur} v={v} /> : null}</span>
+                  <span className="fd-glass" aria-hidden="true" />
                 </span>
-                <span className="fd-tag">
-                  <svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true">
-                    {GLYPH[c.id]}
-                  </svg>
-                  {c.name}
-                </span>
-              </a>
+                <span className="fd-rim" aria-hidden="true" />
+              </span>
+            </a>
+          </div>
+
+          <div className="fd-drops">
+            <span className="fd-k"><i className="live" />THIS WEEK ON OUR CHANNELS</span>
+            {(v.drops || []).map((d: any, i: number) => (
+              <div key={d.t} className="fd-drop" style={{ ['--i' as string]: i } as React.CSSProperties}>
+                <span className="tag">{d.tag}</span>
+                <b>{d.t}</b>
+                <small>{d.m}</small>
+                <em>{d.ago}</em>
+              </div>
             ))}
+            <div className="fd-next"><span>NEXT LANDING</span><b>Thursday · 14:00</b><small>Turn on notifications so you see it first</small></div>
           </div>
         </div>
       </div>
