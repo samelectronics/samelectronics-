@@ -328,8 +328,8 @@ html[dir='rtl'] .wf-range::-moz-range-track { background: linear-gradient(270deg
 .wf-sc3-fly { position: absolute; inset: 0; width: 100%; height: 100%; }
 .wf-sc3-fly .arc { fill: none; stroke: rgba(247, 192, 50, .55); stroke-width: 1.5; stroke-dasharray: 4 5; }
 .wf-sc3-fly .pl path { fill: #FFFFFF; filter: drop-shadow(0 0 3px rgba(247, 192, 50, .9)); }
-.wf-sc3 .qstamp { position: absolute; right: 14%; top: 12%; rotate: -10deg; padding: 3px 8px; border: 2px solid #2BB673; border-radius: 6px; color: #2BB673; font: 700 12px 'JetBrains Mono', monospace; letter-spacing: .12em; animation: wfStamp 4.2s ease-in-out infinite; }
-@keyframes wfStamp { 0%, 55% { opacity: 0; scale: 1.6; } 62%, 92% { opacity: 1; scale: 1; } 100% { opacity: 0; scale: 1; } }
+.wf-sc3 .qstamp { position: absolute; right: 14%; top: 12%; rotate: -10deg; padding: 3px 8px; border: 2px solid #2BB673; border-radius: 6px; color: #2BB673; font: 700 12px 'JetBrains Mono', monospace; letter-spacing: .12em; animation: wfQStamp 4.2s ease-in-out infinite; }
+@keyframes wfQStamp { 0%, 55% { opacity: 0; scale: 1.6; } 62%, 92% { opacity: 1; scale: 1; } 100% { opacity: 0; scale: 1; } }
 /* owner (27 Oct) · search-first, recent models, the request list, the >1,000 enquiry and the trade-account invitation */
 .wf-recent-h { display: block; margin: 10px 0 6px; font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .1em; text-transform: uppercase; color: #8C9096; }
 .wf-enq { margin: 10px 0 0; padding: 10px 12px; border-radius: 10px; background: rgba(247, 192, 50, .16); border: 1px solid rgba(247, 192, 50, .5); font-size: 13px; }
@@ -364,3 +364,27 @@ html[dir='rtl'] .wf-row img { right: auto !important; left: calc(4% + var(--i) *
 /* steps: the base state without !important so the light-up animation can win */
 .wf .wf-steps li .node { background: rgba(38, 40, 43, .08); color: #26282B; box-shadow: inset 0 0 0 2px rgba(38, 40, 43, .5); }
 .wf-sc3-film { position: absolute; inset: 0; }
+/* ===== owner (28 Oct) ===== the same flat yellow as the hero; no grain or vignette patches */
+.wf { background: #F7C032 !important; }
+.wf-grain, .wf-vig { display: none !important; }
+/* the stamp sits beside the title, never over it */
+.wf-hrow { display: flex; align-items: flex-end; gap: 22px; flex-wrap: wrap; }
+.wf-stamp { font-size: 18px !important; padding: 8px 12px 6px !important; border-width: 3px !important; margin: 0 0 10px !important; }
+/* invite to the real tools (verified supplier accounts) */
+.wf-real { display: flex; align-items: center; gap: 12px; margin-top: 12px; padding: 12px 14px; border-radius: 14px; background: rgba(247, 192, 50, .12); color: #fff; text-decoration: none; box-shadow: inset 0 0 0 1.5px rgba(247, 192, 50, .55); transition: background .2s, transform .2s; }
+.wf-real:hover { background: rgba(247, 192, 50, .2); transform: translateY(-2px); }
+.wf-real .i { flex: none; display: grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; background: #F7C032; color: #26282B; }
+.wf-real > span:nth-child(2) { display: flex; flex-direction: column; gap: 2px; flex: 1; }
+.wf-real b { font: 700 15px 'Space Grotesk', sans-serif; } .wf-real small { font: 400 12.5px Inter, sans-serif; color: #C9CBCE; }
+html[dir='rtl'] .wf-real > svg:last-child { transform: scaleX(-1); }
+/* How trade works: the steps light one after another, then ALL go dark together and it starts again */
+.wf.wf-seen .wf-steps li:nth-child(1) .node { animation: wfL1 6s .3s infinite both !important; }
+.wf.wf-seen .wf-steps li:nth-child(2) .node { animation: wfL2 6s .3s infinite both !important; }
+.wf.wf-seen .wf-steps li:nth-child(3) .node { animation: wfL3 6s .3s infinite both !important; }
+.wf.wf-seen .wf-steps li:nth-child(1) .wire::after { animation: wfW1 6s .3s infinite both !important; }
+.wf.wf-seen .wf-steps li:nth-child(2) .wire::after { animation: wfW2 6s .3s infinite both !important; }
+@keyframes wfW1 { 0%, 8% { transform: scaleX(0); } 22%, 82% { transform: scaleX(1); } 92%, 100% { transform: scaleX(0); } }
+@keyframes wfW2 { 0%, 26% { transform: scaleX(0); } 40%, 82% { transform: scaleX(1); } 92%, 100% { transform: scaleX(0); } }
+@keyframes wfL1 { 0% { background: rgba(38, 40, 43, .08); color: #26282B; } 6%, 82% { background: #26282B; color: #F7C032; box-shadow: inset 0 0 0 2px #26282B, 0 0 0 6px rgba(38, 40, 43, .12), 0 8px 18px rgba(38, 40, 43, .35); } 92%, 100% { background: rgba(38, 40, 43, .08); color: #26282B; } }
+@keyframes wfL2 { 0%, 18% { background: rgba(38, 40, 43, .08); color: #26282B; } 24%, 82% { background: #26282B; color: #F7C032; box-shadow: inset 0 0 0 2px #26282B, 0 0 0 6px rgba(38, 40, 43, .12), 0 8px 18px rgba(38, 40, 43, .35); } 92%, 100% { background: rgba(38, 40, 43, .08); color: #26282B; } }
+@keyframes wfL3 { 0%, 36% { background: rgba(38, 40, 43, .08); color: #26282B; } 42%, 82% { background: #26282B; color: #F7C032; box-shadow: inset 0 0 0 2px #26282B, 0 0 0 6px rgba(38, 40, 43, .12), 0 8px 18px rgba(38, 40, 43, .35); } 92%, 100% { background: rgba(38, 40, 43, .08); color: #26282B; } }

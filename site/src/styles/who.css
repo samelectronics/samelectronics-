@@ -177,3 +177,15 @@ html[dir='rtl'] .ws-doc { right: auto; left: 7%; transform: translateY(-50%) rot
 @keyframes wsStamp { from { opacity: 0; transform: rotate(-10deg) scale(1.8); } }
 @media (max-width: 700px) { .ws-globe { transform: scale(.6); transform-origin: 0 50%; } .ws-doc { width: 180px; } .ws-grades span { min-width: 0; } }
 .ws-film { position: absolute; inset: 0 0 0 0; z-index: 1; }
+/* ===== owner (28 Oct) ===== */
+.wh-tabs { margin-top: 26px; }
+.wh-h { margin-bottom: 4px; }
+/* a cinematic studio: lit backdrop fading into depth, a reflective floor with a soft horizon */
+.wh-stage, .wh-stage.ret, .wh-stage.rep, .wh-stage.exp, .wh-stage.blk { background: radial-gradient(70% 55% at 50% 30%, #4A4C51, #2C2E31 58%, #1C1D20) !important; }
+.wh-stage::before { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 36%; z-index: 0; pointer-events: none; background: linear-gradient(180deg, rgba(255, 255, 255, .07), rgba(255, 255, 255, .02) 30%, rgba(0, 0, 0, .45)); border-top: 1px solid rgba(255, 255, 255, .08); }
+.wh-stage::after { content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none; background: radial-gradient(90% 80% at 50% 50%, rgba(0, 0, 0, 0) 55%, rgba(0, 0, 0, .35)); }
+.ws { z-index: 1; }
+.ws-hero { width: min(64%, 420px) !important; top: 50% !important; }
+.ws-globe { left: 50% !important; top: 47% !important; margin: -165px 0 0 -165px !important; }
+html[dir='rtl'] .ws-globe { right: auto !important; }
+.ws-film { position: absolute; inset: 0; }

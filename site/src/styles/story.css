@@ -114,3 +114,11 @@
 .st-stats > div > span { font: 500 14px Inter, sans-serif; color: #4A4D52; }
 .st-note { margin: 12px 0 0; font: 500 12px Inter, sans-serif; color: #8C9096; }
 @media (max-width: 900px) { .st-br-g, .st-stats { grid-template-columns: 1fr; } .st-stats > div + div { border-inline-start: none; border-top: 1px solid rgba(26, 27, 29, .2); } }
+/* owner (28 Oct): thin hero-style circuits at the stage's sides, the light travels with the scroll */
+.st-circ { position: absolute; inset: 0; pointer-events: none; z-index: 0; --sp: 0; }
+.stc { position: absolute; top: 50%; width: 180px; height: 660px; transform: translateY(-50%); overflow: visible; }
+.stc.l { left: 0; } .stc.r { right: 0; }
+.stc .b { fill: none; stroke: rgba(38, 40, 43, .14); stroke-width: 2; stroke-linejoin: round; }
+.stc .f { fill: none; stroke: #F7C032; stroke-width: 2.6; stroke-linecap: round; stroke-dasharray: 90 910; stroke-dashoffset: calc(1000 - (var(--sp) * 4000 + var(--k) * 180) * 1); }
+.stc .n { fill: #F2F3F4; stroke: rgba(38, 40, 43, .45); stroke-width: 2; }
+@media (max-width: 1100px) { .st-circ { display: none; } }

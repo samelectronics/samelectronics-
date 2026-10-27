@@ -1,5 +1,6 @@
 // Our story & branches (Issue 10): rebuilt 13 Oct 2026. Styles in src/styles/story.css.
 'use client';
+import StoryCircuits from '../home/StoryCircuits';
 import React from 'react';
 import { type Vals, createDC } from '@/dc/runtime';
 import Logic, { CX } from './SEStory.logic.js';
@@ -86,6 +87,7 @@ function render(v: Vals) {
     <section id="story" className="st">
       <div className="st-pin-wrap" ref={v.secRef}>
         <div className="st-pin">
+          <StoryCircuits />
           <div className="st-sun" aria-hidden="true" />
           <div className="st-grain" aria-hidden="true" />
           <div className="st-box" style={{ ['--sc' as string]: v.sc } as React.CSSProperties}>

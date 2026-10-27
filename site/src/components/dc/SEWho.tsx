@@ -19,17 +19,12 @@ const shot = (id: string) => (typeof window !== 'undefined' && (window as unknow
 /** owner (27 Oct): one symbolic 3D scene per visitor, all on the same dark studio stage as the hero ad and the teardown
  *  (real renders, a soft key light, a floor shadow), no cartoon hand and no busy backgrounds. */
 function Scene({ id, v }: { id: string; v: Vals }) {
+  // owner (28 Oct): ONE product, centred, on a studio floor: no search bars, price tags or small bits around it
   if (id === 'ret') {
     return (
       <div className="ws ws-ret">
         <span className="ws-key" />
-        <div className="ws-search">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg>
-          <span className="ws-type" data-no-i18n="">iPhone 13 screen</span><i className="ws-caret" />
-        </div>
-        {shot('apple-temp') ? <img className="ws-hero" src={shot('apple-temp')} alt="" /> : null}
-        <span className="ws-floor" />
-        <div className="ws-tag"><b>{v.from}</b></div>
+        {shot('samsung-sp') ? <img className="ws-hero" src={shot('samsung-sp')} alt="" /> : null}
       </div>
     );
   }
@@ -37,14 +32,7 @@ function Scene({ id, v }: { id: string; v: Vals }) {
     return (
       <div className="ws ws-rep">
         <span className="ws-key" />
-        <div className="ws-film"><RepairFlip w={960} zoom={1.4} /></div>
-        <span className="ws-floor" />
-        <div className="ws-grades">
-          {(v.grades || []).map((g: any, k: number) => (
-            <span key={g.g} style={{ ['--k' as string]: k } as React.CSSProperties}><b>{g.g}</b><s>{g.p}</s><em>{g.t}</em></span>
-          ))}
-        </div>
-        <span className="ws-chip">TRADE PRICES</span>
+        <div className="ws-film"><RepairFlip w={960} zoom={1.0} /></div>
       </div>
     );
   }
@@ -52,14 +40,7 @@ function Scene({ id, v }: { id: string; v: Vals }) {
     return (
       <div className="ws ws-exp">
         <span className="ws-key" />
-        <DotGlobe size={360} speed={7} className="ws-globe" />
-        <div className="ws-doc">
-          <span className="h"><b>BULK LIST</b><span data-no-i18n="">#BL-2611</span></span>
-          {[['Screens · mixed grades', '× 300'], ['Batteries', '× 180'], ['Back covers', '× 120'], ['Charging flex', '× 240'], ['Cameras', '× 60']].map(([a, b], k) => (
-            <span key={a} className="r" style={{ ['--k' as string]: k } as React.CSSProperties}><span>{a}</span><b>{b}</b></span>
-          ))}
-          <span className="st">QUOTED</span>
-        </div>
+        <DotGlobe size={330} speed={7} className="ws-globe" />
       </div>
     );
   }

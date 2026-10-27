@@ -326,6 +326,11 @@ function render(v: Vals) {
                 <button type="button" className="wf-add" onClick={v.addLine}>+ Add to request</button>
                 <a className="wf-send" href={v.send} target="_blank" rel="noopener">Send request on WhatsApp</a>
               </div>
+              <a className="wf-real" href="#wholesale" onClick={v.apply}>
+                <span className="i" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6z" /><path d="M9 12l2 2 4-4" /></svg></span>
+                <span><b>Use the real trade tools</b><small>Live stock and trade prices for verified supplier accounts</small></span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+              </a>
               <p className="wf-acct">This is a preview of our trade tools. For the full trade catalogue and live trade prices, <a href="#wholesale" onClick={v.apply}>apply for an approved trade account</a>.</p>
             </div>
           </div>

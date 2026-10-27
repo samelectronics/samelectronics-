@@ -13,7 +13,7 @@ export const LANES = [
   { id: 'exp', k: 'Trader & exporter', d: 'Bulk lists, shipped worldwide.', cta: 'Plan my shipment', ben: ['Bulk lists quoted fast', 'Packed for export', 'Shipped to four regions'] },
   { id: 'blk', k: 'Bulk buyer', d: 'Volume, first in line.', cta: 'Request a bulk quote', ben: ['Volume pricing on request', 'Incoming shipments first', 'One contact for every order'] },
 ];
-const DUR = 6.2;
+const DUR = 5; // owner (28 Oct): a little quicker
 
 class Component extends DCLogic {
   secRef = React.createRef();
