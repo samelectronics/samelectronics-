@@ -77,6 +77,7 @@ function core(l: Other, s: string): string | null {
     const part = D[m[2].toLowerCase()] || m[2], cap = l === 'fa' || l === 'ur' || l === 'hi' ? part : part.charAt(0).toUpperCase() + part.slice(1);
     return `${cap} ${m[1]}${m[3] ? ' · ' + T(m[3]) : ''}`;
   }
+  if ((m = s.match(/^(.+) \(estimate\)$/)) && D['estimate']) { const r = core(l, m[1]); if (r != null) return `${r} (${D['estimate']})`; }
   // "A · B · C": each piece
   if (s.includes(' · ')) {
     const parts = s.split(' · '), t = parts.map((p) => core(l, p) ?? p);

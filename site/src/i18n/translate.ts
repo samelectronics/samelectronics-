@@ -41,6 +41,7 @@ const RULES: Rule[] = [
   // stock, counts
   [/^([\d,.]+k?) in stock$/i, (_, n) => `${num(n)} متوفر`],
   [/^Only (\d+) left$/i, (_, n) => `بقي ${n} فقط`],
+  [/^Only (\d+) left \(estimate\)$/i, (_, n) => `بقي ${n} فقط (تقديري)`],
   [/^Only (\d+)$/i, (_, n) => `فقط ${n}`],
   [/^(\d+) searches$/, (_, n) => `${n} عملية بحث`],
   [/^([\d,]+) (models?|parts?|listings|boxes|events today|cartons?)$/i, (_, n, w) => `${n} ${({ model: 'موديل', models: 'موديل', part: 'قطعة', parts: 'قطعة', listings: 'إعلان', boxes: 'صندوق', 'events today': 'حدث اليوم', carton: 'كرتونة', cartons: 'كرتونة' } as Record<string, string>)[w.toLowerCase()]}`],

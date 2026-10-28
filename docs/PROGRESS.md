@@ -2778,3 +2778,13 @@ DONE WHEN
 - Walk only shows things that are really on screen (fixes the tour breaking on narrower screens); pages can add steps with `data-tour-step`, `data-tour-title`, `data-tour-text`.
 - Samsoom is always animated in the tour (LiveSam: blinking, emotes every few seconds, eyes follow the pointer).
 - Phones/tablets: the nav now fits the screen (brand name, bench, staff and hours pill move out of the bar on small screens).
+
+## 28 Oct · P1–P5 · The full site (ready for Supabase)
+
+- **P1 Foundation.** One data layer (`src/lib/catalog.ts`, `store.ts`) and one backend contract (`src/lib/backend/types.ts`). It runs on a local adapter today (browser storage, demo staff) and switches to Supabase by itself when `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are set. Schema, row-level security, order/stock functions, seed script and an e-mail function are in `site/supabase/` (see its README). Every page uses the home page's frame (nav, cart drawer, Samsoom, language pop-up, footer).
+- **P2 Shop.** `/shop` and `/deals`: search with typo fixing, a "Customise" panel (price min/max, quality, brand, model, part, colour, stock, deals, warranty and more, plus saved setups), product view with grade comparison, fitting fee, reviews, stock alerts. Banners come from the Control Room. `/cart` adds 5% VAT and delivery from settings.
+- **P3 Account.** `/account` (My Bench): sign up with an e-mail code (demo code shown until e-mail is connected), orders, repairs, devices, saved parts, member card, company profiles with trade approval. `/membership` (Sam Circle / Grid / Circuit) and `/samsoom` (full Ask Samsoom page).
+- **P4 Info pages.** `/repair` (fee tiers 25/35/45, booking), `/wholesale` (info and apply only), `/worldwide`, `/story`, `/contact` (live chat, careers), `/legal` (terms, privacy, warranty, returns, cookies), `/brands`.
+- **P5 Control Room.** `/staff`, with roles (owner, manager, sales, technician): dashboard, products and stock, warehouse moves, orders and invoices, repairs board, customers, approvals, inbox, site editor (banners, announcement, Samsoom, any text), accounting with a VAT summary, e-mail templates, team, audit log, settings. Demo log-in: `owner@sam.demo` / `demo1234` (also manager@, sales@, tech@).
+- **Languages.** About 850 new strings are translated into all 8 languages. A sweep of all 13 pages in Arabic finds no English left except brand and model names. The Control Room is in English only (staff tool).
+- All prices, stock and ratings are **samples** until the owner sends real data.
