@@ -13,16 +13,20 @@ import { isolateNumbers, tr } from './translate';
 import { LANG_KEY } from './prepaint';
 import { loadDict, trOther, type Other } from './multi';
 
-export type Lang = 'en' | 'ar' | 'es' | 'fr' | 'fa';
-/** R7-G: the five site languages, in menu order. Arabic and Persian read right to left. */
+export type Lang = 'en' | 'ar' | 'es' | 'fr' | 'fa' | 'ru' | 'hi' | 'ur';
+/** R8: the eight site languages, in menu order: English and Arabic first (the shop's own two), then the rest A to Z by
+ *  their English name. Arabic, Persian and Urdu read right to left. */
 export const LANGS: { id: Lang; name: string; en: string }[] = [
   { id: 'en', name: 'English', en: 'English' },
   { id: 'ar', name: 'العربية', en: 'Arabic' },
-  { id: 'es', name: 'Español', en: 'Spanish' },
   { id: 'fr', name: 'Français', en: 'French' },
+  { id: 'hi', name: 'हिन्दी', en: 'Hindi' },
   { id: 'fa', name: 'فارسی', en: 'Persian' },
+  { id: 'ru', name: 'Русский', en: 'Russian' },
+  { id: 'es', name: 'Español', en: 'Spanish' },
+  { id: 'ur', name: 'اردو', en: 'Urdu' },
 ];
-export const isRtl = (l: string) => l === 'ar' || l === 'fa';
+export const isRtl = (l: string) => l === 'ar' || l === 'fa' || l === 'ur';
 const valid = (l: unknown): l is Lang => typeof l === 'string' && LANGS.some((x) => x.id === l);
 /** The current language's translation of one English text. */
 const trCur = (en: string) => (lang === 'en' ? en : lang === 'ar' ? tr(en) : trOther(lang as Other, en));

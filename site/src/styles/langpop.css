@@ -7,14 +7,14 @@
   display: flex; flex-direction: column; justify-content: center; gap: 18px; animation: lpCard .3s cubic-bezier(.2, .9, .3, 1) both; }
 .lp-out .lp-card { animation: lpCardOut .26s ease-in forwards; }
 .lp-eb { font: 500 11px/1 'JetBrains Mono', monospace; letter-spacing: .16em; color: #F7C032; }
-.lp-card:is([lang='ar'],[lang='fa']) .lp-eb { font: 600 12px/1 'IBM Plex Sans Arabic', sans-serif; letter-spacing: 0; }
+.lp-card:is([lang='ar'],[lang='fa'],[lang='ur']) .lp-eb { font: 600 12px/1 'IBM Plex Sans Arabic', sans-serif; letter-spacing: 0; }
 .lp-row { display: flex; align-items: center; gap: 16px; }
 .lp-ic { flex: none; width: 44px; height: 44px; }
 .lp-txt { display: flex; flex-direction: column; gap: 6px; }
 .lp-txt b { font: 700 20px/1.2 'Space Grotesk', sans-serif; letter-spacing: -.02em; }
 .lp-txt span { font: 400 14px/1.4 Inter, sans-serif; color: rgba(255, 255, 255, .72); }
-.lp-card:is([lang='ar'],[lang='fa']) .lp-txt b { font: 700 20px/1.35 'IBM Plex Sans Arabic', sans-serif; letter-spacing: 0; }
-.lp-card:is([lang='ar'],[lang='fa']) .lp-txt span { font: 400 14px/1.5 'IBM Plex Sans Arabic', sans-serif; }
+.lp-card:is([lang='ar'],[lang='fa'],[lang='ur']) .lp-txt b { font: 700 20px/1.35 'IBM Plex Sans Arabic', sans-serif; letter-spacing: 0; }
+.lp-card:is([lang='ar'],[lang='fa'],[lang='ur']) .lp-txt span { font: 400 14px/1.5 'IBM Plex Sans Arabic', sans-serif; }
 .lp-done .lp-txt { animation: lpLine .35s cubic-bezier(.2, .8, .2, 1) both; }
 .lp-ring { fill: none; stroke: rgba(247, 192, 50, .25); stroke-width: 2; stroke-dasharray: 30 96; transform-origin: 22px 22px; animation: lpSpin 1s linear infinite; }
 .lp-done .lp-ring { stroke: #F7C032; stroke-dasharray: none; animation: none; fill: rgba(247, 192, 50, .12); transition: fill .3s; }
@@ -41,7 +41,7 @@
 .lp-card { width: 380px; min-height: 140px; padding: 24px; flex-direction: row; align-items: center; justify-content: center; gap: 18px; text-align: start; }
 .lp-ic { width: 40px; height: 40px; }
 .lp-txt { gap: 6px; }
-.lp-txt b, .lp-card:is([lang='ar'],[lang='fa']) .lp-txt b { font-size: 18px; }
+.lp-txt b, .lp-card:is([lang='ar'],[lang='fa'],[lang='ur']) .lp-txt b { font-size: 18px; }
 .lp-plate { fill: rgba(247, 192, 50, .08); stroke: rgba(247, 192, 50, .3); stroke-width: 1; }
 .lp-trace { fill: none; stroke: #F7C032; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: lpDraw 1.7s .15s cubic-bezier(.45, 0, .55, 1) forwards; }
 .lp-pad { fill: #26282B; stroke: #F7C032; stroke-width: 1.6; }
@@ -108,3 +108,10 @@
 .lp2-cell .lp2-fill::after { content: none; }
 .lp2-bar i { background: linear-gradient(90deg, hsl(calc(var(--p, 0) * 140), 78%, 50%), hsl(calc(var(--p, 0) * 140 + 12), 82%, 60%)); }
 .lp2-meta em { color: hsl(calc(var(--p, 0) * 140), 75%, 60%); transition: color .12s linear; }
+/* R8 · the card grows to fit longer languages (French, Spanish, Russian…) with safe spacing; the text wraps instead of
+   leaving the card. Right-to-left languages fill the battery from the right. */
+.lp-card.lp2 { max-width: min(560px, calc(100vw - 32px)); padding: 24px 30px; }
+.lp2-txt { flex: 1 1 auto; }
+.lp2-txt b { white-space: normal; overflow-wrap: anywhere; text-wrap: balance; }
+.lp-eb { white-space: nowrap; }
+[dir='rtl'] .lp2-cell .lp2-fill { transform-origin: right center; }

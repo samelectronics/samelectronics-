@@ -5,7 +5,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { LANGS, type Lang } from '@/i18n/lang';
 
-const CODE: Record<Lang, string> = { en: 'EN', ar: 'ع', es: 'ES', fr: 'FR', fa: 'فا' };
+const CODE: Record<Lang, string> = { en: 'EN', ar: 'ع', es: 'ES', fr: 'FR', fa: 'فا', ru: 'RU', hi: 'हि', ur: 'اُر' };
 
 export default function LangMenu({ up = false, dark = false }: { up?: boolean; dark?: boolean }) {
   const [cur, setCur] = useState<Lang>('en'), [open, setOpen] = useState(false), box = useRef<HTMLSpanElement>(null);

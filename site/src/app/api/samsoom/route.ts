@@ -71,7 +71,7 @@ export async function POST(req: Request) {
       output_config: { effort: 'low' }, // quick chat answers
       system: [
         { type: 'text', text: SYSTEM, cache_control: { type: 'ephemeral' } },
-        { type: 'text', text: `Now in Dubai: ${dubaiNow()}. The visitor's site language: ${({ ar: 'Arabic', es: 'Spanish', fr: 'French', fa: 'Persian (Farsi)' } as Record<string, string>)[body.lang || ''] || 'English'}.` },
+        { type: 'text', text: `Now in Dubai: ${dubaiNow()}. The visitor's site language: ${({ ar: 'Arabic', es: 'Spanish', fr: 'French', fa: 'Persian (Farsi)', ru: 'Russian', hi: 'Hindi', ur: 'Urdu' } as Record<string, string>)[body.lang || ''] || 'English'}.` },
       ],
       messages,
     });

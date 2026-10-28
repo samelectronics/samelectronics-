@@ -7,13 +7,16 @@ import React, { useEffect, useRef, useState } from 'react';
 // Hero 3 (owner): the battery charges with a percentage counting up, the end is a drawn tick, the card fits its text
 // (nothing centred awkwardly) and has real colour and detail: graphite case, segmented green charge, yellow accents.
 
-type Lang = 'en' | 'ar' | 'es' | 'fr' | 'fa';
+type Lang = 'en' | 'ar' | 'es' | 'fr' | 'fa' | 'ru' | 'hi' | 'ur';
 type Phase = 'off' | 'load' | 'done' | 'out';
 const TXT = {
   en: { eb: 'LANGUAGE · ENGLISH', load: 'Translating every screen and battery…', done: 'Mission accomplished!', sub: 'The whole shop now speaks English.', close: 'Close' },
   ar: { eb: 'اللغة · العربية', load: 'نترجم كل شاشة وكل بطارية…', done: 'تمت المهمة!', sub: 'المتجر كله يتحدث العربية الآن.', close: 'إغلاق' },
   es: { eb: 'IDIOMA · ESPAÑOL', load: 'Traduciendo cada pantalla y cada batería…', done: '¡Misión cumplida!', sub: 'Toda la tienda habla ahora español.', close: 'Cerrar' },
   fr: { eb: 'LANGUE · FRANÇAIS', load: 'Traduction de chaque écran et chaque batterie…', done: 'Mission accomplie !', sub: 'Toute la boutique parle désormais français.', close: 'Fermer' },
+  ru: { eb: 'ЯЗЫК · РУССКИЙ', load: 'Переводим каждый экран и каждую батарею…', done: 'Миссия выполнена!', sub: 'Весь магазин теперь говорит по-русски.', close: 'Закрыть' },
+  hi: { eb: 'भाषा · हिन्दी', load: 'हर स्क्रीन और हर बैटरी का अनुवाद हो रहा है…', done: 'मिशन पूरा!', sub: 'पूरी दुकान अब हिन्दी बोलती है।', close: 'बंद करें' },
+  ur: { eb: 'زبان · اردو', load: 'ہر اسکرین اور ہر بیٹری کا ترجمہ ہو رہا ہے…', done: 'مشن مکمل!', sub: 'پوری دکان اب اردو بولتی ہے۔', close: 'بند کریں' },
   fa: { eb: 'زبان · فارسی', load: 'ترجمهٔ همهٔ صفحه‌ها و باتری‌ها…', done: 'مأموریت انجام شد!', sub: 'حالا کل فروشگاه فارسی صحبت می‌کند.', close: 'بستن' },
 };
 
@@ -51,7 +54,7 @@ export default function LangPop() {
   const T = TXT[to] || TXT.en, done = phase === 'done' || phase === 'out';
   return (
     <div className={'lp' + (phase === 'out' ? ' lp-out' : '')} data-no-i18n="" role="dialog" aria-modal="true" aria-live="polite" aria-label={done ? T.done : T.load}>
-      <div className={'lp-card lp2' + (done ? ' lp-done' : '')} dir={to === 'ar' || to === 'fa' ? 'rtl' : 'ltr'} lang={to}>
+      <div className={'lp-card lp2' + (done ? ' lp-done' : '')} dir={to === 'ar' || to === 'fa' || to === 'ur' ? 'rtl' : 'ltr'} lang={to}>
         <span className="lp2-ic" aria-hidden="true">
           <span className="lp2-bat">
             <span className="lp2-cell">

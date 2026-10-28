@@ -6,7 +6,7 @@
  */
 import { PARTS } from './ar';
 
-export type Other = 'es' | 'fr' | 'fa';
+export type Other = 'es' | 'fr' | 'fa' | 'ru' | 'hi' | 'ur';
 const norm = (s: string) => s.replace(/\s+/g, ' ').trim();
 const dicts: Partial<Record<Other, Record<string, string>>> = {};
 const caches: Partial<Record<Other, Map<string, string>>> = {};
@@ -14,7 +14,7 @@ const caches: Partial<Record<Other, Map<string, string>>> = {};
 /** Load a language's dictionary (once). */
 export async function loadDict(l: Other) {
   if (dicts[l]) return;
-  const m = l === 'es' ? await import('./es') : l === 'fr' ? await import('./fr') : await import('./fa');
+  const m = l === 'es' ? await import('./es') : l === 'fr' ? await import('./fr') : l === 'fa' ? await import('./fa') : l === 'ru' ? await import('./ru') : l === 'hi' ? await import('./hi') : await import('./ur');
   dicts[l] = m.default;
   caches[l] = new Map();
 }
@@ -25,6 +25,9 @@ type W = { closesIn: string; opensIn: string; openUntil: string; openNowUntil: s
 const WORDS: Record<Other, W> = {
   es: { closesIn: 'Cierra en', opensIn: 'Abre en', openUntil: 'Abierto · hasta', openNowUntil: 'Abierto ahora · hasta', closingSoon: 'Cierra pronto ·', openingSoon: 'Abre pronto ·', closedOpens: 'Cerrado · abre', closedOpensTomorrow: 'Cerrado · abre mañana', closedNowOpensToday: 'Cerrado ahora · abre hoy a las', opensTomorrow: 'Abre mañana', opens: 'Abre', closes: 'Cierra a las', inStock: 'en stock', only: 'Solo', left: 'quedan', from: 'Desde', h: 'h', m: 'min', d: 'd', min: 'min', hrs: 'h', days: 'días', ago: (n, u) => `hace ${n} ${u === 'h' ? 'h' : 'días'}`, partFirst: true },
   fr: { closesIn: 'Ferme dans', opensIn: 'Ouvre dans', openUntil: 'Ouvert · jusqu’à', openNowUntil: 'Ouvert · jusqu’à', closingSoon: 'Ferme bientôt ·', openingSoon: 'Ouvre bientôt ·', closedOpens: 'Fermé · ouvre à', closedOpensTomorrow: 'Fermé · ouvre demain à', closedNowOpensToday: 'Fermé · ouvre aujourd’hui à', opensTomorrow: 'Ouvre demain à', opens: 'Ouvre à', closes: 'Ferme à', inStock: 'en stock', only: 'Plus que', left: 'restants', from: 'Dès', h: 'h', m: 'min', d: 'j', min: 'min', hrs: 'h', days: 'jours', ago: (n, u) => `il y a ${n} ${u === 'h' ? 'h' : 'j'}`, partFirst: true },
+  ru: { closesIn: 'Закроется через', opensIn: 'Откроется через', openUntil: 'Открыто · до', openNowUntil: 'Сейчас открыто · до', closingSoon: 'Скоро закроется ·', openingSoon: 'Скоро откроется ·', closedOpens: 'Закрыто · откроется в', closedOpensTomorrow: 'Закрыто · откроется завтра в', closedNowOpensToday: 'Сейчас закрыто · откроется сегодня в', opensTomorrow: 'Откроется завтра в', opens: 'Откроется в', closes: 'Закроется в', inStock: 'в наличии', only: 'Осталось', left: 'шт.', from: 'От', h: 'ч', m: 'мин', d: 'д', min: 'мин', hrs: 'ч', days: 'дней', ago: (n, u) => `${n} ${u === 'h' ? 'ч' : 'дн.'} назад`, partFirst: true },
+  hi: { closesIn: 'बंद होने में', opensIn: 'खुलने में', openUntil: 'खुला · तक', openNowUntil: 'अभी खुला · तक', closingSoon: 'जल्द बंद ·', openingSoon: 'जल्द खुलेगा ·', closedOpens: 'बंद · खुलेगा', closedOpensTomorrow: 'बंद · कल खुलेगा', closedNowOpensToday: 'अभी बंद · आज खुलेगा', opensTomorrow: 'कल खुलेगा', opens: 'खुलेगा', closes: 'बंद होगा', inStock: 'स्टॉक में', only: 'केवल', left: 'बचे', from: 'से', h: 'घं', m: 'मि', d: 'दि', min: 'मिनट', hrs: 'घंटे', days: 'दिन', ago: (n, u) => `${n} ${u === 'h' ? 'घंटे' : 'दिन'} पहले`, partFirst: true },
+  ur: { closesIn: 'بند ہونے میں', opensIn: 'کھلنے میں', openUntil: 'کھلا · تک', openNowUntil: 'ابھی کھلا · تک', closingSoon: 'جلد بند ·', openingSoon: 'جلد کھلے گا ·', closedOpens: 'بند · کھلے گا', closedOpensTomorrow: 'بند · کل کھلے گا', closedNowOpensToday: 'ابھی بند · آج کھلے گا', opensTomorrow: 'کل کھلے گا', opens: 'کھلے گا', closes: 'بند ہوگا', inStock: 'اسٹاک میں', only: 'صرف', left: 'باقی', from: 'سے', h: 'گھنٹے', m: 'منٹ', d: 'دن', min: 'منٹ', hrs: 'گھنٹے', days: 'دن', ago: (n, u) => `${n} ${u === 'h' ? 'گھنٹے' : 'دن'} پہلے`, partFirst: true },
   fa: { closesIn: 'بسته می‌شود تا', opensIn: 'باز می‌شود تا', openUntil: 'باز · تا', openNowUntil: 'اکنون باز · تا', closingSoon: 'به‌زودی بسته می‌شود ·', openingSoon: 'به‌زودی باز می‌شود ·', closedOpens: 'بسته · باز می‌شود', closedOpensTomorrow: 'بسته · فردا باز می‌شود', closedNowOpensToday: 'اکنون بسته · امروز باز می‌شود', opensTomorrow: 'فردا باز می‌شود', opens: 'باز می‌شود', closes: 'بسته می‌شود', inStock: 'موجود', only: 'فقط', left: 'باقی مانده', from: 'از', h: 'ساعت', m: 'دقیقه', d: 'روز', min: 'دقیقه', hrs: 'ساعت', days: 'روز', ago: (n, u) => `${n} ${u === 'h' ? 'ساعت' : 'روز'} پیش`, partFirst: true },
 };
 
@@ -53,15 +56,15 @@ function core(l: Other, s: string): string | null {
   if ((m = s.match(/^Closed(?: now)? · opens (Mon|Tue|Wed|Thu|Fri|Sat|Sun) (\d\d:\d\d)$/))) return `${w.closedOpens} ${day(m[1])} ${m[2]}`;
   if ((m = s.match(/^Closed(?: now)? · opens (\d\d:\d\d)$/))) return `${w.closedOpens} ${m[1]}`;
   if ((m = s.match(/^Opens tomorrow (\d\d:\d\d)$/))) return `${w.opensTomorrow} ${m[1]}`;
-  if ((m = s.match(/^(\d+)d (\d+)h (\d+)m$/))) return `${m[1]}${w.d} ${m[2]}${w.h} ${m[3]}${w.m}`.replace(/(\d)([^\d\s])/g, l === 'fa' ? '$1 $2' : '$1$2');
-  if ((m = s.match(/^(\d+)h (\d+)m$/))) return l === 'fa' ? `${m[1]} ساعت ${m[2]} دقیقه` : `${m[1]} h ${m[2]} min`;
+  if ((m = s.match(/^(\d+)d (\d+)h (\d+)m$/))) return `${m[1]}${w.d} ${m[2]}${w.h} ${m[3]}${w.m}`.replace(/(\d)([^\d\s])/g, l === 'fa' || l === 'ur' || l === 'hi' ? '$1 $2' : '$1$2');
+  if ((m = s.match(/^(\d+)h (\d+)m$/))) return l === 'fa' ? `${m[1]} ساعت ${m[2]} دقیقه` : `${m[1]} ${w.h} ${m[2]} ${w.m}`;
   if ((m = s.match(/^(\d+)m$/))) return `${m[1]} ${w.m}`;
   if ((m = s.match(/^(\d+) H AGO$/i))) return w.ago(m[1], 'h');
   if ((m = s.match(/^(\d+) d ago$/i))) return w.ago(m[1], 'd');
   if ((m = s.match(/^(\d+)[–-](\d+) (min|hrs|days)$/))) return `${m[1]}–${m[2]} ${m[3] === 'min' ? w.min : m[3] === 'hrs' ? w.hrs : w.days}`;
   // stock and prices
   if ((m = s.match(/^([\d,.]+k?) in stock$/i))) return `${m[1]} ${w.inStock}`;
-  if ((m = s.match(/^Only (\d+) left$/i))) return l === 'fa' ? `فقط ${m[1]} عدد باقی مانده` : `${w.only} ${m[1]} ${w.left}`;
+  if ((m = s.match(/^Only (\d+) left$/i))) return l === 'fa' ? `فقط ${m[1]} عدد باقی مانده` : l === 'hi' || l === 'ur' ? `${w.only} ${m[1]} ${w.left}` : `${w.only} ${m[1]} ${w.left}`;
   if ((m = s.match(/^From AED ([\d,]+)$/i))) return `${w.from} AED ${m[1]}`;
   if ((m = s.match(/^AED ([\d,]+(?:[–-][\d,]+)?)( · sample)?$/))) return `AED ${m[1]}${m[2] ? ' · ' + T('sample') : ''}`;
   if ((m = s.match(/^SINCE (\d{4})$/i))) return `${T('SINCE')} ${m[1]}`;
@@ -71,7 +74,7 @@ function core(l: Other, s: string): string | null {
   if ((m = s.match(/^Just landed: (.+)$/))) return `${T('Just landed:')} ${T(m[1])}`;
   // products: "<model> <part>[ · <grade>]" → "<part> <model>[ · <grade>]"
   if ((m = s.match(PRODUCT)) && MODEL_RE.test(m[1])) {
-    const part = D[m[2].toLowerCase()] || m[2], cap = l === 'fa' ? part : part.charAt(0).toUpperCase() + part.slice(1);
+    const part = D[m[2].toLowerCase()] || m[2], cap = l === 'fa' || l === 'ur' || l === 'hi' ? part : part.charAt(0).toUpperCase() + part.slice(1);
     return `${cap} ${m[1]}${m[3] ? ' · ' + T(m[3]) : ''}`;
   }
   // "A · B · C": each piece
