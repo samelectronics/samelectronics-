@@ -10,7 +10,7 @@ import SEBrandLogo from './SEBrandLogo';
 function render(v: Vals) {
   return (
     <>
-      <div onMouseEnter={v.enter} onMouseLeave={v.leave} style={{ position: 'relative', display: 'flex' }}>
+      <div data-tour="fmp" onMouseEnter={v.enter} onMouseLeave={v.leave} style={{ position: 'relative', display: 'flex' }}>
         {'\n  '}
         <button
           onClick={v.openAll}

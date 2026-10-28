@@ -11,6 +11,7 @@ function render(v: Vals) {
       <div ref={v.rootRef} style={{ position: 'fixed', insetInlineEnd: '24px', bottom: '24px', zIndex: '70' }} /* R6 Part C6: bottom-left in Arabic */>
         {'\n  '}
         <button
+          data-tour="samsoom"
           onClick={v.click}
           onMouseEnter={v.poke}
           aria-label="Ask Samsoom"

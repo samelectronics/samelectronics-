@@ -130,7 +130,7 @@ function render(v: Vals) {
 
         <div className="mt-chat">
           <div className="mt-chat-h">
-            <span className="av"><SESamsoom mood="idle" size={40} still={true} /></span>
+            <span className="av"><SESamsoom mood="idle" size={30} still={true} /></span>
             <span className="nm">
               <b>Samsoom</b>
               <small>
@@ -144,14 +144,14 @@ function render(v: Vals) {
           <div className="mt-msgs">
             {(v.msgs || []).map((m: any) =>
               m.who === 'typing' ? (
-                <div key={m.id} className="mt-row bot"><span className="mt-av bot" aria-hidden="true"><SESamsoom mood="think" size={30} still={true} /></span><div className="mt-m bot typing" aria-label="Samsoom is typing">
+                <div key={m.id} className="mt-row bot"><span className="mt-av bot" aria-hidden="true"><SESamsoom mood="think" size={25} still={true} /></span><div className="mt-m bot typing" aria-label="Samsoom is typing">
                   <i />
                   <i />
                   <i />
                 </div></div>
               ) : (
                 <div key={m.id} className={'mt-row ' + m.who}>
-                  {m.who === 'me' ? <span className="mt-av me" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4.2" /><path d="M3.5 21c.8-4.4 4.2-7 8.5-7s7.7 2.6 8.5 7z" /></svg></span> : <span className="mt-av bot" aria-hidden="true"><SESamsoom mood="happy" size={30} still={true} /></span>}
+                  {m.who === 'me' ? <span className="mt-av me" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4.2" /><path d="M3.5 21c.8-4.4 4.2-7 8.5-7s7.7 2.6 8.5 7z" /></svg></span> : <span className="mt-av bot" aria-hidden="true"><SESamsoom mood="happy" size={25} still={true} /></span>}
                   <div className={'mt-m ' + m.who}>
                     {m.t ? <span className="bub">{m.t}</span> : null}
                     {m.card ? <Card c={m.card} /> : null}

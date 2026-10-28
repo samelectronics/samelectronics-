@@ -159,3 +159,7 @@ html[dir='rtl'] .mt-asks button:hover { transform: translateX(-4px); } html[dir=
 .mt-av.bot { background: #F7C032; box-shadow: 0 0 0 2px #fff; }
 .mt-av.bot > div { transform: translateY(3px); }
 .mt-asks button.on { background: #26282B !important; color: #F7C032 !important; }
+/* R8 · Samsoom is always shown whole in his avatars, like the launcher (no cropping inside the circle) */
+.mt-av { width: 36px !important; height: 36px !important; overflow: visible !important; }
+.mt-av.bot { overflow: hidden !important; }
+.mt-av.bot > div { transform: none !important; }

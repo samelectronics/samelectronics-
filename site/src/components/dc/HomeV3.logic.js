@@ -16,7 +16,19 @@ class Component extends DCLogic {
   benchRef = React.createRef();
   ext = { feedI: 6, feedT: 0, boardF: 'all', bp: 0, mfModel: 'm4', mfCat: 'SCR', mfGrade: null, cart: [], sparks: [], toast: '', cartPop: false, glow: { bx: 900, by: 300, dx: 400, dy: 300, tx: 400, ty: 300 } };
   rootRef = React.createRef(); reelRef = React.createRef(); heroRef = React.createRef(); railRef = React.createRef(); tdRef = React.createRef(); offerRef = React.createRef();
-  componentDidUpdate(pp, ps) { ps = ps || this._prevS || {}; this._prevS = { chatMsgs: this.state.chatMsgs, chatTyping: this.state.chatTyping, chatOpen: this.state.chatOpen }; const a = (ps.chatMsgs || []).length, b = (this.state.chatMsgs || []).length; if (a !== b || ps.chatTyping !== this.state.chatTyping || (!ps.chatOpen && this.state.chatOpen)) { const c = this.chatRef.current; if (c) c.scrollTop = c.scrollHeight; } }
+  // owner (R8): Samsoom keeps every conversation (on this device): the chat's ☰ menu lists them, reopens one, renames it,
+  // deletes it or starts a new one. Saved after every message; the title is the first question until it is renamed.
+  chats = (() => { try { const v = JSON.parse(localStorage.getItem('se-chats') || '[]'); return Array.isArray(v) ? v : []; } catch { return []; } })();
+  chatId = null;
+  saveChats() { try { localStorage.setItem('se-chats', JSON.stringify(this.chats.slice(0, 30))); } catch { /* private mode */ } }
+  saveChat() {
+    const msgs = (this.state.chatMsgs || []).filter((m) => m && m.t); if (!msgs.some((m) => m.me)) return;
+    const plain = msgs.map((m) => ({ t: m.t, me: !!m.me, emote: m.emote || null, own: !!m.own, n: m.n || 0 }));
+    let c = this.chatId && this.chats.find((x) => x.id === this.chatId);
+    if (!c) { const first = msgs.find((m) => m.me).t; c = { id: 'c' + Date.now().toString(36), title: first.length > 42 ? first.slice(0, 40) + '…' : first, named: false, msgs: [], at: Date.now() }; this.chatId = c.id; this.chats.unshift(c); }
+    c.msgs = plain; c.at = Date.now(); this.chats = [c, ...this.chats.filter((x) => x !== c)]; this.saveChats();
+  }
+  componentDidUpdate(pp, ps) { ps = ps || this._prevS || {}; if (ps.chatMsgs !== this.state.chatMsgs && this.state.chatMsgs) this.saveChat(); this._prevS = { chatMsgs: this.state.chatMsgs, chatTyping: this.state.chatTyping, chatOpen: this.state.chatOpen }; const a = (ps.chatMsgs || []).length, b = (this.state.chatMsgs || []).length; if (a !== b || ps.chatTyping !== this.state.chatTyping || (!ps.chatOpen && this.state.chatOpen)) { const c = this.chatRef.current; if (c) c.scrollTop = c.scrollHeight; } }
   componentDidMount() {
     // G9: re-render the parts that depend on the language (switch state) when it changes.
     this.onLang = (e) => this.setState({ lang: e.detail }); window.addEventListener('se:lang', this.onLang); if (window.seI18n && window.seI18n.lang() === 'ar') this.setState({ lang: 'ar' });
@@ -486,7 +498,12 @@ class Component extends DCLogic {
     const msgs = s.chatMsgs || [{ t: 'Hi, I’m Samsoom. Ask me about a part, a grade, shipping, or whether the shop is open right now.' }];
     // G8: the chat keeps its own input and Samsoom's moods (src/components/home/sections/SamsoomChat.tsx), so
     // typing never re-renders the home page; it only calls ask() and reads the messages.
-    const chat = { open: !!s.chatOpen, closed: !s.chatOpen, typing: !!s.chatTyping, showChips: !s.chatTouched, ask: (q) => this.ask(q), touch: () => !s.chatTouched && this.setState({ chatTouched: true }),
+    const hist = { list: this.chats.map((c) => ({ id: c.id, title: c.title, at: c.at, n: c.msgs.length, on: c.id === this.chatId })),
+      fresh: () => { this.chatId = null; this.setState({ chatMsgs: null, chatTouched: false, chatTyping: false }); },
+      open: (id) => { const c = this.chats.find((x) => x.id === id); if (!c) return; this.chatId = id; this.setState({ chatMsgs: c.msgs.map((m) => ({ ...m })), chatTouched: true, chatTyping: false }); },
+      rename: (id, t) => { const c = this.chats.find((x) => x.id === id); if (!c || !t.trim()) return; c.title = t.trim().slice(0, 60); c.named = true; this.saveChats(); this.setState({ chatsV: Date.now() }); },
+      del: (id) => { this.chats = this.chats.filter((x) => x.id !== id); this.saveChats(); if (this.chatId === id) { this.chatId = null; this.setState({ chatMsgs: null, chatTouched: false }); } else this.setState({ chatsV: Date.now() }); } };
+    const chat = { hist, open: !!s.chatOpen, closed: !s.chatOpen, typing: !!s.chatTyping, showChips: !s.chatTouched, ask: (q) => this.ask(q), touch: () => !s.chatTouched && this.setState({ chatTouched: true }),
       chips: ['Find my part', 'Which grade?', 'Are you open?', 'Do you ship to my country?', 'Trade prices'].map((q2) => ({ q: q2, ask: () => (q2 === 'Find my part' ? this.ask('iPhone 13 screen') : this.ask(q2)) })),
       msgs: msgs.map((m, i) => ({ t: m.t, me: !!m.me, emote: m.emote || null, n: m.n || 0, own: !!(m.me || m.own), al: m.me ? 'flex-end' : 'flex-start', bg: m.me ? '#26282B' : '#FFFFFF', ink: m.me ? '#FFFFFF' : '#26282B', hasAct: !!m.act, act: () => { this.setState({ chatOpen: false }); m.act && m.act(); }, actLbl: m.lbl || '' })) };
     const sparks = s.sparks || [];

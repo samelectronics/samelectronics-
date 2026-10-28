@@ -2722,3 +2722,52 @@ DONE WHEN
 - **Phase 4**: Repair Lab (light, 3D crack → open → fixed scene, every fault grouped and multi-select, all screen qualities, Phone/Tablet/Watch with model search, optional date/time, one WhatsApp booking, bench promises and today's bench). Wholesale (search-first with recent searches, request list to WhatsApp, quote above 1,000 units, trade-account invite, savings gauge, swing tag, warehouse row with depth, steps light one by one). Worldwide (real globe in Tracked, solid boxes, live circuit instead of grid). Who are you (one dark studio stage per visitor with real renders, Samsoom peek removed, icons redrawn).
 - **Phase 5**: Reviews show the owner's own Google reviews (live Google sync later with the database). Request console uses Find My Part-style options per type (brands, parts, grades, colours, quantities, repair date), "Other" boxes and a comment, all sent to WhatsApp as one message. The Feed: one phone switching channel, all three QR codes (local SVGs in `public/assets/qr/`) with follow buttons, this week's drops, next landing. Meet Samsoom: the launcher's Samsoom, no drifting chats, "try asking" prompts and facts, light messaging-app chat. Sam Circuit: load-your-own card (name/shop/level → card updates, register by invitation on WhatsApp), braided cable and 3D battery, live circuit, "how your charge grows". Finale: rebuilt; circuits run into a ring that draws like the loading screen, logo powers up, promises light in turn; flows into the footer.
 - Arabic strings added for all new text.
+
+## 28 Oct 2026 · Rounds 7 and 8 · home page finished
+
+- **Languages:** eight in a quick menu (nav and footer). The order is English and Arabic, then A to Z: French, Hindi, Persian, Russian, Spanish, Urdu.
+  - Arabic, Persian and Urdu read right to left.
+  - Each new dictionary lives in `src/i18n/<lang>.ts` and loads only when picked. The shared translator is `src/i18n/multi.ts`.
+  - The language pop-up grows to fit the text, and its battery fills from the right in right-to-left languages.
+- **Connection notice:**
+  - offline and back online show as a centred card over a blurred page, with an X;
+  - slow connections get a small toast.
+- **Teardown:**
+  - It fades smoothly into What we offer.
+  - The final-call part tiles sit above the 3D canvas, so they always respond.
+- **What we offer:**
+  - extra side circuits;
+  - the three boxes share one rhythm;
+  - no grain.
+- **Bench:** the rig holds in view and scroll plays the test, with smoothing. It has a yellow margin and standard buttons.
+- **Showcase:**
+  - hero yellow;
+  - a floor that fades;
+  - one maker name at a time.
+- **Wholesale:**
+  - the stamp plays its own entrance;
+  - the plane flies across the globe;
+  - the repair phone is shown whole.
+- **Sam Circuit:** three cards, each with a battery level, the store logo and fixed traces.
+  - SAM CIRCUIT (customers, 5 levels, online sign-up with points).
+  - SAM GRID (suppliers, 5 levels, activated by management).
+  - SAM CIRCLE (loyalty, by invitation on WhatsApp).
+- **Team:** the back of each badge is trimmed to fit, with one full-width button.
+- **Who are you:**
+  - the scenes take turns;
+  - everything stands on a fading floor;
+  - the repair phone and the globe are smaller.
+- **Site-wide:**
+  - quiet section materials like the hero (diamond plate with a drifting LED glow, scan lines, brushed aluminium);
+  - a cinematic finale floor and spotlight leading into a grey footer;
+  - a glowing progress line with a circuit pad;
+  - the visit hours shown as one LED line up to now.
+- **Samsoom:**
+  - he shows whole in his chat avatars;
+  - the chat has a ☰ history menu (open, rename, delete, new chat), stored on the visitor's device;
+  - a first-visit welcome tour (`src/components/home/SamsoomTour.tsx`; `window.seTour()` replays it).
+- **Placeholders still waiting for the owner's real figures:**
+  - the 4.9 / 128 Google rating;
+  - follower counts;
+  - Sam Circuit thresholds and perks;
+  - the Feed's "this week" posts.

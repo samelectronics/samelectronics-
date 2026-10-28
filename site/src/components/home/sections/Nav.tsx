@@ -68,7 +68,7 @@ export default function Nav({ v }: { v: Vals }) {
           {'\n    '}
         </a>
         {'\n    '}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: 'clamp(14px,2vw,28px)', fontSize: '15px', fontWeight: '500' }}>
+        <nav data-tour="nav" style={{ display: 'flex', alignItems: 'center', gap: 'clamp(14px,2vw,28px)', fontSize: '15px', fontWeight: '500' }}>
           {'\n      '}
           <SEFMPMenu />
           {'\n      '}
@@ -97,7 +97,7 @@ export default function Nav({ v }: { v: Vals }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 'none' }}>
           {'\n      '}
           {/* G7: status pill. Hover (or keyboard focus) shows the weekly hours, branch and countdown; click goes to Visit us. */}
-          <span className="se-status" style={{ position: 'relative', display: 'flex' }}>
+          <span className="se-status" data-tour="hours" style={{ position: 'relative', display: 'flex' }}>
             <button
               type="button"
               onClick={v.st?.go}
@@ -166,6 +166,7 @@ export default function Nav({ v }: { v: Vals }) {
           {'\n      '}
           <button
             data-navcart="1"
+            data-tour="cart"
             onClick={v.openCart}
             title="Cart"
             style={{
@@ -213,6 +214,7 @@ export default function Nav({ v }: { v: Vals }) {
           </button>
           {'\n      '}
           <button
+            data-tour="menu"
             onClick={v.openMap}
             title="System Map"
             style={cssToObj(
