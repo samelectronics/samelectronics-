@@ -2771,3 +2771,10 @@ DONE WHEN
   - follower counts;
   - Sam Circuit thresholds and perks;
   - the Feed's "this week" posts.
+
+## 28 Oct · P0 · Samsoom tour (language first, help button, always alive)
+- First visit: Samsoom asks for the language first ("Choose your language" cycles through all eight), then welcomes in that language and offers the walk.
+- New ? button in the nav on every page calls him back: tour this page, change language, chat, close.
+- Walk only shows things that are really on screen (fixes the tour breaking on narrower screens); pages can add steps with `data-tour-step`, `data-tour-title`, `data-tour-text`.
+- Samsoom is always animated in the tour (LiveSam: blinking, emotes every few seconds, eyes follow the pointer).
+- Phones/tablets: the nav now fits the screen (brand name, bench, staff and hours pill move out of the bar on small screens).

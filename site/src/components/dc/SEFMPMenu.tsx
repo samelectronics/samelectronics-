@@ -41,7 +41,7 @@ function render(v: Vals) {
             <circle cx="11" cy="11" r="7"></circle>
             <path d="m20 20-3.5-3.5"></path>
           </svg>
-          Find My Part
+          <span className="se-fmp-t">Find My Part</span>
           <svg
             width="12"
             height="12"

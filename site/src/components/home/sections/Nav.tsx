@@ -26,6 +26,7 @@ export default function Nav({ v }: { v: Vals }) {
           height: '72px',
           padding: '0 clamp(20px,3.3vw,48px)',
         }}
+        className="se-nav-row"
       >
         {'\n    '}
         <a href="#top" onClick={v.goTop} style={{ display: 'flex', alignItems: 'center', gap: '13px', flex: 'none' }}>
@@ -44,7 +45,7 @@ export default function Nav({ v }: { v: Vals }) {
             <img src="assets/se-logo-128.webp" alt="Sam Electronics" style={{ width: '100%', height: '100%', display: 'block' }} />
           </span>
           {'\n      '}
-          <span style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+          <span style={{ display: 'flex', flexDirection: 'column', gap: '5px' }} className="se-nav-name">
             <span
               style={{
                 fontFamily: "'Space Grotesk',sans-serif",
@@ -94,7 +95,7 @@ export default function Nav({ v }: { v: Vals }) {
           {'\n    '}
         </nav>
         {'\n    '}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 'none' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flex: 'none' }} className="se-nav-right">
           {'\n      '}
           {/* G7: status pill. Hover (or keyboard focus) shows the weekly hours, branch and countdown; click goes to Visit us. */}
           <span className="se-status" data-tour="hours" style={{ position: 'relative', display: 'flex' }}>
@@ -152,6 +153,11 @@ export default function Nav({ v }: { v: Vals }) {
           {'\n      '}
           {/* R7-G: the quick language menu (five languages) */}
           <LangMenu />
+          {'\n      '}
+          {/* R9: the ? calls Samsoom back on any page (tour of this page, language, chat) */}
+          <button type="button" className="se-help" data-tour="help" title="Help" aria-label="Help: ask Samsoom" onClick={() => window.dispatchEvent(new CustomEvent('se:help'))}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.2" /><path d="M9.4 9.3a2.7 2.7 0 0 1 5.2 1c0 1.8-2.6 2.3-2.6 4" /><circle cx="12" cy="17.2" r=".6" fill="currentColor" /></svg>
+          </button>
           {'\n      '}
           <button
             onClick={v.bench}

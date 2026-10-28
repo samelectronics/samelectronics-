@@ -1752,5 +1752,13 @@ const DICT: Record<string, string> = {
   "Delete chat": "Удалить чат",
   "messages": "сообщений",
   "message": "сообщение",
+  "You called me?": "Звали меня?",
+  "I’m here to help. What would you like?": "Я здесь, чтобы помочь. Что вам нужно?",
+  "Show me this page": "Покажи эту страницу",
+  "Change language": "Сменить язык",
+  "Chat with me": "Поговори со мной",
+  "Help": "Помощь",
+  "Need me again?": "Снова нужна помощь?",
+  "Tap the ? at the top, on any page, and I will show you around.": "Нажмите ? вверху на любой странице, и я всё покажу.",
 };
 export default DICT;

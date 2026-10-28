@@ -1752,5 +1752,13 @@ const DICT: Record<string, string> = {
   "Delete chat": "چیٹ حذف کریں",
   "messages": "پیغامات",
   "message": "پیغام",
+  "You called me?": "آپ نے مجھے بلایا؟",
+  "I’m here to help. What would you like?": "میں مدد کے لیے یہاں ہوں۔ آپ کیا چاہیں گے؟",
+  "Show me this page": "یہ صفحہ دکھائیں",
+  "Change language": "زبان تبدیل کریں",
+  "Chat with me": "مجھ سے بات کریں",
+  "Help": "مدد",
+  "Need me again?": "پھر میری ضرورت ہے؟",
+  "Tap the ? at the top, on any page, and I will show you around.": "کسی بھی صفحے پر اوپر ? دبائیں، میں آپ کو سب دکھا دوں گا۔",
 };
 export default DICT;

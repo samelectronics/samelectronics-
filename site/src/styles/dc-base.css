@@ -825,3 +825,29 @@ html[dir='rtl'] [data-prog='bar'] { background-image: linear-gradient(270deg, #F
 @keyframes stIn { from { opacity: 0; } } @keyframes stOut { to { opacity: 0; transform: scale(.94); } }
 @keyframes stPop { from { opacity: 0; transform: translateY(14px) scale(.95); } }
 @keyframes stGlow { 50% { box-shadow: 0 0 0 9999px rgba(20, 21, 23, .62), 0 0 0 3px #F7C032, 0 0 34px 10px rgba(247, 192, 50, .7); } }
+/* R9: help button in the nav + Samsoom's language-first prompt */
+.se-help { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; padding: 0; border: 0; border-radius: 50%; background: none; color: inherit; cursor: pointer; transition: background .2s, color .2s, transform .2s; }
+.se-help:hover { background: rgba(247, 192, 50, .22); color: #C98A12; transform: rotate(-8deg); }
+.st-lang { width: min(560px, 100%); }
+.st-cycle { min-height: 1.3em; animation: stCyc 1.7s ease-in-out both; }
+@keyframes stCyc { 0% { opacity: 0; transform: translateY(8px); filter: blur(3px); } 18%, 82% { opacity: 1; transform: none; filter: none; } 100% { opacity: 0; transform: translateY(-8px); filter: blur(3px); } }
+.st-langs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 100%; margin-top: 8px; }
+.st-l { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 12px 6px; border: 0; border-radius: 14px; background: #F2F3F4; color: #26282B; cursor: pointer; transition: background .2s, transform .2s, box-shadow .2s; }
+.st-l b { font: 700 16px/1.2 Inter, sans-serif !important; letter-spacing: 0 !important; }
+.st-l small { font: 500 11px Inter, sans-serif; color: #6A6D72; }
+.st-l:hover { background: #F7C032; transform: translateY(-2px); }
+.st-l.hint { box-shadow: inset 0 0 0 2px #F7C032; }
+.st-acts.st-acts4 { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
+@media (max-width: 520px) { .st-langs { grid-template-columns: repeat(2, 1fr); } .st-acts.st-acts4 { grid-template-columns: 1fr; } }
+/* R9: phones — the nav fits the screen (logo, Find My Part, language, help, cart, menu); the rest lives in the menu */
+@media (max-width: 1100px) {
+  .se-nav-name, .se-nav-right > button[title="My Bench"], .se-nav-right > button[title^="Staff"] { display: none !important; }
+  .se-nav-right { gap: 8px !important; }
+}
+@media (max-width: 760px) {
+  .se-nav-row { gap: 8px !important; padding: 0 12px !important; }
+  .se-status { display: none !important; }
+  .se-nav-right { gap: 4px !important; }
+  [data-tour="nav"] { gap: 8px !important; min-width: 0; }
+}
+@media (max-width: 420px) { .se-fmp-t { display: none; } [data-tour="fmp"] > button { padding: 0 11px !important; } }
