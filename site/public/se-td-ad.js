@@ -12,7 +12,7 @@
   const eo = (x) => 1 - Math.pow(1 - cl(x), 3), eo5 = (x) => 1 - Math.pow(1 - cl(x), 5), eio = (x) => { x = cl(x); return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; };
   const back = (x) => { x = cl(x); const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); };
   const F = { sg: '"Space Grotesk","IBM Plex Sans Arabic",sans-serif', in: 'Inter,"IBM Plex Sans Arabic",sans-serif', jb: '"JetBrains Mono","IBM Plex Sans Arabic",monospace' };
-  const T = (s) => (window.seI18n ? window.seI18n.t(s) : s), AR = () => !!(window.seI18n && window.seI18n.lang() === 'ar');
+  const T = (s) => (window.seI18n ? window.seI18n.t(s) : s), AR = () => !!(window.seI18n && (window.seI18n.rtl ? window.seI18n.rtl() : window.seI18n.lang() === 'ar')); // right-to-left: Arabic and Persian
   // the three looks of the hero phone ads
   const TH = {
     yel: { bg: ['#FFE291', Y, Y], ink: G, sub: G, kick: 'rgba(38,40,43,.7)', cta: G, ctaInk: '#FFFFFF', dot: 'rgba(38,40,43,.18)', glow: 'rgba(255,250,228,.75)' },

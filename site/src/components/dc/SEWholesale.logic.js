@@ -57,7 +57,7 @@ class Component extends DCLogic {
   remember(id) { const r = [id].concat(this.state.recent.filter((x) => x !== id)).slice(0, 4); this.setState({ recent: r }); try { localStorage.setItem('se-whs-recent', JSON.stringify(r)); } catch (e) {} }
   pick(id) { this.remember(id); const D = this.state.data, p = D && D.products.find((x) => x.id === id); this.setState({ part: id, from: MAXC }); if (p) this.rollKeep(this.keep(this.state.qty, p)); }
   renderVals() {
-    const L = typeof window !== 'undefined' ? window.seI18n : null, tape = L && L.lang() === 'ar' ? L.tr('SAM ELECTRONICS · WHOLESALE · TRADE') : null; // Urgent 5: the tape is data-no-i18n (the walker skips it), so it is translated here
+    const L = typeof window !== 'undefined' ? window.seI18n : null, tape = L && L.lang() !== 'en' ? L.tr('SAM ELECTRONICS · WHOLESALE · TRADE') : null; // Urgent 5: the tape is data-no-i18n (the walker skips it), so it is translated here
     const s = this.state, D = s.data, lib = s.lib, p = this.prod(), q = s.qty, ti = tierOf(q), full = onPallet(q) >= PER_PALLET, rowN = palletsFor(q);
     const img = (x) => (x && window.SE_SHOTS ? window.SE_SHOTS.url(x.shot || window.SE_SHOTS.forCat(x.category), 480) /* owner (27 Oct): every part is its standard pose */ : x && lib && lib.large && LK[x.category] != null ? lib.large[LK[x.category]] : '');
     const unit = p ? Math.round(p.retail_price * TIERS[ti].f) : 0, n = cartonsFor(q);

@@ -11,8 +11,21 @@
  */
 import { isolateNumbers, tr } from './translate';
 import { LANG_KEY } from './prepaint';
+import { loadDict, trOther, type Other } from './multi';
 
-export type Lang = 'en' | 'ar';
+export type Lang = 'en' | 'ar' | 'es' | 'fr' | 'fa';
+/** R7-G: the five site languages, in menu order. Arabic and Persian read right to left. */
+export const LANGS: { id: Lang; name: string; en: string }[] = [
+  { id: 'en', name: 'English', en: 'English' },
+  { id: 'ar', name: 'العربية', en: 'Arabic' },
+  { id: 'es', name: 'Español', en: 'Spanish' },
+  { id: 'fr', name: 'Français', en: 'French' },
+  { id: 'fa', name: 'فارسی', en: 'Persian' },
+];
+export const isRtl = (l: string) => l === 'ar' || l === 'fa';
+const valid = (l: unknown): l is Lang => typeof l === 'string' && LANGS.some((x) => x.id === l);
+/** The current language's translation of one English text. */
+const trCur = (en: string) => (lang === 'en' ? en : lang === 'ar' ? tr(en) : trOther(lang as Other, en));
 const KEY = LANG_KEY;
 const ATTRS = ['placeholder', 'title', 'aria-label', 'alt'] as const;
 /** Subtrees never translated: brand wordmarks, code, inputs the visitor types into. */
@@ -39,9 +52,9 @@ function doText(n: Text) {
   const o = textOrig.get(n);
   // React (or a logic class) changed the text since we translated it: that new text is the English.
   const en = o && cur === o.out ? o.en : cur;
-  const out = lang === 'ar' ? isolateNumbers(tr(en)) : en;
+  const out = lang === 'en' ? en : isRtl(lang) ? isolateNumbers(trCur(en)) : trCur(en);
   if (out !== cur) n.data = out;
-  if (lang === 'ar') textOrig.set(n, { en, out });
+  if (lang !== 'en') textOrig.set(n, { en, out });
   else textOrig.delete(n);
 }
 
@@ -53,9 +66,9 @@ function doAttrs(el: Element) {
     if (cur == null) continue;
     const o = m?.get(a);
     const en = o && cur === o.out ? o.en : cur;
-    const out = lang === 'ar' ? tr(en) : en;
+    const out = trCur(en);
     if (out !== cur) el.setAttribute(a, out);
-    if (lang === 'ar') {
+    if (lang !== 'en') {
       if (!m) attrOrig.set(el, (m = new Map()));
       m.set(a, { en, out });
     } else m?.delete(a);
@@ -95,7 +108,7 @@ function startObserver() {
 function applyDocument() {
   const h = document.documentElement;
   h.lang = lang;
-  h.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  h.dir = isRtl(lang) ? 'rtl' : 'ltr';
 }
 
 /** Urgent · Plex for Arabic must be loaded before canvases (teardown ads, globes) draw Arabic, or they fall back to a
@@ -108,7 +121,13 @@ export function loadArabicFonts() {
 
 /** Switch the whole site's language and remember it. */
 export function setLang(next: Lang) {
-  if (next === lang) return;
+  if (next === lang || !valid(next)) return;
+  // Spanish, French and Persian load their dictionary first, then switch (a few kB, once)
+  if (next !== 'en' && next !== 'ar') { loadDict(next).then(() => apply(next)); return; }
+  apply(next);
+}
+function apply(next: Lang) {
+  const prev = lang;
   lang = next;
   try {
     localStorage.setItem(KEY, next);
@@ -116,7 +135,10 @@ export function setLang(next: Lang) {
     /* private mode */
   }
   applyDocument();
-  if (next === 'ar') { startObserver(); loadArabicFonts(); }
+  if (next !== 'en') startObserver();
+  if (isRtl(next)) loadArabicFonts();
+  // from one translation to another: back to the English first, so every node is re-translated from its source text
+  if (prev !== 'en' && next !== 'en') { lang = 'en'; walk(document.body); lang = next; }
   walk(document.body);
   if (next === 'en' && observer) {
     observer.disconnect();
@@ -127,12 +149,12 @@ export function setLang(next: Lang) {
 
 /** Translate a string for the current language (used by canvas engines, the map, logic classes). */
 export function t(en: string): string {
-  return lang === 'ar' ? tr(en) : en;
+  return trCur(en);
 }
 
 declare global {
   interface Window {
-    seI18n?: { lang: () => Lang; t: (s: string) => string; tr: (s: string) => string; set: (l: Lang) => void; now: (l: Lang) => void; toggle: () => void };
+    seI18n?: { lang: () => Lang; rtl: () => boolean; t: (s: string) => string; tr: (s: string) => string; set: (l: Lang) => void; now: (l: Lang) => void; toggle: () => void };
   }
 }
 
@@ -141,7 +163,8 @@ export function installI18n() {
   if (typeof window === 'undefined' || window.seI18n) return;
   let saved: Lang = 'en';
   try {
-    saved = localStorage.getItem(KEY) === 'ar' ? 'ar' : 'en';
+    const v = localStorage.getItem(KEY);
+    saved = valid(v) ? v : 'en';
   } catch {
     /* ignore */
   }
@@ -154,12 +177,15 @@ export function installI18n() {
     if ((window as unknown as { __seLangPop?: boolean }).__seLangPop) window.dispatchEvent(new CustomEvent('se:lang-pop', { detail: l }));
     else setLang(l);
   };
-  window.seI18n = { lang: () => lang, t, tr, set: sw, now: setLang, toggle: () => sw(lang === 'ar' ? 'en' : 'ar') };
+  window.seI18n = { lang: () => lang, rtl: () => isRtl(lang), t, tr: t, set: sw, now: setLang, toggle: () => sw(lang === 'en' ? 'ar' : 'en') };
   patchCanvasText();
+  if (isRtl(lang)) loadArabicFonts();
   if (lang === 'ar') {
-    loadArabicFonts();
     startObserver();
     if (document.body) walk(document.body);
+  } else if (lang !== 'en') {
+    const l = lang;
+    loadDict(l).then(() => { if (lang !== l) return; startObserver(); if (document.body) walk(document.body); window.dispatchEvent(new CustomEvent('se:lang', { detail: l })); });
   }
 }
 
@@ -171,7 +197,7 @@ function patchCanvasText() {
   for (const fn of ['fillText', 'strokeText', 'measureText'] as const) {
     const orig = P[fn];
     P[fn] = function (text: unknown, ...rest: unknown[]) {
-      return orig.call(this, lang === 'ar' && typeof text === 'string' ? tr(text) : text, ...rest);
+      return orig.call(this, lang !== 'en' && typeof text === 'string' ? trCur(text) : text, ...rest);
     };
   }
 }

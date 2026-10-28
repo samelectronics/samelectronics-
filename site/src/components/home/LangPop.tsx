@@ -7,11 +7,14 @@ import React, { useEffect, useRef, useState } from 'react';
 // Hero 3 (owner): the battery charges with a percentage counting up, the end is a drawn tick, the card fits its text
 // (nothing centred awkwardly) and has real colour and detail: graphite case, segmented green charge, yellow accents.
 
-type Lang = 'en' | 'ar';
+type Lang = 'en' | 'ar' | 'es' | 'fr' | 'fa';
 type Phase = 'off' | 'load' | 'done' | 'out';
 const TXT = {
   en: { eb: 'LANGUAGE · ENGLISH', load: 'Translating every screen and battery…', done: 'Mission accomplished!', sub: 'The whole shop now speaks English.', close: 'Close' },
   ar: { eb: 'اللغة · العربية', load: 'نترجم كل شاشة وكل بطارية…', done: 'تمت المهمة!', sub: 'المتجر كله يتحدث العربية الآن.', close: 'إغلاق' },
+  es: { eb: 'IDIOMA · ESPAÑOL', load: 'Traduciendo cada pantalla y cada batería…', done: '¡Misión cumplida!', sub: 'Toda la tienda habla ahora español.', close: 'Cerrar' },
+  fr: { eb: 'LANGUE · FRANÇAIS', load: 'Traduction de chaque écran et chaque batterie…', done: 'Mission accomplie !', sub: 'Toute la boutique parle désormais français.', close: 'Fermer' },
+  fa: { eb: 'زبان · فارسی', load: 'ترجمهٔ همهٔ صفحه‌ها و باتری‌ها…', done: 'مأموریت انجام شد!', sub: 'حالا کل فروشگاه فارسی صحبت می‌کند.', close: 'بستن' },
 };
 
 export default function LangPop() {
@@ -45,10 +48,10 @@ export default function LangPop() {
   }, []);
 
   if (phase === 'off') return null;
-  const T = TXT[to], done = phase === 'done' || phase === 'out';
+  const T = TXT[to] || TXT.en, done = phase === 'done' || phase === 'out';
   return (
     <div className={'lp' + (phase === 'out' ? ' lp-out' : '')} data-no-i18n="" role="dialog" aria-modal="true" aria-live="polite" aria-label={done ? T.done : T.load}>
-      <div className={'lp-card lp2' + (done ? ' lp-done' : '')} dir={to === 'ar' ? 'rtl' : 'ltr'} lang={to}>
+      <div className={'lp-card lp2' + (done ? ' lp-done' : '')} dir={to === 'ar' || to === 'fa' ? 'rtl' : 'ltr'} lang={to}>
         <span className="lp2-ic" aria-hidden="true">
           <span className="lp2-bat">
             <span className="lp2-cell">

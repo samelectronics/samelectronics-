@@ -3,10 +3,10 @@
  * Order: exact text → patterns (numbers, prices, times, models) → pieces joined by " · " → unchanged.
  * Leading/trailing spaces are kept so text that sits next to other text still reads correctly.
  */
-import { DAYS, ENGINE, EXACT, GRADES, PARTS, PLACES, TIERS } from './ar';
+import { DAYS, ENGINE, EXACT, GRADES, PARTS, PLACES, R7, TIERS } from './ar';
 
 const norm = (s: string) => s.replace(/\s+/g, ' ').trim();
-const DICT: Record<string, string> = { ...ENGINE, ...EXACT, ...PLACES };
+const DICT: Record<string, string> = { ...R7, ...ENGINE, ...EXACT, ...PLACES };
 
 const MODEL_RE =
   /^(?:iPhone|iPad|Apple Watch|Galaxy|Redmi|POCO|Poco|Pixel|Google|Realme|Oppo|OPPO|RENO|Reno|Vivo|Huawei|Honor|OnePlus|Nokia|Tecno|Infinix|Xiaomi|Mi |SM-|S\d{2}|A\d{2,4}|M\d{3}|J\d|Z |F\d{3}|Note|Magic|Camon|Spark|Nova|P\d{2})/; // R6 Part E: the Excel's model names

@@ -18,7 +18,7 @@ class Component extends DCLogic {
     // (phones / tablets / watches) first, then its models, in-stock first, the rest "On request" (never "0 in stock")
     const curB = Br.find((x) => x.id === s.b) || { name: '', id: s.b }, bm = Mo.filter((m) => m.brand_id === s.b), devs = ['phone', 'tablet', 'watch'].map((d) => ({ id: d, n: bm.filter((m) => m.device === d).length })).filter((d) => d.n);
     const dev = devs.some((d) => d.id === s.dev) ? s.dev : (devs[0] || { id: 'phone' }).id, ms = bm.filter((m) => m.device === dev).sort((x, y) => (this._mq[y.id] || 0) - (this._mq[x.id] || 0));
-    const DN = { phone: 'Phones', tablet: 'Tablets', watch: 'Watches' }, L = window.seI18n, T = (x) => (L && L.lang() === 'ar' ? L.tr(x) : x);
+    const DN = { phone: 'Phones', tablet: 'Tablets', watch: 'Watches' }, L = window.seI18n, T = (x) => (L ? L.t(x) : x);
     return {
       open: s.open, chevR: s.open ? 180 : 0, brandsK: T('BRANDS'),
       enter: () => { clearTimeout(this.t); this.t = setTimeout(() => this.setState({ open: true }), 120); },

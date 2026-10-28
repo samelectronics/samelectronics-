@@ -1,6 +1,7 @@
 // Converted from design/project/Sam Electronics Home v3.dc.html (12 Oct 2026); maintained by hand since.
 // Home v3 section "Nav". Renders against the home page's values (`v`, from HomeV3's logic class).
 'use client';
+import LangMenu from '../LangMenu';
 import ProgressScrub from '@/components/home/ProgressScrub';
 import HoursLive from '../HoursLive';
 import { site } from '@/content/facts';
@@ -149,30 +150,8 @@ export default function Nav({ v }: { v: Vals }) {
             </span>
           </span>
           {'\n      '}
-          <span style={cssToObj(`display:flex;gap:2px;padding:3px;border-radius:10px;background:${s(v.nav?.pillBg)};font-size:12px`)}>
-            {/* G9: language switch. The active language is highlighted; the choice is remembered (src/i18n/lang.ts). */}
-            <button
-              data-no-i18n
-              onClick={v.english}
-              aria-pressed={!v.isAr}
-              style={cssToObj(
-                `padding:4px 9px;border:none;border-radius:7px;font:inherit;font-size:12px;cursor:pointer;background:${v.isAr ? 'none' : s(v.nav?.langOn)};color:${v.isAr ? 'inherit' : s(v.nav?.langOnInk)};font-weight:${v.isAr ? 400 : 600}`,
-              )}
-            >
-              EN
-            </button>
-            <button
-              data-no-i18n
-              lang="ar"
-              onClick={v.arabic}
-              aria-pressed={!!v.isAr}
-              style={cssToObj(
-                `padding:4px 9px;border:none;border-radius:7px;font-family:'IBM Plex Sans Arabic',sans-serif;font-size:12px;cursor:pointer;background:${v.isAr ? s(v.nav?.langOn) : 'none'};color:${v.isAr ? s(v.nav?.langOnInk) : 'inherit'};font-weight:${v.isAr ? 600 : 400}`,
-              )}
-            >
-              عربي
-            </button>
-          </span>
+          {/* R7-G: the quick language menu (five languages) */}
+          <LangMenu />
           {'\n      '}
           <button
             onClick={v.bench}

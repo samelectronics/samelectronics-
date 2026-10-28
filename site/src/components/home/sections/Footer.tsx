@@ -1,6 +1,7 @@
 // Converted from design/project/Sam Electronics Home v3.dc.html (12 Oct 2026); maintained by hand since.
 // Home v3 section "Footer". Renders against the home page's values (`v`, from HomeV3's logic class).
 'use client';
+import LangMenu from '../LangMenu';
 import React from 'react';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 
@@ -266,30 +267,8 @@ export default function Footer({ v }: { v: Vals }) {
               </a>
             </span>
             {'\n        '}
-            <span
-              style={{
-                display: 'flex',
-                gap: '2px',
-                padding: '3px',
-                borderRadius: '10px',
-                background: 'rgba(255,255,255,.06)',
-                fontSize: '12px',
-              }}
-            >
-              {/* G9: same switch as the nav (src/i18n/lang.ts). */}
-              <button data-no-i18n onClick={v.english} aria-pressed={!v.isAr} style={{ ...(v.isAr ? { padding: '4px 9px', border: 'none', borderRadius: '7px', background: 'none', color: '#FFFFFF', fontWeight: 400, cursor: 'pointer' } : { padding: '4px 9px', border: 'none', borderRadius: '7px', background: '#FFFFFF', color: '#26282B', fontWeight: 600, cursor: 'pointer' }), font: 'inherit', fontSize: '12px' }}>
-                EN
-              </button>
-              <button
-                data-no-i18n
-                lang="ar"
-                onClick={v.arabic}
-                aria-pressed={!!v.isAr}
-                style={{ ...(v.isAr ? { padding: '4px 9px', border: 'none', borderRadius: '7px', background: '#FFFFFF', color: '#26282B', fontWeight: 600, cursor: 'pointer' } : { padding: '4px 9px', border: 'none', borderRadius: '7px', background: 'none', color: '#FFFFFF', fontWeight: 400, cursor: 'pointer' }), fontFamily: "'IBM Plex Sans Arabic',sans-serif", fontSize: '12px' }}
-              >
-                عربي
-              </button>
-            </span>
+            {/* R7-G: the same quick language menu as the nav, opening upwards */}
+            <LangMenu up />
             {'\n        '}
             <button
               onClick={v.staff}

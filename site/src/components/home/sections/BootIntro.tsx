@@ -8,12 +8,12 @@ import React, { useEffect, useRef, useState } from 'react';
 import { type Vals } from '@/dc/runtime';
 import SESamsoom from '@/components/dc/SESamsoom';
 
-const LINES: { en: string; ar: string; icon: string }[] = [
-  { en: 'Stocking the shelves…', ar: 'نرتّب البضاعة على الرفوف…', icon: 'shelf' },
-  { en: 'Unboxing fresh screens…', ar: 'نفتح كراتين الشاشات الجديدة…', icon: 'box' },
-  { en: 'Charging the batteries…', ar: 'نشحن البطاريات…', icon: 'battery' },
-  { en: 'Packing today’s orders…', ar: 'نجهّز طلبات اليوم…', icon: 'parcel' },
-  { en: 'Waking Samsoom up…', ar: 'نوقظ سمسوم…', icon: 'samsoom' },
+const LINES: { en: string; ar: string; es?: string; fr?: string; fa?: string; icon: string }[] = [
+  { en: 'Stocking the shelves…', ar: 'نرتّب البضاعة على الرفوف…', es: 'Llenando los estantes…', fr: 'On remplit les rayons…', fa: 'چیدن قفسه‌ها…', icon: 'shelf' },
+  { en: 'Unboxing fresh screens…', ar: 'نفتح كراتين الشاشات الجديدة…', es: 'Abriendo pantallas nuevas…', fr: 'Déballage des nouveaux écrans…', fa: 'باز کردن صفحه‌های تازه…', icon: 'box' },
+  { en: 'Charging the batteries…', ar: 'نشحن البطاريات…', es: 'Cargando las baterías…', fr: 'Recharge des batteries…', fa: 'شارژ باتری‌ها…', icon: 'battery' },
+  { en: 'Packing today’s orders…', ar: 'نجهّز طلبات اليوم…', es: 'Embalando los pedidos de hoy…', fr: 'Préparation des commandes du jour…', fa: 'بسته‌بندی سفارش‌های امروز…', icon: 'parcel' },
+  { en: 'Waking Samsoom up…', ar: 'نوقظ سمسوم…', es: 'Despertando a Samsoom…', fr: 'On réveille Samsoom…', fa: 'بیدار کردن سامسوم…', icon: 'samsoom' },
 ];
 const WAKE = 1.4; // s for Samsoom: asleep → yawn → blink → wave
 const MIN = 1.5, MAX = 5, DUR = 4.8, R = 92; // owner (28 Oct): the loading screen always runs the same ~5s (DUR), from when it appears; // ring radius = 80 (logo) + 12
@@ -57,7 +57,7 @@ export default function BootIntro({ v }: { v: Vals }) {
   const ring = useRef<SVGCircleElement>(null), ringG = useRef<SVGCircleElement>(null);
   const done = useRef(v.bootSkip as () => void);
   done.current = v.bootSkip as () => void;
-  const ar = typeof document !== 'undefined' && document.documentElement.lang === 'ar';
+  const hl = typeof document !== 'undefined' ? document.documentElement.lang : 'en', ar = hl === 'ar' || hl === 'fa';
 
   useEffect(() => {
     if (!on) return;
@@ -141,7 +141,7 @@ export default function BootIntro({ v }: { v: Vals }) {
             ) : (
               <Icon k={L.icon} />
             )}
-            {ar ? L.ar : L.en}
+            {(L as unknown as Record<string, string | undefined>)[hl] || L.en}
           </span>
         </div>
       </div>

@@ -24,7 +24,7 @@ class Component extends DCLogic {
     this.raf = requestAnimationFrame(f); }
   renderVals() {
     const D = window.SE_DATA, L = window.seI18n, line = 'A phone on your bench? We have the part.';
-    const head = (L && L.lang() === 'ar' ? L.tr(line) : line).split(' '); // word by word, in the visitor's language
+    const head = (L && L.lang() !== 'en' ? L.tr(line) : line).split(' '); // word by word, in the visitor's language
     return { secRef: this.secRef, on: this.state.on, head,
       wa: D ? 'https://wa.me/' + D.contact.wa + '?text=' + encodeURIComponent('Hi Sam Electronics, I found you on your website.') : '#',
       dir: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(SITE.contact.plusCode + ' Dubai'),
