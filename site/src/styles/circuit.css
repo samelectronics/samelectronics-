@@ -201,3 +201,67 @@
 .cx-perks small { font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .12em; color: #F7C032; text-transform: uppercase; }
 .cx-perks span { display: flex; align-items: center; gap: 10px; font: 500 14px Inter, sans-serif; } .cx-perks i { flex: none; width: 7px; height: 7px; border-radius: 50%; background: #F7C032; }
 @media (max-width: 1000px) { .cx-in { grid-template-columns: 1fr; } }
+
+/* ===== R8 · three cards: SAM CIRCUIT (yellow, customers) · SAM GRID (graphite, suppliers) · SAM CIRCLE (white, loyalty) ===== */
+.cx-h span:last-child { color: #26282B; text-shadow: none; }
+.cx-h span:first-child { color: #FFFFFF; text-shadow: 0 2px 0 rgba(38, 40, 43, .1); }
+.cx-pick { grid-template-columns: repeat(3, 1fr) !important; }
+.cx-pick button { position: relative; padding: 14px 14px 14px 46px !important; min-height: 74px; justify-content: center; }
+html[dir='rtl'] .cx-pick button { padding: 14px 46px 14px 14px !important; }
+.cx-pick button b { font-size: 14px !important; letter-spacing: .08em !important; }
+.cx-pick button small { font-size: 12px !important; line-height: 1.3; }
+.cx-pick .sw { position: absolute; inset-inline-start: 14px; top: 50%; width: 22px; height: 15px; margin-top: -7.5px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .15), 0 2px 4px rgba(0, 0, 0, .15); }
+.cx-pick .k-circuit .sw { background: linear-gradient(135deg, #FFE08A, #F7C032 55%, #D9A21C); }
+.cx-pick .k-grid .sw { background: linear-gradient(135deg, #5A5D63, #26282B); }
+.cx-pick .k-circle .sw { background: linear-gradient(135deg, #FFFFFF, #ECE8E0); }
+/* the cards */
+.cx-card.k-circuit { background: radial-gradient(120% 120% at 0% 0%, #FFE59A 0%, #F7C032 42%, #E2A923 78%, #F2BC3A 100%); color: #26282B; }
+.cx-card.k-grid { background: radial-gradient(120% 120% at 0% 0%, #55585E 0%, #34363A 40%, #222326 78%, #2C2E32 100%); color: #FFFFFF; }
+.cx-card.k-circle { background: radial-gradient(120% 120% at 0% 0%, #FFFFFF 0%, #F6F4EF 45%, #E6E1D6 80%, #F2EEE6 100%); color: #26282B; box-shadow: 0 40px 60px -26px rgba(60, 35, 0, .55), inset 0 0 0 1px rgba(201, 138, 18, .35), inset 0 1px 0 #fff; }
+.cx-card.k-circle::after { content: ''; position: absolute; inset: 9px; border-radius: 15px; box-shadow: inset 0 0 0 1px rgba(201, 138, 18, .45); pointer-events: none; }
+/* printed traces: still, crisp, part of the card */
+svg.cx-trace { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 1; pointer-events: none; }
+svg.cx-trace path { fill: none; stroke-width: 1.4; stroke-dasharray: none !important; animation: none !important; stroke-linecap: round; stroke-linejoin: round; }
+svg.cx-trace circle { stroke-width: 1.4; }
+.k-circuit svg.cx-trace path { stroke: rgba(38, 40, 43, .22); } .k-circuit svg.cx-trace circle { fill: #F7C032; stroke: rgba(38, 40, 43, .4); }
+.k-grid svg.cx-trace path { stroke: rgba(247, 192, 50, .4); } .k-grid svg.cx-trace circle { fill: #26282B; stroke: #F7C032; }
+.k-circle svg.cx-trace path { stroke: rgba(201, 138, 18, .38); } .k-circle svg.cx-trace circle { fill: #FFFFFF; stroke: #C98A12; }
+/* the store's logo pressed into the card as a tint */
+.cx-logo { position: absolute; inset-inline-end: 18px; top: 50%; width: 132px; height: 132px; margin-top: -58px; border-radius: 50%; object-fit: cover; filter: grayscale(1) contrast(1.4); opacity: .16; mix-blend-mode: multiply; pointer-events: none; }
+.k-grid .cx-logo { filter: grayscale(1) invert(1) contrast(1.2); mix-blend-mode: screen; opacity: .13; }
+.k-circle .cx-logo { filter: sepia(1) saturate(2.2) hue-rotate(-8deg); opacity: .2; }
+.cx-card .top { align-items: flex-start !important; }
+.cx-card .brand { display: flex; flex-direction: column; gap: 3px; } .cx-card .brand b { font: 700 17px 'Space Grotesk', sans-serif !important; letter-spacing: .16em; } .cx-card .brand small { font: 600 9.5px 'JetBrains Mono', monospace; letter-spacing: .16em; text-transform: uppercase; opacity: .7; }
+.cx-card .chip { margin-top: 14px !important; }
+.cx-card .nm { position: relative; }
+/* the battery on the card */
+.cx-bat { position: relative; display: inline-flex; align-items: center; gap: 2px; }
+.cx-bat-cells { display: grid; grid-template-columns: repeat(5, 9px); gap: 2px; height: 20px; padding: 2.5px; border-radius: 5px; box-shadow: inset 0 0 0 1.5px currentColor; box-sizing: border-box; }
+.cx-bat-cells i { border-radius: 1.5px; background: currentColor; opacity: .12; }
+.cx-bat-cells i.on { opacity: 1; animation: cxCell .45s cubic-bezier(.2, .9, .3, 1) both; }
+.k-circuit .cx-bat-cells i.on { background: #26282B; } .k-grid .cx-bat-cells i.on { background: #F7C032; box-shadow: 0 0 6px rgba(247, 192, 50, .6); }
+.cx-bat-nub { width: 3px; height: 8px; border-radius: 0 2px 2px 0; background: currentColor; opacity: .6; }
+.cx-bat-bolt { position: absolute; inset-inline-start: -16px; fill: currentColor; opacity: .55; }
+@keyframes cxCell { from { opacity: .12; transform: scaleY(.3); } }
+.cx-seal { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #F9E3A1, #D9A72C 60%, #B5841A); box-shadow: 0 3px 8px rgba(110, 72, 0, .35), inset 0 0 0 2px rgba(255, 255, 255, .5); }
+.cx-seal svg { fill: #FFFFFF; filter: drop-shadow(0 1px 1px rgba(110, 72, 0, .4)); }
+/* the level picker is a battery */
+.cx-lvl { display: flex; flex-direction: column; gap: 10px; }
+.cx-lvl-h { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.cx-lvl-h b { font: 600 12.5px Inter, sans-serif; color: rgba(38, 40, 43, .75); } .cx-lvl-h em { font: 600 12.5px 'JetBrains Mono', monospace; font-style: normal; color: #26282B; }
+.cx-lvl-bat { position: relative; display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; padding: 6px; padding-inline-end: 6px; border-radius: 14px; background: #26282B; box-shadow: inset 0 0 0 2px #26282B; margin-inline-end: 10px; }
+.cx-lvl-bat .nub { position: absolute; inset-inline-end: -9px; top: 50%; width: 7px; height: 22px; margin-top: -11px; border-radius: 0 4px 4px 0; background: #26282B; }
+html[dir='rtl'] .cx-lvl-bat .nub { border-radius: 4px 0 0 4px; }
+.cx-lvl-bat button { position: relative; height: 54px; border: 0; border-radius: 9px; background: #3A3C40; color: rgba(255, 255, 255, .55); cursor: pointer; overflow: hidden; transition: background .3s, color .3s, box-shadow .3s; display: grid; place-items: end center; padding: 0 2px 7px; }
+.cx-lvl-bat button small { font: 600 10px Inter, sans-serif; line-height: 1.15; text-align: center; }
+.cx-lvl-bat button.on { background: linear-gradient(180deg, #FFD566, #F7C032); color: #26282B; box-shadow: 0 0 12px rgba(247, 192, 50, .45); }
+.cx-lvl-bat button:hover:not(.on) { background: #4A4C51; color: #fff; }
+.cx-inv { display: flex; flex-direction: column; gap: 4px; padding: 14px 16px; border-radius: 12px; background: #fff; box-shadow: inset 0 0 0 1px rgba(201, 138, 18, .35); }
+.cx-inv b { font: 700 15px 'Space Grotesk', sans-serif; color: #26282B; } .cx-inv span { font: 400 13.5px/1.45 Inter, sans-serif; color: rgba(38, 40, 43, .75); }
+/* how you build yours: three steps, different for every card */
+.cx-steps { list-style: none; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0 0; padding: 0; }
+.cx-steps li { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border-radius: 14px; background: rgba(255, 255, 255, .42); animation: seRise .45s both; }
+.cx-steps li i { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: #26282B; color: #F7C032; font: 700 12px 'Space Grotesk', sans-serif; font-style: normal; }
+.cx-steps li span { display: flex; flex-direction: column; gap: 3px; min-width: 0; } .cx-steps li b { font: 600 13px/1.3 Inter, sans-serif; } .cx-steps li small { font: 400 12px/1.35 Inter, sans-serif; color: rgba(38, 40, 43, .72); }
+@media (max-width: 700px) { .cx-steps, .cx-pick { grid-template-columns: 1fr !important; } }
+.cx-sw, .cx-row { display: none !important; }
