@@ -14,6 +14,9 @@
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import LiveSam from '../samsoom/LiveSam';
 import { LANGS, type Lang } from '@/i18n/lang';
+import { siteRaw } from '@/lib/catalog';
+// Control Room → Site & Samsoom: tour on/off, welcome message and emote
+const cfg = () => siteRaw<{ tour?: boolean; greeting?: string; welcome?: string }>('samsoom', {});
 
 const T = (s: string) => (typeof window !== 'undefined' && window.seI18n ? window.seI18n.t(s) : s);
 type Step = { sel?: string; el?: HTMLElement; mood: string; t: string; d: string; open?: string };
@@ -66,6 +69,8 @@ export default function SamsoomTour() {
     (window as unknown as { seTour?: () => void }).seTour = () => setPhase('lang');
     let seen = true, chose = true; try { seen = !!localStorage.getItem('se-tour'); chose = !!localStorage.getItem('se-lang'); } catch { /* blocked */ }
     let iv = 0;
+    if (new URLSearchParams(location.search).get('tour') === '1') seen = false; // the Control Room's preview
+    else if (cfg().tour === false) seen = true;
     if (!seen) {
       let t = 0; iv = window.setInterval(() => {
         const busy = document.documentElement.classList.contains('se-boot') || document.querySelector('.lp, .se-net-veil, .rp-full, .vs-full') || !document.querySelector('[data-tour="cart"]');
@@ -126,11 +131,11 @@ export default function SamsoomTour() {
     return (
       <div className="st-veil" role="dialog" aria-modal="true" aria-label={T('Welcome')} onClick={(e) => { if (e.target === e.currentTarget && phase !== 'bye') bye(1); }}>
         <div className={'st-hello' + (phase === 'bye' ? ' bye' : '')}>
-          <span className="st-sam"><LiveSam size={120} mood="idle" play={phase === 'bye' ? 'kiss' : phase === 'recall' ? 'happy' : 'wave'} /></span>
+          <span className="st-sam"><LiveSam size={120} mood="idle" play={phase === 'bye' ? 'kiss' : phase === 'recall' ? 'happy' : cfg().welcome || 'wave'} /></span>
           {phase === 'hello' ? (
             <>
               <b>{T('Welcome to Sam Electronics!')}</b>
-              <p>{T('I’m Samsoom, your parts assistant. Want a quick walk around? It takes 20 seconds.')}</p>
+              <p>{cfg().greeting ? T(cfg().greeting!) : T('I’m Samsoom, your parts assistant. Want a quick walk around? It takes 20 seconds.')}</p>
               <span className="st-acts">
                 <button type="button" className="st-go" onClick={walk}>{T('Show me around')}</button>
                 <button type="button" className="st-skip" onClick={() => bye()}>{T('Skip')}</button>

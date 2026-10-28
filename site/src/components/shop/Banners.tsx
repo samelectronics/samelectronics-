@@ -3,15 +3,19 @@
 // samples; from the Control Room (Site → Banners) the team will write their own.
 import React, { useEffect, useState } from 'react';
 import { T } from '@/components/site/ui';
+import { siteRaw } from '@/lib/catalog';
 
 type Slide = { k: string; t: string; a: string; d: string; cta: string; go: () => void; img: string; bg: string; ink: string };
 
 export default function Banners({ onDeals, onCat }: { onDeals: () => void; onCat: (c: string) => void }) {
-  const S: Slide[] = [
+  // the slides are edited in the Control Room (Site & Samsoom → Shop banners); these are the defaults
+  const DEF: Slide[] = [
     { k: 'THIS WEEK · SAMPLE OFFER', t: 'Battery week.', a: 'Up to 15% off.', d: 'Genuine cells, tested before they ship.', cta: 'Shop batteries', go: () => onCat('BAT'), img: '/assets/pose/part-bat-960.webp', bg: 'linear-gradient(120deg,#F7C032,#FFD566)', ink: '#26282B' },
     { k: 'SERVICE PACK SCREENS', t: 'The original.', a: 'In its original box.', d: 'Same colour, brightness and touch as new.', cta: 'Shop screens', go: () => onCat('SCR'), img: '/assets/pose/samsung-sp-960.webp', bg: 'linear-gradient(120deg,#26282B,#3D3E3F)', ink: '#FFFFFF' },
     { k: 'DEALS & ARRIVALS', t: 'Fresh stock.', a: 'Limited offers.', d: 'New shipments every week, and offers that end soon.', cta: 'See every deal', go: onDeals, img: '/assets/pose/part-cam-960.webp', bg: 'linear-gradient(120deg,#FFFFFF,#F2F3F4)', ink: '#26282B' },
-  ];
+  ];  const saved = siteRaw<{ k: string; t: string; a: string; d: string; cta: string; href: string; img: string; bg: string; ink: string }[] | null>('shop-banners', null);
+  const S: Slide[] = saved && saved.length ? saved.map((x) => ({ ...x, go: () => { location.href = x.href || '/shop'; } })) : DEF;
+
   const [i, setI] = useState(0), [pause, setPause] = useState(false);
   useEffect(() => { if (pause) return; const t = window.setTimeout(() => setI((n) => (n + 1) % S.length), 6000); return () => window.clearTimeout(t); }, [i, pause, S.length]);
   const s = S[i];

@@ -2,7 +2,7 @@
 // P1 · The demo backend: everything is kept in this browser (localStorage 'se-db'), so every page works before Supabase is
 // connected. Same methods and shapes as the Supabase adapter. Not secure and not shared between devices — demo only.
 // Demo staff log-in (Control Room): owner@sam.demo / demo1234 · manager@sam.demo / demo1234 · sales@sam.demo / demo1234
-import type { Application, Audit, Backend, Company, Message, Order, Result, Review, Staff, Thread, User } from './types';
+import type { Application, Audit, Backend, Company, Message, Order, Result, Review, Staff, StockMove, Thread, User } from './types';
 import { ROLE_PERMS } from './types';
 
 type DB = {
@@ -106,7 +106,8 @@ export const local: Backend = {
   async staffSignOut() { const d = read(); d.staffSession = null; write(d); },
   async staffList() { await ready(); return read().staff.map((s) => strip(s) as Staff); },
   async saveStaff(s) {
-    const d = read(), me = d.staff.find((x) => x.id === d.staffSession); if (!me || !me.perms.includes('staff')) return no('Only the owner and managers can change staff.');
+    const d = read(), me = d.staff.find((x) => x.id === d.staffSession); if (!me) return no('Staff only.');
+    if (!me.perms.includes('staff')) { if (s.id !== me.id) return no('Only the owner and managers can change staff.'); Object.assign(me, { name: s.name, title: s.title, phone: s.phone, photo: s.photo }); write(d); return ok(strip(me) as Staff); }
     const ex = s.id ? d.staff.find((x) => x.id === s.id) : d.staff.find((x) => x.email === s.email.toLowerCase());
     if (ex) { Object.assign(ex, s); write(d); return ok(strip(ex) as Staff); }
     const n = { id: id('s'), branch: 'Dubai · Deira', active: true, title: s.role, perms: ROLE_PERMS[s.role], joined: Date.now(), pw: await hash('welcome123'), ...s, email: s.email.toLowerCase() } as Staff & { pw: string };
@@ -120,6 +121,27 @@ export const local: Backend = {
   async setApplication(aid, status) { const d = read(), a = d.apps.find((x) => x.id === aid); if (a) { a.status = status; write(d); } },
   async audit() { return read().audit; },
   async log(action, target, detail) { const d = read(), me = d.staff.find((x) => x.id === d.staffSession); d.audit.unshift({ id: id('l'), staff: me ? me.name : 'system', action, target, detail, at: Date.now() }); d.audit = d.audit.slice(0, 500); write(d); },
+  async saveProduct(pid, patch) {
+    const d = read(), me = d.staff.find((x) => x.id === d.staffSession); if (!me) return no('Staff only.');
+    const over = (d.settings['catalog-overrides'] || {}) as Record<string, Record<string, unknown>>; over[pid] = { ...(over[pid] || {}), ...patch }; d.settings['catalog-overrides'] = over;
+    d.audit.unshift({ id: id('l'), staff: me.name, action: 'product.save', target: pid, detail: Object.keys(patch).join(', '), at: Date.now() }); write(d); return ok(true);
+  },
+  async addProduct(p) {
+    const d = read(), me = d.staff.find((x) => x.id === d.staffSession); if (!me) return no('Staff only.');
+    const added = (d.settings['catalog-added'] || []) as Record<string, unknown>[]; if (added.some((x) => x.id === p.id)) return no('That reference already exists.');
+    d.settings['catalog-added'] = [...added, { visible: true, badges: [], low_stock_threshold: 3, sample: false, ...p }];
+    d.audit.unshift({ id: id('l'), staff: me.name, action: 'product.add', target: p.id, at: Date.now() }); write(d); return ok(true);
+  },
+  async stockMove(pid, delta, reason, ref) {
+    const d = read(), me = d.staff.find((x) => x.id === d.staffSession); if (!me) return no('Staff only.');
+    const w = window as unknown as { SE_DATA?: { products: { id: string; stock_qty: number }[] } };
+    const over = (d.settings['catalog-overrides'] || {}) as Record<string, Record<string, unknown>>, added = (d.settings['catalog-added'] || []) as { id: string; stock_qty: number }[];
+    const base = (over[pid]?.stock_qty as number | undefined) ?? added.find((x) => x.id === pid)?.stock_qty ?? w.SE_DATA?.products.find((x) => x.id === pid)?.stock_qty ?? 0;
+    over[pid] = { ...(over[pid] || {}), stock_qty: Math.max(0, base + delta) }; d.settings['catalog-overrides'] = over;
+    const moves = (d.settings['stock-moves'] || []) as StockMove[]; d.settings['stock-moves'] = [{ id: id('sm'), product: pid, delta, reason, ref, staff: me.name, at: Date.now() }, ...moves].slice(0, 2000);
+    write(d); return ok(true);
+  },
+  async stockMoves() { return (read().settings['stock-moves'] || []) as StockMove[]; },
   async setting(key, fallback) { const v = read().settings[key]; return (v === undefined ? fallback : v) as typeof fallback; },
   async saveSetting(key, value) { const d = read(); d.settings[key] = value; write(d); },
 };

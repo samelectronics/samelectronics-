@@ -43,7 +43,8 @@ function toUrl(f: Filters, p: string | null, scope: Scope) {
 export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
   const [ready, setReady] = useState(false), [f, setF] = useState<Filters>(EMPTY), [pid, setPid] = useState<string | null>(null), [scope, setScope] = useState<Scope>(mode === 'deals' ? 'deals' : 'all');
   const [view, setView] = useState<View>({ cols: 4, list: false, trade: true, per: 24 }), [page, setPage] = useState(1), [cz, setCz] = useState(false), [cmpOpen, setCmpOpen] = useState(false), [side, setSide] = useState(false);
-  const st = useStore(), [me] = useMe(), trade = !!me?.tradeApproved;
+  const st = useStore(), [me] = useMe(), trade = !!me?.tradeApproved, [cv, setCv] = useState(0);
+  useEffect(() => { const on = () => setCv((n) => n + 1); window.addEventListener('se:catalog', on); return () => window.removeEventListener('se:catalog', on); }, []);
   // the data is loaded by the page's scripts; wait for it, then read the link
   useEffect(() => {
     const go = () => { const u = fromUrl(); setF(u.f); setPid(u.p); if (u.scope !== 'all' || mode === 'deals') setScope(mode === 'deals' && u.scope === 'all' ? 'deals' : u.scope); try { const v = JSON.parse(localStorage.getItem('se-shop-view') || 'null'); if (v) setView(v); } catch { /* */ } setReady(true); };
@@ -55,9 +56,9 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
   const open = useCallback((p: Product) => setPid(p.id), []);
   const close = useCallback(() => setPid(null), []);
 
-  const base = useMemo(() => { if (!ready) return []; const all = products(); return scope === 'deals' ? all.filter((p) => p.deal > 0) : scope === 'new' ? all.filter((p) => p.isNew) : scope === 'limited' ? all.filter((p) => p.stock_qty > 0 && p.stock_qty < 6) : all; }, [ready, scope]);
+  const base = useMemo(() => { if (!ready) return []; const all = products(); return scope === 'deals' ? all.filter((p) => p.deal > 0) : scope === 'new' ? all.filter((p) => p.isNew) : scope === 'limited' ? all.filter((p) => p.stock_qty > 0 && p.stock_qty < 6) : all; }, [ready, scope, cv]);
   const res = useMemo(() => (ready ? apply(f, base) : []), [f, base, ready]);
-  const fc = useMemo(() => (ready ? facets(f) : null), [f, ready]);
+  const fc = useMemo(() => (ready ? facets(f) : null), [f, ready, cv]);
   const D = data();
   if (!ready || !D || !fc) return <div className="shop-wait"><span /><span /><span /></div>;
 

@@ -3,14 +3,13 @@
 // customer's details (filled from the account, or a company profile), then the order is placed (backend.placeOrder —
 // on Supabase the server recomputes prices and VAT) and confirmed on WhatsApp. Saved-for-later and stars sit underneath.
 import React, { useEffect, useState } from 'react';
-import { type Product, aed, byId, data, VAT, waLink, fmt } from '@/lib/catalog';
+import { type Product, aed, byId, data, VAT, waLink, fmt, siteSetting } from '@/lib/catalog';
 import { store, useStore } from '@/lib/store';
 import { backend, useMe, type Company, type Order } from '@/lib/backend';
 import { T, PageHero, useRise } from '@/components/site/ui';
 import LiveSam from '@/components/samsoom/LiveSam';
 
-const SHIP = { pickup: 0, uae: 25, world: 0 };
-const FREE = 500;
+const DL = () => siteSetting('delivery', { uae: 25, freeOver: 500, pickupReady: '20 minutes' }); // set in the Control Room → Settings
 
 export default function CartPage() {
   const st = useStore(), [me] = useMe(), [ready, setReady] = useState(false), [cos, setCos] = useState<Company[]>([]);
@@ -22,7 +21,7 @@ export default function CartPage() {
   useRise(ready);
   if (!ready) return <div className="shop-wait"><span /><span /><span /></div>;
 
-  const trade = !!me?.tradeApproved;
+  const trade = !!me?.tradeApproved, dl = DL(), SHIP = { pickup: 0, uae: dl.uae, world: 0 }, FREE = dl.freeOver;
   const lines = st.cart.map((l) => ({ l, p: byId(l.id) })).filter((x) => x.p) as { l: { id: string; qty: number }; p: Product }[];
   const unit = (p: Product) => (trade ? p.wholesale_price : p.price);
   const sub = lines.reduce((a, { l, p }) => a + unit(p) * l.qty, 0), save = lines.reduce((a, { l, p }) => a + (p.retail_price - unit(p)) * l.qty, 0);

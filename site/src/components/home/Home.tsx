@@ -8,6 +8,7 @@ import LangPop from '@/components/home/LangPop';
 import SectionLife from '@/components/home/SectionLife';
 import NetNotice from '@/components/home/NetNotice';
 import SamsoomTour from '@/components/home/SamsoomTour';
+import SiteSettings from '@/components/site/SiteSettings';
 import { installI18n } from '@/i18n/lang';
 
 // G9: the language is applied before the home page renders, so nothing flashes in the other language.
@@ -29,6 +30,7 @@ export default function Home() {
       <SectionLife />
       <NetNotice />
       <SamsoomTour />
+      <SiteSettings />
     </div>
   );
 }

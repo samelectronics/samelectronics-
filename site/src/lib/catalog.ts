@@ -37,15 +37,29 @@ const hash = (s: string) => { let h = 2166136261; for (let i = 0; i < s.length; 
 const WARRANTY: Record<string, string> = { OR: '6 months', OL: '3 months', IN: '1 month', AQ: '1 month' };
 export const warrantyOf = (grade: string) => WARRANTY[grade] || '1 month';
 
-let cache: { d: D; list: Product[] } | null = null;
+let cache: { d: D; list: Product[]; v: number } | null = null, ver = 0;
+/** P5: the Control Room's edits (prices, stock, visibility, new products) are applied on top of the catalogue. In the demo
+ *  they live in the browser's demo database ('se-db' → settings); on Supabase the products table itself is edited. */
+type Over = Record<string, Partial<Raw>>;
+function overrides(): { over: Over; added: Raw[] } {
+  try { const s = JSON.parse(localStorage.getItem('se-db') || '{}').settings || {}; return { over: s['catalog-overrides'] || {}, added: s['catalog-added'] || [] }; } catch { return { over: {}, added: [] }; }
+}
+export function invalidate() { ver++; cache = null; vocab = null; if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('se:catalog')); }
+if (typeof window !== 'undefined') window.addEventListener('se:db', () => { const o = JSON.stringify(overrides()); if (o !== lastOver) { lastOver = o; invalidate(); } });
+let lastOver = '';
+export function rawProducts(): Raw[] {
+  const d = data(); if (!d) return [];
+  const { over, added } = overrides();
+  return [...d.products, ...added].map((p) => (over[p.id] ? { ...p, ...over[p.id] } : p));
+}
 export function products(): Product[] {
   const d = data(); if (!d) return [];
-  if (cache && cache.d === d) return cache.list;
+  if (cache && cache.d === d && cache.v === ver) return cache.list;
   const B = new Map(d.brands.map((b) => [b.id, b])), M = new Map(d.models.map((m) => [m.id, m])), C = new Map(d.categories.map((c) => [c.id, c]));
   const Q = new Map(d.qualities.map((q) => [q.id, q.name])), MK = new Map(d.manufacturers.map((q) => [q.id, q.name]));
   const now = Date.now(), DL = new Map(d.deals.filter((x) => x.ends > now - 864e5 * 30).map((x) => [x.product_id, x]));
   const S = shots();
-  const list = d.products.filter((p) => p.visible !== false).map((p, i) => {
+  const list = rawProducts().filter((p) => p.visible !== false).map((p, i) => {
     const m = M.get(p.model_id), b = m ? B.get(m.brand_id) : undefined, brand = b ? b.id : 'other', dl = DL.get(p.id);
     const pose = S ? S.forCat(p.category, brand, p.manufacturer) : p.shot;
     // sample offers on ~1 in 9 parts (besides the deals in the data), ending at the end of the week, until the team sets real ones
@@ -64,7 +78,7 @@ export function products(): Product[] {
     out.hay = norm([out.title, out.brandName, out.modelName, out.series, out.catName, out.part_name, out.gradeName, out.makerName, out.qualityName, p.id].join(' '));
     return out;
   });
-  cache = { d, list };
+  cache = { d, list, v: ver };
   return list;
 }
 export const byId = (id: string) => products().find((p) => p.id === id) || null;
@@ -161,4 +175,7 @@ export const alsoFor = (p: Product) => products().filter((x) => x.model_id === p
 export const grades = (p: Product) => products().filter((x) => x.model_id === p.model_id && x.category === p.category);
 export const waLink = (text: string) => 'https://wa.me/' + (data()?.contact.wa || '971503420015') + '?text=' + encodeURIComponent(text);
 /** fee for fitting a part in the Repair Lab (owner): AED 25 under 100, AED 35 for 100–500, AED 45 above 500 */
-export const repairFee = (partPrice: number) => (partPrice < 100 ? 25 : partPrice <= 500 ? 35 : 45);
+/** a setting made in the Control Room, read synchronously (demo: the browser's demo database; live: cached by SiteSettings) */
+export const siteRaw = <T,>(key: string, fallback: T): T => { try { const v = JSON.parse(localStorage.getItem('se-db') || '{}').settings?.[key] ?? JSON.parse(localStorage.getItem('se-set-' + key) || 'null'); return v == null ? fallback : v; } catch { return fallback; } };
+export const siteSetting = <T extends object,>(key: string, fallback: T): T => ({ ...fallback, ...siteRaw<Partial<T>>(key, {}) });
+export const repairFee = (partPrice: number) => { const f = siteSetting('repair-fees', { low: 25, mid: 35, high: 45, lowMax: 100, midMax: 500 }); return partPrice < f.lowMax ? f.low : partPrice <= f.midMax ? f.mid : f.high; };

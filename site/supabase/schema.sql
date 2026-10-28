@@ -81,6 +81,15 @@ begin
   return r;
 end $$;
 
+-- staff editing their own profile cannot change their role, permissions or status
+create or replace function guard_staff() returns trigger language plpgsql as $$
+begin
+  if not has_perm('staff') then new.role := old.role; new.perms := old.perms; new.active := old.active; new.email := old.email; end if;
+  return new;
+end $$;
+drop trigger if exists t_guard_staff on staff;
+create trigger t_guard_staff before update on staff for each row execute function guard_staff();
+
 -- ── orders (VAT 5%, prices from the database) ─────────────────────────────────────────────────────────────
 create sequence if not exists order_no start 1001;
 create table if not exists orders (
@@ -168,6 +177,17 @@ begin
   return r;
 end $$;
 
+-- stock changes always go through here, so every unit is accounted for
+alter table stock_moves add column if not exists staff_name text;
+create or replace function stock_move(p_id text, p_delta int, p_reason text, p_ref text) returns void language plpgsql security definer set search_path = public as $$
+declare who text;
+begin
+  if not has_perm('stock') then raise exception 'Not allowed.'; end if;
+  select name into who from staff where id = auth.uid();
+  update products set stock_qty = greatest(0, stock_qty + p_delta), updated_at = now() where id = p_id;
+  insert into stock_moves (product_id, delta, reason, ref, staff_id, staff_name) values (p_id, p_delta, p_reason, p_ref, auth.uid(), who);
+end $$;
+
 -- ── row-level security ────────────────────────────────────────────────────────────────────────────────────
 alter table brands enable row level security; alter table models enable row level security; alter table categories enable row level security;
 alter table manufacturers enable row level security; alter table products enable row level security; alter table deals enable row level security;
@@ -194,6 +214,7 @@ do $$ begin
   create policy "own profile" on profiles for select using (id = auth.uid() or has_perm('customers'));
   create policy "edit own profile" on profiles for update using (id = auth.uid() or has_perm('customers'));
   create policy "staff read" on staff for select using (is_staff());
+  create policy "own staff profile" on staff for update using (id = auth.uid());
   create policy "own companies" on companies for all using (owner = auth.uid() or has_perm('customers')) with check (owner = auth.uid() or has_perm('customers'));
   create policy "own orders" on orders for select using (user_id = auth.uid() or has_perm('orders'));
   create policy "read reviews" on reviews for select using (not hidden or has_perm('content'));

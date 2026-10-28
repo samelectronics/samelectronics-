@@ -4,7 +4,7 @@
 // Sign-up sends a real confirmation code by e-mail (Supabase Auth, "Email OTP"; SMTP through Resend — supabase/README.md).
 // Staff are normal Supabase users with a row in `staff`; what they can do is enforced by the security rules, not the page.
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
-import type { Application, Audit, Backend, Company, Message, Order, Result, Review, Staff, Thread, User } from './types';
+import type { Application, Audit, Backend, Company, Message, Order, Result, Review, Staff, StockMove, Thread, User } from './types';
 
 let sb: SupabaseClient | null = null;
 const db = () => (sb = sb || createClient(process.env.NEXT_PUBLIC_SUPABASE_URL as string, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string, { auth: { persistSession: true, autoRefreshToken: true } }));
@@ -62,7 +62,7 @@ export const supabase: Backend = {
   async staffSignIn(email, password) { const { error } = await db().auth.signInWithPassword({ email: email.trim(), password }); if (error) return no(error.message); const s = await this.staffMe(); if (!s || !s.active) { await db().auth.signOut(); return no('This account is not a staff account.'); } await db().from('staff').update({ last_seen: new Date().toISOString() }).eq('id', s.id); return ok(s); },
   async staffSignOut() { await db().auth.signOut(); },
   async staffList() { const { data } = await db().from('staff').select('*').order('created_at'); return (data || []).map(toStaff); },
-  async saveStaff(s) { const { data, error } = await db().rpc('save_staff', { p: s }); return error ? no(error.message) : ok(toStaff(data)); },
+  async saveStaff(s) { const me = await uid(); if (s.id && s.id === me) { const { data, error } = await db().from('staff').update({ name: s.name, title: s.title, phone: s.phone, photo: s.photo }).eq('id', me).select().single(); if (!error) return ok(toStaff(data)); } const { data, error } = await db().rpc('save_staff', { p: s }); return error ? no(error.message) : ok(toStaff(data)); },
   async allOrders() { const { data } = await db().from('orders').select('*').order('created_at', { ascending: false }).limit(500); return (data || []).map(toOrder); },
   async setOrderStatus(id, status) { const { data, error } = await db().rpc('set_order_status', { p_id: id, p_status: status }); return error ? no(error.message) : ok(toOrder(data)); },
   async customers() { const { data } = await db().from('profiles').select('*').order('created_at', { ascending: false }).limit(1000); return (data || []).map(toUser); },
@@ -71,6 +71,10 @@ export const supabase: Backend = {
   async setApplication(id, status) { await db().from('applications').update({ status }).eq('id', id); },
   async audit() { const { data } = await db().from('audit_log').select('*').order('created_at', { ascending: false }).limit(500); return (data || []).map((l: Row): Audit => ({ id: l.id, staff: l.staff_name, action: l.action, target: l.target, detail: l.detail, at: ts(l.created_at) })); },
   async log(action, target, detail) { await db().from('audit_log').insert({ action, target, detail }); },
+  async saveProduct(id, patch) { const { error } = await db().from('products').update({ ...patch, updated_at: new Date().toISOString() }).eq('id', id); if (error) return no(error.message); await this.log('product.save', id, Object.keys(patch).join(', ')); return ok(true as const); },
+  async addProduct(p) { const { error } = await db().from('products').insert(p); if (error) return no(error.message); await this.log('product.add', p.id); return ok(true as const); },
+  async stockMove(id, delta, reason, ref) { const { error } = await db().rpc('stock_move', { p_id: id, p_delta: delta, p_reason: reason, p_ref: ref || null }); return error ? no(error.message) : ok(true as const); },
+  async stockMoves() { const { data } = await db().from('stock_moves').select('*').order('created_at', { ascending: false }).limit(2000); return (data || []).map((m: Row): StockMove => ({ id: m.id, product: m.product_id, delta: m.delta, reason: m.reason, ref: m.ref || undefined, staff: m.staff_name || '', at: ts(m.created_at) })); },
   async setting(key, fallback) { const { data } = await db().from('settings').select('value').eq('key', key).maybeSingle(); return (data ? data.value : fallback) as typeof fallback; },
   async saveSetting(key, value) { await db().from('settings').upsert({ key, value }); },
 };

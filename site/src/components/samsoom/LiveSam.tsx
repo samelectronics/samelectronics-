@@ -6,16 +6,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import SESamsoom from '../dc/SESamsoom';
 import { createScheduler } from './scheduler';
+import { siteRaw } from '@/lib/catalog';
 
 const PLAYFUL = ['wave', 'happy', 'think', 'wink', 'kiss', 'celebrate', 'blush', 'dabke'];
 
-export default function LiveSam({ size = 64, mood = 'idle', play, rest = 2600, className }: { size?: number; mood?: string; play?: string; rest?: number; className?: string }) {
+export default function LiveSam({ size = 64, mood = 'idle', play, rest: rest0, className }: { size?: number; mood?: string; play?: string; rest?: number; className?: string }) {
+  // the emotes and their pace are set in the Control Room (Site & Samsoom)
+  const cfg = siteRaw<{ emotes?: string[]; rest?: number }>('samsoom', {}), rest = rest0 || cfg.rest || 2600;
   const [m, setM] = useState(play || mood), [look, setLook] = useState({ x: 0, y: 0 }), box = useRef<HTMLSpanElement>(null);
   const sch = useRef<ReturnType<typeof createScheduler> | null>(null), cur = useRef(m);
   cur.current = m;
   useEffect(() => {
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    const x = createScheduler({ onMood: setM, auto: !reduce, emotes: PLAYFUL, rest });
+    const x = createScheduler({ onMood: setM, auto: !reduce, emotes: cfg.emotes && cfg.emotes.length ? cfg.emotes : PLAYFUL, rest });
     sch.current = x;
     return () => { x.stop(); sch.current = null; };
   }, [rest]);

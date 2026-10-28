@@ -33,6 +33,7 @@ export type Perm =
   | 'accounting' | 'reports' | 'emails' | 'staff' | 'settings' | 'audit';
 export type Application = { id: string; type: 'job' | 'wholesale' | 'membership' | 'circle'; name: string; email: string; phone?: string; data: Record<string, string>; status: 'new' | 'reviewing' | 'approved' | 'declined'; at: number };
 export type Audit = { id: string; staff: string; action: string; target: string; at: number; detail?: string };
+export type StockMove = { id: string; product: string; delta: number; reason: string; ref?: string; staff: string; at: number };
 export type Result<T> = { ok: true; data: T } | { ok: false; error: string };
 
 export interface Backend {
@@ -76,6 +77,11 @@ export interface Backend {
   setApplication(id: string, status: Application['status']): Promise<void>;
   audit(): Promise<Audit[]>;
   log(action: string, target: string, detail?: string): Promise<void>;
+  // catalogue & stock (Control Room)
+  saveProduct(id: string, patch: Record<string, unknown>): Promise<Result<true>>;
+  addProduct(p: Record<string, unknown> & { id: string; title: string }): Promise<Result<true>>;
+  stockMove(id: string, delta: number, reason: string, ref?: string): Promise<Result<true>>;
+  stockMoves(): Promise<StockMove[]>;
   // site settings edited from the Control Room (banners, Samsoom emotes, section texts, prices, stock…)
   setting<T>(key: string, fallback: T): Promise<T>;
   saveSetting<T>(key: string, value: T): Promise<void>;
