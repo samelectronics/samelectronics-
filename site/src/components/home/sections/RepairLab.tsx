@@ -46,7 +46,7 @@ export default function RepairLab({ v, full = false }: { v: Vals; full?: boolean
                 color: '#26282B',
               }}
             >
-              <span>Fixed, tested,</span> <span style={{ color: '#C98A12' }}>guaranteed.</span>
+              <span>Fixed, tested,</span> <span style={{ color: '#F7C032' }}>guaranteed.</span>
             </h2>
             {'\n      '}
           </div>

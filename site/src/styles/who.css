@@ -189,3 +189,20 @@ html[dir='rtl'] .ws-doc { right: auto; left: 7%; transform: translateY(-50%) rot
 .ws-globe { left: 50% !important; top: 47% !important; margin: -165px 0 0 -165px !important; }
 html[dir='rtl'] .ws-globe { right: auto !important; }
 .ws-film { position: absolute; inset: 0; }
+/* ===== R8 ===== */
+/* one scene at a time: the old one leaves completely (0.45s), THEN the new one makes its own entrance */
+.wh-scene.off { animation: whLeave .45s ease-in both !important; }
+.wh-scene.on { animation: whArrive .8s .45s cubic-bezier(.2, 1.1, .4, 1) both !important; }
+.wh-scene.on .ws-hero, .wh-scene.on .ws-globe, .wh-scene.on .ws-chip, .wh-scene.on .wh-ben span, .wh-scene.on .wh-cta { animation-delay: .5s; }
+/* a real studio floor: no hard edge, it fades out of the backdrop into the distance and catches a soft key light */
+.wh-stage::before { height: 46% !important; border-top: 0 !important; background: radial-gradient(60% 55% at 50% 0%, rgba(255, 255, 255, .09), rgba(255, 255, 255, 0) 70%), linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, .03) 18%, rgba(0, 0, 0, .18) 60%, rgba(0, 0, 0, .5) 100%) !important;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 22%); mask-image: linear-gradient(180deg, transparent 0, #000 22%); }
+/* everything stands ON the floor (a contact shadow under it), nothing floats */
+.ws::after { content: ''; position: absolute; left: 50%; bottom: 12%; width: 48%; height: 26px; margin-left: -24%; border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 0, 0, .6), rgba(0, 0, 0, 0)); filter: blur(2px); z-index: 0; pointer-events: none; }
+.ws-hero { top: auto !important; bottom: 13% !important; transform: translateX(-50%) !important; width: min(52%, 360px) !important; animation: wsRise .9s cubic-bezier(.16, 1, .3, 1) both !important; filter: drop-shadow(0 18px 18px rgba(0, 0, 0, .45)) !important; }
+@keyframes wsRise { from { opacity: 0; transform: translate(-50%, 24px); } to { opacity: 1; transform: translate(-50%, 0); } }
+.ws-rep .ws-film { inset: 6% 24% 11% !important; }
+.ws-rep::after { width: 30%; margin-left: -15%; }
+.ws-globe { top: auto !important; bottom: 17% !important; margin: 0 0 0 -140px !important; }
+.ws-exp::after { width: 34%; margin-left: -17%; bottom: 12%; }
+.ws-blk > :not(.ws-key):not(.ws-chip) { top: auto !important; bottom: 12% !important; transform: translateX(-50%) !important; }

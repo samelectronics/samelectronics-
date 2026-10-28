@@ -75,3 +75,12 @@
 .tm-band { gap: 8px; white-space: nowrap; }
 .tm-slot.f .tm-band b { letter-spacing: .08em; }
 .tm-slot.f .tm-band span { font-size: 8.5px; letter-spacing: .08em; }
+/* R8 · the back of a badge keeps only what matters: the role, three things it helps with, and one full-width button with
+   safe spacing (no bio, nothing cut by the lanyard or the edge) */
+.tm-face.back { align-items: stretch !important; padding: 30px 16px 16px !important; gap: 0; text-align: start; }
+.tm-face.back .tm-k { white-space: normal; line-height: 1.35; }
+.tm-face.back ul { gap: 6px !important; margin-top: 8px !important; }
+.tm-face.back li { font-size: 12.5px !important; line-height: 1.3 !important; overflow-wrap: anywhere; }
+.tm-face.back li:nth-child(n + 4) { display: none; }
+.tm-face.back p { display: none !important; }
+.tm-ask { width: 100%; box-sizing: border-box; justify-content: center; height: 42px !important; padding: 0 12px !important; margin-top: auto !important; font-size: 13.5px !important; overflow: hidden; text-overflow: ellipsis; }

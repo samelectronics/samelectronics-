@@ -32,7 +32,7 @@ function Scene({ id, v }: { id: string; v: Vals }) {
     return (
       <div className="ws ws-rep">
         <span className="ws-key" />
-        <div className="ws-film"><RepairFlip w={960} zoom={1.0} /></div>
+        <div className="ws-film"><RepairFlip w={960} zoom={1.0} fit="contain" /></div>
       </div>
     );
   }
@@ -40,7 +40,7 @@ function Scene({ id, v }: { id: string; v: Vals }) {
     return (
       <div className="ws ws-exp">
         <span className="ws-key" />
-        <DotGlobe size={330} speed={7} className="ws-globe" />
+        <DotGlobe size={280} speed={7} className="ws-globe" />
       </div>
     );
   }
