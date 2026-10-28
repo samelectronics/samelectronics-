@@ -28,6 +28,9 @@ import '@/styles/boot.css';
 import '@/styles/langpop.css';
 import '@/styles/pages.css';
 import '@/styles/shop.css';
+import '@/styles/account.css';
+import '@/styles/ask.css';
+import '@/styles/info.css';
 
 export const metadata: Metadata = {
   title: 'Sam Electronics - Home', // R6 §01: "Sam Electronics - <page>" (src/components/site/TabTitle.tsx keeps it in the visitor's language)

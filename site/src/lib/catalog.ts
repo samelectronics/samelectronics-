@@ -73,6 +73,7 @@ export const byId = (id: string) => products().find((p) => p.id === id) || null;
 export const norm = (s: string) => s.toLowerCase().normalize('NFKD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9؀-ۿऀ-ॿЀ-ӿ]+/g, ' ').trim();
 // words people type for the same thing
 const ALIAS: Record<string, string> = { iphone: 'iphone', ip: 'iphone', aple: 'apple', samsng: 'samsung', sumsung: 'samsung', galaxy: 'samsung', lcd: 'screen', display: 'screen', oled: 'screen', glass: 'screen', touch: 'screen', battry: 'battery', batery: 'battery', bat: 'battery', charging: 'flex', charger: 'flex', port: 'flex', cam: 'camera', camra: 'camera', back: 'back', housing: 'frame', chassis: 'frame', 'شاشة': 'screen', 'بطارية': 'battery', 'كاميرا': 'camera', 'ايفون': 'iphone', 'سامسونج': 'samsung' };
+const STOP = new Set('do does u you ya have has got any is are there the a an of for to my me i we need want looking price prices cost how much what which please pls plz can could hi hello hey with and or in on at this that it its your'.split(' '));
 function lev(a: string, b: string, max: number) {
   if (Math.abs(a.length - b.length) > max) return max + 1;
   const v = Array.from({ length: b.length + 1 }, (_, i) => i);
@@ -93,14 +94,16 @@ function words(): string[] {
 /** each typed word → the closest real word (typos up to 1–2 letters), so "iphon 13 scren" finds "iphone 13 screen" */
 export function fix(q: string): { terms: string[]; fixed: string; changed: boolean } {
   const W = words(), raw = norm(q).split(' ').filter(Boolean);
-  const terms = raw.map((w) => {
+  // filler words ("do you have", "price of", "pls") are dropped; unknown words with no close match are dropped too
+  const terms = raw.filter((w) => !STOP.has(w)).map((w) => {
     if (ALIAS[w]) return ALIAS[w];
     if (/^\d+$/.test(w) || W.includes(w) || W.some((x) => x.startsWith(w))) return w;
-    const max = w.length <= 4 ? 1 : 2; let best = w, bd = max + 1;
+    if (w.length < 3) return '';
+    const max = w.length <= 4 ? 1 : 2; let best = '', bd = max + 1;
     for (const x of W) { const dd = lev(w, x, max); if (dd < bd) { bd = dd; best = x; if (dd === 1 && max === 1) break; } }
     return best;
-  });
-  return { terms, fixed: terms.join(' '), changed: terms.join(' ') !== raw.join(' ') };
+  }).filter(Boolean);
+  return { terms, fixed: terms.join(' '), changed: terms.join(' ') !== raw.filter((w) => !STOP.has(w)).join(' ') };
 }
 export function search(q: string, list = products()): Product[] {
   if (!norm(q)) return list;

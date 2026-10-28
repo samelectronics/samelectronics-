@@ -16,20 +16,20 @@ export default function Banners({ onDeals, onCat }: { onDeals: () => void; onCat
   useEffect(() => { if (pause) return; const t = window.setTimeout(() => setI((n) => (n + 1) % S.length), 6000); return () => window.clearTimeout(t); }, [i, pause, S.length]);
   const s = S[i];
   return (
-    <section className="bn" aria-label={T('Offers')}>
-      <div className="bn-main" style={{ background: s.bg, color: s.ink }} onPointerEnter={() => setPause(true)} onPointerLeave={() => setPause(false)}>
-        <div className="bn-txt" key={'t' + i}>
-          <span className="bn-k">{T(s.k)}</span>
-          <b className="bn-t">{T(s.t)}<br /><em>{T(s.a)}</em></b>
-          <span className="bn-d">{T(s.d)}</span>
+    <section className="ad" aria-label={T('Offers')}>
+      <div className="ad-main" style={{ background: s.bg, color: s.ink }} onPointerEnter={() => setPause(true)} onPointerLeave={() => setPause(false)}>
+        <div className="ad-txt" key={'t' + i}>
+          <span className="ad-k">{T(s.k)}</span>
+          <b className="ad-t">{T(s.t)}<br /><em>{T(s.a)}</em></b>
+          <span className="ad-d">{T(s.d)}</span>
           <button type="button" className={'sp-btn' + (s.ink === '#FFFFFF' ? '' : ' dark')} onClick={s.go}>{T(s.cta)}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button>
         </div>
-        <img key={'i' + i} className="bn-img" src={s.img} alt="" />
-        <span className="bn-dots">{S.map((_, k) => <button key={k} type="button" className={k === i ? 'on' : ''} onClick={() => setI(k)} aria-label={'Slide ' + (k + 1)}><i style={{ animationPlayState: pause ? 'paused' : 'running' }} /></button>)}</span>
+        <img key={'i' + i} className="ad-img" src={s.img} alt="" />
+        <span className="ad-dots">{S.map((_, k) => <button key={k} type="button" className={k === i ? 'on' : ''} onClick={() => setI(k)} aria-label={'Slide ' + (k + 1)}><i style={{ animationPlayState: pause ? 'paused' : 'running' }} /></button>)}</span>
       </div>
-      <div className="bn-side">
-        <a className="bn-tile y" href="/wholesale"><span className="bn-k">{T('FOR REPAIR SHOPS')}</span><b>{T('Trade prices on every grade')}</b><small>{T('Apply once, see both prices in the shop.')}</small><img src="/assets/pose/line-all-480.webp" alt="" /></a>
-        <a className="bn-tile d" href="/repair"><span className="bn-k">{T('REPAIR LAB')}</span><b>{T('Fitted while you wait')}</b><small>{T('Fitting from AED 25 (sample).')}</small><img src="/assets/pose/rep-fixed-480.webp" alt="" /></a>
+      <div className="ad-side">
+        <a className="ad-tile y" href="/wholesale"><span className="ad-k">{T('FOR REPAIR SHOPS')}</span><b>{T('Trade prices on every grade')}</b><small>{T('Apply once, see both prices in the shop.')}</small><img src="/assets/pose/line-all-480.webp" alt="" /></a>
+        <a className="ad-tile d" href="/repair"><span className="ad-k">{T('REPAIR LAB')}</span><b>{T('Fitted while you wait')}</b><small>{T('Fitting from AED 25 (sample).')}</small><img src="/assets/pose/rep-fixed-480.webp" alt="" /></a>
       </div>
     </section>
   );
