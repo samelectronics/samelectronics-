@@ -429,7 +429,7 @@ function render(v: Vals) {
                 {'\n      '}
                 <div
                   style={cssToObj(
-                    `position:absolute;left:${s(v.msg?.l)}px;top:112px;bottom:40px;width:${s(v.msg?.w)}px;display:flex;flex-direction:column;justify-content:center;opacity:${s(v.msg?.o)};pointer-events:${s(v.msg?.pe)}`,
+                    `position:absolute;z-index:25;left:${s(v.msg?.l)}px;top:112px;bottom:40px;width:${s(v.msg?.w)}px;display:flex;flex-direction:column;justify-content:center;opacity:${s(v.msg?.o)};pointer-events:${s(v.msg?.pe)}`,
                   )}
                 >
                   {'\n        '}

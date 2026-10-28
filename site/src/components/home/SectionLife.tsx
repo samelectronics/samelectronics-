@@ -49,12 +49,12 @@ function cluster(gw: number, side: 1 | -1, s0: number) {
 }
 
 const NS = 'http://www.w3.org/2000/svg';
-function gutter(sec: HTMLElement, gw: number, side: 1 | -1, t: string, s0: number, top: boolean) {
+function gutter(sec: HTMLElement, gw: number, side: 1 | -1, t: string, s0: number, top: boolean, at?: number) {
   if (gw < 70) return;
   const { W, H, paths, pads } = cluster(gw, side, s0), h = sec.getBoundingClientRect().height; if (h < H + 80) return;
   const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'se-gut se-gut-' + t); svg.setAttribute('aria-hidden', 'true');
   svg.setAttribute('width', String(W)); svg.setAttribute('height', String(H)); svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-  svg.style.cssText = `position:absolute;${top ? 'top:' + Math.round(h * 0.12) : 'bottom:' + Math.round(h * 0.1)}px;${side > 0 ? 'left' : 'right'}:0;width:${W}px;height:${H}px;pointer-events:none;z-index:0;overflow:visible`;
+  svg.style.cssText = `position:absolute;${at != null ? 'top:' + Math.round(h * at) : top ? 'top:' + Math.round(h * 0.12) : 'bottom:' + Math.round(h * 0.1)}px;${side > 0 ? 'left' : 'right'}:0;width:${W}px;height:${H}px;pointer-events:none;z-index:0;overflow:visible`;
   paths.forEach((d, i) => { const p = document.createElementNS(NS, 'path'); p.setAttribute('d', d); p.setAttribute('class', 'tr'); svg.appendChild(p);
     const f = document.createElementNS(NS, 'path'); f.setAttribute('d', d); f.setAttribute('class', 'fl'); f.setAttribute('pathLength', '1000'); f.style.animationDuration = (2.8 + (i % 3) * 0.9).toFixed(1) + 's'; f.style.animationDelay = (i * 0.7).toFixed(1) + 's'; svg.appendChild(f); });
   pads.forEach(([x, y, r]) => { const c = document.createElementNS(NS, 'circle'); c.setAttribute('cx', x.toFixed(1)); c.setAttribute('cy', y.toFixed(1)); c.setAttribute('r', String(r)); c.setAttribute('class', 'nd'); svg.appendChild(c); });
@@ -63,7 +63,7 @@ function gutter(sec: HTMLElement, gw: number, side: 1 | -1, t: string, s0: numbe
 
 function markEntries(sec: HTMLElement) {
   if (sec.dataset.seLife) return; sec.dataset.seLife = '1';
-  const mark = (e: Element | null, i: number) => { if (!e || (e as HTMLElement).dataset.seRise != null) return; const cs = getComputedStyle(e); if (cs.animationName !== 'none' || cs.position === 'fixed') return; (e as HTMLElement).dataset.seRise = ''; (e as HTMLElement).style.setProperty('--i', String(i)); };
+  const mark = (e: Element | null, i: number) => { if (!e || (e as HTMLElement).dataset.seRise != null || e.closest('[data-own-entry]')) return; const cs = getComputedStyle(e); if (cs.animationName !== 'none' || cs.position === 'fixed' || cs.opacity === '0' || cs.display === 'none' || (cs.position === 'absolute' && !(e as HTMLElement).innerText)) return; /* never wake hidden decor layers */ (e as HTMLElement).dataset.seRise = ''; (e as HTMLElement).style.setProperty('--i', String(i)); };
   const h2 = sec.querySelector('h2'); let i = 0;
   if (h2) { const pre = h2.previousElementSibling; if (pre && (pre as HTMLElement).getBoundingClientRect().height < 60) mark(pre, i++); mark(h2, i++); let n = h2.nextElementSibling, c = 0; while (n && c < 3) { if ((n as HTMLElement).getBoundingClientRect().height < 260) mark(n, i++); n = n.nextElementSibling; c++; } }
   // card groups: 3+ siblings of the same kind, card-sized, not already inside a marked element
@@ -72,6 +72,9 @@ function markEntries(sec: HTMLElement) {
 }
 
 // owner (28 Oct): the small corner circuits stay only where the owner kept them; every other section is clean
+// R8: tall sections that felt bare (What we offer) get a few more clusters down their sides, still only in the empty
+// gutters and alternating left / right like the hero: fractions of the section height where each one sits
+const TALL: Record<string, number[]> = { families: [0.06, 0.24, 0.46, 0.68, 0.86] };
 const GUT = new Set(['families', 'quality', 'wholesale', 'reviews', 'board']);
 
 export default function SectionLife() {
@@ -85,7 +88,8 @@ export default function SectionLife() {
       eio = eio || new IntersectionObserver((es) => es.forEach((e) => { const el = e.target as HTMLElement; if (e.isIntersecting && e.intersectionRatio > 0.12) el.setAttribute('data-se-on', ''); else if (!e.isIntersecting) el.removeAttribute('data-se-on'); }), { threshold: [0, 0.12, 0.3] });
       secs.forEach((sec, k) => {
         markEntries(sec); io!.observe(sec); sec.querySelectorAll('[data-se-rise]').forEach((el) => { if (!(el as HTMLElement).dataset.seObs) { (el as HTMLElement).dataset.seObs = '1'; eio!.observe(el); } });
-        if (window.innerWidth >= 1100 && GUT.has(sec.id) && !sec.querySelector(':scope > .se-gut') && !sec.querySelector('.se-cfield') && !sec.querySelector('.se-own-circ')) { const t = tone(sec), e = contentEdges(sec); if (getComputedStyle(sec).position === 'static') sec.style.position = 'relative'; gutter(sec, e.l, 1, t, 101 + k * 37, k % 2 === 0); gutter(sec, e.r, -1, t, 207 + k * 53, k % 2 === 1); }
+        if (window.innerWidth >= 1100 && GUT.has(sec.id) && !sec.querySelector(':scope > .se-gut') && !sec.querySelector('.se-cfield') && !sec.querySelector('.se-own-circ')) { const t = tone(sec), e = contentEdges(sec); if (getComputedStyle(sec).position === 'static') sec.style.position = 'relative'; if (TALL[sec.id]) TALL[sec.id].forEach((at, j) => gutter(sec, j % 2 ? e.r : e.l, j % 2 ? -1 : 1, t, 101 + k * 37 + j * 71, true, at));
+          else { gutter(sec, e.l, 1, t, 101 + k * 37, k % 2 === 0); gutter(sec, e.r, -1, t, 207 + k * 53, k % 2 === 1); } }
       });
     } catch (err) { console.warn('[SectionLife]', err); } };
     (window as unknown as { __seLife?: () => void }).__seLife = run;

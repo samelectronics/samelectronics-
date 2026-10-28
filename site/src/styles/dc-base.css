@@ -666,8 +666,12 @@ html[dir='rtl'] .se-rep-fix.se-rep-loop { animation-name: seRepFixR; } html[dir=
 .ipb.line img { height: 150px; }
 /* owner (27 Oct) · the teardown no longer cuts straight into What we offer: a breathing space after its buttons that
    fades from the studio graphite into the next section's fog */
-#teardown::after { content: ''; display: block; height: 140px; background: linear-gradient(180deg, #232427 0%, #2E3033 35%, #C9CBCE 82%, #F2F3F4 100%); pointer-events: none; }
-@media (max-width: 860px) { #teardown::after { height: 90px; } }
+/* R8 · the teardown floor runs on under the stage (same dark floor and the same centre reflection) and then fades slowly
+   into the showroom: no flat grey step between them */
+#teardown::after { content: ''; display: block; height: 280px; pointer-events: none;
+  background: radial-gradient(46% 150px at 50% 0, rgba(255, 255, 255, .065), rgba(255, 255, 255, 0) 75%),
+    linear-gradient(180deg, #1F2023 0%, #212225 10%, #26282B 20%, #303235 30%, #44464A 40%, #64666A 50%, #8E9094 60%, #B8BABD 70%, #D8DADC 80%, #EAECED 90%, #F2F3F4 100%); }
+@media (max-width: 860px) { #teardown::after { height: 160px; } }
 
 /* owner (27 Oct) · site-wide entry: every section's eyebrow, title, text and cards rise in, one after another, each time
    the section comes into view (SectionFX toggles data-se-vis; leaving resets it so it replays) */
@@ -682,7 +686,7 @@ h2[data-se-rise][data-se-on] { animation-name: seSecTitle; animation-duration: .
 .se-gut .fl { fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-dasharray: 70 930; animation: sePulse 3.4s linear infinite; }
 .se-gut .nd { stroke-width: 2; }
 .se-gut-dark .tr { stroke: rgba(247, 192, 50, .22); } .se-gut-dark .nd { fill: #26282B; stroke: #F7C032; } .se-gut-dark .fl { stroke: #F7C032; }
-.se-gut-light .tr { stroke: rgba(38, 40, 43, .16); } .se-gut-light .nd { fill: #F2F3F4; stroke: rgba(38, 40, 43, .5); } .se-gut-light .fl { stroke: #F7C032; }
+.se-gut-light .tr { stroke: rgba(38, 40, 43, .2); } .se-gut-light .nd { fill: #F2F3F4; stroke: #E0A82A; } .se-gut-light .fl { stroke: #F7C032; filter: drop-shadow(0 0 3px rgba(247, 192, 50, .7)); }
 .se-gut-yel .tr { stroke: rgba(38, 40, 43, .2); } .se-gut-yel .nd { fill: #F7C032; stroke: #26282B; } .se-gut-yel .fl { stroke: #26282B; }
 @media (prefers-reduced-motion: reduce) { .se-gut .fl { animation: none; opacity: 0; } }
 /* owner (27 Oct) · What we offer: the service panels show the hero ad's own elements */
@@ -752,3 +756,7 @@ h2[data-se-rise][data-se-on] { animation-name: seSecTitle; animation-duration: .
 .se-net-veil .se-net button { align-self: flex-start; }
 @keyframes seNetVeil { from { opacity: 0; } }
 @keyframes seNetPop { from { opacity: 0; transform: scale(.94) translateY(8px); } }
+/* R8 · the three boxes share one rhythm: the title and the line under it take the same room in each, so the dividers,
+   the figures and the buttons sit at the same height in all three */
+.wwo-boxes [data-w='Rp'], .wwo-boxes [data-w='Wp'], .wwo-boxes [data-w='Gp'] { min-height: 3em; line-height: 1.5 !important; }
+.wwo-boxes h3 { min-height: 2.04em; }

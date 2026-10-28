@@ -121,3 +121,18 @@ html[dir='rtl'] .sc-pose { animation-name: scPoseInR, scPoseFloat; }
 .sc-makers i { padding: 5px 10px; border-radius: 999px; background: rgba(38, 40, 43, .12); color: rgba(38, 40, 43, .7); font: 600 11.5px Inter, sans-serif; font-style: normal; transition: background .3s, color .3s; }
 .sc-makers i.on { background: #26282B; color: #F7C032; }
 html[dir='rtl'] .sc-makers { left: 150px; right: 24px; }
+/* R8 · the hero's yellow everywhere (one hue: #F7C032, lit from above, not an orange gradient), and a studio floor that
+   fades out of the wall instead of starting at a hard line; every product gets the same soft contact shadow */
+.sc-r { background: radial-gradient(70% 60% at 50% 26%, rgba(255, 255, 255, .26), rgba(255, 255, 255, 0) 62%), radial-gradient(120% 90% at 50% 100%, rgba(120, 78, 0, .16), rgba(120, 78, 0, 0) 70%), #F7C032 !important; }
+.sc-floor { height: 44% !important; border-top: 0 !important; background: linear-gradient(180deg, rgba(120, 78, 0, 0) 0%, rgba(120, 78, 0, .05) 22%, rgba(120, 78, 0, .12) 55%, rgba(120, 78, 0, .2) 100%) !important;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 30%); mask-image: linear-gradient(180deg, transparent 0, #000 30%); }
+.sc-floor::after { content: ''; position: absolute; left: 50%; top: 18%; width: 62%; height: 22%; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0)); pointer-events: none; }
+.sc-makers { gap: 8px 8px !important; bottom: 24px !important; align-items: center; }
+.sc-makers i { padding: 6px 12px !important; line-height: 1.2; white-space: nowrap; }
+.sc-makers { flex-wrap: nowrap !important; gap: 14px !important; bottom: 34px !important; right: 160px !important; min-width: 0; }
+.sc-mk-name { flex: none; padding: 8px 14px; border-radius: 999px; background: #26282B; color: #F7C032; font: 600 13px Inter, sans-serif; white-space: nowrap; box-shadow: 0 8px 18px -8px rgba(38, 40, 43, .6); animation: scMkIn .45s cubic-bezier(.2, .9, .3, 1) both; }
+.sc-mk-dots { display: flex; gap: 7px; }
+.sc-mk-dots i { width: 7px; height: 7px; border-radius: 50%; background: rgba(38, 40, 43, .28); transition: background .3s, transform .3s; }
+.sc-mk-dots i.on { background: #26282B; transform: scale(1.25); }
+@keyframes scMkIn { from { opacity: 0; transform: translateY(6px); } }
+html[dir='rtl'] .sc-makers { right: 24px !important; left: 160px !important; }

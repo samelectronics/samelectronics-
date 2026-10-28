@@ -26,7 +26,7 @@ class Component extends DCLogic {
     setTimeout(() => this.secRef.current && this.runIO.observe(this.secRef.current), 50);
     const loop = () => { if (!this.alive) return; if (this.near) this.frame(); this.raf = requestAnimationFrame(loop); };
     this.raf = requestAnimationFrame(loop);
-    this.onResize = () => { const vw = document.documentElement.clientWidth, vh = window.innerHeight, sc = Math.min(vw / 1440, (vh - 72) / 828); if (Math.abs(sc - this.state.sc) > 0.002) this.setState({ sc }); };
+    this.onResize = () => { const vw = document.documentElement.clientWidth, vh = window.innerHeight, sc = Math.min(vw / 1440, (vh - 72 - 64) / 828); if (Math.abs(sc - this.state.sc) > 0.002) this.setState({ sc }); };
     window.addEventListener('resize', this.onResize); this.onResize();
     window.seBench = (p) => { this.ov = p; this.p = p; this.frame(true); };
   }
@@ -41,12 +41,13 @@ class Component extends DCLogic {
     // hold and the passed state stays for the rest. The phone is already clamped on arrival (p starts at 0.1), so the
     // stage is never empty. 'Run the test yourself' plays one 5.8s pass on its own clock, then scroll takes over again.
     const travel = Math.max(1, R.offsetHeight - (this.q('pin') ? this.q('pin').offsetHeight : vh)), sp = cl(-r.top / (travel * 0.85));
-    // owner (28 Oct): the test plays ON ITS OWN, smoothly, in ~4s, as soon as the rig is in view (scroll no longer drives it,
-    // which made it slow and jerky); it replays every time the section comes back into view
-    if (r.top > vh || r.bottom < 0) this.played = false;
-    if (!this.played && this.runAt == null && r.top < vh * 0.45 && r.bottom > vh * 0.55) { this.played = true; this.runAt = now; }
+    // owner (R8): the section stops the visitor with the whole rig in view (sticky) and SCROLL plays the test, step by
+    // step. The scroll position is only the target: the show follows it with a smooth ease every frame, so a fast or
+    // jerky wheel never makes it jump. 'Run the test yourself' still plays one pass on its own clock.
     let el = this.runAt == null ? -1 : (now - this.runAt) / 1000; if (el > 5) { this.runAt = null; el = -1; }
-    void sp; this.p = this.ov != null ? this.ov : el >= 0 ? (el < 0.6 ? 0.1 * (el / 0.6) : el < 3.2 ? 0.1 + 0.75 * ((el - 0.6) / 2.6) : Math.min(1, 0.85 + 0.15 * ((el - 3.2) / 0.8))) : this.played ? 1 : 0.1;
+    const target = 0.1 + 0.9 * sp, dt = Math.min(0.05, (now - (this.lastT || now)) / 1000); this.lastT = now;
+    if (this.sp == null || Math.abs(target - this.sp) > 0.6) this.sp = target; else this.sp += (target - this.sp) * (1 - Math.exp(-dt * 7));
+    this.p = this.ov != null ? this.ov : el >= 0 ? (el < 0.6 ? 0.1 * (el / 0.6) : el < 3.2 ? 0.1 + 0.75 * ((el - 0.6) / 2.6) : Math.min(1, 0.85 + 0.15 * ((el - 3.2) / 0.8))) : this.sp;
     const p = this.p, t = now / 1000;
     // Today on the rig: rolls up on arrival, then every pass adds one test, one pass and one sticker (the unit on the rig)
     { const ck = this.cT0 == null ? 0 : eo((now - this.cT0 - 300) / 1400), T = this.today || {}, add = { tested: p >= 0.965 ? 1 : 0, passed: p >= 0.965 ? 1 : 0, stickers: p >= 0.88 ? 1 : 0, returned: 1 };

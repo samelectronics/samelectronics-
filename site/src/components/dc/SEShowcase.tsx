@@ -15,7 +15,11 @@ function MakerCycle() {
   return (
     <>
       {MAKERS.map(([id], j) => <img key={id} className={'sc-pose sc-mk' + (j === i ? ' on' : '')} src={u(id)} alt="" />)}
-      <span className="sc-makers">{MAKERS.map(([, n], j) => <i key={n} className={j === i ? 'on' : ''}>{n}</i>)}</span>
+      {/* R8: one maker named at a time (its own pill), the rest as dots: nothing crowds or runs under the arrows */}
+      <span className="sc-makers">
+        <b key={i} className="sc-mk-name">{MAKERS[i][1]}</b>
+        <span className="sc-mk-dots" aria-hidden="true">{MAKERS.map(([id], j) => <i key={id} className={j === i ? 'on' : ''} />)}</span>
+      </span>
     </>
   );
 }

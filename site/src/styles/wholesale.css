@@ -388,3 +388,10 @@ html[dir='rtl'] .wf-real > svg:last-child { transform: scaleX(-1); }
 @keyframes wfL1 { 0% { background: rgba(38, 40, 43, .08); color: #26282B; } 6%, 82% { background: #26282B; color: #F7C032; box-shadow: inset 0 0 0 2px #26282B, 0 0 0 6px rgba(38, 40, 43, .12), 0 8px 18px rgba(38, 40, 43, .35); } 92%, 100% { background: rgba(38, 40, 43, .08); color: #26282B; } }
 @keyframes wfL2 { 0%, 18% { background: rgba(38, 40, 43, .08); color: #26282B; } 24%, 82% { background: #26282B; color: #F7C032; box-shadow: inset 0 0 0 2px #26282B, 0 0 0 6px rgba(38, 40, 43, .12), 0 8px 18px rgba(38, 40, 43, .35); } 92%, 100% { background: rgba(38, 40, 43, .08); color: #26282B; } }
 @keyframes wfL3 { 0%, 36% { background: rgba(38, 40, 43, .08); color: #26282B; } 42%, 82% { background: #26282B; color: #F7C032; box-shadow: inset 0 0 0 2px #26282B, 0 0 0 6px rgba(38, 40, 43, .12), 0 8px 18px rgba(38, 40, 43, .35); } 92%, 100% { background: rgba(38, 40, 43, .08); color: #26282B; } }
+/* R8 · the plane's route sits on the globe's face (the svg is exactly the globe's box), and lands on a pulsing dot */
+.wf-sc3-gl { position: relative; width: 150px; height: 150px; }
+.wf-sc3-gl .wf-sc3-fly { position: absolute; inset: 0; width: 150px; height: 150px; overflow: hidden; border-radius: 50%; }
+.wf-sc3-fly .dxb { fill: #F7C032; }
+.wf-sc3-fly .dst { fill: none; stroke: #FFFFFF; stroke-width: 1.5; transform-box: fill-box; transform-origin: center; animation: wfDst 1.8s ease-out infinite; }
+@keyframes wfDst { 0% { opacity: 1; transform: scale(.6); } 100% { opacity: 0; transform: scale(2.2); } }
+.wf-sc3-film { inset: 6px 0 0 !important; }

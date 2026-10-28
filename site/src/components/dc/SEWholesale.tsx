@@ -68,7 +68,7 @@ function Scene({ k }: { k: string }) {
   if (k === 'rep')
     return (
       <div className="wf-sc wf-sc3" aria-hidden="true">
-        <div className="wf-sc3-film"><RepairFlip w={480} zoom={1.5} /></div>
+        <div className="wf-sc3-film"><RepairFlip w={480} zoom={1.3} fit="contain" /></div>
       </div>
     );
   if (k === 'trd')
@@ -82,14 +82,19 @@ function Scene({ k }: { k: string }) {
   if (k === 'exp')
     return (
       <div className="wf-sc wf-sc3 wf-sc3-exp" aria-hidden="true">
-        <DotGlobe size={150} speed={9} />
-        <svg viewBox="0 0 200 150" className="wf-sc3-fly">
-          <path d="M18 120 Q100 -10 182 96" className="arc" />
-          <g className="pl">
-            <path d="M-8 0 L6 -1.5 L8 0 L6 1.5 Z M-2 0 L-6 -6 L-3 -6 L3 0 L-3 6 L-6 6 Z" />
-            <animateMotion dur="4.2s" repeatCount="indefinite" rotate="auto" path="M18 120 Q100 -10 182 96" />
-          </g>
-        </svg>
+        {/* R8: the plane flies ACROSS the globe (Dubai to a customer), its route drawn on the globe's face, never outside it */}
+        <div className="wf-sc3-gl">
+          <DotGlobe size={150} speed={9} />
+          <svg viewBox="0 0 150 150" className="wf-sc3-fly">
+            <path d="M44 92 Q66 40 112 58" className="arc" />
+            <circle cx="44" cy="92" r="3" className="dxb" />
+            <circle cx="112" cy="58" r="3" className="dst" />
+            <g className="pl">
+              <path d="M-6 0 L4.5 -1.1 L6 0 L4.5 1.1 Z M-1.5 0 L-4.5 -4.5 L-2.2 -4.5 L2.2 0 L-2.2 4.5 L-4.5 4.5 Z" />
+              <animateMotion dur="3.6s" repeatCount="indefinite" rotate="auto" keyPoints="0;1;1" keyTimes="0;0.8;1" calcMode="linear" path="M44 92 Q66 40 112 58" />
+            </g>
+          </svg>
+        </div>
       </div>
     );
   return (
@@ -158,7 +163,7 @@ function render(v: Vals) {
                   <span>Cost down.</span>
                 </span>
               </h2>
-              <span className="wf-stamp">TRADE ONLY</span>
+              <span className="wf-stamp" data-own-entry="">TRADE ONLY</span>
             </div>
           </div>
           <div className="wf-tr">

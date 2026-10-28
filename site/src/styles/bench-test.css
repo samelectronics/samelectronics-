@@ -160,7 +160,9 @@ html[dir='rtl'] .bt-try > svg:last-child { transform: scaleX(-1); }
 .bt-rig::after { content: ''; position: absolute; inset: 7px; border-radius: 22px; pointer-events: none; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8), inset 0 -1px 0 rgba(0, 0, 0, .15); background: radial-gradient(circle at 18px 18px, #8E9298 2.4px, #E7E9EC 3px, transparent 4.6px), radial-gradient(circle at calc(100% - 18px) 18px, #8E9298 2.4px, #E7E9EC 3px, transparent 4.6px), radial-gradient(circle at 18px calc(100% - 18px), #8E9298 2.4px, #E7E9EC 3px, transparent 4.6px), radial-gradient(circle at calc(100% - 18px) calc(100% - 18px), #8E9298 2.4px, #E7E9EC 3px, transparent 4.6px); }
 /* owner (28 Oct): the show plays on its own clock, so the section no longer needs a long held scroll; the price lives on
    the bill (bigger), and the two actions are the site's standard full-size buttons */
-.bt { height: auto !important; min-height: calc(72px + 828px * var(--sc, 1) + 26vh); }
+/* R8 · held again: the rig stops in full view (sticky, with a yellow margin under the buttons) and scroll plays the test */
+.bt { height: calc(72px + 828px * var(--sc, 1) + 64px + 190vh) !important; min-height: 0 !important; }
+.bt-pin { height: calc(72px + 828px * var(--sc, 1) + 64px) !important; }
 .bt-ptag { display: none !important; }
 .bt-acts { display: flex; flex-wrap: wrap; gap: 12px !important; margin-top: 18px; }
 .bt-how, .bt-try { height: 52px !important; padding: 0 22px !important; border-radius: 12px !important; font: 600 16px Inter, sans-serif !important; gap: 10px !important; }
