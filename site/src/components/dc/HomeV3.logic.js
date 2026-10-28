@@ -8,6 +8,7 @@ import { shopStatus } from '@/lib/shopStatus';
 import { jumpTo } from '@/lib/jumpScroll'; // R6 Part B: logo, nav links, hours pill: fast jumps that never get held
 import { site as SITE } from '@/content/facts';
 import { fallbackAnswer, emoteFor, isArabic } from '@/components/samsoom/brain';
+import { store, get as getStore } from '@/lib/store'; // P1: one cart for every page (kept on this device)
 
 // R6 Part E: quality names come from the Excel (window.SE_DATA.gradeNames); read lazily so it also works before data loads
 const GN = new Proxy({}, { get: (_, k) => ((typeof window !== 'undefined' && window.SE_DATA && window.SE_DATA.gradeNames) || {})[k] });
@@ -33,6 +34,7 @@ class Component extends DCLogic {
     // G9: re-render the parts that depend on the language (switch state) when it changes.
     this.onLang = (e) => this.setState({ lang: e.detail }); window.addEventListener('se:lang', this.onLang); if (window.seI18n && window.seI18n.lang() === 'ar') this.setState({ lang: 'ar' });
     this.setState(this.ext);
+    this.setState({ cart: getStore().cart }); this.onStore = (e) => this.setState({ cart: e.detail.cart }); window.addEventListener('se:store', this.onStore);
     this.offIO = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) e.target.removeAttribute('data-off'); else e.target.setAttribute('data-off', ''); }), { rootMargin: '150px 0px' });
     this.offSeen = new WeakSet(); const scan = () => { document.querySelectorAll('section, footer').forEach((el) => { if (!this.offSeen.has(el)) { this.offSeen.add(el); el.setAttribute('data-off', ''); this.offIO.observe(el); } }); };
     scan(); this.offIv = setInterval(scan, 3000);
@@ -68,7 +70,7 @@ class Component extends DCLogic {
     setTimeout(() => [this.railRef, this.offerRef, this.storyRef, ...(this.extraObs || [])].forEach((r) => r.current && this.io.observe(r.current)), 300);
     try { document.fonts && document.fonts.load('700 20px "Space Grotesk"').then(() => { if (!this.dead) { this._hl = {}; this.forceUpdate(); } }); } catch (e) {}
   }
-  componentWillUnmount() { this.secMO && this.secMO.disconnect(); this.gIO && this.gIO.disconnect(); window.removeEventListener('se:lang', this.onLang); this.dead = true; clearInterval(this._reelSync); this._reelRaf && this._reelRaf(); if (this._reelOnStart) document.removeEventListener('animationstart', this._reelOnStart, true); this._reelVio && this._reelVio.disconnect(); cancelAnimationFrame(this.reelRAF); this.reelIO && this.reelIO.disconnect(); [this.dIv, this.t, this.buyIv, this.offIv].forEach(clearInterval); this.offIO && this.offIO.disconnect(); this.busOff && this.busOff(); window.removeEventListener('keydown', this.onKey); ['se:cart', 'se:flash', 'se:go', 'se:fmp', 'se:chat', 'se:search'].forEach((n) => window.removeEventListener(n, this.bus)); this.playIO && this.playIO.disconnect(); if (this._kfEl) this._kfEl.remove(); clearTimeout(this.toastT2); clearTimeout(this.hideT); clearTimeout(this.toastT); window.removeEventListener('scroll', this.onScroll); window.removeEventListener('resize', this.onScroll); this.io && this.io.disconnect(); }
+  componentWillUnmount() { window.removeEventListener('se:store', this.onStore); this.secMO && this.secMO.disconnect(); this.gIO && this.gIO.disconnect(); window.removeEventListener('se:lang', this.onLang); this.dead = true; clearInterval(this._reelSync); this._reelRaf && this._reelRaf(); if (this._reelOnStart) document.removeEventListener('animationstart', this._reelOnStart, true); this._reelVio && this._reelVio.disconnect(); cancelAnimationFrame(this.reelRAF); this.reelIO && this.reelIO.disconnect(); [this.dIv, this.t, this.buyIv, this.offIv].forEach(clearInterval); this.offIO && this.offIO.disconnect(); this.busOff && this.busOff(); window.removeEventListener('keydown', this.onKey); ['se:cart', 'se:flash', 'se:go', 'se:fmp', 'se:chat', 'se:search'].forEach((n) => window.removeEventListener(n, this.bus)); this.playIO && this.playIO.disconnect(); if (this._kfEl) this._kfEl.remove(); clearTimeout(this.toastT2); clearTimeout(this.hideT); clearTimeout(this.toastT); window.removeEventListener('scroll', this.onScroll); window.removeEventListener('resize', this.onScroll); this.io && this.io.disconnect(); }
   TYPED = ['iPhone 15 Pro screen', 'Galaxy A54 battery', 'SM-A546 back cover', 'Redmi Note 13 charging flex', 'Pixel 8 Pro camera', 'Honor Magic6 Pro frame', 'Tecno Camon 30 screen', 'A2849 battery', 'Vivo V30 back glass', 'POCO X6 Pro charging port', 'Infinix Note 40 screen', 'Huawei P60 Pro camera'];
   measure() {
     const de = document.documentElement, vw = de.clientWidth || window.innerWidth, vh = window.innerHeight, z = Math.max(0.5, vw / 1440);
@@ -241,7 +243,7 @@ class Component extends DCLogic {
   addToCart(id, ev) {
     const D = this.state.data, p = D && D.products.find((x) => x.id === id); if (!p) return;
     if (ev && ev.clientX != null) this.spark(ev.clientX, ev.clientY);
-    this.setState((s) => { const c = s.cart || [], ex = c.find((x) => x.id === id); return { cart: ex ? c.map((x) => (x.id === id ? { ...x, qty: x.qty + 1 } : x)) : [...c, { id, qty: 1 }], cartPop: true, toast: 'Added · ' + p.title + ' · ' + p.grade }; });
+    store.add(id); this.setState({ cartPop: true, toast: 'Added · ' + p.title + ' · ' + p.grade });
     setTimeout(() => this.setState({ cartPop: false }), 320); clearTimeout(this.toastT2); this.toastT2 = setTimeout(() => this.setState({ toast: '' }), 2600);
   }
   spark(x, y) { const id = Date.now() + Math.random(); this.setState((s) => ({ sparks: [...(s.sparks || []), { id, x, y }] })); setTimeout(() => this.setState((s) => ({ sparks: (s.sparks || []).filter((k) => k.id !== id) })), 700); }
@@ -478,7 +480,7 @@ class Component extends DCLogic {
     const scope = lvl === 1 ? P : lvl === 2 ? bProds : lvl === 3 ? mp : fgr, count = scope.length, stockU = units(scope);
     const pathTxt = [bName, mObj && mObj.name, cObj && cObj.name].filter(Boolean).join(' › ') || 'All parts';
     const goShop = (gp) => { this.setState({ fmpOpen: false }); this.flash('Shop · ' + pathTxt + (gp ? ' · ' + GN[gp.grade] + ' highlighted' : '') + ' · ' + count + ' results (Shop page comes in Part C).'); };
-    const fmp = { init: this._fmpInit = (this._fmpInit && this._fmpInit.b === fb && this._fmpInit.m === fm && this._fmpInit.c === fc && this._fmpInit.q === s.fmpQ ? this._fmpInit : { b: fb, m: fm, c: fc, q: s.fmpQ || '' }), shop: this._fmpShop = this._fmpShop || ((sum, n) => { this.setState({ fmpOpen: false }); this.flash('Shop · ' + sum + ' · ' + n + ' results.'); }), open: !!s.fmpOpen, s1: lvl === 1, s2: lvl === 2, s3: lvl === 3, s4: lvl === 4, path, q: s.fmpQ || '', setQ: (e) => this.setState({ fmpQ: e.target.value }), close: () => this.setState({ fmpOpen: false }),
+    const fmp = { init: this._fmpInit = (this._fmpInit && this._fmpInit.b === fb && this._fmpInit.m === fm && this._fmpInit.c === fc && this._fmpInit.q === s.fmpQ ? this._fmpInit : { b: fb, m: fm, c: fc, q: s.fmpQ || '' }), shop: this._fmpShop = this._fmpShop || ((sum, n, sel) => { this.setState({ fmpOpen: false }); this.openShop(sel); }), open: !!s.fmpOpen, s1: lvl === 1, s2: lvl === 2, s3: lvl === 3, s4: lvl === 4, path, q: s.fmpQ || '', setQ: (e) => this.setState({ fmpQ: e.target.value }), close: () => this.setState({ fmpOpen: false }),
       slide: (lvl % 2 ? 'fmSlideA' : 'fmSlideB') + ' .3s cubic-bezier(.2,.8,.2,1) both', brands: brandsF,
       series: [{ name: 'All', id: null }, ...SER.map((x) => ({ name: x, id: x }))].map((x) => ({ name: x.name, bg: ser === x.id ? '#F7C032' : 'rgba(255,255,255,.07)', ink: ser === x.id ? '#26282B' : '#FFFFFF', pick: () => this.setState({ fmpSer: x.id }) })),
       quick: (fb ? bm.slice(0, 2) : []).map((m, i) => ({ t: (i ? 'Most searched · ' : 'Recently viewed · ') + m.name, pick: () => this.setState({ fmpM: m.id }) })),
@@ -492,7 +494,7 @@ class Component extends DCLogic {
       shop: () => goShop(null) };
     // cart
     const cart = (s.cart || []).filter((c) => P.find((p) => p.id === c.id));
-    const cartItems = cart.map((c) => { const p = P.find((x) => x.id === c.id); return { kind: KIND[p.category], title: p.title, grade: GN[p.grade], unit: 'AED ' + fmt(p.retail_price), qty: c.qty, line: 'AED ' + fmt(p.retail_price * c.qty), inc: () => this.setState((st) => ({ cart: st.cart.map((x) => (x.id === c.id ? { ...x, qty: x.qty + 1 } : x)) })), dec: () => this.setState((st) => ({ cart: st.cart.map((x) => (x.id === c.id ? { ...x, qty: x.qty - 1 } : x)).filter((x) => x.qty > 0) })) }; });
+    const cartItems = cart.filter((c) => P.some((x) => x.id === c.id)).map((c) => { const p = P.find((x) => x.id === c.id); return { kind: KIND[p.category], title: p.title, grade: GN[p.grade], unit: 'AED ' + fmt(p.retail_price), qty: c.qty, line: 'AED ' + fmt(p.retail_price * c.qty), inc: () => store.qty(c.id, c.qty + 1), dec: () => store.qty(c.id, c.qty - 1) }; });
     const sub = cart.reduce((a, c) => a + P.find((p) => p.id === c.id).retail_price * c.qty, 0);
     // chat
     const msgs = s.chatMsgs || [{ t: 'Hi, I’m Samsoom. Ask me about a part, a grade, shipping, or whether the shop is open right now.' }];
@@ -637,6 +639,8 @@ class Component extends DCLogic {
     return { sp, openSearch: () => this.openSearch() };
   }
   // Issue 6: the Model File left the home page; "Brands & models" opens Find My Part (browsing by model lives there).
+  // P2: Find My Part's "show results" opens the shop filtered to the choice (brand, models, parts, quality, manufacturer)
+  openShop(sel) { const u = new URLSearchParams(); if (sel) { if (sel.b) u.set('brand', sel.b); if (sel.ms && sel.ms.length) u.set('model', sel.ms.join(',')); if (sel.ps && sel.ps.length) u.set('part', sel.ps.join(',')); if (sel.qu && sel.qu.length) u.set('quality', sel.qu.join(',')); if (sel.mf && sel.mf.length) u.set('maker', sel.mf.join(',')); if (sel.dev) u.set('device', sel.dev); } const q = u.toString(); location.href = '/shop' + (q ? '?' + q : ''); }
   // G17: any other target that isn't on this page opens the "Coming soon" card instead of doing nothing.
   go(id) { if (id === 'models') return this.openFmpAt(); const el = document.getElementById(id); if (el) jumpTo(el.getBoundingClientRect().top + window.scrollY - 74); else window.dispatchEvent(new CustomEvent('se:soon', { detail: {} })); }
   renderVals() {

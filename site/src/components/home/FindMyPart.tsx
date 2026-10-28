@@ -50,7 +50,7 @@ const CHECK = 'M5 12.5l4.5 4.5L19 7.5';
 const k = (n: number) => (n >= 1000 ? (n / 1000).toFixed(1).replace('.0', '') + 'k' : String(n));
 const toggle = (a: string[], x: string) => (a.includes(x) ? a.filter((y) => y !== x) : [...a, x]);
 
-export default function FindMyPart({ open, init, onClose, onShop }: { open: boolean; init: Init; onClose: () => void; onShop: (summary: string, count: number) => void }) {
+export default function FindMyPart({ open, init, onClose, onShop }: { open: boolean; init: Init; onClose: () => void; onShop: (summary: string, count: number, sel?: { b: string | null; ms: string[]; ps: string[]; qu: string[]; mf: string[]; dev: string | null }) => void }) {
   const [D, setD] = useState<Data | null>(null);
   const [parts, setParts] = useState<Named[]>([]);
   const [cat, setCat] = useState('parts');
@@ -124,7 +124,7 @@ export default function FindMyPart({ open, init, onClose, onShop }: { open: bool
   const canNext = step === 0 ? !!b : step === 1 ? !!dev : step === 2 ? ms.length > 0 : true;
   const go = (n: number) => setStep(Math.max(0, Math.min(4, n)));
   const summary = [brand && brand.name, dev && T(DEV.find((d) => d.id === dev)?.name || ''), ms.length ? (ms.length === 1 ? D?.models.find((m) => m.id === ms[0])?.name : ms.length + ' ' + T('models')) : null, ps.length ? (ps.length === 1 ? T(pName(ps[0])) : ps.length + ' ' + T('parts')) : null].filter(Boolean).join(ar ? ' ‹ ' : ' › ');
-  const shop = () => onShop(summary || T('All parts'), result.length);
+  const shop = () => onShop(summary || T('All parts'), result.length, { b, ms, ps, qu, mf, dev });
   const c0 = CATS.find((c) => c.id === cat) || CATS[0];
 
   return (

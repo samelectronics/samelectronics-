@@ -39,6 +39,7 @@
   "exclude": [
     "node_modules",
     "public",
-    "scripts/import-catalog.ts"
+    "scripts/import-catalog.ts",
+    "supabase"
   ]
 }
