@@ -31,7 +31,7 @@ async function seed() {
   const pw = await hash('demo1234'), now = Date.now();
   const S = (email: string, name: string, role: Staff['role'], title: string, photo?: string): Staff & { pw: string } => ({ id: id('s'), email, name, role, title, photo, branch: 'Dubai · Deira', active: true, perms: ROLE_PERMS[role], joined: now - 864e5 * 400, pw });
   d.staff = [
-    S('owner@sam.demo', 'Tarek (demo)', 'owner', 'Founder & owner', '/assets/team/tarek.webp'),
+    S('owner@sam.demo', 'Tarek (demo)', 'owner', 'Founder & owner'),
     S('manager@sam.demo', 'Store manager (demo)', 'manager', 'Store manager'),
     S('sales@sam.demo', 'Sales desk (demo)', 'sales', 'Sales'),
     S('tech@sam.demo', 'Technician (demo)', 'technician', 'Repair technician'),
