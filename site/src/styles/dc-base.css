@@ -760,3 +760,23 @@ h2[data-se-rise][data-se-on] { animation-name: seSecTitle; animation-duration: .
    the figures and the buttons sit at the same height in all three */
 .wwo-boxes [data-w='Rp'], .wwo-boxes [data-w='Wp'], .wwo-boxes [data-w='Gp'] { min-height: 3em; line-height: 1.5 !important; }
 .wwo-boxes h3 { min-height: 2.04em; }
+/* R8 · section materials (src/components/home/SectionLife.tsx texture()), under the content like the hero's */
+.se-tex { position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
+.se-tex i { position: absolute; display: block; }
+.se-tex-dark .pl { inset: 0; opacity: .55; background-image: linear-gradient(45deg, rgba(255, 255, 255, .035) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, .035) 75%), linear-gradient(45deg, rgba(255, 255, 255, .035) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, .035) 75%); background-size: 6px 6px; background-position: 0 0, 3px 3px; -webkit-mask-image: linear-gradient(90deg, #000, transparent 50%); mask-image: linear-gradient(90deg, #000, transparent 50%); }
+.se-tex-dark.r .pl { -webkit-mask-image: linear-gradient(270deg, #000, transparent 50%); mask-image: linear-gradient(270deg, #000, transparent 50%); }
+.se-tex-dark .st { left: 30%; top: -30%; width: 240px; height: 160%; transform: rotate(28deg); background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .045), transparent); }
+.se-tex-dark.r .st { left: auto; right: 30%; transform: rotate(-28deg); }
+.se-tex-dark .led { left: 10%; top: 20%; width: 620px; height: 620px; margin: -310px 0 0 -310px; border-radius: 50%; background: radial-gradient(closest-side, rgba(247, 192, 50, .11), rgba(247, 192, 50, 0)); animation: seLed 22s ease-in-out infinite alternate; }
+.se-tex-dark.r .led { left: 90%; animation-direction: alternate-reverse; }
+@keyframes seLed { 0% { transform: translate(0, 0); } 50% { transform: translate(28vw, 30%); } 100% { transform: translate(8vw, 60%); } }
+.se-tex-yel .pl { inset: 0; background-image: repeating-linear-gradient(0deg, rgba(255, 255, 255, .07) 0 1px, transparent 1px 4px); }
+.se-tex-yel .lt { left: 50%; top: -10%; width: 70%; height: 80%; margin-left: -35%; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0)); }
+.se-tex-light .pl { inset: 0; opacity: .9; background-image: repeating-linear-gradient(90deg, rgba(38, 40, 43, .014) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(255, 255, 255, .5) 0 1px, transparent 1px 7px); }
+.se-tex-light .lt { left: 50%; top: -20%; width: 80%; height: 70%; margin-left: -40%; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 255, 255, .7), rgba(255, 255, 255, 0)); }
+@media (prefers-reduced-motion: reduce) { .se-tex-dark .led { animation: none; } }
+/* R8 · the progress line glows again and ends in a circuit pad: a soft moving light runs along the filled part, and the
+   head is a small ringed pad with a yellow core (the "Urgent 2" flat line is lifted) */
+[data-prog='bar'] { background-image: linear-gradient(90deg, #F7C032 0%, #F7C032 35%, #FFF1C2 47%, #F7C032 60%, #F7C032 100%) !important; background-size: 200px 2px !important; animation: seFlowBg 1.6s linear infinite !important; box-shadow: 0 0 8px rgba(247, 192, 50, .75), 0 0 2px rgba(247, 192, 50, .9) !important; }
+[data-prog='dot'] { display: block !important; top: -4px !important; width: 10px !important; height: 10px !important; margin-inline-start: -5px !important; box-sizing: border-box; background: #26282B !important; border: 2px solid #F7C032; box-shadow: 0 0 10px 2px rgba(247, 192, 50, .65), inset 0 0 0 2px #F7C032 !important; }
+html[dir='rtl'] [data-prog='bar'] { background-image: linear-gradient(270deg, #F7C032 0%, #F7C032 35%, #FFF1C2 47%, #F7C032 60%, #F7C032 100%) !important; }

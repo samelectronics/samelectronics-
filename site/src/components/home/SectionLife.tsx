@@ -61,6 +61,19 @@ function gutter(sec: HTMLElement, gw: number, side: 1 | -1, t: string, s0: numbe
   sec.prepend(svg);
 }
 
+// owner (R8): every section gets a quiet material under its content, the way the hero has one: graphite sections a fine
+// diamond plate that fades out from one side, a diagonal light streak and a slow drifting yellow LED glow; yellow sections
+// fine horizontal scan lines and a soft light; light sections brushed aluminium with a soft light from above. Low enough
+// that it reads as material, never as a pattern. Placed under everything (the section is its own stacking context).
+const NOTEX = new Set(['finale', 'teardown', 'top']);
+function texture(sec: HTMLElement, t: 'dark' | 'light' | 'yel', k: number) {
+  if (NOTEX.has(sec.id) || sec.querySelector(':scope > .se-tex')) return;
+  const d = document.createElement('div'); d.className = 'se-tex se-tex-' + t + (k % 2 ? ' r' : ''); d.setAttribute('aria-hidden', 'true');
+  d.innerHTML = t === 'dark' ? '<i class="pl"></i><i class="st"></i><i class="led"></i>' : '<i class="pl"></i><i class="lt"></i>';
+  if (getComputedStyle(sec).position === 'static') sec.style.position = 'relative';
+  sec.style.isolation = 'isolate'; sec.prepend(d);
+}
+
 function markEntries(sec: HTMLElement) {
   if (sec.dataset.seLife) return; sec.dataset.seLife = '1';
   const mark = (e: Element | null, i: number) => { if (!e || (e as HTMLElement).dataset.seRise != null || e.closest('[data-own-entry]')) return; const cs = getComputedStyle(e); if (cs.animationName !== 'none' || cs.position === 'fixed' || cs.opacity === '0' || cs.display === 'none' || (cs.position === 'absolute' && !(e as HTMLElement).innerText)) return; /* never wake hidden decor layers */ (e as HTMLElement).dataset.seRise = ''; (e as HTMLElement).style.setProperty('--i', String(i)); };
@@ -87,7 +100,7 @@ export default function SectionLife() {
       // so long sections never finish their entrance off-screen; fully out of view resets it so it plays again next time
       eio = eio || new IntersectionObserver((es) => es.forEach((e) => { const el = e.target as HTMLElement; if (e.isIntersecting && e.intersectionRatio > 0.12) el.setAttribute('data-se-on', ''); else if (!e.isIntersecting) el.removeAttribute('data-se-on'); }), { threshold: [0, 0.12, 0.3] });
       secs.forEach((sec, k) => {
-        markEntries(sec); io!.observe(sec); sec.querySelectorAll('[data-se-rise]').forEach((el) => { if (!(el as HTMLElement).dataset.seObs) { (el as HTMLElement).dataset.seObs = '1'; eio!.observe(el); } });
+        markEntries(sec); io!.observe(sec); texture(sec, tone(sec), k); sec.querySelectorAll('[data-se-rise]').forEach((el) => { if (!(el as HTMLElement).dataset.seObs) { (el as HTMLElement).dataset.seObs = '1'; eio!.observe(el); } });
         if (window.innerWidth >= 1100 && GUT.has(sec.id) && !sec.querySelector(':scope > .se-gut') && !sec.querySelector('.se-cfield') && !sec.querySelector('.se-own-circ')) { const t = tone(sec), e = contentEdges(sec); if (getComputedStyle(sec).position === 'static') sec.style.position = 'relative'; if (TALL[sec.id]) TALL[sec.id].forEach((at, j) => gutter(sec, j % 2 ? e.r : e.l, j % 2 ? -1 : 1, t, 101 + k * 37 + j * 71, true, at));
           else { gutter(sec, e.l, 1, t, 101 + k * 37, k % 2 === 0); gutter(sec, e.r, -1, t, 207 + k * 53, k % 2 === 1); } }
       });

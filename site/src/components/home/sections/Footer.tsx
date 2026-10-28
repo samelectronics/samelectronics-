@@ -13,7 +13,7 @@ export default function Footer({ v }: { v: Vals }) {
       style={{
         position: 'relative',
         overflow: 'hidden',
-        background: 'linear-gradient(180deg,#2E3033,#34363A)', /* owner (28 Oct): grey, not black; continues the finale */
+        background: 'radial-gradient(70% 120% at 50% 0%,rgba(255,255,255,.04),rgba(255,255,255,0) 60%),linear-gradient(180deg,#27292C,#2E3033 45%,#34363A)', /* R8: the finale's floor runs on into the footer (grey, not black) */
         color: '#FFFFFF',
         padding: '72px clamp(20px,4vw,64px) 28px',
       }}
