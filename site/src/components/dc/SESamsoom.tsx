@@ -673,6 +673,14 @@ function render(v: Vals) {
                 {'\n        '}
               </div>
               {'\n        '}
+              {v.chin ? (
+                <svg width="200" height="250" viewBox="0 0 200 250" style={{ position: 'absolute', left: 0, top: 0, overflow: 'visible', transformOrigin: '52px 140px', animation: v.chinAnim }} fill="none" strokeLinecap="round" aria-hidden="true">
+                  <path d="M52 140 C 44 176, 78 178, 88 156" stroke="#26282B" strokeWidth="6" />
+                  <path d="M52 140 C 44 176, 78 178, 88 156" stroke="#8C9096" strokeWidth="1.6" strokeDasharray="2 3" />
+                  <circle cx="90" cy="150" r="8" fill="url(#smChinG)" />
+                  <defs><radialGradient id="smChinG" cx="35%" cy="30%" r="70%"><stop offset="0" stopColor="#6E7378" /><stop offset=".7" stopColor="#26282B" /></radialGradient></defs>
+                </svg>
+              ) : null}
               {v.zzz ? (
                 <>
                   <span

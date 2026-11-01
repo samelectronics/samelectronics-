@@ -155,13 +155,14 @@ export default function Nav({ v }: { v: Vals }) {
           <LangMenu />
           {'\n      '}
           {/* R9: the ? calls Samsoom back on any page (tour of this page, language, chat) */}
-          <button type="button" className="se-help" data-tour="help" title="Help" aria-label="Help: ask Samsoom" onClick={() => window.dispatchEvent(new CustomEvent('se:help'))}>
+          <button type="button" className="se-help se-ico" data-tour="help" title="Help" aria-label="Help: ask Samsoom" onClick={() => window.dispatchEvent(new CustomEvent('se:help'))}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9.2" /><path d="M9.4 9.3a2.7 2.7 0 0 1 5.2 1c0 1.8-2.6 2.3-2.6 4" /><circle cx="12" cy="17.2" r=".6" fill="currentColor" /></svg>
           </button>
           {'\n      '}
           <button
             onClick={v.bench}
             title="My Bench"
+            className="se-ico"
             style={{ display: 'flex', border: 'none', background: 'none', padding: '4px', color: 'inherit', cursor: 'pointer' }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
@@ -175,6 +176,7 @@ export default function Nav({ v }: { v: Vals }) {
             data-tour="cart"
             onClick={v.openCart}
             title="Cart"
+            className="se-ico"
             style={{
               position: 'relative',
               display: 'flex',
@@ -211,7 +213,7 @@ export default function Nav({ v }: { v: Vals }) {
               opacity: '.7',
               cursor: 'pointer',
             }}
-            className={cx(undefined, 'scp-18367cd8')}
+            className={cx(undefined, 'scp-18367cd8 se-ico')}
           >
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
               <rect x="4" y="11" width="16" height="10" rx="2"></rect>

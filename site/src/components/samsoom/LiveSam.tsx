@@ -10,7 +10,8 @@ import { siteRaw } from '@/lib/catalog';
 
 const PLAYFUL = ['wave', 'happy', 'think', 'wink', 'kiss', 'celebrate', 'blush', 'dabke'];
 
-export default function LiveSam({ size = 64, mood = 'idle', play, rest: rest0, className }: { size?: number; mood?: string; play?: string; rest?: number; className?: string }) {
+// `pose` (R9 tour): a scripted pose such as 'pt-smile' held for as long as it is set (no random emotes); `pointA` aims the arm.
+export default function LiveSam({ size = 64, mood = 'idle', play, rest: rest0, className, pose, pointA }: { size?: number; mood?: string; play?: string; rest?: number; className?: string; pose?: string; pointA?: number }) {
   // the emotes and their pace are set in the Control Room (Site & Samsoom)
   const cfg = siteRaw<{ emotes?: string[]; rest?: number }>('samsoom', {}), rest = rest0 || cfg.rest || 2600;
   const [m, setM] = useState(play || mood), [look, setLook] = useState({ x: 0, y: 0 }), box = useRef<HTMLSpanElement>(null);
@@ -18,10 +19,10 @@ export default function LiveSam({ size = 64, mood = 'idle', play, rest: rest0, c
   cur.current = m;
   useEffect(() => {
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    const x = createScheduler({ onMood: setM, auto: !reduce, emotes: cfg.emotes && cfg.emotes.length ? cfg.emotes : PLAYFUL, rest });
+    const x = createScheduler({ onMood: setM, auto: !reduce && !pose, emotes: cfg.emotes && cfg.emotes.length ? cfg.emotes : PLAYFUL, rest });
     sch.current = x;
     return () => { x.stop(); sch.current = null; };
-  }, [rest]);
+  }, [rest, !!pose]);
   useEffect(() => { sch.current?.base(mood); }, [mood]);
   useEffect(() => { if (play) sch.current?.play(play); }, [play]);
   // the eyes follow the pointer while he rests (cheap: at most ~11 updates a second)
@@ -39,7 +40,7 @@ export default function LiveSam({ size = 64, mood = 'idle', play, rest: rest0, c
   }, []);
   return (
     <span ref={box} className={className} style={{ display: 'inline-grid', placeItems: 'center' }}>
-      <SESamsoom mood={m} size={size} lookX={look.x} lookY={look.y} />
+      <SESamsoom mood={pose || m} size={size} lookX={pose ? 0 : look.x} lookY={pose ? 0 : look.y} pointA={pointA} />
     </span>
   );
 }

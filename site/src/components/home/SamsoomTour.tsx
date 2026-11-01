@@ -21,19 +21,21 @@ const cfg = () => siteRaw<{ tour?: boolean; greeting?: string; welcome?: string 
 const T = (s: string) => (typeof window !== 'undefined' && window.seI18n ? window.seI18n.t(s) : s);
 type Step = { sel?: string; el?: HTMLElement; mood: string; t: string; d: string; open?: string };
 const NAV: Step[] = [
-  { sel: '[data-tour="fmp"]', mood: 'think', t: 'Find My Part', d: 'Pick a brand, a model and a part: every grade we have, in seconds.' },
-  { sel: '[data-tour="nav"]', mood: 'happy', t: 'Jump anywhere', d: 'The shop, repairs, trade prices and how to reach us.' },
-  { sel: '.se-lm', mood: 'wave', t: 'Your language', d: 'Eight languages. Pick yours and the whole site follows.', open: '.se-lm-btn' },
-  { sel: '[data-tour="hours"]', mood: 'wink', t: 'Open right now?', d: 'Live opening hours, in Dubai time.' },
-  { sel: '[data-tour="cart"]', mood: 'happy', t: 'Your cart', d: 'Add parts as you browse; we confirm stock and price on WhatsApp.' },
-  { sel: '[data-tour="menu"]', mood: 'think', t: 'The whole site', d: 'Every page and section, in one menu.' },
+  { sel: '[data-tour="fmp"]', mood: 'pt-smile', t: 'Find My Part', d: 'Pick a brand, a model and a part: every grade we have, in seconds.' },
+  { sel: '[data-tour="nav"]', mood: 'pt-happy', t: 'Jump anywhere', d: 'The shop, repairs, trade prices and how to reach us.' },
+  { sel: '.se-lm', mood: 'pt-blush', t: 'Your language', d: 'Pick your language and the whole site follows.', open: '.se-lm-btn' },
+  { sel: '[data-tour="hours"]', mood: 'pt-wink', t: 'Open right now?', d: 'Live opening hours, in Dubai time.' },
+  { sel: '[data-tour="cart"]', mood: 'pt-smile', t: 'Your cart', d: 'Add parts as you browse; we confirm stock and price on WhatsApp.' },
+  { sel: '[data-tour="menu"]', mood: 'pt-think', t: 'The whole site', d: 'Every page and section, in one menu.' },
 ];
 const END: Step[] = [
-  { sel: '[data-tour="help"]', mood: 'wave', t: 'Need me again?', d: 'Tap the ? at the top, on any page, and I will show you around.' },
-  { sel: '[data-tour="samsoom"]', mood: 'celebrate', t: 'And me!', d: 'Ask me about any part, grade or delivery, any time. I am always here.' },
+  { sel: '[data-tour="help"]', mood: 'pt-blush', t: 'Need me again?', d: 'Tap the ? at the top, on any page, and I will show you around.' },
+  { sel: '[data-tour="samsoom"]', mood: 'pt-wow', t: 'And me!', d: 'Ask me about any part, grade or delivery, any time. I am always here.' },
 ];
 // "Choose your language" in each language, cycled so everyone recognises theirs
 const CHOOSE: [Lang, string][] = [['en', 'Choose your language'], ['ar', 'اختر لغتك'], ['fr', 'Choisissez votre langue'], ['hi', 'अपनी भाषा चुनें'], ['fa', 'زبان خود را انتخاب کنید'], ['ru', 'Выберите язык'], ['es', 'Elige tu idioma'], ['ur', 'اپنی زبان منتخب کریں']];
+// page steps name a mood; on the walk each one becomes a pointing pose with the matching face
+const POSE: Record<string, string> = { happy: 'pt-happy', think: 'pt-think', wave: 'pt-smile', wink: 'pt-wink', blush: 'pt-blush', found: 'pt-wow', celebrate: 'pt-wow', idle: 'pt-smile' };
 const RTL = (l: string) => l === 'ar' || l === 'fa' || l === 'ur';
 
 const visible = (el: Element | null): el is HTMLElement => {
@@ -45,7 +47,7 @@ function buildSteps(): Step[] {
   const home = location.pathname === '/';
   const page = Array.from(document.querySelectorAll<HTMLElement>('[data-tour-step]'))
     .sort((a, b) => +(a.dataset.tourStep || 0) - +(b.dataset.tourStep || 0))
-    .map((el) => ({ el, mood: el.dataset.tourMood || 'happy', t: el.dataset.tourTitle || '', d: el.dataset.tourText || '' }));
+    .map((el) => ({ el, mood: POSE[el.dataset.tourMood || ''] || (el.dataset.tourMood?.startsWith('pt-') ? el.dataset.tourMood : 'pt-smile'), t: el.dataset.tourTitle || '', d: el.dataset.tourText || '' }));
   const nav = (home ? NAV : NAV.filter((s) => s.sel === '[data-tour="fmp"]' || s.sel === '[data-tour="cart"]')).filter((s) => visible(document.querySelector(s.sel!)) && (s.sel !== '[data-tour="nav"]' || !!document.querySelector('[data-tour="nav"] > a')));
   const end = END.filter((s) => visible(document.querySelector(s.sel!)));
   return home ? [...nav, ...page, ...end] : [...page, ...nav, ...end];
@@ -54,7 +56,7 @@ function buildSteps(): Step[] {
 export default function SamsoomTour() {
   const [phase, setPhase] = useState<'off' | 'lang' | 'hello' | 'recall' | 'walk' | 'bye'>('off'), [i, setI] = useState(0), [box, setBox] = useState<DOMRect | null>(null);
   const [steps, setSteps] = useState<Step[]>([]), [ci, setCi] = useState(0), [, force] = useReducer((n: number) => n + 1, 0);
-  const done = () => { try { localStorage.setItem('se-tour', '1'); } catch { /* private mode */ } };
+  const done = () => { try { localStorage.setItem('se-tour2', '1'); } catch { /* private mode */ } };
   const closeLang = () => { const m = document.querySelector('.se-lm.open .se-lm-btn') as HTMLElement | null; if (m) m.click(); };
   const bye = useCallback((ms = 2800) => { closeLang(); done(); setPhase('bye'); window.setTimeout(() => setPhase('off'), ms); }, []);
   const walk = () => { const s = buildSteps(); if (!s.length) return bye(); setSteps(s); setI(0); setPhase('walk'); };
@@ -67,16 +69,16 @@ export default function SamsoomTour() {
     const help = () => { closeLang(); setPhase('recall'); };
     window.addEventListener('se:help', help);
     (window as unknown as { seTour?: () => void }).seTour = () => setPhase('lang');
-    let seen = true, chose = true; try { seen = !!localStorage.getItem('se-tour'); chose = !!localStorage.getItem('se-lang'); } catch { /* blocked */ }
+    let seen = true, chose = true; try { seen = !!localStorage.getItem('se-tour2'); chose = !!localStorage.getItem('se-lang'); } catch { /* blocked */ }
     let iv = 0;
     if (new URLSearchParams(location.search).get('tour') === '1') seen = false; // the Control Room's preview
     else if (cfg().tour === false) seen = true;
     if (!seen) {
-      let t = 0; iv = window.setInterval(() => {
+      let t = 0; iv = window.setInterval(() => {  // ~1s after the page is ready
         const busy = document.documentElement.classList.contains('se-boot') || document.querySelector('.lp, .se-net-veil, .rp-full, .vs-full') || !document.querySelector('[data-tour="cart"]');
         if (busy) { t = 0; return; }
-        if ((t += 500) >= 3000) { window.clearInterval(iv); setPhase(chose ? 'hello' : 'lang'); }
-      }, 500);
+        if ((t += 250) >= 1000) { window.clearInterval(iv); setPhase(chose ? 'hello' : 'lang'); }
+      }, 250);
     }
     return () => { window.clearInterval(iv); window.removeEventListener('se:help', help); };
   }, []);
@@ -137,8 +139,8 @@ export default function SamsoomTour() {
               <b>{T('Welcome to Sam Electronics!')}</b>
               <p>{cfg().greeting ? T(cfg().greeting!) : T('I’m Samsoom, your parts assistant. Want a quick walk around? It takes 20 seconds.')}</p>
               <span className="st-acts">
-                <button type="button" className="st-go" onClick={walk}>{T('Show me around')}</button>
-                <button type="button" className="st-skip" onClick={() => bye()}>{T('Skip')}</button>
+                <button type="button" className="st-btn st-go" onClick={walk}>{T('Show me around')}</button>
+                <button type="button" className="st-btn st-grey" onClick={() => bye()}>{T('Skip')}</button>
               </span>
             </>
           ) : phase === 'recall' ? (
@@ -146,10 +148,10 @@ export default function SamsoomTour() {
               <b>{T('You called me?')}</b>
               <p>{T('I’m here to help. What would you like?')}</p>
               <span className="st-acts st-acts4">
-                <button type="button" className="st-go" onClick={walk}>{T('Show me this page')}</button>
-                <button type="button" className="st-back" onClick={() => setPhase('lang')}>{T('Change language')}</button>
-                <button type="button" className="st-back" onClick={() => { setPhase('off'); window.dispatchEvent(new CustomEvent('se:chat', { detail: {} })); }}>{T('Chat with me')}</button>
-                <button type="button" className="st-skip" onClick={() => setPhase('off')}>{T('Close')}</button>
+                <button type="button" className="st-btn st-go" onClick={walk}>{T('Show me this page')}</button>
+                <button type="button" className="st-btn st-dark" onClick={() => { setPhase('off'); window.dispatchEvent(new CustomEvent('se:chat', { detail: {} })); }}>{T('Chat with me')}</button>
+                <button type="button" className="st-btn st-dark" onClick={() => setPhase('lang')}>{T('Change language')}</button>
+                <button type="button" className="st-btn st-grey" onClick={() => setPhase('off')}>{T('Close')}</button>
               </span>
             </>
           ) : (
@@ -163,24 +165,27 @@ export default function SamsoomTour() {
     );
   }
   const s = steps[i]; if (!s) return null;
-  const vw = window.innerWidth, vh = window.innerHeight;
+  const vw = window.innerWidth, vh = window.innerHeight, rtl = document.documentElement.dir === 'rtl';
   const pad = 8, r = box, hole = r ? { left: r.left - pad, top: r.top - pad, width: r.width + pad * 2, height: r.height + pad * 2 } : null;
   // the bubble sits under the spot (or above it near the bottom), kept inside the screen with a 16px margin
-  const bw = Math.min(340, vw - 32), below = !r || r.bottom + 220 < vh, bx = r ? Math.min(vw - bw - 16, Math.max(16, r.left + r.width / 2 - bw / 2)) : (vw - bw) / 2, by = r ? (below ? r.bottom + pad + 16 : Math.max(16, r.top - pad - 16 - 190)) : vh / 2 - 90;
+  const bw = Math.min(360, vw - 32), below = !r || r.bottom + 230 < vh, bx = r ? Math.min(vw - bw - 16, Math.max(16, r.left + r.width / 2 - bw / 2)) : (vw - bw) / 2, by = r ? (below ? r.bottom + pad + 16 : Math.max(16, r.top - pad - 16 - 200)) : vh / 2 - 90;
+  // he points at the spot: the arm angle comes from where the spot is, seen from him; if it is on his left he turns around
+  const sx = rtl ? bx + bw - 50 : bx + 50, sy = by + 50, dx = r ? r.left + r.width / 2 - sx : 0, dy = r ? r.top + r.height / 2 - sy : -1, flip = dx < -20;
+  const ang = Math.max(-172, Math.min(-35, (Math.atan2(-Math.abs(dx), dy) * 180) / Math.PI));
   return (
     <div className="st-walk" role="dialog" aria-modal="true" aria-label={T(s.t)}>
       {hole ? <span className="st-hole" style={hole} /> : <span className="st-dim" />}
       <div className="st-bub" style={{ left: bx, top: by, width: bw }}>
-        <span className="st-bsam"><LiveSam size={54} mood="idle" play={s.mood} /></span>
+        <button type="button" className="st-x" onClick={() => bye()}>{T('Skip')} <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg></button>
+        <span className="st-bsam" style={flip ? { transform: 'scaleX(-1)' } : undefined}><LiveSam size={58} pose={s.mood} pointA={Math.round(ang)} /></span>
         <span className="st-btx" key={i}>
           <small>{i + 1} / {steps.length}</small>
           <b>{T(s.t)}</b>
           <span>{T(s.d)}</span>
-          <span className="st-bacts">
-            <button type="button" className="st-skip" onClick={() => bye()}>{T('Skip')}</button>
-            {i > 0 ? <button type="button" className="st-back" onClick={() => setI(i - 1)}>{T('Back')}</button> : null}
-            <button type="button" className="st-go" onClick={next}>{i === steps.length - 1 ? T('Done') : T('Next')}</button>
-          </span>
+        </span>
+        <span className="st-bacts">
+          <button type="button" className="st-btn st-grey" disabled={i === 0} onClick={() => setI(Math.max(0, i - 1))}>{T('Back')}</button>
+          <button type="button" className="st-btn st-dark" onClick={next}>{i === steps.length - 1 ? T('Done') : T('Next')}</button>
         </span>
       </div>
     </div>
