@@ -176,87 +176,168 @@ export default function Hero({ v }: { v: Vals }) {
             {'\n        '}
             {/* owner (28 Oct, lag): the glow is a soft wide copy of each pulse, not a drop-shadow filter (a filter over the whole
                 board was re-rendered every frame and was most of the hero's cost) */}
-            <g clipPath="url(#seDarkSide)" stroke="#F7C032" strokeWidth="11" strokeDasharray="70 930" strokeLinecap="round" opacity=".22">
+            {/* R9 (owner): a quicker, brighter pulse with a soft glow that fades out (two wide faint copies), no hard outline */}
+            <g clipPath="url(#seDarkSide)" stroke="#F7C032" strokeWidth="16" strokeDasharray="46 954" strokeLinecap="round" opacity=".07">
               {'\n          '}
-              <path className="se-glowcopy" pathLength="1000" d="M36 78 V112 L22 126 V560 L36 574" style={{ animation: 'sePulse 3.2s linear infinite' }}></path>
+              <path className="se-glowcopy" pathLength="1000" d="M36 78 V112 L22 126 V560 L36 574" style={{ animation: 'sePulse 2.08s linear infinite' }}></path>
               {'\n          '}
-              <path className="se-glowcopy" pathLength="1000" d="M760 600 H790 L810 580 H850" style={{ animation: 'sePulse 2.2s .9s linear infinite' }}></path>
+              <path className="se-glowcopy" pathLength="1000" d="M760 600 H790 L810 580 H850" style={{ animation: 'sePulse 1.43s .9s linear infinite' }}></path>
               {'\n          '}
               <path
                 pathLength="1000"
                 d="M760 640 V660 L780 680 H800"
                 strokeWidth="2.5"
-                style={{ animation: 'sePulse 4.1s 1.4s linear infinite' }}
+                style={{ animation: 'sePulse 2.67s 1.4s linear infinite' }}
               ></path>
               {'\n          '}
               <path
                 pathLength="1000"
                 d="M760 104 V150 L790 180 H820 L850 210 V260"
                 strokeWidth="2.5"
-                style={{ animation: 'sePulse 2.7s .3s linear infinite' }}
+                style={{ animation: 'sePulse 1.76s .3s linear infinite' }}
               ></path>
               {'\n          '}
               <path
                 pathLength="1000"
                 d="M790 300 H810 L830 280 V200"
                 strokeWidth="2"
-                style={{ animation: 'sePulse 4.8s 2s linear infinite' }}
+                style={{ animation: 'sePulse 3.12s 2s linear infinite' }}
               ></path>
               {'\n          '}
               <path
                 pathLength="1000"
                 d="M0 810 H140 L170 780 H430 L460 810 H620 L650 780 H700"
                 strokeWidth="3"
-                style={{ animation: 'sePulse 5.2s .6s linear infinite' }}
+                style={{ animation: 'sePulse 3.38s .6s linear infinite' }}
               ></path>
               {'\n          '}
               <path
                 pathLength="1000"
                 d="M0 250 H18 L30 262 V440"
                 strokeWidth="2"
-                style={{ animation: 'sePulse 3.6s 1.1s linear infinite' }}
+                style={{ animation: 'sePulse 2.34s 1.1s linear infinite' }}
               ></path>
               {'\n        '}
             </g>
-            <g clipPath="url(#seDarkSide)" stroke="#F7C032" strokeWidth="3.5" strokeDasharray="70 930">
+            <g clipPath="url(#seDarkSide)" stroke="#F7C032" strokeWidth="8" strokeDasharray="46 954" strokeLinecap="round" opacity=".18">
               {'\n          '}
-              <path pathLength="1000" d="M36 78 V112 L22 126 V560 L36 574" style={{ animation: 'sePulse 3.2s linear infinite' }}></path>
+              <path className="se-glowcopy" pathLength="1000" d="M36 78 V112 L22 126 V560 L36 574" style={{ animation: 'sePulse 2.08s linear infinite' }}></path>
               {'\n          '}
-              <path pathLength="1000" d="M760 600 H790 L810 580 H850" style={{ animation: 'sePulse 2.2s .9s linear infinite' }}></path>
+              <path className="se-glowcopy" pathLength="1000" d="M760 600 H790 L810 580 H850" style={{ animation: 'sePulse 1.43s .9s linear infinite' }}></path>
               {'\n          '}
               <path
                 pathLength="1000"
                 d="M760 640 V660 L780 680 H800"
                 strokeWidth="2.5"
-                style={{ animation: 'sePulse 4.1s 1.4s linear infinite' }}
+                style={{ animation: 'sePulse 2.67s 1.4s linear infinite' }}
               ></path>
               {'\n          '}
               <path
                 pathLength="1000"
                 d="M760 104 V150 L790 180 H820 L850 210 V260"
                 strokeWidth="2.5"
-                style={{ animation: 'sePulse 2.7s .3s linear infinite' }}
+                style={{ animation: 'sePulse 1.76s .3s linear infinite' }}
               ></path>
               {'\n          '}
               <path
                 pathLength="1000"
                 d="M790 300 H810 L830 280 V200"
                 strokeWidth="2"
-                style={{ animation: 'sePulse 4.8s 2s linear infinite' }}
+                style={{ animation: 'sePulse 3.12s 2s linear infinite' }}
               ></path>
               {'\n          '}
               <path
                 pathLength="1000"
                 d="M0 810 H140 L170 780 H430 L460 810 H620 L650 780 H700"
                 strokeWidth="3"
-                style={{ animation: 'sePulse 5.2s .6s linear infinite' }}
+                style={{ animation: 'sePulse 3.38s .6s linear infinite' }}
               ></path>
               {'\n          '}
               <path
                 pathLength="1000"
                 d="M0 250 H18 L30 262 V440"
                 strokeWidth="2"
-                style={{ animation: 'sePulse 3.6s 1.1s linear infinite' }}
+                style={{ animation: 'sePulse 2.34s 1.1s linear infinite' }}
+              ></path>
+              {'\n        '}
+            </g>
+            <g clipPath="url(#seDarkSide)" stroke="#F7C032" strokeWidth="3.5" strokeDasharray="46 954">
+              {'\n          '}
+              <path pathLength="1000" d="M36 78 V112 L22 126 V560 L36 574" style={{ animation: 'sePulse 2.08s linear infinite' }}></path>
+              {'\n          '}
+              <path pathLength="1000" d="M760 600 H790 L810 580 H850" style={{ animation: 'sePulse 1.43s .9s linear infinite' }}></path>
+              {'\n          '}
+              <path
+                pathLength="1000"
+                d="M760 640 V660 L780 680 H800"
+                strokeWidth="2.5"
+                style={{ animation: 'sePulse 2.67s 1.4s linear infinite' }}
+              ></path>
+              {'\n          '}
+              <path
+                pathLength="1000"
+                d="M760 104 V150 L790 180 H820 L850 210 V260"
+                strokeWidth="2.5"
+                style={{ animation: 'sePulse 1.76s .3s linear infinite' }}
+              ></path>
+              {'\n          '}
+              <path
+                pathLength="1000"
+                d="M790 300 H810 L830 280 V200"
+                strokeWidth="2"
+                style={{ animation: 'sePulse 3.12s 2s linear infinite' }}
+              ></path>
+              {'\n          '}
+              <path
+                pathLength="1000"
+                d="M0 810 H140 L170 780 H430 L460 810 H620 L650 780 H700"
+                strokeWidth="3"
+                style={{ animation: 'sePulse 3.38s .6s linear infinite' }}
+              ></path>
+              {'\n          '}
+              <path
+                pathLength="1000"
+                d="M0 250 H18 L30 262 V440"
+                strokeWidth="2"
+                style={{ animation: 'sePulse 2.34s 1.1s linear infinite' }}
+              ></path>
+              {'\n        '}
+            </g>
+            {'\n        '}
+            <g clipPath="url(#seDarkSide)" stroke="#FFF6DA" strokeWidth="1.4" strokeDasharray="46 954">
+              {'\n          '}
+              <path pathLength="1000" d="M36 78 V112 L22 126 V560 L36 574" style={{ animation: 'sePulse 2.08s linear infinite' }}></path>
+              {'\n          '}
+              <path pathLength="1000" d="M760 600 H790 L810 580 H850" style={{ animation: 'sePulse 1.43s .9s linear infinite' }}></path>
+              {'\n          '}
+              <path
+                pathLength="1000"
+                d="M760 640 V660 L780 680 H800"
+                style={{ animation: 'sePulse 2.67s 1.4s linear infinite' }}
+              ></path>
+              {'\n          '}
+              <path
+                pathLength="1000"
+                d="M760 104 V150 L790 180 H820 L850 210 V260"
+                style={{ animation: 'sePulse 1.76s .3s linear infinite' }}
+              ></path>
+              {'\n          '}
+              <path
+                pathLength="1000"
+                d="M790 300 H810 L830 280 V200"
+                style={{ animation: 'sePulse 3.12s 2s linear infinite' }}
+              ></path>
+              {'\n          '}
+              <path
+                pathLength="1000"
+                d="M0 810 H140 L170 780 H430 L460 810 H620 L650 780 H700"
+                style={{ animation: 'sePulse 3.38s .6s linear infinite' }}
+              ></path>
+              {'\n          '}
+              <path
+                pathLength="1000"
+                d="M0 250 H18 L30 262 V440"
+                style={{ animation: 'sePulse 2.34s 1.1s linear infinite' }}
               ></path>
               {'\n        '}
             </g>

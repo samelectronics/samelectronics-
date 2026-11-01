@@ -69,7 +69,9 @@ const NOTEX = new Set(['finale', 'teardown', 'top']);
 function texture(sec: HTMLElement, t: 'dark' | 'light' | 'yel', k: number) {
   if (NOTEX.has(sec.id) || sec.querySelector(':scope > .se-tex')) return;
   const d = document.createElement('div'); d.className = 'se-tex se-tex-' + t + (k % 2 ? ' r' : ''); d.setAttribute('aria-hidden', 'true');
-  d.innerHTML = t === 'dark' ? '<i class="pl"></i><i class="st"></i><i class="led"></i>' : '<i class="pl"></i><i class="lt"></i>';
+  // R9 (owner): no stripes or half-page panels; a fine grain that fades in from the top, a soft studio light, and a shine that
+  // follows the pointer like the hero's (dark: the diamond plate the owner liked + the drifting yellow LED glow)
+  d.innerHTML = t === 'dark' ? '<i class="pl"></i><i class="st"></i><i class="led"></i><i class="gr"></i><i class="sh"></i>' : '<i class="gr"></i><i class="lt"></i><i class="sh"></i>';
   if (getComputedStyle(sec).position === 'static') sec.style.position = 'relative';
   sec.style.isolation = 'isolate'; sec.prepend(d);
 }
@@ -106,10 +108,15 @@ export default function SectionLife() {
       });
     } catch (err) { console.warn('[SectionLife]', err); } };
     (window as unknown as { __seLife?: () => void }).__seLife = run;
+    // the shine follows the pointer inside whichever section it is over (one listener, at most one write per frame)
+    let pend: PointerEvent | null = null, rq = 0, cur: HTMLElement | null = null;
+    const mv = (e: PointerEvent) => { pend = e; if (!rq) rq = requestAnimationFrame(() => { rq = 0; const ev = pend; if (!ev) return; const sec = (ev.target as Element | null)?.closest?.('section[id]') as HTMLElement | null; const tex = sec?.querySelector(':scope > .se-tex') as HTMLElement | null;
+      if (cur && cur !== tex) cur.classList.remove('lit'); cur = tex; if (!tex || !sec) return; const b = sec.getBoundingClientRect(); tex.style.setProperty('--mx', (ev.clientX - b.left).toFixed(0) + 'px'); tex.style.setProperty('--my', (ev.clientY - b.top).toFixed(0) + 'px'); tex.classList.add('lit'); }); };
+    window.addEventListener('pointermove', mv, { passive: true });
     // the sections arrive late (the home page renders in the browser): keep checking for the first 30s; already-done
     // sections are skipped, so each pass is cheap
     let n = 0; t1 = window.setInterval(() => { run(); if (++n > 15) clearInterval(t1); }, 2000); t2 = window.setTimeout(run, 600);
-    return () => { clearInterval(t1); clearTimeout(t2); io && io.disconnect(); eio && eio.disconnect(); };
+    return () => { clearInterval(t1); clearTimeout(t2); io && io.disconnect(); eio && eio.disconnect(); window.removeEventListener('pointermove', mv); cancelAnimationFrame(rq); };
   }, []);
   return null;
 }

@@ -32,7 +32,7 @@ function render(v: Vals) {
         {'\n\n  '}
         <div data-w="A" style={{ position: 'relative', padding: '120px 0 0' }}>
           {'\n    '}
-          <div style={{ position: 'absolute', inset: '0', background: '#F2F3F4' }}></div>
+          {/* R9: no solid panel here: it hid the section's material on the top half only */}
           {'\n    '}
           {/* R6 §06 A: no blend from the teardown. The showroom has its own light: a very large faint circuit pattern (5%),
               soft spot pools from above, and the fine grain below */}

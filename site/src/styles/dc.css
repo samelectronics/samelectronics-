@@ -20,7 +20,7 @@ image-slot:not([data-filled]){display:none !important}
 @keyframes seEdgeGlow{0%,100%{opacity:.65}50%{opacity:1}}
 @keyframes seRail{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @keyframes seRun{from{transform:translateX(-40%)}to{transform:translateX(260%)}}
-@keyframes seFlowBg{from{background-position:0 0}to{background-position:-200px 0}}
+@keyframes seFlowBg{from{background-position:0 0}to{background-position:260px 0}}
 @keyframes seSearchGlow{0%,30%{box-shadow:0 0 0 2px rgba(247,192,50,.4),0 0 30px rgba(247,192,50,.18)}42%{box-shadow:0 0 0 2px #F7C032,0 0 70px rgba(247,192,50,.6)}60%,100%{box-shadow:0 0 0 2px rgba(247,192,50,.4),0 0 30px rgba(247,192,50,.18)}}
 @keyframes seBlinkDot{0%,60%{opacity:1}61%,100%{opacity:.25}}
 @keyframes seCaret{0%,49%{opacity:1}50%,100%{opacity:0}}

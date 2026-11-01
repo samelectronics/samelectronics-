@@ -100,7 +100,7 @@ class Component extends DCLogic {
     const L = window.seI18n; return { isAr: !!(L && L.lang() !== 'en'), tr: (x) => (L ? L.tr(x) : x), secRef: this.secRef, i: s.i, ad: a, ads: ADS.map((x, j) => ({ k: x.k, on: j === s.i, go: () => { if (this.pinOn()) this.goGrade(j); else { this.t = 0.02; this.setState({ i: j }); } } })), spacer: this.pinOn() ? (ADS.length - 1) * 55 + 'vh' : '0px', qual: QL.map((l, j) => ({ l, v: a.q[j], w: (a.q[j] / 5) * 100 + '%', d: j * 0.08 + 's' })), pose: window.SE_SHOTS ? window.SE_SHOTS.url(({ OR: 'line-or', OL: 'apple-temp', AQ: 'apple-gx', IN: 'apple-zy' })[a.g] || 'apple-sp', 960) : '', poseWide: a.g === 'OR', u: ((q, base) => ({ box: base + q + '-box-480.webp', box2: base + q + '-box-960.webp', front: base + q + '-front-480.webp', front2: base + q + '-front-960.webp', back: base + q + '-back-480.webp', back2: base + q + '-back-960.webp', lid: a.lid }))(a.u, '/assets/shots/sc-'), price: pr ? 'AED ' + pr : '', hasPrice: !!pr,
       enter: () => { this.hov = true; }, leave: () => { this.hov = false; }, prev: () => (this.pinOn() ? this.goGrade(this.state.i - 1) : this.next(-1)), next: () => (this.pinOn() ? this.goGrade(this.state.i + 1) : this.next(1)),
       ts: (e) => { this._tx = e.touches[0].clientX; }, te: (e) => { if (this._tx == null) return; const dx = e.changedTouches[0].clientX - this._tx; this._tx = null; if (Math.abs(dx) > 40) this.next(dx < 0 ? 1 : -1); },
-      shop: (e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('se:fmp', { detail: { c: 'SCR' } })); } };
+      shop: (e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('se:shop', { detail: { cat: 'SCR' } })); } };
   }
 }
 

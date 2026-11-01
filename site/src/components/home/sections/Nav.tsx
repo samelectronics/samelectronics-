@@ -249,8 +249,7 @@ export default function Nav({ v }: { v: Vals }) {
             top: '0',
             bottom: '0',
             width: '100%',
-            transform: 'scaleX(0)', // R6 Part A: moved with transforms (no layout per scroll)
-            transformOrigin: 'var(--se-start, left) center',
+            clipPath: 'inset(-8px 100% -8px 0)', // R9: revealed with a clip, no layout per scroll
             backgroundImage: 'linear-gradient(90deg,#F7C032 0%,#F7C032 30%,#FFF4D1 45%,#F7C032 60%,#F7C032 100%)',
             backgroundSize: '200px 2px',
             animation: 'seFlowBg 1.2s linear infinite',

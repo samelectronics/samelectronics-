@@ -263,8 +263,7 @@ class Component extends DCLogic {
       const fam = k >= 1 && k <= 8 ? this.L[k - 1] : null, catId = fam ? fam[1].split(':')[0] : null;
       const shopGo = (ev) => { ev && ev.preventDefault && ev.preventDefault();
         if (fam && fam[4] === 'board') { const D2 = this.state.data; window.open('https://wa.me/' + ((D2 && D2.contact && D2.contact.wa) || '971503420015') + '?text=' + encodeURIComponent('Hi Sam Electronics, do you have logic board parts for my phone?'), '_blank', 'noopener'); return; }
-        const famName = catId && this.state.data ? (this.state.data.categories.find((x) => x.id === catId) || {}).name : '';
-        comingSoon({ title: famName || 'Shop', text: 'The Shop page for ' + (famName ? famName.toLowerCase() : 'every part') + ' is coming soon. Use Find My Part in the meantime.', cta: 'Open Find My Part', act: () => window.dispatchEvent(new CustomEvent('se:fmp', { detail: {} })) }); };
+        window.dispatchEvent(new CustomEvent('se:shop', { detail: catId ? { cat: catId } : {} })); }; // R9: the shop is live
       return { ...c, key: 'c' + k + (live ? 'L' : 'O'), go: shopGo, out: live ? 'none' : 'tdCardOut .2s cubic-bezier(.4,0,1,1) both', a0: anim(0), a1: anim(1), a2: anim(2), a3: anim(3), a4: anim(4) }; };
     const cmI = (i) => Math.max(0, i - 1), cards = (s.ps >= 0 && cmI(s.ps) !== cmI(si) && s.ps < last ? [cardFor(cmI(s.ps), false)] : []).concat(si < last && oT >= 3.0 ? [cardFor(cmI(si), true)] : []); if (cards.length) cards[cards.length - 1].key = cards[cards.length - 1].key + '-' + (s.ck || 0);
     const actR = si >= 2 && si <= 9 ? si - 2 : -1;

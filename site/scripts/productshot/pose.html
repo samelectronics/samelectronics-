@@ -306,15 +306,37 @@ if (!prod.userData.noBox) {
 }
 if (LINE) { // owner (27 Oct): every box of a range, lined up behind each other (each ~70% showing), the screen in front
   let prev = box; for (let j = BOXL.length - 2; j >= 0; j--) { const b2 = await carton(pw, PH0, BOXL[j]); stand.add(b2); const cw2 = b2.userData.bw; b2.position.set(prev.position.x + SIDE * (prev.userData.bw / 2 + cw2 / 2 - 0.3 * cw2), b2.userData.bh / 2, prev.position.z - prev.userData.depth / 2 - b2.userData.depth / 2 - 0.05); prev = b2; } }
-if (ITEM === 'crack' || ITEM === 'fixed' || ITEM === 'open') { // owner (27 Oct): the repair ad: the phone centred, real tools leaning beside it
-  const tools = new THREE.Group(), sd = new THREE.Group();
-  const hdl = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.085, 0.62, 32), new THREE.MeshPhysicalMaterial({ color: 0x1c1d1f, roughness: 0.55 })); hdl.position.y = 0.31 + 0.62; sd.add(hdl);
-  const band = new THREE.Mesh(new THREE.CylinderGeometry(0.102, 0.102, 0.12, 32), new THREE.MeshPhysicalMaterial({ color: 0xf7c032, roughness: 0.4 })); band.position.y = 0.62 + 0.5; sd.add(band);
-  const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.1, 0.06, 32), mMetal(0xb8bcc2, 0.3)); cap.position.y = 0.62 + 0.65; sd.add(cap);
-  const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.62, 16), mMetal(0xd5d8dc, 0.18)); shaft.position.y = 0.31; sd.add(shaft);
-  const tip = new THREE.Mesh(new THREE.ConeGeometry(0.022, 0.06, 4), mMetal(0xd5d8dc, 0.18)); tip.rotation.x = PI; tip.position.y = -0.02; sd.add(tip);
-  sd.scale.setScalar(1.7); sd.position.set(SIDE * 1.15, 0.03, 0.3); sd.rotation.z = SIDE * -0.3; tools.add(sd);
-  const sp = RB(0.09, 1.3, 0.025, 0.02, new THREE.MeshPhysicalMaterial({ color: 0x18191b, roughness: 0.45 })); sp.position.set(-SIDE * 1.0, 0.66, 0.15); sp.rotation.z = SIDE * 0.28; tools.add(sp);
+if (ITEM === 'crack' || ITEM === 'fixed' || ITEM === 'open') { // R9 (owner: "the tools look cheap"): real bench tools, modelled like the real ones
+  const tools = new THREE.Group();
+  // 1 · precision screwdriver: knurled anodised aluminium handle, polished swivel cap, tapered nose, chrome hex bit holder and bit
+  const knurl = cv(256, 512, (x, w, h) => { x.fillStyle = '#808080'; x.fillRect(0, 0, w, h); x.strokeStyle = '#ffffff'; x.lineWidth = 2; for (let i = -h; i < w + h; i += 9) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i + h * 0.6, h); x.stroke(); x.beginPath(); x.moveTo(i + h * 0.6, 0); x.lineTo(i, h); x.stroke(); } });
+  knurl.colorSpace = THREE.NoColorSpace; knurl.wrapS = knurl.wrapT = THREE.RepeatWrapping; knurl.repeat.set(3, 1);
+  const anod = new THREE.MeshPhysicalMaterial({ color: 0x6b7178, metalness: 0.92, roughness: 0.34, bumpMap: knurl, bumpScale: 1.4, clearcoat: 0.25, envMapIntensity: 1.3 });
+  const chrome = mMetal(0xe2e5e8, 0.12), satin = mMetal(0xb9bdc2, 0.28);
+  const sd = new THREE.Group();
+  const prof = [[0, 0], [0.012, 0], [0.012, 0.16], [0.03, 0.2], [0.045, 0.28], [0.06, 0.31], [0.088, 0.36], [0.092, 0.38], [0.092, 1.02], [0.088, 1.04], [0, 1.04]].map(([r, y]) => new THREE.Vector2(r, y));
+  const body = new THREE.Mesh(new THREE.LatheGeometry(prof, 64), anod); sd.add(body);
+  [0.4, 0.98].forEach((y) => { const ring = new THREE.Mesh(new THREE.TorusGeometry(0.093, 0.006, 10, 64), satin); ring.rotation.x = PI / 2; ring.position.y = y; sd.add(ring); });
+  const band = new THREE.Mesh(new THREE.CylinderGeometry(0.0935, 0.0935, 0.05, 64), new THREE.MeshPhysicalMaterial({ color: 0xf7c032, metalness: 0.6, roughness: 0.32, clearcoat: 0.6 })); band.position.y = 0.92; sd.add(band);
+  const capP = [[0, 0], [0.07, 0], [0.074, 0.02], [0.07, 0.05], [0.05, 0.075], [0, 0.085]].map(([r, y]) => new THREE.Vector2(r, y));
+  const cap = new THREE.Mesh(new THREE.LatheGeometry(capP, 48), chrome); cap.position.y = 1.045; sd.add(cap);
+  const hex = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.1, 6), chrome); hex.position.y = 0.11; sd.add(hex);
+  const bit = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.014, 0.22, 24), chrome); bit.position.y = -0.04; sd.add(bit);
+  const tip = new THREE.Mesh(new THREE.ConeGeometry(0.014, 0.05, 6), chrome); tip.rotation.x = PI; tip.position.y = -0.175; sd.add(tip);
+  sd.scale.setScalar(1.45); const sdL = new THREE.Group(); sd.rotation.z = PI / 2; sd.position.y = 0.093 * 1.45; sdL.add(sd); sdL.rotation.y = SIDE * 0.5; sdL.position.set(SIDE * 0.95, 0, 0.75); tools.add(sdL); // lying on the bench
+  // 2 · nylon spudger: a long tapered flat blade with bevelled edges and a rounded pick end (black anti-static nylon)
+  const sh = new THREE.Shape(); sh.moveTo(-0.05, 0); sh.lineTo(0.05, 0); sh.lineTo(0.05, 0.9); sh.quadraticCurveTo(0.05, 1.18, 0.012, 1.3); sh.lineTo(-0.012, 1.3); sh.quadraticCurveTo(-0.05, 1.18, -0.05, 0.9); sh.lineTo(-0.05, 0);
+  const spg = new THREE.ExtrudeGeometry(sh, { depth: 0.022, bevelEnabled: true, bevelThickness: 0.008, bevelSize: 0.008, bevelSegments: 4, curveSegments: 24 });
+  const nylon = new THREE.MeshPhysicalMaterial({ color: 0x15161a, roughness: 0.38, metalness: 0, clearcoat: 0.35, clearcoatRoughness: 0.4, sheen: 0.3, envMapIntensity: 1 });
+  const sp = new THREE.Mesh(spg, nylon); const grip = new THREE.Group(); grip.add(sp);
+  for (let k = 0; k < 6; k++) { const g2 = RB(0.1, 0.012, 0.006, 0.003, mBlack(0.7)); g2.position.set(0, 0.08 + k * 0.035, 0.034); grip.add(g2); }
+  grip.rotation.x = -PI / 2; grip.position.y = 0.03; const spL = new THREE.Group(); spL.add(grip); spL.rotation.y = -SIDE * 0.9; spL.position.set(-SIDE * 0.95, 0, 0.95); tools.add(spL); // flat on the bench
+  // 3 · suction cup with a ring pull, lying on the bench in front
+  const cupP = [[0, 0.06], [0.05, 0.058], [0.12, 0.035], [0.2, 0.008], [0.21, 0], [0.205, 0.004]].map(([r, y]) => new THREE.Vector2(r, y));
+  const cup = new THREE.Mesh(new THREE.LatheGeometry(cupP, 64), new THREE.MeshPhysicalMaterial({ color: 0x8e949b, roughness: 0.5, transmission: 0.2, thickness: 0.05, clearcoat: 0.5, envMapIntensity: 1 }));
+  const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.03, 0.06, 24), satin); stem.position.y = 0.085;
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(0.07, 0.012, 16, 48), chrome); ring.position.y = 0.15;
+  const sc2 = new THREE.Group(); sc2.add(cup, stem, ring); sc2.scale.setScalar(1.3); sc2.position.set(-SIDE * 1.15, 0, 0.1); sc2.rotation.y = 0.4; tools.add(sc2);
   tools.traverse((m) => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; } }); scene.add(tools); }
 stand.rotation.set(-5 * PI / 180, -SIDE * 20 * PI / 180, 0);
 stand.updateMatrixWorld(true); { const bb = new THREE.Box3().setFromObject(stand); stand.position.y -= bb.min.y; }

@@ -22,7 +22,7 @@ function render(v: Vals) {
             {'\n  '}
             <div style={cssToObj(`position:relative;height:${s(v.secH)}`)}>
               {'\n    '}
-              <div style={cssToObj(`position:sticky;top:0;height:${s(v.stageH)};overflow:hidden;background:#2A2C2F`)}>
+              <div className="td-stage" style={cssToObj(`position:sticky;top:0;height:${s(v.stageH)};overflow:hidden;background:#2A2C2F`)}>
                 {'\n      '}
                 <div style={{ position: 'absolute', inset: '0', pointerEvents: 'none' }}>
                   {'\n        '}

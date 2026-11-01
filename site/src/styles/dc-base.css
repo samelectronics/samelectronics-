@@ -564,7 +564,8 @@ html[dir='rtl'] .ipb { padding: 14px 16px 14px 10px; }
    ring, no flowing highlight. It stays clickable / draggable (the invisible .se-scrub hit area) with its section tooltip. */
 .se-scrub > i { display: none !important; }
 [data-prog='dot'], [data-prog='end'] { display: none !important; }
-[data-prog='bar'] { background: #F7C032 !important; background-image: none !important; animation: none !important; box-shadow: none !important; }
+[data-prog='bar'] { background-image: linear-gradient(90deg, #E9A91C 0%, #F7C032 30%, #FFE8A3 44%, #FFFFFF 50%, #FFE8A3 56%, #F7C032 70%, #E9A91C 100%) !important; background-size: 260px 2px !important; animation: seFlowBg 1.1s linear infinite !important; box-shadow: 0 0 10px rgba(247, 192, 50, .85), 0 0 3px rgba(255, 220, 120, 1) !important; }
+[dir='rtl'] [data-prog='bar'] { animation-direction: reverse !important; }
 
 /* Urgent 3 · What we offer: Fog background, clean graphite cards, #F7C032 accents only. No glowing ovals, no muddy
    gradients, no showroom light pools; the part stands still in its pose. Chips neat and aligned, small consistent "i". */
@@ -651,14 +652,14 @@ html.se-intro-done #top [data-hero-text] > *, html.se-intro-done #top [data-hero
 @media (prefers-reduced-motion: reduce) { .se-pd > .se-pd-c { animation: none; opacity: 1; transform: translate(var(--x), var(--y)); } }
 /* owner (27 Oct) · the repair ad: the cracked phone, a yellow repair light sweeps across, the repaired phone boots */
 .se-rep-fix { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.se-rep-beam { position: absolute; top: 4%; bottom: 4%; width: 10%; margin-left: -5%; background: linear-gradient(90deg, rgba(247, 192, 50, 0), rgba(255, 219, 110, .95), rgba(247, 192, 50, 0)); filter: blur(2px); mix-blend-mode: screen; pointer-events: none; }
+.se-rep-beam { display: none !important; position: absolute; top: 4%; bottom: 4%; width: 10%; margin-left: -5%; background: linear-gradient(90deg, rgba(247, 192, 50, 0), rgba(255, 219, 110, .95), rgba(247, 192, 50, 0)); filter: blur(2px); mix-blend-mode: screen; pointer-events: none; }
 .se-rep-poster { position: relative; display: block; height: 100%; aspect-ratio: 1; }
 .se-rep-poster > img:first-child { position: absolute; inset: 0; width: 100%; height: 100%; max-height: none !important; }
 .se-rep-fix.se-rep-loop { animation: seRepFix 4.6s cubic-bezier(.45, 0, .55, 1) infinite both; }
 .se-rep-beam.se-rep-loop { animation: seRepBeam 4.6s cubic-bezier(.45, 0, .55, 1) infinite both; }
-@keyframes seRepFix { 0%, 30% { clip-path: inset(0 100% 0 0); } 48%, 92% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
+@keyframes seRepFix { 0%, 30% { opacity: 0; } 50%, 92% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes seRepBeam { 0%, 29% { left: 0; opacity: 0; } 30% { left: 0; opacity: 1; } 48% { left: 100%; opacity: 1; } 53%, 100% { left: 100%; opacity: 0; } }
-html[dir='rtl'] .se-rep-fix.se-rep-loop { animation-name: seRepFixR; } html[dir='rtl'] .se-rep-beam.se-rep-loop { animation-name: seRepBeamR; }
+ html[dir='rtl'] .se-rep-beam.se-rep-loop { animation-name: seRepBeamR; }
 @keyframes seRepFixR { 0%, 30% { clip-path: inset(0 0 0 100%); } 48%, 92% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 0 0 0); opacity: 0; } }
 @keyframes seRepBeamR { 0%, 29% { left: 100%; opacity: 0; } 30% { left: 100%; opacity: 1; } 48% { left: 0; opacity: 1; } 53%, 100% { left: 0; opacity: 0; } }
 /* owner (27 Oct) · the iPad's wide banner shows the whole lineup of boxes, so the picture takes most of the width */
@@ -668,9 +669,12 @@ html[dir='rtl'] .se-rep-fix.se-rep-loop { animation-name: seRepFixR; } html[dir=
    fades from the studio graphite into the next section's fog */
 /* R8 · the teardown floor runs on under the stage (same dark floor and the same centre reflection) and then fades slowly
    into the showroom: no flat grey step between them */
-#teardown::after { content: ''; display: block; height: 280px; pointer-events: none;
-  background: radial-gradient(46% 150px at 50% 0, rgba(255, 255, 255, .065), rgba(255, 255, 255, 0) 75%),
-    linear-gradient(180deg, #1F2023 0%, #212225 10%, #26282B 20%, #303235 30%, #44464A 40%, #64666A 50%, #8E9094 60%, #B8BABD 70%, #D8DADC 80%, #EAECED 90%, #F2F3F4 100%); }
+/* R9 (owner): the stage's reflective floor (3D reflection included) now melts into the floor colour before the stage ends,
+   so the fade below starts from exactly the same colour: one continuous floor running into the showroom, no cut */
+.td-stage::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 12%; z-index: 40; pointer-events: none;
+  background: linear-gradient(180deg, rgba(31, 32, 35, 0) 0%, rgba(31, 32, 35, .55) 55%, #1F2023 100%); }
+#teardown::after { content: ''; display: block; height: 340px; pointer-events: none;
+  background: linear-gradient(180deg, #1F2023 0%, #202124 8%, #232427 16%, #2A2C2F 24%, #36383B 32%, #4A4C50 40%, #66686C 48%, #86888C 56%, #A6A8AB 64%, #C3C5C7 72%, #D9DBDD 80%, #E8E9EA 88%, #F2F3F4 100%); }
 @media (max-width: 860px) { #teardown::after { height: 160px; } }
 
 /* owner (27 Oct) · site-wide entry: every section's eyebrow, title, text and cards rise in, one after another, each time
@@ -771,9 +775,16 @@ h2[data-se-rise][data-se-on] { animation-name: seSecTitle; animation-duration: .
 .se-tex-dark.r .led { left: 90%; animation-direction: alternate-reverse; }
 @keyframes seLed { 0% { transform: translate(0, 0); } 50% { transform: translate(28vw, 30%); } 100% { transform: translate(8vw, 60%); } }
 .se-tex-yel .pl { inset: 0; background-image: repeating-linear-gradient(0deg, rgba(255, 255, 255, .07) 0 1px, transparent 1px 4px); }
-.se-tex-yel .lt { left: 50%; top: -10%; width: 70%; height: 80%; margin-left: -35%; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 255, 255, .22), rgba(255, 255, 255, 0)); }
-.se-tex-light .pl { inset: 0; opacity: .9; background-image: repeating-linear-gradient(90deg, rgba(38, 40, 43, .014) 0 1px, transparent 1px 3px), repeating-linear-gradient(90deg, rgba(255, 255, 255, .5) 0 1px, transparent 1px 7px); }
-.se-tex-light .lt { left: 50%; top: -20%; width: 80%; height: 70%; margin-left: -40%; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 255, 255, .7), rgba(255, 255, 255, 0)); }
+/* R9 · materials: grain fades in from the top (never starts halfway), soft studio light, pointer shine */
+.se-tex { -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 320px); mask-image: linear-gradient(180deg, transparent 0, #000 320px); }
+.se-tex .gr { inset: 0; opacity: .5; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.15 0 0 0 0 0.16 0 0 0 0 0.17 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.se-tex-dark .gr { opacity: .9; filter: invert(1); }
+.se-tex-light .lt, .se-tex-yel .lt { left: 0; right: 0; top: 0; height: 100%; width: auto; margin: 0; border-radius: 0; background: radial-gradient(60% 520px at 50% 0, rgba(255, 255, 255, .75), rgba(255, 255, 255, 0) 100%), radial-gradient(40% 380px at 85% 55%, rgba(255, 250, 235, .45), rgba(255, 250, 235, 0) 100%); }
+.se-tex .sh { left: var(--mx, 50%); top: var(--my, 30%); width: 760px; height: 760px; margin: -380px 0 0 -380px; border-radius: 50%; opacity: 0; transition: opacity .6s ease; }
+.se-tex.lit .sh { opacity: 1; }
+.se-tex-light .sh { background: radial-gradient(closest-side, rgba(255, 255, 255, .85), rgba(255, 243, 210, .35) 45%, rgba(255, 255, 255, 0)); }
+.se-tex-dark .sh { background: radial-gradient(closest-side, rgba(247, 192, 50, .1), rgba(247, 192, 50, .04) 50%, rgba(247, 192, 50, 0)); }
+.se-tex-yel .sh { background: radial-gradient(closest-side, rgba(255, 255, 255, .28), rgba(255, 255, 255, 0)); }
 @media (prefers-reduced-motion: reduce) { .se-tex-dark .led { animation: none; } }
 /* R8 · the progress line glows again and ends in a circuit pad: a soft moving light runs along the filled part, and the
    head is a small ringed pad with a yellow core (the "Urgent 2" flat line is lifted) */
