@@ -65,3 +65,9 @@ Build order:
 10. Samsoom settings + staff Samsoom; seasons & events; shop floor (queue, TV, counter tablet, tasks, calendar); reports; AI helpers; health & data quality; training; security (roles, 2-step, devices).
 Activity Center: every action by everyone incl. owner, before/after, dashboard widget + own page + per-item history, role-based visibility, alerts, evening summary. No screen recording.
 All controls in brand style (no native grey widgets). All exports branded.
+
+## SEO (added 1 Nov)
+- Own page per model and per part with clean addresses (`/m/galaxy-a54`, `/p/<part-slug>`), titles like "Galaxy A54 screen, battery and parts · Sam Electronics Dubai", meta descriptions, canonical + hreflang per language.
+- `sitemap.xml` with every model/part/page, `robots.txt`.
+- Product structured data (schema.org Product + Offer with price and availability), LocalBusiness for the shop, BreadcrumbList, FAQPage.
+- Server-rendered content so Google can read it; fast and mobile-friendly.
