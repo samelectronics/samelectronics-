@@ -9,3 +9,7 @@
 #repair h2 > span:last-child { color: #F7C032 !important; }
 /* owner (27 Oct): Who are you and Reviews read as one calm title (graphite, second line softer), like Story and Showcase */
 #everyone h2 > span:last-child, #reviews h2 > span:last-child { color: #F7C032 !important; } /* owner (28 Oct): graphite + deep gold, never grey with black */
+/* R9 (owner: "the font sizes are not matching"): one title size for every home section (the teardown's scroll headline and
+   the Trade Floor's display title are the two deliberate exceptions) */
+:is(#families, #board, #showcase, #deals, #repair, #network, #circuit, #story, #team, #samsoom, #everyone, #social, #visit, #reviews, #finale) h2 { font-size: clamp(32px, 3.7vw, 52px) !important; line-height: 1.06 !important; letter-spacing: -.035em !important; }
+#quality h2 { font-size: calc(clamp(32px, 3.7vw, 52px) / var(--sc, 1)) !important; line-height: 1.06 !important; }

@@ -6,7 +6,6 @@
  * page, with a button that opens Find My Part for it.
  */
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { comingSoon } from '@/components/g17/ComingSoon';
 import SEBrandLogo from '@/components/dc/SEBrandLogo';
 
 /** R6 §03 A · the example searches: the caret appears with the first typed letter and blinks only once the word is
@@ -85,6 +84,7 @@ export function findModels(q: string, models: Model[]): Hit[] {
   return out.sort((a, b) => a.score - b.score).slice(0, 8);
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export default function HeroSearch({ examples, openFmp }: { examples: string[]; openFmp: (b?: string, m?: string, c?: string | null, q?: string) => void }) {
   const [q, setQ] = useState('');
   const [focus, setFocus] = useState(false);
@@ -97,19 +97,13 @@ export default function HeroSearch({ examples, openFmp }: { examples: string[]; 
   const pick = (h?: Hit) => {
     if (!h) {
       if (!q.trim()) return inp.current?.focus();
-      // no model matched: Find My Part with the words typed
-      // the shop page with these results is coming (G17): say what was searched, offer Find My Part with the words
-      comingSoon({ title: '“' + q.trim() + '”', text: 'Search results open on the Shop page, coming soon. Use Find My Part in the meantime.', cta: 'Open Find My Part', act: () => openFmp(undefined, undefined, null, q) });
+      // R9: the shop is live: the words typed open its search
+      location.href = '/shop?q=' + encodeURIComponent(q.trim());
       return;
     }
     setFocus(false);
     inp.current?.blur();
-    comingSoon({
-      title: h.m.name,
-      text: `The full ${h.m.name} page is coming soon. Use Find My Part in the meantime.`,
-      cta: 'Open Find My Part',
-      act: () => openFmp(h.m.brand_id, h.m.id, h.cat),
-    });
+    location.href = '/shop?model=' + encodeURIComponent(h.m.id) + (h.cat ? '&cat=' + encodeURIComponent(h.cat) : '');
   };
   const open = focus && hits.length > 0;
   const fams = (id: string) => {

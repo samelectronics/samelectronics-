@@ -32,6 +32,7 @@ import '@/styles/account.css';
 import '@/styles/ask.css';
 import '@/styles/info.css';
 import '@/styles/staff.css';
+import '@/styles/studio.css';
 
 export const metadata: Metadata = {
   title: 'Sam Electronics - Home', // R6 §01: "Sam Electronics - <page>" (src/components/site/TabTitle.tsx keeps it in the visitor's language)

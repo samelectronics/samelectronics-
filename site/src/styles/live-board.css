@@ -96,9 +96,13 @@
 
 /* R6 §07 · side circuits in the gutters (hidden when the gutter is too narrow for a 24px safe zone), pings into the newest
    row, a yellow flash on the new row's status chip, sparklines that draw in as the section enters */
-.lb-side { position: absolute; top: calc(var(--ry, 50%) - 200px); height: 400px; width: calc((100% - 1272px) / 2 - 24px); overflow: visible; pointer-events: none; }
+.lb-side { position: absolute; top: 14%; height: 400px; width: 120px; overflow: visible; pointer-events: none; }
+.lb-side.k1 { top: auto; bottom: 6%; transform: scaleY(-1); } .lb-side.r.k1 { transform: scale(-1, -1); }
 .lb-side.l { left: 0; } .lb-side.r { right: 0; transform: scaleX(-1); }
 @media (max-width: 1399px) { .lb-side { display: none; } }
+.lb-sflow { fill: none; stroke: #FFD054; stroke-width: 2.4; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: .07 .93; stroke-dashoffset: 1; filter: drop-shadow(0 0 4px rgba(247, 192, 50, .9)); animation: lbFlow 3.6s linear infinite; }
+@keyframes lbFlow { to { stroke-dashoffset: 0; } }
+@media (prefers-reduced-motion: reduce) { .lb-sflow { animation: none; opacity: 0; } }
 .lb-strace { fill: none; stroke: rgba(247, 192, 50, .16); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
 .lb-snode { fill: #2A2C2F; stroke: rgba(247, 192, 50, .4); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
 .lb-spulse { fill: none; stroke: #FFE9A8; stroke-width: 3; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: .14 1; stroke-dashoffset: .14; filter: drop-shadow(0 0 4px rgba(247, 192, 50, .9)); animation: lbSPing .8s cubic-bezier(.45, 0, .55, 1) both; }

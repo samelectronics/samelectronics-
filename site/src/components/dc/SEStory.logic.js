@@ -79,7 +79,7 @@ class Component extends DCLogic {
     const s = this.state, D = s.data, H = D ? D.history : [], ss = (D && D.serviceStats) || { countries: 24 };
     const items = H.map((h, i) => ({ ...h, i, now: i === 3, soon: i === 4 }));
     return { secRef: this.secRef, brRef: this.brRef, sc: s.sc, items, br: s.br, countries: ss.countries,
-      more: (ev) => { ev.preventDefault(); window.dispatchEvent(new CustomEvent('se:soon', { detail: { title: 'Our story', text: 'The full Our Story page is coming soon.' } })); },
+      more: (ev) => { ev.preventDefault(); location.href = '/story'; },
       mapsDxb: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('78G4+3H2 Dubai'),
       mapsMad: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Plaza Mayor, Madrid') };
   }

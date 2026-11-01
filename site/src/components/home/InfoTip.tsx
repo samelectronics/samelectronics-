@@ -4,7 +4,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { QUALITY_INFO, MAKER_INFO } from '@/content/specInfo';
-import { comingSoon } from '@/components/g17/ComingSoon';
 
 const T = (s: string) => (typeof window !== 'undefined' && window.seI18n ? window.seI18n.t(s) : s);
 
@@ -36,7 +35,7 @@ export default function InfoTip({ name, kind = 'quality', dark = true }: { name:
                 <dt>{T('Warranty')}</dt>
                 <dd>{T(info.warranty)}</dd>
               </dl>
-              <button type="button" onClick={() => { setAt(null); comingSoon({ text: T('A detailed page about each quality and maker is coming soon.') }); }}>
+              <button type="button" onClick={() => { setAt(null); location.href = '/brands#makers'; }}>
                 {T('Learn more')}
               </button>
             </div>,

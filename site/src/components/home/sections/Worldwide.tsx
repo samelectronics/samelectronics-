@@ -40,7 +40,7 @@ export default function Worldwide({ v }: { v: Vals }) {
                 color: '#F7C032',
               }}
             >
-              <span style={{ width: '28px', height: '2px', background: '#F7C032' }}></span>WORLDWIDE NETWORK
+              WORLDWIDE NETWORK
             </span>
             {'\n        '}
             <h2

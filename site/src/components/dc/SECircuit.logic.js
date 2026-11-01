@@ -54,7 +54,7 @@ class Component extends DCLogic {
       invite: 'https://wa.me/' + (((window.SE_DATA && window.SE_DATA.contact) || {}).wa || '971503420015') + '?text=' + encodeURIComponent('*SAM CIRCUIT · MEMBERSHIP REQUEST*\n\nName: ' + (s.name.trim() || '—') + (s.shop.trim() ? '\nShop / company: ' + s.shop.trim() : '') + (s.pick != null ? '\nInterested in: ' + TN[s.pick] : '') + '\n\nPlease send me an invitation to Sam Circuit.\nSent from the Sam Electronics website'), popName: s.tier >= 0 ? TN[s.tier] : '', pop: s.pop, flash: s.flash, pulse: s.pulse,
       spend: 'AED ' + fmt(s.spend), level: Math.round(lv * 100) + '%',
       add: (n) => () => this.add(n), reset: () => this.reset(),
-      join: () => window.dispatchEvent(new CustomEvent('se:soon', { detail: { title: 'Sam Circuit', text: 'Sam Circuit accounts open with My Bench, coming soon.' } })),
+      join: () => { location.href = '/account?signup=1'; }, // R9: My Bench is live
       tilt: (e) => { const c = this.cardRef.current; if (!c) return; const r = c.getBoundingClientRect(), x = (e.clientX - r.left) / r.width, y = (e.clientY - r.top) / r.height;
         c.style.transform = 'rotateX(' + ((0.5 - y) * 16).toFixed(2) + 'deg) rotateY(' + ((x - 0.5) * 20).toFixed(2) + 'deg)'; c.style.setProperty('--lx', (x * 100).toFixed(1) + '%'); c.style.setProperty('--ly', (y * 100).toFixed(1) + '%'); },
       untilt: () => { const c = this.cardRef.current; if (c) { c.style.transform = ''; c.style.setProperty('--lx', '30%'); c.style.setProperty('--ly', '20%'); } } };

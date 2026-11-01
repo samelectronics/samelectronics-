@@ -114,3 +114,4 @@
 .rp-full-bar { position: sticky; top: 0; z-index: 3; display: flex; align-items: center; justify-content: space-between; padding: 14px clamp(20px, 4vw, 64px); background: rgba(242, 243, 244, .92); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(38, 40, 43, .08); }
 .rp-full-bar b { font: 700 16px 'Space Grotesk', sans-serif; color: #26282B; }
 .rp-full-bar button { height: 40px; padding: 0 16px; border: none; border-radius: 10px; background: #26282B; color: #fff; font: 600 14px Inter, sans-serif; cursor: pointer; }
+.rp-search { position: sticky; top: -6px; z-index: 1; background: #fff; }

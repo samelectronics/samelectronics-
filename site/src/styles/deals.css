@@ -176,3 +176,14 @@ html[dir='rtl'] .dl-new, html[dir='rtl'] .dl-flaps, html[dir='rtl'] .dl-ship-clo
 /* owner (27 Oct) · the live count lives in the eyebrow line */
 .dl-eb { display: inline-flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 .dl-eb .dl-live { margin: 0; padding: 4px 10px; border-radius: 999px; font-size: 11px; letter-spacing: .06em; }
+
+/* R9: the live count is part of the eyebrow text: a small steady green dot (a gentle blink, no glow ring) */
+.dl-eb { gap: 10px !important; }
+.dl-eb .dl-live { height: auto !important; padding: 0 !important; background: none !important; box-shadow: none !important; font: 600 13px/1 'JetBrains Mono', monospace !important; letter-spacing: .15em !important; color: #F7C032 !important; gap: 8px !important; }
+.dl-eb .dl-live b { font: inherit !important; color: #FFFFFF !important; }
+.dl-eb .dl-live i { width: 7px !important; height: 7px !important; box-shadow: none !important; animation: dlBlink 1.6s ease-in-out infinite !important; }
+.dl-sep { color: rgba(255, 255, 255, .35); }
+@keyframes dlBlink { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+.dl-pre-img { position: relative; display: grid; place-items: center; width: 64px; height: 56px; border-radius: 10px; overflow: hidden; background: var(--st-dark); flex: none; }
+.dl-pre-img img { width: 120%; height: 120%; object-fit: contain; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, .45)); }
+.dl-pre li { grid-template-columns: 64px 1fr auto !important; }

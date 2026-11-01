@@ -10,7 +10,7 @@ type Mode = 'in' | 'up' | 'code' | 'forgot';
 const strength = (p: string) => [p.length >= 8, /[A-Z]/.test(p) && /[a-z]/.test(p), /\d/.test(p), /[^A-Za-z0-9]/.test(p), p.length >= 12].filter(Boolean).length;
 
 export default function Auth({ onDone }: { onDone: () => void }) {
-  const [mode, setMode] = useState<Mode>('in'), [busy, setBusy] = useState(false), [err, setErr] = useState(''), [info, setInfo] = useState('');
+  const [mode, setMode] = useState<Mode>(() => (typeof location !== 'undefined' && new URLSearchParams(location.search).get('signup') ? 'up' : 'in')), [busy, setBusy] = useState(false), [err, setErr] = useState(''), [info, setInfo] = useState('');
   const [f, setF] = useState({ name: '', email: '', password: '', phone: '', kind: 'customer' as 'customer' | 'wholesale', agree: false, code: '' });
   const [demo, setDemo] = useState(''), [show, setShow] = useState(false);
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement>) => setF({ ...f, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value });

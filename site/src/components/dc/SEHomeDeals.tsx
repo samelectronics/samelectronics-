@@ -7,10 +7,10 @@ import Logic from './SEHomeDeals.logic.js';
 /** R6 §10: the shipment map is real geography (Natural Earth coastlines and borders, scripts/maps/make-ship-map.mjs →
  *  public/se-ship-map.json, fetched when the section nears). The arc runs Shenzhen → Dubai; the plane sits at the real
  *  progress of the sample shipment. */
-type ShipMap = { w: number; h: number; land: string; borders: string; shenzhen: [number, number]; dubai: [number, number] };
+type ShipMap = { w: number; h: number; land: string; borders: string; shenzhen: [number, number]; dubai: [number, number]; hanoi?: [number, number]; hcmc?: [number, number] };
 const FALLBACK: ShipMap = { w: 520, h: 230, land: '', borders: '', shenzhen: [430, 150], dubai: [70, 140] };
-const arcOf = (m: ShipMap) => {
-  const A = m.shenzhen, B = m.dubai, C: [number, number] = [(A[0] + B[0]) / 2, Math.min(A[1], B[1]) - 80];
+const arcOf = (m: ShipMap, from?: [number, number], lift = 80) => {
+  const A = from || m.shenzhen, B = m.dubai, C: [number, number] = [(A[0] + B[0]) / 2, Math.min(A[1], B[1]) - lift];
   const bez = (t: number): [number, number] => [(1 - t) * (1 - t) * A[0] + 2 * (1 - t) * t * C[0] + t * t * B[0], (1 - t) * (1 - t) * A[1] + 2 * (1 - t) * t * C[1] + t * t * B[1]];
   return { A, B, C, bez };
 };
@@ -40,12 +40,14 @@ function render(v: Vals) {
         <header className="dl-top">
           <div>
             {/* owner (27 Oct): the live count sits in the eyebrow line above the title, not as a loose chip by the button */}
+            {/* R9 (owner): the live count reads first, in the same line as the section name (no chip, no glowing tick) */}
             <span className="dl-eb">
-              DEALS & ARRIVALS
               <span className="dl-live" aria-live="polite">
                 <i />
-                <b key={v.live}>{v.live}</b> live deals
+                <b key={v.live}>{v.live}</b> LIVE DEALS
               </span>
+              <span className="dl-sep" aria-hidden="true">·</span>
+              DEALS & ARRIVALS
             </span>
             <h2 className="dl-h">
               <span>
@@ -231,13 +233,28 @@ function render(v: Vals) {
                   </defs>
                   <path d={M.land} className="dl-land" />
                   <path d={M.borders} className="dl-borders" />
+                  {/* R9 (owner): more than one plane: Vietnam routes run alongside the main shipment, each at its own point */}
+                  {([['hanoi', 'HANOI', 0.37, 52], ['hcmc', 'HO CHI MINH', 0.71, 30]] as const).map(([k, lab, off, lift]) => {
+                    const from = M[k as 'hanoi' | 'hcmc']; if (!from) return null;
+                    const r = arcOf(M, from, lift), pp = (prog + off) % 1, [x1, y1] = r.bez(pp), [x2, y2] = r.bez(Math.min(1, pp + 0.01)), a2 = (Math.atan2(y2 - y1, x2 - x1) * 180) / Math.PI;
+                    return (
+                      <g key={k} className="dl-alt">
+                        <path d={`M${r.A[0]} ${r.A[1]} Q${r.C[0]} ${r.C[1]} ${r.B[0]} ${r.B[1]}`} className="dl-route" />
+                        <circle cx={r.A[0]} cy={r.A[1]} r="3.5" fill="#1F2023" stroke="#F7C032" strokeWidth="1.3" />
+                        <text x={r.A[0]} y={r.A[1] + 16} textAnchor="middle" className="dl-city">{lab}</text>
+                        <g style={{ transform: `translate(${x1.toFixed(2)}px, ${y1.toFixed(2)}px) rotate(${a2.toFixed(1)}deg)`, transition: 'transform 1s linear' }}>
+                          <g className="dl-plane"><path d="M-9 0 L6 -1.6 L9 0 L6 1.6 Z M-2 0 L-6 -6 L-3 -6 L3 0 L-3 6 L-6 6 Z M-8 0 L-10 -3 L-8.5 -3 L-6 0 L-8.5 3 L-10 3 Z" fill="#FFFFFF" opacity=".85" /></g>
+                        </g>
+                      </g>
+                    );
+                  })}
                   <path d={`M${A[0]} ${A[1]} Q${C[0]} ${C[1]} ${B[0]} ${B[1]}`} className="dl-route" />
                   <path d={`M${A[0]} ${A[1]} Q${C[0]} ${C[1]} ${B[0]} ${B[1]}`} className="dl-route-flow" pathLength={1} style={{ ['--p' as string]: prog.toFixed(3) } as React.CSSProperties} />
                   <polyline points={trail.map(([x, y]) => x.toFixed(1) + ',' + y.toFixed(1)).join(' ')} fill="none" stroke="url(#dlTrail)" strokeWidth="2.5" strokeLinecap="round" />
                   <circle cx={A[0]} cy={A[1]} r="4" fill="#1F2023" stroke="#F7C032" strokeWidth="1.5" />
                   <circle cx={B[0]} cy={B[1]} r="5" fill="#F7C032" className="dl-dxb" />
-                  <text x={A[0]} y={A[1] + 18} textAnchor="middle" className="dl-city">
-                    SHENZHEN
+                  <text x={A[0]} y={A[1] - 12} textAnchor="middle" className="dl-city">
+                    SHENZHEN · HONG KONG
                   </text>
                   <text x={B[0]} y={B[1] + 20} textAnchor="middle" className="dl-city">
                     DUBAI · DEIRA
@@ -287,7 +304,7 @@ function render(v: Vals) {
               <ul className={(v.pre || []).length > 2 ? 'roll' : ''}>
                 {(v.pre || []).concat((v.pre || []).length > 2 ? (v.pre || []).map((p: any) => ({ ...p, k: 'c' + p.k, clone: true })) : []).map((p: any) => (
                   <li key={p.k} aria-hidden={p.clone || undefined}>
-                    <span className="dl-sil" aria-hidden="true" />
+                    {p.img ? <span className="dl-pre-img" aria-hidden="true"><img src={p.img} alt="" loading="lazy" /></span> : <span className="dl-sil" aria-hidden="true" />}
                     <span className="dl-pre-t">
                       <b data-no-i18n="">{p.model}</b>
                       <small>{p.parts}</small>

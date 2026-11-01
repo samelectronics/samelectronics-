@@ -1,0 +1,31 @@
+/* R9 (owner, universal rule): every box that shows a part is a small photo studio: a back wall lit by a spotlight from
+   above, a soft cove where the wall turns into the floor, and a floor that runs off into the distance with a pool of light
+   (and a faint reflection) under the part. Dark studio on graphite cards, white studio in the shop; same light everywhere. */
+:root {
+  --st-dark: radial-gradient(46% 34% at 50% -4%, rgba(255, 244, 222, .30), rgba(255, 244, 222, .08) 55%, rgba(255, 244, 222, 0) 80%),
+    radial-gradient(52% 16% at 50% 79%, rgba(255, 255, 255, .13), rgba(255, 255, 255, .04) 55%, rgba(255, 255, 255, 0) 80%),
+    radial-gradient(120% 60% at 50% 120%, rgba(0, 0, 0, .55), rgba(0, 0, 0, 0) 70%),
+    linear-gradient(180deg, #3A3C41 0%, #313337 30%, #2A2C30 52%, #232427 62%, #282A2E 72%, #222327 88%, #1B1C1F 100%);
+  --st-light: radial-gradient(46% 34% at 50% -4%, rgba(255, 255, 255, 1), rgba(255, 255, 255, .5) 55%, rgba(255, 255, 255, 0) 80%),
+    radial-gradient(50% 15% at 50% 79%, rgba(255, 255, 255, .95), rgba(255, 255, 255, 0) 80%),
+    radial-gradient(120% 60% at 50% 120%, rgba(38, 40, 43, .10), rgba(38, 40, 43, 0) 70%),
+    linear-gradient(180deg, #F7F8F9 0%, #EFF0F2 40%, #E6E8EB 58%, #DCDFE2 64%, #E7E9EC 74%, #E1E3E6 90%, #D6D9DD 100%);
+  --st-warm: radial-gradient(42% 32% at 50% -4%, rgba(255, 214, 110, .42), rgba(255, 214, 110, .1) 55%, rgba(255, 214, 110, 0) 80%),
+    radial-gradient(52% 16% at 50% 79%, rgba(255, 220, 140, .16), rgba(255, 220, 140, 0) 80%),
+    radial-gradient(120% 60% at 50% 120%, rgba(0, 0, 0, .55), rgba(0, 0, 0, 0) 70%),
+    linear-gradient(180deg, #3D3B37 0%, #33322F 30%, #2B2B2B 52%, #232326 62%, #2A2A2C 72%, #222225 88%, #1B1B1D 100%);
+}
+/* the floor line the part stands on: a soft horizon, never a hard edge */
+.wo-stage, .dl-spot-art, .dl-card-art, .pc-stage, .pv-stage, .sc-r { isolation: isolate; }
+.wo-stage { background: var(--st-dark) !important; }
+.dl-spot-art, .dl-card-art { background: var(--st-dark); border-radius: 14px; overflow: hidden; }
+.dl-spot-light { display: none; }
+.sc-r { background: var(--st-warm) !important; }
+.sc-floor { display: none !important; }
+.pc-stage { background: var(--st-light) !important; }
+.pv-stage { background: var(--st-light) !important; }
+/* a faint reflection band on the floor (polished studio floor) */
+.wo-stage::after, .dl-spot-art::after, .dl-card-art::after, .sc-r::after, .pv-stage::before {
+  content: ''; position: absolute; left: 8%; right: 8%; top: 66%; height: 22%; z-index: -1; pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, 0)); border-radius: 50% / 30%; }
+.pv-stage::before { background: linear-gradient(180deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, 0)); }

@@ -94,14 +94,18 @@ class Component extends DCLogic {
     const L = window.seI18n, ar = !!(L && L.lang() === 'ar'), eta = sh ? new Date(sh.lands).toLocaleString(ar ? 'ar-AE' : 'en-GB', { timeZone: 'Asia/Dubai', weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) + ' GST' : '';
     const ship = sh ? { id: sh.id, label: sh.label, eta, pct: Math.round(prog * 100) + '%', prog, clock: [[Math.floor(dh / 24), 'DAYS'], [dh % 24, 'HRS'], [dm, 'MIN'], [ds, 'SEC']] /* owner (27 Oct): a real ticking countdown, to the second */.map(([v, u]) => ({ v: pad(v), u })), stages: STAGES.map((t, i) => ({ t, on: i <= stage, cur: i === stage })),
       notify: () => window.dispatchEvent(new CustomEvent('se:flash', { detail: { t: 'We’ll message you when ' + sh.id + ' lands.' } })) } : null;
-    const pre = D ? D.preorders.map((p, i) => ({ ...p, k: i, reserve: () => window.dispatchEvent(new CustomEvent('se:soon', { detail: { title: 'Pre-orders', text: 'Reserving a pre-order opens with the shop. Ask us on WhatsApp in the meantime.' } })) })) : [];
+    // R9 (owner): each pre-order shows the real 3D part (the first part family it lists); Reserve sends the request on WhatsApp
+    const PRE_IMG = { screen: 'solo-scr', batter: 'solo-bat', back: 'solo-bcv', camera: 'solo-cam', flex: 'solo-flx', frame: 'solo-frm' };
+    const preImg = (parts) => { const t = String(parts || '').toLowerCase(), k = Object.keys(PRE_IMG).find((x) => t.includes(x)); return window.SE_SHOTS && k ? window.SE_SHOTS.url(PRE_IMG[k], 240) : ''; };
+    const waN = (D && D.contact && D.contact.wa) || '971503420015';
+    const pre = D ? D.preorders.map((p, i) => ({ ...p, k: i, img: preImg(p.parts), reserve: () => window.open('https://wa.me/' + waN + '?text=' + encodeURIComponent('*PRE-ORDER*\n\nI would like to reserve parts for the ' + p.model + ' (' + p.parts + ').\nName: \nQuantity: \n\nSent from the Sam Electronics website'), '_blank', 'noopener') })) : [];
     return { secRef: this.secRef, trackRef: this.trackRef, beltRef: this.beltRef, seen: s.seen, spot, cards, belt, loop, tabs, ship, pre, waiting: s.waiting, live: pool.filter((d) => d.ends > s.now).length, map: s.map,
       prev: () => { this.glide = { t0: performance.now(), from: this.bx, by: -this.step() }; }, next: () => { this.glide = { t0: performance.now(), from: this.bx, by: this.step() }; },
       hold: () => { this.hold = true; }, free: () => { this.hold = false; },
       down: (e) => { if (e.pointerType !== 'mouse' || e.target.closest('button') || !this._loop) return; this.drag = { x: e.clientX, b: this.bx }; this.glide = null; },
       move: (e) => { const d = this.drag; if (!d) return; const rtl = document.documentElement.dir === 'rtl'; this.bx = d.b - (rtl ? -1 : 1) * (e.clientX - d.x); this.belt(0, performance.now()); },
       up: () => { this.drag = null; },
-      all: (ev) => { ev.preventDefault(); window.dispatchEvent(new CustomEvent('se:soon', { detail: { title: 'Every deal', text: 'The full Deals & arrivals page is coming soon. Every live deal is in the carousel in the meantime.' } })); } };
+      all: (ev) => { ev.preventDefault(); location.href = '/shop?scope=deals'; } };
   }
 }
 

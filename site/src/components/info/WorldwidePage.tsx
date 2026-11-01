@@ -50,7 +50,7 @@ export default function WorldwidePage() {
         <small className="sp-muted">{T('Not on the list? We ship almost anywhere: ask us.')}</small>
       </div></section>
 
-      <section className="sp-sec d"><div className="sp-wrap">
+      <section id="partners" className="sp-sec d"><div className="sp-wrap">
         <div className="sp-head" data-rise><div><span className="sp-eb">{T('OUR SHIPPING PARTNERS')}</span><h2 className="sp-h2" style={{ color: '#fff' }}>{T('Air cargo and express, from Dubai.')}</h2><p className="sp-p">{T('We book the best route for your parcel: express for urgent parts, air cargo for bulk.')}</p></div></div>
         <div className="ww-partners" data-rise>{PARTNERS.map(([n, d, c]) => <div key={n} className="ww-p" style={{ ['--c' as string]: c }}><b>{n}</b><small>{T(d)}</small></div>)}<div className="ww-p more"><b>{T('and more')}</b><small>{T('Regional couriers on request')}</small></div></div>
         <span className="sp-sample" style={{ color: '#9DA1A6' }}>{T('Partner names as given by the owner; logos added once permission is confirmed.')}</span>

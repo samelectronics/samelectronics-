@@ -45,7 +45,7 @@ class Logic extends DCLogic {
   renderVals() {
     const go = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Sam Electronics Al Murar Deira Dubai');
     return { secRef: this.secRef, seen: this.state.seen, rating: RATING.toFixed(1), google: go,
-      write: () => window.dispatchEvent(new CustomEvent('se:soon', { detail: { title: 'Write a review', text: 'Reviews open with customer accounts. Review us on Google in the meantime.' } })) };
+      write: () => window.open('https://maps.app.goo.gl/wiMCNcX3SqyPpM9S6', '_blank', 'noopener') }; // R9 (owner): our own Google listing
   }
 }
 

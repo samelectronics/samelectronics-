@@ -49,14 +49,18 @@ function render(v: Vals) {
     <section id="board" ref={v.secRef} className={'lb' + (v.seen ? ' lb-seen' : '')}>
       {/* R6 §07: faint side circuits in the gutters, away from the board and text; with every new row a ping runs
           from one side's circuit into the board at the newest row's height (--ry, measured by the logic) */}
-      {(['l', 'r'] as const).map((sd, n) => (
-        <svg key={sd} className={'lb-side ' + sd} viewBox="0 0 100 400" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M0 36 H38 L58 56 V176 L82 200 H100" className="lb-strace" />
-          <path d="M0 330 H26 L46 310 V244 L64 226" className="lb-strace" />
-          <path d="M0 120 H18 L30 132 V150" className="lb-strace" />
-          <circle cx="64" cy="226" r="3" className="lb-snode" />
-          <circle cx="30" cy="150" r="3" className="lb-snode" />
-          {pulse && pulse.id % 2 === n ? <path key={pulse.id} d="M0 36 H38 L58 56 V176 L82 200 H100" className="lb-spulse" pathLength={1} /> : null}
+      {/* R9 (owner): four matched circuits (top and bottom of each side), drawn at their real shape (not stretched), with a
+          light always running along them; a new row still sends an extra ping along the top one */}
+      {([['l', 0], ['l', 1], ['r', 0], ['r', 1]] as const).map(([sd, k], n) => (
+        <svg key={sd + k} className={'lb-side ' + sd + ' k' + k} viewBox="0 0 120 400" preserveAspectRatio="xMinYMid meet" aria-hidden="true">
+          <path d="M0 36 H44 L64 56 V176 L88 200 H120" className="lb-strace" />
+          <path d="M0 330 H30 L50 310 V244 L68 226" className="lb-strace" />
+          <path d="M0 120 H20 L32 132 V150" className="lb-strace" />
+          <circle cx="68" cy="226" r="3.5" className="lb-snode" />
+          <circle cx="32" cy="150" r="3.5" className="lb-snode" />
+          <path d="M0 36 H44 L64 56 V176 L88 200 H120" className="lb-sflow" pathLength={1} style={{ animationDelay: n * -0.9 + 's' }} />
+          <path d="M0 330 H30 L50 310 V244 L68 226" className="lb-sflow" pathLength={1} style={{ animationDelay: n * -1.3 - 1.6 + 's' }} />
+          {k === 0 && pulse && pulse.id % 2 === (sd === 'l' ? 0 : 1) ? <path key={pulse.id} d="M0 36 H44 L64 56 V176 L88 200 H120" className="lb-spulse" pathLength={1} /> : null}
         </svg>
       ))}
       <div className="lb-in">

@@ -136,3 +136,11 @@ html[dir='rtl'] .sc-makers { left: 150px; right: 24px; }
 .sc-mk-dots i.on { background: #26282B; transform: scale(1.25); }
 @keyframes scMkIn { from { opacity: 0; transform: translateY(6px); } }
 html[dir='rtl'] .sc-makers { right: 24px !important; left: 160px !important; }
+/* R9 (owner: "the arrows look cheap"): the hero's reel controls: one frosted pill, two quiet arrows split by a hairline,
+   each lighting up with the site's yellow LED glow on hover */
+.sc-nav { gap: 0 !important; padding: 4px; border-radius: 999px; background: rgba(20, 21, 23, .55); -webkit-backdrop-filter: blur(10px) saturate(1.2); backdrop-filter: blur(10px) saturate(1.2); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12), 0 12px 26px -12px rgba(0, 0, 0, .6); }
+.sc-nav button { width: 40px !important; height: 40px !important; border-radius: 50% !important; background: transparent !important; color: rgba(255, 255, 255, .85) !important; box-shadow: none !important; transition: color .2s, background .2s, filter .2s !important; }
+.sc-nav button + button { position: relative; }
+.sc-nav button + button::before { content: ''; position: absolute; inset-inline-start: -1px; top: 11px; bottom: 11px; width: 1px; background: rgba(255, 255, 255, .16); }
+.sc-nav button:hover { transform: none !important; color: #F7C032 !important; background: rgba(247, 192, 50, .14) !important; filter: drop-shadow(0 0 6px rgba(247, 192, 50, .7)); }
+.sc-nav button:active { transform: scale(.94) !important; }

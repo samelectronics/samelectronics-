@@ -89,8 +89,8 @@ function markEntries(sec: HTMLElement) {
 // owner (28 Oct): the small corner circuits stay only where the owner kept them; every other section is clean
 // R8: tall sections that felt bare (What we offer) get a few more clusters down their sides, still only in the empty
 // gutters and alternating left / right like the hero: fractions of the section height where each one sits
-const TALL: Record<string, number[]> = { families: [0.06, 0.24, 0.46, 0.68, 0.86] };
-const GUT = new Set(['families', 'quality', 'wholesale', 'reviews', 'board']);
+const TALL: Record<string, number[]> = { families: [0.06, 0.24, 0.46, 0.68, 0.86], wholesale: [0.08, 0.3, 0.52, 0.74, 0.92] }; // R9: Trade Floor circuits down both sides
+const GUT = new Set(['families', 'quality', 'wholesale', 'reviews']); // R9: the board has its own four circuits
 
 export default function SectionLife() {
   useEffect(() => {

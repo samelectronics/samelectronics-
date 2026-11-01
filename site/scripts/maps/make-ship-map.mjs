@@ -20,6 +20,6 @@ const land = gp(feature(topo, topo.objects.land));
 const ids = new Set(near.map((f) => f.id));
 const borders = gp(mesh(topo, topo.objects.countries, (a, b) => a !== b && (ids.has(a.id) || ids.has(b.id))));
 const pt = (lon, lat) => proj([lon, lat]).map((v) => Math.round(v * 10) / 10);
-const out = JSON.stringify({ src: 'Natural Earth 50m (world-atlas), Mercator', w: W, h: H, land, borders, shenzhen: pt(114.06, 22.54), dubai: pt(55.3, 25.27) });
+const out = JSON.stringify({ src: 'Natural Earth 50m (world-atlas), Mercator', w: W, h: H, land, borders, shenzhen: pt(114.06, 22.54), dubai: pt(55.3, 25.27), hongkong: pt(114.17, 22.32), hanoi: pt(105.85, 21.03), hcmc: pt(106.66, 10.82) });
 fs.writeFileSync(path.join(ROOT, 'public/se-ship-map.json'), out);
 console.log('land', land.length, 'borders', borders.length, 'countries', near.length, out.length);

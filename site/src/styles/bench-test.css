@@ -170,3 +170,14 @@ html[dir='rtl'] .bt-try > svg:last-child { transform: scaleX(-1); }
 .bt-try { padding-inline-start: 10px !important; }
 .bt-try-i { width: 34px !important; height: 34px !important; border-radius: 9px !important; }
 .bt-o-r:nth-last-of-type(1) span:last-child, .bt-order .bt-o-r:last-of-type span:last-child { font-weight: 700; }
+
+/* R9 (owner): the section material shows through (the rig's own flat panel hid it); the two actions are the site's standard
+   buttons: graphite filled + graphite outline, no icons, nothing yellow on yellow */
+.bt-bg { background: none !important; }
+.bt-try { background: #26282B !important; color: #FFFFFF !important; border-color: #26282B !important; }
+.bt-try-i { display: none !important; }
+.bt-how:hover, .bt-try:hover { transform: translateY(-2px); }
+.bt-cable { height: 640px !important; }
+
+/* R9 (owner): small titles start with the words, no line in front */
+.bt-eb i { display: none !important; }

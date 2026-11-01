@@ -32,7 +32,7 @@ export default function RepairLab({ v, full = false }: { v: Vals; full?: boolean
                 color: '#F7C032',
               }}
             >
-              <span style={{ width: '28px', height: '2px', background: '#F7C032' }}></span>REPAIR LAB · DEIRA BENCH
+              REPAIR LAB · DEIRA BENCH
             </span>
             {'\n        '}
             <h2
@@ -107,7 +107,7 @@ export default function RepairLab({ v, full = false }: { v: Vals; full?: boolean
             {'\n        '}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px' }}>
               {'\n          '}
-              <div style={{ position: 'relative', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div style={{ position: 'relative', zIndex: v.re?.mdd?.open ? 40 : 2, display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 <span style={{ fontSize: '13px', fontWeight: '600', color: '#3D3E3F' }}>2 · Device and model</span>
                 <div className="rp-devs">
                   {(v.re?.devs || []).map((d: any) => (
@@ -140,8 +140,8 @@ export default function RepairLab({ v, full = false }: { v: Vals; full?: boolean
                         position: 'absolute',
                         left: '0',
                         right: '0',
-                        top: '122px',
-                        zIndex: '20',
+                        top: 'calc(100% + 6px)', // R9: right under the model field (it was a fixed offset that drifted)
+                        zIndex: '40',
                         maxHeight: '240px',
                         overflowY: 'auto',
                         padding: '6px',

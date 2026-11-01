@@ -82,8 +82,8 @@ class Component extends DCLogic {
       unitDigits: String(unit).split('').map((d, i) => ({ d, k: d + '-' + i + '-' + ti + '-' + s.part })),
       retail: 'AED ' + fmt(p ? p.retail_price * q : 0), trade: 'AED ' + fmt(unit * q), keepInit: 'AED ' + fmt(this.shown != null ? this.shown : this.keep()),
       cartons, n, full, partName: p ? p.title : '', grade: p ? GN[p.grade] : '', partImg: img(p),
-      apply: soon('Trade accounts', 'Trade account applications open with the Wholesale page, coming soon. Message us on WhatsApp in the meantime.'),
-      partner: soon('Partner programme', 'Partner programme details are coming soon. Message us on WhatsApp in the meantime.'), wa,
+      apply: (ev) => { ev && ev.preventDefault && ev.preventDefault(); location.href = '/wholesale#apply'; },
+      partner: (ev) => { ev && ev.preventDefault && ev.preventDefault(); location.href = '/worldwide#partners'; }, wa,
     };
   }
 }
