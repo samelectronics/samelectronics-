@@ -2788,3 +2788,27 @@ DONE WHEN
 - **P5 Control Room.** `/staff`, with roles (owner, manager, sales, technician): dashboard, products and stock, warehouse moves, orders and invoices, repairs board, customers, approvals, inbox, site editor (banners, announcement, Samsoom, any text), accounting with a VAT summary, e-mail templates, team, audit log, settings. Demo log-in: `owner@sam.demo` / `demo1234` (also manager@, sales@, tech@).
 - **Languages.** About 850 new strings are translated into all 8 languages. A sweep of all 13 pages in Arabic finds no English left except brand and model names. The Control Room is in English only (staff tool).
 - All prices, stock and ratings are **samples** until the owner sends real data.
+
+## R9 (Nov 2026) · site-wide systems, detail pages, SEO, Control Room v2 (part 1)
+
+**Done and deployed**
+- **Home fixes (phase 1):** see docs/PLAN_R9.md §1. All buttons go somewhere; legal pages open; studio backdrops; no long dashes.
+- **24 languages.** en, ar, es, fr, fa, ru, hi, ur + tl, ml, ca, de, it, pt, ro, zh, gl, eu, sw, am, ha, yo, om, ig. Only en/ar/es/fr are ready at entrance; the others download when chosen (with the "Switching language…" pill). The 16 new languages cover the ~480 most visible strings; the rest shows in English. **am, ha, yo, om, ig are machine-quality and marked for a native speaker's review.**
+- **Welcome picker:** Samsoom on the left, scrollable list on the right, the visitor's language detected and listed first, "scroll for more" hint.
+- **Cookie banner** (Core Circuit, Memory Chip, Signal Meter, Booster · Accept all / Deny all / Choose) and **Settings panel** (sounds on/off, volume, Classic/Soft/Arcade pack; privacy; AED/USD/EUR display; language; install the app). Memory Chip off = no saved searches or recently viewed.
+- **Sounds:** quiet synthesized clicks per action (no audio files), silent in the Control Room and with reduced motion.
+- **Ads between product rows** (max 3 per page, each rotating), **notification bell**, **themed FAQs** on each page + `/faq` with FAQPage data, **PWA** (manifest with shortcuts, service worker, install button), **page-tour offer** on first visit of each page (auto steps from the page's sections), **Samsoom only as the circle** on detail pages, **branded dropdowns everywhere** (desktop; phones keep their native picker).
+- **Shop:** search grows downward with recent + popular searches; branded My device picker; no Find My Part inside the shop; American spelling (Customize, color); **price display modes** per product (exact, range, from, ask on WhatsApp, call, trade only + a note).
+- **SEO:** `/m` (all models), `/m/<model>` (e.g. `/m/galaxy-a54-5g`), `/p/<part>` (396 parts) with Product structured data (price in AED + stock), breadcrumbs, ItemList, `sitemap.xml` (446 URLs), `robots.txt`, LocalBusiness data on the home page. Set **NEXT_PUBLIC_SITE_URL** in Vercel to the final domain so the sitemap uses it.
+- **Payments page** `/payments`: 38 methods worldwide in 8 groups; the owner switches them on in Control Room → Settings → Payment methods; checkout shows only enabled ones.
+- **Repair:** find your phone by its model code (Samsung SM- codes, iPhone A-numbers, names) + a how-to per brand.
+- **Account:** profile photo; **reviews only after staff confirm the order** (local + Supabase trigger), always "Verified purchase".
+- **Control Room:** **Daftra** module (status, products, clients, quotations, invoices; name matching to website products; pull prices & stock), **Ads, pop-ups & events** module (shop ads editor, pop-up builder, 10 seasonal presets).
+
+**Daftra setup (owner)**
+1. Regenerate the API key in Daftra (the old one appeared in a screenshot), then set in Vercel: `DAFTRA_API_KEY`, `DAFTRA_SUBDOMAIN=samelectronics`.
+2. Set `CONTROL_ROOM_KEY` in Vercel (any long password). The Daftra route refuses everything until this is set (or Supabase staff sign-in is live).
+3. Writing (quotations/invoices) stays off until `DAFTRA_ALLOW_WRITE=1`.
+4. Not yet tested against the real Daftra account from here (the key is only in Vercel). The field names used (name, product_code, unit_price, buy_price, stock_balance) are Daftra's documented ones; check the Products tab once deployed.
+
+**Still to build (Control Room v2, docs/PLAN_R9.md §4):** repair job cards with QR + phone scanner, purchasing, delivery, Brand Studio templates, Excel catalogue/price-list builder and import, messages & campaigns, visual editor with drafts/publish/history, staff Samsoom, shop floor (queue/TV/tablet/tasks), reports, AI helpers, health & data quality, 2FA, Activity Center widget, translations editor with length warnings, FAQ editor, creating quotations/invoices in Daftra from orders.
