@@ -10,7 +10,13 @@ export type Raw = {
   id: string; model_id: string; category: string; part: string; part_name: string; grade: string; quality: string; manufacturer: string;
   title: string; shot: string; retail_price: number; wholesale_price: number; stock_qty: number; low_stock_threshold: number;
   badges: string[]; visible: boolean; sample?: boolean; colour?: string;
+  /** R9 · how the price shows (set per product in the Control Room): exact (default), range (price → price_max), from,
+   *  whatsapp (ask for price), call, trade (trade accounts only); price_note is a short line under the price. */
+  price_mode?: PriceMode; price_max?: number; price_note?: string;
 };
+export type PriceMode = 'exact' | 'range' | 'from' | 'whatsapp' | 'call' | 'trade';
+/** can it go in the cart as it is shown? (ask/call need a conversation first; trade-only needs a trade account) */
+export const buyable = (p: { price_mode?: PriceMode; stock_qty: number }, trade = false) => p.stock_qty > 0 && (!p.price_mode || p.price_mode === 'exact' || p.price_mode === 'from' || p.price_mode === 'range' || (p.price_mode === 'trade' && trade));
 export type Product = Raw & {
   brand: string; brandName: string; modelName: string; series: string; device: string; catName: string; gradeName: string;
   makerName: string; qualityName: string; img: string; imgBig: string; deal: number; dealEnds: number; price: number;

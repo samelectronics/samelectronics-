@@ -2,6 +2,8 @@
 // P2 · One product in the shop grid (or list). Photo on the standard stage, grade + maker, rating, price ("· sample" until
 // the owner's prices), the trade price (locked until the trade account is approved), stock estimate, and the actions:
 // add to cart (flies into the cart), star, compare, "fits my device".
+import PriceTag from './PriceTag';
+import { buyable } from '@/lib/catalog';
 import React, { useRef } from 'react';
 import { type Product, aed } from '@/lib/catalog';
 import { store, type State } from '@/lib/store';
@@ -38,14 +40,14 @@ export default function ProductCard({ p, st, trade, open, list, fits }: { p: Pro
         <span className="pc-sub">{p.brandName} · {p.part_name}</span>
         <span className="pc-rate"><Stars v={p.rating} n={p.reviews} /><span className="sp-sample">sample</span></span>
         <span className="pc-price">
-          <b>{aed(p.price, false)}</b>{p.deal ? <s>{aed(p.retail_price, false)}</s> : null}<span className="sp-sample">· sample</span>
+          <PriceTag p={p} trade={trade} />
         </span>
         <span className={'pc-trade' + (trade ? ' on' : '')}>
           {trade ? <>{T('Trade')} <b>{aed(p.wholesale_price, false)}</b> <span className="sp-sample">· sample</span></> : <><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>{T('Trade price for approved accounts')}</>}
         </span>
         <span className={'pc-stock s-' + sk}><i />{sl}</span>
         <span className="pc-acts">
-          <button type="button" className={'pc-add' + (inCart ? ' in' : '')} disabled={p.stock_qty <= 0} onClick={(e) => flyToCart(img.current, p.id, e)}>
+          <button type="button" className={'pc-add' + (inCart ? ' in' : '')} disabled={!buyable(p, trade)} onClick={(e) => flyToCart(img.current, p.id, e)}>
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6" /><circle cx="10" cy="20" r="1.4" /><circle cx="17" cy="20" r="1.4" /></svg>
             {inCart ? T('Add another') + ' · ' + inCart.qty : T('Add to cart')}
           </button>

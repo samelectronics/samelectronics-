@@ -4,6 +4,8 @@
 // trade price (locked until approved), quantity, add to cart / buy on WhatsApp, star, compare, stock alert, share,
 // "fits my devices", estimated stock (confirm on WhatsApp), delivery estimate, then the tabs (description, specifications,
 // manufacturer, warranty & quality, reviews by account holders), the repair kit for this model, similar parts and recently viewed.
+import PriceTag from './PriceTag';
+import { buyable } from '@/lib/catalog';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { type Product, aed, alsoFor, byId, data, grades, similar, waLink, fmt, VAT } from '@/lib/catalog';
 import { store, useStore } from '@/lib/store';
@@ -76,7 +78,7 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
             {fits ? <span className="pv-fits ok">✓ {T('Fits your')} {fits.nick || fits.name}</span> : model ? <button type="button" className="pv-fits" onClick={() => store.device({ model_id: model.id, name: model.name })}>+ {T('Add')} {model.name} {T('to My devices')}</button> : null}
 
             <div className="pv-price">
-              <span className="pv-now"><b>{aed(p.price, false)}</b>{p.deal ? <s>{aed(p.retail_price, false)}</s> : null}<span className="sp-sample">· sample</span></span>
+              <span className="pv-now"><PriceTag p={p} trade={trade} big /></span>
               <small>{T('Includes 5% VAT at checkout:')} {aed(p.price * (1 + VAT), false)} · {T('price for everyone')}</small>
               {p.deal ? <Countdown to={p.dealEnds} /> : null}
               <div className={'pv-trade' + (trade ? ' on' : '')}>
@@ -94,7 +96,7 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
 
             <div className="pv-buy">
               <span className="pv-qty"><button type="button" onClick={() => setQty(Math.max(1, qty - 1))} aria-label="−">−</button><input value={qty} inputMode="numeric" onChange={(e) => setQty(Math.max(1, Math.min(999, +e.target.value || 1)))} aria-label={T('Quantity')} /><button type="button" onClick={() => setQty(qty + 1)} aria-label="+">+</button></span>
-              <button type="button" className="sp-btn pv-add" disabled={p.stock_qty <= 0} onClick={(e) => { flyToCart(img.current, p.id, e); if (qty > 1) store.add(p.id, qty - 1); }}>
+              <button type="button" className="sp-btn pv-add" disabled={!buyable(p, trade)} onClick={(e) => { flyToCart(img.current, p.id, e); if (qty > 1) store.add(p.id, qty - 1); }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6" /><circle cx="10" cy="20" r="1.4" /><circle cx="17" cy="20" r="1.4" /></svg>{T('Add to cart')}
               </button>
               <a className="sp-btn wa" href={wa} target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9 0-1.4.7-2 1-2.3.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z" /></svg>{T('Order on WhatsApp')}</a>

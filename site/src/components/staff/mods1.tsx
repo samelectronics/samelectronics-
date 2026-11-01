@@ -88,16 +88,21 @@ export function Products({ me }: P) {
 }
 function ProductForm({ p, canP, canS, canC, onSave }: { p: Raw; canP: boolean; canS: boolean; canC: boolean; onSave: (patch: Record<string, unknown>) => void }) {
   const x = p as Raw & { cost_price?: number; location?: string; description?: string; warranty?: string; photos?: string[] };
-  const [f, setF] = useState({ title: p.title, retail_price: p.retail_price, wholesale_price: p.wholesale_price, cost_price: x.cost_price || Math.round(p.wholesale_price * 0.82), low_stock_threshold: p.low_stock_threshold || 3, visible: p.visible !== false, location: x.location || '', description: x.description || '', warranty: x.warranty || '', badges: (p.badges || []).join(', '), photos: x.photos || [] as string[] });
+  const [f, setF] = useState({ title: p.title, retail_price: p.retail_price, wholesale_price: p.wholesale_price, cost_price: x.cost_price || Math.round(p.wholesale_price * 0.82), low_stock_threshold: p.low_stock_threshold || 3, visible: p.visible !== false, location: x.location || '', description: x.description || '', warranty: x.warranty || '', badges: (p.badges || []).join(', '), photos: x.photos || [] as string[], price_mode: p.price_mode || 'exact', price_max: p.price_max || 0, price_note: p.price_note || '' });
   const margin = f.retail_price ? Math.round((1 - f.cost_price / f.retail_price) * 100) : 0, tmargin = f.wholesale_price ? Math.round((1 - f.cost_price / f.wholesale_price) * 100) : 0;
   const pic = (e: React.ChangeEvent<HTMLInputElement>) => { const file = e.target.files?.[0]; if (!file) return; const r = new FileReader(); r.onload = () => setF({ ...f, photos: [...f.photos, String(r.result)].slice(0, 6) }); r.readAsDataURL(file); };
   return (
-    <form className="cr-form" onSubmit={(e) => { e.preventDefault(); onSave({ title: f.title, ...(canP ? { retail_price: +f.retail_price, wholesale_price: +f.wholesale_price, cost_price: +f.cost_price } : {}), ...(canS ? { low_stock_threshold: +f.low_stock_threshold, location: f.location } : {}), ...(canC ? { visible: f.visible, description: f.description, warranty: f.warranty, badges: f.badges.split(',').map((s) => s.trim()).filter(Boolean), photos: f.photos } : {}) }); }}>
+    <form className="cr-form" onSubmit={(e) => { e.preventDefault(); onSave({ title: f.title, ...(canP ? { retail_price: +f.retail_price, wholesale_price: +f.wholesale_price, cost_price: +f.cost_price, price_mode: f.price_mode, price_max: +f.price_max || undefined, price_note: f.price_note || undefined } : {}), ...(canS ? { low_stock_threshold: +f.low_stock_threshold, location: f.location } : {}), ...(canC ? { visible: f.visible, description: f.description, warranty: f.warranty, badges: f.badges.split(',').map((s) => s.trim()).filter(Boolean), photos: f.photos } : {}) }); }}>
       <label>Title<input className="cr-in" value={f.title} disabled={!canC} onChange={(e) => setF({ ...f, title: e.target.value })} /></label>
       <div className="cr-row3">
         <label>Retail price (AED)<input className="cr-in" type="number" step="0.5" value={f.retail_price} disabled={!canP} onChange={(e) => setF({ ...f, retail_price: +e.target.value })} /></label>
         <label>Trade price (AED)<input className="cr-in" type="number" step="0.5" value={f.wholesale_price} disabled={!canP} onChange={(e) => setF({ ...f, wholesale_price: +e.target.value })} /></label>
         <label>Cost price (AED)<input className="cr-in" type="number" step="0.5" value={f.cost_price} disabled={!canP} onChange={(e) => setF({ ...f, cost_price: +e.target.value })} /></label>
+      </div>
+      <div className="cr-row3">
+        <label>Price shows as<select className="cr-in" value={f.price_mode} disabled={!canP} onChange={(e) => setF({ ...f, price_mode: e.target.value as typeof f.price_mode })}><option value="exact">Exact price</option><option value="range">A range (from retail to “up to”)</option><option value="from">“From” price</option><option value="whatsapp">Ask on WhatsApp</option><option value="call">Call for price</option><option value="trade">Trade accounts only</option></select></label>
+        <label>Up to (for a range)<input className="cr-in" type="number" step="0.5" value={f.price_max || ''} disabled={!canP || f.price_mode !== 'range'} onChange={(e) => setF({ ...f, price_max: +e.target.value })} /></label>
+        <label>Note under the price<input className="cr-in" value={f.price_note} disabled={!canP} maxLength={60} onChange={(e) => setF({ ...f, price_note: e.target.value })} placeholder="e.g. price changes daily" /></label>
       </div>
       <div className="cr-note">Margin: retail <b>{margin}%</b> · trade <b>{tmargin}%</b> · VAT is added at checkout (5%).</div>
       <div className="cr-row3">

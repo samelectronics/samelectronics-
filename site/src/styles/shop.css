@@ -453,3 +453,10 @@ html[dir='rtl'] .dp-panel { left: auto; right: 0; }
 .dp-none { padding: 18px 8px; font: 400 14px Inter, sans-serif; color: #6A6D72; }
 /* R9 · the search panel and device picker open over the page below (the circuits stay clipped by their own layer) */
 .shop-hd { overflow: visible; z-index: 20; } .shop-hd > .cf, .shop-hd > canvas, .shop-hd > svg { clip-path: inset(0); }
+/* R9 · price display modes */
+.pt { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; } .pt-note { flex-basis: 100%; font: 500 12px Inter, sans-serif; color: var(--g4); }
+.pt-from { font: 600 12px Inter, sans-serif; color: var(--g4); text-transform: uppercase; letter-spacing: .06em; }
+.pt-tag { padding: 2px 6px; border-radius: 5px; background: var(--g8); color: var(--y); font: 700 10.5px 'JetBrains Mono', monospace; }
+.pt-ask { display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 12px; border-radius: 10px; background: #26282B; color: #F7C032; font: 600 13.5px Inter, sans-serif; text-decoration: none; } .pt-ask.wa { background: #1FAF5A; color: #fff; } .pt-ask:hover { filter: brightness(1.08); }
+.pt-trade { display: inline-flex; align-items: center; gap: 6px; font: 600 13.5px Inter, sans-serif; color: var(--g6); } .pt-trade a { color: var(--yd); }
+.pt.big .pt-ask { height: 44px; font-size: 15px; padding: 0 16px; }
