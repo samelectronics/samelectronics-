@@ -3,6 +3,7 @@
 import React from 'react';
 import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SEFeed.logic.js';
+const T = (x: string) => (typeof window !== 'undefined' && (window as unknown as { seI18n?: { t: (s: string) => string } }).seI18n ? (window as unknown as { seI18n: { t: (s: string) => string } }).seI18n.t(x) : x);
 
 export const GLYPH: Record<string, React.ReactNode> = {
   ig: (
@@ -154,6 +155,7 @@ function render(v: Vals) {
 
           <div className="fd-stage" onMouseEnter={() => v.hover(true)} onMouseLeave={() => v.hover(false)}>
             <span className="fd-pool" aria-hidden="true" />
+            <span className="fd-ground" aria-hidden="true"><i /></span>
             <span className="fd-chan" key={v.cur}>{(v.ch || []).find((c: any) => c.on)?.name}</span>
             <a href={(v.ch || []).find((c: any) => c.on)?.href} target="_blank" rel="noopener noreferrer" className="fd-ph one">
               <span className="fd-ph-in">
@@ -161,6 +163,8 @@ function render(v: Vals) {
                 {v.phone ? <img className="fd-body" src={v.phone} alt="" draggable={false} /> : null}
                 <span className="fd-scr" style={scr}>
                   <span className="fd-on" key={v.cur}>{v.seen ? <Screen id={v.cur} v={v} /> : null}</span>
+                  {/* R9 (owner): the bottom of the screen is the app's own bar: the channel and a Follow button (no chip above) */}
+                  <span className="fd-appbar" key={'b' + v.cur}><b>{(v.ch || []).find((c: any) => c.on)?.name}</b><i>{T('Follow')}</i></span>
                   <span className="fd-glass" aria-hidden="true" />
                 </span>
                 <span className="fd-rim" aria-hidden="true" />

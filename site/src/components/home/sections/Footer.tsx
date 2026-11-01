@@ -247,22 +247,22 @@ export default function Footer({ v }: { v: Vals }) {
               {''}
             </span>
             {/* G18 */}
-            <span style={{ opacity: 0.75 }}>Brand names and logos belong to their owners and are used only to show compatibility.</span>
+            <a href="/legal#brands" style={{ opacity: 0.75, color: 'inherit' }} className={cx(undefined, 'scp-f2a4cf2e')}>Brand names and logos belong to their owners and are used only to show compatibility.</a>
           </span>
           {'\n      '}
           <div style={{ display: 'flex', alignItems: 'center', gap: '18px', flexWrap: 'wrap' }}>
             {'\n        '}
             <span style={{ display: 'flex', gap: '14px' }}>
-              <a href="#top" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')}>
+              <a href="/legal#warranty" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')}>
                 Warranty
               </a>
-              <a href="#top" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')}>
+              <a href="/legal#shipping" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')}>
                 Shipping
               </a>
-              <a href="#top" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')}>
+              <a href="/legal#privacy" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')}>
                 Privacy
               </a>
-              <a href="#top" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')}>
+              <a href="/legal#terms" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')}>
                 Terms
               </a>
             </span>

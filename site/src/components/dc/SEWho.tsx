@@ -32,7 +32,7 @@ function Scene({ id, v }: { id: string; v: Vals }) {
     return (
       <div className="ws ws-rep">
         <span className="ws-key" />
-        <div className="ws-film"><RepairFlip w={960} zoom={1.0} fit="contain" /></div>
+        <div className="ws-film"><RepairFlip w={960} zoom={1.12} fit="contain" /></div>
       </div>
     );
   }
@@ -40,14 +40,15 @@ function Scene({ id, v }: { id: string; v: Vals }) {
     return (
       <div className="ws ws-exp">
         <span className="ws-key" />
-        <DotGlobe size={280} speed={7} className="ws-globe" />
+        <DotGlobe size={330} speed={7} className="ws-globe" />
+        <span className="ws-gshadow" aria-hidden="true" />
       </div>
     );
   }
   return (
     <div className="ws ws-blk">
       <span className="ws-key" />
-      <PalletDrop style={{ position: 'absolute', left: '50%', top: '44%', width: '330px', transform: 'translate(-50%, -50%)' }} />
+      <PalletDrop style={{ position: 'absolute', left: '50%', top: '47%', width: '400px', transform: 'translate(-50%, -50%)' }} />
       <span className="ws-chip">Incoming shipments first</span>
     </div>
   );

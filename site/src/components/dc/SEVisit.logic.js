@@ -41,6 +41,7 @@ class Component extends DCLogic {
     window.seVisit = (o) => { if (o.now) this.ovNow = o.now; this.setState({ ...(o.now ? { now: o.now } : {}), ...(o.type ? { type: o.type } : {}), ...(o.vals ? { vals: { ...this.state.vals, ...o.vals } } : {}), ...(o.send ? { sent: o.send, sentN: this.state.sentN + 1 } : {}) }); };
   }
   componentWillUnmount() { this.offRp && this.offRp(); clearInterval(this.iv); clearInterval(this.dIv); clearTimeout(this.sT); this.io && this.io.disconnect(); window.removeEventListener('se:lang', this.onLang); }
+  needAll() { this.setState({ full: true, need: Date.now() }); setTimeout(() => { const R = this.secRef.current, el = R && [...R.querySelectorAll('.vs-con input, .vs-con select, .vs-con textarea')].find((x) => !x.value || !String(x.value).trim()); if (el) { el.focus({ preventScroll: true }); el.closest('.vs-f')?.classList.add('need'); } }, 120); }
   send(via, url) { window.open(url, '_blank', 'noopener'); this.setState({ sent: via, sentN: this.state.sentN + 1 }); clearTimeout(this.sT); this.sT = setTimeout(() => this.setState({ sent: null }), 3600); }
   renderVals() {
     const s = this.state, D = s.data, RT = D ? D.requestTypes : ['Order parts', 'Bulk quote', 'Book a repair', 'Trade account', 'Shipping quote', 'General'], rt = s.type || RT[0];
@@ -68,9 +69,11 @@ class Component extends DCLogic {
     const week = [6, 1, 2, 3, 4, 5, 0].map((x) => ({ day: DAYS[x], on: x === day, h: (H[x] || []).length ? H[x].map(([a, b]) => hm(a) + '–' + hm(b)).join(' · ') : 'Closed' }));
     return { secRef: this.secRef, seen: s.seen,
       types: RT.map((t) => ({ name: t, on: t === rt, pick: () => this.setState({ type: t }) })), rt, fields: s.full ? fields : fields.slice(0, 3), filled, total: fields.length, no, note, setNote, full: !!s.full, more: fields.length > 3, openFull: () => this.setState({ full: true }), closeFull: () => this.setState({ full: false }), // owner (28 Oct): the home shows the first questions; the full form opens on its own
-      lines: fields.filter((f) => f.val.trim()).map((f) => ({ k: f.label.toUpperCase(), v: f.val })).concat(note.trim() ? [{ k: 'COMMENT', v: note.trim() }] : []), sent: s.sent, sentN: s.sentN,
-      sendWa: (e) => { e.preventDefault(); this.send('wa', wa + '?text=' + encodeURIComponent(body)); },
-      sendMail: (e) => { e.preventDefault(); this.send('mail', 'mailto:' + email + '?subject=' + encodeURIComponent(no + ' · ' + rt) + '&body=' + encodeURIComponent(body)); },
+      lines: fields.filter((f) => f.val.trim()).map((f) => ({ k: f.label.toUpperCase(), v: f.val })).concat(note.trim() ? [{ k: 'COMMENT', v: note.trim() }] : []), sent: s.sent, sentN: s.sentN, need: s.need && Date.now() - s.need < 8000, complete: filled >= fields.length,
+      // R9 (owner): never send a half request. Until every field is filled, Send opens the full form (what was typed stays)
+      // and points at the first empty field; only a complete request goes to WhatsApp or email
+      sendWa: (e) => { e.preventDefault(); if (filled < fields.length) return this.needAll(); this.send('wa', wa + '?text=' + encodeURIComponent(body)); },
+      sendMail: (e) => { e.preventDefault(); if (filled < fields.length) return this.needAll(); this.send('mail', 'mailto:' + email + '?subject=' + encodeURIComponent(no + ' · ' + rt) + '&body=' + encodeURIComponent(body)); },
       clock: hm(m) + ':' + pad(sec), open: !!cur, soon, dot: SS.dot, state: SS.state, status, sub, count, today: DAYS[day],
       shifts: sh.map(([a, b]) => ({ l: ((a / 1440) * 100).toFixed(2) + '%', w: (((b - a) / 1440) * 100).toFixed(2) + '%', t: hm(a) + '–' + hm(b) })), nowAt: (((m + sec / 60) / 1440) * 100).toFixed(3) + '%', week,
       address: C.address || 'Al Murar, Deira, Dubai, UAE', plus: C.plus || '78G4+3H2', phone: C.phone || '+971 4 273 3031', tel: 'tel:' + (C.tel || '+97142733031'),

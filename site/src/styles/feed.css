@@ -204,3 +204,15 @@
 .fd-info, .fd-drops { padding-top: 10px; }
 .fd-follow { margin-top: 30px; }
 .fd-fl { background: rgba(255, 255, 255, .04); }
+
+/* R9 (owner): no chip above the phone; the screen's bottom is the app bar; the phone stands on a floor that runs into the distance */
+.fd-chan { display: none !important; }
+.fd-appbar { position: absolute; left: 8px; right: 8px; bottom: 8px; z-index: 4; display: flex; align-items: center; justify-content: space-between; gap: 8px; height: 38px; padding: 0 6px 0 12px; border-radius: 12px; background: rgba(20, 21, 23, .82); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); animation: seRise .4s both; }
+.fd-appbar b { font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .1em; text-transform: uppercase; }
+.fd-appbar i { font: 700 12px Inter, sans-serif; font-style: normal; padding: 6px 12px; border-radius: 9px; background: #F7C032; color: #26282B; }
+.fd-ground { position: absolute; left: -30%; right: -30%; bottom: -10px; height: 300px; overflow: hidden; perspective: 520px; pointer-events: none; -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 35%, #000 70%, transparent 100%); mask-image: linear-gradient(180deg, transparent 0%, #000 35%, #000 70%, transparent 100%); }
+.fd-ground i { position: absolute; left: 0; right: 0; bottom: -40%; height: 180%; transform: rotateX(72deg); transform-origin: 50% 100%; background:
+  radial-gradient(40% 50% at 50% 30%, rgba(255, 236, 200, .12), rgba(255, 236, 200, 0) 70%),
+  repeating-linear-gradient(90deg, rgba(255, 255, 255, .055) 0 1px, transparent 1px 64px),
+  repeating-linear-gradient(0deg, rgba(255, 255, 255, .045) 0 1px, transparent 1px 64px),
+  linear-gradient(180deg, #1C1D20, #2A2C30); -webkit-mask-image: radial-gradient(60% 80% at 50% 70%, #000, transparent 75%); mask-image: radial-gradient(60% 80% at 50% 70%, #000, transparent 75%); }

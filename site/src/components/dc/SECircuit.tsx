@@ -38,12 +38,14 @@ const CARDS: Record<Kind, Card> = {
 };
 const ORDER: Kind[] = ['circuit', 'grid', 'circle'];
 
-/** the battery printed on the card: 5 cells fill up to the level (a soft charge sweep when it changes) */
+/** R9 (owner): the battery on the card charges like a real one: a liquid fill that grows smoothly to the level (with a
+ *  charging shimmer running through it), five faint cell marks on top, never flat blocks */
 function Battery({ n, of, k }: { n: number; of: number; k: Kind }) {
   return (
     <span className="cx-bat" aria-hidden="true">
       <span className="cx-bat-cells">
-        {Array.from({ length: of }, (_, i) => <i key={i + '-' + n} className={i <= n ? 'on' : ''} style={{ animationDelay: i * 0.09 + 's' }} />)}
+        <span className="fill" style={{ width: (((n + 1) / of) * 100).toFixed(1) + '%' }}><i /></span>
+        {Array.from({ length: of - 1 }, (_, i) => <b key={i} style={{ left: (((i + 1) / of) * 100).toFixed(1) + '%' }} />)}
       </span>
       <span className="cx-bat-nub" />
       <svg className="cx-bat-bolt" width="12" height="12" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z" /></svg>
@@ -88,9 +90,10 @@ export default function SECircuit() {
               <div className="cx-lvl">
                 <span className="cx-lvl-h"><b>{T('Level')}</b><em>{T(C.levels[lvl])} · {T(C.req[lvl])}</em></span>
                 {/* the level picker IS a battery: tap a cell to charge the card to that level */}
-                <span className="cx-lvl-bat" role="radiogroup" aria-label={T('Level')}>
+                <span className="cx-lvl-bat" role="radiogroup" aria-label={T('Level')} style={{ ['--lv' as string]: String((lvl + 1) / C.levels.length) }}>
+                  <span className="charge" aria-hidden="true"><i /></span>
                   {C.levels.map((l, i) => (
-                    <button key={l} type="button" role="radio" aria-checked={lvl === i} aria-label={T(l)} className={i <= lvl ? 'on' : ''} onClick={() => setLvl(i)}>
+                    <button key={l} type="button" role="radio" aria-checked={lvl === i} aria-label={T(l)} className={(i <= lvl ? 'on' : '') + (i === lvl ? ' cur' : '')} style={{ transitionDelay: (i <= lvl ? i * 0.12 : 0) + 's' }} onClick={() => setLvl(i)}>
                       <small>{T(l)}</small>
                     </button>
                   ))}
@@ -119,13 +122,13 @@ export default function SECircuit() {
               <path d="M248 0 V34 L274 60 H332" /><path d="M400 96 H352 L334 114 V150" /><path d="M400 176 H338 L316 154 H262 L244 136 H214" /><path d="M300 0 V14 L314 28 H372" />
               <circle cx="332" cy="60" r="3.4" /><circle cx="334" cy="150" r="3.4" /><circle cx="214" cy="136" r="3.4" /><circle cx="372" cy="28" r="3" />
             </svg>
-            <img className="cx-logo" src="/assets/se-logo-320.webp" alt="" aria-hidden="true" />
+            <span className="cx-mat" aria-hidden="true" />
             <div className="cx-card-in">
               <span className="top">
-                <span className="brand"><b data-no-i18n="">{C.name}</b><small>{T(C.kind)}</small></span>
+                <span className="brand"><img className="cx-badge" src="/assets/se-logo-320.webp" alt="" aria-hidden="true" /><span><b data-no-i18n="">{C.name}</b><small>{T(C.kind)}</small></span></span>
                 {hasLv ? <Battery n={lvl} of={5} k={kind} /> : <span className="cx-seal" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 2l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 15.3 6.8 18l1-5.8L3.6 8.1l5.8-.8z" /></svg></span>}
               </span>
-              <span className="chip" aria-hidden="true"><i /><i /><i /></span>
+              <span className="cx-chiprow" aria-hidden="true"><span className="chip"><i /><i /><i /></span><svg className="cx-nfc" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M8.5 7.5a6 6 0 0 1 0 9M12 5a9.5 9.5 0 0 1 0 14M5 10a2.5 2.5 0 0 1 0 4" /></svg></span>
               <span className="nm" data-no-i18n={name ? '' : undefined}>{name || T('Your name here')}</span>
               <span className="sh" data-no-i18n="">{C.shop ? shop || T('Your shop') : ' '}</span>
               <span className="bot">

@@ -68,7 +68,8 @@ function render(v: Vals) {
                   <span>fields printed</span>
                 </small>
               </div>
-              <div className="vs-send">
+              {v.need ? <p className="vs-need" role="alert">Fill in every field to send: the full form is open and your answers are kept.</p> : null}
+              <div className={'vs-send' + (v.complete ? ' ready' : '')}>
                 <button type="button" className={'vs-btn yel' + (v.sent === 'wa' ? ' hit' : '')} onClick={v.sendWa}>
                   <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
                     {WA}

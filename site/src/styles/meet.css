@@ -163,3 +163,8 @@ html[dir='rtl'] .mt-asks button:hover { transform: translateX(-4px); } html[dir=
 .mt-av { width: 36px !important; height: 36px !important; overflow: visible !important; }
 .mt-av.bot { overflow: hidden !important; }
 .mt-av.bot > div { transform: none !important; }
+
+/* R9 (owner): a sample question is written on the visitor's side: it types into the right of the box and rises into the chat */
+.mt-flyq { left: auto !important; right: 20px; animation: mtFlyQR .8s cubic-bezier(.2, .8, .2, 1) both !important; }
+html[dir='rtl'] .mt-flyq { right: auto; left: 20px !important; }
+@keyframes mtFlyQR { 0% { opacity: 0; clip-path: inset(0 0 0 100% round 999px); transform: translateY(8px); } 45% { opacity: 1; clip-path: inset(0 0 0 0 round 999px); transform: none; } 80% { opacity: 1; transform: translateY(-6px); } 100% { opacity: 0; transform: translateY(-26px); } }

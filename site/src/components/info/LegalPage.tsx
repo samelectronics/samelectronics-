@@ -46,6 +46,10 @@ const S: [string, string, [string, string[]][]][] = [
     ['What we store', ['This site keeps a few things in your browser so it works: your language, your cart, stars and recent searches, whether you have seen Samsoom’s tour, and your sign-in session. We do not use advertising cookies.']],
     ['Your choice', ['You can clear them at any time in your browser; the site will simply forget your cart and preferences on that device.']],
   ]],
+  ['brands', 'Brand names & trademarks', [
+    ['Compatibility only', ['Brand names, model names and logos (such as Apple, Samsung, Xiaomi, Huawei and others) belong to their owners. We use them only to show which phones a part fits. Sam Electronics is an independent parts seller and repair shop, and is not affiliated with, authorised by or endorsed by these brands unless a page says so.']],
+    ['Original and compatible parts', ['Every part is labelled with its quality and its maker. "Original" and "Service Pack" mean parts made for the brand; every other quality is a compatible part from the maker named on the label.']],
+  ]],
   ['accounts', 'Accounts & reviews', [
     ['Your account', ['Keep your password private. You are responsible for orders placed with your account. Trade accounts may be suspended if they are used to resell trade prices outside the approved business.']],
     ['Reviews', ['Only account holders can rate parts, and reviews of parts you bought are marked "verified purchase". Reviews must be honest and about the part. We remove reviews that are abusive, off-topic, contain personal data or advertise other businesses.']],

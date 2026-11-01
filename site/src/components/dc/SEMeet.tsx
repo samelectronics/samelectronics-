@@ -113,7 +113,7 @@ function render(v: Vals) {
           {/* owner (27 Oct): the same Samsoom as the launcher on the right, big; under it what you can ask (fills the space) */}
           <div className="mt-stage2">
             <span className="mt-glow" aria-hidden="true" />
-            <div className="mt-bot"><SESamsoom mood={v.mood} size={220} /></div>
+            <div className="mt-bot"><SESamsoom mood={v.mood} size={220} still={v.still} /></div>
             <div className="mt-asks">
               <span className="mt-k">TRY ASKING</span>
               {(v.tries || []).map((t: any) => (

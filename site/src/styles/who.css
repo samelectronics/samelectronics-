@@ -206,3 +206,11 @@ html[dir='rtl'] .ws-globe { right: auto !important; }
 .ws-globe { top: auto !important; bottom: 17% !important; margin: 0 0 0 -140px !important; }
 .ws-exp::after { width: 34%; margin-left: -17%; bottom: 12%; }
 .ws-blk > :not(.ws-key):not(.ws-chip) { top: auto !important; bottom: 12% !important; transform: translateX(-50%) !important; }
+/* R9 (owner): every scene is a studio (wall, spotlight, floor into the distance); the part stands ON the floor, centred
+   and a little bigger; the globe is centred above its own floor shadow */
+.wh-stage, .wh-stage.ret, .wh-stage.rep, .wh-stage.exp, .wh-stage.blk { background: var(--st-dark) !important; }
+.ws-hero { top: auto !important; bottom: 9% !important; width: min(68%, 470px) !important; filter: drop-shadow(0 22px 22px rgba(0, 0, 0, .55)) !important; }
+.ws-rep .ws-film { inset: 0 14% 10% !important; }
+.ws-ret::after, .ws-exp .ws-gshadow { content: ''; position: absolute; left: 50%; bottom: 8%; width: 52%; height: 30px; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(closest-side, rgba(0, 0, 0, .6), rgba(0, 0, 0, 0)); pointer-events: none; }
+.ws-globe { left: 50% !important; right: auto !important; top: 46% !important; margin: 0 !important; transform: translate(-50%, -50%); animation: none !important; }
+.ws-exp .ws-gshadow { width: 40%; bottom: 7%; }

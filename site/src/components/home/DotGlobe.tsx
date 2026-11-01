@@ -36,6 +36,13 @@ export default function DotGlobe({ size = 240, speed = 6, className, style }: { 
         x.globalAlpha = a; x.beginPath(); x.arc(d[0], d[1], 5 * k1, 0, 7); x.fillStyle = '#F7C032'; x.fill(); x.lineWidth = 1.6 * k1; x.strokeStyle = '#26282B'; x.stroke(); }
       x.globalAlpha = 1; const rim = x.createRadialGradient(C, C, R * 0.82, C, C, R); rim.addColorStop(0, 'rgba(255,236,190,0)'); rim.addColorStop(0.85, 'rgba(255,236,190,.16)'); rim.addColorStop(1, 'rgba(255,240,205,.42)'); x.beginPath(); x.arc(C, C, R, 0, 7); x.fillStyle = rim; x.fill();
       x.lineWidth = dpr; x.strokeStyle = 'rgba(255,240,205,.35)'; x.stroke();
+      // R9 (owner: "the globe looks fake and 2D"): real sphere light over everything: a lit side up-left, a terminator
+      // shadow down-right, a soft specular highlight, all clipped to the sphere
+      x.save(); x.beginPath(); x.arc(C, C, R, 0, 7); x.clip(); x.globalAlpha = 1;
+      const sh = x.createRadialGradient(C - R * 0.45, C - R * 0.5, R * 0.05, C + R * 0.1, C + R * 0.15, R * 1.35); sh.addColorStop(0, 'rgba(255,255,255,.10)'); sh.addColorStop(0.45, 'rgba(0,0,0,0)'); sh.addColorStop(0.8, 'rgba(0,0,0,.38)'); sh.addColorStop(1, 'rgba(0,0,0,.62)');
+      x.fillStyle = sh; x.fillRect(C - R, C - R, R * 2, R * 2);
+      const sp = x.createRadialGradient(C - R * 0.42, C - R * 0.46, 0, C - R * 0.42, C - R * 0.46, R * 0.38); sp.addColorStop(0, 'rgba(255,255,255,.22)'); sp.addColorStop(1, 'rgba(255,255,255,0)');
+      x.fillStyle = sp; x.fillRect(C - R, C - R, R * 2, R * 2); x.restore();
     };
     const loop = (n: number) => { raf = requestAnimationFrame(loop); if (!vis || n - last < 33) return; last = n; draw(n / 1000 - t0); };
     const io = new IntersectionObserver(([e]) => { vis = e.isIntersecting; if (vis) draw(performance.now() / 1000 - t0); }); io.observe(cv);

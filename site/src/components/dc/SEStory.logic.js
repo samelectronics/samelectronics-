@@ -41,7 +41,7 @@ class Component extends DCLogic {
     this.raf = requestAnimationFrame(loop);
     this.onResize = () => { const vw = document.documentElement.clientWidth, vh = window.innerHeight, sc = Math.min(vw / 1440, (vh - 72) / 800); if (Math.abs(sc - this.state.sc) > 0.002) this.setState({ sc }); };
     window.addEventListener('resize', this.onResize); this.onResize();
-    this.io = new IntersectionObserver(([e]) => { if (e.isIntersecting && !this.state.br) { this.setState({ br: true }); this.countUp(); } }, { threshold: 0.25 });
+    this.io = new IntersectionObserver(([e]) => { if (e.isIntersecting && !this.state.br) { this.setState({ br: true }); this.countUp(); } }, { threshold: 0, rootMargin: '0px 0px -8% 0px' }); // R9: starts as soon as the maps edge in
     setTimeout(() => this.brRef.current && this.io.observe(this.brRef.current), 50);
     this.onLang = () => this.forceUpdate(); window.addEventListener('se:lang', this.onLang);
     window.seStory = (p) => { this.ov = p; this.p = p; this.frame(true); };
