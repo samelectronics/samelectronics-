@@ -43,7 +43,7 @@ export default function Nav({ v }: { v: Vals }) {
               flex: 'none',
             }}
           >
-            <img src="assets/se-logo-128.webp" alt="Sam Electronics" style={{ width: '100%', height: '100%', display: 'block' }} />
+            <img src="/assets/se-logo-128.webp" alt="Sam Electronics" style={{ width: '100%', height: '100%', display: 'block' }} />
           </span>
           {'\n      '}
           <span style={{ display: 'flex', flexDirection: 'column', gap: '5px' }} className="se-nav-name">

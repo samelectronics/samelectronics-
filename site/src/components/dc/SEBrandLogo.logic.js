@@ -32,7 +32,7 @@ class Component extends DCLogic {
   componentDidUpdate(pp) { if (pp.brand !== this.props.brand) this.check(); }
   check() {
     const b = this.props.brand || 'apple', C = (window.__seLogo = window.__seLogo || {});
-    const url = 'assets/brands/' + b + '.svg';
+    const url = '/assets/brands/' + b + '.svg';
     if (!C[b]) C[b] = fetch(url).then((r) => (r.ok ? r.text() : null)).then((t) => { if (!t || !/<svg/i.test(t)) return null; const m = t.match(/viewBox="[\d.\-]+\s+[\d.\-]+\s+([\d.]+)\s+([\d.]+)"/); return { ar: m ? Number(m[1]) / Number(m[2]) : 3.2 }; }).catch(() => null);
     C[b].then((v) => { if (this.props.brand === b || !this.props.brand) this.setState({ ok: !!v, ar: v ? v.ar : 3.2 }); });
   }

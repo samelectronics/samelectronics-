@@ -35,6 +35,7 @@ import '@/styles/staff.css';
 import '@/styles/studio.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? 'https://' + process.env.VERCEL_PROJECT_PRODUCTION_URL : 'http://localhost:3000')),
   title: 'Sam Electronics - Home', // R6 §01: "Sam Electronics - <page>" (src/components/site/TabTitle.tsx keeps it in the visitor's language)
   description:
     'Sam Electronics L.L.C, Al Murar, Deira, Dubai: wholesale and retail mobile phone spare parts, repairs and worldwide shipping since 2003. Quality · Warranty · Price.',
