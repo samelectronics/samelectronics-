@@ -11,20 +11,37 @@
  */
 import { isolateNumbers, tr } from './translate';
 import { LANG_KEY } from './prepaint';
-import { loadDict, trOther, type Other } from './multi';
+import { hasDict, loadDict, trOther, type Other } from './multi';
 
-export type Lang = 'en' | 'ar' | 'es' | 'fr' | 'fa' | 'ru' | 'hi' | 'ur';
-/** R8: the eight site languages, in menu order: English and Arabic first (the shop's own two), then the rest A to Z by
- *  their English name. Arabic, Persian and Urdu read right to left. */
+export type Lang = 'en' | 'ar' | 'es' | 'fr' | 'fa' | 'ru' | 'hi' | 'ur' | 'tl' | 'ml' | 'ca' | 'de' | 'it' | 'pt' | 'ro' | 'zh' | 'gl' | 'eu' | 'sw' | 'am' | 'ha' | 'yo' | 'om' | 'ig';
+/** R9: twenty-four languages, in menu order: English and Arabic first (the shop's own two), then the rest A to Z by their
+ *  English name. Arabic, Persian and Urdu read right to left. English and Arabic are built in; Spanish and French are
+ *  fetched quietly once the page has loaded; every other language is fetched only when it is picked. */
 export const LANGS: { id: Lang; name: string; en: string }[] = [
   { id: 'en', name: 'English', en: 'English' },
   { id: 'ar', name: 'العربية', en: 'Arabic' },
+  { id: 'am', name: 'አማርኛ', en: 'Amharic' },
+  { id: 'eu', name: 'Euskara', en: 'Basque' },
+  { id: 'ca', name: 'Català', en: 'Catalan' },
+  { id: 'zh', name: '中文', en: 'Chinese' },
+  { id: 'tl', name: 'Tagalog', en: 'Filipino' },
   { id: 'fr', name: 'Français', en: 'French' },
+  { id: 'gl', name: 'Galego', en: 'Galician' },
+  { id: 'de', name: 'Deutsch', en: 'German' },
+  { id: 'ha', name: 'Hausa', en: 'Hausa' },
   { id: 'hi', name: 'हिन्दी', en: 'Hindi' },
+  { id: 'ig', name: 'Igbo', en: 'Igbo' },
+  { id: 'it', name: 'Italiano', en: 'Italian' },
+  { id: 'ml', name: 'മലയാളം', en: 'Malayalam' },
+  { id: 'om', name: 'Afaan Oromoo', en: 'Oromo' },
   { id: 'fa', name: 'فارسی', en: 'Persian' },
+  { id: 'pt', name: 'Português', en: 'Portuguese' },
+  { id: 'ro', name: 'Română', en: 'Romanian' },
   { id: 'ru', name: 'Русский', en: 'Russian' },
   { id: 'es', name: 'Español', en: 'Spanish' },
+  { id: 'sw', name: 'Kiswahili', en: 'Swahili' },
   { id: 'ur', name: 'اردو', en: 'Urdu' },
+  { id: 'yo', name: 'Yorùbá', en: 'Yoruba' },
 ];
 export const isRtl = (l: string) => l === 'ar' || l === 'fa' || l === 'ur';
 const valid = (l: unknown): l is Lang => typeof l === 'string' && LANGS.some((x) => x.id === l);
@@ -127,7 +144,12 @@ export function loadArabicFonts() {
 export function setLang(next: Lang) {
   if (next === lang || !valid(next)) return;
   // Spanish, French and Persian load their dictionary first, then switch (a few kB, once)
-  if (next !== 'en' && next !== 'ar') { loadDict(next).then(() => apply(next)); return; }
+  if (next !== 'en' && next !== 'ar') {
+    // R9: languages not yet on this device show "Switching language…" while their words arrive
+    if (!hasDict(next as Other)) window.dispatchEvent(new CustomEvent('se:lang-loading', { detail: next }));
+    loadDict(next as Other).then(() => { window.dispatchEvent(new CustomEvent('se:lang-loading', { detail: null })); apply(next); }).catch(() => window.dispatchEvent(new CustomEvent('se:lang-loading', { detail: null })));
+    return;
+  }
   apply(next);
 }
 function apply(next: Lang) {
@@ -184,12 +206,15 @@ export function installI18n() {
   window.seI18n = { lang: () => lang, rtl: () => isRtl(lang), t, tr: t, set: sw, now: setLang, toggle: () => sw(lang === 'en' ? 'ar' : 'en') };
   patchCanvasText();
   if (isRtl(lang)) loadArabicFonts();
+  // R9: Spanish and French are ready before anyone asks (fetched once the page is idle); the rest load when picked
+  const pre = () => { (['es', 'fr'] as Other[]).forEach((l) => { loadDict(l).catch(() => {}); }); };
+  if (document.readyState === 'complete') setTimeout(pre, 2500); else window.addEventListener('load', () => setTimeout(pre, 2500), { once: true });
   if (lang === 'ar') {
     startObserver();
     if (document.body) walk(document.body);
   } else if (lang !== 'en') {
     const l = lang;
-    loadDict(l).then(() => { if (lang !== l) return; startObserver(); if (document.body) walk(document.body); window.dispatchEvent(new CustomEvent('se:lang', { detail: l })); });
+    loadDict(l as Other).then(() => { if (lang !== l) return; startObserver(); if (document.body) walk(document.body); window.dispatchEvent(new CustomEvent('se:lang', { detail: l })); });
   }
 }
 
