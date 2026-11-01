@@ -4,6 +4,7 @@
 // Kept on this device (localStorage) for guests; when someone signs in and Supabase is connected, src/lib/backend syncs
 // it to their account (tables cart_items, favourites, devices, alerts in supabase/schema.sql).
 import { useSyncExternalStore } from 'react';
+import { allowed } from './prefs';
 
 export type Line = { id: string; qty: number; at: number };
 export type Device = { model_id: string; name: string; nick?: string };
@@ -21,7 +22,8 @@ function load() {
   window.addEventListener('storage', (e) => { if (e.key === KEY) { loaded = false; load(); emit(); } });
 }
 function emit() { subs.forEach((f) => f()); if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('se:store', { detail: state })); }
-function set(patch: Partial<State>) { load(); state = { ...state, ...patch }; try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* full or blocked */ } emit(); }
+// R9: recent searches and recently viewed parts are only kept on the device when the visitor allowed the Memory Chip
+function set(patch: Partial<State>) { load(); state = { ...state, ...patch }; try { const keep = allowed('memory') ? state : { ...state, recent: [], viewed: [] }; localStorage.setItem(KEY, JSON.stringify(keep)); } catch { /* full or blocked */ } emit(); }
 export const get = (): State => { load(); return state; };
 export function useStore(): State {
   return useSyncExternalStore((f) => { subs.add(f); return () => subs.delete(f); }, get, () => EMPTY);

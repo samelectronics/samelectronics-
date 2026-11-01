@@ -265,6 +265,12 @@ export default function Footer({ v }: { v: Vals }) {
               <a href="/legal#terms" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')}>
                 Terms
               </a>
+              <a href="/legal#cookies" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')} onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('se:settings', { detail: 'privacy' })); }}>
+                Cookies
+              </a>
+              <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('se:settings'))} style={{ color: '#9DA1A6', background: 'none', border: 0, padding: 0, font: 'inherit', cursor: 'pointer' }} className={cx(undefined, 'scp-f2a4cf2e')}>
+                Settings
+              </button>
             </span>
             {'\n        '}
             {/* R7-G: the same quick language menu as the nav, opening upwards */}

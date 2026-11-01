@@ -30,7 +30,9 @@ export const shots = (): Shots | undefined => (typeof window !== 'undefined' ? W
 export const data = (): D | null => (typeof window !== 'undefined' && W().SE_DATA) || null;
 export const VAT = 0.05; // UAE VAT (owner: 5%)
 export const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
-export const aed = (n: number, sample = true) => 'AED ' + fmt(n) + (sample ? ' · sample' : '');
+// R9: prices can be shown in USD or EUR (the visitor's choice in Settings); orders and invoices stay in AED
+import { prefs, RATES } from './prefs';
+export const aed = (n: number, sample = true) => { const c = typeof window === 'undefined' ? 'AED' : prefs().currency; return (c === 'AED' ? 'AED ' + fmt(n) : '≈ ' + c + ' ' + (n * RATES[c]).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })) + (sample ? ' · sample' : ''); };
 
 // a stable pseudo-random number per id (placeholder ratings until account holders rate)
 const hash = (s: string) => { let h = 2166136261; for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619); return (h >>> 0) / 4294967295; };

@@ -9,6 +9,7 @@ import { installI18n } from '@/i18n/lang';
 import { loadRemoteCatalog } from '@/lib/remoteCatalog';
 import SiteSettings from './SiteSettings';
 import LangLoading from './LangLoading';
+import SiteControls from './SiteControls';
 import FitText from './FitText';
 
 if (typeof window !== 'undefined') {
@@ -29,6 +30,7 @@ export default function SitePage({ children }: { children: React.ReactNode }) {
       <SamsoomTour />
       <FitText />
       <LangLoading />
+      <SiteControls />
     </div>
   );
 }

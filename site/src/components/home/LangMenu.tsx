@@ -34,6 +34,7 @@ export default function LangMenu({ up = false, dark = false }: { up?: boolean; d
               <small>{l.en}</small>
             </button>
           ))}
+          <button type="button" className="se-lm-set" onClick={() => { setOpen(false); window.dispatchEvent(new CustomEvent('se:settings')); }}><b>⚙ {typeof window !== 'undefined' && window.seI18n ? window.seI18n.t('Settings') : 'Settings'}</b><small>{typeof window !== 'undefined' && window.seI18n ? window.seI18n.t('Sounds') : 'Sounds'} · AED/USD/EUR</small></button>
         </span>
       ) : null}
     </span>

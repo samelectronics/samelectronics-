@@ -154,7 +154,7 @@ export default function SamsoomTour() {
               <b>{T('Welcome to Sam Electronics!')}</b>
               <p>{cfg().greeting ? T(cfg().greeting!) : T('I’m Samsoom, your parts assistant. Want a quick walk around? It takes 20 seconds.')}</p>
               <span className="st-acts">
-                <button type="button" className="st-btn st-go" onClick={walk}>{T('Show me around')}</button>
+                <button type="button" className="st-btn st-go" data-sound="next" onClick={walk}>{T('Show me around')}</button>
                 <button type="button" className="st-btn st-grey" onClick={() => bye()}>{T('Skip')}</button>
               </span>
             </>
@@ -191,7 +191,7 @@ export default function SamsoomTour() {
     <div className="st-walk" role="dialog" aria-modal="true" aria-label={T(s.t)}>
       {hole ? <span className="st-hole" style={hole} /> : <span className="st-dim" />}
       <div className="st-bub" style={{ left: bx, top: by, width: bw }}>
-        <button type="button" className="st-x" onClick={() => bye()}>{T('Skip')} <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg></button>
+        <button type="button" className="st-x" data-sound="skip" onClick={() => bye()}>{T('Skip')} <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg></button>
         <span className="st-bsam" style={flip ? { transform: 'scaleX(-1)' } : undefined}><LiveSam size={58} pose={s.mood} pointA={Math.round(ang)} /></span>
         <span className="st-btx" key={i}>
           <small>{i + 1} / {steps.length}</small>
@@ -199,8 +199,8 @@ export default function SamsoomTour() {
           <span>{T(s.d)}</span>
         </span>
         <span className="st-bacts">
-          <button type="button" className="st-btn st-grey" disabled={i === 0} onClick={() => setI(Math.max(0, i - 1))}>{T('Back')}</button>
-          <button type="button" className="st-btn st-dark" onClick={next}>{i === steps.length - 1 ? T('Done') : T('Next')}</button>
+          <button type="button" className="st-btn st-grey" data-sound="back" disabled={i === 0} onClick={() => setI(Math.max(0, i - 1))}>{T('Back')}</button>
+          <button type="button" className="st-btn st-dark" data-sound="next" onClick={next}>{i === steps.length - 1 ? T('Done') : T('Next')}</button>
         </span>
       </div>
     </div>
