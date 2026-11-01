@@ -4,6 +4,7 @@
 // prices, stock & warehouse, orders, repairs, customers, approvals, inbox (live chat), site editing (banners, Samsoom,
 // texts), accounting & VAT reports, automated e-mails, staff & roles, audit log and settings.
 // Demo log-ins (until Supabase is connected): owner@sam.demo / demo1234 · manager@ · sales@ · tech@ (same password).
+import DaftraMod from './DaftraMod';
 import React, { useEffect, useState } from 'react';
 import { backend, live, ROLE_NAMES, useStaff, type Perm, type Staff } from '@/lib/backend';
 import { installI18n } from '@/i18n/lang';
@@ -27,6 +28,7 @@ const MODS: Mod[] = [
   { id: 'approvals', l: 'Approvals', d: 'M9 12l2 2 4-4M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7z', need: ['approvals'], C: Approvals },
   { id: 'inbox', l: 'Inbox · live chat', d: 'M4 5h16v11H8l-4 4z', need: ['chat'], C: Inbox },
   { id: 'site', l: 'Site & Samsoom', d: 'M3 4h18v12H3zM8 20h8M12 16v4', need: ['content', 'banners', 'samsoom'], C: SiteEditor },
+  { id: 'daftra', l: 'Daftra · the brain', d: 'M12 2a7 7 0 0 0-7 7c0 2.4 1.2 4.5 3 5.7V18h8v-3.3A7 7 0 0 0 12 2zM9 22h6M9 9h.01M15 9h.01M9 13c1.5 1 4.5 1 6 0', need: ['accounting', 'products'], C: DaftraMod },
   { id: 'accounting', l: 'Accounting & VAT', d: 'M4 4h16v16H4zM8 8h8M8 12h8M8 16h5', need: ['accounting', 'reports'], C: Accounting },
   { id: 'emails', l: 'Automated e-mails', d: 'M3 6l9 6 9-6M3 6h18v12H3z', need: ['emails'], C: Emails },
   { id: 'team', l: 'Staff & roles', d: 'M16 11a4 4 0 1 0-8 0M4 21a8 8 0 0 1 16 0', need: ['staff'], C: Team },

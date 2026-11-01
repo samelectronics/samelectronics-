@@ -78,3 +78,6 @@ export const supabase: Backend = {
   async setting(key, fallback) { const { data } = await db().from('settings').select('value').eq('key', key).maybeSingle(); return (data ? data.value : fallback) as typeof fallback; },
   async saveSetting(key, value) { await db().from('settings').upsert({ key, value }); },
 };
+
+/** R9 · the signed-in user's access token, for server routes that check staff (e.g. /api/daftra) */
+export async function accessToken(): Promise<string | null> { const { data } = await db().auth.getSession(); return data.session?.access_token || null; }

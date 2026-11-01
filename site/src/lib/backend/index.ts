@@ -8,6 +8,7 @@ export * from './types';
 
 export const live = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 export const backend: Backend = live ? supabase : local;
+export const staffToken = async (): Promise<string | null> => (live ? (await import('./supabase')).accessToken() : null);
 
 /** the signed-in customer (null = guest, undefined = still checking); refreshes when anyone signs in or out */
 export function useMe(): [User | null | undefined, () => void] {
