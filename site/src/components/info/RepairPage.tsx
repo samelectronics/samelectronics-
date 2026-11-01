@@ -9,6 +9,7 @@ import { backend, useMe } from '@/lib/backend';
 import { PageHero, T, useRise, flyToCart } from '@/components/site/ui';
 import SEBrandLogo from '@/components/dc/SEBrandLogo';
 import RepairFlip from '@/components/home/RepairFlip';
+import CodeLookup from './CodeLookup';
 
 type Rep = { id: string; g: string; name: string; cat: string | null; labour?: number; time?: string };
 
@@ -53,6 +54,7 @@ export default function RepairPage() {
             <div className="rp-ml">{models.slice(0, 48).map((m) => <button key={m.id} type="button" className={'rp-m' + (model === m.id ? ' on' : '') + (stocked.has(m.id) ? '' : ' dim')} onClick={() => { setModel(m.id); setPick(null); window.setTimeout(() => document.getElementById('list')?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 60); }}>{m.name}{stocked.has(m.id) ? <i /> : null}</button>)}</div>
             {models.length > 48 ? <small className="sp-muted">+{models.length - 48} {T('more: type to narrow')}</small> : null}
           </div>
+          <CodeLookup onModel={(id, b) => { setBrand(b); setModel(id); setPick(null); window.setTimeout(() => document.getElementById('list')?.scrollIntoView({ behavior: 'smooth' }), 60); }} />
         </div>
       </section>
 
