@@ -1,5 +1,6 @@
 'use client';
 // P5 · Control Room: Site & Samsoom editing, Accounting & VAT, Automated e-mails, Staff & roles, Audit log, Settings, My profile.
+import { PAYMENTS, PAY_GROUPS, PAY_DEFAULT } from '@/lib/payments';
 import React, { useEffect, useMemo, useState } from 'react';
 import { backend, live, ROLE_NAMES, ROLE_PERMS, type Audit as AuditT, type Order, type Perm, type Role, type Staff } from '@/lib/backend';
 import { rawProducts } from '@/lib/catalog';
@@ -229,9 +230,13 @@ export function Settings() {
   const [biz, setBiz] = useSetting('business', { name: 'Sam Electronics L.L.C', trn: '', vat: 5, currency: 'AED', invoiceNote: 'Thank you for your business.' });
   const [fees, setFees] = useSetting('repair-fees', { low: 25, mid: 35, high: 45, lowMax: 100, midMax: 500 });
   const [ship, setShip] = useSetting('delivery', { uae: 25, freeOver: 500, pickupReady: '20 minutes' });
+  const [pays, setPays] = useSetting<Record<string, boolean>>('payments', PAY_DEFAULT);
   const [reset, setReset] = useState(false);
   return (
     <div className="cr-grid">
+      <Panel t="Payment methods" d="Switch on the ways customers can pay. The Payments page and checkout show only these." className="span2">
+        {PAY_GROUPS.map((g) => <div key={g} className="cr-pays"><b>{g}</b><span>{PAYMENTS.filter((p) => p.group === g).map((p) => <label key={p.id} className={'cr-pay' + (pays[p.id] ? ' on' : '')}><input type="checkbox" checked={!!pays[p.id]} onChange={(e) => setPays({ ...pays, [p.id]: e.target.checked })} />{p.name}<small>{p.where}</small></label>)}</span></div>)}
+      </Panel>
       <Panel t="Business" d="Shown on tax invoices.">
         <div className="cr-form"><label>Legal name<input className="cr-in" value={biz.name} onChange={(e) => setBiz({ ...biz, name: e.target.value })} /></label>
           <label>TRN (tax registration number)<input className="cr-in" value={biz.trn} onChange={(e) => setBiz({ ...biz, trn: e.target.value })} placeholder="100xxxxxxxxxxxx" /></label>

@@ -265,6 +265,9 @@ export default function Footer({ v }: { v: Vals }) {
               <a href="/legal#terms" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')}>
                 Terms
               </a>
+              <a href="/payments" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')}>
+                Payments
+              </a>
               <a href="/faq" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')}>
                 Questions
               </a>

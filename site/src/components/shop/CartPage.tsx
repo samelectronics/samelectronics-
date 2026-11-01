@@ -2,6 +2,8 @@
 // P2 · The cart and checkout. Lines with quantity, save for later, 5% UAE VAT, delivery (pick-up · UAE · worldwide), the
 // customer's details (filled from the account, or a company profile), then the order is placed (backend.placeOrder —
 // on Supabase the server recomputes prices and VAT) and confirmed on WhatsApp. Saved-for-later and stars sit underneath.
+import { PAY_DEFAULT } from '@/lib/payments';
+import { siteRaw } from '@/lib/catalog';
 import { notify } from '@/lib/notes';
 import React, { useEffect, useState } from 'react';
 import { type Product, aed, byId, data, VAT, waLink, fmt, siteSetting } from '@/lib/catalog';
@@ -103,10 +105,11 @@ export default function CartPage() {
               </div>
               <h3 className="sp-h3">{T('Payment')}</h3>
               <div className="cart-del">
-                {([['whatsapp', 'Confirm first, pay after', 'We confirm on WhatsApp, then send a payment link'], ['cash', 'Cash or card in the shop', 'When you collect'], ['transfer', 'Bank transfer', 'For trade and export orders'], ['card', 'Card online', 'Coming soon']] as const).map(([k, t, d]) => (
+                {([['whatsapp', 'Confirm first, pay after', 'We confirm on WhatsApp, then send a payment link'], ['cash', 'Cash or card in the shop', 'When you collect'], ['transfer', 'Bank transfer', 'For trade and export orders'], ['card', 'Card online', 'Coming soon']] as const).filter(([k]) => { const o = { ...PAY_DEFAULT, ...siteRaw<Record<string, boolean>>('payments', {}) }; return k === 'whatsapp' || (k === 'cash' ? o.cash || o['card-pos'] : k === 'transfer' ? o['bank-uae'] || o.swift : o.visa || o.mastercard); }).map(([k, t, d]) => (
                   <label key={k} className={'cart-opt' + (pay === k ? ' on' : '') + (k === 'card' ? ' off' : '')}><input type="radio" name="pay" disabled={k === 'card'} checked={pay === k} onChange={() => setPay(k)} /><i /><span><b>{T(t)}</b><small>{T(d)}</small></span></label>
                 ))}
               </div>
+              <a className="cart-paylink" href="/payments" target="_blank" rel="noopener">{T('Every way to pay')} →</a>
               {err ? <div className="sp-note" style={{ background: 'rgba(229,72,77,.1)', color: '#9B1C20' }}>{err}</div> : null}
               <button type="submit" className="sp-btn cart-place" disabled={busy}>{busy ? T('Placing your order…') : T('Place order') + ' · ' + aed(total, false)}</button>
               <small className="sp-muted">{T('By placing the order you agree to our')} <a href="/legal#terms">{T('terms')}</a>, <a href="/legal#returns">{T('returns')}</a> {T('and')} <a href="/legal#privacy">{T('privacy policy')}</a>.</small>
