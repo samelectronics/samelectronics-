@@ -104,3 +104,6 @@ html[dir='rtl'] .au-tabs i { left: auto; right: 4px; } html[dir='rtl'] .au-tabs 
   .bn-loc { grid-template-columns: 1fr 1fr; } .bn-coc { grid-template-columns: auto 1fr; }
 }
 @media (max-width: 560px) { .bn-hello { flex-direction: column-reverse; align-items: flex-start; padding: 22px; } .bn-send { flex-wrap: wrap; } .bn-send select.sp-in { width: 100%; } }
+/* R9 · profile photo */
+.bn-av { position: relative; cursor: pointer; overflow: visible !important; } .bn-av img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; display: block; }
+.bn-av i { position: absolute; right: -4px; bottom: -4px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #26282B; color: #F7C032; box-shadow: 0 0 0 2px #fff; transition: transform .2s; } .bn-av:hover i { transform: scale(1.15); }

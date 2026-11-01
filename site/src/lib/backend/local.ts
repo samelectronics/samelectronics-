@@ -43,6 +43,7 @@ async function seed() {
 const ready = () => (seeded = seeded || seed());
 const strip = <T extends { pw?: string; code?: string }>(u: T) => { const { pw: _p, code: _c, ...rest } = u; return rest; };
 
+const CONFIRMED = ['Confirmed', 'Ready', 'Collected / Shipped', 'Closed'];
 export const local: Backend = {
   mode: 'local',
   async me() { await ready(); const d = read(); const u = d.users.find((x) => x.id === d.session); return u ? (strip(u) as User) : null; },
@@ -88,8 +89,10 @@ export const local: Backend = {
   async reviews(product) { return read().reviews.filter((r) => r.product === product); },
   async addReview(r) {
     const d = read(), u = d.users.find((x) => x.id === d.session); if (!u) return no('Only account holders can rate. Please sign in.');
-    const bought = d.orders.some((o) => o.user === u.id && o.lines.some((l) => l.id === r.product));
-    const rv: Review = { id: id('r'), user: u.id, name: u.name, verified: bought, at: Date.now(), ...r }; d.reviews.unshift(rv); write(d); return ok(rv);
+    // R9: reviews open only once staff have confirmed an order of this part (Confirmed or later)
+    const bought = d.orders.some((o) => (o.user === u.id || o.email === u.email) && CONFIRMED.includes(o.status) && o.lines.some((l) => l.id === r.product));
+    if (!bought) return no('Reviews open once we have confirmed your order of this part.');
+    const rv: Review = { id: id('r'), user: u.id, name: u.name, verified: true, at: Date.now(), ...r }; d.reviews.unshift(rv); write(d); return ok(rv);
   },
   async threads() { await ready(); const d = read(); if (d.staffSession) return d.threads; const u = d.users.find((x) => x.id === d.session); const mine = JSON.parse(localStorage.getItem('se-my-threads') || '[]'); return d.threads.filter((t) => mine.includes(t.id) || (u && t.user === u.id)); },
   async messages(thread) { return read().messages.filter((m) => m.thread === thread).sort((a, b) => a.at - b.at); },

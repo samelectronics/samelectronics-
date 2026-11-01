@@ -32,10 +32,11 @@ function Countdown({ to }: { to: number }) {
 export default function ProductView({ id, me, onClose, onOpen }: { id: string | null; me: User | null | undefined; onClose: () => void; onOpen: (p: Product) => void }) {
   const p = id ? byId(id) : null, st = useStore(), trade = !!me?.tradeApproved;
   const [qty, setQty] = useState(1), [tab, setTab] = useState<(typeof TABS)[number]>('Description'), [zoom, setZoom] = useState<{ x: number; y: number } | null>(null), [shot, setShot] = useState(0);
+  const [canRate, setCanRate] = useState(false);
   const [rv, setRv] = useState<Review[]>([]), [form, setForm] = useState({ stars: 5, title: '', text: '' }), [msg, setMsg] = useState(''), [kit, setKit] = useState<string[]>([]), [copied, setCopied] = useState(false);
   const img = useRef<HTMLImageElement>(null), sheet = useRef<HTMLDivElement>(null);
   useScrollLock(!!p);
-  useEffect(() => { if (!p) return; store.view(p.id); setQty(1); setShot(0); setTab('Description'); setMsg(''); setKit([]); sheet.current?.scrollTo({ top: 0 }); backend.reviews(p.id).then(setRv); }, [p?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (!p) return; store.view(p.id); setQty(1); setShot(0); setTab('Description'); setMsg(''); setKit([]); sheet.current?.scrollTo({ top: 0 }); backend.reviews(p.id).then(setRv); backend.myOrders().then((os) => setCanRate(os.some((o) => ['Confirmed', 'Ready', 'Collected / Shipped', 'Closed'].includes(o.status) && o.lines.some((l) => l.id === p.id)))).catch(() => setCanRate(false)); }, [p?.id]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { if (!p) return; const k = (e: KeyboardEvent) => e.key === 'Escape' && onClose(); window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k); }, [p, onClose]);
   const D = data();
   const sib = useMemo(() => (p ? grades(p) : []), [p]), also = useMemo(() => (p ? alsoFor(p) : []), [p]), sim = useMemo(() => (p ? similar(p, 8) : []), [p]);
@@ -145,7 +146,7 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
                 {hist.map((h, i) => <span key={i} className="pv-hb"><small>{5 - i}★</small><i><em style={{ width: Math.round(h * 100) + '%' }} /></i><small>{Math.round(h * 100)}%</small></span>)}
               </div>
               <div className="pv-rlist">
-                {me ? (
+                {me && !canRate ? <div className="sp-note">{T('Reviews open once we have confirmed your order of this part, so every review is a verified purchase.')}</div> : me ? (
                   <form className="pv-rform" onSubmit={submit}>
                     <b>{T('Rate this part')}</b>
                     <span className="pv-rst">{[1, 2, 3, 4, 5].map((s) => <button key={s} type="button" className={s <= form.stars ? 'on' : ''} onClick={() => setForm({ ...form, stars: s })} aria-label={s + ' stars'}>★</button>)}</span>
@@ -153,7 +154,7 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
                     <textarea className="sp-in" style={{ height: 90, padding: 12 }} value={form.text} onChange={(e) => setForm({ ...form, text: e.target.value })} placeholder={T('What was it like?')} required />
                     <button type="submit" className="sp-btn sm">{T('Post review')}</button>{msg ? <small>{msg}</small> : null}
                   </form>
-                ) : <div className="sp-note">{T('Only account holders can rate parts, so every review is from a real customer.')} <a href="/account">{T('Sign in or create an account')}</a></div>}
+                ) : <div className="sp-note">{T('Only customers who bought this part can review it, after we confirm their order.')} <a href="/account">{T('Sign in or create an account')}</a></div>}
                 {rv.length ? rv.map((r) => <div key={r.id} className="pv-r"><span><Stars v={r.stars} /><b>{r.title}</b>{r.verified ? <span className="sp-tag ok">{T('Verified purchase')}</span> : null}</span><p>{r.text}</p><small>{r.name} · {new Date(r.at).toLocaleDateString()}</small></div>) : <div className="sp-empty"><b>{T('No reviews yet')}</b><span>{T('Be the first to rate this part.')}</span></div>}
               </div>
             </div>

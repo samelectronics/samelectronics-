@@ -129,12 +129,14 @@ begin
   return r;
 end $$;
 
--- ── reviews (account holders only; "verified" when they bought it) ───────────────────────────────────────────
+-- ── reviews (only buyers whose order staff confirmed; all verified) ───────────────────────────────────────────
 create table if not exists reviews (id uuid primary key default gen_random_uuid(), product_id text references products(id) on delete cascade, user_id uuid references profiles(id) on delete cascade default auth.uid(), name text, stars int not null check (stars between 1 and 5), title text, text text, verified boolean default false, hidden boolean default false, created_at timestamptz default now());
 create or replace function on_review() returns trigger language plpgsql security definer set search_path = public as $$
 begin
   new.user_id := auth.uid(); select name into new.name from profiles where id = auth.uid();
-  new.verified := exists (select 1 from orders o, jsonb_array_elements(o.lines) x where o.user_id = auth.uid() and x->>'id' = new.product_id);
+  -- R9: only after staff confirm the order (Confirmed or later), and every review is then a verified purchase
+  new.verified := exists (select 1 from orders o, jsonb_array_elements(o.lines) x where o.user_id = auth.uid() and x->>'id' = new.product_id and o.status in ('Confirmed', 'Ready', 'Collected / Shipped', 'Closed'));
+  if not new.verified then raise exception 'Reviews open once we have confirmed your order of this part.'; end if;
   return new;
 end $$;
 drop trigger if exists t_review on reviews;
