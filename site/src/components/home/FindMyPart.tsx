@@ -1,6 +1,6 @@
 // Hero 4 · Find My Part, rebuilt on the boss's Excel (docs/Products.xlsx, src/content/catalog.ts):
 //   Catalog (level 1) → Brand (level 2) → Device: phones / tablets / watches → Models (level 3, multi-select, series
-//   filter) → Parts (level 4, the Excel's 30 parts, multi-select) → Specs (level 5: quality, manufacturer, colour,
+//   filter) → Parts (level 4, the Excel's 30 parts, multi-select) → Specs (level 5: quality, manufacturer, color,
 //   multi-select) → open the shop with those filters.
 // Every brand is its own card (Honor is a brand of its own; no family headings), every logo has the same optical size.
 // Stock and prices are sample data from SE_DATA; a model with nothing in stock says "On request", never "0 in stock".
@@ -265,7 +265,7 @@ export default function FindMyPart({ open, init, onClose, onShop }: { open: bool
                 </div>
               </section>
               <section>
-                <h4>{T('Colour')}</h4>
+                <h4>{T('Color')}</h4>
                 <div className="fp-chips">
                   {(D ? D.colours : []).map((x) => { const on = co.includes(x.id); return <button key={x.id} type="button" className={'fp-chip fp-col' + (on ? ' on' : '')} aria-pressed={on} onClick={() => setCo(toggle(co, x.id))}><i style={{ background: SWATCH[x.id] || '#888' }} />{T(x.name)}</button>; })}
                 </div>

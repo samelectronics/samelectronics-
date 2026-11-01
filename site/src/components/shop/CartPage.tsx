@@ -99,7 +99,7 @@ export default function CartPage() {
                 <label className="sp-field">{T('E-mail')}<input required type="email" value={form.email} onChange={set('email')} autoComplete="email" /></label>
                 {cos.length ? <label className="sp-field">{T('Order for')}<select value={form.company} onChange={set('company')}><option value="">{T('Myself')}</option>{cos.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}</select></label> : <label className="sp-field">{T('Country')}<input value={form.country} onChange={set('country')} autoComplete="country-name" /></label>}
                 {del !== 'pickup' ? <label className="sp-field" style={{ gridColumn: '1 / -1' }}>{T('Delivery address')}<input value={form.address} onChange={set('address')} autoComplete="street-address" placeholder={T('Building, street, area, city')} /></label> : null}
-                <label className="sp-field" style={{ gridColumn: '1 / -1' }}>{T('Note for the team (optional)')}<textarea value={form.note} onChange={set('note')} placeholder={T('Model number, colour, anything we should know')} /></label>
+                <label className="sp-field" style={{ gridColumn: '1 / -1' }}>{T('Note for the team (optional)')}<textarea value={form.note} onChange={set('note')} placeholder={T('Model number, color, anything we should know')} /></label>
               </div>
               <h3 className="sp-h3">{T('Payment')}</h3>
               <div className="cart-del">

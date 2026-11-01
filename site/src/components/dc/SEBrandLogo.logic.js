@@ -8,7 +8,7 @@ import LM from '@/content/logoMetrics.json';
 
 // Logo slot: drop a monochrome SVG at assets/brands/<brand>.svg (it is re-coloured to `color`).
 // Until official files arrive, each brand is a typographic stand-in approximating its own wordmark
-// (one colour, normalised to the same cap/x-height so all sit at the same visual size and baseline).
+// (one color, normalised to the same cap/x-height so all sit at the same visual size and baseline).
 const WM = {
   apple: { t: 'Apple', f: "'Inter',sans-serif", w: 600, fs: 0.9, ls: '-.02em' },
   samsung: { t: 'SAMSUNG', f: "'Syncopate',sans-serif", w: 700, fs: 0.74, ls: '.06em' },

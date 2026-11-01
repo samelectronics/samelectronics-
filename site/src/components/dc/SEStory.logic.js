@@ -61,7 +61,7 @@ class Component extends DCLogic {
     // the year counter
     const y = String(yearAt(L)), ye = this.q('year'); if (ye && ye.textContent !== y) ye.textContent = y;
     this.q('yearT')?.classList.toggle('now', L >= 0.8);
-    // cards lift in as the line reaches them; their photos develop (1.2s, warm first, then true colour)
+    // cards lift in as the line reaches them; their photos develop (1.2s, warm first, then true color)
     CX.forEach((c, i) => { const on = L >= c - 0.004, card = this.q('card' + i), node = this.q('node' + i);
       if (card && card.classList.contains('on') !== on) card.classList.toggle('on', on); if (node && node.classList.contains('on') !== on) node.classList.toggle('on', on); });
     // RUNNING / INSTALLING

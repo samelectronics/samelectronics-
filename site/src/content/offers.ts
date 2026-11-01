@@ -1,6 +1,6 @@
 // R6 Part E · the Control Room contract. The Excel (src/content/catalog.ts) gives the structure: brands, series, models
-// and the fixed list of 30 parts, plus the master lists of qualities, colours and manufacturers. What a given part of a
-// given model really has (which quality, colour, manufacturer, part number), how many are in stock and what it costs is
+// and the fixed list of 30 parts, plus the master lists of qualities, colors and manufacturers. What a given part of a
+// given model really has (which quality, color, manufacturer, part number), how many are in stock and what it costs is
 // set per offer in the Control Room. Until it exists, the home page shows SAMPLE offers only (`sample: true`).
 export type Offer = {
   id: string;

@@ -7,6 +7,7 @@
 import React, { useEffect, useState } from 'react';
 import { backend, live, ROLE_NAMES, useStaff, type Perm, type Staff } from '@/lib/backend';
 import { installI18n } from '@/i18n/lang';
+import { installBrandSelects } from '@/lib/brandSelect';
 import LiveSam from '@/components/samsoom/LiveSam';
 import { can } from './kit';
 import { Dashboard, Products, Warehouse } from './mods1';
@@ -63,7 +64,7 @@ function Login({ onDone }: { onDone: () => void }) {
 export default function StaffApp() {
   const [me, refresh] = useStaff(), [mod, setMod] = useState('dashboard'), [nav, setNav] = useState(false);
   useEffect(() => { const h = () => setMod(location.hash.slice(1) || 'dashboard'); h(); window.addEventListener('hashchange', h); return () => window.removeEventListener('hashchange', h); }, []);
-  useEffect(() => { document.documentElement.classList.add('cr-html'); return () => document.documentElement.classList.remove('cr-html'); }, []);
+  useEffect(() => { installBrandSelects(); document.documentElement.classList.add('cr-html'); return () => document.documentElement.classList.remove('cr-html'); }, []);
   if (me === undefined) return <div className="cr-boot"><i /></div>;
   if (!me) return <Login onDone={refresh} />;
   const mine = MODS.filter((m) => !m.need || m.need.some((p) => can(me, p)));

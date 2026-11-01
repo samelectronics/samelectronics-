@@ -13,8 +13,8 @@ import { Stars, T, flyToCart } from '@/components/site/ui';
 import ProductCard, { stockLabel } from './ProductCard';
 
 const GRADE_INFO: Record<string, [string, string]> = {
-  OR: ['Original · Service Pack', 'The part the brand itself fits, in its service box. Same colours, brightness, touch and battery life as new. Our longest warranty.'],
-  OL: ['OLED Soft', 'A flexible OLED panel made to the original spec: deep blacks and true colours, close to original at a lower price.'],
+  OR: ['Original · Service Pack', 'The part the brand itself fits, in its service box. Same colors, brightness, touch and battery life as new. Our longest warranty.'],
+  OL: ['OLED Soft', 'A flexible OLED panel made to the original spec: deep blacks and true colors, close to original at a lower price.'],
   IN: ['Incell', 'An LCD with the touch layer built in. Bright and reliable for everyday use, at a budget price.'],
   AQ: ['AAA', 'A good, tested aftermarket part for the best price. Ideal when cost matters most.'],
 };
@@ -125,7 +125,7 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
             </div>
           ) : tab === 'Specifications' ? (
             <table className="sp-table pv-spec"><tbody>
-              {([['Brand', p.brandName], ['Model', p.modelName], ['Model numbers', (model as unknown as { model_numbers?: string[] })?.model_numbers?.join(', ') || '—'], ['Part', p.part_name], ['Category', p.catName], ['Grade', p.gradeName], ['Quality', p.qualityName], ['Manufacturer', p.makerName], ['Warranty', p.warranty], ['Colour', p.colour || '—'], ['Reference', p.id]] as [string, string][]).map(([k, v]) => <tr key={k}><th>{T(k)}</th><td>{v}</td></tr>)}
+              {([['Brand', p.brandName], ['Model', p.modelName], ['Model numbers', (model as unknown as { model_numbers?: string[] })?.model_numbers?.join(', ') || '—'], ['Part', p.part_name], ['Category', p.catName], ['Grade', p.gradeName], ['Quality', p.qualityName], ['Manufacturer', p.makerName], ['Warranty', p.warranty], ['Color', p.colour || '—'], ['Reference', p.id]] as [string, string][]).map(([k, v]) => <tr key={k}><th>{T(k)}</th><td>{v}</td></tr>)}
             </tbody></table>
           ) : tab === 'Manufacturer' ? (
             <div className="pv-maker">

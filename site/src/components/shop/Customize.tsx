@@ -1,7 +1,7 @@
 'use client';
-// P2 · "Customise everything": the shop's full control panel, built like the Find My Part panel (graphite glass, steps on
+// P2 · "Customize everything": the shop's full control panel, built like the Find My Part panel (graphite glass, steps on
 // the left, live result count). Price range (min/max), brand, model, part, quality, manufacturer, grade, warranty,
-// device, colour, rating, availability, sort, how results are shown, and saved setups. Every change counts the results
+// device, color, rating, availability, sort, how results are shown, and saved setups. Every change counts the results
 // live; "Show N results" applies it.
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { type Filters, EMPTY, apply, data, facets, priceRange, fmt } from '@/lib/catalog';
@@ -10,13 +10,13 @@ import { T } from '@/components/site/ui';
 import SEBrandLogo from '@/components/dc/SEBrandLogo';
 
 export type View = { cols: 3 | 4 | 5; list: boolean; trade: boolean; per: 24 | 48 | 96 };
-const SECS: [string, string][] = [['price', 'Price'], ['brand', 'Brand'], ['model', 'Model'], ['part', 'Part'], ['quality', 'Quality'], ['maker', 'Manufacturer'], ['grade', 'Grade'], ['warranty', 'Warranty'], ['device', 'Device'], ['colour', 'Colour'], ['rating', 'Rating'], ['avail', 'Availability'], ['sort', 'Sort & view'], ['saved', 'Saved setups']];
+const SECS: [string, string][] = [['price', 'Price'], ['brand', 'Brand'], ['model', 'Model'], ['part', 'Part'], ['quality', 'Quality'], ['maker', 'Manufacturer'], ['grade', 'Grade'], ['warranty', 'Warranty'], ['device', 'Device'], ['colour', 'Color'], ['rating', 'Rating'], ['avail', 'Availability'], ['sort', 'Sort & view'], ['saved', 'Saved setups']];
 const SORTS: [Filters['sort'], string][] = [['best', 'Best match'], ['price-asc', 'Price: low to high'], ['price-desc', 'Price: high to low'], ['rating', 'Top rated'], ['deal', 'Biggest discount'], ['stock', 'Most in stock'], ['new', 'Newest'], ['name', 'Name A–Z']];
 const DEVS: [string, string][] = [['phone', 'Phones'], ['tablet', 'Tablets'], ['watch', 'Watches'], ['laptop', 'Laptops']];
 const SW: Record<string, string> = { black: '#1d1d1f', white: '#f5f5f2', blue: '#3a6fd8', gold: '#d9b36a', green: '#4a8f5a', violet: '#7a5ac8', silver: '#c9ccd1', lavender: '#b9a7e6' };
 const PKEY = 'se-shop-presets';
 
-export default function Customise({ open, f, view, onClose, onApply }: { open: boolean; f: Filters; view: View; onClose: () => void; onApply: (f: Filters, v: View) => void }) {
+export default function Customize({ open, f, view, onClose, onApply }: { open: boolean; f: Filters; view: View; onClose: () => void; onApply: (f: Filters, v: View) => void }) {
   const [x, setX] = useState<Filters>(f), [vw, setVw] = useState<View>(view), [sec, setSec] = useState('price'), [mq, setMq] = useState(''), [name, setName] = useState('');
   const [presets, setPresets] = useState<{ name: string; f: Filters; v: View }[]>([]);
   const body = useRef<HTMLDivElement>(null);
@@ -46,10 +46,10 @@ export default function Customise({ open, f, view, onClose, onApply }: { open: b
   const pct = (v: number) => ((v - lo) / Math.max(1, hi - lo)) * 100;
 
   return (
-    <div className="cz-veil" role="dialog" aria-modal="true" aria-label={T('Customise everything')} onClick={(e) => e.target === e.currentTarget && onClose()}>
+    <div className="cz-veil" role="dialog" aria-modal="true" aria-label={T('Customize everything')} onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="cz">
         <header className="cz-top">
-          <span className="cz-tt"><b>{T('Customise everything')}</b><small>{active ? active + ' ' + T('settings on') : T('Nothing set yet: showing every part')}</small></span>
+          <span className="cz-tt"><b>{T('Customize everything')}</b><small>{active ? active + ' ' + T('settings on') : T('Nothing set yet: showing every part')}</small></span>
           <span className="cz-live"><i /><b>{fmt(n)}</b> {T('results')}</span>
           <button type="button" className="sp-x" style={{ position: 'static' }} onClick={onClose} aria-label={T('Close')}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M6 6l12 12M18 6 6 18" /></svg></button>
         </header>
@@ -112,7 +112,7 @@ export default function Customise({ open, f, view, onClose, onApply }: { open: b
             <div className="cz-opts">{DEVS.map(([d, l]) => <Opt key={d} k="device" v={d} label={T(l)} cnt={count('device', d)} />)}</div>
           </section>
           <section id="cz-colour" className="cz-sec">
-            <h3>{T('Colour')} <small>{T('back covers and frames')}</small></h3>
+            <h3>{T('Color')} <small>{T('back covers and frames')}</small></h3>
             <div className="cz-opts">{D.colours.slice(0, 8).map((c) => <Opt key={c.id} k="colours" v={c.id} label={T(c.name)} sw={SW[c.id] || '#999'} cnt={count('colours', c.id)} />)}</div>
           </section>
           <section id="cz-rating" className="cz-sec">

@@ -8,10 +8,10 @@ import { PageHero, T, useRise } from '@/components/site/ui';
 import SEBrandLogo from '@/components/dc/SEBrandLogo';
 
 const MAKER: Record<string, [string, string, string]> = {
-  'service-pack': ['The brand’s own part', 'Original parts in the brand’s service packaging, the same ones authorised service centres fit. Exact colours, brightness, touch and battery life.', 'Original · 6 months'],
+  'service-pack': ['The brand’s own part', 'Original parts in the brand’s service packaging, the same ones authorised service centres fit. Exact colors, brightness, touch and battery life.', 'Original · 6 months'],
   oem: ['Made by the original supplier', 'Produced by the factories that supply the brands, sold outside the brand’s own box. Very close to original.', 'Original / Compatible · up to 6 months'],
   repaied: ['Refurbished original', 'Original parts recovered and rebuilt (for example a new glass on an original panel), then tested.', 'Original grade · 3 months'],
-  oled: ['OLED panels', 'Flexible OLED panels made to the original specification: deep blacks and true colours.', 'OLED Soft / Big / Small · 3 months'],
+  oled: ['OLED panels', 'Flexible OLED panels made to the original specification: deep blacks and true colors.', 'OLED Soft / Big / Small · 3 months'],
   gx: ['GX', 'A well-known aftermarket maker with consistent quality and packaging; our usual AAA choice.', 'AAA · 1 month'],
   zy: ['ZY', 'Aftermarket Incell and LCD panels: bright, reliable and affordable.', 'Incell · 1 month'],
   yk: ['YK', 'Aftermarket parts for the best price on older models.', 'AA / Standard · 1 month'],

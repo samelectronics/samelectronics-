@@ -10,7 +10,7 @@ import { DCLogic } from '@/dc/runtime';
 import { onReplay } from '@/components/perf/SectionFX';
 import { shopStatus } from '@/lib/shopStatus';
 
-// owner (27 Oct): every request type asks with the same options as Find My Part (brands, parts, grades, colours,
+// owner (27 Oct): every request type asks with the same options as Find My Part (brands, parts, grades, colors,
 // quantities, a date for repairs), always with "Other" (opens a small box) and a free comment, all sent to WhatsApp.
 // field: [label, kind, options | placeholder]; kinds: text, area, date, one (single choice), many (multi choice)
 const BR = ['Apple', 'Samsung', 'Xiaomi', 'Redmi', 'POCO', 'Huawei', 'Honor', 'Oppo', 'Realme', 'OnePlus', 'Vivo', 'Infinix', 'Tecno', 'Pixel', 'Nokia', 'Other'];
@@ -18,7 +18,7 @@ const PT = ['Screen', 'Battery', 'Back cover', 'Charging port', 'Camera', 'Frame
 const GR = ['Original', 'Service Pack', 'OLED Soft', 'OLED Hard', 'Incell', 'AAA', 'Not sure', 'Other'];
 const CO = ['Black', 'White', 'Gold', 'Silver', 'Blue', 'Purple', 'Other'];
 const FL = {
-  'Order parts': [['Brand', 'one', BR], ['Model', 'text', 'e.g. iPhone 15 Pro'], ['Part', 'many', PT], ['Grade', 'one', GR], ['Colour', 'one', CO], ['Quantity', 'one', ['1', '2–5', '6–10', '10–50', '50+', 'Other']]],
+  'Order parts': [['Brand', 'one', BR], ['Model', 'text', 'e.g. iPhone 15 Pro'], ['Part', 'many', PT], ['Grade', 'one', GR], ['Color', 'one', CO], ['Quantity', 'one', ['1', '2–5', '6–10', '10–50', '50+', 'Other']]],
   'Bulk quote': [['Company', 'text', 'Your shop or company'], ['Country', 'text', 'e.g. Nigeria'], ['Brands', 'many', BR], ['Parts', 'many', PT], ['Grades', 'many', GR], ['Quantity', 'one', ['50+', '100+', '500+', '1,000+', 'Other']], ['Parts list', 'area', 'Paste models and quantities']],
   'Book a repair': [['Brand', 'one', BR], ['Model', 'text', 'e.g. Galaxy A54'], ['Problem', 'many', ['Screen', 'Touch glass', 'Battery', 'Back glass', 'Charging port', 'Camera', 'Water damage', 'Software', 'Not sure', 'Other']], ['Quality', 'one', ['Original', 'OLED', 'Incell', 'Not sure', 'Other']], ['Date', 'date', ''], ['Time', 'one', ['Morning', 'Afternoon', 'Evening', 'Any time']]],
   'Trade account': [['Business name', 'text', 'Your shop or company'], ['Customer type', 'one', ['Repair shop', 'Trader', 'Exporter', 'Bulk buyer', 'Other']], ['Country', 'text', 'e.g. UAE'], ['Monthly volume', 'one', ['Under 100 units', '100–500', '500–1,000', '1,000+']], ['Main brands', 'many', BR]],

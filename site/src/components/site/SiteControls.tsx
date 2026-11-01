@@ -9,6 +9,7 @@
 import React, { useEffect, useState } from 'react';
 import { prefs, setPrefs, type Currency, type Pack, type Prefs } from '@/lib/prefs';
 import { play, type Snd } from '@/lib/sound';
+import { installBrandSelects } from '@/lib/brandSelect';
 
 const T = (s: string) => (typeof window !== 'undefined' && window.seI18n ? window.seI18n.t(s) : s);
 const CATS: ['memory' | 'signal' | 'booster', string, string][] = [
@@ -26,6 +27,7 @@ export default function SiteControls() {
   const [inst, setInst] = useState<null | { prompt: () => void }>(null);
   const [draft, setDraft] = useState({ memory: true, signal: false, booster: false });
   useEffect(() => {
+    installBrandSelects();
     const cur = prefs(); setP(cur); if (!cur.consent) window.setTimeout(() => setBanner(true), 1600);
     const onP = (e: Event) => setP({ ...(e as CustomEvent).detail });
     const onOpen = (e: Event) => { const d = (e as CustomEvent).detail; setPanel(d === 'privacy' ? 'privacy' : 'all'); const c = prefs().consent; setDraft(c ? { memory: c.memory, signal: c.signal, booster: c.booster } : { memory: true, signal: false, booster: false }); play('open'); };

@@ -11,7 +11,7 @@ export default function Banners({ onDeals, onCat }: { onDeals: () => void; onCat
   // the slides are edited in the Control Room (Site & Samsoom → Shop banners); these are the defaults
   const DEF: Slide[] = [
     { k: 'THIS WEEK · SAMPLE OFFER', t: 'Battery week.', a: 'Up to 15% off.', d: 'Genuine cells, tested before they ship.', cta: 'Shop batteries', go: () => onCat('BAT'), img: '/assets/pose/part-bat-960.webp', bg: 'linear-gradient(120deg,#F7C032,#FFD566)', ink: '#26282B' },
-    { k: 'SERVICE PACK SCREENS', t: 'The original.', a: 'In its original box.', d: 'Same colour, brightness and touch as new.', cta: 'Shop screens', go: () => onCat('SCR'), img: '/assets/pose/samsung-sp-960.webp', bg: 'linear-gradient(120deg,#26282B,#3D3E3F)', ink: '#FFFFFF' },
+    { k: 'SERVICE PACK SCREENS', t: 'The original.', a: 'In its original box.', d: 'Same color, brightness and touch as new.', cta: 'Shop screens', go: () => onCat('SCR'), img: '/assets/pose/samsung-sp-960.webp', bg: 'linear-gradient(120deg,#26282B,#3D3E3F)', ink: '#FFFFFF' },
     { k: 'DEALS & ARRIVALS', t: 'Fresh stock.', a: 'Limited offers.', d: 'New shipments every week, and offers that end soon.', cta: 'See every deal', go: onDeals, img: '/assets/pose/part-cam-960.webp', bg: 'linear-gradient(120deg,#FFFFFF,#F2F3F4)', ink: '#26282B' },
   ];  const saved = siteRaw<{ k: string; t: string; a: string; d: string; cta: string; href: string; img: string; bg: string; ink: string }[] | null>('shop-banners', null);
   const S: Slide[] = saved && saved.length ? saved.map((x) => ({ ...x, go: () => { location.href = x.href || '/shop'; } })) : DEF;

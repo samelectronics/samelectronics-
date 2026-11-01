@@ -1,5 +1,5 @@
 // Issue 1B: the ad poster. Clicking the hero phone opens this pop-up: the same ad, bigger and with more
-// details (a short paragraph, key points, the stock line), in the phone ad's colours and type. An X at the
+// details (a short paragraph, key points, the stock line), in the phone ad's colors and type. An X at the
 // top right, Esc and a click outside close it; the page behind dims and blurs.
 'use client';
 import PalletDrop from '../PalletDrop';

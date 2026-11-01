@@ -183,7 +183,7 @@ function render(v: Vals) {
                     <span className="bt-bar">
                       <i data-b="dbar" />
                     </span>
-                    <span className="bt-sub">Every pixel, every colour</span>
+                    <span className="bt-sub">Every pixel, every color</span>
                   </Tile>
                   <Tile k="t" name="Touch">
                     <svg className="bt-mini" viewBox="0 0 200 30" preserveAspectRatio="none" aria-hidden="true">

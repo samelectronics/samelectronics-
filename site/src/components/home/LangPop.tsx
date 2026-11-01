@@ -5,7 +5,7 @@
 // by setLang (localStorage).
 import React, { useEffect, useRef, useState } from 'react';
 // Hero 3 (owner): the battery charges with a percentage counting up, the end is a drawn tick, the card fits its text
-// (nothing centred awkwardly) and has real colour and detail: graphite case, segmented green charge, yellow accents.
+// (nothing centred awkwardly) and has real color and detail: graphite case, segmented green charge, yellow accents.
 
 type Lang = 'en' | 'ar' | 'es' | 'fr' | 'fa' | 'ru' | 'hi' | 'ur';
 type Phase = 'off' | 'load' | 'done' | 'out';

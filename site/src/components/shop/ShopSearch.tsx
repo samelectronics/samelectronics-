@@ -19,7 +19,8 @@ export default function ShopSearch({ q, onQ, onFmp }: { q: string; onQ: (q: stri
   const sug = useMemo(() => (v.trim() ? suggest(v, 8) : []), [v]);
   const fx = useMemo(() => (v.trim().length > 2 ? fix(v) : null), [v]);
   const go = (s: string) => { store.searched(s); onQ(s); setV(s); setOpen(false); inp.current?.blur(); };
-  const items = v.trim() ? sug.map((s) => s.q) : st.recent;
+  const items = v.trim() ? sug.map((s) => s.q) : [...st.recent, ...TRY.filter((t) => !st.recent.includes(t)).slice(0, 4)];
+  void onFmp;
   const key = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown') { e.preventDefault(); setOpen(true); setHi((h) => Math.min(items.length - 1, h + 1)); }
     else if (e.key === 'ArrowUp') { e.preventDefault(); setHi((h) => Math.max(-1, h - 1)); }
@@ -33,10 +34,9 @@ export default function ShopSearch({ q, onQ, onFmp }: { q: string; onQ: (q: stri
         <input ref={inp} value={v} onChange={(e) => { setV(e.target.value); setOpen(true); setHi(-1); }} onFocus={() => setOpen(true)} onKeyDown={key}
           placeholder={T('Search') + ' “' + T(TRY[ph]) + '”'} aria-label={T('Search the shop')} autoComplete="off" spellCheck={false} />
         {v ? <button type="button" className="ss-clr" onClick={() => { setV(''); onQ(''); inp.current?.focus(); }} aria-label={T('Clear')}>×</button> : <kbd className="ss-kbd">/</kbd>}
-        <button type="button" className="ss-fmp" onClick={onFmp}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M4 6h16M7 12h10M10 18h4" /></svg><span>Find My Part</span></button>
         <button type="button" className="ss-go" onClick={() => go(v)}>{T('Search')}</button>
       </div>
-      {open && (items.length || (fx && fx.changed)) ? (
+      {open ? (
         <div className="ss-drop" role="listbox">
           {fx && fx.changed && v.trim() ? <button type="button" className="ss-fix" onClick={() => go(fx.fixed)}>{T('Did you mean')} <b>{fx.fixed}</b>?</button> : null}
           {!v.trim() && st.recent.length ? <span className="ss-h">{T('Recent searches')}<button type="button" onClick={() => store.forget()}>{T('Clear all')}</button></span> : null}
@@ -47,12 +47,18 @@ export default function ShopSearch({ q, onQ, onFmp }: { q: string; onQ: (q: stri
                   <b>{s.label}</b><small>{s.sub}</small>
                 </button>
               ))
-            : st.recent.map((r, i) => (
-                <span key={r} className={'ss-it rec' + (hi === i ? ' hi' : '')} onMouseEnter={() => setHi(i)}>
-                  <button type="button" onClick={() => go(r)}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>{r}</button>
-                  <button type="button" className="ss-del" onClick={() => store.forget(r)} aria-label={T('Remove')}>×</button>
-                </span>
-              ))}
+            : <>
+                {st.recent.map((r, i) => (
+                  <span key={r} className={'ss-it rec' + (hi === i ? ' hi' : '')} onMouseEnter={() => setHi(i)}>
+                    <button type="button" onClick={() => go(r)}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg>{r}</button>
+                    <button type="button" className="ss-del" onClick={() => store.forget(r)} aria-label={T('Remove')}>×</button>
+                  </span>
+                ))}
+                <span className="ss-h">{T('Popular right now')}</span>
+                <span className="ss-pop">{items.slice(st.recent.length).map((t, k) => <button key={t} type="button" className={'sp-chip' + (hi === st.recent.length + k ? ' y' : '')} onClick={() => go(T(t))}>{T(t)}</button>)}</span>
+                {!st.recent.length ? <span className="ss-hint">{T('Your searches will be kept here on this device.')}</span> : null}
+              </>}
+          {!v.trim() || sug.length || (fx && fx.changed) ? null : <span className="ss-hint">{T('No quick match. Press Enter to search everything.')}</span>}
         </div>
       ) : null}
     </div>

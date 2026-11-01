@@ -989,3 +989,12 @@ html[dir='rtl'] .st-offer { right: auto; left: 96px; }
 .fq-ticket .fq-q { position: relative; background: #fff !important; box-shadow: inset 0 0 0 1px #E6E8EA !important; filter: none !important; overflow: visible; }
 .fq-ticket .fq-q::before, .fq-ticket .fq-q::after { content: ''; position: absolute; top: 29px; width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 1px #E6E8EA; clip-path: inset(0 0 0 50%); left: -9px; }
 .fq-ticket .fq-q::after { left: auto; right: -9px; clip-path: inset(0 50% 0 0); }
+/* R9 · branded dropdowns: the closed control and our own list (src/lib/brandSelect.ts) */
+select:not([data-native]):not([multiple]) { -webkit-appearance: none; appearance: none; padding-inline-end: 34px !important; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23C98A12' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") !important; background-repeat: no-repeat !important; background-position: right 12px center !important; cursor: pointer; }
+html[dir='rtl'] select:not([data-native]):not([multiple]) { background-position: left 12px center !important; }
+select.bsel-open { box-shadow: 0 0 0 2px #F7C032 !important; }
+.bsel-pop { position: fixed; z-index: 10000; display: flex; flex-direction: column; max-width: min(420px, calc(100vw - 16px)); max-height: 320px; padding: 6px; border-radius: 14px; background: #fff; color: #26282B; box-shadow: 0 24px 60px -16px rgba(0,0,0,.45), inset 0 0 0 1.5px #F7C032; animation: stPop .22s cubic-bezier(.2,1.2,.4,1) both; outline: 0; font: 500 14px Inter, sans-serif; }
+.bsel-q { flex: none; height: 38px; margin-bottom: 6px; padding: 0 12px; border: 0; border-radius: 10px; background: #F4F5F6; outline: 0; font: 500 14px Inter, sans-serif; color: #26282B; }
+.bsel-list { overflow-y: auto; scrollbar-width: thin; scrollbar-color: #F7C032 transparent; }
+.bsel-o { display: block; width: 100%; padding: 9px 12px; border: 0; border-radius: 9px; background: none; text-align: start; font: inherit; color: inherit; cursor: pointer; } .bsel-o.hi { background: rgba(247,192,50,.16); } .bsel-o.on { background: #26282B; color: #F7C032; font-weight: 600; } .bsel-o:disabled { opacity: .4; cursor: default; }
+.bsel-g { padding: 10px 12px 4px; font: 600 10.5px 'JetBrains Mono', monospace; letter-spacing: .12em; text-transform: uppercase; color: #C98A12; } .bsel-none { padding: 12px; color: #8A8D92; }

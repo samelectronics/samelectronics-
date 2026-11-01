@@ -1,6 +1,6 @@
 'use client';
 // P2 · THE SHOP (owner: "professional, like Amazon, so detailed"). Built from the home's language: graphite header with
-// live circuits, the search like the hero, Find My Part, then categories, adverts, quick filters, a "Customise everything"
+// live circuits, the search like the hero, Find My Part, then categories, adverts, quick filters, a "Customize everything"
 // panel, the results (grid or list), compare, My devices, and the product view inside the shop (?p=ID).
 // mode="deals" is the Deals page: the same shop engine showing offers, new arrivals and limited stock.
 // Everything reads the URL, so any view can be shared: /shop?q=a54&cat=BAT&sort=price-asc
@@ -14,9 +14,10 @@ import LiveSam from '@/components/samsoom/LiveSam';
 import ShopSearch from './ShopSearch';
 import ProductCard from './ProductCard';
 import ProductView from './ProductView';
-import Customise, { type View } from './Customise';
+import Customize, { type View } from './Customize';
 import Banners from './Banners';
 import InlineAd from './InlineAd';
+import DevicePicker from './DevicePicker';
 
 const LIST_KEYS = ['brands', 'models', 'cats', 'parts', 'grades', 'makers', 'qualities', 'warranty', 'device', 'colours'] as const;
 const URLK: Record<(typeof LIST_KEYS)[number], string> = { brands: 'brand', models: 'model', cats: 'cat', parts: 'part', grades: 'grade', makers: 'maker', qualities: 'quality', warranty: 'warranty', device: 'device', colours: 'colour' };
@@ -103,10 +104,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
           <div className="shop-devs" data-tour-step="2" data-tour-title="My devices" data-tour-text="Add the phones you fix most. I will mark every part that fits them.">
             <span>{T('My devices')}:</span>
             {st.devices.map((d) => <button key={d.model_id} type="button" className={'sp-chip' + (f.models.includes(d.model_id) ? ' y' : '')} onClick={() => tog('models', d.model_id)}>{d.nick || d.name}<span className="x" onClick={(e) => { e.stopPropagation(); store.device(d); }}>×</span></button>)}
-            <select className="shop-adddev" value="" onChange={(e) => { const m = D.models.find((x) => x.id === e.target.value); if (m) store.device({ model_id: m.id, name: m.name }); }} aria-label={T('Add a device')}>
-              <option value="">+ {T('Add a device')}</option>
-              {D.brands.map((b) => <optgroup key={b.id} label={b.name}>{D.models.filter((m) => m.brand_id === b.id && products().some((p) => p.model_id === m.id)).map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}</optgroup>)}
-            </select>
+            <DevicePicker have={st.devices.map((d) => d.model_id)} onPick={(m) => store.device({ model_id: m.id, name: m.name })} />
           </div>
         </div>
       </section>
@@ -134,9 +132,9 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
           {/* quick filters on the left; the full panel is one tap away */}
           <aside className={'shop-side' + (side ? ' open' : '')} aria-label={T('Filters')}>
             <div className="shop-side-in">
-              <button type="button" className="shop-cz" onClick={() => setCz(true)} data-tour-step={mode === 'deals' ? '5' : '4'} data-tour-title="Customise everything" data-tour-text="Price, quality, manufacturer, colour, warranty… set it all exactly how you like, and save it.">
+              <button type="button" className="shop-cz" onClick={() => setCz(true)} data-tour-step={mode === 'deals' ? '5' : '4'} data-tour-title="Customize everything" data-tour-text="Price, quality, manufacturer, color, warranty… set it all exactly how you like, and save it.">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0" /><circle cx="16" cy="6" r="2" /><circle cx="10" cy="12" r="2" /><circle cx="18" cy="18" r="2" /></svg>
-                <span><b>{T('Customise everything')}</b><small>{T('Price, quality, colour, warranty…')}</small></span>
+                <span><b>{T('Customize everything')}</b><small>{T('Price, quality, color, warranty…')}</small></span>
               </button>
               <div className="sf"><b>{T('Availability')}</b>
                 {([['inStock', 'In stock'], ['deals', 'On offer'], ['isNew', 'New arrivals']] as const).map(([k, l]) => <label key={k} className="sf-tg"><input type="checkbox" checked={f[k]} onChange={(e) => set({ [k]: e.target.checked })} /><i /><span>{T(l)}</span></label>)}
@@ -157,7 +155,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
             <div className="shop-bar">
               <span className="shop-n"><b>{fmt(res.length)}</b> {T('results')}{f.q ? <> {T('for')} “<b>{f.q}</b>”</> : null}</span>
               <button type="button" className="sp-chip shop-fbtn" onClick={() => setSide(true)}>☰ {T('Filters')}{chips.length ? ' · ' + chips.length : ''}</button>
-              <button type="button" className="sp-chip y" onClick={() => setCz(true)}>{T('Customise')}</button>
+              <button type="button" className="sp-chip y" onClick={() => setCz(true)}>{T('Customize')}</button>
               <label className="shop-sort"><span>{T('Sort')}</span><select value={f.sort} onChange={(e) => set({ sort: e.target.value as Filters['sort'] })}>{SORTS.map(([k, l]) => <option key={k} value={k}>{T(l)}</option>)}</select></label>
               <span className="shop-vw">
                 <button type="button" className={!view.list ? 'on' : ''} onClick={() => setView({ ...view, list: false })} aria-label={T('Grid')}><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="8" height="8" rx="2" /><rect x="13" y="3" width="8" height="8" rx="2" /><rect x="3" y="13" width="8" height="8" rx="2" /><rect x="13" y="13" width="8" height="8" rx="2" /></svg></button>
@@ -210,7 +208,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
         </>
       ) : null}
 
-      <Customise open={cz} f={f} view={view} onClose={() => setCz(false)} onApply={(nf, nv) => { setF(nf); setView(nv); setCz(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />
+      <Customize open={cz} f={f} view={view} onClose={() => setCz(false)} onApply={(nf, nv) => { setF(nf); setView(nv); setCz(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />
       <ProductView id={pid} me={me} onClose={close} onOpen={open} />
     </div>
   );

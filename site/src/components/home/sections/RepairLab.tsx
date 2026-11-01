@@ -311,7 +311,7 @@ export default function RepairLab({ v, full = false }: { v: Vals; full?: boolean
                   {(v.re?.times || []).map(([k, l]: [string, string]) => <option key={k} value={k}>{l}</option>)}
                 </select>
               </div>
-              <textarea defaultValue={v.re?.noteTxt || ''} onChange={v.re?.setNote} rows={2} placeholder="Anything else? (colour, password-free check, pickup…)" aria-label="Notes" />
+              <textarea defaultValue={v.re?.noteTxt || ''} onChange={v.re?.setNote} rows={2} placeholder="Anything else? (color, password-free check, pickup…)" aria-label="Notes" />
             </div> : null}
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               {'\n          '}

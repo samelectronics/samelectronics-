@@ -12,7 +12,7 @@ type P = { me: Staff; go: (m: string) => void };
 export type Slide = { k: string; t: string; a: string; d: string; cta: string; href: string; img: string; bg: string; ink: string };
 export const DEFAULT_SLIDES: Slide[] = [
   { k: 'THIS WEEK · SAMPLE OFFER', t: 'Battery week.', a: 'Up to 15% off.', d: 'Genuine cells, tested before they ship.', cta: 'Shop batteries', href: '/shop?cat=BAT', img: '/assets/pose/part-bat-960.webp', bg: 'linear-gradient(120deg,#F7C032,#FFD566)', ink: '#26282B' },
-  { k: 'SERVICE PACK SCREENS', t: 'The original.', a: 'In its original box.', d: 'Same colour, brightness and touch as new.', cta: 'Shop screens', href: '/shop?cat=SCR', img: '/assets/pose/samsung-sp-960.webp', bg: 'linear-gradient(120deg,#26282B,#3D3E3F)', ink: '#FFFFFF' },
+  { k: 'SERVICE PACK SCREENS', t: 'The original.', a: 'In its original box.', d: 'Same color, brightness and touch as new.', cta: 'Shop screens', href: '/shop?cat=SCR', img: '/assets/pose/samsung-sp-960.webp', bg: 'linear-gradient(120deg,#26282B,#3D3E3F)', ink: '#FFFFFF' },
   { k: 'DEALS & ARRIVALS', t: 'Fresh stock.', a: 'Limited offers.', d: 'New shipments every week, and offers that end soon.', cta: 'See every deal', href: '/deals', img: '/assets/pose/part-cam-960.webp', bg: 'linear-gradient(120deg,#FFFFFF,#F2F3F4)', ink: '#26282B' },
 ];
 export type SamCfg = { tour: boolean; welcome: string; greeting: string; emotes: string[]; rest: number };
@@ -46,7 +46,7 @@ export function SiteEditor({ me }: P) {
               <label>Description<input className="cr-in" value={s.d} onChange={(e) => setS({ d: e.target.value })} /></label>
               <label>Button opens<input className="cr-in" value={s.href} onChange={(e) => setS({ href: e.target.value })} placeholder="/shop?cat=BAT" /></label>
               <div><small>Picture</small><div className="cr-imgs">{IMGS.map((im) => <button key={im} type="button" className={s.img.includes('/' + im + '-') ? 'on' : ''} onClick={() => setS({ img: '/assets/pose/' + im + '-960.webp' })}><img src={'/assets/pose/' + im + '-240.webp'} alt="" /></button>)}</div></div>
-              <div><small>Colour</small><div className="cr-bgs">{BGS.map(([n, bg, ink]) => <button key={n} type="button" className={s.bg === bg ? 'on' : ''} style={{ background: bg, color: ink }} onClick={() => setS({ bg, ink })}>{n}</button>)}</div></div>
+              <div><small>Color</small><div className="cr-bgs">{BGS.map(([n, bg, ink]) => <button key={n} type="button" className={s.bg === bg ? 'on' : ''} style={{ background: bg, color: ink }} onClick={() => setS({ bg, ink })}>{n}</button>)}</div></div>
               <small className="cr-muted">Saved as you type; the shop shows the new slides on the next visit.</small>
             </div>
           </Panel>
@@ -57,7 +57,7 @@ export function SiteEditor({ me }: P) {
           <div className="cr-form">
             <label className="cr-chk"><input type="checkbox" checked={ann.on} onChange={(e) => setAnn({ ...ann, on: e.target.checked })} /> Show the bar on the site</label>
             <label>Text<input className="cr-in" value={ann.text} onChange={(e) => setAnn({ ...ann, text: e.target.value })} /></label>
-            <div className="cr-row2"><label>Link<input className="cr-in" value={ann.href} onChange={(e) => setAnn({ ...ann, href: e.target.value })} /></label><label>Colour<select className="cr-in" value={ann.tone} onChange={(e) => setAnn({ ...ann, tone: e.target.value })}><option value="y">Yellow</option><option value="d">Graphite</option><option value="g">Green</option><option value="r">Red</option></select></label></div>
+            <div className="cr-row2"><label>Link<input className="cr-in" value={ann.href} onChange={(e) => setAnn({ ...ann, href: e.target.value })} /></label><label>Color<select className="cr-in" value={ann.tone} onChange={(e) => setAnn({ ...ann, tone: e.target.value })}><option value="y">Yellow</option><option value="d">Graphite</option><option value="g">Green</option><option value="r">Red</option></select></label></div>
           </div>
         </Panel>
       ) : tab === 'samsoom' ? (

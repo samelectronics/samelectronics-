@@ -15,12 +15,12 @@ const ex = (x) => (x >= 1 ? 1 : 1 - Math.pow(2, -10 * cl(x))), eio = (x) => { x 
 // R6 Part E: the Excel's qualities (High Copy is not one of them and is gone). Featured until the owner chooses: Original
 // (sealed in its Service Pack box, the lead ad), OLED, Incell and AAA. No warranty claims here: periods come per product.
 export const ADS = [
-  { g: 'OR', u: 'or', lid: '#F3F3F0', k: 'ORIGINAL · SERVICE PACK', h: ['The original.', 'Nothing less.'], d: 'Genuine part, sealed in the maker’s service box · best colour, brightness and touch', q: [5, 5, 5, 3] },
-  { g: 'OL', u: 'ol', lid: '#F1F1EE', k: 'OLED', h: ['Deep blacks.', 'Fair price.'], d: 'OLED replacement · deep blacks, true colour · great value', q: [4, 4, 4, 4] },
-  { g: 'AQ', u: 'aq', lid: '#141414', k: 'AAA · GX', h: ['Close to', 'the original.'], d: 'High-grade copy · very good colour and touch · lower price', q: [4, 3, 4, 4] },
+  { g: 'OR', u: 'or', lid: '#F3F3F0', k: 'ORIGINAL · SERVICE PACK', h: ['The original.', 'Nothing less.'], d: 'Genuine part, sealed in the maker’s service box · best color, brightness and touch', q: [5, 5, 5, 3] },
+  { g: 'OL', u: 'ol', lid: '#F1F1EE', k: 'OLED', h: ['Deep blacks.', 'Fair price.'], d: 'OLED replacement · deep blacks, true color · great value', q: [4, 4, 4, 4] },
+  { g: 'AQ', u: 'aq', lid: '#141414', k: 'AAA · GX', h: ['Close to', 'the original.'], d: 'High-grade copy · very good color and touch · lower price', q: [4, 3, 4, 4] },
   { g: 'IN', u: 'in', lid: '#1D7FE6', k: 'INCELL', h: ['Best value.', 'Still bright.'], d: 'LCD with built-in touch · good everyday quality · budget friendly', q: [3, 3, 4, 5] },
 ];
-export const QL = ['Brightness', 'Colour', 'Touch', 'Value'];
+export const QL = ['Brightness', 'Color', 'Touch', 'Value'];
 // R6 §09: every quality gets the same unboxing film: 4.5s on stage + 0.6s change
 const DUR = (i) => (i === 0 ? 8.4 : 5.1); // owner (28 Oct): the Original slide is longer: every manufacturer's box gets its moment
 

@@ -151,7 +151,7 @@ class Component extends DCLogic {
     const pj = (lon, lat, h) => { const l = lon * Dg - lc, f = lat * Dg, cf = Math.cos(f), sf = Math.sin(f), cL = Math.cos(l), r = R * (h || 1); return [C + r * cf * Math.sin(l), C - r * (cp0 * sf - sp0 * cf * cL), sp0 * sf + cp0 * cf * cL]; };
     x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, N, N); if (fin <= 0) { cv.style.opacity = 0; return; } cv.style.opacity = fin.toFixed(3); cv.style.transform = 'scale(' + (0.9 + 0.1 * fin).toFixed(3) + ')'; cv.style.filter = fin < 1 ? 'blur(' + ((1 - fin) * 8).toFixed(1) + 'px)' : 'none';
     const bg = x.createRadialGradient(C - R * 0.35, C - R * 0.4, R * 0.05, C, C, R); bg.addColorStop(0, '#FFFFFF'); bg.addColorStop(0.6, '#F2F3F4'); bg.addColorStop(1, '#DCDDDF'); x.beginPath(); x.arc(C, C, R, 0, 7); x.fillStyle = bg; x.fill();
-    // 14 Oct §09: the hero globe's crisp square dots (same colours as before), pixel-snapped, depth-faded toward the rim
+    // 14 Oct §09: the hero globe's crisp square dots (same colors as before), pixel-snapped, depth-faded toward the rim
     const dots = (arr, col, sz) => { x.fillStyle = col; for (let i = 0; i < arr.length; i += 2) { const q = pj(arr[i], arr[i + 1]); if (q[2] <= 0.02) continue; x.globalAlpha = Math.min(1, 0.15 + q[2] * 1.1); const z = Math.max(1.5, sz * (0.55 + 0.45 * q[2])); x.fillRect(Math.round(q[0] - z / 2), Math.round(q[1] - z / 2), z, z); } x.globalAlpha = 1; };
     dots(G.land, '#3D3E3F', 5.6); dots(G.hi, '#F7C032', 6);
     const v3 = (lo, la) => [Math.cos(la * Dg) * Math.cos(lo * Dg), Math.cos(la * Dg) * Math.sin(lo * Dg), Math.sin(la * Dg)], ll = (v) => [Math.atan2(v[1], v[0]) / Dg, Math.asin(Math.max(-1, Math.min(1, v[2]))) / Dg];

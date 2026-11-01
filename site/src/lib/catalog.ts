@@ -1,7 +1,7 @@
 'use client';
 // P1 · The shop's catalogue engine. Reads the product data the whole site already uses (window.SE_DATA, built from the
 // owner's Products.xlsx) and adds what the shop needs on top: brand/model names, the product photo, price labels, a
-// typo-tolerant search with suggestions, every filter of the "customise" panel, facet counts and sorting.
+// typo-tolerant search with suggestions, every filter of the "customize" panel, facet counts and sorting.
 // When Supabase is connected (src/lib/backend), products come from the `products` table instead, in the same shape.
 //
 // Prices: everything in the data is a SAMPLE until the owner sends real prices, so every price label carries "· sample".
@@ -74,7 +74,7 @@ export function products(): Product[] {
       deal, dealEnds: dl ? dl.ends : deal ? wk : 0, price: Math.round(p.retail_price * (1 - deal / 100)),
       rating: Math.round((3.9 + r * 1.1) * 10) / 10, reviews: Math.round(4 + r * 180), warranty: warrantyOf(p.grade),
       hay: '', isNew: i % 11 === 3, best: r > 0.82,
-      // back covers and frames come in colours (sample until the Excel lists them per product)
+      // back covers and frames come in colors (sample until the Excel lists them per product)
       colour: p.colour || (p.category === 'BCV' || p.category === 'FRM' ? d.colours[Math.floor(hash(p.id + 'c') * Math.min(8, d.colours.length))].id : ''),
     };
     out.hay = norm([out.title, out.brandName, out.modelName, out.series, out.catName, out.part_name, out.gradeName, out.makerName, out.qualityName, p.id].join(' '));
@@ -143,7 +143,7 @@ export function suggest(q: string, n = 8) {
   const seen = new Set<string>(); return out.filter((x) => (seen.has(x.label) ? false : (seen.add(x.label), true))).slice(0, n);
 }
 
-// ── filters (the "customise" panel) ─────────────────────────────────────────────────────────────────────────
+// ── filters (the "customize" panel) ─────────────────────────────────────────────────────────────────────────
 export type Filters = {
   q: string; brands: string[]; models: string[]; cats: string[]; parts: string[]; grades: string[]; makers: string[]; qualities: string[];
   min: number | null; max: number | null; inStock: boolean; deals: boolean; isNew: boolean; rating: number; warranty: string[];

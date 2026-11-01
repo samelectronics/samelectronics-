@@ -1,4 +1,4 @@
-/* P2 · The shop: header, search, categories, banners, filters, cards, product view, customise panel, compare. */
+/* P2 · The shop: header, search, categories, banners, filters, cards, product view, customize panel, compare. */
 .shop { background: var(--g0); padding-bottom: 80px; }
 .shop-wait { min-height: 70vh; display: flex; gap: 10px; align-items: center; justify-content: center; }
 .shop-wait span { width: 12px; height: 12px; border-radius: 50%; background: var(--y); animation: shopDot 1s ease-in-out infinite; }
@@ -284,7 +284,7 @@ html[dir='rtl'] .sf-tg input:checked + i::after { transform: translateX(-14px); 
 .pv-foot { margin-top: 30px; text-align: center; }
 @media (max-width: 900px) { .pv-top { grid-template-columns: 1fr; } .pv-gal { position: static; } .pv-rev { grid-template-columns: 1fr; } .pv-promise { grid-template-columns: 1fr; } .pv-veil { padding-top: 60px; } .pv { height: calc(100vh - 60px); } }
 
-/* customise everything (built like the Find My Part panel) */
+/* customize everything (built like the Find My Part panel) */
 .cz-veil { position: fixed; inset: 0; z-index: 92; display: grid; place-items: center; padding: 16px; background: rgba(15,16,18,.6); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); animation: spFade .25s both; }
 .cz { display: grid; grid-template-columns: 210px minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; width: min(1080px, 100%); height: min(780px, calc(100vh - 32px)); border-radius: 26px; overflow: hidden; background: linear-gradient(160deg, rgba(52,54,58,.98), rgba(30,31,34,.98)); color: #fff; box-shadow: 0 0 0 1px rgba(247,192,50,.25), 0 50px 120px -30px rgba(0,0,0,.8); animation: spRise .4s cubic-bezier(.2,.9,.3,1) both; }
 .cz-top { grid-column: 1 / -1; display: flex; align-items: center; gap: 16px; padding: 18px 22px; border-bottom: 1px solid rgba(255,255,255,.08); }
@@ -434,3 +434,22 @@ html[dir='rtl'] .cz-sw2 input:checked + i::after { transform: translateX(-18px);
 .sx-acts { display: flex; flex-wrap: wrap; gap: 10px; } .sx-open { font: 600 14px Inter, sans-serif; color: #C9CBCE; text-decoration: none; } .sx-open:hover { color: #F7C032; }
 .sx-spec { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; margin: 0; } .sx-spec div { display: flex; justify-content: space-between; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,.1); } .sx-spec dt { font: 500 13px Inter, sans-serif; color: #9DA1A6; } .sx-spec dd { margin: 0; font: 600 13.5px Inter, sans-serif; text-align: end; }
 @media (max-width: 860px) { .sx-pgrid { grid-template-columns: 1fr; gap: 28px; } .sx-hero { padding-top: 100px; } .sx-spec { grid-template-columns: 1fr; } .sx-stats span { padding: 0 14px; } }
+/* R9 · the search grows downward into one panel with your history */
+.ss { position: relative; z-index: 30; }
+.ss.open .ss-bar { border-radius: 18px 18px 0 0; }
+.ss.open .ss-drop { top: 100%; margin-top: 0; border-radius: 0 0 18px 18px; box-shadow: 0 0 0 3px var(--y), 0 40px 70px -24px rgba(0,0,0,.6); clip-path: inset(0 -6px -80px -6px); transform-origin: top; animation: ssGrow .32s cubic-bezier(.2,.9,.3,1) both; padding: 8px 10px 14px; border-top: 1px solid #EEF0F2; }
+@keyframes ssGrow { from { opacity: 0; transform: scaleY(.6); } }
+.ss-pop { display: flex; flex-wrap: wrap; gap: 8px; padding: 4px 10px 6px; } .ss-hint { display: block; padding: 8px 12px 2px; font: 400 12.5px Inter, sans-serif; color: var(--g4); }
+/* R9 · My device picker */
+.dp { position: relative; display: inline-flex; } .dp-btn { display: inline-flex; align-items: center; gap: 8px; height: 34px; padding: 0 12px; border: 1px dashed rgba(247,192,50,.6); border-radius: 999px; background: rgba(247,192,50,.08); color: #F7C032; font: 600 13.5px Inter, sans-serif; cursor: pointer; transition: background .2s; } .dp-btn:hover, .dp.open .dp-btn { background: #F7C032; color: #26282B; border-style: solid; }
+.dp-chev { transition: transform .25s; } .dp.open .dp-chev { transform: rotate(180deg); }
+.dp-panel { position: absolute; top: calc(100% + 10px); left: 0; z-index: 40; display: flex; flex-direction: column; width: min(420px, calc(100vw - 32px)); max-height: 440px; padding: 12px; border-radius: 18px; background: #fff; color: #26282B; box-shadow: 0 30px 70px -20px rgba(0,0,0,.6), inset 0 0 0 1.5px #F7C032; animation: stPop .3s cubic-bezier(.2,1.2,.4,1) both; }
+html[dir='rtl'] .dp-panel { left: auto; right: 0; }
+.dp-search { display: flex; align-items: center; gap: 8px; height: 44px; padding: 0 12px; border-radius: 12px; background: #F4F5F6; color: #6A6D72; } .dp-search input { flex: 1; border: 0; outline: 0; background: none; font: 500 15px Inter, sans-serif; color: #26282B; }
+.dp-brands { display: flex; gap: 6px; padding: 10px 0; overflow-x: auto; scrollbar-width: none; } .dp-brands button { flex: none; height: 30px; padding: 0 12px; border: 0; border-radius: 8px; background: #F2F3F4; font: 600 12.5px Inter, sans-serif; color: #4A4D52; cursor: pointer; } .dp-brands button.on { background: #26282B; color: #F7C032; }
+.dp-list { display: flex; flex-direction: column; overflow-y: auto; margin: 0 -4px; padding: 0 4px; scrollbar-width: thin; scrollbar-color: #F7C032 transparent; }
+.dp-it { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 0 10px; padding: 10px 12px; border: 0; border-radius: 10px; background: none; text-align: start; cursor: pointer; } .dp-it:hover { background: rgba(247,192,50,.14); }
+.dp-it b { font: 600 14.5px Inter, sans-serif; } .dp-it small { grid-column: 1; font: 400 12px Inter, sans-serif; color: #6A6D72; } .dp-it i { grid-row: 1 / 3; grid-column: 2; font-style: normal; color: #1F8A4C; font-weight: 700; } .dp-it.on { background: #FFF8E3; }
+.dp-none { padding: 18px 8px; font: 400 14px Inter, sans-serif; color: #6A6D72; }
+/* R9 · the search panel and device picker open over the page below (the circuits stay clipped by their own layer) */
+.shop-hd { overflow: visible; z-index: 20; } .shop-hd > .cf, .shop-hd > canvas, .shop-hd > svg { clip-path: inset(0); }
