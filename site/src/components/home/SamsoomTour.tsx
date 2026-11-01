@@ -32,11 +32,16 @@ const END: Step[] = [
   { sel: '[data-tour="help"]', mood: 'pt-blush', t: 'Need me again?', d: 'Tap the ? at the top, on any page, and I will show you around.' },
   { sel: '[data-tour="samsoom"]', mood: 'pt-wow', t: 'And me!', d: 'Ask me about any part, grade or delivery, any time. I am always here.' },
 ];
-// "Choose your language" in each language, cycled so everyone recognises theirs
-const CHOOSE: [Lang, string][] = [['en', 'Choose your language'], ['ar', 'اختر لغتك'], ['fr', 'Choisissez votre langue'], ['hi', 'अपनी भाषा चुनें'], ['fa', 'زبان خود را انتخاب کنید'], ['ru', 'Выберите язык'], ['es', 'Elige tu idioma'], ['ur', 'اپنی زبان منتخب کریں']];
+// "Choose your language" in each language, cycled so everyone recognises theirs (R9: all twenty-four)
+const CHOOSE: [Lang, string][] = [["en", "Choose your language"], ["ar", "اختر لغتك"], ["fr", "Choisissez votre langue"], ["es", "Elige tu idioma"], ["zh", "选择您的语言"], ["hi", "अपनी भाषा चुनें"], ["ur", "اپنی زبان منتخب کریں"], ["fa", "زبان خود را انتخاب کنید"], ["ru", "Выберите язык"], ["de", "Sprache wählen"], ["pt", "Escolha o idioma"], ["it", "Scegli la lingua"], ["sw", "Chagua lugha yako"], ["tl", "Piliin ang wika mo"], ["ml", "നിങ്ങളുടെ ഭാഷ തിരഞ്ഞെടുക്കൂ"], ["am", "ቋንቋዎን ይምረጡ"], ["ha", "Zaɓi harshenka"], ["yo", "Yan èdè rẹ"], ["ig", "Họrọ asụsụ gị"], ["om", "Afaan kee filadhu"], ["ro", "Alege limba"], ["ca", "Tria l’idioma"], ["gl", "Escolle o teu idioma"], ["eu", "Aukeratu zure hizkuntza"]];
+const SCROLL: Record<string, string> = {"en": "Scroll for more languages", "de": "Für mehr Sprachen scrollen", "it": "Scorri per altre lingue", "pt": "Deslize para mais idiomas", "ca": "Llisca per a més idiomes", "gl": "Despraza para máis idiomas", "eu": "Irristatu hizkuntza gehiagorako", "ro": "Derulează pentru alte limbi", "tl": "Mag-scroll para sa iba pang wika", "zh": "滑动查看更多语言", "ml": "കൂടുതൽ ഭാഷകൾക്ക് സ്ക്രോൾ ചെയ്യൂ", "sw": "Sogeza kuona lugha zaidi", "am": "ለተጨማሪ ቋንቋዎች ያሸብልሉ", "ha": "Gungura don ƙarin harsuna", "yo": "Yí lọ fún èdè mìíràn", "om": "Afaanota dabalataaf gadi qabi", "ig": "Pịgharịa maka asụsụ ndị ọzọ", "ar": "مرّر لمزيد من اللغات", "es": "Desliza para más idiomas", "fr": "Faites défiler pour plus de langues", "fa": "برای زبان‌های بیشتر بکشید", "ru": "Прокрутите, чтобы увидеть ещё", "hi": "और भाषाओं के लिए स्क्रॉल करें", "ur": "مزید زبانوں کے لیے اسکرول کریں"};
+const DETECTED: Record<string, string> = {"en": "Detected", "de": "Erkannt", "it": "Rilevata", "pt": "Detetado", "ca": "Detectat", "gl": "Detectado", "eu": "Detektatua", "ro": "Detectată", "tl": "Natukoy", "zh": "已检测", "ml": "കണ്ടെത്തിയത്", "sw": "Imegunduliwa", "am": "ተገኝቷል", "ha": "An gano", "yo": "A rí i", "om": "Argame", "ig": "Achọpụtara", "ar": "تم اكتشافها", "es": "Detectado", "fr": "Détectée", "fa": "شناسایی شد", "ru": "Определён", "hi": "पहचानी गई", "ur": "شناخت ہوئی"};
+/** the visitor's own language, from the browser (shown first, marked "Detected") */
+const detect = (): Lang | null => { try { for (const n of navigator.languages || [navigator.language]) { const c = (n || '').toLowerCase().slice(0, 2), f = c === 'fil' ? 'tl' : c; if (LANGS.some((x) => x.id === f)) return f as Lang; } } catch { /* */ } return null; };
 // page steps name a mood; on the walk each one becomes a pointing pose with the matching face
 const POSE: Record<string, string> = { happy: 'pt-happy', think: 'pt-think', wave: 'pt-smile', wink: 'pt-wink', blush: 'pt-blush', found: 'pt-wow', celebrate: 'pt-wow', idle: 'pt-smile' };
 const RTL = (l: string) => l === 'ar' || l === 'fa' || l === 'ur';
+const LANG_SET = new Set(['ar', 'fa', 'ur']);
 
 const visible = (el: Element | null): el is HTMLElement => {
   if (!el) return false; const r = (el as HTMLElement).getBoundingClientRect(), cs = getComputedStyle(el as HTMLElement);
@@ -112,18 +117,28 @@ export default function SamsoomTour() {
 
   if (phase === 'off') return null;
   if (phase === 'lang') {
-    const [cl, ct] = CHOOSE[ci];
+    const [cl, ct] = CHOOSE[ci], d = detect(), list = d ? [LANGS.find((x) => x.id === d)!, ...LANGS.filter((x) => x.id !== d)] : LANGS;
+    const pick = (id: Lang) => { window.seI18n && window.seI18n.now(id); try { localStorage.setItem('se-lang', id); } catch { /* */ } setPhase('hello'); };
+    const hint = d || cl;
     return (
       <div className="st-veil" role="dialog" aria-modal="true" aria-label="Choose your language" data-no-i18n="">
-        <div className="st-hello st-lang">
-          <span className="st-sam"><LiveSam size={120} mood="idle" play="wave" /></span>
-          <b key={ci} className="st-cycle" lang={cl} dir={RTL(cl) ? 'rtl' : 'ltr'}>{ct}</b>
-          <div className="st-langs">
-            {LANGS.map((l) => (
-              <button key={l.id} type="button" lang={l.id} className={'st-l' + (l.id === cl ? ' hint' : '')} onClick={() => { window.seI18n && window.seI18n.now(l.id); try { localStorage.setItem('se-lang', l.id); } catch { /* */ } setPhase('hello'); }}>
-                <b dir="auto">{l.name}</b><small>{l.en}</small>
-              </button>
-            ))}
+        <div className="st-lang2">
+          <div className="st-l2-sam">
+            <span className="st-l2-bubble" key={ci} lang={cl} dir={LANG_SET.has(cl) ? 'rtl' : 'ltr'}>{ct}</span>
+            <span className="st-l2-av"><LiveSam size={170} mood="idle" play="wave" /></span>
+            <span className="st-l2-floor" aria-hidden="true" />
+          </div>
+          <div className="st-l2-list">
+            <div className="st-l2-scroll" onScroll={(e) => { const el = e.currentTarget; el.parentElement!.classList.toggle('end', el.scrollTop + el.clientHeight >= el.scrollHeight - 6); }}>
+              {list.map((l) => (
+                <button key={l.id} type="button" lang={l.id} className={'st-l2-i' + (l.id === d ? ' det' : '') + (l.id === cl ? ' hint' : '')} onClick={() => pick(l.id)}>
+                  <b dir="auto">{l.name}</b>
+                  <small>{l.id === d ? (DETECTED[l.id] || DETECTED.en) + ' · ' : ''}{l.en}</small>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+                </button>
+              ))}
+            </div>
+            <span className="st-l2-more" lang={hint} aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path d="M6 9l6 6 6-6" /></svg>{SCROLL[hint] || SCROLL.en}</span>
           </div>
         </div>
       </div>

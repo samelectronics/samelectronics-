@@ -10,7 +10,7 @@ const WAIT: Record<L, string> = { en: 'Your part is waiting', ar: 'قطعتك ب
 export default function TabTitle({ page, ar }: { page: string; ar: string }) {
   useEffect(() => {
     let cur: L = (['ar', 'es', 'fr', 'fa', 'ru', 'hi', 'ur'].includes(document.documentElement.lang) ? document.documentElement.lang : 'en') as L;
-    const set = (e?: Event) => { const d = e && (e as CustomEvent).detail; if (d && d in NAME) cur = d; else { const L = window.seI18n && window.seI18n.lang(); if (L) cur = L; } const l = cur; document.title = NAME[l] + ' - ' + (document.hidden ? WAIT[l] : l === 'ar' ? ar : l === 'en' || !window.seI18n ? page : window.seI18n.t(page)); };
+    const set = (e?: Event) => { const d = e && (e as CustomEvent).detail; if (d && d in NAME) cur = d; else { const L = window.seI18n && window.seI18n.lang(); cur = (L && L in NAME ? L : "en") as L; } const l = cur; document.title = NAME[l] + ' - ' + (document.hidden ? WAIT[l] : l === 'ar' ? ar : l === 'en' || !window.seI18n ? page : window.seI18n.t(page)); };
     const icons = () => [...document.querySelectorAll<HTMLLinkElement>('link[rel~="icon"]')];
     const dim = () => icons().forEach((l) => { if (!l.dataset.on) l.dataset.on = l.href; l.href = document.hidden ? '/favicon-dim-32.png' : l.dataset.on; });
     const vis = () => { set(); dim(); };

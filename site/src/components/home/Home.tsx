@@ -9,6 +9,7 @@ import SectionLife from '@/components/home/SectionLife';
 import NetNotice from '@/components/home/NetNotice';
 import SamsoomTour from '@/components/home/SamsoomTour';
 import SiteSettings from '@/components/site/SiteSettings';
+import LangLoading from '@/components/site/LangLoading';
 import FitText from '@/components/site/FitText';
 import { installI18n } from '@/i18n/lang';
 
@@ -33,6 +34,7 @@ export default function Home() {
       <SamsoomTour />
       <SiteSettings />
       <FitText />
+      <LangLoading />
     </div>
   );
 }

@@ -8,6 +8,7 @@ import SamsoomTour from '@/components/home/SamsoomTour';
 import { installI18n } from '@/i18n/lang';
 import { loadRemoteCatalog } from '@/lib/remoteCatalog';
 import SiteSettings from './SiteSettings';
+import LangLoading from './LangLoading';
 import FitText from './FitText';
 
 if (typeof window !== 'undefined') {
@@ -27,6 +28,7 @@ export default function SitePage({ children }: { children: React.ReactNode }) {
       <NetNotice />
       <SamsoomTour />
       <FitText />
+      <LangLoading />
     </div>
   );
 }
