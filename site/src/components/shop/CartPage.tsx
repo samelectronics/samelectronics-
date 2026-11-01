@@ -2,6 +2,7 @@
 // P2 · The cart and checkout. Lines with quantity, save for later, 5% UAE VAT, delivery (pick-up · UAE · worldwide), the
 // customer's details (filled from the account, or a company profile), then the order is placed (backend.placeOrder —
 // on Supabase the server recomputes prices and VAT) and confirmed on WhatsApp. Saved-for-later and stars sit underneath.
+import { notify } from '@/lib/notes';
 import React, { useEffect, useState } from 'react';
 import { type Product, aed, byId, data, VAT, waLink, fmt, siteSetting } from '@/lib/catalog';
 import { store, useStore } from '@/lib/store';
@@ -36,13 +37,13 @@ export default function CartPage() {
     const r = await backend.placeOrder({ email: form.email, name: form.name, phone: form.phone, lines: lines.map(({ l, p }) => ({ id: p.id, title: p.title, grade: p.gradeName, qty: l.qty, unit: unit(p) })), sub, vat, ship, total, delivery: del, address: form.address, country: form.country, note: form.note, pay, company: form.company || undefined });
     setBusy(false);
     if (!r.ok) return setErr(T(r.error));
-    setDone(r.data); store.clear(); window.scrollTo({ top: 0, behavior: 'smooth' });
+    setDone(r.data); store.clear(); notify({ kind: 'order', t: 'Order received', d: 'We will confirm stock and message you shortly.', href: '/account#orders' }); window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   const waMsg = (o: Order) => `Hi Sam Electronics, I placed order ${o.no} on the website.\n\n${o.lines.map((x) => `${x.qty} × ${x.title} · ${x.grade}`).join('\n')}\n\nTotal ${aed(o.total, false)} incl. VAT\nDelivery: ${o.delivery}\nPlease confirm stock and price.`;
 
   if (done) return (
     <>
-      <PageHero eb={T('ORDER RECEIVED')} title={T('Thank you,') + ' ' + (done.name.split(' ')[0] || '') + '!'} accent={done.no} sub={T('We received your order. Our team confirms stock, delivery and the final price on WhatsApp, usually within minutes during opening hours.')} right={<LiveSam size={180} mood="idle" play="celebrate" />}>
+      <PageHero eb={T('ORDER RECEIVED')} title={T('Thank you,') + ' ' + (done.name.split(' ')[0] || '') + '!'} accent={done.no} sub={T('We received your order. Our team confirms stock, delivery and the final price on WhatsApp, usually within minutes during opening hours.')} right={<LiveSam circle size={180} mood="idle" play="celebrate" />}>
         <div className="sp-acts"><a className="sp-btn wa" href={waLink(waMsg(done))} target="_blank" rel="noopener noreferrer">{T('Confirm on WhatsApp')}</a><a className="sp-btn ghost" href="/shop">{T('Keep shopping')}</a>{me ? <a className="sp-btn ghost" href="/account#orders">{T('My orders')}</a> : null}</div>
       </PageHero>
       <section className="sp-sec w"><div className="sp-wrap cart-done">
@@ -58,7 +59,7 @@ export default function CartPage() {
 
   return (
     <>
-      <PageHero eb={T('YOUR CART')} title={T('Ready when')} accent={T('you are.')} crumb={[[T('Shop'), '/shop'], [T('Cart')]]} sub={lines.length ? `${lines.reduce((a, x) => a + x.l.qty, 0)} ${T('items')} · ${aed(total, false)} ${T('incl. 5% VAT')} · ${T('sample prices')}` : T('Your cart is empty. Every part you add, here or on the home page, waits here.')} seed={31} right={<LiveSam size={150} mood="idle" play={lines.length ? 'happy' : 'think'} />} />
+      <PageHero eb={T('YOUR CART')} title={T('Ready when')} accent={T('you are.')} crumb={[[T('Shop'), '/shop'], [T('Cart')]]} sub={lines.length ? `${lines.reduce((a, x) => a + x.l.qty, 0)} ${T('items')} · ${aed(total, false)} ${T('incl. 5% VAT')} · ${T('sample prices')}` : T('Your cart is empty. Every part you add, here or on the home page, waits here.')} seed={31} right={<LiveSam circle size={150} mood="idle" play={lines.length ? 'happy' : 'think'} />} />
       <section className="sp-sec g"><div className="sp-wrap cart">
         <div className="cart-l">
           {lines.length ? (
@@ -79,7 +80,7 @@ export default function CartPage() {
               <span className="sp-sample">{T('All prices are samples until the owner’s prices are in.')}</span>
             </div>
           ) : (
-            <div className="sp-card sp-empty" data-rise><LiveSam size={110} mood="think" /><b className="sp-h3">{T('Nothing here yet')}</b><span>{T('Find your part in seconds and it will wait here.')}</span><span className="sp-acts" style={{ justifyContent: 'center' }}><a className="sp-btn" href="/shop">{T('Go to the shop')}</a><button type="button" className="sp-btn ghost" onClick={() => window.dispatchEvent(new CustomEvent('se:fmp', { detail: {} }))}>Find My Part</button></span></div>
+            <div className="sp-card sp-empty" data-rise><LiveSam circle size={110} mood="think" /><b className="sp-h3">{T('Nothing here yet')}</b><span>{T('Find your part in seconds and it will wait here.')}</span><span className="sp-acts" style={{ justifyContent: 'center' }}><a className="sp-btn" href="/shop">{T('Go to the shop')}</a><button type="button" className="sp-btn ghost" onClick={() => window.dispatchEvent(new CustomEvent('se:fmp', { detail: {} }))}>Find My Part</button></span></div>
           )}
 
           {lines.length ? (

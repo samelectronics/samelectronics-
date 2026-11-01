@@ -1,3 +1,4 @@
+import Faq from '@/components/site/Faq';
 import SitePage from '@/components/site/SitePage';
 import TabTitle from '@/components/site/TabTitle';
 import RepairPage from '@/components/info/RepairPage';
@@ -8,7 +9,7 @@ export default function Page() {
   return (
     <>
       <TabTitle page="Repair Lab" ar="مختبر الصيانة" />
-      <SitePage><RepairPage /></SitePage>
+      <SitePage><RepairPage /><Faq topic="repair" /></SitePage>
     </>
   );
 }

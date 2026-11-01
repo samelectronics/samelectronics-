@@ -1,3 +1,4 @@
+import Faq from '@/components/site/Faq';
 import SitePage from '@/components/site/SitePage';
 import TabTitle from '@/components/site/TabTitle';
 import WorldwidePage from '@/components/info/WorldwidePage';
@@ -8,7 +9,7 @@ export default function Page() {
   return (
     <>
       <TabTitle page="Worldwide" ar="حول العالم" />
-      <SitePage><WorldwidePage /></SitePage>
+      <SitePage><WorldwidePage /><Faq topic="worldwide" /></SitePage>
     </>
   );
 }

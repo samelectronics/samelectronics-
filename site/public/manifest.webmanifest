@@ -1,13 +1,24 @@
 {
-  "name": "Sam Electronics",
+  "id": "/",
+  "name": "Sam Electronics · Phone parts & repairs",
   "short_name": "Sam Electronics",
-  "start_url": "/",
+  "description": "Genuine, tested phone parts in every grade, repairs in Deira, trade prices and worldwide shipping.",
+  "start_url": "/?src=app",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#26282B",
   "theme_color": "#26282B",
+  "categories": ["shopping", "business"],
   "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
     { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ],
+  "shortcuts": [
+    { "name": "Shop", "url": "/shop", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Book a repair", "url": "/repair", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Deals", "url": "/shop?scope=deals", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] },
+    { "name": "My Bench", "url": "/account", "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }] }
   ]
 }

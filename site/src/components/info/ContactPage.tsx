@@ -51,7 +51,7 @@ export default function ContactPage() {
     <>
       <PageHero eb={T('CONTACT & HELP')} title={T('Talk to us.')} accent={T('Any way you like.')} crumb={[[T('Contact')]]} seed={97}
         sub={T('Call, WhatsApp, e-mail, chat here with the team, or come to the counter in Deira. We answer in Arabic, English and more.')}
-        right={<LiveSam size={170} mood="idle" play="wave" />} />
+        right={<LiveSam circle size={170} mood="idle" play="wave" />} />
 
       <section className="sp-sec w"><div className="sp-wrap">
         <div className="ct-ways" data-rise>

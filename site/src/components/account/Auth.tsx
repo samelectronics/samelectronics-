@@ -32,7 +32,7 @@ export default function Auth({ onDone }: { onDone: () => void }) {
   return (
     <div className="au">
       <aside className="au-side">
-        <span className="au-sam"><LiveSam size={140} mood="idle" play={mode === 'code' ? 'think' : mode === 'up' ? 'wave' : 'happy'} /></span>
+        <span className="au-sam"><LiveSam circle size={140} mood="idle" play={mode === 'code' ? 'think' : mode === 'up' ? 'wave' : 'happy'} /></span>
         <b className="sp-h2" style={{ color: '#fff' }}>{mode === 'up' ? T('Welcome to My Bench.') : T('Welcome back.')}</b>
         <ul className="au-perks">
           {['Your orders and repairs, live', 'Stars, saved parts and stock alerts', 'Points on every part and repair', 'Your company profiles and trade prices', 'Your Samsoom chats, kept'].map((p) => <li key={p}><i />{T(p)}</li>)}

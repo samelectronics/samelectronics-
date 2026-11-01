@@ -2,6 +2,7 @@
 // Home v3 section "Nav". Renders against the home page's values (`v`, from HomeV3's logic class).
 'use client';
 import LangMenu from '../LangMenu';
+import NoteBell from '@/components/site/NoteBell';
 import ProgressScrub from '@/components/home/ProgressScrub';
 import HoursLive from '../HoursLive';
 import { site } from '@/content/facts';
@@ -153,6 +154,8 @@ export default function Nav({ v }: { v: Vals }) {
           {'\n      '}
           {/* R7-G: the quick language menu (five languages) */}
           <LangMenu />
+          {'\n      '}
+          <NoteBell />
           {'\n      '}
           {/* R9: the ? calls Samsoom back on any page (tour of this page, language, chat) */}
           <button type="button" className="se-help se-ico" data-tour="help" title="Help" aria-label="Help: ask Samsoom" onClick={() => window.dispatchEvent(new CustomEvent('se:help'))}>

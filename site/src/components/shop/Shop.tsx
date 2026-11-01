@@ -16,6 +16,7 @@ import ProductCard from './ProductCard';
 import ProductView from './ProductView';
 import Customise, { type View } from './Customise';
 import Banners from './Banners';
+import InlineAd from './InlineAd';
 
 const LIST_KEYS = ['brands', 'models', 'cats', 'parts', 'grades', 'makers', 'qualities', 'warranty', 'device', 'colours'] as const;
 const URLK: Record<(typeof LIST_KEYS)[number], string> = { brands: 'brand', models: 'model', cats: 'cat', parts: 'part', grades: 'grade', makers: 'maker', qualities: 'quality', warranty: 'warranty', device: 'device', colours: 'colour' };
@@ -168,11 +169,11 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
 
             {res.length ? (
               <div className={'shop-grid' + (view.list ? ' list' : '')} style={{ ['--cols' as string]: view.cols }}>
-                {shown.map((p) => <ProductCard key={p.id} p={p} st={st} trade={trade} open={open} list={view.list} fits={myModels.get(p.model_id)} />)}
+                {shown.map((p, k) => { const every = (view.list ? 1 : Math.max(1, +view.cols || 4)) * 3; const ad = (k + 1) % every === 0 && k + 1 < shown.length && (k + 1) / every <= 3; return <React.Fragment key={p.id}><ProductCard p={p} st={st} trade={trade} open={open} list={view.list} fits={myModels.get(p.model_id)} />{ad ? <InlineAd slot={(k + 1) / every} lastCat={f.cats[0]} /> : null}</React.Fragment>; })}
               </div>
             ) : (
               <div className="sp-empty shop-none">
-                <LiveSam size={96} mood="think" />
+                <LiveSam circle size={96} mood="think" />
                 <b>{T('Nothing matches all of that.')}</b>
                 <span>{T('Remove a filter, try another spelling, or ask me: we may have it in the back.')}</span>
                 <span className="sp-acts" style={{ justifyContent: 'center' }}><button type="button" className="sp-btn sm" onClick={() => setF({ ...EMPTY })}>{T('Clear filters')}</button><button type="button" className="sp-btn sm ghost" onClick={() => window.dispatchEvent(new CustomEvent('se:chat', { detail: { q: f.q || 'Do you have this part?' } }))}>{T('Ask Samsoom')}</button></span>

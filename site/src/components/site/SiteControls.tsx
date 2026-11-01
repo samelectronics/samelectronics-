@@ -23,18 +23,22 @@ function Switch({ on, set, label, locked }: { on: boolean; set?: (v: boolean) =>
 
 export default function SiteControls() {
   const [p, setP] = useState<Prefs | null>(null), [banner, setBanner] = useState(false), [panel, setPanel] = useState<false | 'all' | 'privacy'>(false), [, force] = useState(0);
+  const [inst, setInst] = useState<null | { prompt: () => void }>(null);
   const [draft, setDraft] = useState({ memory: true, signal: false, booster: false });
   useEffect(() => {
     const cur = prefs(); setP(cur); if (!cur.consent) window.setTimeout(() => setBanner(true), 1600);
     const onP = (e: Event) => setP({ ...(e as CustomEvent).detail });
     const onOpen = (e: Event) => { const d = (e as CustomEvent).detail; setPanel(d === 'privacy' ? 'privacy' : 'all'); const c = prefs().consent; setDraft(c ? { memory: c.memory, signal: c.signal, booster: c.booster } : { memory: true, signal: false, booster: false }); play('open'); };
     const onLang = () => force((n) => n + 1);
+    // PWA: the service worker (production only) and the install offer shown in Settings
+    if ('serviceWorker' in navigator && location.hostname !== 'localhost') navigator.serviceWorker.register('/sw.js').catch(() => {});
+    const bip = (e: Event) => { e.preventDefault(); setInst(e as unknown as { prompt: () => void }); }; window.addEventListener('beforeinstallprompt', bip);
     // every click gives its own quiet sound (buttons and links; the element can name one with data-sound)
     const click = (e: MouseEvent) => { const el = (e.target as Element | null)?.closest?.('button, a, [role="button"], [role="tab"], [role="option"]') as HTMLElement | null; if (!el || el.closest('[data-no-sound]')) return; const s = (el.closest('[data-sound]') as HTMLElement | null)?.dataset.sound as Snd | undefined; play(s || 'click'); };
     const cart = () => play('add');
     const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setPanel(false); }; document.addEventListener('keydown', esc);
     window.addEventListener('se:prefs', onP); window.addEventListener('se:settings', onOpen); window.addEventListener('se:lang', onLang); document.addEventListener('click', click, true); window.addEventListener('se:cart', cart);
-    return () => { window.removeEventListener('se:prefs', onP); window.removeEventListener('se:settings', onOpen); window.removeEventListener('se:lang', onLang); document.removeEventListener('click', click, true); window.removeEventListener('se:cart', cart); document.removeEventListener('keydown', esc); };
+    return () => { window.removeEventListener('se:prefs', onP); window.removeEventListener('se:settings', onOpen); window.removeEventListener('se:lang', onLang); document.removeEventListener('click', click, true); window.removeEventListener('se:cart', cart); window.removeEventListener('beforeinstallprompt', bip); document.removeEventListener('keydown', esc); };
   }, []);
   if (!p) return null;
   const save = (c: { memory: boolean; signal: boolean; booster: boolean }) => { setPrefs({ consent: { ...c, at: Date.now() } }); setBanner(false); };
@@ -75,6 +79,7 @@ export default function SiteControls() {
                 <h4>{T('Price')}</h4>
                 <div className="sc2-row"><span>AED · USD · EUR</span><span className="sc2-seg">{(['AED', 'USD', 'EUR'] as Currency[]).map((c) => <button key={c} type="button" className={p.currency === c ? 'on' : ''} onClick={() => { setPrefs({ currency: c }); window.dispatchEvent(new CustomEvent('se:catalog')); }}>{c}</button>)}</span></div>
                 <div className="sc2-row"><span>{T('Language')}</span><button type="button" className="st-btn st-dark sc2-small" onClick={() => { setPanel(false); (window as unknown as { seTour?: () => void }).seTour?.(); }}>{T('Change language')}</button></div>
+                {inst ? <div className="sc2-row"><span>{T('Install the app')}</span><button type="button" className="st-btn st-go sc2-small" onClick={() => { inst.prompt(); setInst(null); }}>{T('Install')}</button></div> : null}
               </section>
             ) : null}
           </div>

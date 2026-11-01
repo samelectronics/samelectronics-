@@ -5,6 +5,7 @@
 // it to their account (tables cart_items, favourites, devices, alerts in supabase/schema.sql).
 import { useSyncExternalStore } from 'react';
 import { allowed } from './prefs';
+import { notify } from './notes';
 
 export type Line = { id: string; qty: number; at: number };
 export type Device = { model_id: string; name: string; nick?: string };
@@ -38,7 +39,7 @@ export const store = {
   later(id: string) { set({ cart: get().cart.filter((x) => x.id !== id), saved: [id, ...get().saved.filter((x) => x !== id)] }); },
   fav(id: string) { set({ favs: toggle(get().favs, id) }); },
   cmp(id: string) { const c = get().compare; set({ compare: c.includes(id) ? c.filter((x) => x !== id) : [...c, id].slice(-4) }); },
-  alert(id: string) { set({ alerts: toggle(get().alerts, id) }); },
+  alert(id: string) { const on = !get().alerts.includes(id); set({ alerts: toggle(get().alerts, id) }); if (on) notify({ kind: 'stock', t: 'Alert set', d: 'We will tell you here when the price drops or stock is back.', href: '/account#saved' }); },
   device(d: Device) { const l = get().devices; set({ devices: l.some((x) => x.model_id === d.model_id) ? l.filter((x) => x.model_id !== d.model_id) : [...l, d].slice(-8) }); },
   searched(q: string) { q = q.trim(); if (q.length < 2) return; set({ recent: [q, ...get().recent.filter((x) => x.toLowerCase() !== q.toLowerCase())].slice(0, 8) }); },
   forget(q?: string) { set({ recent: q ? get().recent.filter((x) => x !== q) : [] }); },

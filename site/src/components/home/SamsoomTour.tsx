@@ -53,6 +53,13 @@ function buildSteps(): Step[] {
   const page = Array.from(document.querySelectorAll<HTMLElement>('[data-tour-step]'))
     .sort((a, b) => +(a.dataset.tourStep || 0) - +(b.dataset.tourStep || 0))
     .map((el) => ({ el, mood: POSE[el.dataset.tourMood || ''] || (el.dataset.tourMood?.startsWith('pt-') ? el.dataset.tourMood : 'pt-smile'), t: el.dataset.tourTitle || '', d: el.dataset.tourText || '' }));
+  // pages without their own tour marks: walk through the page's sections by their headings
+  if (!home && !page.length) {
+    Array.from(document.querySelectorAll<HTMLElement>('main section, .sp-sec')).filter((sec) => sec.querySelector('h1, h2') && visible(sec)).slice(0, 5).forEach((el, k) => {
+      const h = el.querySelector('h1, h2') as HTMLElement, eb = el.querySelector('.sp-eb') as HTMLElement | null, pp = el.querySelector('.sp-p, p') as HTMLElement | null;
+      const d = (pp?.textContent || '').trim(); page.push({ el, mood: k ? 'pt-smile' : 'pt-happy', t: (h.innerText || h.textContent || '').replace(/\s+/g, ' ').trim(), d: d.length > 140 ? d.slice(0, d.lastIndexOf(' ', 136)) + '…' : d || (eb?.textContent || '') });
+    });
+  }
   const nav = (home ? NAV : NAV.filter((s) => s.sel === '[data-tour="fmp"]' || s.sel === '[data-tour="cart"]')).filter((s) => visible(document.querySelector(s.sel!)) && (s.sel !== '[data-tour="nav"]' || !!document.querySelector('[data-tour="nav"] > a')));
   const end = END.filter((s) => visible(document.querySelector(s.sel!)));
   return home ? [...nav, ...page, ...end] : [...page, ...nav, ...end];
@@ -60,6 +67,7 @@ function buildSteps(): Step[] {
 
 export default function SamsoomTour() {
   const [phase, setPhase] = useState<'off' | 'lang' | 'hello' | 'recall' | 'walk' | 'bye'>('off'), [i, setI] = useState(0), [box, setBox] = useState<DOMRect | null>(null);
+  const [offer, setOffer] = useState(false);
   const [steps, setSteps] = useState<Step[]>([]), [ci, setCi] = useState(0), [, force] = useReducer((n: number) => n + 1, 0);
   const done = () => { try { localStorage.setItem('se-tour2', '1'); } catch { /* private mode */ } };
   const closeLang = () => { const m = document.querySelector('.se-lm.open .se-lm-btn') as HTMLElement | null; if (m) m.click(); };
@@ -85,7 +93,14 @@ export default function SamsoomTour() {
         if ((t += 250) >= 1000) { window.clearInterval(iv); setPhase(chose ? 'hello' : 'lang'); }
       }, 250);
     }
-    return () => { window.clearInterval(iv); window.removeEventListener('se:help', help); };
+    // on a page someone opens for the first time (after the first welcome), he offers a tour of that page once
+    let ot = 0;
+    if (seen && location.pathname !== '/' && !location.pathname.startsWith('/staff')) {
+      const k = 'se-pt:' + location.pathname; let had = true; try { had = !!localStorage.getItem(k); localStorage.setItem(k, '1'); } catch { /* */ }
+      if (!had) ot = window.setTimeout(() => { if (!document.querySelector('.sc2-banner, .sc2-veil, .st-veil')) setOffer(true); }, 3500);
+    }
+    (window as unknown as { seWalk?: () => void }).seWalk = () => { setOffer(false); walk(); };
+    return () => { window.clearInterval(iv); window.clearTimeout(ot); window.removeEventListener('se:help', help); };
   }, []);
   // the language prompt cycles through every language
   useEffect(() => { if (phase !== 'lang') return; const iv = window.setInterval(() => setCi((n) => (n + 1) % CHOOSE.length), 1700); return () => window.clearInterval(iv); }, [phase]);
@@ -115,7 +130,14 @@ export default function SamsoomTour() {
     window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k);
   });
 
-  if (phase === 'off') return null;
+  if (phase === 'off') return offer ? (
+    <div className="st-offer" role="dialog" aria-label={T('Want a tour of this page?')}>
+      <span className="st-offer-av"><LiveSam circle size={46} mood="idle" play="wave" /></span>
+      <b>{T('Want a tour of this page?')}</b>
+      <button type="button" className="st-btn st-go" data-sound="next" onClick={() => { setOffer(false); walk(); }}>{T('Yes')}</button>
+      <button type="button" className="st-x" data-sound="skip" onClick={() => setOffer(false)} aria-label={T('Not now')}>✕</button>
+    </div>
+  ) : null;
   if (phase === 'lang') {
     const [cl, ct] = CHOOSE[ci], d = detect(), list = d ? [LANGS.find((x) => x.id === d)!, ...LANGS.filter((x) => x.id !== d)] : LANGS;
     const pick = (id: Lang) => { window.seI18n && window.seI18n.now(id); try { localStorage.setItem('se-lang', id); } catch { /* */ } setPhase('hello'); };

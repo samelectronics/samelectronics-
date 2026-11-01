@@ -50,7 +50,7 @@ export default function Bench({ me, refresh }: { me: User; refresh: () => void }
           <>
             <div className="bn-hello">
               <div><span className="sp-eb">{T('MY BENCH')}</span><h1 className="sp-h2">{T('Hello')}, {first}.</h1><p className="sp-p">{T('Everything you keep with us, in one place.')}</p></div>
-              <LiveSam size={110} mood="idle" play="wave" />
+              <LiveSam circle size={110} mood="idle" play="wave" />
             </div>
             <div className="bn-stats">
               {([['Orders', orders.length, 'orders'], ['In your cart', st.cart.reduce((a, l) => a + l.qty, 0), 'saved'], ['Stars', st.favs.length, 'saved'], ['Points', pts, 'points']] as [string, number, string][]).map(([l, n, s]) => <button key={l} type="button" className="bn-stat" onClick={() => go(s)}><b>{n.toLocaleString('en-US')}</b><small>{T(l)}</small></button>)}
@@ -96,7 +96,7 @@ function Sec({ t, d, children, right }: { t: string; d?: string; children: React
   return <section className="bn-sec"><div className="bn-sh"><div><h2 className="sp-h2">{T(t)}</h2>{d ? <p className="sp-p">{T(d)}</p> : null}</div>{right}</div><div className="bn-body">{children}</div></section>;
 }
 function Empty({ t, a, h }: { t: string; a?: string; h?: string }) {
-  return <div className="sp-empty bn-empty"><LiveSam size={72} mood="think" /><b>{T(t)}</b>{a ? <a className="sp-btn sm" href={h}>{T(a)}</a> : null}</div>;
+  return <div className="sp-empty bn-empty"><LiveSam circle size={72} mood="think" /><b>{T(t)}</b>{a ? <a className="sp-btn sm" href={h}>{T(a)}</a> : null}</div>;
 }
 function OrderRow({ o, full }: { o: Order; full?: boolean }) {
   const k = Math.max(0, STEPS.indexOf(o.status));
@@ -238,7 +238,7 @@ function Messages({ me, threads, reload }: { me: User; threads: Thread[]; reload
         </div>
         <div className="bn-conv">
           <div className="bn-ms">
-            {!open ? <div className="sp-empty"><LiveSam size={80} mood="idle" play="wave" /><b>{T('How can the team help?')}</b><span>{T('Pick a topic and write your message.')}</span></div> : msgs.map((m) => <div key={m.id} className={'bn-m ' + m.from}><small>{m.from === 'staff' ? m.name + ' · Sam Electronics' : T('You')}</small><p>{m.text}</p><small>{new Date(m.at).toLocaleString()}</small></div>)}
+            {!open ? <div className="sp-empty"><LiveSam circle size={80} mood="idle" play="wave" /><b>{T('How can the team help?')}</b><span>{T('Pick a topic and write your message.')}</span></div> : msgs.map((m) => <div key={m.id} className={'bn-m ' + m.from}><small>{m.from === 'staff' ? m.name + ' · Sam Electronics' : T('You')}</small><p>{m.text}</p><small>{new Date(m.at).toLocaleString()}</small></div>)}
           </div>
           <form className="bn-send" onSubmit={send}>
             {!open ? <select className="sp-in" value={topic} onChange={(e) => setTopic(e.target.value)}>{['Stock question', 'Order question', 'Repair', 'Trade account', 'Shipping', 'Something else'].map((t) => <option key={t} value={t}>{T(t)}</option>)}</select> : null}
