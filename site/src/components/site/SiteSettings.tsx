@@ -22,7 +22,7 @@ export default function SiteSettings() {
   useEffect(() => {
     const read = () => setAnn(siteRaw<Ann | null>('announcement', null));
     read();
-    if (live) Promise.all(KEYS.map((k) => backend.setting(k, null).then((v) => { try { if (v != null) localStorage.setItem('se-set-' + k, JSON.stringify(v)); } catch { /* */ } }))).then(() => { read(); window.dispatchEvent(new CustomEvent('se:settings')); });
+    if (live) Promise.all(KEYS.map((k) => backend.setting(k, null).then((v) => { try { if (v != null) localStorage.setItem('se-set-' + k, JSON.stringify(v)); } catch { /* */ } }))).then(() => { read(); window.dispatchEvent(new CustomEvent('se:site-settings')); });
     try { setHide(sessionStorage.getItem('se-ann-x') === '1'); } catch { /* */ }
     let t = 0; const mo = new MutationObserver(() => { window.clearTimeout(t); t = window.setTimeout(applyTexts, 250); });
     mo.observe(document.body, { childList: true, subtree: true, characterData: true }); applyTexts();

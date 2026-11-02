@@ -29,7 +29,13 @@ export default function SiteControls() {
   const [draft, setDraft] = useState({ memory: true, signal: false, booster: false });
   useEffect(() => {
     installBrandSelects();
-    const cur = prefs(); setP(cur); if (!cur.consent) window.setTimeout(() => setBanner(true), 1600);
+    const cur = prefs(); setP(cur); let iv = 0; if (!cur.consent) {
+      // A4: loader → welcome/language → fully closed → only then the cookie banner. Never overlap.
+      let calm = 0; iv = window.setInterval(() => {
+        const busy = (window as unknown as { __seTourIdle?: boolean }).__seTourIdle === false || document.documentElement.classList.contains('se-boot') || document.querySelector('.se-bootv, .st-veil, .lp, .se-net-veil, .sc2-veil, .rp-full, .vs-full');
+        calm = busy ? 0 : calm + 1; if (calm >= 3) { window.clearInterval(iv); setBanner(true); }
+      }, 400);
+    }
     const onP = (e: Event) => setP({ ...(e as CustomEvent).detail });
     const onOpen = (e: Event) => { const d = (e as CustomEvent).detail; setPanel(d === 'privacy' ? 'privacy' : 'all'); const c = prefs().consent; setDraft(c ? { memory: c.memory, signal: c.signal, booster: c.booster } : { memory: true, signal: false, booster: false }); play('open'); };
     const onLang = () => force((n) => n + 1);
@@ -41,7 +47,7 @@ export default function SiteControls() {
     const cart = () => play('add');
     const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setPanel(false); }; document.addEventListener('keydown', esc);
     window.addEventListener('se:prefs', onP); window.addEventListener('se:settings', onOpen); window.addEventListener('se:lang', onLang); document.addEventListener('click', click, true); window.addEventListener('se:cart', cart);
-    return () => { window.removeEventListener('se:prefs', onP); window.removeEventListener('se:settings', onOpen); window.removeEventListener('se:lang', onLang); document.removeEventListener('click', click, true); window.removeEventListener('se:cart', cart); window.removeEventListener('beforeinstallprompt', bip); document.removeEventListener('keydown', esc); };
+    return () => { window.clearInterval(iv); window.removeEventListener('se:prefs', onP); window.removeEventListener('se:settings', onOpen); window.removeEventListener('se:lang', onLang); document.removeEventListener('click', click, true); window.removeEventListener('se:cart', cart); window.removeEventListener('beforeinstallprompt', bip); document.removeEventListener('keydown', esc); };
   }, []);
   if (!p) return null;
   const save = (c: { memory: boolean; signal: boolean; booster: boolean }) => { setPrefs({ consent: { ...c, at: Date.now() } }); setBanner(false); };

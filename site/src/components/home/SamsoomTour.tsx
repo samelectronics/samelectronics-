@@ -36,6 +36,10 @@ const END: Step[] = [
 const CHOOSE: [Lang, string][] = [["en", "Choose your language"], ["ar", "اختر لغتك"], ["fr", "Choisissez votre langue"], ["es", "Elige tu idioma"], ["zh", "选择您的语言"], ["hi", "अपनी भाषा चुनें"], ["ur", "اپنی زبان منتخب کریں"], ["fa", "زبان خود را انتخاب کنید"], ["ru", "Выберите язык"], ["de", "Sprache wählen"], ["pt", "Escolha o idioma"], ["it", "Scegli la lingua"], ["sw", "Chagua lugha yako"], ["tl", "Piliin ang wika mo"], ["ml", "നിങ്ങളുടെ ഭാഷ തിരഞ്ഞെടുക്കൂ"], ["am", "ቋንቋዎን ይምረጡ"], ["ha", "Zaɓi harshenka"], ["yo", "Yan èdè rẹ"], ["ig", "Họrọ asụsụ gị"], ["om", "Afaan kee filadhu"], ["ro", "Alege limba"], ["ca", "Tria l’idioma"], ["gl", "Escolle o teu idioma"], ["eu", "Aukeratu zure hizkuntza"]];
 const SCROLL: Record<string, string> = {"en": "Scroll for more languages", "de": "Für mehr Sprachen scrollen", "it": "Scorri per altre lingue", "pt": "Deslize para mais idiomas", "ca": "Llisca per a més idiomes", "gl": "Despraza para máis idiomas", "eu": "Irristatu hizkuntza gehiagorako", "ro": "Derulează pentru alte limbi", "tl": "Mag-scroll para sa iba pang wika", "zh": "滑动查看更多语言", "ml": "കൂടുതൽ ഭാഷകൾക്ക് സ്ക്രോൾ ചെയ്യൂ", "sw": "Sogeza kuona lugha zaidi", "am": "ለተጨማሪ ቋንቋዎች ያሸብልሉ", "ha": "Gungura don ƙarin harsuna", "yo": "Yí lọ fún èdè mìíràn", "om": "Afaanota dabalataaf gadi qabi", "ig": "Pịgharịa maka asụsụ ndị ọzọ", "ar": "مرّر لمزيد من اللغات", "es": "Desliza para más idiomas", "fr": "Faites défiler pour plus de langues", "fa": "برای زبان‌های بیشتر بکشید", "ru": "Прокрутите, чтобы увидеть ещё", "hi": "और भाषाओं के लिए स्क्रॉल करें", "ur": "مزید زبانوں کے لیے اسکرول کریں"};
 const DETECTED: Record<string, string> = {"en": "Detected", "de": "Erkannt", "it": "Rilevata", "pt": "Detetado", "ca": "Detectat", "gl": "Detectado", "eu": "Detektatua", "ro": "Detectată", "tl": "Natukoy", "zh": "已检测", "ml": "കണ്ടെത്തിയത്", "sw": "Imegunduliwa", "am": "ተገኝቷል", "ha": "An gano", "yo": "A rí i", "om": "Argame", "ig": "Achọpụtara", "ar": "تم اكتشافها", "es": "Detectado", "fr": "Détectée", "fa": "شناسایی شد", "ru": "Определён", "hi": "पहचानी गई", "ur": "شناخت ہوئی"};
+// R10 B1: English, Arabic, Spanish, French, then the rest by how likely our buyers speak them (detected one pinned on top)
+export const RANK: Lang[] = ['en', 'ar', 'es', 'fr', 'ru', 'hi', 'ur', 'fa', 'zh', 'pt', 'de', 'it', 'tl', 'ml', 'sw', 'am', 'ha', 'ro', 'yo', 'ig', 'om', 'ca', 'gl', 'eu'];
+const ranked = () => RANK.map((id) => LANGS.find((x) => x.id === id)!).filter(Boolean).concat(LANGS.filter((x) => !RANK.includes(x.id)));
+const CHOOSE_R = () => RANK.map((id) => CHOOSE.find((c) => c[0] === id)).filter(Boolean) as [Lang, string][];
 /** the visitor's own language, from the browser (shown first, marked "Detected") */
 const detect = (): Lang | null => { try { for (const n of navigator.languages || [navigator.language]) { const c = (n || '').toLowerCase().slice(0, 2), f = c === 'fil' ? 'tl' : c; if (LANGS.some((x) => x.id === f)) return f as Lang; } } catch { /* */ } return null; };
 // page steps name a mood; on the walk each one becomes a pointing pose with the matching face
@@ -86,11 +90,14 @@ export default function SamsoomTour() {
     let iv = 0;
     if (new URLSearchParams(location.search).get('tour') === '1') seen = false; // the Control Room's preview
     else if (cfg().tour === false) seen = true;
+    const W = window as unknown as { __seTourIdle?: boolean };
+    W.__seTourIdle = seen; // R10 A4: the cookie banner waits for this
     if (!seen) {
       let t = 0; iv = window.setInterval(() => {  // ~1s after the page is ready
-        const busy = document.documentElement.classList.contains('se-boot') || document.querySelector('.lp, .se-net-veil, .rp-full, .vs-full') || !document.querySelector('[data-tour="cart"]');
+        const busy = document.documentElement.classList.contains('se-boot') || document.querySelector('.se-bootv, .lp, .se-net-veil, .rp-full, .vs-full') || !document.querySelector('[data-tour="cart"]');
         if (busy) { t = 0; return; }
-        if ((t += 250) >= 1000) { window.clearInterval(iv); setPhase(chose ? 'hello' : 'lang'); }
+        if (!t) t = Date.now();
+        if (Date.now() - t >= 900) { window.clearInterval(iv); setPhase(chose ? 'hello' : 'lang'); }
       }, 250);
     }
     // on a page someone opens for the first time (after the first welcome), he offers a tour of that page once
@@ -102,8 +109,10 @@ export default function SamsoomTour() {
     (window as unknown as { seWalk?: () => void }).seWalk = () => { setOffer(false); walk(); };
     return () => { window.clearInterval(iv); window.clearTimeout(ot); window.removeEventListener('se:help', help); };
   }, []);
+  const wasOn = React.useRef(false);
+  useEffect(() => { if (phase !== 'off') wasOn.current = true; else if (wasOn.current) (window as unknown as { __seTourIdle?: boolean }).__seTourIdle = true; }, [phase]);
   // the language prompt cycles through every language
-  useEffect(() => { if (phase !== 'lang') return; const iv = window.setInterval(() => setCi((n) => (n + 1) % CHOOSE.length), 1700); return () => window.clearInterval(iv); }, [phase]);
+  useEffect(() => { if (phase !== 'lang') return; const iv = window.setInterval(() => setCi((n) => (n + 1) % CHOOSE.length), 1900); return () => window.clearInterval(iv); }, [phase]);
 
   // follow the highlighted element (it may move as the page lays out); page steps are scrolled into view first
   useEffect(() => {
@@ -139,7 +148,7 @@ export default function SamsoomTour() {
     </div>
   ) : null;
   if (phase === 'lang') {
-    const [cl, ct] = CHOOSE[ci], d = detect(), list = d ? [LANGS.find((x) => x.id === d)!, ...LANGS.filter((x) => x.id !== d)] : LANGS;
+    const cr = CHOOSE_R(), [cl, ct] = cr[ci % cr.length], d = detect(), all = ranked(), list = d ? [all.find((x) => x.id === d)!, ...all.filter((x) => x.id !== d)] : all;
     const pick = (id: Lang) => { window.seI18n && window.seI18n.now(id); try { localStorage.setItem('se-lang', id); } catch { /* */ } setPhase('hello'); };
     const hint = d || cl;
     return (
@@ -147,19 +156,10 @@ export default function SamsoomTour() {
         <div className="st-lang2">
           <div className="st-l2-sam">
             <span className="st-l2-bubble" key={ci} lang={cl} dir={LANG_SET.has(cl) ? 'rtl' : 'ltr'}>{ct}</span>
-            <span className="st-l2-av"><LiveSam size={170} mood="idle" play="wave" /></span>
-            <span className="st-l2-floor" aria-hidden="true" />
+            <span className="st-l2-av"><LiveSam size={150} mood="idle" play="wave" /><span className="st-l2-floor" aria-hidden="true" /></span>
           </div>
           <div className="st-l2-list">
-            <div className="st-l2-scroll" onScroll={(e) => { const el = e.currentTarget; el.parentElement!.classList.toggle('end', el.scrollTop + el.clientHeight >= el.scrollHeight - 6); }}>
-              {list.map((l) => (
-                <button key={l.id} type="button" lang={l.id} className={'st-l2-i' + (l.id === d ? ' det' : '') + (l.id === cl ? ' hint' : '')} onClick={() => pick(l.id)}>
-                  <b dir="auto">{l.name}</b>
-                  <small>{l.id === d ? (DETECTED[l.id] || DETECTED.en) + ' · ' : ''}{l.en}</small>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
-                </button>
-              ))}
-            </div>
+            <LangScroll list={list} d={d} cl={cl} pick={pick} />
             <span className="st-l2-more" lang={hint} aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path d="M6 9l6 6 6-6" /></svg>{SCROLL[hint] || SCROLL.en}</span>
           </div>
         </div>
@@ -225,6 +225,31 @@ export default function SamsoomTour() {
           <button type="button" className="st-btn st-dark" data-sound="next" onClick={next}>{i === steps.length - 1 ? T('Done') : T('Next')}</button>
         </span>
       </div>
+    </div>
+  );
+}
+
+/** R10 B1: the language list follows the bubble (smoothly scrolls the language being shown into the middle) until the
+ *  visitor touches the list; soft fades at the top and bottom. */
+function LangScroll({ list, d, cl, pick }: { list: { id: Lang; name: string; en: string }[]; d: Lang | null; cl: Lang; pick: (id: Lang) => void }) {
+  const ref = React.useRef<HTMLDivElement>(null), touched = React.useRef(false);
+  useEffect(() => {
+    const el = ref.current; if (!el || touched.current) return;
+    const b = el.querySelector<HTMLElement>(`[data-l="${cl}"]`); if (!b) return;
+    const top = cl === d ? 0 : b.offsetTop - el.clientHeight / 2 + b.offsetHeight / 2;
+    el.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+  }, [cl, d]);
+  const stop = () => { touched.current = true; };
+  return (
+    <div ref={ref} className="st-l2-scroll" onWheel={stop} onTouchStart={stop} onMouseDown={stop} onKeyDown={stop}
+      onScroll={(e) => { const el = e.currentTarget, p = el.parentElement!; p.classList.toggle('end', el.scrollTop + el.clientHeight >= el.scrollHeight - 6); p.classList.toggle('top', el.scrollTop > 4); }}>
+      {list.map((l) => (
+        <button key={l.id} data-l={l.id} type="button" lang={l.id} className={'st-l2-i' + (l.id === d ? ' det' : '') + (l.id === cl ? ' hint' : '')} onClick={() => pick(l.id)}>
+          <b dir="auto">{l.name}</b>
+          <small>{l.id === d ? (DETECTED[l.id] || DETECTED.en) + ' · ' : ''}{l.en}</small>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
+        </button>
+      ))}
     </div>
   );
 }
