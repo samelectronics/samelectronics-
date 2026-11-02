@@ -29,3 +29,38 @@
   content: ''; position: absolute; left: 8%; right: 8%; top: 66%; height: 22%; z-index: -1; pointer-events: none;
   background: linear-gradient(180deg, rgba(255, 255, 255, .06), rgba(255, 255, 255, 0)); border-radius: 50% / 30%; }
 .pv-stage::before { background: linear-gradient(180deg, rgba(255, 255, 255, .7), rgba(255, 255, 255, 0)); }
+
+/* R10 U1 (owner): ONE studio stage for every phone/part. A back wall with a soft spotlight from above, a polished floor
+   that starts at a soft horizon and fades into darkness (white in light studios), a tight contact shadow right under
+   the object and a faint mirror reflection of it on the floor. No flat one-colour platform or disc anywhere.
+   Per stage: --st-hz (where the floor starts), --st-cy (the object's base), --st-cw (shadow width). */
+:root {
+  --st-dark: radial-gradient(34% 62% at 50% -14%, rgba(255, 244, 222, .30), rgba(255, 244, 222, .08) 58%, rgba(255, 244, 222, 0) 86%),
+    radial-gradient(70% 14% at 50% var(--st-hz, 70%), rgba(255, 244, 222, .07), rgba(255, 244, 222, 0) 100%),
+    linear-gradient(180deg, #393B40 0%, #2E3034 46%, #2A2C30 calc(var(--st-hz, 70%) - 1%), #26282B var(--st-hz, 70%), #18191C calc(var(--st-hz, 70%) + 16%), #0D0E10 100%);
+  --st-warm: radial-gradient(34% 62% at 50% -14%, rgba(255, 214, 110, .40), rgba(255, 214, 110, .10) 58%, rgba(255, 214, 110, 0) 86%),
+    radial-gradient(70% 14% at 50% var(--st-hz, 70%), rgba(255, 220, 140, .08), rgba(255, 220, 140, 0) 100%),
+    linear-gradient(180deg, #3D3B37 0%, #32312E 46%, #2C2B2B calc(var(--st-hz, 70%) - 1%), #272628 var(--st-hz, 70%), #19191B calc(var(--st-hz, 70%) + 16%), #0D0D0F 100%);
+  --st-light: radial-gradient(34% 62% at 50% -14%, rgba(255, 255, 255, 1), rgba(255, 255, 255, .5) 58%, rgba(255, 255, 255, 0) 86%),
+    radial-gradient(70% 14% at 50% var(--st-hz, 70%), rgba(255, 255, 255, .9), rgba(255, 255, 255, 0) 100%),
+    linear-gradient(180deg, #F2F3F5 0%, #E9EBEE calc(var(--st-hz, 70%) - 1%), #E4E6E9 var(--st-hz, 70%), #F3F4F6 calc(var(--st-hz, 70%) + 18%), #FFFFFF 100%);
+}
+.wo-stage { --st-hz: 74%; --st-cy: 83.5%; --st-cw: 44%; }
+.dl-spot-art { --st-hz: 72%; --st-cy: 82.5%; --st-cw: 34%; }
+.dl-card-art { --st-hz: 63%; --st-cy: calc(50% + 58px); --st-cw: 54%; }
+.sc-r { --st-hz: 66%; --st-cy: 71%; --st-cw: 40%; }
+.pc-stage, .pv-stage { --st-hz: 72%; --st-cy: 80%; --st-cw: 46%; }
+.pc-stage { background: var(--st-light) !important; }
+/* the old elliptical "platform" band is gone: the floor itself is the polish */
+.wo-stage::after, .dl-spot-art::after, .dl-card-art::after, .sc-r::after, .pv-stage::before, .pc-stage::after {
+  content: ''; position: absolute; left: 50%; top: var(--st-cy); right: auto; bottom: auto; width: var(--st-cw); height: 16px;
+  transform: translate(-50%, -50%); border-radius: 50%; z-index: 0; pointer-events: none; filter: blur(3px);
+  background: radial-gradient(closest-side, rgba(0, 0, 0, .62), rgba(0, 0, 0, .28) 55%, rgba(0, 0, 0, 0)); }
+.pv-stage::before, .pc-stage::after { background: radial-gradient(closest-side, rgba(38, 40, 43, .26), rgba(38, 40, 43, .1) 55%, rgba(38, 40, 43, 0)); }
+.sc-floor, .sc-floor::after, .dl-spot-light, .dl-card-shadow, .dl-spot-shadow, .wo-floor, .wo-puck, .wo-ring { display: none !important; }
+/* the faint mirror on the polished floor (Chromium/Safari; others simply show no reflection) */
+.wo-pose { -webkit-box-reflect: below -28px linear-gradient(transparent 15%, rgba(0, 0, 0, .26) 17%, rgba(0, 0, 0, 0) 36%); }
+.dl-spot-art img { -webkit-box-reflect: below -35px linear-gradient(transparent 15%, rgba(0, 0, 0, .26) 17%, rgba(0, 0, 0, 0) 36%); }
+.dl-card-art img { -webkit-box-reflect: below -27px linear-gradient(transparent 15%, rgba(0, 0, 0, .26) 17%, rgba(0, 0, 0, 0) 36%); }
+.sc-pose { -webkit-box-reflect: below -9% linear-gradient(transparent 15%, rgba(0, 0, 0, .24) 17%, rgba(0, 0, 0, 0) 36%); }
+.pv-stage img, .pc-stage ~ img, .pc-stage + img { -webkit-box-reflect: below -12% linear-gradient(transparent 15%, rgba(0, 0, 0, .4) 17%, rgba(0, 0, 0, 0) 36%); }
