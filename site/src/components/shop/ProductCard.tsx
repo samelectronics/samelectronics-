@@ -9,7 +9,7 @@ import { type Product, aed } from '@/lib/catalog';
 import { store, type State } from '@/lib/store';
 import { Stars, flyToCart, T } from '@/components/site/ui';
 
-export const stockLabel = (q: number) => (q <= 0 ? ['Out of stock · ask us', 'out'] : q < 4 ? ['Only ' + q + ' left (estimate)', 'low'] : q < 15 ? ['In stock (estimate)', 'ok'] : ['Plenty in stock (estimate)', 'ok']);
+export const stockLabel = (q: number) => (q <= 0 ? ['Out of stock · request it', 'out'] : q < 4 ? ['Only ' + q + ' left (estimate)', 'low'] : q < 15 ? ['In stock (estimate)', 'ok'] : ['Plenty in stock (estimate)', 'ok']);
 
 export default function ProductCard({ p, st, trade, open, list, fits }: { p: Product; st: State; trade: boolean; open: (p: Product) => void; list?: boolean; fits?: string }) {
   const img = useRef<HTMLImageElement>(null), fav = st.favs.includes(p.id), cmp = st.compare.includes(p.id), inCart = st.cart.find((l) => l.id === p.id);
@@ -49,7 +49,7 @@ export default function ProductCard({ p, st, trade, open, list, fits }: { p: Pro
         <span className="pc-acts">
           <button type="button" className={'pc-add' + (inCart ? ' in' : '')} disabled={!buyable(p, trade)} onClick={(e) => flyToCart(img.current, p.id, e)}>
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6" /><circle cx="10" cy="20" r="1.4" /><circle cx="17" cy="20" r="1.4" /></svg>
-            {inCart ? T('Add another') + ' · ' + inCart.qty : T('Add to cart')}
+            {p.stock_qty <= 0 ? (inCart ? T('Requested') + ' · ' + inCart.qty : T('Request it')) : inCart ? T('Add another') + ' · ' + inCart.qty : T('Add to cart')}
           </button>
         </span>
       </div>

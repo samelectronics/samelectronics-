@@ -5,7 +5,7 @@
 // mode="deals" is the Deals page: the same shop engine showing offers, new arrivals and limited stock.
 // Everything reads the URL, so any view can be shared: /shop?q=a54&cat=BAT&sort=price-asc
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { type Filters, type Product, EMPTY, apply, data, products, fmt, aed, byId, facets, shots } from '@/lib/catalog';
+import { type Filters, type Product, EMPTY, apply, data, products, fmt, aed, byId, facets, shots , priceText } from '@/lib/catalog';
 import { store, useStore } from '@/lib/store';
 import { useMe } from '@/lib/backend';
 import { T, CountUp, Stars } from '@/components/site/ui';
@@ -199,7 +199,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
             <h3 className="sp-h3">{T('Side by side')}</h3>
             <div className="cmp-scroll"><table className="sp-table cmp-t"><tbody>
               <tr><th /> {cmp.map((p) => <td key={p.id}><img src={p.img} alt="" /><b>{p.title}</b></td>)}</tr>
-              {([['Price', (p: Product) => aed(p.price)], ['Grade', (p: Product) => p.gradeName], ['Manufacturer', (p: Product) => p.makerName], ['Quality', (p: Product) => p.qualityName], ['Warranty', (p: Product) => p.warranty], ['Rating', (p: Product) => p.rating + ' ★'], ['Stock (estimate)', (p: Product) => String(p.stock_qty)], ['Model', (p: Product) => p.modelName]] as [string, (p: Product) => string][]).map(([k, fn]) => (
+              {([['Price', (p: Product) => priceText(p.price)], ['Grade', (p: Product) => p.gradeName], ['Manufacturer', (p: Product) => p.makerName], ['Quality', (p: Product) => p.qualityName], ['Warranty', (p: Product) => p.warranty], ['Rating', (p: Product) => p.rating + ' ★'], ['Stock (estimate)', (p: Product) => String(p.stock_qty)], ['Model', (p: Product) => p.modelName]] as [string, (p: Product) => string][]).map(([k, fn]) => (
                 <tr key={k}><th>{T(k)}</th>{cmp.map((p) => <td key={p.id}>{fn(p)}</td>)}</tr>
               ))}
               <tr><th /> {cmp.map((p) => <td key={p.id}><button type="button" className="sp-btn sm" onClick={(e) => { window.dispatchEvent(new CustomEvent('se:cart', { detail: { id: p.id, clientX: e.clientX, clientY: e.clientY } })); }}>{T('Add to cart')}</button></td>)}</tr>

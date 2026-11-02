@@ -4,7 +4,7 @@
 // chats, messages with the team (live chat), and profile & settings. Sections are in the link (#orders, #companies…).
 import React, { useEffect, useMemo, useState } from 'react';
 import { backend, type Company, type Order, type Thread, type Message, type User } from '@/lib/backend';
-import { aed, byId, data, type Product } from '@/lib/catalog';
+import { aed, byId, data, type Product , priceText } from '@/lib/catalog';
 import { store, useStore } from '@/lib/store';
 import { T } from '@/components/site/ui';
 import LiveSam from '@/components/samsoom/LiveSam';
@@ -115,7 +115,7 @@ function List({ title, ids, act, each, note }: { title: string; ids: string[]; a
     <div className="sp-card bn-list">
       <div className="bn-ch"><h3 className="sp-h3">{T(title)} <small className="sp-muted">· {ps.length}</small></h3>{act && ps.length ? <button type="button" className="sp-btn sm" onClick={act[1]}>{T(act[0])}</button> : null}</div>
       {note ? <small className="sp-muted">{T(note)}</small> : null}
-      {ps.length ? <div className="bn-items">{ps.map((p) => <div key={p.id} className="bn-item"><a href={'/shop?p=' + p.id}><img src={p.img} alt="" /></a><span><a href={'/shop?p=' + p.id}><b>{p.title}</b></a><small>{p.gradeName} · {aed(p.price)}</small></span>{each ? <button type="button" className="shop-clear" onClick={() => each[1](p.id)}>{T(each[0])}</button> : null}</div>)}</div> : <small className="sp-muted">{T('Nothing here yet.')}</small>}
+      {ps.length ? <div className="bn-items">{ps.map((p) => <div key={p.id} className="bn-item"><a href={'/shop?p=' + p.id}><img src={p.img} alt="" /></a><span><a href={'/shop?p=' + p.id}><b>{p.title}</b></a><small>{p.gradeName} · {priceText(p.price)}</small></span>{each ? <button type="button" className="shop-clear" onClick={() => each[1](p.id)}>{T(each[0])}</button> : null}</div>)}</div> : <small className="sp-muted">{T('Nothing here yet.')}</small>}
     </div>
   );
 }

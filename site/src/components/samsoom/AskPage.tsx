@@ -4,7 +4,7 @@
 // Samsoom reacting to every answer, suggestions to start, and parts he finds shown as cards you can add to the cart.
 // Answers come from Claude (/api/samsoom) when the key is set; otherwise from his built-in brain + the catalogue.
 import React, { useEffect, useRef, useState } from 'react';
-import { search, aed, data, byId, type Product } from '@/lib/catalog';
+import { search, aed, data, byId, type Product , priceText } from '@/lib/catalog';
 import { fallbackAnswer, emoteFor } from './brain';
 import { T, flyToCart } from '@/components/site/ui';
 import LiveSam from './LiveSam';
@@ -118,7 +118,7 @@ function PartCard({ p }: { p: Product }) {
   return (
     <div className="ak-part">
       <a href={'/shop?p=' + p.id}><img ref={img} src={p.img} alt="" /></a>
-      <span><a href={'/shop?p=' + p.id}><b>{p.title}</b></a><small>{p.gradeName} · {p.makerName}</small><b className="ak-pr">{aed(p.price)}</b></span>
+      <span><a href={'/shop?p=' + p.id}><b>{p.title}</b></a><small>{p.gradeName} · {p.makerName}</small><b className="ak-pr">{priceText(p.price)}</b></span>
       <button type="button" className="sp-btn sm" onClick={(e) => flyToCart(img.current, p.id, e)}>+</button>
     </div>
   );

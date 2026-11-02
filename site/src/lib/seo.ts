@@ -36,7 +36,7 @@ export function catalog() {
   models.forEach((m) => { m.slug = uniq(slug(m.name), slug(m.brandName + ' ' + m.name)); });
   const MM = new Map(models.map((m) => [m.id, m]));
   const pUsed = new Set<string>();
-  const parts: SeoPart[] = D.products.filter((p) => p.visible !== false).map((p) => {
+  const parts: SeoPart[] = D.products.filter((p) => p.visible !== false && !/CANCEL/i.test(p.title)).map((p) => {
     const m = MM.get(p.model_id), pose = S ? S.forCat(p.category, m ? m.brand : 'other', p.manufacturer) : '';
     const gradeName = D.gradeNames[p.grade] || p.grade, title = m && m.raw !== m.name ? p.title.replace(m.raw, m.name) : p.title; let s = slug(title + ' ' + gradeName); if (pUsed.has(s)) s = s + '-' + slug(p.id); pUsed.add(s);
     const sp: SeoPart = { id: p.id, slug: s, title, name: p.part_name, cat: p.category, catName: C.get(p.category) || p.category, grade: p.grade, gradeName, maker: MK.get(p.manufacturer) || p.manufacturer, quality: Q.get(p.quality) || p.quality, price: p.retail_price, stock: p.stock_qty, img: S ? S.url(pose, 480) : '', imgBig: S ? S.url(pose, 960) : '', warranty: WARRANTY[p.grade] || '1 month', model: p.model_id, modelSlug: m ? m.slug : '', modelName: m ? m.full : '', brandName: m ? m.brandName : '', sample: p.sample !== false };
@@ -55,7 +55,7 @@ export function productLd(p: SeoPart) {
     '@context': 'https://schema.org', '@type': 'Product', name: p.title + ' · ' + p.gradeName, sku: p.id, mpn: p.id, category: p.catName,
     image: p.imgBig ? [abs(p.imgBig)] : undefined, description: `${p.name} for ${p.modelName}, ${p.gradeName} grade (${p.quality}), made by ${p.maker}. Tested before it ships, ${p.warranty} warranty. Sam Electronics, Deira, Dubai.`,
     brand: { '@type': 'Brand', name: p.brandName || 'Sam Electronics' },
-    offers: { '@type': 'Offer', url: abs('/p/' + p.slug), priceCurrency: 'AED', price: p.price.toFixed(2), availability: p.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock', itemCondition: p.grade === 'OL' ? 'https://schema.org/UsedCondition' : 'https://schema.org/NewCondition', seller: { '@type': 'Organization', name: 'Sam Electronics L.L.C' } },
+    offers: { '@type': 'Offer', url: abs('/p/' + p.slug), ...(p.price > 0 ? { priceCurrency: 'AED', price: p.price.toFixed(2) } : {}), availability: p.stock > 0 ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock', itemCondition: p.grade === 'OL' ? 'https://schema.org/UsedCondition' : 'https://schema.org/NewCondition', seller: { '@type': 'Organization', name: 'Sam Electronics L.L.C' } },
   };
 }
 export const crumbsLd = (l: [string, string][]) => ({ '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: l.map(([n, u], i) => ({ '@type': 'ListItem', position: i + 1, name: n, item: abs(u) })) });

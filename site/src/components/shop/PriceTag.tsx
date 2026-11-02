@@ -9,7 +9,8 @@ const WA = () => ((typeof window !== 'undefined' && (window as unknown as { SE_D
 const TEL = () => ((typeof window !== 'undefined' && (window as unknown as { SE_DATA?: { contact?: { phone?: string } } }).SE_DATA?.contact?.phone) || '+97142222000').replace(/[^\d+]/g, '');
 
 export default function PriceTag({ p, trade, big }: { p: Product; trade: boolean; big?: boolean }) {
-  const m = p.price_mode || 'exact', note = p.price_note ? <small className="pt-note">{T(p.price_note)}</small> : null, S = <span className="sp-sample">· sample</span>;
+  const m = p.price <= 0 && p.price_mode !== 'call' ? 'whatsapp' : p.price_mode || 'exact', // R9: never “AED 0”
+    note = p.price_note ? <small className="pt-note">{T(p.price_note)}</small> : null, S = <span className="sp-sample">· sample</span>;
   const ask = (txt: string) => encodeURIComponent('Hi Sam Electronics, what is the price of ' + p.title + ' (' + p.gradeName + ', ' + p.id + ')?' + txt);
   let body: React.ReactNode;
   if (m === 'whatsapp') body = <a className="pt-ask wa" href={'https://wa.me/' + WA() + '?text=' + ask('')} target="_blank" rel="noopener" onClick={(e) => e.stopPropagation()}><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.1-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.6-.1l2 .9c.2.1.4.2.5.3 0 .1 0 .7-.2 1.3z" /></svg>{T('Ask for price on WhatsApp')}</a>;

@@ -16,7 +16,8 @@ create table if not exists products (
   grade text, quality text, manufacturer text references manufacturers(id), title text not null, description text, colour text, shot text, photos text[] default '{}',
   retail_price numeric(10,2) not null default 0, wholesale_price numeric(10,2) not null default 0, cost_price numeric(10,2),
   stock_qty int not null default 0, low_stock_threshold int default 3, location text, barcode text, warranty text,
-  badges text[] default '{}', visible boolean default true, sample boolean default false, updated_at timestamptz default now()
+  badges text[] default '{}', visible boolean default true, sample boolean default false, updated_at timestamptz default now(),
+  price_mode text not null default 'exact' check (price_mode in ('exact','range','from','whatsapp','call','trade')), price_max numeric(10,2), price_note text, daftra_id text
 );
 create table if not exists deals (id uuid primary key default gen_random_uuid(), product_id text references products(id) on delete cascade, discount int not null check (discount between 1 and 90), starts timestamptz default now(), ends timestamptz not null, label text);
 create table if not exists stock_moves (id uuid primary key default gen_random_uuid(), product_id text references products(id) on delete cascade, delta int not null, reason text not null, ref text, staff_id uuid, created_at timestamptz default now());
@@ -95,11 +96,11 @@ create sequence if not exists order_no start 1001;
 create table if not exists orders (
   id uuid primary key default gen_random_uuid(), no text unique not null, user_id uuid references profiles(id) on delete set null, company_id uuid references companies(id) on delete set null,
   email text not null, name text not null, phone text not null, lines jsonb not null, sub numeric(12,2) not null, vat numeric(12,2) not null, ship numeric(12,2) not null default 0, total numeric(12,2) not null,
-  delivery text not null check (delivery in ('pickup','uae','world')), address text, country text, note text, pay text default 'whatsapp',
+  delivery text not null check (delivery in ('pickup','uae','world')), address text, country text, note text, pay text default 'whatsapp', pending boolean not null default false,
   status text not null default 'New', history jsonb default '[]', created_at timestamptz default now()
 );
 create or replace function place_order(p jsonb) returns orders language plpgsql security definer set search_path = public as $$
-declare l jsonb; pr products; trade boolean; unit numeric; lines jsonb := '[]'; sub numeric := 0; ship numeric := 0; r orders;
+declare l jsonb; pr products; trade boolean; unit numeric; fixed boolean; lines jsonb := '[]'; sub numeric := 0; ship numeric := 0; pend boolean := false; r orders;
 begin
   select coalesce(trade_approved,false) into trade from profiles where id = auth.uid();
   for l in select * from jsonb_array_elements(p->'lines') loop
@@ -107,13 +108,15 @@ begin
     if pr.id is null then raise exception 'A part in your cart is no longer available.'; end if;
     unit := case when coalesce(trade,false) then pr.wholesale_price else pr.retail_price end;
     unit := round(unit * (1 - coalesce((select max(discount) from deals d where d.product_id = pr.id and now() between d.starts and d.ends),0) / 100.0), 2);
-    lines := lines || jsonb_build_object('id', pr.id, 'title', pr.title, 'grade', pr.grade, 'qty', greatest(1,(l->>'qty')::int), 'unit', unit);
+    fixed := (pr.price_mode = 'exact' or (pr.price_mode = 'trade' and coalesce(trade,false))) and unit > 0 and pr.stock_qty > 0;
+    if not fixed then unit := 0; pend := true; end if;
+    lines := lines || jsonb_build_object('id', pr.id, 'title', pr.title, 'grade', pr.grade, 'qty', greatest(1,(l->>'qty')::int), 'unit', unit) || case when fixed then '{}'::jsonb else '{"confirm": true}'::jsonb end;
     sub := sub + unit * greatest(1,(l->>'qty')::int);
   end loop;
   ship := case p->>'delivery' when 'uae' then (case when sub >= 500 then 0 else 25 end) else 0 end; -- world: quoted by the team
-  insert into orders (no, user_id, company_id, email, name, phone, lines, sub, vat, ship, total, delivery, address, country, note, pay, history)
+  insert into orders (no, user_id, company_id, email, name, phone, lines, sub, vat, ship, total, delivery, address, country, note, pay, pending, history)
   values ('SE-' || extract(year from now())::int || '-' || nextval('order_no'), auth.uid(), nullif(p->>'company_id','')::uuid, p->>'email', p->>'name', p->>'phone', lines, sub, round((sub + ship) * 0.05, 2), ship, round((sub + ship) * 1.05, 2),
-          p->>'delivery', p->>'address', p->>'country', p->>'note', coalesce(p->>'pay','whatsapp'), jsonb_build_array(jsonb_build_object('at', extract(epoch from now())*1000, 'status', 'New')))
+          p->>'delivery', p->>'address', p->>'country', p->>'note', case when pend then 'whatsapp' else coalesce(p->>'pay','whatsapp') end, pend, jsonb_build_array(jsonb_build_object('at', extract(epoch from now())*1000, 'status', 'New')))
   returning * into r;
   insert into email_queue (to_email, template, data) values (r.email, 'order-received', to_jsonb(r));
   return r;
@@ -205,7 +208,7 @@ do $$ begin
   create policy "read models" on models for select using (true);
   create policy "read categories" on categories for select using (true);
   create policy "read makers" on manufacturers for select using (true);
-  create policy "read products" on products for select using (visible or has_perm('products'));
+  create policy "read products" on products for select using (has_perm('products') or has_perm('prices') or has_perm('stock'));
   create policy "read deals" on deals for select using (true);
   create policy "edit catalogue" on products for all using (has_perm('products') or has_perm('stock') or has_perm('prices')) with check (has_perm('products') or has_perm('stock') or has_perm('prices'));
   create policy "edit brands" on brands for all using (has_perm('products')) with check (has_perm('products'));
@@ -240,10 +243,12 @@ do $$ begin
   create policy "own samsoom chats" on samsoom_chats for all using (user_id = auth.uid()) with check (user_id = auth.uid());
 exception when duplicate_object then null; end $$;
 
-create or replace view products_public with (security_invoker = true) as
+create or replace view products_public as
   select id, model_id, category, part, part_name, grade, quality, manufacturer, title, description, colour, shot, photos, retail_price,
          case when has_perm('prices') or exists (select 1 from profiles p where p.id = auth.uid() and p.trade_approved) then wholesale_price end as wholesale_price,
-         stock_qty, low_stock_threshold, warranty, badges, visible, sample from products where visible;
+         stock_qty, low_stock_threshold, warranty, badges, visible, sample, price_mode, price_max, price_note
+  from products where visible and upper(title) not like '%CANCEL%';
+grant select on products_public to anon, authenticated;
 
 -- live updates for the team inbox, orders and stock (Supabase Realtime)
 do $$ begin alter publication supabase_realtime add table messages, threads, orders, products; exception when others then null; end $$;

@@ -10,10 +10,10 @@ export default function BuyBox({ id, price, stock, title, wa }: { id: string; pr
   useEffect(() => { const r = () => f((n) => n + 1); window.addEventListener('se:prefs', r); window.addEventListener('se:lang', r); return () => { window.removeEventListener('se:prefs', r); window.removeEventListener('se:lang', r); }; }, []);
   return (
     <div className="sx-buy">
-      <b className="sx-price">{aed(price)}</b>
+      <b className="sx-price">{price > 0 ? aed(price) : T('Ask for price on WhatsApp')}</b>
       <span className={'sx-stock' + (stock > 0 ? ' in' : '')}><i />{stock > 0 ? (stock < 5 ? T('Only a few left') : T('In stock')) + ' · ' + T('estimate') : T('Out of stock')}</span>
       <div className="sx-acts">
-        <button type="button" className="sp-btn" data-sound="add" disabled={stock <= 0} onClick={() => { store.add(id); window.dispatchEvent(new CustomEvent('se:cart')); setAdded(true); }}>{added ? '✓ ' + T('Added to cart') : T('Add to cart')}</button>
+        <button type="button" className="sp-btn" data-sound="add" onClick={() => { store.add(id); window.dispatchEvent(new CustomEvent('se:cart')); setAdded(true); }}>{added ? '✓ ' + T('Added to cart') : stock <= 0 || price <= 0 ? T('Request it') : T('Add to cart')}</button>
         <a className="sp-btn ghost" href={'https://wa.me/' + wa.replace(/\D/g, '') + '?text=' + encodeURIComponent('Hi Sam Electronics, is this available? ' + title + ' (' + id + ')')} target="_blank" rel="noopener">{T('Ask on WhatsApp')}</a>
       </div>
       <a className="sx-open" href={'/shop?p=' + encodeURIComponent(id)}>{T('Open in the shop')} →</a>

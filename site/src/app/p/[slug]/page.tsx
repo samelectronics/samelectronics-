@@ -40,12 +40,12 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         </section>
         {grades.length ? (
           <section className="sp-sec w"><div className="sp-wrap"><h2 className="sx-h2">Other grades of this part</h2>
-            <div className="sx-grid">{grades.map((x) => <a key={x.id} className="sx-card" href={'/p/' + x.slug}><span className="sx-img">{x.img ? <img src={x.img} alt="" loading="lazy" width={240} height={240} /> : null}</span><span className={'pc-gr g-' + x.grade}>{x.gradeName}</span><b>{x.title}</b><small>{x.maker} · {x.warranty}</small><span className="sx-row"><em>AED {x.price}</em><i className={x.stock > 0 ? 'in' : ''}>{x.stock > 0 ? 'In stock' : 'Out of stock'}</i></span></a>)}</div>
+            <div className="sx-grid">{grades.map((x) => <a key={x.id} className="sx-card" href={'/p/' + x.slug}><span className="sx-img">{x.img ? <img src={x.img} alt="" loading="lazy" width={240} height={240} /> : null}</span><span className={'pc-gr g-' + x.grade}>{x.gradeName}</span><b>{x.title}</b><small>{x.maker} · {x.warranty}</small><span className="sx-row"><em>{x.price > 0 ? 'AED ' + x.price : 'Ask for price'}</em><i className={x.stock > 0 ? 'in' : ''}>{x.stock > 0 ? 'In stock' : 'Out of stock'}</i></span></a>)}</div>
           </div></section>
         ) : null}
         {more.length ? (
           <section className="sp-sec"><div className="sp-wrap"><h2 className="sx-h2">More {p.modelName} parts</h2>
-            <div className="sx-grid">{more.map((x) => <a key={x.id} className="sx-card" href={'/p/' + x.slug}><span className="sx-img">{x.img ? <img src={x.img} alt="" loading="lazy" width={240} height={240} /> : null}</span><span className={'pc-gr g-' + x.grade}>{x.gradeName}</span><b>{x.title}</b><small>{x.catName}</small><span className="sx-row"><em>AED {x.price}</em></span></a>)}</div>
+            <div className="sx-grid">{more.map((x) => <a key={x.id} className="sx-card" href={'/p/' + x.slug}><span className="sx-img">{x.img ? <img src={x.img} alt="" loading="lazy" width={240} height={240} /> : null}</span><span className={'pc-gr g-' + x.grade}>{x.gradeName}</span><b>{x.title}</b><small>{x.catName}</small><span className="sx-row"><em>{x.price > 0 ? 'AED ' + x.price : 'Ask for price'}</em></span></a>)}</div>
             <p><a className="sp-btn ghost" href={'/m/' + p.modelSlug}>Every {p.modelName} part →</a></p>
           </div></section>
         ) : null}

@@ -18,7 +18,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
   const m = modelBySlug((await params).slug); if (!m) notFound();
   const groups = Array.from(new Set(m.parts.map((p) => p.catName))).map((c) => [c, m.parts.filter((p) => p.catName === c)] as const);
   const ld = [crumbsLd([['Home', '/'], ['Models', '/m'], [m.brandName, '/m#' + m.brand], [m.full, '/m/' + m.slug]]), { '@context': 'https://schema.org', '@type': 'ItemList', name: m.full + ' parts', itemListElement: m.parts.map((p, i) => ({ '@type': 'ListItem', position: i + 1, url: abs('/p/' + p.slug), item: productLd(p) })) }];
-  const low = Math.min(...m.parts.map((p) => p.price)), inStock = m.parts.filter((p) => p.stock > 0).length;
+  const priced = m.parts.map((p) => p.price).filter((n) => n > 0), low = priced.length ? Math.min(...priced) : 0, inStock = m.parts.filter((p) => p.stock > 0).length;
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(ld) }} />
@@ -30,7 +30,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             <span className="sp-eb">{m.brandName.toUpperCase()} · {m.series.toUpperCase()}</span>
             <h1 className="sx-h1">{m.full} <em>parts &amp; repair</em></h1>
             <p className="sx-sub">Every part we carry for the {m.full}, in every grade we stock. Tested before it ships, with warranty, fitted in Deira or sent worldwide.</p>
-            <div className="sx-stats"><span><b>{m.parts.length}</b><small>parts</small></span><span><b>{groups.length}</b><small>part types</small></span><span><b>{inStock}</b><small>in stock</small></span><span><b>AED {low}</b><small>from · sample</small></span></div>
+            <div className="sx-stats"><span><b>{m.parts.length}</b><small>parts</small></span><span><b>{groups.length}</b><small>part types</small></span><span><b>{inStock}</b><small>in stock</small></span>{low ? <span><b>AED {low}</b><small>from · sample</small></span> : null}</div>
             {m.codes.length ? <p className="sx-codes">Model codes: {m.codes.map((c) => <code key={c}>{c}</code>)}</p> : null}
             <div className="sp-acts"><a className="sp-btn" href={'/shop?model=' + m.id}>Shop {m.name} parts</a><a className="sp-btn ghost" href={'/repair?model=' + m.id + '#pick'}>Book a repair</a></div>
           </div>
@@ -46,7 +46,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
                       <span className="sx-img">{p.img ? <img src={p.img} alt={p.title + ' ' + p.gradeName} loading="lazy" width={240} height={240} /> : null}</span>
                       <span className={'pc-gr g-' + p.grade}>{p.gradeName}</span>
                       <b>{p.title}</b><small>{p.maker} · {p.warranty} warranty</small>
-                      <span className="sx-row"><em>AED {p.price}</em><i className={p.stock > 0 ? 'in' : ''}>{p.stock > 0 ? 'In stock' : 'Out of stock'}</i></span>
+                      <span className="sx-row"><em>{p.price > 0 ? 'AED ' + p.price : 'Ask for price'}</em><i className={p.stock > 0 ? 'in' : ''}>{p.stock > 0 ? 'In stock' : 'Out of stock'}</i></span>
                     </a>
                   ))}
                 </div>

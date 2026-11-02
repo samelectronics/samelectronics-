@@ -16,9 +16,9 @@ export type Raw = {
 };
 export type PriceMode = 'exact' | 'range' | 'from' | 'whatsapp' | 'call' | 'trade';
 /** can it go in the cart as it is shown? (ask/call need a conversation first; trade-only needs a trade account) */
-export const buyable = (p: { price_mode?: PriceMode; stock_qty: number }, _trade = false) => p.stock_qty > 0; // R9: every price mode goes in the cart
+export const buyable = (_p?: unknown, _trade = false) => true; // R9: everything goes in the cart; no price or no stock = confirmed on WhatsApp
 /** has a fixed price for this customer (otherwise it is confirmed on WhatsApp and left out of the total) */
-export const fixedPrice = (p: { price_mode?: PriceMode }, trade = false) => !p.price_mode || p.price_mode === 'exact' || (p.price_mode === 'trade' && trade);
+export const fixedPrice = (p: { price_mode?: PriceMode; price?: number; retail_price?: number; stock_qty?: number }, trade = false) => (!p.price_mode || p.price_mode === 'exact' || (p.price_mode === 'trade' && trade)) && (p.price ?? p.retail_price ?? 0) > 0 && (p.stock_qty ?? 1) > 0;
 export type Product = Raw & {
   brand: string; brandName: string; modelName: string; series: string; device: string; catName: string; gradeName: string;
   makerName: string; qualityName: string; img: string; imgBig: string; deal: number; dealEnds: number; price: number;
@@ -42,6 +42,8 @@ export const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
 import { prefs, RATES } from './prefs';
 export const aed = (n: number, sample = true) => { const c = typeof window === 'undefined' ? 'AED' : prefs().currency; return (c === 'AED' ? 'AED ' + fmt(n) : '≈ ' + c + ' ' + (n * RATES[c]).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })) + (sample ? ' · sample' : ''); };
 
+/** R9 · a product's price as text: never “AED 0” — no price means we confirm it */
+export const priceText = (n: number, sample = false) => (n > 0 ? aed(n, sample) : (typeof window !== 'undefined' && (window as unknown as { seI18n?: { t: (s: string) => string } }).seI18n?.t('Ask for price')) || 'Ask for price');
 // a stable pseudo-random number per id (placeholder ratings until account holders rate)
 const hash = (s: string) => { let h = 2166136261; for (let i = 0; i < s.length; i++) h = Math.imul(h ^ s.charCodeAt(i), 16777619); return (h >>> 0) / 4294967295; };
 const WARRANTY: Record<string, string> = { OR: '6 months', OL: '3 months', IN: '1 month', AQ: '1 month' };
@@ -69,7 +71,7 @@ export function products(): Product[] {
   const Q = new Map(d.qualities.map((q) => [q.id, q.name])), MK = new Map(d.manufacturers.map((q) => [q.id, q.name]));
   const now = Date.now(), DL = new Map(d.deals.filter((x) => x.ends > now - 864e5 * 30).map((x) => [x.product_id, x]));
   const S = shots();
-  const list = rawProducts().filter((p) => p.visible !== false).map((p, i) => {
+  const list = rawProducts().filter((p) => p.visible !== false && !/CANCEL/i.test(p.title)).map((p, i) => { // R9: Daftra's cancelled items never show
     const m = M.get(p.model_id), b = m ? B.get(m.brand_id) : undefined, brand = b ? b.id : 'other', dl = DL.get(p.id);
     const pose = S ? S.forCat(p.category, brand, p.manufacturer) : p.shot;
     // sample offers on ~1 in 9 parts (besides the deals in the data), ending at the end of the week, until the team sets real ones

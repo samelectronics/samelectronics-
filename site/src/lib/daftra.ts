@@ -29,27 +29,31 @@ export const rows = (j: unknown): Record<string, unknown>[] => { const d = (j as
 export type SendItem = { name: string; description?: string; unit_price: number; quantity: number; product_id?: string };
 export type SendReq = { type: 'estimate' | 'invoice'; ref: string; clientId?: string; newClient?: { name: string; email?: string; phone?: string }; items: SendItem[]; notes?: string };
 const sent = new Map<string, { id: string; no: string }>(); // the same order is never sent twice from one server
-export async function send(r: SendReq): Promise<{ ok: true; id: string; no: string; type: string } | { ok: false; error: string; status: number }> {
+export async function send(r: SendReq): Promise<{ ok: true; id: string; no: string; type: string; warn?: string } | { ok: false; error: string; status: number }> {
   if (!canWrite()) return { ok: false, status: 403, error: 'Writing to Daftra is off (DAFTRA_ALLOW_WRITE).' };
   if (!r.ref || !r.items?.length) return { ok: false, status: 400, error: 'Nothing to send.' };
   const key = r.type + ':' + r.ref, had = sent.get(key); if (had) return { ok: false, status: 409, error: `Already sent: ${r.type} ${had.no}` };
   let clientId = r.clientId;
   if (!clientId) {
     const c = r.newClient; if (!c?.name) return { ok: false, status: 400, error: 'Pick a Daftra client or create one.' };
-    const cr = await daftra('clients.json', { method: 'POST', body: { Client: { business_name: c.name, email: c.email || '', phone1: c.phone || '', type: 2 } } });
+    const cr = await daftra('clients.json', { method: 'POST', body: { Client: { business_name: c.name, ...(c.email ? { email: c.email } : {}), ...(c.phone ? { phone1: c.phone } : {}), country_code: 'AE', default_currency_code: 'AED' } } });
     if (!cr.ok) return { ok: false, status: cr.status, error: 'Could not create the client: ' + cr.error };
     clientId = String((cr.data as { id?: unknown }).id || '');
     if (!clientId) return { ok: false, status: 502, error: 'Daftra did not return the new client id.' };
   }
   const today = new Date(Date.now() + 4 * 36e5).toISOString().slice(0, 10); // Dubai date
   const items = r.items.map((i) => ({ item: i.name.slice(0, 250), description: i.description || '', unit_price: i.unit_price, quantity: i.quantity, ...(i.product_id ? { product_id: i.product_id } : {}) }));
-  const head = { client_id: clientId, date: today, currency_code: 'AED', notes: ((r.notes || '') + '\nWebsite order ' + r.ref).trim(), ...(r.type === 'invoice' ? { draft: 1 } : {}) };
-  const body = r.type === 'invoice' ? { Invoice: head, InvoiceItem: items } : { Estimate: head, EstimateItem: items };
+  // Daftra docs: header object + an "InvoiceItem" array for invoices AND estimates; only client_id is required.
+  // Invoices are created as drafts. For estimates the docs show the header both as "Estimate" and as "Invoice", so both
+  // keys carry the same header (the server reads its own).
+  const head = { client_id: clientId, date: today, currency_code: 'AED', draft: 1, notes: ((r.notes || '') + '\nWebsite order ' + r.ref).trim() };
+  const body = r.type === 'invoice' ? { Invoice: head, InvoiceItem: items } : { Estimate: head, Invoice: head, InvoiceItem: items };
   const res = await daftra(r.type + 's.json', { method: 'POST', body });
   if (!res.ok) return { ok: false, status: res.status, error: res.error };
   const id = String((res.data as { id?: unknown }).id || '');
-  let no = id;
-  if (id) { const g = await daftra(r.type + 's/' + id + '.json'); const row = g.ok ? rows({ data: [(g.data as { data?: unknown }).data] })[0] : null; if (row && row.no) no = String(row.no); }
+  let warn = '';
+  let no = String((res.data as { no?: unknown; number?: unknown }).no || (res.data as { number?: unknown }).number || id);
+  if (id) { const g = await daftra(r.type + 's/' + id + '.json'); const row = g.ok ? rows({ data: [(g.data as { data?: unknown }).data] })[0] : null; if (row && row.no) no = String(row.no); if (row && Array.isArray((g.data as { data?: { InvoiceItem?: unknown[] } }).data?.InvoiceItem) && !(g.data as { data: { InvoiceItem: unknown[] } }).data.InvoiceItem.length) warn = 'Created, but Daftra shows no items on it: check it in Daftra.'; }
   sent.set(key, { id, no });
-  return { ok: true, id, no, type: r.type };
+  return { ok: true, id, no, type: r.type, ...(warn ? { warn } : {}) };
 }

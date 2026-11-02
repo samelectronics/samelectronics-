@@ -41,7 +41,7 @@ export default function SendToDaftra({ o, me }: { o: Order; me: Staff }) {
       const rec: Sent = { type, id: String(r.id), no: String(r.no || r.id), at: Date.now(), by: me.name };
       await setSentAll({ ...sentAll, [o.id]: rec }, `Sent ${o.no} to Daftra as ${type === 'invoice' ? 'draft invoice' : 'quotation'} ${rec.no}`);
       await backend.log('Sent to Daftra', o.no, `${type === 'invoice' ? 'Draft invoice' : 'Quotation'} ${rec.no} (Daftra id ${rec.id}) by ${me.name}`);
-      setOpen(false);
+      setOpen(false); if ((r as { warn?: string }).warn) window.alert((r as { warn?: string }).warn);
     } catch (e) { setErr((e as Error).message); }
     setBusy(false);
   };

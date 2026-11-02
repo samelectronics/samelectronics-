@@ -3,7 +3,7 @@
 // customer's details (filled from the account, or a company profile), then the order is placed (backend.placeOrder —
 // on Supabase the server recomputes prices and VAT) and confirmed on WhatsApp. Saved-for-later and stars sit underneath.
 import { PAY_DEFAULT } from '@/lib/payments';
-import { siteRaw } from '@/lib/catalog';
+import { siteRaw , priceText } from '@/lib/catalog';
 import { notify } from '@/lib/notes';
 import React, { useEffect, useState } from 'react';
 import { type Product, aed, byId, data, VAT, waLink, fmt, siteSetting, fixedPrice } from '@/lib/catalog';
@@ -31,7 +31,7 @@ export default function CartPage() {
   const toConfirm = lines.filter(({ p }) => !fixed(p)).length;
   const sub = lines.reduce((a, { l, p }) => a + unit(p) * l.qty, 0), save = lines.reduce((a, { l, p }) => a + (fixed(p) ? (p.retail_price - unit(p)) * l.qty : 0), 0);
   // R9: what the customer sees for a price that is confirmed on WhatsApp
-  const hint = (p: Product) => (p.price_mode === 'from' ? T('From') + ' ' + aed(p.price, false) : p.price_mode === 'range' ? aed(p.price, false) + ' – ' + aed(p.price_max || p.price, false).replace(/^AED /, '') : '');
+  const hint = (p: Product) => (p.price <= 0 ? '' : (!p.price_mode || p.price_mode === 'exact') && p.stock_qty <= 0 ? aed(trade ? p.wholesale_price : p.price, false) : p.price_mode === 'from' ? T('From') + ' ' + aed(p.price, false) : p.price_mode === 'range' ? aed(p.price, false) + ' – ' + aed(p.price_max || p.price, false).replace(/^AED /, '') : '');
   const ship = del === 'uae' ? (sub >= FREE ? 0 : SHIP.uae) : 0, vat = Math.round((sub + ship) * VAT * 100) / 100, total = sub + ship + vat;
   const saved = st.saved.map(byId).filter(Boolean) as Product[], favs = st.favs.map(byId).filter(Boolean) as Product[];
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setForm({ ...form, [k]: e.target.value });
@@ -50,7 +50,7 @@ export default function CartPage() {
   };
   // R9: the full list for WhatsApp: name, model, part, grade/quality, color, quantity, price if known; then name + reference
   const listMsg = (o: Order) => {
-    const rows = lines.map(({ l, p }, i) => [`${i + 1}. ${p.title}`, `   ${T('Model')}: ${p.modelName || '—'} · ${T('Part')}: ${p.part_name}`, `   ${T('Grade')}: ${p.gradeName} · ${T('Quality')}: ${p.qualityName}${p.colour ? ' · ' + T('Color') + ': ' + p.colour : ''}`, `   ${T('Quantity')}: ${l.qty} · ${fixed(p) ? T('Price') + ': ' + aed(unit(p), false) + ' ' + T('each') : T('Price') + ': ' + T('please confirm') + (hint(p) ? ' (' + hint(p) + ')' : '')}`].join('\n'));
+    const rows = lines.map(({ l, p }, i) => [`${i + 1}. ${p.title}`, `   ${T('Model')}: ${p.modelName || '—'} · ${T('Part')}: ${p.part_name}`, `   ${T('Grade')}: ${p.gradeName} · ${T('Quality')}: ${p.qualityName}${p.colour ? ' · ' + T('Color') + ': ' + p.colour : ''}`, `   ${T('Quantity')}: ${l.qty}${p.stock_qty <= 0 ? ' · ' + T('out of stock: please check') : ''} · ${fixed(p) ? T('Price') + ': ' + aed(unit(p), false) + ' ' + T('each') : T('Price') + ': ' + T('please confirm') + (hint(p) ? ' (' + hint(p) + ')' : '')}`].join('\n'));
     return `${T('Hi Sam Electronics, here is my list from the website:')}\n\n${rows.join('\n\n')}\n\n${sub ? T('Known total') + ': ' + aed(total, false) + ' ' + T('incl. VAT') + ' + ' : ''}${toConfirm} ${toConfirm === 1 ? T('item to confirm') : T('items to confirm')}\n${T('Delivery')}: ${T(({ pickup: 'Pick up in Deira', uae: 'Delivery in the UAE', world: 'Worldwide' } as const)[del])}\n\n${form.name}\n${T('Reference')}: ${o.no}`;
   };
   const waMsg = (o: Order) => `Hi Sam Electronics, I placed order ${o.no} on the website.\n\n${o.lines.map((x) => `${x.qty} × ${x.title} · ${x.grade}`).join('\n')}\n\nTotal ${aed(o.total, false)} incl. VAT\nDelivery: ${o.delivery}\nPlease confirm stock and price.`;
@@ -73,7 +73,7 @@ export default function CartPage() {
 
   return (
     <>
-      <PageHero eb={T('YOUR CART')} title={T('Ready when')} accent={T('you are.')} crumb={[[T('Shop'), '/shop'], [T('Cart')]]} sub={lines.length ? `${lines.reduce((a, x) => a + x.l.qty, 0)} ${T('items')} · ${aed(total, false)} ${T('incl. 5% VAT')} · ${T('sample prices')}` : T('Your cart is empty. Every part you add, here or on the home page, waits here.')} seed={31} right={<LiveSam circle size={150} mood="idle" play={lines.length ? 'happy' : 'think'} />} />
+      <PageHero eb={T('YOUR CART')} title={T('Ready when')} accent={T('you are.')} crumb={[[T('Shop'), '/shop'], [T('Cart')]]} sub={lines.length ? `${lines.reduce((a, x) => a + x.l.qty, 0)} ${T('items')} · ${sub > 0 ? aed(total, false) + ' ' + T('incl. 5% VAT') : T('prices confirmed on WhatsApp')} · ${T('sample prices')}` : T('Your cart is empty. Every part you add, here or on the home page, waits here.')} seed={31} right={<LiveSam circle size={150} mood="idle" play={lines.length ? 'happy' : 'think'} />} />
       <section className="sp-sec g"><div className="sp-wrap cart">
         <div className="cart-l">
           {lines.length ? (
@@ -88,7 +88,7 @@ export default function CartPage() {
                     <span className="cart-acts"><button type="button" onClick={() => store.later(p.id)}>{T('Save for later')}</button><button type="button" onClick={() => store.fav(p.id)}>{st.favs.includes(p.id) ? '★ ' + T('Starred') : '☆ ' + T('Star it')}</button><button type="button" onClick={() => store.remove(p.id)}>{T('Remove')}</button></span>
                   </div>
                   <span className="pv-qty sm"><button type="button" onClick={() => store.qty(p.id, l.qty - 1)}>−</button><input value={l.qty} onChange={(e) => store.qty(p.id, Math.max(1, +e.target.value || 1))} aria-label={T('Quantity')} /><button type="button" onClick={() => store.qty(p.id, l.qty + 1)}>+</button></span>
-                  {fixed(p) ? <span className="cart-pr"><b>{aed(unit(p) * l.qty, false)}</b><small>{aed(unit(p), false)} {T('each')}{trade ? ' · ' + T('trade') : ''}</small></span> : <span className="cart-pr cart-tbc"><b>{T('Price confirmed on WhatsApp')}</b>{hint(p) ? <small>{hint(p)}</small> : null}</span>}
+                  {fixed(p) ? <span className="cart-pr"><b>{aed(unit(p) * l.qty, false)}</b><small>{aed(unit(p), false)} {T('each')}{trade ? ' · ' + T('trade') : ''}</small></span> : <span className="cart-pr cart-tbc"><b>{p.stock_qty <= 0 ? T('Requested: we check stock on WhatsApp') : T('Price confirmed on WhatsApp')}</b>{hint(p) ? <small>{hint(p)}</small> : null}</span>}
                 </div>
               ))}
               <span className="sp-sample">{T('All prices are samples until the owner’s prices are in.')}</span>
@@ -135,11 +135,11 @@ export default function CartPage() {
           <div className="sp-card d cart-total" data-rise>
             <span className="sp-eb" style={{ color: '#F7C032' }}>{T('SUMMARY')}</span>
             <div className="cart-sum">
-              <span>{T('Subtotal')}<b>{aed(sub, false)}</b></span>
+              <span>{T('Subtotal')}<b>{sub > 0 || !toConfirm ? aed(sub, false) : T('To confirm')}</b></span>
               {save > 0 ? <span className="sv">{trade ? T('Trade savings') : T('You save')}<b>−{aed(save, false)}</b></span> : null}
               <span>{T('Delivery')}<b>{del === 'world' ? T('Quoted') : ship ? aed(ship, false) : T('Free')}</b></span>
-              <span>{T('VAT 5%')}<b>{aed(vat, false)}</b></span>
-              <span className="tot">{T('Total')}<b>{aed(total, false)}</b></span>
+              <span>{T('VAT 5%')}<b>{sub > 0 || !toConfirm ? aed(vat, false) : T('To confirm')}</b></span>
+              <span className="tot">{T('Total')}<b>{sub > 0 || !toConfirm ? aed(total, false) : T('To confirm')}</b></span>
               {toConfirm ? <span className="cart-plus">+ {toConfirm} {toConfirm === 1 ? T('item to confirm') : T('items to confirm')}</span> : null}
             </div>
             {del === 'uae' && sub < FREE && sub > 0 ? <div className="cart-free"><small>{T('Add')} {aed(FREE - sub, false)} {T('more for free UAE delivery')}</small><i><em style={{ width: Math.min(100, (sub / FREE) * 100) + '%' }} /></i></div> : null}
@@ -162,9 +162,9 @@ export default function CartPage() {
       {saved.length || favs.length ? (
         <section className="sp-sec w"><div className="sp-wrap">
           {saved.length ? <><div className="sp-head"><div><span className="sp-eb">{T('Saved for later')}</span><h2 className="sp-h2">{fmt(saved.length)} {T('parts waiting')}</h2></div></div>
-            <div className="pv-row">{saved.map((p) => <div key={p.id} className="cart-saved"><img src={p.img} alt="" /><b>{p.title}</b><small>{p.gradeName} · {aed(p.price)}</small><button type="button" className="sp-btn sm" onClick={() => store.add(p.id)}>{T('Move to cart')}</button></div>)}</div></> : null}
+            <div className="pv-row">{saved.map((p) => <div key={p.id} className="cart-saved"><img src={p.img} alt="" /><b>{p.title}</b><small>{p.gradeName} · {priceText(p.price)}</small><button type="button" className="sp-btn sm" onClick={() => store.add(p.id)}>{T('Move to cart')}</button></div>)}</div></> : null}
           {favs.length ? <><div className="sp-head" style={{ marginTop: 40 }}><div><span className="sp-eb">{T('Your stars')}</span><h2 className="sp-h2">{T('Parts you starred')}</h2></div></div>
-            <div className="pv-row">{favs.map((p) => <div key={p.id} className="cart-saved"><img src={p.img} alt="" /><b>{p.title}</b><small>{p.gradeName} · {aed(p.price)}</small><button type="button" className="sp-btn sm" onClick={() => store.add(p.id)}>{T('Add to cart')}</button></div>)}</div></> : null}
+            <div className="pv-row">{favs.map((p) => <div key={p.id} className="cart-saved"><img src={p.img} alt="" /><b>{p.title}</b><small>{p.gradeName} · {priceText(p.price)}</small><button type="button" className="sp-btn sm" onClick={() => store.add(p.id)}>{T('Add to cart')}</button></div>)}</div></> : null}
         </div></section>
       ) : null}
     </>

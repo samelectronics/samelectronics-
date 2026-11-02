@@ -4,7 +4,7 @@
 // 500; the bench may adjust it up or down for the part and the work (the final price is confirmed before we start).
 // Repairs without a stocked part (water damage, buttons, software…) are "diagnosis first". Then how it works and booking.
 import React, { useEffect, useMemo, useState } from 'react';
-import { data, products, repairFee, aed, waLink, type Product } from '@/lib/catalog';
+import { data, products, repairFee, aed, waLink, type Product , priceText } from '@/lib/catalog';
 import { backend, useMe } from '@/lib/backend';
 import { PageHero, T, useRise, flyToCart } from '@/components/site/ui';
 import SEBrandLogo from '@/components/dc/SEBrandLogo';
@@ -76,8 +76,8 @@ export default function RepairPage() {
                             <div className="rp-opts">{ps.map((p) => { const fee = repairFee(p.price); return (
                               <button key={p.id} type="button" className={'rp-o' + (pick?.p?.id === p.id ? ' on' : '')} onClick={() => setPick({ rep: r, p })}>
                                 <span className={'pc-gr g-' + p.grade}>{p.gradeName}</span><small>{p.makerName} · {p.warranty}</small>
-                                <span className="rp-sum"><span>{T('Part')} {aed(p.price, false)}</span><span>+ {T('fitting')} {aed(fee, false)}</span></span>
-                                <b>{aed(p.price + fee, false)}</b><span className="sp-sample">sample</span>
+                                <span className="rp-sum"><span>{T('Part')} {priceText(p.price)}</span><span>+ {T('fitting')} {aed(fee, false)}</span></span>
+                                <b>{p.price > 0 ? aed(p.price + fee, false) : priceText(0)}</b><span className="sp-sample">sample</span>
                               </button>
                             ); })}</div>
                           ) : (
