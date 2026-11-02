@@ -165,7 +165,7 @@ export default function Nav({ v }: { v: Vals }) {
           <button
             onClick={v.bench}
             title="My Bench"
-            className="se-ico"
+            className="se-nav-bench se-ico"
             style={{ display: 'flex', border: 'none', background: 'none', padding: '4px', color: 'inherit', cursor: 'pointer' }}
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7">
@@ -216,7 +216,7 @@ export default function Nav({ v }: { v: Vals }) {
               opacity: '.7',
               cursor: 'pointer',
             }}
-            className={cx(undefined, 'scp-18367cd8 se-ico')}
+            className={cx(undefined, 'scp-18367cd8 se-ico se-nav-staff')}
           >
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
               <rect x="4" y="11" width="16" height="10" rx="2"></rect>

@@ -216,3 +216,7 @@
   repeating-linear-gradient(90deg, rgba(255, 255, 255, .055) 0 1px, transparent 1px 64px),
   repeating-linear-gradient(0deg, rgba(255, 255, 255, .045) 0 1px, transparent 1px 64px),
   linear-gradient(180deg, #1C1D20, #2A2C30); -webkit-mask-image: radial-gradient(60% 80% at 50% 70%, #000, transparent 75%); mask-image: radial-gradient(60% 80% at 50% 70%, #000, transparent 75%); }
+
+/* R10 H1: the handle on its own line, sized so it is never cut (EN and AR) */
+.fd-h .fd-handle { display: block; font: inherit; font-size: .74em; white-space: nowrap; color: #F7C032; letter-spacing: -.02em; }
+[dir='rtl'] .fd-h .fd-handle { text-align: right; unicode-bidi: isolate; }

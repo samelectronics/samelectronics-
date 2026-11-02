@@ -5,17 +5,21 @@
 // a language change, a resize, or when scrolling stops.
 import { useEffect } from 'react';
 
-const SEL = 'button, a, [role="tab"], [role="radio"], label, h1, h2, h3, h4, .sp-chip, .sp-tag';
+// R10 B11: big titles (h1, h2) are never scaled; they wrap. Scaling them shrank the hero headline after a language switch.
+const SEL = 'button, a, [role="tab"], [role="radio"], label, h3, h4, .sp-chip, .sp-tag';
 const MIN = 0.78;
 
 function fit() {
   const l = document.documentElement.lang || 'en';
+  // R10 B11: first undo every size set for another language (on or off screen), so nothing stays small after switching back
+  document.querySelectorAll<HTMLElement>('[data-fit-l]').forEach((el) => { if (el.dataset.fitL !== l) { el.style.fontSize = ''; delete el.dataset.fitL; } });
   if (l === 'en' || l === 'ar') return;
   const vh = window.innerHeight;
   document.querySelectorAll<HTMLElement>(SEL).forEach((el) => {
     const r = el.getBoundingClientRect();
     if (r.bottom < -50 || r.top > vh + 50 || r.width < 8) return;
-    if (el.dataset.fitL !== l) { el.style.fontSize = ''; el.dataset.fitL = l; }
+    if (el.dataset.fitL === l && el.style.fontSize) return; // already fitted for this language: never shrink twice
+    el.dataset.fitL = l;
     const over = el.scrollWidth - el.clientWidth;
     if (over <= 1 || el.clientWidth === 0) return;
     const cur = parseFloat(getComputedStyle(el).fontSize) || 14, k = Math.max(MIN, el.clientWidth / el.scrollWidth);

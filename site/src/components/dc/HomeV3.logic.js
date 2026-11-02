@@ -48,6 +48,7 @@ class Component extends DCLogic {
     this.onKey = (e) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); this.openSearch(); } else if (e.key === 'Escape') this.setState({ posterI: null, spOpen: false, fmpOpen: false, drawerMap: false, drawerCart: false }); };
     window.addEventListener('keydown', this.onKey);
     this.onLib = (e) => this.setState({ lib: e.detail }); window.addEventListener('se:parts-lib', this.onLib); this.libT = setTimeout(() => { if (!window.seParts) return; const lb = window.seParts.peek(); if (lb && lb.large && lb.large.length >= 8) this.setState({ lib: lb }); else window.seParts.get(); }, 400);
+    window.__seHome = this; // R10 B12: the live page instance (the shared reel controller opens posters on it)
     window.seIpFlyAt = (t) => this.flyToCart(t); window.seNowAt = (ms) => { this.nowOv = ms; this.forceUpdate(); }; window.seGlobeAt = (t) => { this._gOv = t; this._gDrawn = 0; this.drawGlobe(); }; window.seReelAt = (t) => { this._gOv = null; this.reelCtl(); window.seReel.at(t * 1000); this.drawGlobe(); };
     // R6 Part A: the hero globe only draws while the hero is on screen, at most ~30 times a second
     this.gVis = true; this.gIO = new IntersectionObserver(([e]) => { this.gVis = e.isIntersecting; }); setTimeout(() => this.heroRef.current && this.gIO.observe(this.heroRef.current), 300);
@@ -62,7 +63,10 @@ class Component extends DCLogic {
     // that appears (or is re-mounted) is watched at once.
     this.secMO = new MutationObserver(() => { if (!this._moT) this._moT = setTimeout(() => { this._moT = 0; obsAll(); }, 250); }); /* throttled, never starved by constant updates */ if (this.rootRef.current) this.secMO.observe(this.rootRef.current, { childList: true, subtree: true });
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 60);
-    this.t = setInterval(() => this.setState({ now: Date.now() }), 60000);
+    // R10 B6: tick exactly on the minute (aligned to the clock), and re-check when the tab comes back
+    const tickMin = () => { this.setState({ now: Date.now() }); this.t = setTimeout(tickMin, 60000 - (Date.now() % 60000) + 30); };
+    this.t = setTimeout(tickMin, 60000 - (Date.now() % 60000) + 30);
+    this.onVis = () => { if (!document.hidden) this.setState({ now: Date.now() }); }; document.addEventListener('visibilitychange', this.onVis);
     this.onScroll = () => { if (this.raf) return; this.raf = requestAnimationFrame(() => { this.raf = 0; this.measure(); }); };
     window.addEventListener('scroll', this.onScroll, { passive: true }); window.addEventListener('resize', this.onScroll);
     this.measure(); setTimeout(() => this.measure(), 600);
@@ -70,7 +74,7 @@ class Component extends DCLogic {
     setTimeout(() => [this.railRef, this.offerRef, this.storyRef, ...(this.extraObs || [])].forEach((r) => r.current && this.io.observe(r.current)), 300);
     try { document.fonts && document.fonts.load('700 20px "Space Grotesk"').then(() => { if (!this.dead) { this._hl = {}; this.forceUpdate(); } }); } catch (e) {}
   }
-  componentWillUnmount() { window.removeEventListener('se:store', this.onStore); this.secMO && this.secMO.disconnect(); this.gIO && this.gIO.disconnect(); window.removeEventListener('se:lang', this.onLang); this.dead = true; clearInterval(this._reelSync); this._reelRaf && this._reelRaf(); if (this._reelOnStart) document.removeEventListener('animationstart', this._reelOnStart, true); this._reelVio && this._reelVio.disconnect(); cancelAnimationFrame(this.reelRAF); this.reelIO && this.reelIO.disconnect(); [this.dIv, this.t, this.buyIv, this.offIv].forEach(clearInterval); this.offIO && this.offIO.disconnect(); this.busOff && this.busOff(); window.removeEventListener('keydown', this.onKey); ['se:cart', 'se:flash', 'se:go', 'se:fmp', 'se:shop', 'se:chat', 'se:search'].forEach((n) => window.removeEventListener(n, this.bus)); this.playIO && this.playIO.disconnect(); if (this._kfEl) this._kfEl.remove(); clearTimeout(this.toastT2); clearTimeout(this.hideT); clearTimeout(this.toastT); window.removeEventListener('scroll', this.onScroll); window.removeEventListener('resize', this.onScroll); this.io && this.io.disconnect(); }
+  componentWillUnmount() { if (window.__seHome === this) window.__seHome = null; document.removeEventListener('visibilitychange', this.onVis); window.removeEventListener('se:store', this.onStore); this.secMO && this.secMO.disconnect(); this.gIO && this.gIO.disconnect(); window.removeEventListener('se:lang', this.onLang); this.dead = true; clearInterval(this._reelSync); this._reelRaf && this._reelRaf(); if (this._reelOnStart) document.removeEventListener('animationstart', this._reelOnStart, true); this._reelVio && this._reelVio.disconnect(); cancelAnimationFrame(this.reelRAF); this.reelIO && this.reelIO.disconnect(); [this.dIv, this.t, this.buyIv, this.offIv].forEach(clearInterval); this.offIO && this.offIO.disconnect(); this.busOff && this.busOff(); window.removeEventListener('keydown', this.onKey); ['se:cart', 'se:flash', 'se:go', 'se:fmp', 'se:shop', 'se:chat', 'se:search'].forEach((n) => window.removeEventListener(n, this.bus)); this.playIO && this.playIO.disconnect(); if (this._kfEl) this._kfEl.remove(); clearTimeout(this.toastT2); clearTimeout(this.hideT); clearTimeout(this.toastT); window.removeEventListener('scroll', this.onScroll); window.removeEventListener('resize', this.onScroll); this.io && this.io.disconnect(); }
   TYPED = ['iPhone 15 Pro screen', 'Galaxy A54 battery', 'SM-A546 back cover', 'Redmi Note 13 charging flex', 'Pixel 8 Pro camera', 'Honor Magic6 Pro frame', 'Tecno Camon 30 screen', 'A2849 battery', 'Vivo V30 back glass', 'POCO X6 Pro charging port', 'Infinix Note 40 screen', 'Huawei P60 Pro camera'];
   measure() {
     const de = document.documentElement, vw = de.clientWidth || window.innerWidth, vh = window.innerHeight, z = Math.max(0.5, vw / 1440);
@@ -113,7 +117,7 @@ class Component extends DCLogic {
     if (cur) count = 'Closes in ' + span(cur[1] - m);
     else { for (let k = 0; k < 8 && !count; k++) { const dd = (day + k) % 7, nx = (H[dd] || []).find(([a]) => k > 0 || a > m); if (nx) count = 'Opens in ' + span(k * 1440 + nx[0] - m); } }
     const NAMES = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const days = [6, 0, 1, 2, 3, 4, 5].map((k) => { const sh = H[k] || [], on = k === day; return { day: NAMES[k], h: sh.length ? sh.map(([a, b]) => hm(a) + '–' + hm(b)).join(' · ') : 'Closed', on, ink: on ? '#F7C032' : sh.length ? '#E4E5E7' : '#8A8C90', w: on ? 600 : 400, bg: on ? 'rgba(247,192,50,.10)' : 'transparent' }; });
+    const days = [1, 2, 3, 4, 5, 6, 0].map((k) => { const sh = H[k] || [], on = k === day; return { day: NAMES[k], h: sh.length ? sh.map(([a, b]) => hm(a) + '–' + hm(b)).join(' · ') : 'Closed', on, ink: on ? '#F7C032' : sh.length ? '#E4E5E7' : '#8A8C90', w: on ? 600 : 400, bg: on ? 'rgba(247,192,50,.10)' : 'transparent' }; });
     return { count, days, branch: 'Al Murar, Deira · Dubai time' };
   }
   memo(k, s, f) {
@@ -448,7 +452,7 @@ class Component extends DCLogic {
     // visit + hours
     const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'], dg = new Date(s.now), g = new Date(dg.getTime() + dg.getTimezoneOffset() * 6e4 + 4 * 36e5), hm = (x) => pad(Math.floor(x / 60)) + ':' + pad(x % 60);
     const visit = { bg: H.open ? '#F7C032' : 'linear-gradient(150deg,#3D3E3F,#26282B)', ink: H.open ? '#26282B' : '#FFFFFF', dot: H.dot, state: H.short.replace(/^Open · until /, 'Open now · until ').replace(/^Closed · opens (\d\d:\d\d)$/, 'Closed now · opens $1 today').replace(/^Closed · /, 'Closed now · '), btnBg: H.open ? '#26282B' : '#F7C032', btnInk: H.open ? '#FFFFFF' : '#26282B', wa: wa + '?text=' + encodeURIComponent('Hi Sam Electronics, I found you on your website.'),
-      days: [6, 1, 2, 3, 4, 5, 0].map((d) => { const sh = (D ? D.hours[d] : []) || [], on = d === g.getDay(); return { day: DAYS[d], short: DAYS[d].slice(0, 3), h: sh.length ? sh.map(([a, b]) => hm(a) + '–' + hm(b)).join(' · ') : 'Closed', bg: on ? (H.open ? 'rgba(26,27,29,.1)' : 'rgba(247,192,50,.14)') : 'transparent', w: on ? 700 : 500, fc: on ? '#F7C032' : '#C9CBCE' }; }) };
+      days: [1, 2, 3, 4, 5, 6, 0].map((d) => { const sh = (D ? D.hours[d] : []) || [], on = d === g.getDay(); return { day: DAYS[d], short: DAYS[d].slice(0, 3), h: sh.length ? sh.map(([a, b]) => hm(a) + '–' + hm(b)).join(' · ') : 'Closed', bg: on ? (H.open ? 'rgba(26,27,29,.1)' : 'rgba(247,192,50,.14)') : 'transparent', w: on ? 700 : 500, fc: on ? '#F7C032' : '#C9CBCE' }; }) };
     // system map
     // P4: the system map (menu + footer) opens the real pages
     const SM = [['Shop parts', 'Every part, every grade', '/shop'], ['Brands & models', 'Every brand and every parts maker', '/brands'], ['Repair Lab', 'Fixed, tested, guaranteed', '/repair'], ['Wholesale & trade', 'Stock up. Cost down.', '/wholesale'], ['Worldwide network', 'From Deira to the world', '/worldwide'], ['Deals & arrivals', 'Price drops, new stock, limited offers', '/deals'], ['Our story', 'Since 2003: branches, team, careers', '/story'], ['Sam Circuit', 'Our membership', '/membership'], ['Ask Samsoom', 'Your parts assistant', '/samsoom'], ['My Bench', 'Orders, saved parts, your card', '/account'], ['Contact & help', 'Call, chat, visit, help centre', '/contact'], ['Home', 'The full system, top to bottom', '/']];
@@ -581,7 +585,7 @@ class Component extends DCLogic {
       prev: (e) => { e && e.stopPropagation(); go(-1); },
       next: (e) => { e && e.stopPropagation(); go(1); },
       // owner (28 Oct): the poster opens the ad that is ON SCREEN (the nearest ad to the feed position), never the next one
-      poster: () => { if (this._swiped && Date.now() - this._swiped < 400) return; this.setState({ posterI: ((Math.round(posOf(master())) % N) + N) % N }); },
+      poster: () => { if (this._swiped && Date.now() - this._swiped < 400) return; /* R10 B12: the shared controller may belong to a discarded first instance; open the poster on the live page */ (window.__seHome || this).setState({ posterI: ((Math.round(posOf(master())) % N) + N) % N }); },
     });
   }
   // Issue 1B: the ad poster: the same ad, bigger, with a short paragraph, key points and the stock line

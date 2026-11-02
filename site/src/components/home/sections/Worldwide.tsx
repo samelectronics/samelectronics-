@@ -94,7 +94,7 @@ export default function Worldwide({ v }: { v: Vals }) {
           {'\n    '}
         </div>
         {'\n    '}
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 300px', gap: '20px', alignItems: 'stretch' }}>
+        <div className="ww-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 300px', gap: '20px', alignItems: 'stretch' }}>
           {'\n      '}
           <div
             style={{

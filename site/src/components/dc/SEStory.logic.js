@@ -39,7 +39,7 @@ class Component extends DCLogic {
       yFor: (i) => { const g = geo(); return g ? Math.round(g.top + g.range * PS[i]) : window.scrollY; },
       index: () => { const g = geo(); if (!g) return 0; const p = (window.scrollY - g.top) / g.range; let bi = 0; PS.forEach((q, i) => { if (Math.abs(q - p) < Math.abs(PS[bi] - p)) bi = i; }); return bi; } });
     this.raf = requestAnimationFrame(loop);
-    this.onResize = () => { const vw = document.documentElement.clientWidth, vh = window.innerHeight, sc = Math.min(vw / 1440, (vh - 72) / 800); if (Math.abs(sc - this.state.sc) > 0.002) this.setState({ sc }); };
+    this.onResize = () => { const vw = document.documentElement.clientWidth, vh = window.innerHeight, sc = vw <= 700 ? Math.min(vw / 720, (vh - 72) / 1290) : Math.min(vw / 1440, (vh - 72) / 800); /* R10: phones get a portrait 720-wide album */ if (Math.abs(sc - this.state.sc) > 0.002) this.setState({ sc }); };
     window.addEventListener('resize', this.onResize); this.onResize();
     this.io = new IntersectionObserver(([e]) => { if (e.isIntersecting && !this.state.br) { this.setState({ br: true }); this.countUp(); } }, { threshold: 0, rootMargin: '0px 0px -8% 0px' }); // R9: starts as soon as the maps edge in
     setTimeout(() => this.brRef.current && this.io.observe(this.brRef.current), 50);

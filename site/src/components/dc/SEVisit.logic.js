@@ -66,7 +66,7 @@ class Component extends DCLogic {
     const left = cur ? cur[1] - m : nxt ? nxt[0] - m : 0, dur = (x) => (x >= 60 ? Math.floor(x / 60) + 'h ' + pad(x % 60) + 'm' : x + 'm');
     const status = { open: 'Open now', closing: 'Closing soon', opening: 'Opening soon', closed: 'Closed now' }[SS.state], sub = cur ? 'Closes at ' + hm(cur[1]) : nxt ? 'Opens at ' + hm(nxt[0]) : 'Opens ' + (day === 6 ? 'Monday' : 'tomorrow') + ' at 10:30';
     const count = cur ? 'Closes in ' + dur(left) : nxt ? 'Opens in ' + dur(left) : '';
-    const week = [6, 1, 2, 3, 4, 5, 0].map((x) => ({ day: DAYS[x], on: x === day, h: (H[x] || []).length ? H[x].map(([a, b]) => hm(a) + '–' + hm(b)).join(' · ') : 'Closed' }));
+    const week = [1, 2, 3, 4, 5, 6, 0].map((x) => ({ day: DAYS[x], on: x === day, h: (H[x] || []).length ? H[x].map(([a, b]) => hm(a) + '–' + hm(b)).join(' · ') : 'Closed' }));
     return { secRef: this.secRef, seen: s.seen,
       types: RT.map((t) => ({ name: t, on: t === rt, pick: () => this.setState({ type: t }) })), rt, fields: s.full ? fields : fields.slice(0, 3), filled, total: fields.length, no, note, setNote, full: !!s.full, more: fields.length > 3, openFull: () => this.setState({ full: true }), closeFull: () => this.setState({ full: false }), // owner (28 Oct): the home shows the first questions; the full form opens on its own
       lines: fields.filter((f) => f.val.trim()).map((f) => ({ k: f.label.toUpperCase(), v: f.val })).concat(note.trim() ? [{ k: 'COMMENT', v: note.trim() }] : []), sent: s.sent, sentN: s.sentN, need: s.need && Date.now() - s.need < 8000, complete: filled >= fields.length,

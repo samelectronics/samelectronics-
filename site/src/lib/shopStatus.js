@@ -3,10 +3,10 @@
 // Always Dubai time (UTC+4, no daylight saving), whatever the visitor's clock or timezone says.
 // Four states, each with a pulsing dot:
 //   open     green   inside hours, more than 60 min before a closing time   "Open · until 14:00"
-//   closing  yellow  the last 60 min before ANY closing time                "Closing soon · 14:00"
+//   closing  yellow  the last 30 min before ANY closing time                "Closing soon · 14:00"
 //   closed   red     outside hours, more than 60 min before an opening      "Closed · opens tomorrow 10:30"
-//   opening  yellow  the last 60 min before ANY opening time                "Opening soon · 16:00"
-export const SOON = 60;
+//   opening  yellow  the last 30 min before ANY opening time                "Opening soon · 16:00"
+export const SOON = 30; // R10 G2: amber in the last 30 min before closing (or opening)
 export const DOT = { open: '#5FD49A', closing: '#F7C032', opening: '#F7C032', closed: '#E5484D' };
 const DN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const hm = (x) => String(Math.floor(x / 60) % 24).padStart(2, '0') + ':' + String(x % 60).padStart(2, '0');

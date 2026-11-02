@@ -857,7 +857,7 @@ html[dir='rtl'] [data-prog='bar'] { background-image: linear-gradient(270deg, #F
 @media (max-width: 520px) { .st-langs { grid-template-columns: repeat(2, 1fr); } .st-acts.st-acts4 { grid-template-columns: 1fr; } }
 /* R9: phones — the nav fits the screen (logo, Find My Part, language, help, cart, menu); the rest lives in the menu */
 @media (max-width: 1100px) {
-  .se-nav-name, .se-nav-right > button[title="My Bench"], .se-nav-right > button[title^="Staff"] { display: none !important; }
+  .se-nav-name, .se-nav-right > .se-nav-bench, .se-nav-right > .se-nav-staff { display: none !important; }
   .se-nav-right { gap: 8px !important; }
 }
 @media (max-width: 760px) {
@@ -879,7 +879,11 @@ html[dir='rtl'] [data-prog='bar'] { background-image: linear-gradient(270deg, #F
 
 /* R9: every nav icon (help, account, cart, staff) lights up like the nav links: yellow LED glow on hover/focus */
 .se-ico { align-items: center; justify-content: center; width: 34px; height: 34px; padding: 0 !important; border-radius: 50%; transition: color .2s, background .2s, filter .2s, transform .2s, opacity .2s; }
-.se-ico:hover, .se-ico:focus-visible { color: #F7C032 !important; background: rgba(247, 192, 50, .16) !important; filter: drop-shadow(0 0 6px rgba(247, 192, 50, .75)); opacity: 1 !important; transform: translateY(-1px); }
+.se-ico { position: relative; isolation: isolate; }
+/* R10 B10: no yellow circle. A soft, blurred yellow light fades in behind and under the icon, then fades out */
+.se-ico::after { content: ''; position: absolute; left: 50%; top: 58%; width: 44px; height: 30px; margin: -15px 0 0 -22px; z-index: -1; border-radius: 50%; background: radial-gradient(closest-side, rgba(247, 192, 50, .42), rgba(247, 192, 50, 0)); filter: blur(6px); opacity: 0; transform: scale(.6); transition: opacity .35s ease, transform .45s cubic-bezier(.2, .8, .2, 1); pointer-events: none; }
+.se-ico:hover::after, .se-ico:focus-visible::after { opacity: 1; transform: scale(1); }
+.se-ico:hover, .se-ico:focus-visible { color: #F7C032 !important; background: transparent !important; filter: drop-shadow(0 0 5px rgba(247, 192, 50, .45)); opacity: 1 !important; }
 .se-help.se-ico:hover { transform: rotate(-8deg); }
 /* R9: long words in longer languages break with a hyphen instead of spilling out of their box */
 html:not([lang='en']):not([lang='ar']) :is(h1, h2, h3, h4, p, li, small) { overflow-wrap: anywhere; hyphens: auto; }
@@ -986,7 +990,7 @@ html[dir='rtl'] .st-offer { right: auto; left: 96px; }
 .st-offer b { font: 600 14.5px Inter, sans-serif; white-space: nowrap; } .st-offer .st-btn { height: 36px; min-width: 0; padding: 0 16px; font-size: 14px; } .st-offer .st-x { position: static; }
 @media (max-width: 560px) { .st-offer { left: 12px; right: 12px; bottom: 90px; border-radius: 18px; } .st-offer b { white-space: normal; flex: 1; } }
 /* R9 · the bell joined the nav: on mid-size screens the staff lock moves to the footer and the shop name gives way */
-@media (max-width: 1480px) { .se-nav-right > button[title^="Staff"] { display: none !important; } }
+@media (max-width: 1480px) { .se-nav-right > .se-nav-staff { display: none !important; } }
 @media (max-width: 1360px) { .se-nav-name { display: none !important; } }
 /* ticket FAQ: notches drawn on top, no seam */
 .fq-ticket .fq-q { position: relative; background: #fff !important; box-shadow: inset 0 0 0 1px #E6E8EA !important; filter: none !important; overflow: visible; }

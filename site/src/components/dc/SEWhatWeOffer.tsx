@@ -183,7 +183,7 @@ function render(v: Vals) {
             }}
           >
             {'\n      '}
-            <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: '40px' }}>
+            <div className="wo-head" style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: '40px' }}>
               {'\n        '}
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 {'\n          '}
@@ -243,6 +243,7 @@ function render(v: Vals) {
             <div style={{ position: 'relative' }}>
               {'\n        '}
               <div
+                className="wo-grid"
                 style={{
                   position: 'absolute',
                   inset: '0',
@@ -278,6 +279,7 @@ function render(v: Vals) {
               </div>
               {'\n        '}
               <div
+                className="wo-grid"
                 style={{
                   position: 'relative',
                   zIndex: '2',

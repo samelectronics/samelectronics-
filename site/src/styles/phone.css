@@ -1,0 +1,97 @@
+/* R10 · phone layouts for the home sections (audit 2 Nov: 9 sections squeezed or cut at 390px).
+   Loaded last so it wins over the desktop rules; only applies up to 700px wide. */
+@media (max-width: 700px) {
+  /* ── What we offer ── */
+  #families .wo-head { flex-direction: column; align-items: flex-start !important; gap: 14px !important; }
+  #families .wo-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; grid-template-rows: repeat(4, 292px) !important; gap: 12px !important; }
+  #families .wo-stage { left: 8px; right: 8px; top: 8px; height: 128px; }
+  #families .wo-pose { top: 10px; width: 118px; height: 118px; margin-left: -59px; }
+  #families .wo-cf [data-w^='slot'] { left: 8px !important; right: 8px !important; height: 120px !important; }
+  #families .wo-body { left: 12px; right: 12px; top: 146px; bottom: 12px; gap: 6px; }
+  #families .wo-name { font-size: 16px; }
+  #families .wo-meta { font-size: 10px; white-space: normal; }
+  #families .wo-chips { max-height: 22px !important; }
+  #families .wo-foot { flex-direction: column; align-items: stretch; gap: 6px; font-size: 12px; }
+  #families .wo-shop { height: 30px; justify-content: center; font-size: 12px; }
+  .wwo-boxes { max-width: calc(100% - 32px) !important; padding: 32px 0 72px; gap: 16px; }
+  .wwo-boxes [data-w='Rscene'], .wwo-boxes [data-w='Wscene'], .wwo-boxes [data-w='Gscene'] { zoom: .44 !important; }
+  .wwo-boxes > [data-w] > div[style*='grid-template-columns'] { padding-inline: 20px !important; }
+  .wwo-boxes h3 { font-size: 28px !important; }
+
+  /* ── Live parts board ── */
+  .lb-in { max-width: calc(100% - 32px); padding: 64px 0 64px; }
+  .lb-h { font-size: 34px; }
+  .lb-top { gap: 14px; margin-bottom: 24px; }
+  .lb-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 10px !important; }
+  .lb-tile { grid-template-columns: 34px minmax(0, 1fr); gap: 8px; height: 92px; padding: 0 10px; }
+  .lb-tile .lb-ic { transform: scale(.8); transform-origin: center; }
+  .lb-tile .lb-spark { position: absolute; left: 10px; right: 10px; bottom: 6px; width: auto; height: 18px; opacity: .45; pointer-events: none; }
+  .lb-tile .lb-k { font-size: 9px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lb-tile .lb-d { display: none; }
+  .lb-board { height: auto; max-height: 460px; }
+  .lb-bh { padding-inline: 12px; }
+  .lb-tabs { overflow-x: auto; scrollbar-width: none; }
+  .lb-row { grid-template-columns: 40px minmax(0, 1fr) auto; gap: 8px; height: 52px; padding: 0 12px; }
+  .lb-row .lb-tag, .lb-row .lb-th { display: none; }
+  .lb-row .lb-t { font-size: 11px; }
+  .lb-row .lb-note { font-size: 11px; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .lb-foot { padding: 0 12px; }
+
+  /* ── Bench test: portrait stage 720 × 1390, scaled to the screen width ── */
+  .bt { height: calc(72px + 1390px * var(--sc, 1) + 140vh); }
+  .bt-pin { height: calc(56px + 1390px * var(--sc, 1)) !important; }
+  .bt-box { width: 720px; height: 1390px; top: 56px; }
+  .bt-w { font-size: 58px; } .bt-words { gap: 10px; } .bt-ring { width: 44px; height: 44px; margin-top: 6px; }
+  .bt-left { left: 40px; top: 24px; width: 640px; }
+  .bt-h { font-size: 60px; }
+  .bt-p { font-size: 24px; max-width: none; }
+  .bt-rigwrap { left: 50%; top: 800px; margin-left: -310px; transform: scale(.72); transform-origin: top center; }
+
+  /* ── Deals ── */
+  .dl-in { max-width: calc(100% - 32px); padding: 56px 0 64px; }
+  .dl-top { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .dl-h { font-size: 34px; }
+  /* ── Story: portrait album 720 × 1290 scaled to the screen ── */
+  .st-box { width: 720px; height: 1290px; padding: 28px 32px 0; }
+  .st-top { flex-direction: column; align-items: flex-start; gap: 18px; }
+  .st-h { font-size: 56px; }
+  .st-yr { flex-direction: row; align-items: center; gap: 18px; }
+  .st-yr b { font-size: 96px; }
+  .st-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+  .st-card:last-child { grid-column: span 2; }
+  .st-card h3 { font-size: 28px; }
+  .st-card p { display: none; }
+  .st-years, .st-v, .st-st { font-size: 17px; }
+  .st-ph { height: 168px; }
+  .st-hint { display: none; }
+
+  /* ── Worldwide: map on top, shipments under it ── */
+  #network .ww-grid { grid-template-columns: 1fr !important; }
+  /* ── Sam Circuit: the card first, then the form ── */
+  .cx-r { order: -1; padding: 0 0 4px; gap: 16px; }
+  .cx-h { font-size: 34px; }
+  /* ── Feed ── */
+  .fd-in { max-width: calc(100% - 32px); padding: 64px 0 32px; }
+  .fd-h { font-size: 34px; }
+  .fd-grid { grid-template-columns: minmax(0, 1fr) !important; gap: 28px !important; }
+  .fd-grid > * { min-width: 0; }
+  .fd-follow { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 8px !important; }
+  .fd-fl { padding: 10px 6px; min-width: 0; }
+  .fd-fl .qr { width: 70px; height: 70px; }
+  .fd-fl .nm { font-size: 12px; } .fd-fl .ct { font-size: 10.5px; text-align: center; }
+  /* ── Reviews ── */
+  .rv-in, .rv-note { max-width: calc(100% - 32px); }
+  .rv-g { flex-wrap: wrap; width: 100%; box-sizing: border-box; padding: 16px; gap: 12px; }
+  .rv-g-acts { flex-direction: row; width: 100%; margin: 0; }
+  .rv-g-acts > * { flex: 1; justify-content: center; }
+  .rv-card { width: 280px; }
+}
+/* reviews marquee: soft fade at both edges so the moving cards never look cut (every width) */
+.rv-row { -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+/* R10: right-to-left on phones. The hero and bench stages are cropped to the visible side, so the Arabic text must sit there too */
+@media (max-width: 700px) {
+  html[dir='rtl'] #top [data-hero-text] { left: 60px !important; }
+  html[dir='rtl'] #top [data-hero-scene], html[dir='rtl'] #top [data-hero-screen] { scale: none; }
+  html[dir='rtl'] .bt-left { left: 40px; }
+  html[dir='rtl'] .bt-rigwrap { left: 50%; }
+}

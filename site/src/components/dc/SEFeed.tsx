@@ -139,7 +139,7 @@ function render(v: Vals) {
         <div className="fd-grid">
           <div className="fd-info">
             <span className="fd-eb">THE FEED · @SAMELECTRONICS.UAE</span>
-            <h2 className="fd-h"><span>Follow @samelectronics.uae</span> <span>for daily stock drops.</span></h2>
+            <h2 className="fd-h"><span>Follow</span> <b className="fd-handle" data-no-i18n="" dir="ltr">@samelectronics.uae</b> <span>for daily stock drops.</span></h2>
             <p className="fd-p">New stock, offers and bench tests go up first on our channels. Scan a code or tap Follow.</p>
             <div className="fd-follow">
               {(v.ch || []).map((c: any) => (
