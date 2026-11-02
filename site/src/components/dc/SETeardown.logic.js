@@ -291,7 +291,7 @@ class Component extends DCLogic {
         /* R10 C5: Skip goes TO the final call (the ad still plays), not past it */
         clearTimeout(this.autoT); this.manual = false; if (this.opBusy()) this.opShow(); this.tossEnd(); this.passing = 0;
         const last = this.FS.length - 1; this.mode = 'film'; this.td.faceBack = false; this.busyUntil = performance.now() + 1500;
-        window.__seJumpForced = 0; this.goTo(last, 900); this.idx = last; this.gUsed = true; this.lastW = performance.now(); },
+        window.__seJumpForced = 0; cancelAnimationFrame(this.twRaf); this.anim = false; this.enterFilm(true); /* a clean cut to the final call: no sweep through the stages */ this.busyUntil = performance.now() + 600; },
       mt: { ink: fin > 0.5 ? '#26282B' : '#FFFFFF', sub: fin > 0.5 ? '#26282B' : '#F7C032' }, mRail: fin < 0.5, mFin: fin >= 0.5,
       railFill: (allLit ? 1 : Math.max(0, act) / 7).toFixed(3),
       prev: () => this.goStep(Math.max(-1, act - 1)), next: () => this.goStep(Math.min(7, act + 1)), replay: () => { this.stopAuto(); this.at(0.02); setTimeout(() => this.play(), 200); },
