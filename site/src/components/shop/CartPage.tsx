@@ -134,14 +134,14 @@ export default function CartPage() {
         <aside className="cart-r">
           <div className="sp-card d cart-total" data-rise>
             <span className="sp-eb" style={{ color: '#F7C032' }}>{T('SUMMARY')}</span>
-            <div className="cart-sum">
+            {!lines.length ? <div className="cart-sum"><span>{T('Your cart is empty')}<b>·</b></span></div> : <div className="cart-sum">
               <span>{T('Subtotal')}<b>{sub > 0 || !toConfirm ? aed(sub, false) : T('To confirm')}</b></span>
               {save > 0 ? <span className="sv">{trade ? T('Trade savings') : T('You save')}<b>−{aed(save, false)}</b></span> : null}
               <span>{T('Delivery')}<b>{del === 'world' ? T('Quoted') : ship ? aed(ship, false) : T('Free')}</b></span>
               <span>{T('VAT 5%')}<b>{sub > 0 || !toConfirm ? aed(vat, false) : T('To confirm')}</b></span>
               <span className="tot">{T('Total')}<b>{sub > 0 || !toConfirm ? aed(total, false) : T('To confirm')}</b></span>
               {toConfirm ? <span className="cart-plus">+ {toConfirm} {toConfirm === 1 ? T('item to confirm') : T('items to confirm')}</span> : null}
-            </div>
+            </div>}
             {del === 'uae' && sub < FREE && sub > 0 ? <div className="cart-free"><small>{T('Add')} {aed(FREE - sub, false)} {T('more for free UAE delivery')}</small><i><em style={{ width: Math.min(100, (sub / FREE) * 100) + '%' }} /></i></div> : null}
             <span className="sp-sample" style={{ color: '#9DA1A6' }}>{T('Sample prices · TRN shown on the invoice')}</span>
             {lines.length && toConfirm ? <button type="button" className="sp-btn wa" onClick={() => document.querySelector('.cart-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}>{T('Send my list on WhatsApp')}</button> : lines.length ? <a className="sp-btn wa" href={waLink('Hi Sam Electronics, I would like to order:\n' + lines.map(({ l, p }) => `${l.qty} × ${p.title} · ${p.gradeName} (${p.id})`).join('\n') + '\nPlease confirm stock and price.')} target="_blank" rel="noopener noreferrer">{T('Or send it on WhatsApp')}</a> : null}

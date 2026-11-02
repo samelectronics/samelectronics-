@@ -158,3 +158,4 @@ textarea.cr-in { height: auto; padding: 9px 11px; resize: vertical; line-height:
 .dft-cl { display: flex; flex-direction: column; gap: 6px; } .dft-cl label { display: grid; grid-template-columns: 20px 1fr; gap: 0 8px; align-items: center; padding: 8px 10px; border-radius: 10px; border: 1px solid #E6E8EA; cursor: pointer; font-size: 13.5px; } .dft-cl small { grid-column: 2; color: #8C9096; } .dft-cl input { accent-color: #1E5BD8; }
 .dft-pr { width: 90px; height: 32px; }
 .dft-box > .cr-err { padding: 0 20px 8px; }
+.cr-lcard { max-width: calc(100vw - 32px) !important; box-sizing: border-box; }
