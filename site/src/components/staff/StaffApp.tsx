@@ -8,7 +8,7 @@ import DaftraMod from './DaftraMod';
 import PromoMod from './PromoMod';
 import ExcelMod from './ExcelMod';
 import React, { useEffect, useState } from 'react';
-import { backend, live, ROLE_NAMES, useStaff, type Perm, type Staff } from '@/lib/backend';
+import { backend, live, preview, ROLE_NAMES, useStaff, type Perm, type Staff } from '@/lib/backend';
 import { installI18n } from '@/i18n/lang';
 import { installBrandSelects } from '@/lib/brandSelect';
 import LiveSam from '@/components/samsoom/LiveSam';
@@ -55,7 +55,18 @@ function Login({ onDone }: { onDone: () => void }) {
           {err ? <span className="cr-err">{err}</span> : null}
           <button type="submit" className="cr-btn y big" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
         </form>
-        {!live ? (
+        {live ? (
+          <div className="cr-demo"><b>Design preview</b> Look through the whole Control Room as the owner, on sample data in this browser only. Nothing real is shown or changed.
+            <button type="button" className="cr-btn ghost" onClick={() => { location.href = '/staff?preview=1'; }}>Open the design preview</button>
+          </div>
+        ) : null}
+        {preview ? (
+          <div className="cr-demo"><b>Design preview</b> Sample data only.
+            <button type="button" className="cr-btn y" onClick={async () => { setBusy(true); const r = await backend.staffSignIn('owner@sam.demo', 'demo1234'); setBusy(false); if (r.ok) onDone(); else setErr(r.error); }}>Enter as owner</button>
+            <a href="/staff?preview=0" className="cr-muted">Back to the real sign-in</a>
+          </div>
+        ) : null}
+        {!live && !preview ? (
           <div className="cr-demo"><b>Demo log-ins</b> (until the database is connected)
             {[['owner@sam.demo', 'Owner · everything'], ['manager@sam.demo', 'Manager · everything'], ['sales@sam.demo', 'Sales · orders, customers, chat'], ['tech@sam.demo', 'Technician · repairs, stock']].map(([e, r]) => <button key={e} type="button" onClick={() => { setEmail(e); setPw('demo1234'); }}><span>{e}</span><small>{r}</small></button>)}
             <small>Password: demo1234</small>
@@ -91,7 +102,7 @@ export default function StaffApp() {
         <header className="cr-top">
           <button type="button" className="cr-burger" onClick={() => setNav(!nav)} aria-label="Menu">☰</button>
           <h1>{cur.l}</h1>
-          {!live ? <span className="cr-badge y">DEMO DATA · this browser only</span> : <span className="cr-badge g">LIVE</span>}
+          {preview ? <a className="cr-badge y" href="/staff?preview=0" title="Exit the design preview">DESIGN PREVIEW · sample data · exit</a> : !live ? <span className="cr-badge y">DEMO DATA · this browser only</span> : <span className="cr-badge g">LIVE</span>}
           <a className="cr-btn ghost" href="/" target="_blank" rel="noopener">View site ↗</a>
         </header>
         <div className="cr-body" key={cur.id}><cur.C me={me} go={go} /></div>
