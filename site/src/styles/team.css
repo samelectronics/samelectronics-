@@ -85,3 +85,4 @@
 .tm-face.back p { display: none !important; }
 .tm-ask { width: 100%; box-sizing: border-box; justify-content: center; height: 42px !important; padding: 0 12px !important; margin-top: auto !important; font-size: 13.5px !important; overflow: hidden; text-overflow: ellipsis; }
 @media (min-width: 1101px) and (max-width: 1400px) { .tm-card { width: 198px; height: 306px; } .tm-slot.f .tm-card { width: 214px; height: 330px; } } /* R10: laptops, more room between the badges */
+@media (max-width: 1400px) { .tm-band { padding-inline: 12px; margin-inline: -16px; } .tm-band b { letter-spacing: .08em; font-size: 9px; } .tm-band span { letter-spacing: .04em; font-size: 8px; } .tm-slot.f .tm-band b { letter-spacing: .04em; } } /* R10 L10: badge band text never cut on laptops */

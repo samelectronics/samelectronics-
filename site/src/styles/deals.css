@@ -187,3 +187,9 @@ html[dir='rtl'] .dl-new, html[dir='rtl'] .dl-flaps, html[dir='rtl'] .dl-ship-clo
 .dl-pre-img { position: relative; display: grid; place-items: center; width: 64px; height: 56px; border-radius: 10px; overflow: hidden; background: var(--st-dark); flex: none; }
 .dl-pre-img img { width: 120%; height: 120%; object-fit: contain; filter: drop-shadow(0 6px 8px rgba(0, 0, 0, .45)); }
 .dl-pre li { grid-template-columns: 64px 1fr auto !important; }
+/* R10 L6: the rolling pre-order list fills the card instead of setting its height (it is doubled for the loop, which
+   stretched both cards and left a big empty area); the shipment card sets the row height */
+.dl-pre-vp { flex: 1 1 0 !important; height: auto !important; min-height: 240px !important; }
+.dl-below { align-items: stretch; }
+/* the deal belt: a wider soft fade at both edges, so a card entering or leaving never looks cut */
+.dl-track { -webkit-mask-image: linear-gradient(90deg, transparent, #000 120px, #000 calc(100% - 120px), transparent) !important; mask-image: linear-gradient(90deg, transparent, #000 120px, #000 calc(100% - 120px), transparent) !important; }

@@ -33,6 +33,7 @@ import '@/styles/ask.css';
 import '@/styles/info.css';
 import '@/styles/staff.css';
 import '@/styles/studio.css';
+import '@/styles/system.css';
 import '@/styles/phone.css';
 
 export const metadata: Metadata = {

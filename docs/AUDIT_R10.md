@@ -56,3 +56,34 @@ re-shot with the same script.
   soft, low, no squeaky tones; packs Classic, Soft, Studio. B9 bell items open My Bench → Notifications (filters,
   mark read, clear; also for signed-out visitors), "See all", Escape closes. B13 online/offline: graphite pill with a
   green / red / amber dot, no veil.
+
+## Stage 0 redone for LAPTOPS (owner, 2 Nov) · 1440×900 and 1280×720, full-size frames, every section
+| # | Section | Finding | Plan ID |
+|---|---|---|---|
+| L1 | Bench test | Buttons smaller than every other section and touching the bottom (no safe space); on 1280 they wrap to two rows | E1/E2 |
+| L2 | Bench test | "Today on the rig" numbers and labels tiny | U6/E2 |
+| L3 | Bench, What we offer, Live board, Wholesale | Side circuits are short stubs / lumps, not hero traces | U2/D1/E3 |
+| L4 | All light sections (offer, showcase, repair, story, who are you, reviews) | Golden-yellow title line on white | U5 |
+| L5 | Many sections | Main buttons not one size (finale ~34px, deals 48px, story small, board 52px) | standard buttons |
+| L6 | Deals | Carousel cards cut at both edges; big empty dark gap under shipment/pre-order boxes; pre-order list starts with a half-hidden row on 1280 | F1 |
+| L7 | Live board, Wholesale ticker | Marquee first item hard-cut at the edge | no clipped elements |
+| L8 | Worldwide | Shipping-quote ticket shows "AED 0"; tracking label cut on 1280 | no AED 0 |
+| L9 | Showcase | On 1280×720 the card is taller than the screen, its button falls below the fold | fit |
+| L10 | Team | Founder badge band text cut on 1280 | no clipped elements |
+| L11 | Reviews | Title leaves "us." alone on a line | text |
+| L12 | Story | Timeline markers plain grey dots, not glossy LED nodes | G1 |
+| L13 | Finale | Small buttons; circuits broken into segments, not continuous from the sides | I1 |
+| L14 | Stat boxes | Different sizes per section (bench, wholesale, samsoom, finale, offer boxes) | U6 |
+
+### Laptop fixes done (re-shot at 1440×900, 1366×768, 1280×720, EN + AR; smoke test ALL CLEAN)
+- L1 Bench buttons: standard 52px / 16px (counter-scaled against the stage), one row, 112px yellow safe margin below.
+- L2/L14 one stat size (src/styles/system.css): bench, wholesale, Samsoom facts, finale; bench stats never touch.
+- L3 U2: the old stub/lump circuits removed; one generator draws long traces down every section's empty side gutters
+  (enter from the edge, run down, 45° jogs, a joining trace with a junction, pads at the ends, continuous pulses).
+- L4 U5: no golden-yellow title lines on white sections (graphite); dark sections keep white + yellow; yellow keep graphite.
+- L5 one button size for every section's main buttons.
+- L6 Deals: empty gap removed (pre-order list fills its card), wider soft fade on the deal belt.
+- L7 marquees fade at both edges. L8 Worldwide quote counts 140 → 185 (never AED 0), tracking number on its own line.
+- L9 Showcase fits one screen on 1280×720. L10 Team band text fits. L11 titles balanced (no lone word).
+- L12 G1 Story markers are glossy LED nodes.
+- Still open from this list: L13 Finale circuits continuous from the sides (with I1, next).

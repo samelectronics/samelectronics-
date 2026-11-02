@@ -121,3 +121,4 @@ html[dir='rtl'] .nwr canvas { left: auto; right: 12px; } html[dir='rtl'] .nwr .r
 .nwr canvas { position: static !important; margin: 0 !important; width: 124px !important; height: 124px !important; flex: none; }
 .nwr .rg-l { position: static !important; transform: none !important; }
 .nwt-num { white-space: nowrap; } .nwt .nwt-globe { width: 112px !important; height: 112px !important; }
+.nwt-num { white-space: normal !important; } .nwt-num b { display: block; margin: 2px 0 0 !important; white-space: nowrap; } /* R10 L8: the tracking number on its own line, never cut on laptops */

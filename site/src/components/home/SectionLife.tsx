@@ -29,36 +29,52 @@ function contentEdges(sec: HTMLElement) {
   return { l, r: sr.width - r, w: sr.width, h: sr.height };
 }
 
-// owner (28 Oct): NOT continuous gutters any more. Circuits are used the way the hero uses them: a few short traces that
-// come in from the section's edge into ONE empty corner, with 45° chamfers, pads where they end and a short light pulse
-// running along them. Two small clusters per section (top on one side, bottom on the other, alternating by section).
-function cluster(gw: number, side: 1 | -1, s0: number) {
-  seed = s0; const W = Math.min(190, gw - 18), paths: string[] = [], pads: [number, number, number][] = [];
-  const X = (x: number) => (side > 0 ? x : W - x);
-  const n = 3 + Math.floor(rnd() * 2);
-  for (let k = 0; k < n; k++) {
-    let y = 20 + k * (34 + rnd() * 18), x = 0, d = `M${X(0)} ${y.toFixed(0)}`;
-    const len = W * (0.45 + rnd() * 0.5);
-    x = len * (0.3 + rnd() * 0.3); d += ` H${X(x).toFixed(0)}`;
-    const dy = (rnd() < 0.5 ? -1 : 1) * (14 + rnd() * 22); x += Math.abs(dy); y += dy; d += ` L${X(x).toFixed(0)} ${y.toFixed(0)}`;
-    if (rnd() < 0.6) { x = Math.min(W - 8, len); d += ` H${X(x).toFixed(0)}`; }
-    else { const v = 20 + rnd() * 40; y += v; d += ` V${y.toFixed(0)}`; }
-    paths.push(d); pads.push([X(x), y, k % 2 ? 3.5 : 4.5]);
+const NS = 'http://www.w3.org/2000/svg';
+// R10 U2 (owner: "no 2 cm stubs, no lumps"): ONE generator, drawn like the hero. Down each side's empty gutter: a few
+// traces enter from the section's edge, run DOWN the gutter, bend inward with 45° chamfers, one more joins them halfway
+// (with a junction node), and each ends in a pad. Never closer than 18px to any content; same 2px stroke as the hero; a
+// light pulse runs along every trace continuously (infinite loop, never restarting). Gutters under 48px get nothing.
+function lanes(gw: number, H: number, side: 1 | -1, s0: number) {
+  seed = s0;
+  const W = Math.min(gw - 18, 120), n = W >= 80 ? 3 : W >= 52 ? 2 : 1, step = Math.max(14, Math.min(26, (W - 12) / n));
+  const X = (x: number) => (side > 0 ? x : W - x), f = (v: number) => v.toFixed(0);
+  const paths: { d: string; len: number }[] = [], pads: [number, number, number][] = [], joints: [number, number][] = [];
+  const laneX: number[] = [];
+  for (let i = 0; i < n; i++) {
+    const lx = 8 + i * step; laneX.push(lx);
+    let y = 40 + i * 30 + rnd() * 24; const y0 = y;
+    let d = `M${f(X(0))} ${f(y)} H${f(X(lx - 10))} L${f(X(lx))} ${f(y + 10)}`; y += 10;
+    // the long run down, with one gentle 45° jog toward the content and back
+    const end = H * (0.62 + rnd() * 0.3) - i * 40, jogAt = y + (end - y) * (0.3 + rnd() * 0.3), jog = Math.min(10, W - lx - 6);
+    if (jog > 4 && end - y > 260) { d += ` V${f(jogAt)} L${f(X(lx + jog))} ${f(jogAt + jog)} V${f(jogAt + jog + 90)} L${f(X(lx))} ${f(jogAt + 2 * jog + 90)}`; y = jogAt + 2 * jog + 90; }
+    // the end: bend inward and finish on a pad (still inside the gutter)
+    const bx = Math.min(W - 6, lx + 12 + rnd() * 14), by = Math.max(y + 40, end);
+    d += ` V${f(by)} L${f(X(bx))} ${f(by + (bx - lx))} V${f(by + (bx - lx) + 22)}`;
+    pads.push([X(bx), by + (bx - lx) + 22, i % 2 ? 3.5 : 4.5]); paths.push({ d, len: by - y0 + 80 });
   }
-  return { W, H: 20 + n * 52 + 60, paths, pads };
+  // one trace joins the outer lane halfway down, entering from the edge
+  if (H > 700) {
+    const jy = H * (0.38 + rnd() * 0.2), lx = laneX[0];
+    const d = `M${f(X(0))} ${f(jy - 14)} L${f(X(lx - 14 > 0 ? lx - 14 : 0))} ${f(jy - 14)} L${f(X(lx))} ${f(jy)}`;
+    paths.push({ d, len: lx + 20 }); joints.push([X(lx), jy]);
+  }
+  return { W, paths, pads, joints };
 }
 
-const NS = 'http://www.w3.org/2000/svg';
-function gutter(sec: HTMLElement, gw: number, side: 1 | -1, t: string, s0: number, top: boolean, at?: number) {
-  if (gw < 70) return;
-  const { W, H, paths, pads } = cluster(gw, side, s0), h = sec.getBoundingClientRect().height; if (h < H + 80) return;
+function gutter(sec: HTMLElement, gw: number, side: 1 | -1, t: string, s0: number, host?: HTMLElement) {
+  if (gw < 48) return;
+  const box = host || sec, H = box.getBoundingClientRect().height; if (H < 320) return;
+  const { W, paths, pads, joints } = lanes(gw, H, side, s0);
   const svg = document.createElementNS(NS, 'svg'); svg.setAttribute('class', 'se-gut se-gut-' + t); svg.setAttribute('aria-hidden', 'true');
-  svg.setAttribute('width', String(W)); svg.setAttribute('height', String(H)); svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-  svg.style.cssText = `position:absolute;${at != null ? 'top:' + Math.round(h * at) : top ? 'top:' + Math.round(h * 0.12) : 'bottom:' + Math.round(h * 0.1)}px;${side > 0 ? 'left' : 'right'}:0;width:${W}px;height:${H}px;pointer-events:none;z-index:0;overflow:visible`;
-  paths.forEach((d, i) => { const p = document.createElementNS(NS, 'path'); p.setAttribute('d', d); p.setAttribute('class', 'tr'); svg.appendChild(p);
-    const f = document.createElementNS(NS, 'path'); f.setAttribute('d', d); f.setAttribute('class', 'fl'); f.setAttribute('pathLength', '1000'); f.style.animationDuration = (2.8 + (i % 3) * 0.9).toFixed(1) + 's'; f.style.animationDelay = (i * 0.7).toFixed(1) + 's'; svg.appendChild(f); });
+  svg.setAttribute('width', String(W)); svg.setAttribute('height', String(Math.round(H))); svg.setAttribute('viewBox', `0 0 ${W} ${Math.round(H)}`);
+  svg.style.cssText = `position:absolute;top:0;${side > 0 ? 'left' : 'right'}:0;width:${W}px;height:${Math.round(H)}px;pointer-events:none;z-index:0;overflow:visible`;
+  paths.forEach(({ d, len }, i) => { const p = document.createElementNS(NS, 'path'); p.setAttribute('d', d); p.setAttribute('class', 'tr'); svg.appendChild(p);
+    const fl = document.createElementNS(NS, 'path'); fl.setAttribute('d', d); fl.setAttribute('class', 'fl'); fl.setAttribute('pathLength', '1000');
+    fl.style.animationDuration = Math.max(2.4, Math.min(9, len / 260)).toFixed(1) + 's'; fl.style.animationDelay = (-(i * 1.3)).toFixed(1) + 's'; svg.appendChild(fl); });
   pads.forEach(([x, y, r]) => { const c = document.createElementNS(NS, 'circle'); c.setAttribute('cx', x.toFixed(1)); c.setAttribute('cy', y.toFixed(1)); c.setAttribute('r', String(r)); c.setAttribute('class', 'nd'); svg.appendChild(c); });
-  sec.prepend(svg);
+  joints.forEach(([x, y]) => { const c = document.createElementNS(NS, 'circle'); c.setAttribute('cx', x.toFixed(1)); c.setAttribute('cy', y.toFixed(1)); c.setAttribute('r', '3'); c.setAttribute('class', 'jn'); svg.appendChild(c); });
+  if (getComputedStyle(box).position === 'static') box.style.position = 'relative';
+  box.prepend(svg);
 }
 
 // owner (R8): every section gets a quiet material under its content, the way the hero has one: graphite sections a fine
@@ -89,8 +105,7 @@ function markEntries(sec: HTMLElement) {
 // owner (28 Oct): the small corner circuits stay only where the owner kept them; every other section is clean
 // R8: tall sections that felt bare (What we offer) get a few more clusters down their sides, still only in the empty
 // gutters and alternating left / right like the hero: fractions of the section height where each one sits
-const TALL: Record<string, number[]> = { families: [0.06, 0.24, 0.46, 0.68, 0.86], wholesale: [0.08, 0.3, 0.52, 0.74, 0.92] }; // R9: Trade Floor circuits down both sides
-const GUT = new Set(['families', 'quality', 'wholesale', 'reviews']); // R9: the board has its own four circuits
+const OWN = new Set(['story', 'finale']); // these draw their own hero-style circuits
 
 export default function SectionLife() {
   useEffect(() => {
@@ -103,8 +118,11 @@ export default function SectionLife() {
       eio = eio || new IntersectionObserver((es) => es.forEach((e) => { const el = e.target as HTMLElement; if (e.isIntersecting && e.intersectionRatio > 0.12) el.setAttribute('data-se-on', ''); else if (!e.isIntersecting) el.removeAttribute('data-se-on'); }), { threshold: [0, 0.12, 0.3] });
       secs.forEach((sec, k) => {
         markEntries(sec); io!.observe(sec); texture(sec, tone(sec), k); sec.querySelectorAll('[data-se-rise]').forEach((el) => { if (!(el as HTMLElement).dataset.seObs) { (el as HTMLElement).dataset.seObs = '1'; eio!.observe(el); } });
-        if (window.innerWidth >= 1100 && GUT.has(sec.id) && !sec.querySelector(':scope > .se-gut') && !sec.querySelector('.se-cfield') && !sec.querySelector('.se-own-circ')) { const t = tone(sec), e = contentEdges(sec); if (getComputedStyle(sec).position === 'static') sec.style.position = 'relative'; if (TALL[sec.id]) TALL[sec.id].forEach((at, j) => gutter(sec, j % 2 ? e.r : e.l, j % 2 ? -1 : 1, t, 101 + k * 37 + j * 71, true, at));
-          else { gutter(sec, e.l, 1, t, 101 + k * 37, k % 2 === 0); gutter(sec, e.r, -1, t, 207 + k * 53, k % 2 === 1); } }
+        // R10 U2: every home section gets the same circuits, only in its empty side gutters (sections with their own
+        // hero-style circuits keep theirs: story, finale)
+        const host = sec.id === 'quality' ? (sec.querySelector('.bt-pin') as HTMLElement | null) || undefined : undefined;
+        if (window.innerWidth >= 1100 && !OWN.has(sec.id) && !(host || sec).querySelector(':scope > .se-gut')) { const t = tone(sec), e = contentEdges(host || sec);
+          gutter(sec, e.l, 1, t, 101 + k * 37, host); gutter(sec, e.r, -1, t, 207 + k * 53, host); }
       });
     } catch (err) { console.warn('[SectionLife]', err); } };
     (window as unknown as { __seLife?: () => void }).__seLife = run;

@@ -101,7 +101,7 @@ function Quoted() {
   useClock(ref, 7, React.useCallback((t: number) => {
     const R = ref.current; if (!R) return;
     R.querySelectorAll<HTMLElement>('.qs-ln').forEach((l, i) => { const k = seg(t, 0.4 + i * 0.45, 0.3); l.style.clipPath = `inset(0 ${((1 - k) * 100).toFixed(1)}% 0 0)`; });
-    const tot = Math.round(185 * eio(seg(t, 2.4, 0.9))), e = R.querySelector('.qs-tot b'); if (e && e.textContent !== 'AED ' + tot) e.textContent = 'AED ' + tot;
+    const tot = Math.round(140 + 45 * eio(seg(t, 2.4, 0.9))) /* R10: counts 140 → 185, never shows AED 0 */, e = R.querySelector('.qs-tot b'); if (e && e.textContent !== 'AED ' + tot) e.textContent = 'AED ' + tot;
     const s = seg(t, 3.5, 0.22), st = R.querySelector<HTMLElement>('.qs-stamp'); if (st) { st.style.opacity = s > 0 ? String(1 - seg(t, 6.4, 0.5)) : '0'; st.style.transform = `rotate(-12deg) scale(${(s < 1 ? 1.8 - 0.8 * s : 1).toFixed(3)})`; }
     const sl = R.querySelector<HTMLElement>('.qs'); if (sl) sl.style.transform = `translateY(${(-(1 - eio(seg(t, 0, 0.5))) * 30 + seg(t, 6.4, 0.5) * 10).toFixed(1)}px)`, (sl.style.opacity = String(1 - seg(t, 6.4, 0.5)));
   }, []));
@@ -113,7 +113,7 @@ function Quoted() {
         {SLIP.map(([k, v]) => (
           <span key={k} className="qs-ln"><small>{k}</small><span>{v}</span></span>
         ))}
-        <span className="qs-tot"><small>Total</small><b>AED 0</b></span>
+        <span className="qs-tot"><small>Total</small><b>AED 140</b></span>
         <em className="qs-stamp">CONFIRMED</em>
       </div>
     </div>

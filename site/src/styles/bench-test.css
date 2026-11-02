@@ -161,8 +161,8 @@ html[dir='rtl'] .bt-try > svg:last-child { transform: scaleX(-1); }
 /* owner (28 Oct): the show plays on its own clock, so the section no longer needs a long held scroll; the price lives on
    the bill (bigger), and the two actions are the site's standard full-size buttons */
 /* R8 · held again: the rig stops in full view (sticky, with a yellow margin under the buttons) and scroll plays the test */
-.bt { height: calc(72px + 828px * var(--sc, 1) + 64px + 190vh) !important; min-height: 0 !important; }
-.bt-pin { height: calc(72px + 828px * var(--sc, 1) + 64px) !important; }
+.bt { height: calc(72px + 828px * var(--sc, 1) + 112px + 190vh) !important; min-height: 0 !important; }
+.bt-pin { height: calc(72px + 828px * var(--sc, 1) + 112px) !important; }
 .bt-ptag { display: none !important; }
 .bt-acts { display: flex; flex-wrap: wrap; gap: 12px !important; margin-top: 18px; }
 .bt-how, .bt-try { height: 52px !important; padding: 0 22px !important; border-radius: 12px !important; font: 600 16px Inter, sans-serif !important; gap: 10px !important; }
@@ -181,3 +181,12 @@ html[dir='rtl'] .bt-try > svg:last-child { transform: scaleX(-1); }
 
 /* R9 (owner): small titles start with the words, no line in front */
 .bt-eb i { display: none !important; }
+/* R10 (owner, laptops): the stage is scaled to fit the screen, which shrank the buttons below the site's standard size.
+   They are counter-scaled so they always look exactly like every other section's buttons: 52px tall, 16px text. */
+.bt-how, .bt-try { height: calc(52px / var(--sc, 1)) !important; padding: 0 calc(22px / var(--sc, 1)) !important; border-radius: calc(12px / var(--sc, 1)) !important; font-size: calc(16px / var(--sc, 1)) !important; gap: calc(10px / var(--sc, 1)) !important; }
+.bt-try { padding-inline-start: calc(10px / var(--sc, 1)) !important; }
+.bt-try-i { width: calc(32px / var(--sc, 1)); height: calc(32px / var(--sc, 1)); border-radius: calc(8px / var(--sc, 1)); }
+.bt-how svg, .bt-try svg { width: calc(15px / var(--sc, 1)); height: calc(15px / var(--sc, 1)); }
+.bt-acts { gap: calc(12px / var(--sc, 1)) !important; margin-top: calc(20px / var(--sc, 1)) !important; }
+/* R10 L1: the text column uses all the room left of the rig, so both standard buttons stay on one row on every laptop */
+@media (min-width: 701px) { .bt-left { width: 668px; } .bt-acts { flex-wrap: nowrap !important; } }
