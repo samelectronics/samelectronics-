@@ -461,3 +461,6 @@ html[dir='rtl'] .dp-panel { left: auto; right: 0; }
 .pt-trade { display: inline-flex; align-items: center; gap: 6px; font: 600 13.5px Inter, sans-serif; color: var(--g6); } .pt-trade a { color: var(--yd); }
 .pt.big .pt-ask { height: 44px; font-size: 15px; padding: 0 16px; }
 .cart-paylink { display: inline-block; margin: 6px 0 12px; font: 600 13.5px Inter, sans-serif; color: var(--yd); text-decoration: none; }
+/* R9 · cart items whose price is confirmed on WhatsApp */
+.cart-tbc b { font: 600 13.5px Inter, sans-serif !important; color: #1F8A4C; } .cart-plus { display: block; margin-top: 4px; text-align: end; font: 600 13px Inter, sans-serif; color: #F7C032; }
+.sp-btn.wa { background: #1FAF5A !important; color: #fff !important; }

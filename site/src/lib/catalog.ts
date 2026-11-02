@@ -16,7 +16,9 @@ export type Raw = {
 };
 export type PriceMode = 'exact' | 'range' | 'from' | 'whatsapp' | 'call' | 'trade';
 /** can it go in the cart as it is shown? (ask/call need a conversation first; trade-only needs a trade account) */
-export const buyable = (p: { price_mode?: PriceMode; stock_qty: number }, trade = false) => p.stock_qty > 0 && (!p.price_mode || p.price_mode === 'exact' || p.price_mode === 'from' || p.price_mode === 'range' || (p.price_mode === 'trade' && trade));
+export const buyable = (p: { price_mode?: PriceMode; stock_qty: number }, _trade = false) => p.stock_qty > 0; // R9: every price mode goes in the cart
+/** has a fixed price for this customer (otherwise it is confirmed on WhatsApp and left out of the total) */
+export const fixedPrice = (p: { price_mode?: PriceMode }, trade = false) => !p.price_mode || p.price_mode === 'exact' || (p.price_mode === 'trade' && trade);
 export type Product = Raw & {
   brand: string; brandName: string; modelName: string; series: string; device: string; catName: string; gradeName: string;
   makerName: string; qualityName: string; img: string; imgBig: string; deal: number; dealEnds: number; price: number;

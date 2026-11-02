@@ -4,7 +4,7 @@
 // quotation or invoice only when DAFTRA_ALLOW_WRITE=1.
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { daftra, daftraReady, canWrite, READ, WRITE, rows } from '@/lib/daftra';
+import { daftra, daftraReady, canWrite, READ, WRITE, rows, send, type SendReq } from '@/lib/daftra';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -26,6 +26,7 @@ async function handle(req: Request, ctx: { params: Promise<{ path: string[] }> }
   const path = (await ctx.params).path.join('/');
   if (path === 'status') return NextResponse.json({ connected: daftraReady(), write: canWrite(), subdomain: process.env.DAFTRA_SUBDOMAIN || null, protectedBy: process.env.CONTROL_ROOM_KEY ? 'key' : process.env.NEXT_PUBLIC_SUPABASE_URL ? 'supabase' : 'none' });
   const no = await staffOk(req); if (no) return NextResponse.json({ error: no }, { status: 401 });
+  if (method === 'POST' && path === 'send') { const b = (await req.json().catch(() => null)) as SendReq | null; if (!b || (b.type !== 'estimate' && b.type !== 'invoice')) return NextResponse.json({ error: 'Bad request' }, { status: 400 }); const r = await send(b); return NextResponse.json(r, { status: r.ok ? 200 : r.status }); }
   if (method === 'GET' && !READ.test(path)) return NextResponse.json({ error: 'Not allowed: ' + path }, { status: 403 });
   if (method === 'POST' && (!canWrite() || !WRITE.test(path))) return NextResponse.json({ error: canWrite() ? 'Not allowed: ' + path : 'Writing to Daftra is off (DAFTRA_ALLOW_WRITE).' }, { status: 403 });
   const q = new URL(req.url).searchParams; const query = new URLSearchParams(); ['page', 'limit', 'q', 'keyword', 'name', 'product_code'].forEach((k) => { const v = q.get(k); if (v) query.set(k, v); });

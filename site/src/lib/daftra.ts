@@ -7,7 +7,7 @@ const base = () => `https://${process.env.DAFTRA_SUBDOMAIN}.daftra.com/api2/`;
 
 /** Which Daftra paths the Control Room may read, and which it may create (when writing is allowed). */
 export const READ = /^(products|clients|invoices|estimates|stores|product_categories|suppliers|purchase_invoices|payments|invoice_payments)(\/\d+)?\.json$/;
-export const WRITE = /^(estimates|invoices)\.json$/;
+export const WRITE = /^$/; // writes only go through send() below, one confirmed document at a time
 
 export async function daftra(path: string, init?: { method?: string; body?: unknown; query?: string }) {
   if (!daftraReady()) return { ok: false as const, status: 503, error: 'Daftra is not connected: add DAFTRA_API_KEY and DAFTRA_SUBDOMAIN in Vercel.' };
@@ -22,3 +22,34 @@ export async function daftra(path: string, init?: { method?: string; body?: unkn
 
 /** Daftra wraps each row as { Product: {...} } / { Client: {...} }; this unwraps lists into plain rows. */
 export const rows = (j: unknown): Record<string, unknown>[] => { const d = (j as { data?: unknown[] })?.data; return Array.isArray(d) ? d.map((x) => { const v = Object.values(x as object)[0]; return (v && typeof v === 'object' ? v : x) as Record<string, unknown>; }) : []; };
+
+/** R9 · "Send to Daftra": one website order → one Daftra quotation (estimate) or draft invoice, after staff confirm it.
+ *  The client is an existing Daftra client (clientId) or created from the order's customer. Returns Daftra's id and number.
+ *  Body shapes follow Daftra's API v2 (Invoice/InvoiceItem, Estimate/EstimateItem, Client); check the first test document. */
+export type SendItem = { name: string; description?: string; unit_price: number; quantity: number; product_id?: string };
+export type SendReq = { type: 'estimate' | 'invoice'; ref: string; clientId?: string; newClient?: { name: string; email?: string; phone?: string }; items: SendItem[]; notes?: string };
+const sent = new Map<string, { id: string; no: string }>(); // the same order is never sent twice from one server
+export async function send(r: SendReq): Promise<{ ok: true; id: string; no: string; type: string } | { ok: false; error: string; status: number }> {
+  if (!canWrite()) return { ok: false, status: 403, error: 'Writing to Daftra is off (DAFTRA_ALLOW_WRITE).' };
+  if (!r.ref || !r.items?.length) return { ok: false, status: 400, error: 'Nothing to send.' };
+  const key = r.type + ':' + r.ref, had = sent.get(key); if (had) return { ok: false, status: 409, error: `Already sent: ${r.type} ${had.no}` };
+  let clientId = r.clientId;
+  if (!clientId) {
+    const c = r.newClient; if (!c?.name) return { ok: false, status: 400, error: 'Pick a Daftra client or create one.' };
+    const cr = await daftra('clients.json', { method: 'POST', body: { Client: { business_name: c.name, email: c.email || '', phone1: c.phone || '', type: 2 } } });
+    if (!cr.ok) return { ok: false, status: cr.status, error: 'Could not create the client: ' + cr.error };
+    clientId = String((cr.data as { id?: unknown }).id || '');
+    if (!clientId) return { ok: false, status: 502, error: 'Daftra did not return the new client id.' };
+  }
+  const today = new Date(Date.now() + 4 * 36e5).toISOString().slice(0, 10); // Dubai date
+  const items = r.items.map((i) => ({ item: i.name.slice(0, 250), description: i.description || '', unit_price: i.unit_price, quantity: i.quantity, ...(i.product_id ? { product_id: i.product_id } : {}) }));
+  const head = { client_id: clientId, date: today, currency_code: 'AED', notes: ((r.notes || '') + '\nWebsite order ' + r.ref).trim(), ...(r.type === 'invoice' ? { draft: 1 } : {}) };
+  const body = r.type === 'invoice' ? { Invoice: head, InvoiceItem: items } : { Estimate: head, EstimateItem: items };
+  const res = await daftra(r.type + 's.json', { method: 'POST', body });
+  if (!res.ok) return { ok: false, status: res.status, error: res.error };
+  const id = String((res.data as { id?: unknown }).id || '');
+  let no = id;
+  if (id) { const g = await daftra(r.type + 's/' + id + '.json'); const row = g.ok ? rows({ data: [(g.data as { data?: unknown }).data] })[0] : null; if (row && row.no) no = String(row.no); }
+  sent.set(key, { id, no });
+  return { ok: true, id, no, type: r.type };
+}

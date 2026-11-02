@@ -147,3 +147,14 @@ textarea.cr-in { height: auto; padding: 9px 11px; resize: vertical; line-height:
 .cr-adprev { position: relative; display: flex; flex-direction: column; justify-content: center; gap: 4px; min-height: 110px; padding: 14px; border-radius: 14px; overflow: hidden; } .cr-adprev small { font: 600 10px 'JetBrains Mono', monospace; opacity: .7; } .cr-adprev b { max-width: 70%; font: 700 15px/1.2 'Space Grotesk', sans-serif; } .cr-adprev img { position: absolute; right: 6px; bottom: 6px; height: 70px; }
 .cr-adprev.t-y { background: linear-gradient(115deg,#F7C032,#FFD566); color: #26282B; } .cr-adprev.t-d { background: linear-gradient(115deg,#26282B,#3D3E3F); color: #fff; } .cr-adprev.t-w { background: #fff; color: #26282B; box-shadow: inset 0 0 0 1px #E6E8EA; }
 @media (max-width: 760px) { .cr-ad { grid-template-columns: 1fr; } }
+/* R9 · Send to Daftra */
+.dft-mark { display: inline-grid; place-items: center; border-radius: 5px; background: #1E5BD8; color: #fff; font-weight: 800; font-family: Inter, sans-serif; line-height: 1; }
+.dft-btn { display: inline-flex !important; align-items: center; gap: 8px; background: #1E5BD8 !important; color: #fff !important; border-color: #1E5BD8 !important; } .dft-btn:disabled { opacity: .5; }
+.dft-sent { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 10px; background: rgba(30,91,216,.1); color: #1E5BD8; font-size: 13px; font-weight: 600; } .dft-sent small { color: #8C9096; font-weight: 500; }
+.dft-veil { position: fixed; inset: 0; z-index: 9500; display: grid; place-items: center; padding: 16px; background: rgba(20,21,23,.6); }
+.dft-box { width: min(640px, 100%); max-height: calc(100vh - 32px); overflow-y: auto; border-radius: 18px; background: #fff; color: #26282B; box-shadow: 0 40px 90px -20px rgba(0,0,0,.6); }
+.dft-box header { display: flex; align-items: center; gap: 10px; padding: 16px 20px; border-bottom: 1px solid #EEF0F2; font-size: 17px; } .dft-box footer { display: flex; justify-content: flex-end; gap: 8px; padding: 14px 20px; border-top: 1px solid #EEF0F2; position: sticky; bottom: 0; background: #fff; }
+.dft-sec { display: flex; flex-direction: column; gap: 8px; padding: 14px 20px; } .dft-sec > small { font: 600 10.5px 'JetBrains Mono', monospace; letter-spacing: .12em; color: #8C9096; }
+.dft-cl { display: flex; flex-direction: column; gap: 6px; } .dft-cl label { display: grid; grid-template-columns: 20px 1fr; gap: 0 8px; align-items: center; padding: 8px 10px; border-radius: 10px; border: 1px solid #E6E8EA; cursor: pointer; font-size: 13.5px; } .dft-cl small { grid-column: 2; color: #8C9096; } .dft-cl input { accent-color: #1E5BD8; }
+.dft-pr { width: 90px; height: 32px; }
+.dft-box > .cr-err { padding: 0 20px 8px; }

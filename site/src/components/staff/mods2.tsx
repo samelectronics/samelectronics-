@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { backend, type Application, type Message, type Order, type Staff, type Thread, type User } from '@/lib/backend';
 import { data, products, repairFee } from '@/lib/catalog';
 import { Panel, Kpi, Table, Drawer, Badge, csv, can, money, when, useSetting } from './kit';
+import SendToDaftra, { DaftraBadge } from './SendToDaftra';
 
 type P = { me: Staff; go: (m: string) => void };
 const FLOW: Order['status'][] = ['New', 'Quoted', 'Confirmed', 'Ready', 'Collected / Shipped', 'Closed'];
@@ -41,7 +42,7 @@ export function Orders({ me }: P) {
           { k: 'no', l: 'Order', get: (o) => <b className="mono">{o.no}</b>, sort: (o) => o.createdAt }, { k: 'd', l: 'Placed', get: (o) => when(o.createdAt), sort: (o) => o.createdAt },
           { k: 'c', l: 'Customer', get: (o) => <span className="cr-two"><b>{o.name}</b><small>{o.phone}</small></span>, sort: (o) => o.name },
           { k: 'i', l: 'Items', get: (o) => o.lines.reduce((a, l) => a + l.qty, 0), cls: 'num' }, { k: 'dl', l: 'Delivery', get: (o) => o.delivery },
-          { k: 's', l: 'Status', get: (o) => <Badge t={o.status} tone={o.status === 'New' ? 'y' : o.status === 'Cancelled' ? 'r' : 'g'} />, sort: (o) => FLOW.indexOf(o.status) },
+          { k: 's', l: 'Status', get: (o) => <span className="cr-acts"><Badge t={o.status} tone={o.status === 'New' ? 'y' : o.status === 'Cancelled' ? 'r' : 'g'} />{o.pending || (o.note || '').startsWith('[Prices to confirm') ? <Badge t="PRICES TO CONFIRM" tone="r" /> : null}<DaftraBadge id={o.id} /></span>, sort: (o) => FLOW.indexOf(o.status) },
           { k: 't', l: 'Total', get: (o) => money(o.total), sort: (o) => o.total, cls: 'num' }]} />
       </Panel>
       <Drawer open={!!sel} onClose={() => setSel(null)} title={sel ? 'Order ' + sel.no : ''} wide>
@@ -52,11 +53,12 @@ export function Orders({ me }: P) {
               <div className="cr-box"><small>CUSTOMER</small><b>{sel.name}</b><span>{sel.email}</span><span>{sel.phone}</span>{sel.address ? <span>{sel.address}, {sel.country}</span> : null}{sel.note ? <em>“{sel.note}”</em> : null}</div>
               <div className="cr-box"><small>DELIVERY & PAYMENT</small><b>{sel.delivery}</b><span>Payment: {sel.pay}</span><span>Placed {when(sel.createdAt)}</span></div>
             </div>
-            <table className="cr-lines"><tbody>{sel.lines.map((l) => <tr key={l.id}><td>{l.qty} ×</td><td><b>{l.title}</b> · {l.grade}<br /><small className="mono">{l.id}</small></td><td className="num">{money(l.unit * l.qty)}</td></tr>)}
+            <table className="cr-lines"><tbody>{sel.lines.map((l) => <tr key={l.id}><td>{l.qty} ×</td><td><b>{l.title}</b> · {l.grade}<br /><small className="mono">{l.id}</small></td><td className="num">{l.confirm ? <Badge t="PRICE TO CONFIRM" tone="r" /> : money(l.unit * l.qty)}</td></tr>)}
               <tr><td /><td>Subtotal</td><td className="num">{money(sel.sub)}</td></tr><tr><td /><td>Delivery</td><td className="num">{money(sel.ship)}</td></tr><tr><td /><td>VAT 5%</td><td className="num">{money(sel.vat)}</td></tr><tr className="tot"><td /><td>Total</td><td className="num">{money(sel.total)}</td></tr></tbody></table>
             <div className="cr-acts">
               <a className="cr-btn wa" href={'https://wa.me/' + sel.phone.replace(/\D/g, '') + '?text=' + encodeURIComponent('Hi ' + sel.name.split(' ')[0] + ', this is Sam Electronics about your order ' + sel.no + '.')} target="_blank" rel="noopener noreferrer">WhatsApp customer</a>
               <button type="button" className="cr-btn" onClick={() => invoice(sel, trn.trn)}>Tax invoice</button>
+              <SendToDaftra o={sel} me={me} />
               {can(me, 'orders') && sel.status !== 'Cancelled' ? <button type="button" className="cr-btn danger" onClick={() => setStatus(sel, 'Cancelled')}>Cancel order</button> : null}
             </div>
             <div className="cr-hist"><small>HISTORY</small>{sel.history.map((h, i) => <span key={i}>{when(h.at)} · <b>{h.status}</b>{h.by ? ' · ' + h.by : ''}</span>)}</div>

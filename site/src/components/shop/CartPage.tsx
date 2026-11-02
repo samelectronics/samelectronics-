@@ -6,7 +6,7 @@ import { PAY_DEFAULT } from '@/lib/payments';
 import { siteRaw } from '@/lib/catalog';
 import { notify } from '@/lib/notes';
 import React, { useEffect, useState } from 'react';
-import { type Product, aed, byId, data, VAT, waLink, fmt, siteSetting } from '@/lib/catalog';
+import { type Product, aed, byId, data, VAT, waLink, fmt, siteSetting, fixedPrice } from '@/lib/catalog';
 import { store, useStore } from '@/lib/store';
 import { backend, useMe, type Company, type Order } from '@/lib/backend';
 import { T, PageHero, useRise } from '@/components/site/ui';
@@ -26,8 +26,12 @@ export default function CartPage() {
 
   const trade = !!me?.tradeApproved, dl = DL(), SHIP = { pickup: 0, uae: dl.uae, world: 0 }, FREE = dl.freeOver;
   const lines = st.cart.map((l) => ({ l, p: byId(l.id) })).filter((x) => x.p) as { l: { id: string; qty: number }; p: Product }[];
-  const unit = (p: Product) => (trade ? p.wholesale_price : p.price);
-  const sub = lines.reduce((a, { l, p }) => a + unit(p) * l.qty, 0), save = lines.reduce((a, { l, p }) => a + (p.retail_price - unit(p)) * l.qty, 0);
+  const fixed = (p: Product) => fixedPrice(p, trade);
+  const unit = (p: Product) => (!fixed(p) ? 0 : trade ? p.wholesale_price : p.price);
+  const toConfirm = lines.filter(({ p }) => !fixed(p)).length;
+  const sub = lines.reduce((a, { l, p }) => a + unit(p) * l.qty, 0), save = lines.reduce((a, { l, p }) => a + (fixed(p) ? (p.retail_price - unit(p)) * l.qty : 0), 0);
+  // R9: what the customer sees for a price that is confirmed on WhatsApp
+  const hint = (p: Product) => (p.price_mode === 'from' ? T('From') + ' ' + aed(p.price, false) : p.price_mode === 'range' ? aed(p.price, false) + ' – ' + aed(p.price_max || p.price, false).replace(/^AED /, '') : '');
   const ship = del === 'uae' ? (sub >= FREE ? 0 : SHIP.uae) : 0, vat = Math.round((sub + ship) * VAT * 100) / 100, total = sub + ship + vat;
   const saved = st.saved.map(byId).filter(Boolean) as Product[], favs = st.favs.map(byId).filter(Boolean) as Product[];
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setForm({ ...form, [k]: e.target.value });
@@ -36,17 +40,25 @@ export default function CartPage() {
     if (!lines.length) return;
     if (del !== 'pickup' && !form.address.trim()) return setErr(T('Please add the delivery address.'));
     setBusy(true);
-    const r = await backend.placeOrder({ email: form.email, name: form.name, phone: form.phone, lines: lines.map(({ l, p }) => ({ id: p.id, title: p.title, grade: p.gradeName, qty: l.qty, unit: unit(p) })), sub, vat, ship, total, delivery: del, address: form.address, country: form.country, note: form.note, pay, company: form.company || undefined });
+    // with items to confirm, WhatsApp opens right away (a tab opened before the wait is not blocked) and gets the list after
+    const tab = toConfirm ? window.open('', '_blank') : null;
+    const r = await backend.placeOrder({ email: form.email, name: form.name, phone: form.phone, lines: lines.map(({ l, p }) => ({ id: p.id, title: p.title, grade: p.gradeName, qty: l.qty, unit: unit(p), ...(fixed(p) ? {} : { confirm: true }) })), sub, vat, ship, total, delivery: del, address: form.address, country: form.country, note: (toConfirm ? '[Prices to confirm on WhatsApp: ' + toConfirm + '] ' : '') + form.note, pay: toConfirm ? 'whatsapp' : pay, company: form.company || undefined, ...(toConfirm ? { pending: true } : {}) });
     setBusy(false);
-    if (!r.ok) return setErr(T(r.error));
+    if (!r.ok) { tab?.close(); return setErr(T(r.error)); }
+    if (toConfirm) { const link = waLink(listMsg(r.data)); if (tab) tab.location.href = link; else window.open(link, '_blank', 'noopener'); }
     setDone(r.data); store.clear(); notify({ kind: 'order', t: 'Order received', d: 'We will confirm stock and message you shortly.', href: '/account#orders' }); window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+  // R9: the full list for WhatsApp: name, model, part, grade/quality, color, quantity, price if known; then name + reference
+  const listMsg = (o: Order) => {
+    const rows = lines.map(({ l, p }, i) => [`${i + 1}. ${p.title}`, `   ${T('Model')}: ${p.modelName || '—'} · ${T('Part')}: ${p.part_name}`, `   ${T('Grade')}: ${p.gradeName} · ${T('Quality')}: ${p.qualityName}${p.colour ? ' · ' + T('Color') + ': ' + p.colour : ''}`, `   ${T('Quantity')}: ${l.qty} · ${fixed(p) ? T('Price') + ': ' + aed(unit(p), false) + ' ' + T('each') : T('Price') + ': ' + T('please confirm') + (hint(p) ? ' (' + hint(p) + ')' : '')}`].join('\n'));
+    return `${T('Hi Sam Electronics, here is my list from the website:')}\n\n${rows.join('\n\n')}\n\n${sub ? T('Known total') + ': ' + aed(total, false) + ' ' + T('incl. VAT') + ' + ' : ''}${toConfirm} ${toConfirm === 1 ? T('item to confirm') : T('items to confirm')}\n${T('Delivery')}: ${T(({ pickup: 'Pick up in Deira', uae: 'Delivery in the UAE', world: 'Worldwide' } as const)[del])}\n\n${form.name}\n${T('Reference')}: ${o.no}`;
   };
   const waMsg = (o: Order) => `Hi Sam Electronics, I placed order ${o.no} on the website.\n\n${o.lines.map((x) => `${x.qty} × ${x.title} · ${x.grade}`).join('\n')}\n\nTotal ${aed(o.total, false)} incl. VAT\nDelivery: ${o.delivery}\nPlease confirm stock and price.`;
 
   if (done) return (
     <>
       <PageHero eb={T('ORDER RECEIVED')} title={T('Thank you,') + ' ' + (done.name.split(' ')[0] || '') + '!'} accent={done.no} sub={T('We received your order. Our team confirms stock, delivery and the final price on WhatsApp, usually within minutes during opening hours.')} right={<LiveSam circle size={180} mood="idle" play="celebrate" />}>
-        <div className="sp-acts"><a className="sp-btn wa" href={waLink(waMsg(done))} target="_blank" rel="noopener noreferrer">{T('Confirm on WhatsApp')}</a><a className="sp-btn ghost" href="/shop">{T('Keep shopping')}</a>{me ? <a className="sp-btn ghost" href="/account#orders">{T('My orders')}</a> : null}</div>
+        <div className="sp-acts">{done.pending ? <span className="sp-note">{T('Your list was sent to us on WhatsApp. We confirm prices and stock there.')}</span> : null}<a className="sp-btn wa" href={waLink(waMsg(done))} target="_blank" rel="noopener noreferrer">{T('Confirm on WhatsApp')}</a><a className="sp-btn ghost" href="/shop">{T('Keep shopping')}</a>{me ? <a className="sp-btn ghost" href="/account#orders">{T('My orders')}</a> : null}</div>
       </PageHero>
       <section className="sp-sec w"><div className="sp-wrap cart-done">
         <div className="sp-card"><h3 className="sp-h3">{T('Your order')}</h3>
@@ -76,7 +88,7 @@ export default function CartPage() {
                     <span className="cart-acts"><button type="button" onClick={() => store.later(p.id)}>{T('Save for later')}</button><button type="button" onClick={() => store.fav(p.id)}>{st.favs.includes(p.id) ? '★ ' + T('Starred') : '☆ ' + T('Star it')}</button><button type="button" onClick={() => store.remove(p.id)}>{T('Remove')}</button></span>
                   </div>
                   <span className="pv-qty sm"><button type="button" onClick={() => store.qty(p.id, l.qty - 1)}>−</button><input value={l.qty} onChange={(e) => store.qty(p.id, Math.max(1, +e.target.value || 1))} aria-label={T('Quantity')} /><button type="button" onClick={() => store.qty(p.id, l.qty + 1)}>+</button></span>
-                  <span className="cart-pr"><b>{aed(unit(p) * l.qty, false)}</b><small>{aed(unit(p), false)} {T('each')}{trade ? ' · ' + T('trade') : ''}</small></span>
+                  {fixed(p) ? <span className="cart-pr"><b>{aed(unit(p) * l.qty, false)}</b><small>{aed(unit(p), false)} {T('each')}{trade ? ' · ' + T('trade') : ''}</small></span> : <span className="cart-pr cart-tbc"><b>{T('Price confirmed on WhatsApp')}</b>{hint(p) ? <small>{hint(p)}</small> : null}</span>}
                 </div>
               ))}
               <span className="sp-sample">{T('All prices are samples until the owner’s prices are in.')}</span>
@@ -103,15 +115,17 @@ export default function CartPage() {
                 {del !== 'pickup' ? <label className="sp-field" style={{ gridColumn: '1 / -1' }}>{T('Delivery address')}<input value={form.address} onChange={set('address')} autoComplete="street-address" placeholder={T('Building, street, area, city')} /></label> : null}
                 <label className="sp-field" style={{ gridColumn: '1 / -1' }}>{T('Note for the team (optional)')}<textarea value={form.note} onChange={set('note')} placeholder={T('Model number, color, anything we should know')} /></label>
               </div>
-              <h3 className="sp-h3">{T('Payment')}</h3>
+              {toConfirm ? null : <><h3 className="sp-h3">{T('Payment')}</h3>
               <div className="cart-del">
                 {([['whatsapp', 'Confirm first, pay after', 'We confirm on WhatsApp, then send a payment link'], ['cash', 'Cash or card in the shop', 'When you collect'], ['transfer', 'Bank transfer', 'For trade and export orders'], ['card', 'Card online', 'Coming soon']] as const).filter(([k]) => { const o = { ...PAY_DEFAULT, ...siteRaw<Record<string, boolean>>('payments', {}) }; return k === 'whatsapp' || (k === 'cash' ? o.cash || o['card-pos'] : k === 'transfer' ? o['bank-uae'] || o.swift : o.visa || o.mastercard); }).map(([k, t, d]) => (
                   <label key={k} className={'cart-opt' + (pay === k ? ' on' : '') + (k === 'card' ? ' off' : '')}><input type="radio" name="pay" disabled={k === 'card'} checked={pay === k} onChange={() => setPay(k)} /><i /><span><b>{T(t)}</b><small>{T(d)}</small></span></label>
                 ))}
               </div>
+              </>}
               <a className="cart-paylink" href="/payments" target="_blank" rel="noopener">{T('Every way to pay')} →</a>
               {err ? <div className="sp-note" style={{ background: 'rgba(229,72,77,.1)', color: '#9B1C20' }}>{err}</div> : null}
-              <button type="submit" className="sp-btn cart-place" disabled={busy}>{busy ? T('Placing your order…') : T('Place order') + ' · ' + aed(total, false)}</button>
+              {toConfirm ? <div className="sp-note">{toConfirm === 1 ? T('1 item has no fixed price.') : toConfirm + ' ' + T('items have no fixed price.')} {T('We send your full list to WhatsApp, confirm prices and stock there, then you pay.')}</div> : null}
+              <button type="submit" className={'sp-btn cart-place' + (toConfirm ? ' wa' : '')} disabled={busy}>{busy ? T('Placing your order…') : toConfirm ? T('Send my list on WhatsApp') : T('Place order') + ' · ' + aed(total, false)}</button>
               <small className="sp-muted">{T('By placing the order you agree to our')} <a href="/legal#terms">{T('terms')}</a>, <a href="/legal#returns">{T('returns')}</a> {T('and')} <a href="/legal#privacy">{T('privacy policy')}</a>.</small>
             </form>
           ) : null}
@@ -126,10 +140,11 @@ export default function CartPage() {
               <span>{T('Delivery')}<b>{del === 'world' ? T('Quoted') : ship ? aed(ship, false) : T('Free')}</b></span>
               <span>{T('VAT 5%')}<b>{aed(vat, false)}</b></span>
               <span className="tot">{T('Total')}<b>{aed(total, false)}</b></span>
+              {toConfirm ? <span className="cart-plus">+ {toConfirm} {toConfirm === 1 ? T('item to confirm') : T('items to confirm')}</span> : null}
             </div>
             {del === 'uae' && sub < FREE && sub > 0 ? <div className="cart-free"><small>{T('Add')} {aed(FREE - sub, false)} {T('more for free UAE delivery')}</small><i><em style={{ width: Math.min(100, (sub / FREE) * 100) + '%' }} /></i></div> : null}
             <span className="sp-sample" style={{ color: '#9DA1A6' }}>{T('Sample prices · TRN shown on the invoice')}</span>
-            {lines.length ? <a className="sp-btn wa" href={waLink('Hi Sam Electronics, I would like to order:\n' + lines.map(({ l, p }) => `${l.qty} × ${p.title} · ${p.gradeName} (${p.id})`).join('\n') + '\nPlease confirm stock and price.')} target="_blank" rel="noopener noreferrer">{T('Or send it on WhatsApp')}</a> : null}
+            {lines.length && toConfirm ? <button type="button" className="sp-btn wa" onClick={() => document.querySelector('.cart-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}>{T('Send my list on WhatsApp')}</button> : lines.length ? <a className="sp-btn wa" href={waLink('Hi Sam Electronics, I would like to order:\n' + lines.map(({ l, p }) => `${l.qty} × ${p.title} · ${p.gradeName} (${p.id})`).join('\n') + '\nPlease confirm stock and price.')} target="_blank" rel="noopener noreferrer">{T('Or send it on WhatsApp')}</a> : null}
           </div>
           <div className="sp-card cart-promo" data-rise>
             <b>{T('Promo or member code')}</b>

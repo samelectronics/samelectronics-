@@ -15,11 +15,11 @@ export type Company = {
   phone?: string; email?: string; website?: string; locations: { id: string; label: string; address: string; city: string; country: string; main?: boolean }[];
   approved: boolean; note?: string; createdAt: number;
 };
-export type OrderLine = { id: string; title: string; grade: string; qty: number; unit: number };
+export type OrderLine = { id: string; title: string; grade: string; qty: number; unit: number; confirm?: boolean };
 export type Order = {
   id: string; no: string; user?: string; email: string; name: string; phone: string; lines: OrderLine[]; sub: number; vat: number; ship: number; total: number;
   delivery: 'pickup' | 'uae' | 'world'; address?: string; country?: string; note?: string; status: 'New' | 'Quoted' | 'Confirmed' | 'Ready' | 'Collected / Shipped' | 'Closed' | 'Cancelled';
-  pay: 'whatsapp' | 'cash' | 'card' | 'transfer'; company?: string; createdAt: number; history: { at: number; status: string; by?: string }[];
+  pay: 'whatsapp' | 'cash' | 'card' | 'transfer'; company?: string; createdAt: number; pending?: boolean; history: { at: number; status: string; by?: string }[];
 };
 export type Review = { id: string; product: string; user: string; name: string; stars: number; title: string; text: string; verified: boolean; at: number };
 export type Message = { id: string; thread: string; from: 'visitor' | 'staff' | 'samsoom'; name: string; text: string; at: number; read?: boolean };

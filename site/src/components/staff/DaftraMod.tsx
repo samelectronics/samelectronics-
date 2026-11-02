@@ -13,11 +13,12 @@ import { Panel, Badge, useSetting, money } from './kit';
 
 type Row = Record<string, unknown>;
 const KEY = 'cr-daftra-key';
-async function api(path: string, q = '') {
+export async function api(path: string, q = '', post?: unknown) {
   const h: Record<string, string> = {}; try { const k = sessionStorage.getItem(KEY); if (k) h['x-cr-key'] = k; } catch { /* */ }
   const t = await staffToken(); if (t) h.Authorization = 'Bearer ' + t;
-  const r = await fetch('/api/daftra/' + path + (q ? '?' + q : ''), { headers: h, cache: 'no-store' }); const j = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error(j.error || 'Error ' + r.status); return j as { rows: Row[]; pagination: { page_count?: number; total_results?: number } | null; connected?: boolean; write?: boolean; subdomain?: string; protectedBy?: string };
+  if (post) h['Content-Type'] = 'application/json';
+  const r = await fetch('/api/daftra/' + path + (q ? '?' + q : ''), { method: post ? 'POST' : 'GET', headers: h, cache: 'no-store', body: post ? JSON.stringify(post) : undefined }); const j = await r.json().catch(() => ({}));
+  if (!r.ok) throw new Error(j.error || 'Error ' + r.status); return j as { id?: string; no?: string; type?: string; rows: Row[]; pagination: { page_count?: number; total_results?: number } | null; connected?: boolean; write?: boolean; subdomain?: string; protectedBy?: string };
 }
 const s = (v: unknown) => (v == null ? '' : String(v)), n = (v: unknown) => +s(v) || 0;
 const toks = (x: string) => new Set(norm(x).split(' ').filter((t) => t.length > 1));

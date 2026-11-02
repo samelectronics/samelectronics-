@@ -48,7 +48,7 @@ export const supabase: Backend = {
   async removeCompany(id) { await db().from('companies').delete().eq('id', id); },
   async placeOrder(o) {
     // prices and VAT are re-checked on the server (function place_order) — the page's numbers are never trusted
-    const { data, error } = await db().rpc('place_order', { p: { lines: o.lines.map((l) => ({ id: l.id, qty: l.qty })), email: o.email, name: o.name, phone: o.phone, delivery: o.delivery, address: o.address, country: o.country, note: o.note, pay: o.pay, company_id: o.company } });
+    const { data, error } = await db().rpc('place_order', { p: { lines: o.lines.map((l) => ({ id: l.id, qty: l.qty })), email: o.email, name: o.name, phone: o.phone, delivery: o.delivery, address: o.address, country: o.country, note: o.note, pay: o.pay, company_id: o.company, pending: !!o.pending } });
     return error ? no(error.message) : ok(toOrder(data));
   },
   async myOrders() { const { data } = await db().from('orders').select('*').order('created_at', { ascending: false }); return (data || []).map(toOrder); },
