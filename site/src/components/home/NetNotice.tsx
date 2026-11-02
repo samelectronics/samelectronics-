@@ -9,15 +9,17 @@ const T = (s: string) => { const w = window as unknown as { seI18n?: { t: (x: st
 export default function NetNotice() {
   // owner (R8): offline and back-online show as a centred card over a blurred page, each closable with ×; slow stays a
   // small toast at the bottom. "Back online" is shown whenever the line returns after being offline.
-  const [st, setSt] = useState<'' | 'off' | 'slow' | 'back'>(''), [shut, setShut] = useState(false), wasOff = useRef(false), backT = useRef(0);
+  const [st, setSt] = useState<'' | 'off' | 'slow' | 'back'>(''), [shut, setShut] = useState(false), wasOff = useRef(false), backT = useRef(0), slowSeen = useRef(false), [k, setK] = useState(0);
   useEffect(() => {
     const c = (navigator as unknown as { connection?: Net }).connection;
     const check = () => {
       clearTimeout(backT.current);
-      if (!navigator.onLine) { wasOff.current = true; setShut(false); setSt('off'); return; }
-      if (wasOff.current) { wasOff.current = false; setShut(false); setSt('back'); backT.current = window.setTimeout(() => setSt(''), 4000); return; }
+      // R10 (owner): every state shows at the bottom for 10s (a thin bar drains), then hides itself; × closes it sooner
+      const show = (x: 'off' | 'slow' | 'back') => { setShut(false); setSt(x); setK((n) => n + 1); backT.current = window.setTimeout(() => setSt(''), 10000); };
+      if (!navigator.onLine) { wasOff.current = true; show('off'); return; }
+      if (wasOff.current) { wasOff.current = false; show('back'); return; }
       const slow = !!c && (/(^|-)2g$/.test(c.effectiveType || '') || !!c.saveData);
-      setSt((p) => (p === 'back' ? p : slow ? 'slow' : ''));
+      if (slow && !slowSeen.current) { slowSeen.current = true; show('slow'); }
     };
     check();
     window.addEventListener('online', check); window.addEventListener('offline', check); c?.addEventListener?.('change', check);
@@ -35,11 +37,12 @@ export default function NetNotice() {
   // R10 B13: one graphite pill in the site's style for every state, a small coloured dot carries the meaning
   // (green back online, red offline, amber slow). No veil over the page.
   return (
-    <div className={'se-netp ' + st} role={st === 'off' ? 'alert' : 'status'} aria-live="polite">
+    <div key={k} className={'se-netp ' + st} role={st === 'off' ? 'alert' : 'status'} aria-live="polite">
       <i className="dot" aria-hidden="true" />
       <b>{T(m[0])}</b>
       <small>{T(m[1])}</small>
       <button type="button" aria-label={T('Close')} onClick={close}>×</button>
+      <em className="se-netp-t" aria-hidden="true" />
     </div>
   );
 }

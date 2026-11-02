@@ -1101,3 +1101,22 @@ html[dir='rtl'] .se-qs-sw.on i { transform: translateX(-18px); } html[dir='rtl']
 .sc2-panel .sc2-ct em { color: #B07A0A; } .sc2-panel .sc2-ct u { color: #5E6064; } .sc2-panel .sc2-cat2[open] .sc2-ct u { color: #26282B; }
 .sc2-panel .sc2-cat2 dt { color: #6A6D72; } .sc2-panel .sc2-cat2 dd { color: #26282B; }
 .sc2-panel .sc2-more { color: #26282B; text-decoration: underline; text-decoration-color: #F7C032; text-underline-offset: 3px; }
+/* R10 (owner, 3 Nov): the language picker sits on exactly the same veil as Samsoom's tour steps (same dim, no blur); no
+   cartoon spotlight, no colour blobs, no glowing floor. The card itself carries the look. */
+.st-veil.st-veil-lang { background: rgba(20, 21, 23, .62) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+.st-veil-lang .st-cine, .st-veil-lang .st-l2-spot, .st-veil-lang .st-l2-av::after { display: none !important; }
+.st-veil-lang .st-l2-floor { height: 12px !important; bottom: -4px !important; background: radial-gradient(closest-side, rgba(0, 0, 0, .45), rgba(0, 0, 0, 0)) !important; }
+.st-veil-lang .st-lang2 { box-shadow: 0 40px 90px -30px rgba(0, 0, 0, .8), 0 0 0 1px rgba(255, 255, 255, .07) !important; }
+.st-veil-lang .st-l2-sam { background: linear-gradient(180deg, #2E3034 0%, #232427 100%) !important; }
+/* R10 (owner): the bell's count is the cart's count in red: same size, position and type, no dark outline */
+.nb-n { top: -4px !important; right: -6px !important; min-width: 18px !important; height: 18px !important; padding: 0 4px !important; box-sizing: border-box; border-radius: 9px !important; display: grid !important; place-items: center; font: 700 11px/1 Inter, sans-serif !important; box-shadow: none !important; }
+/* R10 (owner): connection notices sit at the bottom centre, above everything, for 10s */
+.se-netp { top: auto !important; bottom: 24px; overflow: hidden; animation-name: seNetpUp !important; }
+.se-netp-t { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: currentColor; opacity: .35; transform-origin: left; animation: seNetpT 10s linear forwards; }
+.se-netp.off .se-netp-t { background: #E5484D; opacity: .8; } .se-netp.back .se-netp-t { background: #2BB673; opacity: .8; } .se-netp.slow .se-netp-t { background: #F7C032; opacity: .8; }
+@keyframes seNetpT { to { transform: scaleX(0); } }
+@keyframes seNetpUp { from { opacity: 0; transform: translate(-50%, 16px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@media (max-width: 700px) { .se-netp { bottom: 96px; } }
+.sc2-cookie { width: 44px !important; height: 44px !important; border-radius: 50%; background: rgba(255, 255, 255, .06); box-shadow: inset 0 0 0 1px rgba(247, 192, 50, .28); }
+.sc2-ck { position: static !important; right: auto !important; bottom: auto !important; filter: none !important; animation: none !important; }
+.sc2-ck .crumb { animation: ckFall 1.2s .5s ease-in both; }

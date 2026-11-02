@@ -28,13 +28,13 @@ function CatIcon({ k }: { k: Cat['k'] }) {
   return <svg viewBox="0 0 24 24" width="22" height="22">{k === 'core' ? <><rect x="3" y="7" width="16" height="10" rx="2" {...p} /><path d="M21 10.5v3M11.5 9 9.5 12h3l-2 3" {...p} /></> : k === 'memory' ? <><rect x="6" y="6" width="12" height="12" rx="2" {...p} /><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4" {...p} /></> : k === 'signal' ? <><path d="M3 12h4l2-5 4 10 2-5h6" {...p} /></> : <><path d="M12 13v8M8 21h8M12 13a2 2 0 1 0 0-.01M7.5 8.5a6.4 6.4 0 0 1 9 0M4.6 5.6a10.5 10.5 0 0 1 14.8 0" {...p} /></>}</svg>;
 }
 /** a real-looking cookie with a bite out of it and crumbs that fall once */
+// R10 (owner, 3 Nov): one calm mark, not two characters: a yellow line cookie with a bite, in a graphite circle
 function CookieBite() {
   return (
-    <svg className="sc2-ck" viewBox="0 0 40 40" width="30" height="30">
-      <defs><radialGradient id="ckG" cx="35%" cy="30%"><stop offset="0" stopColor="#E9B66A" /><stop offset=".7" stopColor="#C98B3E" /><stop offset="1" stopColor="#A86E2B" /></radialGradient></defs>
-      <path d="M20 3a17 17 0 1 0 17 17c-3 .5-5.5-1.5-5.5-4.5-3 .5-5.5-2-5-5-3 0-5-2.5-4.5-5.5z" fill="url(#ckG)" />
-      {[[12, 14], [22, 24], [14, 27], [27, 17], [19, 15]].map(([x, y], i) => <circle key={i} cx={x} cy={y} r="2.1" fill="#4A2B12" />)}
-      {[[30, 8], [34, 13], [27, 5]].map(([x, y], i) => <circle key={'c' + i} className="crumb" cx={x} cy={y} r="1.2" fill="#C98B3E" style={{ animationDelay: i * 0.12 + 's' }} />)}
+    <svg className="sc2-ck" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#F7C032" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 3a9 9 0 1 0 9 9 2.6 2.6 0 0 1-3-2.6 2.6 2.6 0 0 1-3-2.9A2.6 2.6 0 0 1 12 3z" />
+      <circle cx="8.5" cy="10.5" r=".9" fill="#F7C032" /><circle cx="13" cy="15.5" r=".9" fill="#F7C032" /><circle cx="8.8" cy="15.6" r=".7" fill="#F7C032" />
+      <circle className="crumb" cx="19.5" cy="5" r=".8" fill="#F7C032" stroke="none" />
     </svg>
   );
 }
@@ -78,7 +78,7 @@ export default function SiteControls() {
       <SitePromo />
       {banner && !panel ? (
         <div className="sc2-banner" role="dialog" aria-label={T('Your privacy, your choice')}>
-          <span className="sc2-cookie" aria-hidden="true"><LiveSam size={46} mood="happy" /><CookieBite /></span>
+          <span className="sc2-cookie" aria-hidden="true"><CookieBite /></span>
           <div className="sc2-btxt"><b>{T('Your privacy, your choice')}</b><span>{T('We use a few small files to make the site work. Pick what you allow.')} <a href="/legal#cookies">{T('Cookies')}</a></span></div>
           <div className="sc2-bacts">
             <button type="button" className="st-btn st-grey" onClick={() => save({ memory: false, signal: false, booster: false })}>{T('Deny all')}</button>

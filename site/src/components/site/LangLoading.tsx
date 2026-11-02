@@ -9,11 +9,7 @@ const RTL = new Set(['ar', 'fa', 'ur']);
 export default function LangLoading() {
   const [l, setL] = useState<string | null>(null);
   useEffect(() => { const on = (e: Event) => setL((e as CustomEvent).detail || null); window.addEventListener('se:lang-loading', on); return () => window.removeEventListener('se:lang-loading', on); }, []);
-  if (!l) return null;
-  return (
-    <div className="se-ll" role="status" aria-live="polite" data-no-i18n="" lang={l} dir={RTL.has(l) ? 'rtl' : 'ltr'}>
-      <i className="se-ll-bar"><b /></i>
-      <span>{MSG[l] || MSG.en}</span>
-    </div>
-  );
+  // R10 (owner): no pill any more. A switch from Samsoom's picker is silent; a manual switch shows only the centred
+  // battery card (LangPop), which waits for the words itself.
+  void l; void MSG; void RTL; return null;
 }

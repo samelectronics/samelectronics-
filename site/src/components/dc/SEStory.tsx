@@ -1,6 +1,6 @@
 // Our story & branches (Issue 10): rebuilt 13 Oct 2026. Styles in src/styles/story.css.
 'use client';
-import StoryCircuits from '../home/StoryCircuits';
+
 import React from 'react';
 import { type Vals, createDC } from '@/dc/runtime';
 import Logic, { CX } from './SEStory.logic.js';
@@ -87,7 +87,7 @@ function render(v: Vals) {
     <section id="story" className="st">
       <div className="st-pin-wrap" ref={v.secRef}>
         <div className="st-pin">
-          <StoryCircuits />
+          {/* R10: the shared gutter circuits (SectionLife) replace the old ones that crossed the text */}
           <div className="st-sun" aria-hidden="true" />
           <div className="st-grain" aria-hidden="true" />
           <div className="st-box" style={{ ['--sc' as string]: v.sc } as React.CSSProperties}>
@@ -175,10 +175,12 @@ function render(v: Vals) {
       <div className={'st-br' + (v.br ? ' in' : '')} ref={v.brRef}>
         <div className="st-br-g">
           <article className="st-bc">
-            <a className="st-map" href={v.mapsDxb} target="_blank" rel="noopener noreferrer" aria-label="Open Dubai · Deira in Maps">
+            {/* R10 G2 (owner): a real embedded map of the shop; the drawn map stays underneath while it loads */}
+            <div className="st-map">
               <MapDubai />
-              <span className="st-open">Open in Maps {ARROW}</span>
-            </a>
+              <iframe className="st-gmap" title="Sam Electronics · Al Murar, Deira" src={'https://www.google.com/maps?q=' + encodeURIComponent('78G4+3H2 Dubai') + '&z=17&output=embed'} loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+              <a className="st-open" href={v.mapsDxb} target="_blank" rel="noopener noreferrer">Open in Maps {ARROW}</a>
+            </div>
             <div className="st-bc-in">
               <span className="st-k">
                 <i className="live" />
@@ -207,11 +209,12 @@ function render(v: Vals) {
             </div>
           </article>
           <article className="st-bc">
-            <a className="st-map" href={v.mapsMad} target="_blank" rel="noopener noreferrer" aria-label="Open Madrid · Plaza Mayor in Maps">
+            <div className="st-map">
               <MapMadrid />
+              <iframe className="st-gmap" title="Plaza Mayor, Madrid" src={'https://www.google.com/maps?q=' + encodeURIComponent('Plaza Mayor, Madrid') + '&z=16&output=embed'} loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
               <span className="st-soon-tag">OPENING SOON · AREA</span>
-              <span className="st-open">Open in Maps {ARROW}</span>
-            </a>
+              <a className="st-open" href={v.mapsMad} target="_blank" rel="noopener noreferrer">Open in Maps {ARROW}</a>
+            </div>
             <div className="st-bc-in">
               <span className="st-k">
                 <i className="soon" />

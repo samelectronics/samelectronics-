@@ -6,6 +6,7 @@
 import React from 'react';
 import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SEFinale.logic.js';
+import FinaleRoom from './FinaleRoom';
 
 const LEFT = ['M0 120 H230 L270 90 H470 L540 160 H607', 'M0 230 H170 L210 200 H600', 'M0 330 H250 L290 290 H470 L540 240 H607'];
 const mirror = (d: string) => d.replace(/([MHL]) ?(\d+)/g, (m, c, x) => c + (1440 - Number(x)));
@@ -18,6 +19,7 @@ const start = (d: string) => { const m = d.match(/^M(\d+) (\d+)/)!; return [Numb
 function render(v: Vals) {
   return (
     <section ref={v.secRef} id="finale" data-tone="dark" data-screen-label="Finale" className={'fz' + (v.on ? ' fz-on' : '')}>
+      <FinaleRoom cy={272} horizon={392} />
       <div className="fz-stage">
         <svg className="fz-circ" viewBox="0 0 1440 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
           <defs>

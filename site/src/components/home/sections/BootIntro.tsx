@@ -29,6 +29,7 @@ const POOL: Msg[] = [
   { icon: 'plug', t: { en: 'Plugging in the test rig', ar: 'نوصّل جهاز الفحص', es: 'Conectando el banco de pruebas', fr: 'Branchement du banc de test', fa: 'وصل کردن دستگاه تست', ru: 'Подключаем тестовый стенд', hi: 'टेस्ट रिग जोड़ रहे हैं', ur: 'ٹیسٹ رِگ لگا رہے ہیں', de: 'Prüfstand wird angeschlossen', zh: '正在连接测试台', pt: 'Ligando a bancada de testes', it: 'Colleghiamo il banco prova' } },
 ];
 const WAKE_MSG: Record<string, string> = { en: 'Waking Samsoom up', ar: 'نوقظ سمسوم', es: 'Despertando a Samsoom', fr: 'On réveille Samsoom', fa: 'بیدار کردن سامسوم', ru: 'Будим Samsoom', hi: 'Samsoom को जगा रहे हैं', ur: 'سمسوم کو جگا رہے ہیں', de: 'Samsoom wird geweckt', zh: '正在唤醒 Samsoom', pt: 'Acordando o Samsoom', it: 'Svegliamo Samsoom' };
+const READY_MSG: Record<string, string> = { en: 'All set', ar: 'كل شيء جاهز', es: 'Todo listo', fr: 'Tout est prêt', fa: 'همه چیز آماده است', ru: 'Всё готово', hi: 'सब तैयार है', ur: 'سب تیار ہے', de: 'Alles bereit', zh: '一切就绪', pt: 'Tudo pronto', it: 'Tutto pronto' };
 const WAKE = 1.3; // s for Samsoom: asleep → yawn → blink → wave
 const MIN = 2.4, MAX = 6, STEP = 0.62, R = 92; // R10 A1: never shorter than 2.4s, never longer than 6s; ring radius = 80 (logo) + 12
 const ICON = 22; // every icon (Samsoom included) sits in the same 22px box
@@ -68,6 +69,7 @@ export default function BootIntro({ v }: { v: Vals }) {
   const [line, setLine] = useState(0);
   const [mood, setMood] = useState('sleep');
   const [leaving, setLeaving] = useState(false);
+  const [ready, setReady] = useState(false); // R10 (owner): the ring always completes, then a tick, then the screen fades
   const ring = useRef<SVGCircleElement>(null), ringG = useRef<SVGCircleElement>(null);
   const done = useRef(v.bootSkip as () => void);
   done.current = v.bootSkip as () => void;
@@ -88,7 +90,7 @@ export default function BootIntro({ v }: { v: Vals }) {
     else window.addEventListener('load', onLoad, { once: true });
     const onLib = () => (tasks.parts = true);
     window.addEventListener('se:parts-lib', onLib, { once: true });
-    let shown = 0, raf = 0, exitAt = 0, lineN = 0, wakeAt = 0;
+    let shown = 0, raf = 0, exitAt = 0, lineN = 0, wakeAt = 0, readyAt = 0;
     const C = 2 * Math.PI * R;
     const frame = (now: number) => {
       const t = now / 1000, tm = t - m0;
@@ -105,18 +107,20 @@ export default function BootIntro({ v }: { v: Vals }) {
       }
       if (wakeAt) { const w = t - wakeAt; setMood(w < 0.25 ? 'sleep' : w < 0.75 ? 'yawn' : w < 1.05 ? 'blink' : 'wave'); }
       const woke = wakeAt > 0 && t - wakeAt >= WAKE;
-      if (!exitAt && woke && tm >= MIN - 0.4) { exitAt = t; setLeaving(true); }
+      if (!exitAt && woke && tm >= MIN - 0.4) exitAt = t;
       // ring: follows loading, never sits at 0, completes on exit
       const target = exitAt ? 1 : Math.min(0.94, 0.08 + frac * 0.86);
-      shown += (target - shown) * (exitAt ? 0.25 : 0.06);
+      shown = exitAt ? Math.min(1, shown + Math.max(0.012, (1 - shown) * 0.09)) : shown + (target - shown) * 0.06;
       const off = String(C * (1 - shown));
       if (ring.current) ring.current.style.strokeDashoffset = off;
       if (ringG.current) ringG.current.style.strokeDashoffset = off;
-      if (exitAt && t - exitAt >= 0.4) { done.current && done.current(); return; }
+      if (exitAt && shown >= 1 && !readyAt) { readyAt = t; setReady(true); }
+      if (readyAt && t - readyAt >= 0.75 && t - readyAt < 0.8) setLeaving(true);
+      if (readyAt && t - readyAt >= 1.15) { done.current && done.current(); return; }
       raf = requestAnimationFrame(frame);
     };
     raf = requestAnimationFrame(frame);
-    timers.push(window.setTimeout(() => done.current && done.current(), (MAX + 0.3) * 1000)); // hard stop
+    timers.push(window.setTimeout(() => done.current && done.current(), (MAX + 2) * 1000)); // hard stop (after the ring, the tick and the fade)
     return () => {
       cancelAnimationFrame(raf);
       timers.forEach(clearTimeout);
@@ -126,7 +130,7 @@ export default function BootIntro({ v }: { v: Vals }) {
   }, [on]);
 
   if (!on) return null;
-  const C = 2 * Math.PI * R, last = line >= 4, msg = last ? WAKE_MSG : picks[Math.min(line, 3)].t;
+  const C = 2 * Math.PI * R, last = line >= 4, msg = ready ? READY_MSG : last ? WAKE_MSG : picks[Math.min(line, 3)].t;
   return (
     <div
       className="se-bootv"
@@ -150,11 +154,11 @@ export default function BootIntro({ v }: { v: Vals }) {
           <img src="/assets/se-logo-320.webp" alt="Sam Electronics" width={160} height={160} className="se-boot-img" />
         </div>
         <div className="se-boot-line" style={{ marginTop: '32px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span key={line} className="se-boot-txt" style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', font: (ar ? "500 15px 'IBM Plex Sans Arabic'" : "500 15px Inter") + ', sans-serif', color: 'rgba(255,255,255,.8)', whiteSpace: 'nowrap' }}>
+          <span key={ready ? 'ready' : line} className={'se-boot-txt' + (ready ? ' ready' : '')} style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', font: (ar ? "500 15px 'IBM Plex Sans Arabic'" : "500 15px Inter") + ', sans-serif', color: 'rgba(255,255,255,.8)', whiteSpace: 'nowrap' }}>
             <span className="se-boot-ic" style={{ width: ICON + 'px', height: ICON + 'px', display: 'grid', placeItems: 'center', flex: 'none' }}>
-              {last ? <SESamsoom mood={mood} size={ICON} still={mood !== 'wave'} /> : <Icon k={picks[Math.min(line, 3)].icon} />}
+              {ready ? <svg viewBox="0 0 22 22" width={ICON} height={ICON} aria-hidden="true"><circle cx="11" cy="11" r="10" fill="#F7C032" /><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#26282B" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="se-boot-tick" /></svg> : last ? <SESamsoom mood={mood} size={ICON} still={mood !== 'wave'} /> : <Icon k={picks[Math.min(line, 3)].icon} />}
             </span>
-            {(msg[hl] || msg.en) + '…'}
+            {(msg[hl] || msg.en) + (ready ? '' : '…')}
           </span>
         </div>
       </div>

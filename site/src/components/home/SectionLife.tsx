@@ -35,31 +35,35 @@ const NS = 'http://www.w3.org/2000/svg';
 // (with a junction node), and each ends in a pad. Never closer than 18px to any content; same 2px stroke as the hero; a
 // light pulse runs along every trace continuously (infinite loop, never restarting). Gutters under 48px get nothing.
 function lanes(gw: number, H: number, side: 1 | -1, s0: number) {
-  // R10 (owner: "each section unique, random, not three straight lines"): a seeded random board per section and side.
-  // Traces enter from the edge at random heights, wander down in runs of random length with 45° jogs in BOTH directions,
-  // some branch off and end on their own pad, some stay short, a few rejoin; nothing is evenly spaced.
+  // R10 (owner, 3 Nov: "clumps look messy; use them like the hero, creatively, no repeating, never reaching the section's
+  // edges"): per side ONE tidy bus of 2–3 parallel traces, like the hero's: they come in from the page edge, step inward
+  // at 45°, run down together, step back out and end on pads. Sometimes one short solo trace elsewhere on the side.
+  // Everything stays inside the section with a 140px margin top and bottom. Seeded per section, so no two look alike.
   seed = s0 * 7919 + 13;
-  const W = Math.min(gw - 16, 150), f = (v: number) => v.toFixed(0), X = (x: number) => (side > 0 ? x : W - x);
+  const W = Math.min(gw - 16, 120), f = (v: number) => v.toFixed(0), X = (x: number) => (side > 0 ? x : W - x);
   const paths: { d: string; len: number }[] = [], pads: [number, number, number][] = [], joints: [number, number][] = [];
-  const n = 2 + Math.floor(rnd() * Math.min(4, 1 + H / 500));
-  const ys = Array.from({ length: n }, () => 30 + rnd() * (H - 260)).sort((a, b) => a - b);
-  ys.forEach((y0, i) => {
-    let x = 0, y = y0, len = 0; const entry = 6 + rnd() * Math.min(40, W * 0.4);
-    let d = `M${f(X(0))} ${f(y)} H${f(X(entry))}`; x = entry; len += entry;
-    const segs = 2 + Math.floor(rnd() * 5), maxY = Math.min(H - 40, y0 + 160 + rnd() * (H * 0.55));
-    for (let k = 0; k < segs && y < maxY; k++) {
-      const run = 30 + rnd() * 180; y = Math.min(maxY, y + run); d += ` V${f(y)}`; len += run;
-      const jog = (rnd() < 0.5 ? -1 : 1) * (8 + rnd() * 26), nx = Math.max(6, Math.min(W - 8, x + jog));
-      if (Math.abs(nx - x) > 4 && y + Math.abs(nx - x) < maxY) { y += Math.abs(nx - x); x = nx; d += ` L${f(X(x))} ${f(y)}`; len += Math.abs(jog) * 1.4; }
-      // a branch: leaves at 45°, runs a little, ends on its own pad
-      if (rnd() < 0.3) { const bl = 10 + rnd() * 24, bdir = x > W / 2 ? -1 : 1, bx = Math.max(6, Math.min(W - 6, x + bdir * bl)), by = y + bl, ey = by + 12 + rnd() * 50;
-        paths.push({ d: `M${f(X(x))} ${f(y)} L${f(X(bx))} ${f(by)} V${f(ey)}`, len: bl * 1.4 + (ey - by) }); pads.push([X(bx), ey, 3]); joints.push([X(x), y]); }
-    }
-    // the end: either a pad, or a turn back out to the edge
-    if (rnd() < 0.25) { d += ` L${f(X(Math.max(0, x - 14)))} ${f(y + 14)} H${f(X(0))}`; len += x + 20; }
-    else pads.push([X(x), y, i % 2 ? 3.5 : 4.5]);
+  const top = 140, bot = H - 140; if (bot - top < 220) return { W, paths, pads, joints };
+  const n = 2 + (rnd() < 0.45 ? 1 : 0), gap = 11, step = 18 + rnd() * 14;
+  const run = Math.min(bot - top - 120, 180 + rnd() * 260);
+  const y0 = top + rnd() * Math.max(0, bot - top - run - 80);
+  const inX = 10 + rnd() * Math.max(6, W - 46 - n * gap - step);
+  for (let i = 0; i < n; i++) {
+    const yi = y0 + i * gap, xa = inX + (n - 1 - i) * gap, xb = xa + step;
+    const yb = yi + step, ye = yb + run - i * gap * 0.6;
+    const out = rnd() < 0.5; // half of them bend back out to the edge, the rest stop on a pad
+    let d = `M${f(X(0))} ${f(yi)} H${f(X(xa))} L${f(X(xb))} ${f(yb)} V${f(ye)}`, len = xa + step * 1.41 + (ye - yb);
+    if (out && i === 0) { d += ` L${f(X(xb - step))} ${f(ye + step)} H${f(X(0))}`; len += step * 1.41 + xb; }
+    else pads.push([X(xb), ye, i === 0 ? 4.5 : 3.5]);
     paths.push({ d, len });
-  });
+  }
+  // one junction where the first trace takes its 45° turn
+  joints.push([X(inX + (n - 1) * gap), y0]);
+  // an optional short solo trace well away from the bus
+  if (rnd() < 0.55) {
+    const lo = y0 > (top + bot) / 2, ys = lo ? top + rnd() * Math.max(0, y0 - top - 200) : y0 + run + 160 + rnd() * Math.max(0, bot - (y0 + run + 160) - 120);
+    if (ys > top && ys + 120 < bot) { const xs = 8 + rnd() * Math.max(4, W * 0.35), l = 50 + rnd() * 70;
+      paths.push({ d: `M${f(X(0))} ${f(ys)} H${f(X(xs))} L${f(X(xs + 14))} ${f(ys + 14)} V${f(ys + 14 + l)}`, len: xs + 20 + l }); pads.push([X(xs + 14), ys + 14 + l, 3.5]); }
+  }
   return { W, paths, pads, joints };
 }
 
@@ -107,7 +111,7 @@ function markEntries(sec: HTMLElement) {
 // owner (28 Oct): the small corner circuits stay only where the owner kept them; every other section is clean
 // R8: tall sections that felt bare (What we offer) get a few more clusters down their sides, still only in the empty
 // gutters and alternating left / right like the hero: fractions of the section height where each one sits
-const OWN = new Set(['story', 'finale']); // these draw their own hero-style circuits
+const OWN = new Set(['finale']); // these draw their own hero-style circuits
 
 export default function SectionLife() {
   useEffect(() => {

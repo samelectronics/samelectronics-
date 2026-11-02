@@ -137,14 +137,15 @@ function render(v: Vals) {
       <div className="fd-in">
         {/* owner (27 Oct): one phone (not three), the follow buttons and all three QR codes at once, the week's drops */}
         {/* owner (2 Nov): the title sits full width on top, like every other section, at the same size */}
-        <header className="fd-top2">
-          <div>
-            <span className="fd-eb">THE FEED · @SAMELECTRONICS.UAE</span>
-            <h2 className="fd-h"><span>Follow us</span> <span>for daily stock drops.</span></h2>
-          </div>
-        </header>
         <div className="fd-grid">
           <div className="fd-info">
+            {/* R10 (owner): the title leads the left column, so there is no empty band under it */}
+            <header className="fd-top2">
+              <div>
+                <span className="fd-eb">THE FEED · @SAMELECTRONICS.UAE</span>
+                <h2 className="fd-h"><span>Follow us</span> <span>for daily stock drops.</span></h2>
+              </div>
+            </header>
             {/* owner (2 Nov): the account name and the line fill the space under the title, beside the phone */}
             <a className="fd-user" href={(v.ch || []).find((c: any) => c.on)?.href} target="_blank" rel="noopener noreferrer">
               <img src="/assets/se-logo-128.webp" alt="" width={44} height={44} />

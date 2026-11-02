@@ -153,3 +153,8 @@ html:has(#finale), html:has(#finale) body { background-color: #34363A; }
 .fz-stage::after { content: ''; position: absolute; left: 50%; top: 300px; width: 520px; height: 70px; margin-left: -260px; z-index: 0; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgba(247, 192, 50, .22), rgba(247, 192, 50, 0)); }
 .fz { background: radial-gradient(60% 50% at 50% 26%, #4A4C51 0%, #34363A 42%, #232427 100%) !important; }
 @media (prefers-reduced-motion: reduce) { .fz-circ .cur { animation: none !important; } }
+/* R10 (owner, 3 Nov): the room is drawn by FinaleRoom (wall, beam, full floor, dust); the old CSS cone, floor band and
+   pool are switched off */
+.fz { background: #18191C !important; }
+.fz-room { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.fz::before, .fz-stage::before, .fz-stage::after { display: none !important; }

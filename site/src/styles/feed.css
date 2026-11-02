@@ -244,3 +244,13 @@ html[dir='rtl'] .fd-user svg { transform: scaleX(-1); }
 .fd-info .fd-user b { font-size: 24px; }
 .fd-info .fd-p { margin: 0 0 22px !important; }
 .fd-info { align-self: center !important; }
+/* R10 (owner, 3 Nov): one block: title, account, text and QR codes stacked in the left column from the top; the phone
+   and the week's list sit beside it, all three starting on the same line */
+.fd-info .fd-top2 { display: block; margin: 0 0 26px; }
+.fd-info .fd-top2 .fd-h { margin-top: 10px; }
+.fd-grid { align-items: start !important; }
+.fd-info { align-self: start !important; padding-top: 0 !important; }
+.fd-drops { align-self: start !important; padding-top: 0 !important; }
+@media (min-width: 1181px) { .fd-grid { grid-template-columns: minmax(0, 1.05fr) 340px minmax(0, .9fr); } .fd-info .fd-top2 .fd-h { font-size: clamp(40px, 3.6vw, 56px); } }
+@media (min-width: 1181px) { .fd-info .fd-top2 .fd-h { font-size: clamp(36px, 3.1vw, 48px) !important; line-height: 1.04; } .fd-stage { align-self: center !important; } }
+@media (min-width: 1181px) { .fd-info .fd-top2 .fd-h { font-size: clamp(32px, 2.8vw, 44px) !important; } .fd-info .fd-top2 .fd-h > span { white-space: nowrap; display: block; } }
