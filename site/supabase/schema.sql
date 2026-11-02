@@ -250,6 +250,22 @@ create or replace view products_public as
   from products where visible and upper(title) not like '%CANCEL%';
 grant select on products_public to anon, authenticated;
 
+-- security hardening (Supabase advisor): trigger functions are not API endpoints; staff/sign-in actions need a session
+revoke execute on function public.on_new_user() from public, anon, authenticated;
+revoke execute on function public.on_confirm_user() from public, anon, authenticated;
+revoke execute on function public.on_review() from public, anon, authenticated;
+revoke execute on function public.save_staff(jsonb) from public, anon;
+revoke execute on function public.set_order_status(uuid, text) from public, anon;
+revoke execute on function public.stock_move(text, integer, text, text) from public, anon;
+revoke execute on function public.link_card(text, text) from public, anon;
+grant execute on function public.save_staff(jsonb) to authenticated;
+grant execute on function public.set_order_status(uuid, text) to authenticated;
+grant execute on function public.stock_move(text, integer, text, text) to authenticated;
+grant execute on function public.link_card(text, text) to authenticated;
+alter function public.guard_profile() set search_path = public;
+alter function public.guard_staff() set search_path = public;
+-- products_public is deliberately a definer view: it is how cost stays hidden while the shop reads prices.
+
 -- live updates for the team inbox, orders and stock (Supabase Realtime)
 do $$ begin alter publication supabase_realtime add table messages, threads, orders, products; exception when others then null; end $$;
 

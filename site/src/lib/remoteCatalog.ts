@@ -12,7 +12,7 @@ export async function loadRemoteCatalog() {
     const sb = createClient(url, key);
     const { data, error } = await sb.from('products_public').select('*').limit(20000);
     const w = window as unknown as { SE_DATA?: { products: unknown[] } };
-    if (error || !data || !w.SE_DATA) return;
+    if (error || !data || !data.length || !w.SE_DATA) return; // an empty or missing table keeps the bundled catalogue
     w.SE_DATA.products = data.map((p) => ({ ...p, retail_price: +p.retail_price, wholesale_price: p.wholesale_price == null ? 0 : +p.wholesale_price, badges: p.badges || [] }));
     invalidate();
   } catch { /* keep the bundled catalogue */ }
