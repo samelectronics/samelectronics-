@@ -43,3 +43,16 @@ re-shot with the same script.
 - B6 clock ticks on the exact minute + re-check when the tab returns. G2 amber 30 min before closing. I2 Monday→Sunday.
 - B10 nav hover: soft light, no circle. B11 text-fit no longer shrinks titles and resets after a language change.
 - B12 phone-reel ads open their poster again (the shared reel controller pointed at a discarded page instance).
+
+## Laptops (owner, 2 Nov: "I was talking about laptop") · 1280×720, 1366×768, 1536×864, EN + AR
+- 1536: all 19 sections pass.
+- 1280 / 1366: Bench title ballooned to 4 lines and pushed the stats off (title size divided by the stage scale) → capped.
+  Team badges swung into each other and covered the role names → swing limited to the free gap, badges a bit smaller.
+- Re-shot after the fix: Bench 2 lines with stats visible; badges clear, EN and AR. Smoke test ALL CLEAN.
+
+## Stage 1, batch 2
+- B2 Samsoom fully inside every circle (even padding, centred). B7 one quick-settings button (globe + gear) with
+  Language (ranked) | Settings (sounds, currency, privacy, all settings) tabs. B8 new sound set around the bell click:
+  soft, low, no squeaky tones; packs Classic, Soft, Studio. B9 bell items open My Bench → Notifications (filters,
+  mark read, clear; also for signed-out visitors), "See all", Escape closes. B13 online/offline: graphite pill with a
+  green / red / amber dot, no veil.

@@ -107,3 +107,13 @@ html[dir='rtl'] .au-tabs i { left: auto; right: 4px; } html[dir='rtl'] .au-tabs 
 /* R9 · profile photo */
 .bn-av { position: relative; cursor: pointer; overflow: visible !important; } .bn-av img { width: 100%; height: 100%; border-radius: inherit; object-fit: cover; display: block; }
 .bn-av i { position: absolute; right: -4px; bottom: -4px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #26282B; color: #F7C032; box-shadow: 0 0 0 2px #fff; transition: transform .2s; } .bn-av:hover i { transform: scale(1.15); }
+
+/* R10 B9 · notifications history */
+.nt-bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.nt-f { display: flex; flex-wrap: wrap; gap: 6px; } .nt-acts { display: flex; gap: 8px; }
+.nt-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.nt-it { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; align-items: start; gap: 14px; padding: 14px 16px; border-radius: 14px; background: #fff; box-shadow: inset 0 0 0 1px rgba(38, 40, 43, .08); }
+.nt-it > i { width: 10px; height: 10px; margin-top: 6px; border-radius: 50%; background: #D5D7DA; } .nt-it.new > i { background: #F7C032; box-shadow: 0 0 0 4px rgba(247, 192, 50, .2); }
+.nt-it b { font: 600 15px Inter, sans-serif; color: #26282B; } .nt-it p { margin: 4px 0 0; font: 400 14px/1.45 Inter, sans-serif; color: #5E6064; } .nt-it small { display: block; margin-top: 6px; font: 500 11.5px 'JetBrains Mono', monospace; color: #8C9096; }
+.nt-go { display: flex; gap: 8px; align-items: center; } .nt-none { padding: 24px 0; }
+@media (max-width: 600px) { .nt-it { grid-template-columns: 10px minmax(0, 1fr); } .nt-go { grid-column: 2; } }

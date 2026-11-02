@@ -10,5 +10,5 @@ export const markRead = (id?: string) => write(read().map((x) => (!id || x.id ==
 export const clearNotes = () => write([]);
 export function seedNotes() {
   // the first visit gets one friendly note so the bell is not empty
-  notify({ id: 'welcome', kind: 'info', t: 'Welcome to Sam Electronics', d: 'Star parts or set a stock alert, and updates will land here.', href: '/shop' });
+  notify({ id: 'welcome', kind: 'info', t: 'Welcome to Sam Electronics', d: 'Star parts or set a stock alert, and updates will land here.', href: '/account#notifications' });
 }

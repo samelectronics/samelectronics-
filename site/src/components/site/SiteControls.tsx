@@ -75,7 +75,7 @@ export default function SiteControls() {
                 <h4>{T('Sound effects')}</h4>
                 <div className="sc2-row"><span>{T('Sounds')}</span><Switch on={snd.on} label={T('Sounds')} set={(v) => setPrefs({ sound: { ...snd, on: v } })} /></div>
                 <div className="sc2-row"><span>{T('Volume')}</span><input type="range" min={0} max={1} step={0.05} value={snd.vol} onChange={(e) => setPrefs({ sound: { ...snd, vol: +e.target.value } })} onPointerUp={() => play('click', true)} aria-label={T('Volume')} /></div>
-                <div className="sc2-row"><span>{T('Sound pack')}</span><span className="sc2-seg">{(['classic', 'soft', 'arcade'] as Pack[]).map((k) => <button key={k} type="button" className={snd.pack === k ? 'on' : ''} data-no-sound="" onClick={() => { setPrefs({ sound: { ...snd, pack: k } }); window.setTimeout(() => play('success', true), 30); }}>{T(k[0].toUpperCase() + k.slice(1))}</button>)}</span></div>
+                <div className="sc2-row"><span>{T('Sound pack')}</span><span className="sc2-seg">{(['classic', 'soft', 'studio'] as Pack[]).map((k) => <button key={k} type="button" className={snd.pack === k ? 'on' : ''} data-no-sound="" onClick={() => { setPrefs({ sound: { ...snd, pack: k } }); window.setTimeout(() => play('success', true), 30); }}>{T(k[0].toUpperCase() + k.slice(1))}</button>)}</span></div>
               </section>
             ) : null}
             <section>

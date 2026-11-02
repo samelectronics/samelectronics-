@@ -29,19 +29,17 @@ export default function NetNotice() {
     : st === 'slow'
       ? ['Slow connection', 'Some animations and pictures may take longer or play simplified.']
       : ['Back online', 'Everything works again.'];
+  // short second lines for the pill
+  if (st === 'off') m[1] = 'Open pages keep showing.'; else if (st === 'slow') m[1] = 'Pictures may load slower.';
   const close = () => { setShut(true); if (st === 'back') setSt(''); };
-  const card = (
-    <div className={'se-net ' + st} role={st === 'slow' ? 'status' : 'alertdialog'} aria-live="polite">
-      <span className="ic" aria-hidden="true">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-          <path d="M2 8.5a15 15 0 0 1 20 0M5 12a10 10 0 0 1 14 0M8.5 15.5a5 5 0 0 1 7 0" />
-          <circle cx="12" cy="19" r="1.2" fill="currentColor" />
-          {st === 'off' ? <path d="M3 3l18 18" /> : null}
-        </svg>
-      </span>
-      <span className="tx"><b>{T(m[0])}</b><small>{T(m[1])}</small></span>
+  // R10 B13: one graphite pill in the site's style for every state, a small coloured dot carries the meaning
+  // (green back online, red offline, amber slow). No veil over the page.
+  return (
+    <div className={'se-netp ' + st} role={st === 'off' ? 'alert' : 'status'} aria-live="polite">
+      <i className="dot" aria-hidden="true" />
+      <b>{T(m[0])}</b>
+      <small>{T(m[1])}</small>
       <button type="button" aria-label={T('Close')} onClick={close}>×</button>
     </div>
   );
-  return st === 'slow' ? card : <div className={'se-net-veil ' + st} onClick={(e) => { if (e.target === e.currentTarget) close(); }}>{card}</div>;
 }

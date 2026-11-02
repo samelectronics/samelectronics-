@@ -40,7 +40,7 @@ export default function LiveSam({ size = 64, mood = 'idle', play, rest: rest0, c
   }, []);
   return (
     <span ref={box} className={(className || '') + (circle ? ' sam-ring' : '')} style={circle ? { ['--sr' as string]: size + 'px' } : { display: 'inline-grid', placeItems: 'center' }}>
-      <SESamsoom mood={pose || m} size={circle ? Math.round(size * 0.82) : size} lookX={pose ? 0 : look.x} lookY={pose ? 0 : look.y} pointA={pointA} />
+      <SESamsoom mood={pose || m} size={circle ? Math.round(size * 0.62) : size} lookX={pose ? 0 : look.x} lookY={pose ? 0 : look.y} pointA={pointA} />
     </span>
   );
 }

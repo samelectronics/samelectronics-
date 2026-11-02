@@ -30,7 +30,7 @@ class Component extends DCLogic {
     const loop = (now) => { if (!this.alive) return; const dt = Math.min(0.033, (now - last) / 1000); last = now; if (this.vis && !document.hidden) { this.t += dt; this.step(dt); this.paint(); } this.raf = requestAnimationFrame(loop); };
     this.raf = requestAnimationFrame(loop);
     this.onLang = () => this.forceUpdate(); window.addEventListener('se:lang', this.onLang);
-    this.onResize = () => this.measure(); window.addEventListener('resize', this.onResize); setTimeout(() => this.measure(), 120);
+    this.onResize = () => { this._room = 0; this.measure(); }; window.addEventListener('resize', this.onResize); setTimeout(() => this.measure(), 120);
     window.seTeam = (t, flip) => { if (!this.state.seen) this.start(); this.b.forEach((b) => { b.y = 0; b.vy = 0; b.th = 0; b.w = 0; b.dropAt = -1; }); this.t0 = this.t - t; if (flip != null) this.setState({ flip }); this.paint(); };
   }
   componentWillUnmount() { this.offRp && this.offRp(); this.alive = false; cancelAnimationFrame(this.raf); this.io && this.io.disconnect(); window.removeEventListener('se:lang', this.onLang); window.removeEventListener('resize', this.onResize); }
@@ -54,7 +54,10 @@ class Component extends DCLogic {
     if (!this._g[0] || !this._g[0].isConnected) { this._g = null; return; }
     this.b.forEach((b, i) => { const g = this._g[i], h = this._h[i]; if (!g) return; const y = this.t < b.dropAt ? -720 : b.y;
       if (b.pth != null && Math.abs(b.th - b.pth) < 0.06 && Math.abs(y - b.py) < 0.3) return; b.pth = b.th; b.py = y; // sub-pixel changes are skipped (fewer repaints at idle)
-      g.style.transform = 'translateY(' + y.toFixed(1) + 'px) rotate(' + b.th.toFixed(2) + 'deg)';
+      // R10: never swing into a neighbour (laptops have less room between badges): the drawn angle is limited by the free gap
+      const room = this._room || (this._room = (() => { const sl = R.querySelector('.tm-slot'), cd = R.querySelector('.tm-card'); if (!sl || !cd) return 6; const gap = Math.max(4, sl.getBoundingClientRect().width - cd.getBoundingClientRect().width); return Math.max(1.5, Math.min(8, Math.atan(gap / 2 / 470) * 180 / Math.PI)); })());
+      const th = Math.max(-room, Math.min(room, b.th));
+      g.style.transform = 'translateY(' + y.toFixed(1) + 'px) rotate(' + th.toFixed(2) + 'deg)';
       if (h) h.style.transform = 'translateX(' + (b.th * 9 + Math.sin(this.t * 0.7 + i) * 8).toFixed(1) + '%)'; });
     // the order ticket rides the rail: Parts Advisor → Parts Flow Controller → Bench Engineer → Finance & Checkout → Founder
     const tk = this.q('ticket'); if (!tk || !this.cx) return;

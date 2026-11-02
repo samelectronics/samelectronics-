@@ -9,6 +9,7 @@ import { store, useStore } from '@/lib/store';
 import { T } from '@/components/site/ui';
 import LiveSam from '@/components/samsoom/LiveSam';
 import MemberCard, { LEVELS } from './MemberCard';
+import NotesPanel from './NotesPanel';
 
 const NAV: [string, string, string][] = [
   ['overview', 'Overview', 'M3 12l9-8 9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z'],
@@ -19,6 +20,7 @@ const NAV: [string, string, string][] = [
   ['devices', 'My devices', 'M8 2h8a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM11 18h2'],
   ['chats', 'Samsoom chats', 'M4 5h16v11H8l-4 4z'],
   ['messages', 'Messages', 'M3 6l9 6 9-6M3 6h18v12H3z'],
+  ['notifications', 'Notifications', 'M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0'],
   ['profile', 'Profile & settings', 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0'],
 ];
 const STEPS = ['New', 'Quoted', 'Confirmed', 'Ready', 'Collected / Shipped'];
@@ -84,6 +86,10 @@ export default function Bench({ me, refresh }: { me: User; refresh: () => void }
           <Chats />
         ) : sec === 'messages' ? (
           <Messages me={me} threads={threads} reload={load} />
+        ) : sec === 'notifications' ? (
+          <Sec t="Notifications" d="Everything the bell told you: orders, repairs, stock alerts and offers.">
+            <NotesPanel />
+          </Sec>
         ) : (
           <Profile me={me} refresh={refresh} />
         )}

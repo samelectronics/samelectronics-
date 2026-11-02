@@ -5,6 +5,7 @@ import { useMe } from '@/lib/backend';
 import { PageHero, T } from '@/components/site/ui';
 import Auth from './Auth';
 import Bench from './Bench';
+import NotesPanel from './NotesPanel';
 
 export default function AccountPage() {
   const [me, refresh] = useMe();
@@ -13,6 +14,7 @@ export default function AccountPage() {
   if (!me) return (
     <>
       <PageHero eb={T('MY BENCH')} title={T('Your account.')} accent={T('Your bench.')} crumb={[[T('My Bench')]]} sub={T('Orders, stars, points, companies and your chats with Samsoom, all in one place.')} seed={41} />
+      {typeof location !== 'undefined' && location.hash === '#notifications' ? <section className="sp-sec"><div className="sp-wrap"><h2 className="sp-h2">{T('Notifications')}</h2><NotesPanel /></div></section> : null}
       <section className="sp-sec g"><div className="sp-wrap"><Auth onDone={done} /></div></section>
     </>
   );

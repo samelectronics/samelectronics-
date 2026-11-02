@@ -13,7 +13,7 @@
 // Styles in src/styles/dc-base.css (.st-*).
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import LiveSam from '../samsoom/LiveSam';
-import { LANGS, type Lang } from '@/i18n/lang';
+import { LANGS, RANK, type Lang } from '@/i18n/lang';
 import { siteRaw } from '@/lib/catalog';
 // Control Room → Site & Samsoom: tour on/off, welcome message and emote
 const cfg = () => siteRaw<{ tour?: boolean; greeting?: string; welcome?: string }>('samsoom', {});
@@ -37,7 +37,6 @@ const CHOOSE: [Lang, string][] = [["en", "Choose your language"], ["ar", "اخت
 const SCROLL: Record<string, string> = {"en": "Scroll for more languages", "de": "Für mehr Sprachen scrollen", "it": "Scorri per altre lingue", "pt": "Deslize para mais idiomas", "ca": "Llisca per a més idiomes", "gl": "Despraza para máis idiomas", "eu": "Irristatu hizkuntza gehiagorako", "ro": "Derulează pentru alte limbi", "tl": "Mag-scroll para sa iba pang wika", "zh": "滑动查看更多语言", "ml": "കൂടുതൽ ഭാഷകൾക്ക് സ്ക്രോൾ ചെയ്യൂ", "sw": "Sogeza kuona lugha zaidi", "am": "ለተጨማሪ ቋንቋዎች ያሸብልሉ", "ha": "Gungura don ƙarin harsuna", "yo": "Yí lọ fún èdè mìíràn", "om": "Afaanota dabalataaf gadi qabi", "ig": "Pịgharịa maka asụsụ ndị ọzọ", "ar": "مرّر لمزيد من اللغات", "es": "Desliza para más idiomas", "fr": "Faites défiler pour plus de langues", "fa": "برای زبان‌های بیشتر بکشید", "ru": "Прокрутите, чтобы увидеть ещё", "hi": "और भाषाओं के लिए स्क्रॉल करें", "ur": "مزید زبانوں کے لیے اسکرول کریں"};
 const DETECTED: Record<string, string> = {"en": "Detected", "de": "Erkannt", "it": "Rilevata", "pt": "Detetado", "ca": "Detectat", "gl": "Detectado", "eu": "Detektatua", "ro": "Detectată", "tl": "Natukoy", "zh": "已检测", "ml": "കണ്ടെത്തിയത്", "sw": "Imegunduliwa", "am": "ተገኝቷል", "ha": "An gano", "yo": "A rí i", "om": "Argame", "ig": "Achọpụtara", "ar": "تم اكتشافها", "es": "Detectado", "fr": "Détectée", "fa": "شناسایی شد", "ru": "Определён", "hi": "पहचानी गई", "ur": "شناخت ہوئی"};
 // R10 B1: English, Arabic, Spanish, French, then the rest by how likely our buyers speak them (detected one pinned on top)
-export const RANK: Lang[] = ['en', 'ar', 'es', 'fr', 'ru', 'hi', 'ur', 'fa', 'zh', 'pt', 'de', 'it', 'tl', 'ml', 'sw', 'am', 'ha', 'ro', 'yo', 'ig', 'om', 'ca', 'gl', 'eu'];
 const ranked = () => RANK.map((id) => LANGS.find((x) => x.id === id)!).filter(Boolean).concat(LANGS.filter((x) => !RANK.includes(x.id)));
 const CHOOSE_R = () => RANK.map((id) => CHOOSE.find((c) => c[0] === id)).filter(Boolean) as [Lang, string][];
 /** the visitor's own language, from the browser (shown first, marked "Detected") */

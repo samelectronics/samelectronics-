@@ -17,6 +17,8 @@ export type Lang = 'en' | 'ar' | 'es' | 'fr' | 'fa' | 'ru' | 'hi' | 'ur' | 'tl' 
 /** R9: twenty-four languages, in menu order: English and Arabic first (the shop's own two), then the rest A to Z by their
  *  English name. Arabic, Persian and Urdu read right to left. English and Arabic are built in; Spanish and French are
  *  fetched quietly once the page has loaded; every other language is fetched only when it is picked. */
+/** R10 B1/B7: menu order by how likely our buyers speak them (the detected one is pinned on top where it applies). */
+export const RANK: Lang[] = ['en', 'ar', 'es', 'fr', 'ru', 'hi', 'ur', 'fa', 'zh', 'pt', 'de', 'it', 'tl', 'ml', 'sw', 'am', 'ha', 'ro', 'yo', 'ig', 'om', 'ca', 'gl', 'eu'];
 export const LANGS: { id: Lang; name: string; en: string }[] = [
   { id: 'en', name: 'English', en: 'English' },
   { id: 'ar', name: 'العربية', en: 'Arabic' },

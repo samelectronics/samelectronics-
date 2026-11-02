@@ -84,3 +84,4 @@
 .tm-face.back li:nth-child(n + 4) { display: none; }
 .tm-face.back p { display: none !important; }
 .tm-ask { width: 100%; box-sizing: border-box; justify-content: center; height: 42px !important; padding: 0 12px !important; margin-top: auto !important; font-size: 13.5px !important; overflow: hidden; text-overflow: ellipsis; }
+@media (min-width: 1101px) and (max-width: 1400px) { .tm-card { width: 198px; height: 306px; } .tm-slot.f .tm-card { width: 214px; height: 330px; } } /* R10: laptops, more room between the badges */

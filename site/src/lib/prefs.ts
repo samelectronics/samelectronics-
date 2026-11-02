@@ -6,7 +6,7 @@
 //   Signal Meter  · anonymous visit counts (only once an analytics tool is connected)
 //   Booster       · offers and ads that match what you look at
 export type Currency = 'AED' | 'USD' | 'EUR';
-export type Pack = 'classic' | 'soft' | 'arcade';
+export type Pack = 'classic' | 'soft' | 'studio';
 export type Prefs = { consent: { memory: boolean; signal: boolean; booster: boolean; at: number } | null; sound: { on: boolean; vol: number; pack: Pack }; currency: Currency };
 const KEY = 'se-prefs';
 const DEF: Prefs = { consent: null, sound: { on: true, vol: 0.35, pack: 'classic' }, currency: 'AED' };

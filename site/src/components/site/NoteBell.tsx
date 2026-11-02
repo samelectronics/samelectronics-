@@ -12,8 +12,9 @@ export default function NoteBell() {
   useEffect(() => {
     seedNotes(); const r = () => setL(notes()); r();
     const out = (e: PointerEvent) => { if (box.current && !box.current.contains(e.target as Node)) setOpen(false); };
-    window.addEventListener('se:notes', r); window.addEventListener('se:lang', r); document.addEventListener('pointerdown', out);
-    return () => { window.removeEventListener('se:notes', r); window.removeEventListener('se:lang', r); document.removeEventListener('pointerdown', out); };
+    const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    window.addEventListener('se:notes', r); window.addEventListener('se:lang', r); document.addEventListener('pointerdown', out); document.addEventListener('keydown', esc);
+    return () => { window.removeEventListener('se:notes', r); window.removeEventListener('se:lang', r); document.removeEventListener('pointerdown', out); document.removeEventListener('keydown', esc); };
   }, []);
   const unread = l.filter((x) => !x.read).length;
   return (
@@ -26,11 +27,12 @@ export default function NoteBell() {
         <span className="nb-list" role="dialog" aria-label={T('Notifications')}>
           <span className="nb-head"><b>{T('Notifications')}</b>{unread ? <button type="button" onClick={() => markRead()}>{T('Mark all as read')}</button> : l.length ? <button type="button" onClick={() => clearNotes()}>{T('Clear')}</button> : null}</span>
           {l.length ? l.map((n) => (
-            <a key={n.id} href={n.href || '#'} className={'nb-it k-' + n.kind + (n.read ? '' : ' new')} onClick={(e) => { markRead(n.id); if (!n.href) e.preventDefault(); }}>
+            <a key={n.id} href="/account#notifications" className={'nb-it k-' + n.kind + (n.read ? '' : ' new')} onClick={() => { markRead(n.id); setOpen(false); }}>
               <i><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d={ICON[n.kind]} /></svg></i>
               <span><b>{T(n.t)}</b>{n.d ? <small>{T(n.d)}</small> : null}</span><em>{ago(n.at)}</em>
             </a>
           )) : <span className="nb-none">{T('No notifications yet.')}</span>}
+          <a className="nb-all" href="/account#notifications" onClick={() => setOpen(false)}>{T('See all notifications')} →</a>
         </span>
       ) : null}
     </span>
