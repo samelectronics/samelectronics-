@@ -78,7 +78,7 @@ class Component extends DCLogic {
       shifts: sh.map(([a, b]) => ({ l: ((a / 1440) * 100).toFixed(2) + '%', w: (((b - a) / 1440) * 100).toFixed(2) + '%', t: hm(a) + '–' + hm(b) })), nowAt: (((m + sec / 60) / 1440) * 100).toFixed(3) + '%', week,
       address: C.address || 'Al Murar, Deira, Dubai, UAE', plus: C.plus || '78G4+3H2', phone: C.phone || '+971 4 273 3031', tel: 'tel:' + (C.tel || '+97142733031'),
       wa: wa + '?text=' + encodeURIComponent('Hi Sam Electronics, I found you on your website.'),
-      dir: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent((C.plus || '78G4+3H2') + ' Dubai') };
+      dir: 'https://maps.app.goo.gl/EsZiUQy8HmzfJg6QA' /* R10 G2 */ };
   }
 }
 

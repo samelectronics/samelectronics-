@@ -192,6 +192,8 @@ export const site = {
     whatsapp: v(facts.contact.whatsapp),
     email: v(facts.contact.email),
     social: v(facts.contact.social),
+    /** R10 G2 (owner): the shop's exact place on Google Maps; every "directions / open in Maps" link uses it. */
+    mapsLink: 'https://maps.app.goo.gl/EsZiUQy8HmzfJg6QA',
     /** Google Maps query for the shop (Plus Code + city), URL-encoded. */
     mapsQuery: encodeURIComponent(v(facts.contact.plusCode) + ' Dubai'),
   },

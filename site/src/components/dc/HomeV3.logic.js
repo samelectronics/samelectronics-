@@ -361,7 +361,7 @@ class Component extends DCLogic {
         dot: seen && !soon ? '#F7C032' : '#FFFFFF', ring: soon ? 'rgba(26,27,29,.25)' : '#F7C032', nodeAnim: now ? 'stNode 1.6s cubic-bezier(.45,0,.55,1) infinite' : 'none', st: now ? '● RUNNING' : soon ? '◌ INSTALLING' : '✓ SHIPPED', stC: now ? '#F7C032' : '#5E6064', o: seen ? 1 : 0, y: seen ? 0 : 20, delay: i * 80 + 'ms' }; }) };
     const hrs = D ? D.hours : {}, dg = new Date(s.now), g = new Date(dg.getTime() + dg.getTimezoneOffset() * 6e4 + 4 * 36e5), hm = (x) => pad(Math.floor(x / 60)) + ':' + pad(x % 60);
     const td = (hrs[g.getDay()] || []).map(([a, b]) => hm(a) + '–' + hm(b)).join(' · ') || 'Closed';
-    return { re, whs, net, story, mapRef: this.mapRef, storyRef: this.storyRef, todayHours: td, dirLink: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(SITE.contact.plusCode + ' Dubai') };
+    return { re, whs, net, story, mapRef: this.mapRef, storyRef: this.storyRef, todayHours: td, dirLink: SITE.contact.mapsLink };
   }
   chatRef = React.createRef();
   // G8: where an answer can send the visitor (the API route's ACTIONS), with EN/AR button labels

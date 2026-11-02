@@ -38,3 +38,9 @@
 /* bench: four stats share the text column; on short laptops the counter-scaled number is capped so they never touch */
 .bt-cnt b { font-size: min(calc(var(--stat-n) / var(--sc, 1)), 52px) !important; }
 .bt-cnts { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+/* R10 U4 (owner): the hero's blurred yellow light follows the mouse on every home section (soft, never a spotlight) */
+.se-tex .sh { width: 640px; height: 640px; margin: -320px 0 0 -320px; filter: blur(8px); transition: opacity .5s ease; }
+.se-tex-dark .sh { background: radial-gradient(closest-side, rgba(247, 192, 50, .17), rgba(247, 192, 50, .07) 50%, rgba(247, 192, 50, 0)) !important; }
+.se-tex-light .sh { background: radial-gradient(closest-side, rgba(247, 192, 50, .16), rgba(247, 192, 50, .06) 50%, rgba(247, 192, 50, 0)) !important; }
+.se-tex-yel .sh { background: radial-gradient(closest-side, rgba(255, 246, 214, .42), rgba(255, 246, 214, .12) 50%, rgba(255, 246, 214, 0)) !important; }
+@media (hover: none) { .se-tex .sh { display: none; } }

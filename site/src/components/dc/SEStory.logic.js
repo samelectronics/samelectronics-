@@ -80,7 +80,7 @@ class Component extends DCLogic {
     const items = H.map((h, i) => ({ ...h, i, now: i === 3, soon: i === 4 }));
     return { secRef: this.secRef, brRef: this.brRef, sc: s.sc, items, br: s.br, countries: ss.countries,
       more: (ev) => { ev.preventDefault(); location.href = '/story'; },
-      mapsDxb: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('78G4+3H2 Dubai'),
+      mapsDxb: 'https://maps.app.goo.gl/EsZiUQy8HmzfJg6QA',
       mapsMad: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Plaza Mayor, Madrid') };
   }
 }

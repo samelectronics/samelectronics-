@@ -27,7 +27,7 @@ class Component extends DCLogic {
     const head = (L && L.lang() !== 'en' ? L.tr(line) : line).split(' '); // word by word, in the visitor's language
     return { secRef: this.secRef, on: this.state.on, head,
       wa: D ? 'https://wa.me/' + D.contact.wa + '?text=' + encodeURIComponent('Hi Sam Electronics, I found you on your website.') : '#',
-      dir: 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(SITE.contact.plusCode + ' Dubai'),
+      dir: SITE.contact.mapsLink,
       browse: (ev) => { ev.preventDefault(); window.dispatchEvent(new CustomEvent('se:go', { detail: { id: 'offer' } })); } };
   }
 }

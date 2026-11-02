@@ -68,7 +68,7 @@ export default function ContactPage() {
           <h2 className="sp-h2" style={{ fontSize: 32 }}>{T('Al Murar, Deira, Dubai')}</h2>
           <p className="sp-p">{C.address || 'Al Murar, Deira, Dubai, UAE'} · Plus Code {C.plus || '78G4+3H2'}</p>
           <div className="ct-live"><HoursLive /></div>
-          <span className="sp-acts"><a className="sp-btn" href={'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent('Sam Electronics Al Murar Deira Dubai')} target="_blank" rel="noopener noreferrer">{T('Get directions')}</a><a className="sp-btn ghost" href="/repair#book">{T('Book a repair')}</a></span>
+          <span className="sp-acts"><a className="sp-btn" href={'https://maps.app.goo.gl/EsZiUQy8HmzfJg6QA'} target="_blank" rel="noopener noreferrer">{T('Get directions')}</a><a className="sp-btn ghost" href="/repair#book">{T('Book a repair')}</a></span>
         </div>
         <div className="ct-map" data-rise><iframe title={T('Map')} src={map} loading="lazy" referrerPolicy="no-referrer-when-downgrade" /></div>
       </div></section>

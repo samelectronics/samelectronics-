@@ -144,7 +144,7 @@ export default function Nav({ v }: { v: Vals }) {
               </span>
               {/* R6 §02: every button works */}
               <span className="se-status-acts">
-                <a href={'https://www.google.com/maps/search/?api=1&query=' + site.contact.mapsQuery} target="_blank" rel="noopener noreferrer">Get directions</a>
+                <a href={site.contact.mapsLink} target="_blank" rel="noopener noreferrer">Get directions</a>
                 <a href={'https://wa.me/' + site.contact.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>
                 <a href={'tel:' + site.contact.storeTel}>Call</a>
                 <button type="button" onClick={v.st?.go}>All hours</button>
