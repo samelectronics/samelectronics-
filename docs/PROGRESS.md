@@ -2812,3 +2812,17 @@ DONE WHEN
 4. Not yet tested against the real Daftra account from here (the key is only in Vercel). The field names used (name, product_code, unit_price, buy_price, stock_balance) are Daftra's documented ones; check the Products tab once deployed.
 
 **Still to build (Control Room v2, docs/PLAN_R9.md §4):** repair job cards with QR + phone scanner, purchasing, delivery, Brand Studio templates, Excel catalogue/price-list builder and import, messages & campaigns, visual editor with drafts/publish/history, staff Samsoom, shop floor (queue/TV/tablet/tasks), reports, AI helpers, health & data quality, 2FA, Activity Center widget, translations editor with length warnings, FAQ editor, creating quotations/invoices in Daftra from orders.
+
+## R9 · checklist of every request (2 Nov 2026) — ✓ done and tested · ◐ partly · ○ not started
+
+**Daftra & orders**
+✓ Daftra read (owner confirmed names, codes, cost, stock) · ✓ Send to Daftra (button + confirm window, quotation or draft invoice, once per order, logged; format per Daftra's API docs) · ✓ cart takes every price mode; "Send my list on WhatsApp" with reference; pending order for staff · ✓ never "AED 0" (cards, product view, cart, SEO pages, repair, compare, lists) · ✓ CANCEL items hidden (site, SEO, matching; pull hides linked items) · ✓ cost private (screen, API route by permission, database: products table staff-only) · ✓ out of stock = "Request it" · ✓ Daftra names never shown on the site (only price and stock are pulled)
+◐ Daftra write: one live test pending (owner) · ○ quotation follow-up, convert accepted quotation to invoice
+
+**Phase 3 detail pages still open**
+○ Repair: exploded phone, live fee meter, step-by-step booking ticket · ○ Brands: interactive grade/manufacturer comparison · ○ Membership simulator · ○ Ask Samsoom professional layout (capabilities, suggestions, history side panel) · ○ Account: new sign-in/up design, order tracking, warranty check, "notify me", named lists; trade: reorder, quick order by codes, price-list PDF · ◐ Product view: custom named lists (kits exist), new action icons
+
+**Phase 4 Control Room still open**
+○ repair job cards with QR + phone scanner · ○ purchasing & suppliers, lost sales · ○ delivery & drivers · ○ Brand Studio + Excel catalogue/price-list builder and import · ○ messages & campaigns · ○ visual editor with drafts/publish/history · ○ staff Samsoom · ○ shop floor (queue, TV, tablet, tasks) · ○ reports · ○ AI helpers · ○ health & data quality · ○ 2FA · ○ Activity Center widget · ○ translations editor · ○ FAQ editor
+
+**Smoke test (2 Nov):** all 21 pages × EN/AR × desktop/phone: no page errors, no sideways overflow, no broken images, no AED 0.
