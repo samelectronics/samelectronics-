@@ -2,6 +2,8 @@
  * Oromo (R9). The most visible texts of the site; anything not listed here shows in English until it is added. Marked for review by a native speaker (Control Room › Translations).
  */
 const DICT: Record<string, string> = {
+  "Follow us": "Nu hordofaa",
+  "for daily stock drops.": "meeshaa haaraa guyyaa guyyaatti.",
   "& up": "fi isaa ol",
   "1,000 points": "qabxii 1,000",
   "15,000 points": "qabxii 15,000",

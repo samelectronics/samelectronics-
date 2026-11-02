@@ -2,6 +2,8 @@
  * Malayalam (R9). The most visible texts of the site; anything not listed here shows in English until it is added.
  */
 const DICT: Record<string, string> = {
+  "Follow us": "ഞങ്ങളെ പിന്തുടരൂ",
+  "for daily stock drops.": "ദിവസേനയുള്ള പുതിയ സ്റ്റോക്കിനായി.",
   "& up": "മുതൽ മുകളിലേക്ക്",
   "1,000 points": "1,000 പോയിന്റ്",
   "15,000 points": "15,000 പോയിന്റ്",

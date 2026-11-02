@@ -2,6 +2,8 @@
  * Italian (R9). The most visible texts of the site; anything not listed here shows in English until it is added.
  */
 const DICT: Record<string, string> = {
+  "Follow us": "Seguici",
+  "for daily stock drops.": "per gli arrivi di ogni giorno.",
   "& up": "e oltre",
   "1,000 points": "1.000 punti",
   "15,000 points": "15.000 punti",

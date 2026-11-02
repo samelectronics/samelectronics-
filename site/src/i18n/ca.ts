@@ -2,6 +2,8 @@
  * Catalan (R9). The most visible texts of the site; anything not listed here shows in English until it is added.
  */
 const DICT: Record<string, string> = {
+  "Follow us": "Segueix-nos",
+  "for daily stock drops.": "per a l’estoc nou de cada dia.",
   "& up": "i més",
   "1,000 points": "1.000 punts",
   "15,000 points": "15.000 punts",

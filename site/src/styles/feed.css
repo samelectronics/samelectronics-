@@ -220,3 +220,21 @@
 /* R10 H1: the handle on its own line, sized so it is never cut (EN and AR) */
 .fd-h .fd-handle { display: block; font: inherit; font-size: .74em; white-space: nowrap; color: #F7C032; letter-spacing: -.02em; }
 [dir='rtl'] .fd-h .fd-handle { text-align: right; unicode-bidi: isolate; }
+
+/* owner (2 Nov): title the same size as every section ("Follow us / for daily stock drops."), the handle under the phone */
+.fd-h > span { display: block; }
+.fd-stage { height: auto !important; padding-bottom: 8px; }
+.fd-user { position: relative; z-index: 3; display: inline-flex; align-items: center; gap: 12px; margin-top: 6px; padding: 8px 16px 8px 8px; border-radius: 999px; background: rgba(255, 255, 255, .06); color: #fff; text-decoration: none; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .12); transition: box-shadow .25s, transform .25s; }
+.fd-user:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1.5px #F7C032, 0 12px 26px -12px rgba(0, 0, 0, .6); }
+.fd-user img { width: 34px; height: 34px; border-radius: 50%; }
+.fd-user span { display: flex; flex-direction: column; gap: 2px; }
+.fd-user b { font: 700 17px 'Space Grotesk', sans-serif; letter-spacing: -.01em; color: #F7C032; }
+.fd-user small { font: 500 12px Inter, sans-serif; color: #B9BBBF; }
+html[dir='rtl'] .fd-user svg { transform: scaleX(-1); }
+
+.fd-top2 { display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; margin-bottom: 36px; }
+.fd-top2 .fd-h { max-width: none; }
+.fd-top2 .fd-p { max-width: 400px; margin: 0; }
+.fd-info { justify-content: center; }
+@media (max-width: 900px) { .fd-top2 { flex-direction: column; align-items: flex-start; gap: 14px; margin-bottom: 24px; } }
+.fd-info { display: flex; flex-direction: column; align-self: center; } .fd-info .fd-follow { margin-top: 0 !important; }

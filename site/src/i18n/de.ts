@@ -2,6 +2,8 @@
  * German (R9). The most visible texts of the site; anything not listed here shows in English until it is added.
  */
 const DICT: Record<string, string> = {
+  "Follow us": "Folgen Sie uns",
+  "for daily stock drops.": "für den täglichen Lagernachschub.",
   "& up": "& mehr",
   "1,000 points": "1.000 Punkte",
   "15,000 points": "15.000 Punkte",

@@ -2,6 +2,8 @@
  * Romanian (R9). The most visible texts of the site; anything not listed here shows in English until it is added.
  */
 const DICT: Record<string, string> = {
+  "Follow us": "Urmăriți-ne",
+  "for daily stock drops.": "pentru stocul nou zilnic.",
   "& up": "și peste",
   "1,000 points": "1.000 puncte",
   "15,000 points": "15.000 puncte",

@@ -136,11 +136,16 @@ function render(v: Vals) {
     <section id="social" ref={v.secRef} data-tone="dark" data-screen-label="The Feed" className={'fd' + (v.seen ? ' fd-seen' : '')}>
       <div className="fd-in">
         {/* owner (27 Oct): one phone (not three), the follow buttons and all three QR codes at once, the week's drops */}
+        {/* owner (2 Nov): the title sits full width on top, like every other section, at the same size */}
+        <header className="fd-top2">
+          <div>
+            <span className="fd-eb">THE FEED · @SAMELECTRONICS.UAE</span>
+            <h2 className="fd-h"><span>Follow us</span> <span>for daily stock drops.</span></h2>
+          </div>
+          <p className="fd-p">New stock, offers and bench tests go up first on our channels. Scan a code or tap Follow.</p>
+        </header>
         <div className="fd-grid">
           <div className="fd-info">
-            <span className="fd-eb">THE FEED · @SAMELECTRONICS.UAE</span>
-            <h2 className="fd-h"><span>Follow</span> <b className="fd-handle" data-no-i18n="" dir="ltr">@samelectronics.uae</b> <span>for daily stock drops.</span></h2>
-            <p className="fd-p">New stock, offers and bench tests go up first on our channels. Scan a code or tap Follow.</p>
             <div className="fd-follow">
               {(v.ch || []).map((c: any) => (
                 <a key={c.id} href={c.href} target="_blank" rel="noopener noreferrer" className={'fd-fl ' + c.id + (c.on ? ' on' : '')} onMouseEnter={c.pick}>
@@ -169,6 +174,12 @@ function render(v: Vals) {
                 </span>
                 <span className="fd-rim" aria-hidden="true" />
               </span>
+            </a>
+            {/* owner (2 Nov): the account name lives under the phone, in the space that was empty */}
+            <a className="fd-user" href={(v.ch || []).find((c: any) => c.on)?.href} target="_blank" rel="noopener noreferrer">
+              <img src="/assets/se-logo-128.webp" alt="" width={34} height={34} />
+              <span><b data-no-i18n="" dir="ltr">@samelectronics.uae</b><small>{(v.ch || []).find((c: any) => c.on)?.name} · {T('Follow')}</small></span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
             </a>
           </div>
 

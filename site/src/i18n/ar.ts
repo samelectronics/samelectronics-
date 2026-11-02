@@ -1014,6 +1014,7 @@ export const EXACT: Record<string, string> = {
   'Shops across four regions': 'محلات في أربع مناطق',
   'already trust us.': 'تثق بنا بالفعل.',
   'Follow @samelectronics.uae': 'تابع ‎@samelectronics.uae',
+  'Follow us': 'تابعنا',
   'for daily stock drops.': 'لوصول المخزون اليومي.',
   'One phone or one container.': 'هاتف واحد أو حاوية كاملة.',
   'We serve everyone like family.': 'نخدم الجميع كالعائلة.',

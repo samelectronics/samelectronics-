@@ -1047,4 +1047,4 @@ html[dir='rtl'] .se-qs-sw.on i { transform: translateX(-18px); } html[dir='rtl']
 .se-qs-seg button.on { background: #F7C032 !important; color: #26282B !important; }
 .se-qs-link { justify-content: space-between !important; padding: 9px 2px !important; border-top: 1px solid rgba(255, 255, 255, .08) !important; border-radius: 0 !important; font: 600 13px Inter, sans-serif !important; color: #F7C032 !important; }
 .se-qs-link em { font-style: normal; }
-.se-lm-btn .gear { opacity: .75; margin-inline-start: -2px; }
+.se-lm-ic { flex: none; transition: color .3s; } .se-lm-ic > path:first-of-type { transform-box: fill-box; transform-origin: center; transition: transform .6s cubic-bezier(.2, .8, .2, 1); } .se-lm-btn:hover .se-lm-ic, .se-lm.open .se-lm-ic { color: #F7C032; } .se-lm-btn:hover .se-lm-ic > path:first-of-type, .se-lm.open .se-lm-ic > path:first-of-type { transform: rotate(45deg); }

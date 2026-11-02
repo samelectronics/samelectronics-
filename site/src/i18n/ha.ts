@@ -2,6 +2,8 @@
  * Hausa (R9). The most visible texts of the site; anything not listed here shows in English until it is added. Marked for review by a native speaker (Control Room › Translations).
  */
 const DICT: Record<string, string> = {
+  "Follow us": "Bi mu",
+  "for daily stock drops.": "don sabbin kaya kowace rana.",
   "& up": "da sama",
   "1,000 points": "maki 1,000",
   "15,000 points": "maki 15,000",

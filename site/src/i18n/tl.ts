@@ -2,6 +2,8 @@
  * Filipino (R9). The most visible texts of the site; anything not listed here shows in English until it is added.
  */
 const DICT: Record<string, string> = {
+  "Follow us": "Sundan kami",
+  "for daily stock drops.": "para sa araw-araw na bagong stock.",
   "& up": "pataas",
   "1,000 points": "1,000 puntos",
   "15,000 points": "15,000 puntos",

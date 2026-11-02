@@ -2,6 +2,8 @@
  * Chinese (Simplified) (R9). The most visible texts of the site; anything not listed here shows in English until it is added.
  */
 const DICT: Record<string, string> = {
+  "Follow us": "关注我们",
+  "for daily stock drops.": "获取每日到货。",
   "& up": "及以上",
   "1,000 points": "1,000 积分",
   "15,000 points": "15,000 积分",

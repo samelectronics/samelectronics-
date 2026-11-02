@@ -2,6 +2,8 @@
  * Yoruba (R9). The most visible texts of the site; anything not listed here shows in English until it is added. Marked for review by a native speaker (Control Room › Translations).
  */
 const DICT: Record<string, string> = {
+  "Follow us": "Tẹ̀lé wa",
+  "for daily stock drops.": "fún ọjà tuntun lójoojúmọ́.",
   "& up": "àti jù bẹ́ẹ̀ lọ",
   "1,000 points": "àmì 1,000",
   "15,000 points": "àmì 15,000",

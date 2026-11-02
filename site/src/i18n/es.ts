@@ -967,6 +967,7 @@ const DICT: Record<string, string> = {
   "Shops across four regions": "Tiendas de cuatro regiones",
   "already trust us.": "ya confían en nosotros.",
   "Follow @samelectronics.uae": "Sigue a @samelectronics.uae",
+  "Follow us": "Síguenos",
   "for daily stock drops.": "para el stock diario.",
   "One phone or one container.": "Un teléfono o un contenedor.",
   "We serve everyone like family.": "Tratamos a todos como familia.",

@@ -2,6 +2,8 @@
  * Swahili (R9). The most visible texts of the site; anything not listed here shows in English until it is added.
  */
 const DICT: Record<string, string> = {
+  "Follow us": "Tufuate",
+  "for daily stock drops.": "kwa mzigo mpya kila siku.",
   "& up": "na zaidi",
   "1,000 points": "pointi 1,000",
   "15,000 points": "pointi 15,000",
