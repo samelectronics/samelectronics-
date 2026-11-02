@@ -159,3 +159,8 @@ textarea.cr-in { height: auto; padding: 9px 11px; resize: vertical; line-height:
 .dft-pr { width: 90px; height: 32px; }
 .dft-box > .cr-err { padding: 0 20px 8px; }
 .cr-lcard { max-width: calc(100vw - 32px) !important; box-sizing: border-box; }
+/* R9 · Excel import & price lists */
+.xl-drop { display: flex; flex-direction: column; gap: 4px; padding: 22px; border: 2px dashed rgba(247,192,50,.6); border-radius: 14px; background: rgba(247,192,50,.06); cursor: pointer; text-align: center; } .xl-drop:hover { background: rgba(247,192,50,.14); } .xl-drop small { color: #8C9096; }
+.xl-map { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px 14px; } .xl-map label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; }
+.xl-why { font-size: 12px; color: #5A5D62; max-width: 420px; }
+.xl-f { display: grid; grid-template-columns: 110px 1fr; gap: 10px; align-items: start; } .xl-f > b { font-size: 13px; padding-top: 6px; } .xl-f > span { display: flex; flex-wrap: wrap; gap: 6px; } .xl-f .cr-pay { background: none; font: inherit; font-size: 13px; }

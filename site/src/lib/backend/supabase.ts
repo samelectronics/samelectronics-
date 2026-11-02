@@ -71,7 +71,7 @@ export const supabase: Backend = {
   async setApplication(id, status) { await db().from('applications').update({ status }).eq('id', id); },
   async audit() { const { data } = await db().from('audit_log').select('*').order('created_at', { ascending: false }).limit(500); return (data || []).map((l: Row): Audit => ({ id: l.id, staff: l.staff_name, action: l.action, target: l.target, detail: l.detail, at: ts(l.created_at) })); },
   async log(action, target, detail) { await db().from('audit_log').insert({ action, target, detail }); },
-  async saveProduct(id, patch) { const { error } = await db().from('products').update({ ...patch, updated_at: new Date().toISOString() }).eq('id', id); if (error) return no(error.message); await this.log('product.save', id, Object.keys(patch).join(', ')); return ok(true as const); },
+  async saveProduct(id, patch) { const { data, error } = await db().from('products').update({ ...patch, updated_at: new Date().toISOString() }).eq('id', id).select('id'); if (error) return no(error.message); if (!data || !data.length) return no('Not in the database yet.'); await this.log('product.save', id, Object.keys(patch).join(', ')); return ok(true as const); },
   async addProduct(p) { const { error } = await db().from('products').insert(p); if (error) return no(error.message); await this.log('product.add', p.id); return ok(true as const); },
   async stockMove(id, delta, reason, ref) { const { error } = await db().rpc('stock_move', { p_id: id, p_delta: delta, p_reason: reason, p_ref: ref || null }); return error ? no(error.message) : ok(true as const); },
   async stockMoves() { const { data } = await db().from('stock_moves').select('*').order('created_at', { ascending: false }).limit(2000); return (data || []).map((m: Row): StockMove => ({ id: m.id, product: m.product_id, delta: m.delta, reason: m.reason, ref: m.ref || undefined, staff: m.staff_name || '', at: ts(m.created_at) })); },
@@ -81,3 +81,13 @@ export const supabase: Backend = {
 
 /** R9 · the signed-in user's access token, for server routes that check staff (e.g. /api/daftra) */
 export async function accessToken(): Promise<string | null> { const { data } = await db().auth.getSession(); return data.session?.access_token || null; }
+
+/** R9 · insert rows that are not there yet (existing rows are left exactly as they are). Staff permissions apply (RLS). */
+export async function insertMissing(table: 'products' | 'models', rows: Record<string, unknown>[]): Promise<{ ok: number; error?: string }> {
+  let n = 0;
+  for (let i = 0; i < rows.length; i += 100) {
+    const { error, data } = await db().from(table).upsert(rows.slice(i, i + 100), { onConflict: 'id', ignoreDuplicates: true }).select('id');
+    if (error) return { ok: n, error: error.message }; n += (data || []).length;
+  }
+  return { ok: n };
+}

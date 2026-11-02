@@ -6,6 +6,7 @@
 // Demo log-ins (until Supabase is connected): owner@sam.demo / demo1234 · manager@ · sales@ · tech@ (same password).
 import DaftraMod from './DaftraMod';
 import PromoMod from './PromoMod';
+import ExcelMod from './ExcelMod';
 import React, { useEffect, useState } from 'react';
 import { backend, live, ROLE_NAMES, useStaff, type Perm, type Staff } from '@/lib/backend';
 import { installI18n } from '@/i18n/lang';
@@ -30,6 +31,7 @@ const MODS: Mod[] = [
   { id: 'inbox', l: 'Inbox · live chat', d: 'M4 5h16v11H8l-4 4z', need: ['chat'], C: Inbox },
   { id: 'site', l: 'Site & Samsoom', d: 'M3 4h18v12H3zM8 20h8M12 16v4', need: ['content', 'banners', 'samsoom'], C: SiteEditor },
   { id: 'daftra', l: 'Daftra · the brain', d: 'M12 2a7 7 0 0 0-7 7c0 2.4 1.2 4.5 3 5.7V18h8v-3.3A7 7 0 0 0 12 2zM9 22h6M9 9h.01M15 9h.01M9 13c1.5 1 4.5 1 6 0', need: ['accounting', 'products'], C: DaftraMod },
+  { id: 'excel', l: 'Excel · import & price lists', d: 'M4 3h11l5 5v13H4zM14 3v6h6M8 13l4 5M12 13l-4 5', need: ['products', 'prices', 'stock'], C: ExcelMod },
   { id: 'promo', l: 'Ads, pop-ups & events', d: 'M3 11l15-7v16L3 13zM3 11v2M18 8a4 4 0 0 1 0 8', need: ['banners', 'content'], C: PromoMod },
   { id: 'accounting', l: 'Accounting & VAT', d: 'M4 4h16v16H4zM8 8h8M8 12h8M8 16h5', need: ['accounting', 'reports'], C: Accounting },
   { id: 'emails', l: 'Automated e-mails', d: 'M3 6l9 6 9-6M3 6h18v12H3z', need: ['emails'], C: Emails },
