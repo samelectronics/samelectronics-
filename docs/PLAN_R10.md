@@ -82,6 +82,8 @@ deployed in R9, must be verified on the live site with screenshots (see Stage 0)
 - **U2 Circuit system (REDO).** One generator used by every section, copied from the home hero: traces enter from the
   sides, run down, bend inward, join other traces, glowing pulses travel continuously (no restarting), never touch text
   or elements, use empty space only, same thickness and size as the hero. No 2 cm stubs, no "lumps".
+  **Detail pages: NO circuits filling or spammed across backgrounds.** At most a few iconic hero-style traces at the
+  edges of a cover; content areas stay clean.
 - **U3 Entry animations (REDO).** Every element (titles, text, boxes, cards, images, stats) enters like the hero.
 - **U4 Mouse glow (NEW for home).** Blurred yellow light that follows the mouse, like the hero, on all home sections.
 - **U5 One colour palette for titles (REDO).** No golden-yellow title on white pages; same yellow/graphite rules everywhere.
@@ -149,7 +151,7 @@ lower phone area used · Request console only sends when complete, Google review
 
 ## Stage 3 · Detail pages, rebuilt one by one (each with its own idea, home-hero quality)
 
-Rules for all: unique signature cover per page (no copy-paste), U1–U8, Samsoom only as the bottom-right circle, themed
+Rules for all: unique signature cover per page (no copy-paste), no background circuit spam (U2), U1–U8, Samsoom only as the bottom-right circle, themed
 FAQ at the end of each page, more interactive information, never empty space, same-size cards with aligned buttons.
 
 - **P1 Shop + Deals merged.** "Parts warehouse" cover: shelving racks with lit bins, scanner beam over the search.
@@ -274,6 +276,10 @@ website actions and Daftra documents created from the website).
 - Daftra features depend on what Daftra's API exposes; anything it does not expose is shown as a link into Daftra.
 
 ---
+
+## Final review rule
+Every step ends with a review pass: anything cut, clipped, overlapping, misaligned or off-palette is fixed before it
+is reported, in English and Arabic, desktop and phone.
 
 ## Order of work
 Stage 0 (audit, already started) → Stage 1 (entrance, home, universal system) → Stage 2 (owner + security, so the
