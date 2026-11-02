@@ -43,8 +43,8 @@ const S: [string, string, [string, string[]][]][] = [
     ['Your rights', ['Ask for a copy, a correction or deletion of your data, or object to its use, using the privacy form on the contact page. We answer within 30 days, in line with the UAE personal data protection law.']],
   ]],
   ['cookies', 'Cookies', [
-    ['What we store', ['This site keeps a few things in your browser so it works: your language, your cart, stars and recent searches, whether you have seen Samsoom’s tour, and your sign-in session. We do not use advertising cookies.']],
-    ['Your choice', ['You can clear them at any time in your browser; the site will simply forget your cart and preferences on that device.']],
+    ['Four kinds, named after phone parts', ['Battery (essential, always on): your cart, language, sign-in and these choices. Kept until you clear them; sign-in until you sign out.', 'Memory Chip (preferences): currency, sounds, recent searches, starred parts and your devices. Kept 12 months.', 'Diagnostics (anonymous statistics): which pages are opened and how fast they load, never your name or contact. Kept 13 months.', 'Antenna (marketing and offers): the kinds of parts you look at, to show matching offers. Kept 6 months.']],
+    ['Your choice', ['The banner asks once, after the welcome. Change your choice any time with "Cookie settings" at the bottom of every page, or clear everything in your browser: the site will simply forget your cart and preferences on that device. Each choice is saved with its date.']],
   ]],
   ['brands', 'Brand names & trademarks', [
     ['Compatibility only', ['Brand names, model names and logos (such as Apple, Samsung, Xiaomi, Huawei and others) belong to their owners. We use them only to show which phones a part fits. Sam Electronics is an independent parts seller and repair shop, and is not affiliated with, authorised by or endorsed by these brands unless a page says so.']],

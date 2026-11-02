@@ -2,6 +2,19 @@
  * Romanian (R9). The most visible texts of the site; anything not listed here shows in English until it is added.
  */
 const DICT: Record<string, string> = {
+  "Yes": "Da",
+  "Not now": "Nu acum",
+  "Pick your language and the whole site follows.": "Alege limba și tot site-ul o urmează.",
+  "Add the phones you fix most. I will mark every part that fits them.": "Adaugă telefoanele pe care le repari cel mai des. Voi marca fiecare piesă compatibilă.",
+  "Deals, arrivals, limited": "Oferte, noutăți, limitate",
+  "Switch between offers, new stock and parts that are nearly gone.": "Treci între oferte, stoc nou și piese aproape epuizate.",
+  "Shop by part": "Cumpără după piesă",
+  "Tap a part to see every model and grade we have of it.": "Atinge o piesă ca să vezi fiecare model și calitate pe care le avem.",
+  "Price, quality, manufacturer, color, warranty… set it all exactly how you like, and save it.": "Preț, calitate, producător, culoare, garanție… setează totul exact cum vrei și salvează.",
+  "Search anything": "Caută orice",
+  "Type a model, a part or both. Spelling mistakes are fine: I will understand.": "Scrie un model, o piesă sau ambele. Greșelile nu contează: voi înțelege.",
+  "Pick your phone": "Alege telefonul",
+  "Choose the brand, then the model: every repair for it appears below.": "Alege marca, apoi modelul: toate reparațiile apar mai jos.",
   "Follow us": "Urmăriți-ne",
   "for daily stock drops.": "pentru stocul nou zilnic.",
   "& up": "și peste",

@@ -272,7 +272,7 @@ export default function Footer({ v }: { v: Vals }) {
                 Questions
               </a>
               <a href="/legal#cookies" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')} onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('se:settings', { detail: 'privacy' })); }}>
-                Cookies
+                Cookie settings
               </a>
               <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('se:settings'))} style={{ color: '#9DA1A6', background: 'none', border: 0, padding: 0, font: 'inherit', cursor: 'pointer' }} className={cx(undefined, 'scp-f2a4cf2e')}>
                 Settings

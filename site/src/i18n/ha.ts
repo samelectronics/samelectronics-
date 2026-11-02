@@ -2,6 +2,19 @@
  * Hausa (R9). The most visible texts of the site; anything not listed here shows in English until it is added. Marked for review by a native speaker (Control Room › Translations).
  */
 const DICT: Record<string, string> = {
+  "Yes": "Eh",
+  "Not now": "Ba yanzu ba",
+  "Pick your language and the whole site follows.": "Zaɓi yarenka kuma duk shafin zai bi shi.",
+  "Add the phones you fix most. I will mark every part that fits them.": "Ƙara wayoyin da kake gyarawa sosai. Zan yi alama a kowane kayan da ya dace da su.",
+  "Deals, arrivals, limited": "Rangwame, sababbi, ƙayyadadde",
+  "Switch between offers, new stock and parts that are nearly gone.": "Canja tsakanin rangwame, sabon kaya da kayan da suke kusan ƙarewa.",
+  "Shop by part": "Saya ta kayan gyara",
+  "Tap a part to see every model and grade we have of it.": "Taɓa kayan gyara don ganin kowane samfuri da daraja da muke da su.",
+  "Price, quality, manufacturer, color, warranty… set it all exactly how you like, and save it.": "Farashi, inganci, mai ƙera, launi, garanti… saita komai yadda kake so ka adana.",
+  "Search anything": "Nemi komai",
+  "Type a model, a part or both. Spelling mistakes are fine: I will understand.": "Rubuta samfuri, kayan gyara ko duka biyu. Kuskuren rubutu ba matsala: zan gane.",
+  "Pick your phone": "Zaɓi wayarka",
+  "Choose the brand, then the model: every repair for it appears below.": "Zaɓi alama, sannan samfuri: duk gyaransa zai bayyana a ƙasa.",
   "Follow us": "Bi mu",
   "for daily stock drops.": "don sabbin kaya kowace rana.",
   "& up": "da sama",

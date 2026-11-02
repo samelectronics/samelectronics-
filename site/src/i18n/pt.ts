@@ -2,6 +2,19 @@
  * Portuguese (R9). The most visible texts of the site; anything not listed here shows in English until it is added.
  */
 const DICT: Record<string, string> = {
+  "Yes": "Sim",
+  "Not now": "Agora não",
+  "Pick your language and the whole site follows.": "Escolha o seu idioma e todo o site acompanha.",
+  "Add the phones you fix most. I will mark every part that fits them.": "Adicione os telemóveis que mais repara. Vou marcar cada peça compatível.",
+  "Deals, arrivals, limited": "Promoções, novidades, limitados",
+  "Switch between offers, new stock and parts that are nearly gone.": "Alterne entre promoções, stock novo e peças quase esgotadas.",
+  "Shop by part": "Comprar por peça",
+  "Tap a part to see every model and grade we have of it.": "Toque numa peça para ver cada modelo e qualidade que temos.",
+  "Price, quality, manufacturer, color, warranty… set it all exactly how you like, and save it.": "Preço, qualidade, fabricante, cor, garantia… ajuste tudo ao seu gosto e guarde.",
+  "Search anything": "Pesquise qualquer coisa",
+  "Type a model, a part or both. Spelling mistakes are fine: I will understand.": "Escreva um modelo, uma peça ou ambos. Erros não fazem mal: eu percebo.",
+  "Pick your phone": "Escolha o seu telemóvel",
+  "Choose the brand, then the model: every repair for it appears below.": "Escolha a marca e depois o modelo: todas as reparações aparecem abaixo.",
   "Follow us": "Siga-nos",
   "for daily stock drops.": "para o stock novo todos os dias.",
   "& up": "e acima",

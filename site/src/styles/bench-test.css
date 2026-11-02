@@ -190,3 +190,5 @@ html[dir='rtl'] .bt-try > svg:last-child { transform: scaleX(-1); }
 .bt-acts { gap: calc(12px / var(--sc, 1)) !important; margin-top: calc(20px / var(--sc, 1)) !important; }
 /* R10 L1: the text column uses all the room left of the rig, so both standard buttons stay on one row on every laptop */
 @media (min-width: 701px) { .bt-left { width: 668px; } .bt-acts { flex-wrap: nowrap !important; } }
+/* R10 (owner): the same safe distance from the edges as every other section (content 84px in from each side at 1440) */
+@media (min-width: 701px) { .bt-left { left: 84px !important; width: 600px !important; } .bt-rigwrap { left: 736px !important; } html[dir='rtl'] .bt-left { left: 756px !important; } html[dir='rtl'] .bt-rigwrap { left: 84px !important; } }

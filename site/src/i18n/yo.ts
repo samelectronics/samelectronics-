@@ -2,6 +2,19 @@
  * Yoruba (R9). The most visible texts of the site; anything not listed here shows in English until it is added. Marked for review by a native speaker (Control Room › Translations).
  */
 const DICT: Record<string, string> = {
+  "Yes": "Bẹ́ẹ̀ni",
+  "Not now": "Kì í ṣe báyìí",
+  "Pick your language and the whole site follows.": "Yan èdè rẹ, gbogbo ojú-òpó yóò tẹ̀lé e.",
+  "Add the phones you fix most. I will mark every part that fits them.": "Ṣàfikún àwọn fóònù tí o ń tún jù. Màá sàmì sí gbogbo ẹ̀yà tí ó bá wọn mu.",
+  "Deals, arrivals, limited": "Àdínkù, tuntun, díẹ̀",
+  "Switch between offers, new stock and parts that are nearly gone.": "Yí padà láàárín àdínkù, ọjà tuntun àti ẹ̀yà tí ó fẹ́ tán.",
+  "Shop by part": "Ra nípa ẹ̀yà",
+  "Tap a part to see every model and grade we have of it.": "Tẹ ẹ̀yà kan láti rí gbogbo àwòṣe àti ìpele tí a ní.",
+  "Price, quality, manufacturer, color, warranty… set it all exactly how you like, and save it.": "Iye owó, dídára, olùṣe, àwọ̀, ìdánilójú… ṣètò gbogbo rẹ̀ bí o ṣe fẹ́ kí o sì fi pamọ́.",
+  "Search anything": "Wá ohunkóhun",
+  "Type a model, a part or both. Spelling mistakes are fine: I will understand.": "Kọ àwòṣe, ẹ̀yà tàbí méjèèjì. Àṣìṣe sípẹ́lì kò burú: màá yé mi.",
+  "Pick your phone": "Yan fóònù rẹ",
+  "Choose the brand, then the model: every repair for it appears below.": "Yan ẹ̀ka, lẹ́yìn náà àwòṣe: gbogbo àtúnṣe rẹ̀ yóò hàn nísàlẹ̀.",
   "Follow us": "Tẹ̀lé wa",
   "for daily stock drops.": "fún ọjà tuntun lójoojúmọ́.",
   "& up": "àti jù bẹ́ẹ̀ lọ",

@@ -2,6 +2,19 @@
  * Chinese (Simplified) (R9). The most visible texts of the site; anything not listed here shows in English until it is added.
  */
 const DICT: Record<string, string> = {
+  "Yes": "是",
+  "Not now": "暂不",
+  "Pick your language and the whole site follows.": "选择语言，整个网站随之切换。",
+  "Add the phones you fix most. I will mark every part that fits them.": "添加您最常修的手机，我会标出每个适配的配件。",
+  "Deals, arrivals, limited": "特价、新到、限量",
+  "Switch between offers, new stock and parts that are nearly gone.": "在特价、新到货和即将售罄的配件之间切换。",
+  "Shop by part": "按配件选购",
+  "Tap a part to see every model and grade we have of it.": "点击一个配件，查看我们所有的型号和等级。",
+  "Price, quality, manufacturer, color, warranty… set it all exactly how you like, and save it.": "价格、品质、厂家、颜色、保修……全部按您的喜好设置并保存。",
+  "Search anything": "搜索任何内容",
+  "Type a model, a part or both. Spelling mistakes are fine: I will understand.": "输入型号、配件或两者都行。拼错也没关系：我能理解。",
+  "Pick your phone": "选择您的手机",
+  "Choose the brand, then the model: every repair for it appears below.": "先选品牌，再选型号：下方会显示所有维修项目。",
   "Follow us": "关注我们",
   "for daily stock drops.": "获取每日到货。",
   "& up": "及以上",

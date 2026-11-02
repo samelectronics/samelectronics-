@@ -2,6 +2,19 @@
  * Malayalam (R9). The most visible texts of the site; anything not listed here shows in English until it is added.
  */
 const DICT: Record<string, string> = {
+  "Yes": "അതെ",
+  "Not now": "ഇപ്പോൾ വേണ്ട",
+  "Pick your language and the whole site follows.": "നിങ്ങളുടെ ഭാഷ തിരഞ്ഞെടുക്കൂ, സൈറ്റ് മുഴുവൻ അതിലാകും.",
+  "Add the phones you fix most. I will mark every part that fits them.": "നിങ്ങൾ കൂടുതൽ നന്നാക്കുന്ന ഫോണുകൾ ചേർക്കൂ. അവയ്ക്ക് യോജിക്കുന്ന എല്ലാ പാർട്ടും ഞാൻ അടയാളപ്പെടുത്തും.",
+  "Deals, arrivals, limited": "ഡീലുകൾ, പുതിയ വരവ്, പരിമിതം",
+  "Switch between offers, new stock and parts that are nearly gone.": "ഓഫറുകൾ, പുതിയ സ്റ്റോക്ക്, തീരാറായ പാർട്ടുകൾ എന്നിവയ്ക്കിടയിൽ മാറൂ.",
+  "Shop by part": "പാർട്ട് പ്രകാരം വാങ്ങൂ",
+  "Tap a part to see every model and grade we have of it.": "ഒരു പാർട്ട് ടാപ്പ് ചെയ്ത് ഞങ്ങളുടെ എല്ലാ മോഡലും ഗ്രേഡും കാണൂ.",
+  "Price, quality, manufacturer, color, warranty… set it all exactly how you like, and save it.": "വില, ഗുണമേന്മ, നിർമ്മാതാവ്, നിറം, വാറന്റി… എല്ലാം ഇഷ്ടം പോലെ സജ്ജമാക്കി സേവ് ചെയ്യൂ.",
+  "Search anything": "എന്തും തിരയൂ",
+  "Type a model, a part or both. Spelling mistakes are fine: I will understand.": "മോഡലോ പാർട്ടോ രണ്ടുമോ ടൈപ്പ് ചെയ്യൂ. അക്ഷരത്തെറ്റ് പ്രശ്നമല്ല: എനിക്ക് മനസ്സിലാകും.",
+  "Pick your phone": "നിങ്ങളുടെ ഫോൺ തിരഞ്ഞെടുക്കൂ",
+  "Choose the brand, then the model: every repair for it appears below.": "ബ്രാൻഡ്, പിന്നെ മോഡൽ തിരഞ്ഞെടുക്കൂ: അതിന്റെ എല്ലാ റിപ്പയറും താഴെ കാണാം.",
   "Follow us": "ഞങ്ങളെ പിന്തുടരൂ",
   "for daily stock drops.": "ദിവസേനയുള്ള പുതിയ സ്റ്റോക്കിനായി.",
   "& up": "മുതൽ മുകളിലേക്ക്",

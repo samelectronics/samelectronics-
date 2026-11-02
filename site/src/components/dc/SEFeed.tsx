@@ -142,10 +142,15 @@ function render(v: Vals) {
             <span className="fd-eb">THE FEED · @SAMELECTRONICS.UAE</span>
             <h2 className="fd-h"><span>Follow us</span> <span>for daily stock drops.</span></h2>
           </div>
-          <p className="fd-p">New stock, offers and bench tests go up first on our channels. Scan a code or tap Follow.</p>
         </header>
         <div className="fd-grid">
           <div className="fd-info">
+            {/* owner (2 Nov): the account name and the line fill the space under the title, beside the phone */}
+            <a className="fd-user" href={(v.ch || []).find((c: any) => c.on)?.href} target="_blank" rel="noopener noreferrer">
+              <img src="/assets/se-logo-128.webp" alt="" width={44} height={44} />
+              <span><b data-no-i18n="" dir="ltr">@samelectronics.uae</b><small>Instagram · TikTok · Facebook</small></span>
+            </a>
+            <p className="fd-p">New stock, offers and bench tests go up first on our channels. Scan a code or tap Follow.</p>
             <div className="fd-follow">
               {(v.ch || []).map((c: any) => (
                 <a key={c.id} href={c.href} target="_blank" rel="noopener noreferrer" className={'fd-fl ' + c.id + (c.on ? ' on' : '')} onMouseEnter={c.pick}>
@@ -174,12 +179,6 @@ function render(v: Vals) {
                 </span>
                 <span className="fd-rim" aria-hidden="true" />
               </span>
-            </a>
-            {/* owner (2 Nov): the account name lives under the phone, in the space that was empty */}
-            <a className="fd-user" href={(v.ch || []).find((c: any) => c.on)?.href} target="_blank" rel="noopener noreferrer">
-              <img src="/assets/se-logo-128.webp" alt="" width={34} height={34} />
-              <span><b data-no-i18n="" dir="ltr">@samelectronics.uae</b><small>{(v.ch || []).find((c: any) => c.on)?.name} · {T('Follow')}</small></span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
             </a>
           </div>
 

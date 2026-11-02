@@ -2,6 +2,19 @@
  * Swahili (R9). The most visible texts of the site; anything not listed here shows in English until it is added.
  */
 const DICT: Record<string, string> = {
+  "Yes": "Ndiyo",
+  "Not now": "Si sasa",
+  "Pick your language and the whole site follows.": "Chagua lugha yako na tovuti nzima itafuata.",
+  "Add the phones you fix most. I will mark every part that fits them.": "Ongeza simu unazotengeneza zaidi. Nitaweka alama kila kipuri kinachofaa.",
+  "Deals, arrivals, limited": "Ofa, mpya, chache",
+  "Switch between offers, new stock and parts that are nearly gone.": "Badilisha kati ya ofa, mzigo mpya na vipuri vinavyokaribia kuisha.",
+  "Shop by part": "Nunua kwa kipuri",
+  "Tap a part to see every model and grade we have of it.": "Gusa kipuri uone kila modeli na daraja tulilonalo.",
+  "Price, quality, manufacturer, color, warranty… set it all exactly how you like, and save it.": "Bei, ubora, mtengenezaji, rangi, dhamana… weka kila kitu unavyopenda na uhifadhi.",
+  "Search anything": "Tafuta chochote",
+  "Type a model, a part or both. Spelling mistakes are fine: I will understand.": "Andika modeli, kipuri au vyote. Makosa ya tahajia si tatizo: nitaelewa.",
+  "Pick your phone": "Chagua simu yako",
+  "Choose the brand, then the model: every repair for it appears below.": "Chagua chapa, kisha modeli: matengenezo yake yote yataonekana chini.",
   "Follow us": "Tufuate",
   "for daily stock drops.": "kwa mzigo mpya kila siku.",
   "& up": "na zaidi",

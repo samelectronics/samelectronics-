@@ -2,6 +2,19 @@
  * Amharic (R9). The most visible texts of the site; anything not listed here shows in English until it is added. Marked for review by a native speaker (Control Room › Translations).
  */
 const DICT: Record<string, string> = {
+  "Yes": "አዎ",
+  "Not now": "አሁን አይደለም",
+  "Pick your language and the whole site follows.": "ቋንቋዎን ይምረጡ፣ መላው ድረ ገጽ ይከተላል።",
+  "Add the phones you fix most. I will mark every part that fits them.": "በብዛት የሚጠግኗቸውን ስልኮች ያክሉ። የሚስማማቸውን ሁሉ እለያለሁ።",
+  "Deals, arrivals, limited": "ቅናሾች፣ አዲስ፣ የተወሰነ",
+  "Switch between offers, new stock and parts that are nearly gone.": "በቅናሾች፣ በአዲስ ክምችት እና ሊያልቁ በተቃረቡ ዕቃዎች መካከል ይቀያይሩ።",
+  "Shop by part": "በዕቃ ይግዙ",
+  "Tap a part to see every model and grade we have of it.": "ያለንን እያንዳንዱን ሞዴል እና ደረጃ ለማየት ዕቃ ይንኩ።",
+  "Price, quality, manufacturer, color, warranty… set it all exactly how you like, and save it.": "ዋጋ፣ ጥራት፣ አምራች፣ ቀለም፣ ዋስትና… ሁሉንም እንደወደዱ ያስተካክሉ እና ያስቀምጡ።",
+  "Search anything": "ማንኛውንም ይፈልጉ",
+  "Type a model, a part or both. Spelling mistakes are fine: I will understand.": "ሞዴል፣ ዕቃ ወይም ሁለቱንም ይጻፉ። የፊደል ስህተት ችግር የለውም፤ እረዳለሁ።",
+  "Pick your phone": "ስልክዎን ይምረጡ",
+  "Choose the brand, then the model: every repair for it appears below.": "ብራንድ ከዚያም ሞዴል ይምረጡ፤ ሁሉም ጥገናዎቹ ከታች ይታያሉ።",
   "Follow us": "ይከተሉን",
   "for daily stock drops.": "ለዕለታዊ አዲስ ክምችት።",
   "& up": "እና ከዚያ በላይ",

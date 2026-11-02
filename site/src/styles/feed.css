@@ -238,3 +238,9 @@ html[dir='rtl'] .fd-user svg { transform: scaleX(-1); }
 .fd-info { justify-content: center; }
 @media (max-width: 900px) { .fd-top2 { flex-direction: column; align-items: flex-start; gap: 14px; margin-bottom: 24px; } }
 .fd-info { display: flex; flex-direction: column; align-self: center; } .fd-info .fd-follow { margin-top: 0 !important; }
+
+.fd-info .fd-user { align-self: flex-start; margin: 0 0 14px; padding: 10px 20px 10px 10px; }
+.fd-info .fd-user img { width: 44px; height: 44px; }
+.fd-info .fd-user b { font-size: 24px; }
+.fd-info .fd-p { margin: 0 0 22px !important; }
+.fd-info { align-self: center !important; }

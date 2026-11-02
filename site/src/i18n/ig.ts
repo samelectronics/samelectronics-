@@ -2,6 +2,19 @@
  * Igbo (R9). The most visible texts of the site; anything not listed here shows in English until it is added. Marked for review by a native speaker (Control Room › Translations).
  */
 const DICT: Record<string, string> = {
+  "Yes": "Ee",
+  "Not now": "Ọ bụghị ugbu a",
+  "Pick your language and the whole site follows.": "Họrọ asụsụ gị, saịtị niile ga-agbaso ya.",
+  "Add the phones you fix most. I will mark every part that fits them.": "Tinye ekwentị ndị ị na-edozi kachasị. M ga-aka akara n'akụkụ ọ bụla dabara ha.",
+  "Deals, arrivals, limited": "Mbelata ọnụ ahịa, ọhụrụ, ole na ole",
+  "Switch between offers, new stock and parts that are nearly gone.": "Gbanwee n'etiti mbelata ọnụ ahịa, ngwa ọhụrụ na akụkụ ndị fọrọ obere ka ha gwụ.",
+  "Shop by part": "Zụta site n'akụkụ",
+  "Tap a part to see every model and grade we have of it.": "Pịa akụkụ iji hụ ụdị na ọkwa ọ bụla anyị nwere.",
+  "Price, quality, manufacturer, color, warranty… set it all exactly how you like, and save it.": "Ọnụ ahịa, ịdị mma, onye mepụtara, agba, akwụkwọ nkwa… dozie ihe niile ka ọ masịrị gị ma chekwaa.",
+  "Search anything": "Chọọ ihe ọ bụla",
+  "Type a model, a part or both. Spelling mistakes are fine: I will understand.": "Dee ụdị, akụkụ ma ọ bụ ha abụọ. Mmejọ mkpụrụ edemede adịghị njọ: m ga-aghọta.",
+  "Pick your phone": "Họrọ ekwentị gị",
+  "Choose the brand, then the model: every repair for it appears below.": "Họrọ akara, wee ụdị: nrụzi ya niile ga-apụta n'okpuru.",
   "Follow us": "Soro anyị",
   "for daily stock drops.": "maka ngwa ọhụrụ kwa ụbọchị.",
   "& up": "na karịa",

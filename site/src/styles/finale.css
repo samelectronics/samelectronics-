@@ -144,3 +144,12 @@ html:has(#finale), html:has(#finale) body { background-color: #34363A; }
   background: conic-gradient(from 180deg at 50% 0%, rgba(255, 240, 200, 0) 0deg, rgba(255, 240, 200, 0) 160deg, rgba(255, 240, 200, .1) 172deg, rgba(255, 240, 200, .14) 180deg, rgba(255, 240, 200, .1) 188deg, rgba(255, 240, 200, 0) 200deg, rgba(255, 240, 200, 0) 360deg);
   filter: blur(10px); -webkit-mask-image: linear-gradient(180deg, #000 40%, transparent 92%); mask-image: linear-gradient(180deg, #000 40%, transparent 92%); }
 .fz-stage::after { content: ''; position: absolute; left: 50%; top: 318px; width: 300px; height: 40px; margin-left: -150px; border-radius: 50%; z-index: -1; pointer-events: none; background: radial-gradient(closest-side, rgba(247, 192, 50, .2), rgba(247, 192, 50, 0)); filter: blur(4px); }
+/* R10 I1 / L13 · circuits run CONTINUOUSLY in from both sides: the traces are lit (not faint), and light pulses flow along
+   them all the time, several at once, never restarting from nothing; plus a cinematic studio spotlight on the emblem */
+.fz-circ .base { stroke: rgba(247, 192, 50, .42) !important; stroke-width: 2 !important; filter: drop-shadow(0 0 4px rgba(247, 192, 50, .35)); }
+.fz-on .fz-circ .cur { animation: fzCur 1.1s calc(.15s + var(--i) * .12s) cubic-bezier(.5, 0, .6, 1) both, fzFlow 2.8s calc(1.3s + var(--i) * .35s) linear infinite !important; }
+@keyframes fzFlow { from { stroke-dasharray: .06 .19; stroke-dashoffset: .25; opacity: 1; } to { stroke-dasharray: .06 .19; stroke-dashoffset: 0; opacity: 1; } }
+.fz-stage::before { content: ''; position: absolute; left: 50%; top: -80px; width: 560px; height: 560px; margin-left: -280px; z-index: 0; pointer-events: none; background: linear-gradient(rgba(255, 238, 196, .14), rgba(255, 238, 196, 0) 75%); clip-path: polygon(40% 0, 60% 0, 100% 100%, 0 100%); filter: blur(10px); }
+.fz-stage::after { content: ''; position: absolute; left: 50%; top: 300px; width: 520px; height: 70px; margin-left: -260px; z-index: 0; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgba(247, 192, 50, .22), rgba(247, 192, 50, 0)); }
+.fz { background: radial-gradient(60% 50% at 50% 26%, #4A4C51 0%, #34363A 42%, #232427 100%) !important; }
+@media (prefers-reduced-motion: reduce) { .fz-circ .cur { animation: none !important; } }

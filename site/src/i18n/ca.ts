@@ -2,6 +2,19 @@
  * Catalan (R9). The most visible texts of the site; anything not listed here shows in English until it is added.
  */
 const DICT: Record<string, string> = {
+  "Yes": "Sí",
+  "Not now": "Ara no",
+  "Pick your language and the whole site follows.": "Tria el teu idioma i tot el web el segueix.",
+  "Add the phones you fix most. I will mark every part that fits them.": "Afegeix els telèfons que més repares. Marcaré cada peça que els va bé.",
+  "Deals, arrivals, limited": "Ofertes, novetats, limitats",
+  "Switch between offers, new stock and parts that are nearly gone.": "Canvia entre ofertes, estoc nou i peces gairebé exhaurides.",
+  "Shop by part": "Compra per peça",
+  "Tap a part to see every model and grade we have of it.": "Toca una peça per veure cada model i qualitat que tenim.",
+  "Price, quality, manufacturer, color, warranty… set it all exactly how you like, and save it.": "Preu, qualitat, fabricant, color, garantia… ajusta-ho tot al teu gust i desa-ho.",
+  "Search anything": "Cerca el que vulguis",
+  "Type a model, a part or both. Spelling mistakes are fine: I will understand.": "Escriu un model, una peça o tots dos. Les errades no importen: t’entendré.",
+  "Pick your phone": "Tria el teu telèfon",
+  "Choose the brand, then the model: every repair for it appears below.": "Tria la marca i després el model: a sota apareixen totes les reparacions.",
   "Follow us": "Segueix-nos",
   "for daily stock drops.": "per a l’estoc nou de cada dia.",
   "& up": "i més",

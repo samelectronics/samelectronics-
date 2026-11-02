@@ -2,6 +2,19 @@
  * Filipino (R9). The most visible texts of the site; anything not listed here shows in English until it is added.
  */
 const DICT: Record<string, string> = {
+  "Yes": "Oo",
+  "Not now": "Hindi ngayon",
+  "Pick your language and the whole site follows.": "Piliin ang wika mo at susunod ang buong site.",
+  "Add the phones you fix most. I will mark every part that fits them.": "Idagdag ang mga phone na madalas mong ayusin. Mamarkahan ko ang bawat piyesang kasya.",
+  "Deals, arrivals, limited": "Deals, bagong dating, limitado",
+  "Switch between offers, new stock and parts that are nearly gone.": "Lumipat sa pagitan ng offers, bagong stock at mga piyesang paubos na.",
+  "Shop by part": "Bumili ayon sa piyesa",
+  "Tap a part to see every model and grade we have of it.": "I-tap ang piyesa para makita ang bawat modelo at grade na mayroon kami.",
+  "Price, quality, manufacturer, color, warranty… set it all exactly how you like, and save it.": "Presyo, kalidad, gumawa, kulay, warranty… ayusin lahat ayon sa gusto mo at i-save.",
+  "Search anything": "Maghanap ng kahit ano",
+  "Type a model, a part or both. Spelling mistakes are fine: I will understand.": "I-type ang modelo, piyesa o pareho. Ayos lang ang mali sa spelling: maiintindihan ko.",
+  "Pick your phone": "Piliin ang phone mo",
+  "Choose the brand, then the model: every repair for it appears below.": "Piliin ang brand, tapos ang modelo: lalabas sa ibaba ang bawat repair nito.",
   "Follow us": "Sundan kami",
   "for daily stock drops.": "para sa araw-araw na bagong stock.",
   "& up": "pataas",

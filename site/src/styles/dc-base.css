@@ -1048,3 +1048,56 @@ html[dir='rtl'] .se-qs-sw.on i { transform: translateX(-18px); } html[dir='rtl']
 .se-qs-link { justify-content: space-between !important; padding: 9px 2px !important; border-top: 1px solid rgba(255, 255, 255, .08) !important; border-radius: 0 !important; font: 600 13px Inter, sans-serif !important; color: #F7C032 !important; }
 .se-qs-link em { font-style: normal; }
 .se-lm-ic { flex: none; transition: color .3s; } .se-lm-ic > path:first-of-type { transform-box: fill-box; transform-origin: center; transition: transform .6s cubic-bezier(.2, .8, .2, 1); } .se-lm-btn:hover .se-lm-ic, .se-lm.open .se-lm-ic { color: #F7C032; } .se-lm-btn:hover .se-lm-ic > path:first-of-type, .se-lm.open .se-lm-ic > path:first-of-type { transform: rotate(45deg); }
+
+/* R10 (owner: "cheap looking"): a cinematic entrance for the language picker. The page goes dark behind a slow
+   spotlight with drifting warm light; Samsoom stands on a lit stage in his own spotlight with a reflective floor; the
+   bubble is a glossy speech bubble with a tail and a clear gap above his head; the list fades out well before the edge. */
+.st-veil-lang { background: radial-gradient(70% 60% at 50% 38%, rgba(48, 50, 54, .72), rgba(14, 15, 17, .92) 72%) !important; -webkit-backdrop-filter: blur(10px) saturate(.8); backdrop-filter: blur(10px) saturate(.8); }
+.st-cine { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.st-cine i { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .5; animation: stCine 14s ease-in-out infinite alternate; }
+.st-cine i:nth-child(1) { left: 12%; top: 18%; width: 340px; height: 340px; background: rgba(247, 192, 50, .22); }
+.st-cine i:nth-child(2) { right: 10%; bottom: 12%; width: 420px; height: 420px; background: rgba(247, 160, 40, .16); animation-duration: 18s; }
+.st-cine i:nth-child(3) { left: 45%; top: -10%; width: 240px; height: 520px; border-radius: 40%; background: linear-gradient(rgba(255, 244, 214, .16), rgba(255, 244, 214, 0)); filter: blur(30px); transform: rotate(8deg); animation: none; }
+@keyframes stCine { to { transform: translate(60px, -40px) scale(1.15); } }
+.st-veil-lang .st-lang2 { box-shadow: 0 50px 120px -30px rgba(0, 0, 0, .85), 0 0 0 1px rgba(247, 192, 50, .28), 0 0 80px -20px rgba(247, 192, 50, .35); }
+.st-veil-lang .st-l2-sam { background: radial-gradient(120% 70% at 50% 0%, #3A3C40 0%, #26282B 55%, #1C1D20 100%) !important; justify-content: flex-end; gap: 22px; padding: 26px 20px 30px; overflow: hidden; }
+.st-l2-spot { position: absolute; left: 50%; top: -20px; width: 230px; height: 360px; margin-left: -115px; background: linear-gradient(rgba(255, 236, 190, .26), rgba(255, 236, 190, 0) 80%); clip-path: polygon(38% 0, 62% 0, 100% 100%, 0 100%); filter: blur(6px); pointer-events: none; }
+.st-veil-lang .st-l2-floor { bottom: -10px; height: 22px; background: radial-gradient(closest-side, rgba(247, 192, 50, .35), rgba(0, 0, 0, 0)); }
+.st-veil-lang .st-l2-av::after { content: ''; position: absolute; left: 10%; right: 10%; bottom: -34px; height: 30px; background: linear-gradient(rgba(255, 255, 255, .07), rgba(255, 255, 255, 0)); border-radius: 50%; }
+.st-veil-lang .st-l2-bubble { z-index: 2; background: linear-gradient(180deg, #FFD566, #F7C032 70%); border-radius: 20px; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .55), 0 18px 40px -16px rgba(247, 192, 50, .55); }
+.st-veil-lang .st-l2-bubble::after { bottom: -9px; width: 18px; height: 18px; margin-left: -9px; background: #F7C032; }
+.st-l2-more { padding-top: 80px !important; background: linear-gradient(180deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, .92) 45%, #fff 70%) !important; }
+.st-l2-scroll { padding-bottom: 96px !important; }
+@media (max-width: 680px) { .st-veil-lang .st-l2-sam { flex-direction: row; justify-content: center; gap: 16px; padding: 16px; } .st-l2-spot { display: none; } }
+.st-veil-lang .st-lang2 { background: #1C1D20 !important; }
+.st-veil-lang .st-l2-list { background: linear-gradient(180deg, #232427, #1C1D20); }
+.st-veil-lang .st-l2-i { background: rgba(255, 255, 255, .05); color: #fff; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .06); }
+.st-veil-lang .st-l2-i small { color: #9DA1A6; }
+.st-veil-lang .st-l2-i:hover { background: rgba(247, 192, 50, .16); color: #fff; }
+.st-veil-lang .st-l2-i.det { background: #F7C032; color: #26282B; box-shadow: 0 10px 26px -12px rgba(247, 192, 50, .7); } .st-veil-lang .st-l2-i.det small, .st-veil-lang .st-l2-i.det svg { color: #26282B; }
+.st-veil-lang .st-l2-i.hint:not(.det) { box-shadow: inset 0 0 0 1.5px #F7C032; }
+.st-veil-lang .st-l2-more { background: linear-gradient(180deg, rgba(28, 29, 32, 0), rgba(28, 29, 32, .94) 45%, #1C1D20 70%) !important; color: #F7C032; }
+.st-veil-lang .st-l2-list::before { background: linear-gradient(#232427, rgba(35, 36, 39, 0)); }
+
+/* R10 B4 · cookies: Samsoom with a bitten cookie, crumbs falling once; each category opens to "Read more" */
+.sc2-cookie { position: relative; flex: none; display: grid; place-items: center; width: 56px; height: 56px; }
+.sc2-ck { position: absolute; right: -6px; bottom: 2px; filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .35)); animation: ckBob 2.6s ease-in-out infinite; }
+.sc2-ck .crumb { animation: ckFall 1.4s .4s ease-in both; }
+@keyframes ckFall { 0% { transform: none; opacity: 1; } 100% { transform: translate(4px, 26px); opacity: 0; } }
+@keyframes ckBob { 50% { transform: rotate(-8deg) translateY(-1px); } }
+.sc2-cat2 { display: block !important; padding: 0 !important; border-radius: 14px; background: rgba(255, 255, 255, .04); margin-bottom: 8px; }
+.sc2-cat2 > summary { display: grid; grid-template-columns: 36px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 12px 14px; cursor: pointer; list-style: none; }
+.sc2-cat2 > summary::-webkit-details-marker { display: none; }
+.sc2-cic { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 10px; background: rgba(247, 192, 50, .14); color: #F7C032; }
+.sc2-ct { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sc2-ct em { font: 600 10.5px 'JetBrains Mono', monospace; letter-spacing: .06em; font-style: normal; color: #F7C032; text-transform: uppercase; }
+.sc2-ct u { font: 600 12px Inter, sans-serif; color: #C9CBCE; text-decoration: none; }
+.sc2-cat2[open] .sc2-ct u { color: #F7C032; }
+.sc2-cat2 dl { display: grid; grid-template-columns: 120px 1fr; gap: 6px 12px; margin: 0; padding: 0 14px 14px 62px; font: 400 13px/1.45 Inter, sans-serif; }
+.sc2-cat2 dt { color: #9DA1A6; font-weight: 600; } .sc2-cat2 dd { margin: 0; color: #E4E5E7; }
+.sc2-more { display: inline-block; margin: 4px 0 12px; color: #F7C032; font: 600 13px Inter, sans-serif; text-decoration: none; }
+.sc2-panel .sc2-cat2 { background: #F4F5F6; }
+.sc2-panel .sc2-cic { background: #26282B; }
+.sc2-panel .sc2-ct em { color: #B07A0A; } .sc2-panel .sc2-ct u { color: #5E6064; } .sc2-panel .sc2-cat2[open] .sc2-ct u { color: #26282B; }
+.sc2-panel .sc2-cat2 dt { color: #6A6D72; } .sc2-panel .sc2-cat2 dd { color: #26282B; }
+.sc2-panel .sc2-more { color: #26282B; text-decoration: underline; text-decoration-color: #F7C032; text-underline-offset: 3px; }

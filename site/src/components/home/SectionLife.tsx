@@ -35,29 +35,31 @@ const NS = 'http://www.w3.org/2000/svg';
 // (with a junction node), and each ends in a pad. Never closer than 18px to any content; same 2px stroke as the hero; a
 // light pulse runs along every trace continuously (infinite loop, never restarting). Gutters under 48px get nothing.
 function lanes(gw: number, H: number, side: 1 | -1, s0: number) {
-  seed = s0;
-  const W = Math.min(gw - 18, 120), n = W >= 80 ? 3 : W >= 52 ? 2 : 1, step = Math.max(14, Math.min(26, (W - 12) / n));
-  const X = (x: number) => (side > 0 ? x : W - x), f = (v: number) => v.toFixed(0);
+  // R10 (owner: "each section unique, random, not three straight lines"): a seeded random board per section and side.
+  // Traces enter from the edge at random heights, wander down in runs of random length with 45° jogs in BOTH directions,
+  // some branch off and end on their own pad, some stay short, a few rejoin; nothing is evenly spaced.
+  seed = s0 * 7919 + 13;
+  const W = Math.min(gw - 16, 150), f = (v: number) => v.toFixed(0), X = (x: number) => (side > 0 ? x : W - x);
   const paths: { d: string; len: number }[] = [], pads: [number, number, number][] = [], joints: [number, number][] = [];
-  const laneX: number[] = [];
-  for (let i = 0; i < n; i++) {
-    const lx = 8 + i * step; laneX.push(lx);
-    let y = 40 + i * 30 + rnd() * 24; const y0 = y;
-    let d = `M${f(X(0))} ${f(y)} H${f(X(lx - 10))} L${f(X(lx))} ${f(y + 10)}`; y += 10;
-    // the long run down, with one gentle 45° jog toward the content and back
-    const end = H * (0.62 + rnd() * 0.3) - i * 40, jogAt = y + (end - y) * (0.3 + rnd() * 0.3), jog = Math.min(10, W - lx - 6);
-    if (jog > 4 && end - y > 260) { d += ` V${f(jogAt)} L${f(X(lx + jog))} ${f(jogAt + jog)} V${f(jogAt + jog + 90)} L${f(X(lx))} ${f(jogAt + 2 * jog + 90)}`; y = jogAt + 2 * jog + 90; }
-    // the end: bend inward and finish on a pad (still inside the gutter)
-    const bx = Math.min(W - 6, lx + 12 + rnd() * 14), by = Math.max(y + 40, end);
-    d += ` V${f(by)} L${f(X(bx))} ${f(by + (bx - lx))} V${f(by + (bx - lx) + 22)}`;
-    pads.push([X(bx), by + (bx - lx) + 22, i % 2 ? 3.5 : 4.5]); paths.push({ d, len: by - y0 + 80 });
-  }
-  // one trace joins the outer lane halfway down, entering from the edge
-  if (H > 700) {
-    const jy = H * (0.38 + rnd() * 0.2), lx = laneX[0];
-    const d = `M${f(X(0))} ${f(jy - 14)} L${f(X(lx - 14 > 0 ? lx - 14 : 0))} ${f(jy - 14)} L${f(X(lx))} ${f(jy)}`;
-    paths.push({ d, len: lx + 20 }); joints.push([X(lx), jy]);
-  }
+  const n = 2 + Math.floor(rnd() * Math.min(4, 1 + H / 500));
+  const ys = Array.from({ length: n }, () => 30 + rnd() * (H - 260)).sort((a, b) => a - b);
+  ys.forEach((y0, i) => {
+    let x = 0, y = y0, len = 0; const entry = 6 + rnd() * Math.min(40, W * 0.4);
+    let d = `M${f(X(0))} ${f(y)} H${f(X(entry))}`; x = entry; len += entry;
+    const segs = 2 + Math.floor(rnd() * 5), maxY = Math.min(H - 40, y0 + 160 + rnd() * (H * 0.55));
+    for (let k = 0; k < segs && y < maxY; k++) {
+      const run = 30 + rnd() * 180; y = Math.min(maxY, y + run); d += ` V${f(y)}`; len += run;
+      const jog = (rnd() < 0.5 ? -1 : 1) * (8 + rnd() * 26), nx = Math.max(6, Math.min(W - 8, x + jog));
+      if (Math.abs(nx - x) > 4 && y + Math.abs(nx - x) < maxY) { y += Math.abs(nx - x); x = nx; d += ` L${f(X(x))} ${f(y)}`; len += Math.abs(jog) * 1.4; }
+      // a branch: leaves at 45°, runs a little, ends on its own pad
+      if (rnd() < 0.3) { const bl = 10 + rnd() * 24, bdir = x > W / 2 ? -1 : 1, bx = Math.max(6, Math.min(W - 6, x + bdir * bl)), by = y + bl, ey = by + 12 + rnd() * 50;
+        paths.push({ d: `M${f(X(x))} ${f(y)} L${f(X(bx))} ${f(by)} V${f(ey)}`, len: bl * 1.4 + (ey - by) }); pads.push([X(bx), ey, 3]); joints.push([X(x), y]); }
+    }
+    // the end: either a pad, or a turn back out to the edge
+    if (rnd() < 0.25) { d += ` L${f(X(Math.max(0, x - 14)))} ${f(y + 14)} H${f(X(0))}`; len += x + 20; }
+    else pads.push([X(x), y, i % 2 ? 3.5 : 4.5]);
+    paths.push({ d, len });
+  });
   return { W, paths, pads, joints };
 }
 
@@ -122,7 +124,7 @@ export default function SectionLife() {
         // hero-style circuits keep theirs: story, finale)
         const host = sec.id === 'quality' ? (sec.querySelector('.bt-pin') as HTMLElement | null) || undefined : undefined;
         if (window.innerWidth >= 1100 && !OWN.has(sec.id) && !(host || sec).querySelector(':scope > .se-gut')) { const t = tone(sec), e = contentEdges(host || sec);
-          gutter(sec, e.l, 1, t, 101 + k * 37, host); gutter(sec, e.r, -1, t, 207 + k * 53, host); }
+          const hs = Array.from(sec.id).reduce((a, c) => (a * 31 + c.charCodeAt(0)) % 100000, 7); gutter(sec, e.l, 1, t, hs + 101, host); gutter(sec, e.r, -1, t, hs * 3 + 977, host); }
       });
     } catch (err) { console.warn('[SectionLife]', err); } };
     (window as unknown as { __seLife?: () => void }).__seLife = run;

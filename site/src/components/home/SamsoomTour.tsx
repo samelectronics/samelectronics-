@@ -151,10 +151,12 @@ export default function SamsoomTour() {
     const pick = (id: Lang) => { window.seI18n && window.seI18n.now(id); try { localStorage.setItem('se-lang', id); } catch { /* */ } setPhase('hello'); };
     const hint = d || cl;
     return (
-      <div className="st-veil" role="dialog" aria-modal="true" aria-label="Choose your language" data-no-i18n="">
+      <div className="st-veil st-veil-lang" role="dialog" aria-modal="true" aria-label="Choose your language" data-no-i18n="">
+        <span className="st-cine" aria-hidden="true"><i /><i /><i /></span>
         <div className="st-lang2">
           <div className="st-l2-sam">
             <span className="st-l2-bubble" key={ci} lang={cl} dir={LANG_SET.has(cl) ? 'rtl' : 'ltr'}>{ct}</span>
+            <span className="st-l2-spot" aria-hidden="true" />
             <span className="st-l2-av"><LiveSam size={150} mood="idle" play="wave" /><span className="st-l2-floor" aria-hidden="true" /></span>
           </div>
           <div className="st-l2-list">
@@ -187,7 +189,7 @@ export default function SamsoomTour() {
                 <button type="button" className="st-btn st-go" onClick={walk}>{T('Show me this page')}</button>
                 <button type="button" className="st-btn st-dark" onClick={() => { setPhase('off'); window.dispatchEvent(new CustomEvent('se:chat', { detail: {} })); }}>{T('Chat with me')}</button>
                 <button type="button" className="st-btn st-dark" onClick={() => setPhase('lang')}>{T('Change language')}</button>
-                <button type="button" className="st-btn st-grey" onClick={() => setPhase('off')}>{T('Close')}</button>
+                <button type="button" className="st-btn st-grey" onClick={() => bye()}>{T('Close')}</button>
               </span>
             </>
           ) : (
@@ -204,7 +206,20 @@ export default function SamsoomTour() {
   const vw = window.innerWidth, vh = window.innerHeight, rtl = document.documentElement.dir === 'rtl';
   const pad = 8, r = box, hole = r ? { left: r.left - pad, top: r.top - pad, width: r.width + pad * 2, height: r.height + pad * 2 } : null;
   // the bubble sits under the spot (or above it near the bottom), kept inside the screen with a 16px margin
-  const bw = Math.min(360, vw - 32), below = !r || r.bottom + 230 < vh, bx = r ? Math.min(vw - bw - 16, Math.max(16, r.left + r.width / 2 - bw / 2)) : (vw - bw) / 2, by = r ? (below ? r.bottom + pad + 16 : Math.max(16, r.top - pad - 16 - 200)) : vh / 2 - 90;
+  // R10 B3: the bubble (with Samsoom) goes to the FREE side of the spot: below, above, beside it (reading side first, flipped
+  // in Arabic), never on top of it
+  const bw = Math.min(360, vw - 32), BH = 230, G = pad + 16;
+  let bx = (vw - bw) / 2, by = vh / 2 - 90;
+  if (r) {
+    const cx = Math.min(vw - bw - 16, Math.max(16, r.left + r.width / 2 - bw / 2)), cy = Math.min(vh - BH - 16, Math.max(16, r.top + r.height / 2 - BH / 2));
+    const opts: [boolean, number, number][] = [
+      [r.bottom + G + BH < vh, cx, r.bottom + G],
+      [r.top - G - BH > 0, cx, r.top - G - BH],
+      [rtl ? r.left - G - bw > 0 : r.right + G + bw < vw, rtl ? r.left - G - bw : r.right + G, cy],
+      [rtl ? r.right + G + bw < vw : r.left - G - bw > 0, rtl ? r.right + G : r.left - G - bw, cy],
+    ];
+    const ok = opts.find((o) => o[0]) || opts[0]; bx = ok[1]; by = Math.max(16, Math.min(vh - BH - 16, ok[2]));
+  }
   // he points at the spot: the arm angle comes from where the spot is, seen from him; if it is on his left he turns around
   const sx = rtl ? bx + bw - 50 : bx + 50, sy = by + 50, dx = r ? r.left + r.width / 2 - sx : 0, dy = r ? r.top + r.height / 2 - sy : -1, flip = dx < -20;
   const ang = Math.max(-172, Math.min(-35, (Math.atan2(-Math.abs(dx), dy) * 180) / Math.PI));

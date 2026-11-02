@@ -2,6 +2,19 @@
  * Basque (R9). The most visible texts of the site; anything not listed here shows in English until it is added.
  */
 const DICT: Record<string, string> = {
+  "Yes": "Bai",
+  "Not now": "Orain ez",
+  "Pick your language and the whole site follows.": "Aukeratu zure hizkuntza eta webgune osoak jarraituko dio.",
+  "Add the phones you fix most. I will mark every part that fits them.": "Gehitu gehien konpontzen dituzun telefonoak. Haiei egokitzen zaien pieza bakoitza markatuko dut.",
+  "Deals, arrivals, limited": "Eskaintzak, berritasunak, mugatuak",
+  "Switch between offers, new stock and parts that are nearly gone.": "Aldatu eskaintzen, stock berriaren eta ia agortutako piezen artean.",
+  "Shop by part": "Erosi piezaren arabera",
+  "Tap a part to see every model and grade we have of it.": "Sakatu pieza bat dauzkagun eredu eta kalitate guztiak ikusteko.",
+  "Price, quality, manufacturer, color, warranty… set it all exactly how you like, and save it.": "Prezioa, kalitatea, fabrikatzailea, kolorea, bermea… doitu dena zure gustura eta gorde.",
+  "Search anything": "Bilatu edozer",
+  "Type a model, a part or both. Spelling mistakes are fine: I will understand.": "Idatzi eredu bat, pieza bat edo biak. Akatsak ez dira arazo: ulertuko dut.",
+  "Pick your phone": "Aukeratu zure telefonoa",
+  "Choose the brand, then the model: every repair for it appears below.": "Aukeratu marka, gero eredua: haren konponketa guztiak behean agertuko dira.",
   "Follow us": "Jarrai gaitzazu",
   "for daily stock drops.": "eguneroko stock berrirako.",
   "& up": "eta gehiago",

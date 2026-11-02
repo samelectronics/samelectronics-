@@ -2,6 +2,19 @@
  * Oromo (R9). The most visible texts of the site; anything not listed here shows in English until it is added. Marked for review by a native speaker (Control Room › Translations).
  */
 const DICT: Record<string, string> = {
+  "Yes": "Eeyyee",
+  "Not now": "Amma miti",
+  "Pick your language and the whole site follows.": "Afaan kee filadhu, marsariitiin guutuun ni hordofa.",
+  "Add the phones you fix most. I will mark every part that fits them.": "Bilbiloota caalaatti suphitu dabaladhu. Qaama isaaniif ta'u hunda nan mallatteessa.",
+  "Deals, arrivals, limited": "Gatii hir'ate, haaraa, daangeffame",
+  "Switch between offers, new stock and parts that are nearly gone.": "Gidduu gatii hir'atee, meeshaa haaraa fi qaama dhumachuuf jiruu jijjiiri.",
+  "Shop by part": "Qaamaan bitadhu",
+  "Tap a part to see every model and grade we have of it.": "Moodela fi sadarkaa qabnu hunda ilaaluuf qaama tokko tuqi.",
+  "Price, quality, manufacturer, color, warranty… set it all exactly how you like, and save it.": "Gatii, qulqullina, oomishaa, halluu, wabii… hunda akka barbaaddutti qindeessii olkaa'i.",
+  "Search anything": "Waan kamiyyuu barbaadi",
+  "Type a model, a part or both. Spelling mistakes are fine: I will understand.": "Moodela, qaama ykn lamaanuu barreessi. Dogoggorri qubee rakkoo miti: nan hubadha.",
+  "Pick your phone": "Bilbila kee filadhu",
+  "Choose the brand, then the model: every repair for it appears below.": "Maqaa daldalaa, itti aansuun moodela filadhu: suphaan isaa hundi gadi ni mul'ata.",
   "Follow us": "Nu hordofaa",
   "for daily stock drops.": "meeshaa haaraa guyyaa guyyaatti.",
   "& up": "fi isaa ol",
