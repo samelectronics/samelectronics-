@@ -165,7 +165,7 @@ textarea.cr-in { height: auto; padding: 9px 11px; resize: vertical; line-height:
 .xl-why { font-size: 12px; color: #5A5D62; max-width: 420px; }
 .xl-f { display: grid; grid-template-columns: 110px 1fr; gap: 10px; align-items: start; } .xl-f > b { font-size: 13px; padding-top: 6px; } .xl-f > span { display: flex; flex-wrap: wrap; gap: 6px; } .xl-f .cr-pay { background: none; font: inherit; font-size: 13px; }
 /* R10 A3 · the staff loading screen */
-.cr-boot { background: radial-gradient(60% 50% at 50% 40%, #2C2E32, #1A1B1E 70%); }
+.cr-boot { background: radial-gradient(60% 50% at 50% 40%, #3E4044, #2A2C2F 70%); }
 .cr-boot > i { display: none; }
 .cr-boot-in { display: flex; flex-direction: column; align-items: center; gap: 12px; color: #fff; animation: crBootIn .5s cubic-bezier(.16, 1, .3, 1) both; }
 .cr-boot-in img { border-radius: 50%; box-shadow: 0 0 0 2px rgba(247, 192, 50, .5), 0 0 40px rgba(247, 192, 50, .35); }

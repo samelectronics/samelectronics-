@@ -158,3 +158,16 @@ html:has(#finale), html:has(#finale) body { background-color: #34363A; }
 .fz { background: #18191C !important; }
 .fz-room { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
 .fz::before, .fz-stage::before, .fz-stage::after { display: none !important; }
+/* R10 (owner, 3 Nov, round 2): "no black; the same as the teardown". The Finale uses the teardown's studio, layer for
+   layer and colour for colour: graphite back wall lit in the middle, the floor darkening only to the teardown's own
+   graphite, a lit pool on the floor under the logo that fades out wide, a faint haze, the soft light from above and a
+   brighter glow at the top edge. The dust (FinaleRoom) hangs in that light. Nothing darker than the teardown's floor. */
+.fz { background:
+    radial-gradient(240px 70px at 50% 0, rgba(255, 250, 240, .26) 0%, rgba(255, 250, 240, .08) 45%, rgba(255, 250, 240, 0) 100%),
+    radial-gradient(760px 620px at 50% -6%, rgba(255, 246, 228, .13) 0%, rgba(255, 246, 228, .075) 30%, rgba(255, 246, 228, .03) 60%, rgba(255, 246, 228, 0) 100%),
+    radial-gradient(900px 260px at 50% 400px, rgba(255, 246, 230, .06) 0%, rgba(255, 246, 230, .025) 45%, rgba(255, 246, 230, 0) 100%),
+    radial-gradient(640px 130px at 50% 410px, #58595D 0%, #505155 8%, #45464A 18%, #36373A 30%, #2E2F32 44%, #28292C 60%, rgba(36, 37, 40, .5) 78%, rgba(36, 37, 40, 0) 100%),
+    linear-gradient(180deg, rgba(31, 32, 35, 0) 0%, rgba(31, 32, 35, 0) 52%, rgba(31, 32, 35, .55) 80%, #222326 100%),
+    radial-gradient(1000px 560px at 50% 230px, #3E4044 0%, #393B3F 22%, #323438 46%, #2D2F32 70%, #2A2C2F 100%),
+    #2A2C2F !important; }
+@media (max-width: 700px) { .fz { background-size: auto !important; } }

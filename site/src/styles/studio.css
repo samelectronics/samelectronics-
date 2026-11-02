@@ -37,10 +37,10 @@
 :root {
   --st-dark: radial-gradient(34% 62% at 50% -14%, rgba(255, 244, 222, .30), rgba(255, 244, 222, .08) 58%, rgba(255, 244, 222, 0) 86%),
     radial-gradient(70% 14% at 50% var(--st-hz, 70%), rgba(255, 244, 222, .07), rgba(255, 244, 222, 0) 100%),
-    linear-gradient(180deg, #393B40 0%, #2E3034 46%, #2A2C30 calc(var(--st-hz, 70%) - 1%), #26282B var(--st-hz, 70%), #18191C calc(var(--st-hz, 70%) + 16%), #0D0E10 100%);
+    linear-gradient(180deg, #393B40 0%, #2E3034 46%, #2A2C30 calc(var(--st-hz, 70%) - 1%), #26282B var(--st-hz, 70%), #28292C calc(var(--st-hz, 70%) + 16%), #222326 100%);
   --st-warm: radial-gradient(34% 62% at 50% -14%, rgba(255, 214, 110, .40), rgba(255, 214, 110, .10) 58%, rgba(255, 214, 110, 0) 86%),
     radial-gradient(70% 14% at 50% var(--st-hz, 70%), rgba(255, 220, 140, .08), rgba(255, 220, 140, 0) 100%),
-    linear-gradient(180deg, #3D3B37 0%, #32312E 46%, #2C2B2B calc(var(--st-hz, 70%) - 1%), #272628 var(--st-hz, 70%), #19191B calc(var(--st-hz, 70%) + 16%), #0D0D0F 100%);
+    linear-gradient(180deg, #3D3B37 0%, #32312E 46%, #2C2B2B calc(var(--st-hz, 70%) - 1%), #272628 var(--st-hz, 70%), #28282A calc(var(--st-hz, 70%) + 16%), #232325 100%);
   --st-light: radial-gradient(34% 62% at 50% -14%, rgba(255, 255, 255, 1), rgba(255, 255, 255, .5) 58%, rgba(255, 255, 255, 0) 86%),
     radial-gradient(70% 14% at 50% var(--st-hz, 70%), rgba(255, 255, 255, .9), rgba(255, 255, 255, 0) 100%),
     linear-gradient(180deg, #F2F3F5 0%, #E9EBEE calc(var(--st-hz, 70%) - 1%), #E4E6E9 var(--st-hz, 70%), #F3F4F6 calc(var(--st-hz, 70%) + 18%), #FFFFFF 100%);
