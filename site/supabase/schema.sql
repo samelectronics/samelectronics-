@@ -228,8 +228,11 @@ do $$ begin
   create policy "apply" on applications for insert with check (true);
   create policy "read applications" on applications for select using (has_perm('approvals') or has_perm('staff'));
   create policy "review applications" on applications for update using (has_perm('approvals') or has_perm('staff'));
-  create policy "read settings" on settings for select using (true);
-  create policy "edit settings" on settings for all using (has_perm('content') or has_perm('settings')) with check (has_perm('content') or has_perm('settings'));
+  -- R9: site settings are public, but staff-only keys (repair job cards, Daftra links and sends) are read by staff only
+  create policy "read settings" on settings for select using (key not in ('repair-jobs', 'daftra-map', 'daftra-sent') or is_staff());
+  create policy "edit settings" on settings for all
+    using (has_perm('content') or has_perm('settings') or (key like 'daftra-%' and (has_perm('accounting') or has_perm('products'))) or (key = 'repair-jobs' and has_perm('repairs')))
+    with check (has_perm('content') or has_perm('settings') or (key like 'daftra-%' and (has_perm('accounting') or has_perm('products'))) or (key = 'repair-jobs' and has_perm('repairs')));
   create policy "read audit" on audit_log for select using (has_perm('audit'));
   create policy "write audit" on audit_log for insert with check (is_staff());
   create policy "read email queue" on email_queue for select using (has_perm('emails'));
