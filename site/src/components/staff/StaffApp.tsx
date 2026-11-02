@@ -11,7 +11,6 @@ import React, { useEffect, useState } from 'react';
 import { backend, live, preview, ROLE_NAMES, useStaff, type Perm, type Staff } from '@/lib/backend';
 import { installI18n } from '@/i18n/lang';
 import { installBrandSelects } from '@/lib/brandSelect';
-import LiveSam from '@/components/samsoom/LiveSam';
 import { can } from './kit';
 import { Dashboard, Products, Warehouse } from './mods1';
 import { Orders, Repairs, Customers, Approvals, Inbox } from './mods2';
@@ -41,40 +40,112 @@ const MODS: Mod[] = [
   { id: 'me', l: 'My profile', d: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0', C: MyProfile },
 ];
 
-function Login({ onDone }: { onDone: () => void }) {
-  const [email, setEmail] = useState(''), [pw, setPw] = useState(''), [err, setErr] = useState(''), [busy, setBusy] = useState(false);
-  const go = async (e: React.FormEvent) => { e.preventDefault(); setBusy(true); setErr(''); const r = await backend.staffSignIn(email, pw); setBusy(false); if (r.ok) onDone(); else setErr(r.error); };
+// R10 S2 · S4 · S6 · S7: the Control Room door. Three locks, one after the other, on a teardown-style stage (no Samsoom):
+//  1. the Control Room key (checked on the server, /api/staff/gate), 2. personal e-mail + password, 3. the personal
+//  6-digit code from an authenticator app (set up here the first time, with a QR code). 5 wrong passwords on this device
+//  lock the form for 15 minutes; "Forgot password?" sends a reset link. The design preview is gone once the site is live.
+type Step = 'checking' | 'gate' | 'pw' | 'code' | 'enroll' | 'newpw' | 'sent';
+const LOCK_KEY = 'cr-lock';
+const lockLeft = () => { try { const v = JSON.parse(localStorage.getItem(LOCK_KEY) || '{}'); return v.until && v.until > Date.now() ? Math.ceil((v.until - Date.now()) / 60000) : 0; } catch { return 0; } };
+const failOnce = () => { try { const v = JSON.parse(localStorage.getItem(LOCK_KEY) || '{}'); const n = (v.n || 0) + 1; localStorage.setItem(LOCK_KEY, JSON.stringify(n >= 5 ? { n: 0, until: Date.now() + 15 * 60000 } : { n })); return n >= 5 ? 0 : 5 - n; } catch { return 5; } };
+
+function Door({ children, step, keyOff }: { children: React.ReactNode; step: number; keyOff?: boolean }) {
   return (
-    <div className="cr-login">
-      <div className="cr-lcard">
-        <span className="cr-lsam"><LiveSam size={96} mood="idle" play="wave" /></span>
+    <div className="cr-door">
+      <span className="cr-door-l a" aria-hidden="true" /><span className="cr-door-l b" aria-hidden="true" /><span className="cr-door-l c" aria-hidden="true" />
+      <div className="cr-door-card">
         <span className="cr-brand"><img src="/assets/se-logo-128.webp" alt="" /><span><b>SAM ELECTRONICS</b><small>CONTROL ROOM · STAFF ONLY</small></span></span>
-        <form onSubmit={go}>
-          <label>E-mail<input className="cr-in" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" /></label>
-          <label>Password<input className="cr-in" type="password" required value={pw} onChange={(e) => setPw(e.target.value)} autoComplete="current-password" /></label>
-          {err ? <span className="cr-err">{err}</span> : null}
-          <button type="submit" className="cr-btn y big" disabled={busy}>{busy ? 'Signing in…' : 'Sign in'}</button>
-        </form>
-        {live ? (
-          <div className="cr-demo"><b>Design preview</b> Look through the whole Control Room as the owner, on sample data in this browser only. Nothing real is shown or changed.
-            <button type="button" className="cr-btn ghost" onClick={() => { location.href = '/staff?preview=1'; }}>Open the design preview</button>
-          </div>
-        ) : null}
-        {preview ? (
-          <div className="cr-demo"><b>Design preview</b> Sample data only.
-            <button type="button" className="cr-btn y" onClick={async () => { setBusy(true); const r = await backend.staffSignIn('owner@sam.demo', 'demo1234'); setBusy(false); if (r.ok) onDone(); else setErr(r.error); }}>Enter as owner</button>
-            <a href="/staff?preview=0" className="cr-muted">Back to the real sign-in</a>
-          </div>
-        ) : null}
-        {!live && !preview ? (
-          <div className="cr-demo"><b>Demo log-ins</b> (until the database is connected)
-            {[['owner@sam.demo', 'Owner · everything'], ['manager@sam.demo', 'Manager · everything'], ['sales@sam.demo', 'Sales · orders, customers, chat'], ['tech@sam.demo', 'Technician · repairs, stock']].map(([e, r]) => <button key={e} type="button" onClick={() => { setEmail(e); setPw('demo1234'); }}><span>{e}</span><small>{r}</small></button>)}
-            <small>Password: demo1234</small>
-          </div>
-        ) : <small className="cr-muted">Staff accounts are created by the owner or a manager in Staff & roles.</small>}
-        <a className="cr-back" href="/">← Back to the website</a>
+        <ol className="cr-locks" aria-label="Three locks">{['Key', 'Password', '6-digit code'].map((l, i) => i === 0 && keyOff ? <li key={l} className="off"><i>!</i>Key · off</li> : <li key={l} className={i < step ? 'done' : i === step ? 'on' : ''}><i>{i < step ? '✓' : i + 1}</i>{l}</li>)}</ol>
+        {children}
+        <div className="cr-door-help"><a href={'https://wa.me/971503420015?text=' + encodeURIComponent('Hi, I need help signing in to the Control Room.')} target="_blank" rel="noopener noreferrer">Talk to a person</a><span>·</span><a href="/samsoom">Ask Samsoom</a><span>·</span><a href="/">Back to the website</a></div>
       </div>
     </div>
+  );
+}
+
+function Login({ onDone, start }: { onDone: () => void; start?: Step }) {
+  const [step, setStep] = useState<Step>(start || 'checking'), [email, setEmail] = useState(''), [pw, setPw] = useState(''), [pw2, setPw2] = useState(''), [key, setKey] = useState(''), [code, setCode] = useState('');
+  const [err, setErr] = useState(''), [busy, setBusy] = useState(false), [gateMissing, setGateMissing] = useState(false), [enr, setEnr] = useState<{ id: string; qr: string; secret: string } | null>(null), [factor, setFactor] = useState<string | null>(null);
+  const sb = () => import('@/lib/backend/supabase');
+  const toMfa = async () => {
+    if (!live) { onDone(); return; }
+    const m = await (await sb()).mfaState();
+    if (m.level === 'aal2') { onDone(); return; }
+    if (m.enrolled) { setFactor(m.factorId); setStep('code'); return; }
+    const e = await (await sb()).mfaEnroll(); if ('error' in e) { setErr(e.error); setStep('enroll'); return; }
+    setEnr(e); setFactor(e.id); setStep('enroll');
+  };
+  useEffect(() => {
+    if (start) { if (start === 'code') toMfa(); return; }
+    if (live && new URLSearchParams(location.search).get('reset') === '1') { setStep('newpw'); return; }
+    fetch('/api/staff/gate', { cache: 'no-store' }).then((r) => r.json()).then((g) => { if (g.configured && !g.open) setStep('gate'); else { setGateMissing(!g.configured); setStep('pw'); } }).catch(() => setStep('pw'));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const doGate = async (e: React.FormEvent) => { e.preventDefault(); setBusy(true); setErr(''); const r = await fetch('/api/staff/gate', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ key }) }).then((x) => x.json()).catch(() => ({ ok: false, error: 'No connection.' })); setBusy(false); setKey(''); if (r.ok) setStep('pw'); else setErr(r.error); };
+  const doPw = async (e: React.FormEvent) => {
+    e.preventDefault(); const l = lockLeft(); if (l) { setErr('Too many wrong passwords on this device. Try again in ' + l + ' min.'); return; }
+    setBusy(true); setErr(''); const r = await backend.staffSignIn(email, pw); setBusy(false); setPw('');
+    if (!r.ok) { const left = failOnce(); setErr(left ? r.error + ' (' + left + ' tries left)' : 'Too many wrong passwords. The form is locked for 15 minutes.'); return; }
+    try { localStorage.removeItem(LOCK_KEY); } catch { /* */ } await toMfa();
+  };
+  const doCode = async (e: React.FormEvent) => { e.preventDefault(); if (!factor) return; setBusy(true); setErr(''); const m = await (await sb()).mfaVerify(factor, code); setBusy(false); setCode(''); if (m) setErr(m); else onDone(); };
+  const doReset = async () => { if (!email) { setErr('Type your e-mail first, then press "Forgot password?".'); return; } setBusy(true); const m = live ? await (await sb()).staffPasswordReset(email) : null; setBusy(false); if (m) setErr(m); else setStep('sent'); };
+  const doNew = async (e: React.FormEvent) => { e.preventDefault(); if (pw.length < 10) { setErr('Use at least 10 characters.'); return; } if (pw !== pw2) { setErr('The two passwords are not the same.'); return; } setBusy(true); const m = await (await sb()).setNewPassword(pw); setBusy(false); if (m) setErr(m); else { history.replaceState(null, '', '/staff'); await toMfa(); } };
+  const stepNo = step === 'gate' ? 0 : step === 'pw' || step === 'sent' || step === 'newpw' ? 1 : step === 'checking' ? 0 : 2;
+  if (step === 'checking') return <Door step={0}><div className="cr-door-wait"><i /></div></Door>;
+  return (
+    <Door step={stepNo} keyOff={gateMissing}>
+      {step === 'gate' ? (
+        <form onSubmit={doGate}>
+          <h1>Control Room key</h1><p>The shared key from the owner. It opens the door to the staff sign-in on this device for 12 hours.</p>
+          <label>Key<input className="cr-in" type="password" required autoFocus value={key} onChange={(e) => setKey(e.target.value)} autoComplete="off" /></label>
+          {err ? <span className="cr-err">{err}</span> : null}
+          <button type="submit" className="cr-btn y big" disabled={busy}>{busy ? 'Checking…' : 'Unlock'}</button>
+        </form>
+      ) : step === 'pw' ? (
+        <form onSubmit={doPw}>
+          <h1>Sign in</h1><p>Your personal staff account.</p>
+          {gateMissing ? <span className="cr-note">The Control Room key is not set yet. The owner adds CONTROL_ROOM_KEY in Vercel to switch on the first lock.</span> : null}
+          <label>E-mail<input className="cr-in" type="email" required autoFocus value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="username" /></label>
+          <label>Password<input className="cr-in" type="password" required value={pw} onChange={(e) => setPw(e.target.value)} autoComplete="current-password" /></label>
+          {err ? <span className="cr-err">{err}</span> : null}
+          <button type="submit" className="cr-btn y big" disabled={busy}>{busy ? 'Signing in…' : 'Continue'}</button>
+          <button type="button" className="cr-link" onClick={doReset}>Forgot password?</button>
+          {!live && !preview ? (
+            <div className="cr-demo"><b>Demo log-ins</b> (until the database is connected)
+              {[['owner@sam.demo', 'Owner · everything'], ['manager@sam.demo', 'Manager · everything'], ['sales@sam.demo', 'Sales · orders, customers, chat'], ['tech@sam.demo', 'Technician · repairs, stock']].map(([e, r]) => <button key={e} type="button" onClick={() => { setEmail(e); setPw('demo1234'); }}><span>{e}</span><small>{r}</small></button>)}
+              <small>Password: demo1234</small>
+            </div>
+          ) : <small className="cr-muted">Staff accounts are by invitation from the owner.</small>}
+        </form>
+      ) : step === 'sent' ? (
+        <div className="cr-door-msg"><h1>Check your e-mail</h1><p>If {email} is a staff account, a link to choose a new password is on its way. It works once.</p><button type="button" className="cr-btn ghost" onClick={() => setStep('pw')}>Back to sign-in</button></div>
+      ) : step === 'newpw' ? (
+        <form onSubmit={doNew}>
+          <h1>New password</h1><p>At least 10 characters. Then you confirm with your 6-digit code.</p>
+          <label>New password<input className="cr-in" type="password" required autoFocus value={pw} onChange={(e) => setPw(e.target.value)} autoComplete="new-password" /></label>
+          <label>Repeat it<input className="cr-in" type="password" required value={pw2} onChange={(e) => setPw2(e.target.value)} autoComplete="new-password" /></label>
+          {err ? <span className="cr-err">{err}</span> : null}
+          <button type="submit" className="cr-btn y big" disabled={busy}>Save password</button>
+        </form>
+      ) : step === 'enroll' ? (
+        <form onSubmit={doCode}>
+          <h1>Set up your 6-digit code</h1><p>Every staff account needs it. Open an authenticator app (Google Authenticator, Microsoft Authenticator, 1Password…), scan this code, then type the 6 digits it shows.</p>
+          {enr ? <div className="cr-qr"><img src={enr.qr} alt="QR code for your authenticator app" width={176} height={176} /><span>Can’t scan? Type this key:<code>{enr.secret.replace(/(.{4})/g, '$1 ').trim()}</code></span></div> : null}
+          <label>6-digit code<input className="cr-in cr-code" inputMode="numeric" pattern="[0-9 ]{6,7}" maxLength={7} required autoFocus value={code} onChange={(e) => setCode(e.target.value)} autoComplete="one-time-code" /></label>
+          {err ? <span className="cr-err">{err}</span> : null}
+          <button type="submit" className="cr-btn y big" disabled={busy || !enr}>{busy ? 'Checking…' : 'Turn on and enter'}</button>
+          <small className="cr-muted">Lost your phone later? The owner can reset your two-step in Staff & roles.</small>
+        </form>
+      ) : (
+        <form onSubmit={doCode}>
+          <h1>Your 6-digit code</h1><p>From the authenticator app on your phone.</p>
+          <label>6-digit code<input className="cr-in cr-code" inputMode="numeric" pattern="[0-9 ]{6,7}" maxLength={7} required autoFocus value={code} onChange={(e) => setCode(e.target.value)} autoComplete="one-time-code" /></label>
+          {err ? <span className="cr-err">{err}</span> : null}
+          <button type="submit" className="cr-btn y big" disabled={busy}>{busy ? 'Checking…' : 'Open the Control Room'}</button>
+          <button type="button" className="cr-link" onClick={async () => { await backend.staffSignOut(); location.reload(); }}>Use another account</button>
+        </form>
+      )}
+    </Door>
   );
 }
 
@@ -82,8 +153,12 @@ export default function StaffApp() {
   const [me, refresh] = useStaff(), [mod, setMod] = useState('dashboard'), [nav, setNav] = useState(false);
   useEffect(() => { const h = () => setMod(location.hash.slice(1) || 'dashboard'); h(); window.addEventListener('hashchange', h); return () => window.removeEventListener('hashchange', h); }, []);
   useEffect(() => { installBrandSelects(); document.documentElement.classList.add('cr-html'); return () => document.documentElement.classList.remove('cr-html'); }, []);
-  if (me === undefined) return <div className="cr-boot"><i /></div>;
-  if (!me) return <Login onDone={refresh} />;
+  // R10 S4: a signed-in staff session still needs its 6-digit code (aal2) before anything shows
+  const [lvl, setLvl] = useState<'checking' | 'ok' | 'need'>(live ? 'checking' : 'ok');
+  useEffect(() => { if (!live || !me) return; import('@/lib/backend/supabase').then((m) => m.mfaState()).then((m) => setLvl(m.level === 'aal2' ? 'ok' : 'need')).catch(() => setLvl('need')); }, [me]);
+  if (me === undefined || (me && lvl === 'checking')) return <div className="cr-boot"><i /></div>;
+  if (!me) return <Login onDone={() => { setLvl(live ? 'checking' : 'ok'); refresh(); }} />;
+  if (lvl === 'need') return <Login start="code" onDone={() => setLvl('ok')} />;
   const mine = MODS.filter((m) => !m.need || m.need.some((p) => can(me, p)));
   const cur = mine.find((m) => m.id === mod) || mine[0];
   const go = (m: string) => { history.replaceState(null, '', '#' + m); setMod(m); setNav(false); document.querySelector('.cr-main')?.scrollTo({ top: 0 }); };

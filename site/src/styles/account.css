@@ -117,3 +117,9 @@ html[dir='rtl'] .au-tabs i { left: auto; right: 4px; } html[dir='rtl'] .au-tabs 
 .nt-it b { font: 600 15px Inter, sans-serif; color: #26282B; } .nt-it p { margin: 4px 0 0; font: 400 14px/1.45 Inter, sans-serif; color: #5E6064; } .nt-it small { display: block; margin-top: 6px; font: 500 11.5px 'JetBrains Mono', monospace; color: #8C9096; }
 .nt-go { display: flex; gap: 8px; align-items: center; } .nt-none { padding: 24px 0; }
 @media (max-width: 600px) { .nt-it { grid-template-columns: 10px minmax(0, 1fr); } .nt-go { grid-column: 2; } }
+/* R10 S2 · customers' sign-in door: the teardown stage with slow yellow lights, one glass card, the form on white */
+.au.au-door { display: grid; grid-template-columns: 1fr; place-items: center; min-height: min(860px, calc(100vh - 120px)); max-width: none; border-radius: 28px; padding: 48px 16px; background-color: #2A2C2F; box-shadow: none; }
+.au-door .au-card { width: min(500px, 100%); }
+.au-door .au-form { padding: 24px; border-radius: 18px; background: #fff; color: #26282B; }
+.au-door .cr-brand small { color: #F7C032; }
+@media (max-width: 560px) { .au.au-door { padding: 24px 10px; border-radius: 20px; } .au-door .au-form { padding: 18px; } }

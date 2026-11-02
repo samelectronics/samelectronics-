@@ -4,7 +4,6 @@
 import React, { useState } from 'react';
 import { backend, live } from '@/lib/backend';
 import { T } from '@/components/site/ui';
-import LiveSam from '@/components/samsoom/LiveSam';
 
 type Mode = 'in' | 'up' | 'code' | 'forgot';
 const strength = (p: string) => [p.length >= 8, /[A-Z]/.test(p) && /[a-z]/.test(p), /\d/.test(p), /[^A-Za-z0-9]/.test(p), p.length >= 12].filter(Boolean).length;
@@ -30,15 +29,12 @@ export default function Auth({ onDone }: { onDone: () => void }) {
   }); };
 
   return (
-    <div className="au">
-      <aside className="au-side">
-        <span className="au-sam"><LiveSam circle size={140} mood="idle" play={mode === 'code' ? 'think' : mode === 'up' ? 'wave' : 'happy'} /></span>
-        <b className="sp-h2" style={{ color: '#fff' }}>{mode === 'up' ? T('Welcome to My Bench.') : T('Welcome back.')}</b>
-        <ul className="au-perks">
-          {['Your orders and repairs, live', 'Stars, saved parts and stock alerts', 'Points on every part and repair', 'Your company profiles and trade prices', 'Your Samsoom chats, kept'].map((p) => <li key={p}><i />{T(p)}</li>)}
-        </ul>
-        {!live ? <span className="au-demo">{T('Demo mode: accounts are kept in this browser until the database is connected.')}</span> : null}
-      </aside>
+    // R10 S2: one glass card on the teardown's stage, slow yellow lights, no Samsoom
+    <div className="au au-door cr-door">
+      <span className="cr-door-l a" aria-hidden="true" /><span className="cr-door-l b" aria-hidden="true" /><span className="cr-door-l c" aria-hidden="true" />
+      <div className="cr-door-card au-card">
+      <span className="cr-brand"><img src="/assets/se-logo-128.webp" alt="" /><span><b>SAM ELECTRONICS</b><small>{mode === 'up' ? T('CREATE YOUR ACCOUNT') : T('MY BENCH · SIGN IN')}</small></span></span>
+      {!live ? <span className="cr-note">{T('Demo mode: accounts are kept in this browser until the database is connected.')}</span> : null}
       <form className="au-form" onSubmit={submit}>
         {mode === 'in' || mode === 'up' ? (
           <div className="au-tabs" role="tablist">
@@ -84,6 +80,8 @@ export default function Auth({ onDone }: { onDone: () => void }) {
           <a href="/staff">{T('Staff? Control Room log-in')}</a>
         </span>
       </form>
+      <div className="cr-door-help"><a href={'https://wa.me/971503420015?text=' + encodeURIComponent('Hi, I need help with my account.')} target="_blank" rel="noopener noreferrer">{T('Talk to a person')}</a><span>·</span><a href="/samsoom">{T('Ask Samsoom')}</a></div>
+      </div>
     </div>
   );
 }

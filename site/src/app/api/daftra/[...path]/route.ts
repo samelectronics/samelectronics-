@@ -17,6 +17,9 @@ async function staffOk(req: Request, perm: { seeCost: boolean }): Promise<string
   if (tok && url && anon) {
     const sb = createClient(url, anon, { global: { headers: { Authorization: 'Bearer ' + tok } }, auth: { persistSession: false } });
     const { data: u } = await sb.auth.getUser(tok); if (!u?.user) return 'Please sign in to the Control Room again.';
+    // R10 S4: only a session that has passed the personal 6-digit code (aal2) may reach Daftra
+    let aal = ''; try { aal = JSON.parse(Buffer.from(tok.split('.')[1], 'base64url').toString()).aal || ''; } catch { /* malformed */ }
+    if (aal !== 'aal2') return 'Enter your 6-digit code to open the Control Room.';
     const { data: s } = await sb.from('staff').select('active, role, perms').eq('id', u.user.id).maybeSingle();
     if (!s || !s.active) return 'This account is not active staff.';
     perm.seeCost = ['owner', 'manager'].includes(s.role) || (s.perms || []).some((x: string) => x === 'prices' || x === 'accounting');

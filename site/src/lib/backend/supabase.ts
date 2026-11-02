@@ -59,7 +59,7 @@ export const supabase: Backend = {
   async send(i) { const { data, error } = await db().rpc('send_message', { p_thread: i.thread || null, p_name: i.name, p_email: i.email || null, p_topic: i.topic || 'Website chat', p_text: i.text, p_from: i.from || 'visitor' }); return error ? no(error.message) : ok({ thread: data as string }); },
   async apply(a) { const { data, error } = await db().from('applications').insert({ type: a.type, name: a.name, email: a.email, phone: a.phone, data: a.data }).select().single(); return error ? no(error.message) : ok({ ...a, id: data.id, status: 'new', at: ts(data.created_at) } as Application); },
   async staffMe() { const id = await uid(); if (!id) return null; const { data } = await db().from('staff').select('*').eq('id', id).maybeSingle(); return data ? toStaff(data) : null; },
-  async staffSignIn(email, password) { const { error } = await db().auth.signInWithPassword({ email: email.trim(), password }); if (error) return no(error.message); const s = await this.staffMe(); if (!s || !s.active) { await db().auth.signOut(); return no('This account is not a staff account.'); } await db().from('staff').update({ last_seen: new Date().toISOString() }).eq('id', s.id); return ok(s); },
+  async staffSignIn(email, password) { const { error } = await db().auth.signInWithPassword({ email: email.trim(), password }); if (error) return no(error.message); await db().rpc('claim_staff_invite').then(() => 0, () => 0); /* R10 S5: an invited, confirmed e-mail becomes staff here */ const s = await this.staffMe(); if (!s || !s.active) { await db().auth.signOut(); return no('This account is not a staff account.'); } await db().from('staff').update({ last_seen: new Date().toISOString() }).eq('id', s.id); return ok(s); },
   async staffSignOut() { await db().auth.signOut(); },
   async staffList() { const { data } = await db().from('staff').select('*').order('created_at'); return (data || []).map(toStaff); },
   async saveStaff(s) { const me = await uid(); if (s.id && s.id === me) { const { data, error } = await db().from('staff').update({ name: s.name, title: s.title, phone: s.phone, photo: s.photo }).eq('id', me).select().single(); if (!error) return ok(toStaff(data)); } const { data, error } = await db().rpc('save_staff', { p: s }); return error ? no(error.message) : ok(toStaff(data)); },
@@ -91,3 +91,39 @@ export async function insertMissing(table: 'products' | 'models', rows: Record<s
   }
   return { ok: n };
 }
+
+// ---------- R10 S4 · lock 3 of 3: the personal 6-digit code (Supabase MFA, TOTP) ----------
+export type MfaState = { level: 'aal1' | 'aal2' | null; enrolled: boolean; factorId: string | null };
+export async function mfaState(): Promise<MfaState> {
+  const { data: a } = await db().auth.mfa.getAuthenticatorAssuranceLevel();
+  const { data: f } = await db().auth.mfa.listFactors();
+  const t = (f?.totp || []).find((x) => x.status === 'verified') || null;
+  return { level: (a?.currentLevel as 'aal1' | 'aal2') || null, enrolled: !!t, factorId: t ? t.id : null };
+}
+/** start enrolling an authenticator app: returns the QR code (SVG) and the secret to type in by hand */
+export async function mfaEnroll(): Promise<{ id: string; qr: string; secret: string } | { error: string }> {
+  // clear half-finished enrolments from an earlier attempt first
+  const { data: f } = await db().auth.mfa.listFactors();
+  for (const x of f?.all || []) if (x.status !== 'verified') await db().auth.mfa.unenroll({ factorId: x.id });
+  const { data, error } = await db().auth.mfa.enroll({ factorType: 'totp', friendlyName: 'Sam Electronics Control Room ' + new Date().toISOString().slice(0, 10) });
+  if (error || !data) return { error: error ? error.message : 'Could not start.' };
+  return { id: data.id, qr: data.totp.qr_code, secret: data.totp.secret };
+}
+export async function mfaVerify(factorId: string, code: string): Promise<string | null> {
+  const { error } = await db().auth.mfa.challengeAndVerify({ factorId, code: code.replace(/\s/g, '') });
+  return error ? (/invalid|expired/i.test(error.message) ? 'That code is not right or has expired. Use the newest code in your app.' : error.message) : null;
+}
+/** sign this account out on every device */
+export async function signOutEverywhere() { await db().auth.signOut({ scope: 'global' }); }
+/** R10 S5: invite a staff member by e-mail (they become staff once they sign up with it and confirm it) */
+export async function inviteStaff(p: Record<string, unknown>): Promise<{ ok: boolean; result?: string; error?: string }> {
+  const { data, error } = await db().rpc('invite_staff', { p }); return error ? { ok: false, error: error.message } : { ok: true, result: data as string };
+}
+export async function staffInvites(): Promise<{ email: string; name: string | null; role: string; created_at: string }[]> {
+  const { data } = await db().from('staff_invites').select('email, name, role, created_at').order('created_at', { ascending: false }); return data || [];
+}
+export async function cancelInvite(email: string) { await db().from('staff_invites').delete().eq('email', email); }
+/** R10 S7: the owner resets someone's two-step; they set it up again at their next sign-in */
+export async function resetStaffMfa(id: string): Promise<string | null> { const { error } = await db().rpc('reset_staff_mfa', { p_id: id }); return error ? error.message : null; }
+export async function staffPasswordReset(email: string): Promise<string | null> { const { error } = await db().auth.resetPasswordForEmail(email.trim(), { redirectTo: location.origin + '/staff?reset=1' }); return error ? error.message : null; }
+export async function setNewPassword(pw: string): Promise<string | null> { const { error } = await db().auth.updateUser({ password: pw }); return error ? error.message : null; }

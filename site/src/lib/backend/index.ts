@@ -8,7 +8,8 @@ export * from './types';
 
 /** R9 · design preview: ?preview=1 runs this browser tab on the sample demo data (nothing is read from or written to the
  *  real database; Daftra stays locked on the server). ?preview=0 or "Exit preview" ends it. For checking design only. */
-export const preview = typeof window !== 'undefined' && (() => { try { const q = new URLSearchParams(location.search).get('preview'); if (q === '1') sessionStorage.setItem('se-preview', '1'); if (q === '0') sessionStorage.removeItem('se-preview'); return sessionStorage.getItem('se-preview') === '1'; } catch { return false; } })();
+// R10 S6: the design preview is gone once the real database is connected (it only exists on a site without Supabase)
+export const preview = typeof window !== 'undefined' && !(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) && (() => { try { const q = new URLSearchParams(location.search).get('preview'); if (q === '1') sessionStorage.setItem('se-preview', '1'); if (q === '0') sessionStorage.removeItem('se-preview'); return sessionStorage.getItem('se-preview') === '1'; } catch { return false; } })();
 export const live = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) && !preview;
 export const backend: Backend = live ? supabase : local;
 export const staffToken = async (): Promise<string | null> => (live ? (await import('./supabase')).accessToken() : null);

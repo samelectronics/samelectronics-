@@ -193,13 +193,21 @@ export function StaffForm({ s, self, onSave }: { s: Partial<Staff>; self?: boole
   );
 }
 export function Team({ me }: P) {
-  const [list, setList] = useState<Staff[]>([]), [ed, setEd] = useState<Partial<Staff> | null>(null), [err, setErr] = useState('');
-  const load = () => backend.staffList().then(setList);
-  useEffect(() => { load(); }, []);
-  const save = async (s: Partial<Staff>) => { const r = await backend.saveStaff(s as Staff); if (r.ok) { setEd(null); load(); } else setErr(r.error); };
+  const [list, setList] = useState<Staff[]>([]), [ed, setEd] = useState<Partial<Staff> | null>(null), [err, setErr] = useState(''), [msg, setMsg] = useState('');
+  const [inv, setInv] = useState<{ email: string; name: string | null; role: string; created_at: string }[]>([]);
+  const sbm = () => import('@/lib/backend/supabase');
+  const load = () => { backend.staffList().then(setList); if (live && can(me, 'staff')) sbm().then((m) => m.staffInvites()).then(setInv).catch(() => setInv([])); };
+  useEffect(() => { load(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  // R10 S5: new people are INVITED by e-mail; they become staff after they sign up with that e-mail and confirm it
+  const save = async (s: Partial<Staff>) => {
+    if (live && !s.id) { const r = await (await sbm()).inviteStaff(s as Record<string, unknown>); if (!r.ok) { setErr(r.error || 'Could not invite.'); return; } setEd(null); setMsg(r.result === 'added' ? s.email + ' already had a confirmed account and is now staff.' : 'Invitation saved for ' + s.email + '. Ask them to create an account on the website with this e-mail and confirm it, then open the Control Room: they will set up their 6-digit code.'); load(); return; }
+    const r = await backend.saveStaff(s as Staff); if (r.ok) { setEd(null); load(); } else setErr(r.error);
+  };
+  const reset2 = async (s: Partial<Staff>) => { if (!s.id || !confirm('Reset the two-step code of ' + s.name + '? They will set it up again at their next sign-in.')) return; const e = await (await sbm()).resetStaffMfa(s.id); setMsg(e || 'Two-step reset for ' + s.name + '.'); };
   return (
     <div className="cr-grid">
-      <div className="cr-filters"><span className="cr-muted">Owner and managers have full control. Everyone else sees only their area.</span><span className="cr-sp" />{can(me, 'staff') ? <button type="button" className="cr-btn y sm" onClick={() => setEd({})}>+ Add staff member</button> : null}</div>
+      <div className="cr-filters"><span className="cr-muted">Owner and managers have full control. Everyone else sees only their area. Staff join by invitation only, and every account needs the 6-digit code.</span><span className="cr-sp" />{can(me, 'staff') ? <button type="button" className="cr-btn y sm" onClick={() => setEd({})}>{live ? '+ Invite staff member' : '+ Add staff member'}</button> : null}</div>
+      {msg ? <div className="cr-note span3">{msg}</div> : null}
       <div className="cr-team span3">{list.map((s) => (
         <button key={s.id} type="button" className={'cr-mem' + (s.active ? '' : ' off')} onClick={() => can(me, 'staff') && setEd(s)}>
           <span className="cr-bigav">{s.photo ? <img src={s.photo} alt="" /> : s.name.slice(0, 1)}</span>
@@ -209,13 +217,21 @@ export function Team({ me }: P) {
           <small>{s.lastSeen ? 'Last seen ' + when(s.lastSeen) : 'Never logged in'}</small>
         </button>
       ))}</div>
-      <Drawer open={!!ed} onClose={() => { setEd(null); setErr(''); }} title={ed?.id ? ed.name || '' : 'New staff member'}>{ed ? <>{err ? <span className="cr-err">{err}</span> : null}<StaffForm s={ed} onSave={save} /></> : null}</Drawer>
+      {inv.length ? <Panel t="Waiting invitations" d="They join once they sign up with this e-mail and confirm it." className="span3">
+        <Table rows={inv} empty="" cols={[{ k: 'e', l: 'E-mail', get: (i) => <span className="mono">{i.email}</span> }, { k: 'n', l: 'Name', get: (i) => i.name || '' }, { k: 'r', l: 'Role', get: (i) => <Badge t={ROLE_NAMES[i.role as Role] || i.role} /> }, { k: 'w', l: 'Invited', get: (i) => when(new Date(i.created_at).getTime()) }, { k: 'x', l: '', get: (i) => <button type="button" className="cr-btn ghost sm" onClick={async () => { await (await sbm()).cancelInvite(i.email); load(); }}>Cancel</button> }]} />
+      </Panel> : null}
+      <Drawer open={!!ed} onClose={() => { setEd(null); setErr(''); }} title={ed?.id ? ed.name || '' : live ? 'Invite a staff member' : 'New staff member'}>{ed ? <>{err ? <span className="cr-err">{err}</span> : null}<StaffForm s={ed} onSave={save} />{live && ed.id && ed.id !== me.id ? <div className="cr-sec"><b>Two-step code</b><small>Lost phone or new phone? Reset it; they set it up again at their next sign-in.</small><button type="button" className="cr-btn ghost sm" onClick={() => reset2(ed)}>Reset two-step</button></div> : null}</> : null}</Drawer>
     </div>
   );
 }
 export function MyProfile({ me }: P) {
   const [ok, setOk] = useState('');
-  return <div className="cr-grid"><Panel t="My profile" d="Your photo and details, as the team sees them." className="span2">{ok ? <Badge t={ok} tone="g" /> : null}<StaffForm s={me} self onSave={async (s) => { const r = await backend.saveStaff({ ...me, name: s.name!, title: s.title, phone: s.phone, photo: s.photo } as Staff); setOk(r.ok ? 'Saved' : r.error); }} /></Panel></div>;
+  return <div className="cr-grid"><Panel t="My profile" d="Your photo and details, as the team sees them." className="span2">{ok ? <Badge t={ok} tone="g" /> : null}<StaffForm s={me} self onSave={async (s) => { const r = await backend.saveStaff({ ...me, name: s.name!, title: s.title, phone: s.phone, photo: s.photo } as Staff); setOk(r.ok ? 'Saved' : r.error); }} /></Panel>
+    {live ? <Panel t="Security" d="Key, password and your 6-digit code protect this account.">
+      <div className="cr-sec"><b>Sign out on every device</b><small>Use this if a phone or laptop was lost, or you signed in somewhere you shouldn’t have. You sign in again here afterwards.</small><button type="button" className="cr-btn ghost sm" onClick={async () => { if (!confirm('Sign out of the Control Room on every device?')) return; await (await import('@/lib/backend/supabase')).signOutEverywhere(); await fetch('/api/staff/gate', { method: 'DELETE' }); location.href = '/staff'; }}>Sign out everywhere</button></div>
+      <div className="cr-sec"><b>Lost your authenticator?</b><small>Ask the owner to reset your two-step in Staff &amp; roles; you set it up again at the next sign-in.</small></div>
+    </Panel> : null}
+  </div>;
 }
 
 // ── Audit & settings ─────────────────────────────────────────────────────────────────────────────────────────
