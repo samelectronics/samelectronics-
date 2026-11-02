@@ -71,26 +71,65 @@ function render(v: Vals) {
                 <b>{v.cur?.name}</b>
                 <small>{v.cur?.n}</small>
               </div>
-              <div className="fmq-devs" role="tablist">
-                {(v.devs || []).map((d: any) => (
-                  <button key={d.id} type="button" role="tab" aria-selected={d.on} className={d.on ? 'on' : ''} onMouseEnter={d.pick} onClick={d.pick}>
-                    <DevIcon d={d.id} />
-                    {d.name}
-                    <em>{d.n}</em>
-                  </button>
-                ))}
-              </div>
-              <div className="fmq-grid">
-                {(v.models || []).map((m: any) => (
-                  <button key={m.id} type="button" className="fmq-m" onClick={m.pick}>
-                    <span className="fmq-mi"><DevIcon d={m.dev} /></span>
-                    <span>
-                      <b data-no-i18n="">{m.name}</b>
-                      <small className={m.in ? 'in' : ''}>{m.q}</small>
-                    </span>
-                  </button>
-                ))}
-              </div>
+              <label className="fmq-q">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+                <input value={v.q} onChange={v.setQ} onFocus={v.focusQ} onBlur={v.blurQ} onKeyDown={v.keyQ} placeholder={v.ph} aria-label={v.ph} />
+              </label>
+              {v.model ? (
+                <div className="fmq-parts">
+                  <div className="fmq-ph">
+                    <button type="button" className="fmq-back" onClick={v.model.back}>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path d="m15 6-6 6 6 6" /></svg>
+                      {v.model.backT}
+                    </button>
+                    <span><b data-no-i18n="">{v.model.name}</b><small data-no-i18n="">{v.model.code}</small></span>
+                  </div>
+                  {v.model.empty ? <p className="fmq-none">{v.model.empty}</p> : null}
+                  {(v.model.parts || []).map((pt: any) => (
+                    <div key={pt.id} className="fmq-pt">
+                      <button type="button" className="fmq-ptn" onClick={pt.open}>
+                        <b>{pt.name}</b>
+                        <small className={pt.in ? 'in' : ''}>{pt.q}</small>
+                      </button>
+                      <span className="fmq-gr">
+                        {pt.grades.map((g: any) => (
+                          <button key={g.id} type="button" className={'fmq-g' + (g.out ? ' out' : '')} onClick={g.open}>
+                            <em>{g.g}</em>
+                            <b>{g.price}</b>
+                          </button>
+                        ))}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <>
+                  {(v.devs || []).length ? (
+                    <div className="fmq-devs" role="tablist">
+                      {(v.devs || []).map((d: any) => (
+                        <button key={d.id} type="button" role="tab" aria-selected={d.on} className={d.on ? 'on' : ''} onMouseEnter={d.pick} onClick={d.pick}>
+                          <DevIcon d={d.id} />
+                          {d.name}
+                          <em>{d.n}</em>
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
+                  {v.none ? <p className="fmq-none">{v.none}</p> : null}
+                  <div className="fmq-grid">
+                    {(v.models || []).map((m: any) => (
+                      <button key={m.id} type="button" className="fmq-m" onClick={m.pick}>
+                        <span className="fmq-mi"><DevIcon d={m.dev} /></span>
+                        <span>
+                          <b data-no-i18n="">{m.name}</b>
+                          {m.code ? <i data-no-i18n="">{m.code}</i> : null}
+                          <small className={m.in ? 'in' : ''}>{m.q}</small>
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </>
+              )}
               <button type="button" className="fmq-all" onClick={v.cur?.all}>
                 <span>{v.cur?.see}</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">

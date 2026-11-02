@@ -85,6 +85,13 @@ function core(l: Other, s: string): string | null {
   if ((m = s.match(/^(\d+) H AGO$/i))) return w.ago(m[1], 'h');
   if ((m = s.match(/^(\d+) d ago$/i))) return w.ago(m[1], 'd');
   if ((m = s.match(/^(\d+)[–-](\d+) (min|hrs|days)$/))) return `${m[1]}–${m[2]} ${m[3] === 'min' ? w.min : m[3] === 'hrs' ? w.hrs : w.days}`;
+  // R10: counters and labels built from a number or a name (templates live in each language's dictionary)
+  const tpl = (k: string, v: Record<string, string>) => (D[k] !== undefined ? D[k].replace(/\{(\w)\}/g, (_, x) => v[x] ?? '') : null);
+  if ((m = s.match(/^Only (\d+)$/))) return `${w.only} ${m[1]}`;
+  if ((m = s.match(/^\+(\d+) in the last hour$/))) return tpl('+{n} in the last hour', { n: m[1] });
+  if ((m = s.match(/^(\d+) cartons? on the pallet$/))) return tpl('{n} cartons on the pallet', { n: m[1] });
+  if ((m = s.match(/^(\d{4})–today$/))) return tpl('{y}–today', { y: m[1] });
+  if ((m = s.match(/^About (.+)$/))) return tpl('About {x}', { x: T(m[1]) });
   // stock and prices
   if ((m = s.match(/^([\d,.]+k?) in stock$/i))) return `${m[1]} ${w.inStock}`;
   if ((m = s.match(/^Only (\d+) left$/i))) return l === 'fa' ? `فقط ${m[1]} عدد باقی مانده` : l === 'hi' || l === 'ur' ? `${w.only} ${m[1]} ${w.left}` : `${w.only} ${m[1]} ${w.left}`;
