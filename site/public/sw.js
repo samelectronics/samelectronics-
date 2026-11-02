@@ -1,6 +1,6 @@
 // Sam Electronics service worker (R9 · PWA). Pages: network first, the last copy when offline. Images, fonts and built
 // files: cache first. Never caches the API, the Control Room or sign-in.
-const V = 'se-v2', CORE = ['/', '/shop', '/repair', '/manifest.webmanifest', '/icon-192.png', '/favicon.svg'];
+const V = 'se-v3', CORE = ['/', '/shop', '/repair', '/manifest.webmanifest', '/icon-192.png', '/favicon.svg'];
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(V).then((c) => c.addAll(CORE)).catch(() => {})); self.skipWaiting(); });
 self.addEventListener('activate', (e) => { e.waitUntil(caches.keys().then((k) => Promise.all(k.filter((x) => x !== V).map((x) => caches.delete(x)))).then(() => self.clients.claim())); });
 self.addEventListener('fetch', (e) => {

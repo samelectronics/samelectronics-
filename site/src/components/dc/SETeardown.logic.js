@@ -88,9 +88,9 @@ class Component extends DCLogic {
   // owner (28 Oct): a fast scroll no longer skips the teardown silently: the whole film plays super quickly (~1.3s, the same
   // animations), then the page is released past the section, so nobody has to scroll through a held final call
   quick(dir) {
-    if (dir < 0 || jumping()) return this.pass(dir); if (this.quicking) return; this.quicking = true; this.q = []; clearTimeout(this.autoT);
+    if (dir < 0 || jumping()) return this.pass(dir); if (this.quicking) return; if ((this.idx || 0) === this.FS.length - 1 && !this.busy()) return this.release(1); /* already at the final call: the next push leaves */ this.quicking = true; this.q = []; clearTimeout(this.autoT);
     const last = this.FS.length - 1; if (this.opBusy()) this.opShow(); this.tossEnd(); this.td.faceBack = false; this.busyUntil = performance.now() + 1500;
-    this.goTo(last, 1300); setTimeout(() => { this.quicking = false; this.busyUntil = 0; this.release(1); }, 1350);
+    this.goTo(last, 1300); setTimeout(() => { this.quicking = false; this.busyUntil = 0; /* R10 C1: no kick-down: it stops at the final call; the next scroll leaves */ this.gUsed = true; this.lastW = performance.now(); }, 1350);
   }
   busy() { return this.opBusy() || this.anim || performance.now() < (this.busyUntil || 0) || this.revOn; }
   /** Urgent 3: never freeze the page: end a stalled opening / tween and accept input again. */
@@ -287,7 +287,11 @@ class Component extends DCLogic {
       fmpMove: (e) => { const r = e.currentTarget.getBoundingClientRect(), dx = (e.clientX - r.left - r.width / 2) / (r.width / 2), dy = (e.clientY - r.top - r.height / 2) / (r.height / 2); this.setState({ mag: [Math.max(-1, Math.min(1, dx)) * 6, Math.max(-1, Math.min(1, dy)) * 4], fmpH: true }); },
       fmpLeave: () => this.setState({ mag: [0, 0], fmpH: false }),
       shop: { bd: s.shopH ? '#F7C032' : 'rgba(255,255,255,.32)', ty: s.shopH ? -2 : 0, sh: s.shopH ? '0 0 30px rgba(247,192,50,.35)' : '0 0 0 rgba(0,0,0,0)', ax: s.shopH ? 4 : 0 }, shopIn: () => this.setState({ shopH: true }), shopOut: () => this.setState({ shopH: false }), skp: { o: skpOn ? 1 : 0, pe: skpOn ? 'auto' : 'none' },
-      skip: (ev) => { ev && ev.preventDefault && ev.preventDefault(); const el = this.secRef.current; if (!el) return; jumpTo(window.scrollY + el.getBoundingClientRect().bottom - NAV); },
+      skip: (ev) => { ev && ev.preventDefault && ev.preventDefault(); if (!this.secRef.current) return;
+        /* R10 C5: Skip goes TO the final call (the ad still plays), not past it */
+        clearTimeout(this.autoT); this.manual = false; if (this.opBusy()) this.opShow(); this.tossEnd(); this.passing = 0;
+        const last = this.FS.length - 1; this.mode = 'film'; this.td.faceBack = false; this.busyUntil = performance.now() + 1500;
+        window.__seJumpForced = 0; this.goTo(last, 900); this.idx = last; this.gUsed = true; this.lastW = performance.now(); },
       mt: { ink: fin > 0.5 ? '#26282B' : '#FFFFFF', sub: fin > 0.5 ? '#26282B' : '#F7C032' }, mRail: fin < 0.5, mFin: fin >= 0.5,
       railFill: (allLit ? 1 : Math.max(0, act) / 7).toFixed(3),
       prev: () => this.goStep(Math.max(-1, act - 1)), next: () => this.goStep(Math.min(7, act + 1)), replay: () => { this.stopAuto(); this.at(0.02); setTimeout(() => this.play(), 200); },

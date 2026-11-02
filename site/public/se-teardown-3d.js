@@ -15,7 +15,7 @@ export async function mount(host, state) {
   const { RoundedBoxGeometry } = await import('/vendor/three/RoundedBoxGeometry.js');
   try { await Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 1500))]); } catch (e) {}
   const PI = Math.PI;
-  const canvas = host.querySelector('canvas');
+  const canvas = host.querySelector('canvas'); if (canvas) canvas.style.pointerEvents = 'none'; /* R10: the scene never takes clicks (the Skip button and links stay clickable) */
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: false, logarithmicDepthBuffer: true }); renderer.debug.checkShaderErrors = false; /* owner (28 Oct, lag): no buffer copy each frame, no shader-log stalls */ // R6 §05 A: no depth fighting on the back-cover edge at any distance
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5) /* R6 Part A: 1.5× max */);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -535,7 +535,7 @@ export async function mount(host, state) {
   // final-call ad = Template B of the shared phone-ad engine (se-phone-ad.js); 3D renderAd stays as fallback
   let ad2 = null, ad2Cv = null, ad2Tex = null, ad2Wait = 0;
   const ad2Init = () => { if (ad2 || !window.SETdAd) return ad2; const sp = window.seParts, lib = sp && sp.peek && sp.peek(); /* Urgent 3: the new ad draws the pose shots itself; it no longer waits for the parts library */
-    const w = state.mob ? 560 : 780; ad2Cv = cvs(w, Math.round((w * AH) / AW)); ad2 = window.SETdAd.create(ad2Cv, { lib, data: state.adData }); ad2Tex = new THREE.CanvasTexture(ad2Cv); ad2Tex.colorSpace = THREE.SRGBColorSpace; ad2Tex.anisotropy = ANI; state.adTOT = ad2.dur; state.adLogoT = ad2.logoT; return ad2; };
+    const w = state.mob ? 720 : 1160; /* R10 C4: rendered sharper */ ad2Cv = cvs(w, Math.round((w * AH) / AW)); ad2 = window.SETdAd.create(ad2Cv, { lib, data: state.adData }); ad2Tex = new THREE.CanvasTexture(ad2Cv); ad2Tex.colorSpace = THREE.SRGBColorSpace; ad2Tex.anisotropy = ANI; state.adTOT = ad2.dur; state.adLogoT = ad2.logoT; return ad2; };
   state.ad2Init = ad2Init;
   state.adShot2 = (t) => { if (!ad2Init()) return null; ad2.draw(t); return ad2Cv.toDataURL('image/jpeg', 0.9); };
   state.adShot = (t) => { if (ad2Init()) return state.adShot2(t); renderAd(t); const px = new Uint8Array(AW * AH * 4); renderer.readRenderTargetPixels(rt, 0, 0, AW, AH, px); const c = cvs(AW, AH), x = c.getContext('2d'), id = x.createImageData(AW, AH); for (let y = 0; y < AH; y++) id.data.set(px.subarray((AH - 1 - y) * AW * 4, (AH - y) * AW * 4), y * AW * 4); x.putImageData(id, 0, 0); const o = cvs(Math.round(AW / 2), Math.round(AH / 2)); o.getContext('2d').drawImage(c, 0, 0, o.width, o.height); return o.toDataURL('image/jpeg', 0.9); };
@@ -757,9 +757,11 @@ export async function mount(host, state) {
       if (gk > 0.004) { /* owner (27 Oct): the dust that turns into the big soft yellow circles is back. It is drawn on the canvas BEHIND the 3D canvas, so the circles always pass behind the phone, never over it */ if (!BKD || BKD.w !== w || BKD.h !== hgt) BKD = mkBK(); const ek = eio(gk);
         BKD.forEach((b2) => { const th = b2.th + 0.9 * Math.sin(t * b2.om + b2.ph); b2.x += Math.cos(th) * b2.v * dt; b2.y += (Math.sin(th) * 0.8 - 0.25) * b2.v * dt; if (b2.x < -b2.r) b2.x = w + b2.r; if (b2.x > w + b2.r) b2.x = -b2.r; if (b2.y < -b2.r) b2.y = hgt + b2.r; if (b2.y > hgt + b2.r) b2.y = -b2.r; });
         for (let i = 0; i < BKD.length; i++) for (let j = i + 1; j < BKD.length; j++) { const p1 = BKD[i], p2 = BKD[j], ddx = p2.x - p1.x, ddy = p2.y - p1.y, dd = Math.hypot(ddx, ddy) || 1, ov = p1.r + p2.r + 24 - dd; if (ov > 0) { const k2 = Math.min(ov, 30) * dt * 0.8 / dd; p1.x -= ddx * k2; p1.y -= ddy * k2; p2.x += ddx * k2; p2.y += ddy * k2; } }
-        BKD.forEach((b2, j) => { const hd = DP[9 + j] || DP[j], X = lerp(hd.px == null ? b2.x : hd.px, b2.x, ek), Y = lerp(hd.py == null ? b2.y : hd.py, b2.y, ek), r = lerp(hd.r * 3, b2.r, ek) * dpr, A = b2.a * (1 + 0.2 * Math.sin((t * PI * 2) / b2.bp + b2.ph)) * cl(gk * 1.2), c3 = b2.c.join(',');
-          const gr = dx.createRadialGradient(X * dpr, Y * dpr, 0, X * dpr, Y * dpr, r); gr.addColorStop(0, 'rgba(' + c3 + ',' + (A * 0.72).toFixed(3) + ')'); gr.addColorStop(0.7, 'rgba(' + c3 + ',' + (A * 0.86).toFixed(3) + ')'); gr.addColorStop(0.9, 'rgba(' + c3 + ',' + (A * (b2.rim ? 1.5 : 1)).toFixed(3) + ')'); gr.addColorStop(1, 'rgba(' + c3 + ',0)');
-          dx.fillStyle = gr; dx.beginPath(); dx.arc(X * dpr, Y * dpr, r, 0, PI * 2); dx.fill(); }); } }
+        BKD.forEach((b2, j) => { const hd = DP[9 + j] || DP[j], X = lerp(hd.px == null ? b2.x : hd.px, b2.x, ek), Y = lerp(hd.py == null ? b2.y : hd.py, b2.y, ek), r = lerp(hd.r * 3, b2.r * 1.7, ek) * dpr /* R10 C3: bigger and soft */, A = b2.a * (1 + 0.2 * Math.sin((t * PI * 2) / b2.bp + b2.ph)) * cl(gk * 1.2), c3 = b2.c.join(',');
+          /* R10 C3: soft blurred lights (no hard rim), drifting, and each one leans away from the pointer by its own depth */
+          const pk = 0.5 + (j % 3) * 0.35, PX = (X - mx * 46 * pk) * dpr, PY = (Y - my * 30 * pk) * dpr;
+          const gr = dx.createRadialGradient(PX, PY, 0, PX, PY, r); gr.addColorStop(0, 'rgba(' + c3 + ',' + (A * 0.62).toFixed(3) + ')'); gr.addColorStop(0.35, 'rgba(' + c3 + ',' + (A * 0.42).toFixed(3) + ')'); gr.addColorStop(0.7, 'rgba(' + c3 + ',' + (A * 0.14).toFixed(3) + ')'); gr.addColorStop(1, 'rgba(' + c3 + ',0)');
+          dx.fillStyle = gr; dx.beginPath(); dx.arc(PX, PY, r, 0, PI * 2); dx.fill(); }); } }
     // spec callouts: labels left of the stack; each line = one diagonal outside the stack + one horizontal run that never crosses another layer
     { const ok = stepOn && !mob && oo >= 0.999 && rise > 0.98; const specs = (state.spec && state.spec[act]) || SPEC0[act] || [];
       const hulls = ok ? L.map((g, s2) => (s2 === act || !g.visible ? null : hull(OUT.map((c) => proj(cv.copy(c).applyMatrix4(g.matrixWorld)))))).filter(Boolean) : [];

@@ -87,3 +87,16 @@ re-shot with the same script.
 - L9 Showcase fits one screen on 1280×720. L10 Team band text fits. L11 titles balanced (no lone word).
 - L12 G1 Story markers are glossy LED nodes.
 - Still open from this list: L13 Finale circuits continuous from the sides (with I1, next).
+
+### Owner, 2 Nov (later)
+- Feed: title "Follow us / for daily stock drops." full width at the standard title size; @samelectronics.uae now sits
+  under the phone (the empty space). "Follow us" added in all 24 languages.
+- Language button: ONE icon, a globe inside a gear (no separate sun-like gear); on hover only the gear rim turns.
+### Teardown (C1–C5)
+- C1 done: a fast scroll plays the film quickly and STOPS at the final call (no kick-down); the next push leaves.
+- C5 done: Skip goes to the final call (the ad keeps playing), not past the section. Verified in the browser.
+- C3 done: the hard yellow circles are soft blurred lights, drifting, each leaning away from the pointer.
+- C4 done: status-bar time/signal/battery moved in from the corners (safe margin); ad screen rendered sharper (1160px).
+- Also: the 3D canvas no longer takes clicks (Skip/links underneath were sometimes blocked).
+- OPEN · C2: could not confirm the final-call hover slide for Logic board / Small parts in the headless browser (no GPU);
+  needs a check on a real laptop. OPEN · after Skip the phone sweeps in at an angle over the tiles for ~2s before standing.
