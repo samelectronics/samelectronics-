@@ -100,3 +100,18 @@ re-shot with the same script.
 - Also: the 3D canvas no longer takes clicks (Skip/links underneath were sometimes blocked).
 - OPEN · C2: could not confirm the final-call hover slide for Logic board / Small parts in the headless browser (no GPU);
   needs a check on a real laptop. OPEN · after Skip the phone sweeps in at an angle over the tiles for ~2s before standing.
+
+## Stage 1 · batch 6 (2 Nov)
+| Item | Status | Notes |
+|---|---|---|
+| C5 Skip | PASS | Clean cut to the final call, no sweep (frames 600/1500/3000 ms). |
+| U7 / E4 cut-outs | PASS (checked) | Edge pass tested; the light edges are real highlights (glass rim, pallet wrap), not fringes. Images left untouched. |
+| U1 studio stage | PASS | Spotlight, floor fading to dark/white, contact shadow, soft reflection; flat discs removed (offer cards, deals, showcase, shop cards, product view). |
+| B5 Find My Part | PASS | Quick view: brands, search across all brands, full model grid (model code shown when the catalogue has one — currently none), parts with grade+price chips opening the filtered shop; "See it all" opens the full panel; "Part C" text removed. RTL anchored. |
+| Translations | PASS for the home page | 16 languages went from ~495 missing to only names/brands/numbers; showcase/finale titles, Find My Part, countries, number patterns for all 23 languages. Welcome tour checked in Italian and Amharic. |
+| Translations · hidden states | OPEN | ~750 strings shown only in pop-ups/hover/other pages still English in the 16 newer languages (next batch). |
+| A3 | PASS | 103 JS files on /, /shop, /repair, /account: no Control Room code. Staff loader rebuilt. |
+| G2 | PASS (link) | Every Deira directions link uses maps.app.goo.gl/EsZiUQy8HmzfJg6QA. Resolving it to coordinates was blocked from this session (network). |
+| U3 / U4 | PASS | Entrances on all 17 sections; yellow pointer light on all (hidden on touch). |
+| B9 staff bell | MOVED to Stage 4 | Lives in the Control Room rebuild; cannot be tested here without staff access. |
+| Phone re-test | PASS after fix | Request console overflowed at 390/360 — fixed. |

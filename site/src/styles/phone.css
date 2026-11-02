@@ -95,3 +95,11 @@
   html[dir='rtl'] .bt-left { left: 40px; }
   html[dir='rtl'] .bt-rigwrap { left: 50%; }
 }
+/* R10 re-test: the request console and the visit card never grow past the phone width */
+@media (max-width: 700px) {
+  #visit .vs-con, #visit .vs-card { min-width: 0; max-width: 100%; box-sizing: border-box; }
+  #visit .vs-con { padding: 22px 18px; }
+  #visit .vs-con h2, #visit .vs-con h3 { overflow-wrap: anywhere; text-wrap: balance; }
+  #visit .vs-con * { min-width: 0; }
+}
+@media (max-width: 700px) { #visit .vs-acts { flex-wrap: wrap; } #visit .vs-acts > .vs-btn { flex: 1 1 140px; justify-content: center; } }
