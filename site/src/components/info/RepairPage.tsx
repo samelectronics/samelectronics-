@@ -4,6 +4,7 @@
 // 500; the bench may adjust it up or down for the part and the work (the final price is confirmed before we start).
 // Repairs without a stocked part (water damage, buttons, software…) are "diagnosis first". Then how it works and booking.
 import React, { useEffect, useMemo, useState } from 'react';
+import { PhoneMap, FeeGauge, JobTicket, BenchNow } from './RepairBits';
 import { data, products, repairFee, aed, waLink, type Product , priceText } from '@/lib/catalog';
 import { backend, useMe } from '@/lib/backend';
 import { PageHero, T, useRise, flyToCart } from '@/components/site/ui';
@@ -15,7 +16,7 @@ type Rep = { id: string; g: string; name: string; cat: string | null; labour?: n
 
 export default function RepairPage() {
   const [ready, setReady] = useState(false), [brand, setBrand] = useState('apple'), [model, setModel] = useState<string | null>(null), [q, setQ] = useState(''), [pick, setPick] = useState<{ rep: Rep; p?: Product } | null>(null);
-  const [me] = useMe(), [f, setF] = useState({ name: '', phone: '', when: '', mode: 'walk-in', note: '' }), [sent, setSent] = useState(false);
+  const [me] = useMe(), [f, setF] = useState({ name: '', phone: '', when: '', mode: 'walk-in', note: '' }), [sent, setSent] = useState(false), [job, setJob] = useState('');
   useEffect(() => { const iv = window.setInterval(() => { if (data() && products().length) { window.clearInterval(iv); setReady(true); const u = new URLSearchParams(location.search); if (u.get('model')) { const m = data()!.models.find((x) => x.id === u.get('model')); if (m) { setBrand(m.brand_id); setModel(m.id); } } } }, 60); return () => window.clearInterval(iv); }, []);
   useEffect(() => { if (me) setF((x) => ({ ...x, name: x.name || me.name, phone: x.phone || me.phone || '' })); }, [me]);
   useRise(ready);
@@ -27,12 +28,20 @@ export default function RepairPage() {
   const M = model ? D.models.find((m) => m.id === model) : null;
   const parts = (cat: string | null) => (M && cat ? products().filter((p) => p.model_id === M.id && p.category === cat).sort((a, b) => a.price - b.price) : []);
   const groups = [...new Set(R.map((r) => r.g))];
+  // R10 P3: tapping a part of the exploded phone picks that repair (and its cheapest grade) and brings it into view
+  const fromMap = (id: string) => {
+    if (!M) { document.getElementById('pick')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    const r = R.find((x) => x.id === id); if (!r) return; const ps = parts(r.cat);
+    setPick(ps.length ? { rep: r, p: ps[0] } : { rep: r });
+    window.setTimeout(() => document.getElementById('rp-' + id)?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60);
+  };
+  const avail = (id: string) => { const r = R.find((x) => x.id === id); return !!r && (!r.cat || !M || parts(r.cat).length > 0); };
   const book = async (e: React.FormEvent) => {
     e.preventDefault();
     const what = pick ? pick.rep.name + (pick.p ? ' · ' + pick.p.gradeName + ' (' + aed(pick.p.price + repairFee(pick.p.price), false) + ' est.)' : '') : 'Repair';
     const text = `Repair booking\nModel: ${M?.name || '—'}\nRepair: ${what}\nWhen: ${f.when || 'as soon as possible'} · ${f.mode}\n${f.note}`;
     await backend.send({ name: f.name, topic: 'Repair booking', text });
-    setSent(true); window.open(waLink('Hi Sam Electronics, ' + text + '\nName: ' + f.name + ' · ' + f.phone), '_blank', 'noopener');
+    setJob('SE-R' + Date.now().toString(36).toUpperCase().slice(-6)); setSent(true); window.open(waLink('Hi Sam Electronics, ' + text + '\nName: ' + f.name + ' · ' + f.phone), '_blank', 'noopener');
   };
 
   return (
@@ -41,6 +50,7 @@ export default function RepairPage() {
         sub={T('Pick your phone and see every repair we do for it: the part in each grade, the fitting fee and the total, before you come in.')}
         right={<div className="rp-film"><RepairFlip w={480} fit="contain" zoom={1.25} /></div>}>
         <div className="sp-acts"><a className="sp-btn" href="#pick">{T('Find my repair')}</a><a className="sp-btn ghost" href="#fees">{T('How fees work')}</a></div>
+        <BenchNow />
       </PageHero>
 
       <section id="pick" className="sp-sec g">
@@ -63,6 +73,7 @@ export default function RepairPage() {
           {M ? (
             <>
               <div className="sp-head" data-rise><div><span className="sp-eb">{T('STEP 2 · THE REPAIR')}</span><h2 className="sp-h2">{T('Every repair for the')} {M.name}</h2><p className="sp-p">{T('Part price + fitting fee = your total. Prices are samples; the bench confirms the final price before starting.')}</p></div></div>
+              <div className="rp-mapwrap" data-rise><div><span className="sp-eb">{T('TAP WHAT IS BROKEN')}</span><b className="sp-h3">{T('Point at the part')}</b><p className="sp-p">{T('Every layer of the phone opens its repair below, with every grade and the total.')}</p></div><PhoneMap on={pick?.rep.id || null} pick={fromMap} avail={avail} /></div>
               {groups.map((g) => (
                 <div key={g} className="rp-g" data-rise>
                   <h3 className="rp-gh">{T(g)}</h3>
@@ -70,7 +81,7 @@ export default function RepairPage() {
                     {R.filter((r) => r.g === g).map((r) => {
                       const ps = parts(r.cat);
                       return (
-                        <div key={r.id} className={'rp-r' + (pick?.rep.id === r.id ? ' on' : '')}>
+                        <div key={r.id} id={'rp-' + r.id} className={'rp-r' + (pick?.rep.id === r.id ? ' on' : '')}>
                           <div className="rp-rh"><b>{T(r.name)}</b>{r.time ? <small>⏱ {T(r.time)}</small> : null}</div>
                           {ps.length ? (
                             <div className="rp-opts">{ps.map((p) => { const fee = repairFee(p.price); return (
@@ -109,9 +120,9 @@ export default function RepairPage() {
       <section id="book" className="sp-sec y">
         <div className="sp-wrap rp-book">
           <div data-rise><span className="sp-eb">{T('STEP 3 · BOOK IT')}</span><h2 className="sp-h2">{T('Book your repair')}</h2><p className="sp-p" style={{ color: '#5A4200' }}>{T('Walk in any time we are open, or book a time and skip the queue. We confirm on WhatsApp.')}</p>
-            {pick ? <div className="rp-chosen"><b>{M?.name}</b><span>{T(pick.rep.name)}{pick.p ? ' · ' + pick.p.gradeName : ''}</span>{pick.p ? <b>{aed(pick.p.price + repairFee(pick.p.price))}</b> : <span>{T('Free check')}</span>}{pick.p ? <button type="button" className="sp-btn sm dark" onClick={(e) => flyToCart(null, pick.p!.id, e)}>{T('Just the part, to cart')}</button> : null}</div> : <small>{T('Pick a repair above, or just describe the problem.')}</small>}
+            {pick ? <div className="rp-chosen"><b>{M?.name}</b><span>{T(pick.rep.name)}{pick.p ? ' · ' + pick.p.gradeName : ''}</span>{pick.p ? <FeeGauge fee={repairFee(pick.p.price)} part={pick.p.price} total={aed(pick.p.price + repairFee(pick.p.price))} /> : <span>{T('Free check')}</span>}{pick.p ? <button type="button" className="sp-btn sm dark" onClick={(e) => flyToCart(null, pick.p!.id, e)}>{T('Just the part, to cart')}</button> : null}</div> : <small>{T('Pick a repair above, or just describe the problem.')}</small>}
           </div>
-          {sent ? <div className="sp-card" data-rise><b className="sp-h3">{T('Booked. See you soon!')}</b><p className="sp-p">{T('We opened WhatsApp with your booking; the team confirms the time there.')}</p></div> : (
+          {sent ? <div><JobTicket job={job} name={f.name} model={M?.name || T('Not chosen yet')} repair={pick ? T(pick.rep.name) + (pick.p ? ' · ' + pick.p.gradeName : '') : T('Check first')} total={pick?.p ? aed(pick.p.price + repairFee(pick.p.price)) : T('After the free check')} when={f.when ? new Date(f.when).toLocaleString() : ''} mode={f.mode === 'walk-in' ? 'Walk-in' : f.mode === 'courier' ? 'Courier pick-up' : 'Shipped from abroad'} /><p className="sp-p" style={{ marginTop: 12 }}>{T('We opened WhatsApp with your booking; the team confirms the time there.')}</p></div> : (
             <form className="sp-card rp-form" onSubmit={book} data-rise>
               <label className="sp-field">{T('Your name')}<input required value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></label>
               <label className="sp-field">{T('Phone (WhatsApp)')}<input required value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} /></label>

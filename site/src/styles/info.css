@@ -205,3 +205,42 @@ html.se-page:has(.ak) [data-tour='samsoom'] { display: none; }
 .cl-how li::before { content: counter(h); grid-row: 1 / 4; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: #F7C032; color: #26282B; font: 700 13px 'JetBrains Mono', monospace; }
 .cl-how b { font: 600 14px Inter, sans-serif; } .cl-how code { font: 500 12.5px 'JetBrains Mono', monospace; color: #F7C032; } .cl-how span { font: 400 13px/1.45 Inter, sans-serif; color: #C9CBCE; }
 @media (max-width: 860px) { .cl { grid-template-columns: 1fr; padding: 20px; } }
+/* R10 P3 · Repair Lab: the exploded phone map, the fee gauge, the job ticket, the bench status */
+.rp-mapwrap { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.4fr); gap: 28px; align-items: center; margin: 6px 0 28px; padding: 24px; border-radius: 24px; background: radial-gradient(500px 300px at 65% 40%, #3E4044, #2D2F32 70%, #2A2C2F); color: #fff; }
+.rp-mapwrap .sp-p { color: #C9CBCE; } .rp-mapwrap .sp-eb { color: #F7C032; }
+.rp-map svg { display: block; width: 100%; height: auto; }
+.rp-ly polygon { fill: url(#rpScr); stroke: rgba(255, 255, 255, .14); stroke-width: 1.5; cursor: pointer; transition: fill .25s, stroke .25s, transform .3s; }
+.rp-ly.bat > polygon:first-child { fill: url(#rpBat); } .rp-ly .cell { fill: #2BB673; opacity: .25; stroke: none; }
+.rp-ly .glass { fill: rgba(255, 255, 255, .05); stroke: none; pointer-events: none; }
+.rp-ly:hover polygon:first-child, .rp-ly:focus polygon:first-child { stroke: #F7C032; stroke-width: 2.5; }
+.rp-ly.on polygon:first-child { stroke: #F7C032; stroke-width: 3; fill: #45433A; filter: drop-shadow(0 0 14px rgba(247, 192, 50, .45)); }
+.rp-ly.na { opacity: .5; }
+.rp-ly .lead { stroke: rgba(255, 255, 255, .35); stroke-width: 1.2; } .rp-ly .lbl { fill: #D9DBDE; font: 600 14px Inter, sans-serif; pointer-events: none; }
+.rp-ly.on .lbl { fill: #F7C032; } .rp-ly:focus { outline: none; }
+.rp-spot { cursor: pointer; } .rp-spot .halo { fill: rgba(247, 192, 50, .18); animation: rpPulse 2s ease-in-out infinite; } .rp-spot .dot { fill: #F7C032; stroke: #2A2C2F; stroke-width: 2; }
+.rp-spot.on .dot { fill: #fff; } .rp-spot.na { opacity: .45; } @keyframes rpPulse { 50% { r: 17; opacity: .4; } }
+.rp-map-legend { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.rp-map-legend button { height: 32px; padding: 0 12px; border: 0; border-radius: 9px; background: rgba(255, 255, 255, .07); color: #E6E7E9; font: 600 12.5px Inter, sans-serif; cursor: pointer; }
+.rp-map-legend button.on, .rp-map-legend button:hover { background: #F7C032; color: #26282B; }
+@media (max-width: 860px) { .rp-mapwrap { grid-template-columns: 1fr; } }
+.rp-gauge { display: flex; align-items: center; gap: 14px; }
+.rp-gauge svg { width: 150px; flex: none; } .rp-gauge .arc { fill: none; stroke: rgba(38, 40, 43, .15); stroke-width: 12; } .rp-gauge .arc.on { stroke: #26282B; }
+.rp-gauge .needle { stroke: #26282B; stroke-width: 3; stroke-linecap: round; } .rp-gauge .hub { fill: #26282B; }
+.rp-gauge-t { display: flex; flex-direction: column; } .rp-gauge-t small { font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .12em; text-transform: uppercase; color: #5A4200; }
+.rp-gauge-t b { font: 700 28px 'Space Grotesk', sans-serif; color: #26282B; } .rp-gauge-t span { font: 500 13px Inter, sans-serif; color: #5A4200; } .rp-gauge-t em { font-style: normal; font-weight: 700; color: #26282B; }
+.rp-ticket { position: relative; border-radius: 18px; background: #fff; color: #26282B; box-shadow: 0 30px 60px -30px rgba(38, 40, 43, .5); overflow: hidden; }
+.rp-ticket::before, .rp-ticket::after { content: ''; position: absolute; top: 58px; width: 18px; height: 18px; border-radius: 50%; background: #F7C032; } .rp-ticket::before { left: -9px; } .rp-ticket::after { right: -9px; }
+.rp-tk-h { display: flex; align-items: center; gap: 10px; padding: 14px 18px; border-bottom: 2px dashed #DDE0E3; }
+.rp-tk-h span { flex: 1; display: flex; flex-direction: column; } .rp-tk-h b { font: 700 12.5px 'JetBrains Mono', monospace; letter-spacing: .08em; } .rp-tk-h small { color: #6A6D72; font: 500 11.5px Inter, sans-serif; }
+.rp-tk-h em { font: 700 11px 'JetBrains Mono', monospace; letter-spacing: .14em; font-style: normal; padding: 4px 8px; border-radius: 6px; background: #26282B; color: #F7C032; }
+.rp-tk-b { display: grid; grid-template-columns: 1fr 120px; gap: 16px; padding: 16px 18px; }
+.rp-tk-b dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 0; font: 500 13.5px Inter, sans-serif; }
+.rp-tk-b dt { color: #6A6D72; font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .08em; text-transform: uppercase; padding-top: 2px; }
+.rp-tk-b dd { margin: 0; } .rp-tk-b dd.big { font: 700 20px 'Space Grotesk', sans-serif; } .rp-tk-b .mono { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+.rp-tk-qr svg { width: 120px; height: 120px; display: block; }
+.rp-tk-f { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 18px; background: #F4F5F6; font: 400 12.5px/1.4 Inter, sans-serif; color: #4A4D52; }
+.rp-now { display: inline-flex; align-items: center; gap: 10px; margin-top: 16px; padding: 9px 14px; border-radius: 999px; background: rgba(255, 255, 255, .08); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1); color: #fff; font: 500 13.5px Inter, sans-serif; }
+.rp-now i { width: 9px; height: 9px; border-radius: 50%; box-shadow: 0 0 10px currentColor; } .rp-now small { color: #B9BCC0; font: 500 12px 'JetBrains Mono', monospace; }
+@media print { body * { visibility: hidden; } .rp-ticket, .rp-ticket * { visibility: visible; } .rp-ticket { position: fixed; left: 20px; top: 20px; width: 520px; box-shadow: none; } .rp-tk-f button { display: none; } }
+.rp-mapwrap .sp-eb { display: block; margin-bottom: 8px; } .rp-mapwrap .sp-h3 { display: block; color: #fff; }
+.rp-ly polygon:first-child { stroke-linejoin: round; }
