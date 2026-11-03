@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { data, products } from '@/lib/catalog';
 import { PageHero, T, useRise } from '@/components/site/ui';
 import SEBrandLogo from '@/components/dc/SEBrandLogo';
+import { SupplyChain, MakerBoard, GradeCompare } from './BrandsBits';
 
 const MAKER: Record<string, [string, string, string]> = {
   'service-pack': ['The brand’s own part', 'Original parts in the brand’s service packaging, the same ones authorised service centres fit. Exact colors, brightness, touch and battery life.', 'Original · 6 months'],
@@ -33,6 +34,11 @@ export default function BrandsPage() {
         <div className="sp-acts"><a className="sp-btn" href="#brands">{T('Phone brands')}</a><a className="sp-btn ghost" href="#makers">{T('Part manufacturers')}</a></div>
       </PageHero>
 
+      <section className="sp-sec d bc-sec"><div className="sp-wrap">
+        <div className="sp-head" data-rise><div><span className="sp-eb">{T('FROM FACTORY TO YOUR BENCH')}</span><h2 className="sp-h2" style={{ color: '#fff' }}>{T('Every part has a journey.')}</h2></div></div>
+        <SupplyChain />
+      </div></section>
+
       <section id="brands" className="sp-sec w"><div className="sp-wrap">
         <div className="sp-head" data-rise><div><span className="sp-eb">{T('PHONE BRANDS')}</span><h2 className="sp-h2">{D.brands.length} {T('brands,')} {D.models.length} {T('models')}</h2></div></div>
         <div className="br-grid">{D.brands.map((b, i) => {
@@ -50,23 +56,12 @@ export default function BrandsPage() {
 
       <section id="makers" className="sp-sec d"><div className="sp-wrap">
         <div className="sp-head" data-rise><div><span className="sp-eb">{T('PART MANUFACTURERS')}</span><h2 className="sp-h2" style={{ color: '#fff' }}>{T('Who makes your part.')}</h2><p className="sp-p">{T('Every part in the shop is labelled with two things: its quality, and who made it. Here is what each manufacturer means.')}</p></div></div>
-        <div className="br-makers">{D.manufacturers.map((m) => {
-          const [t, d, w] = MAKER[m.id] || ['', '', ''], n = P.filter((p) => p.manufacturer === m.id).length;
-          return (
-            <article key={m.id} id={'maker-' + m.id} className="br-m" data-rise>
-              <span className="br-mk">{m.name.slice(0, 2).toUpperCase()}</span>
-              <b className="sp-h3">{m.name}</b><small className="br-mt">{T(t)}</small>
-              <p>{T(d)}</p>
-              <span className="br-mw">{T(w)}</span>
-              <a className="sp-btn sm" href={'/shop?maker=' + m.id}>{n ? n + ' ' + T('parts') : T('See parts')} →</a>
-            </article>
-          );
-        })}</div>
+        <MakerBoard gradeNames={D.gradeNames} makers={D.manufacturers.map((m) => { const [t, d, w] = MAKER[m.id] || ['', '', '']; const ps = P.filter((p) => p.manufacturer === m.id); return { id: m.id, name: m.name, t, d, w, n: ps.length, grades: [...new Set(ps.map((p) => p.grade))] }; })} />
       </div></section>
 
       <section className="sp-sec y"><div className="sp-wrap">
         <div className="sp-head" data-rise><div><span className="sp-eb">{T('GRADES')}</span><h2 className="sp-h2">{T('Four grades, one honest label.')}</h2></div></div>
-        <div className="sp-grid sp-g4" data-rise>{Object.entries(D.gradeNames).map(([g, n]) => <div key={g} className="sp-card"><span className={'pc-gr g-' + g}>{n}</span><b className="sp-h3" style={{ marginTop: 10, display: 'block' }}>{D.makerNames[g]}</b><p className="sp-p">{T({ OR: 'The part the brand itself fits.', OL: 'Close to original, at a lower price.', IN: 'Reliable everyday LCD, budget price.', AQ: 'Our best price, tested.' }[g] || '')}</p></div>)}</div>
+        <GradeCompare gradeNames={D.gradeNames} />
       </div></section>
     </>
   );
