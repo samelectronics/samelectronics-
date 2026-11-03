@@ -21,7 +21,7 @@ const nice = (m: string) => {
 const strength = (p: string) => [p.length >= 8, /[A-Z]/.test(p) && /[a-z]/.test(p), /\d/.test(p), /[^A-Za-z0-9]/.test(p), p.length >= 12].filter(Boolean).length;
 
 export default function Auth({ onDone }: { onDone: () => void }) {
-  const [mode, setMode] = useState<Mode>(() => (typeof location !== 'undefined' && new URLSearchParams(location.search).get('signup') ? 'up' : 'in')), [busy, setBusy] = useState(false), [err, setErr] = useState(''), [info, setInfo] = useState('');
+  const [mode, setMode] = useState<Mode>(() => (typeof location !== 'undefined' && new URLSearchParams(location.search).get('signup') ? 'up' : 'in')), [busy, setBusy] = useState(false), [err, setErr] = useState(() => (typeof location !== 'undefined' && /error_code=/.test(location.hash) ? T('That e-mail link has expired or was already used. Ask for a new one below.') : '')), [info, setInfo] = useState('');
   const [f, setF] = useState({ name: '', email: '', password: '', phone: '', kind: 'customer' as 'customer' | 'wholesale', agree: false, code: '' });
   const [demo, setDemo] = useState(''), [show, setShow] = useState(false), [wait, setWait] = useState(0);
   React.useEffect(() => { if (wait <= 0) return; const t = setTimeout(() => setWait(wait - 1), 1000); return () => clearTimeout(t); }, [wait]);

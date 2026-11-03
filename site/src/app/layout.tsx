@@ -62,6 +62,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
+        {/* R11b: e-mail links (password reset, sign-up confirm) that land on any page are forwarded to My Bench with their sign-in code */}
+        <script dangerouslySetInnerHTML={{ __html: "(function(){try{var h=location.hash||'',q=location.search||'';if(location.pathname!=='/account'&&/type=(recovery|signup|email|invite|magiclink)|access_token=|error_code=/.test(h+q)){var r=/type=recovery/.test(h+q)?'?reset=1':'?verified=1';location.replace('/account'+r+h);}}catch(e){}})();" }} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         {DC_FONT_CSS.map((href) => (
