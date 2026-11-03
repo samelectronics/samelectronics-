@@ -9,7 +9,6 @@ import { type Filters, type Product, EMPTY, apply, data, products, fmt, aed, byI
 import { store, useStore } from '@/lib/store';
 import { useMe } from '@/lib/backend';
 import { T, CountUp, Stars } from '@/components/site/ui';
-import CircuitField from '@/components/home/CircuitField';
 import LiveSam from '@/components/samsoom/LiveSam';
 import ShopSearch from './ShopSearch';
 import ProductCard from './ProductCard';
@@ -40,6 +39,20 @@ function toUrl(f: Filters, p: string | null, scope: Scope) {
   if (f.inStock) u.set('stock', '1'); if (f.deals) u.set('deals', '1'); if (f.isNew) u.set('new', '1'); if (f.rating) u.set('rating', String(f.rating)); if (f.sort !== 'best') u.set('sort', f.sort);
   if (scope !== 'all') u.set('scope', scope); if (p) u.set('p', p);
   const s = u.toString(); history.replaceState(history.state, '', location.pathname + (s ? '?' + s : '') + location.hash);
+}
+
+// R10 P1 · "Parts warehouse" cover: a wall of shelving with labelled bins, some lit; it is the shop's own signature
+function WarehouseWall() {
+  const rows = 5, cols = 30;
+  return (
+    <div className="swall" aria-hidden="true">
+      {Array.from({ length: rows }, (_, r) => (
+        <div key={r} className="swall-row" style={{ ['--r' as string]: r } as React.CSSProperties}>
+          {Array.from({ length: cols }, (_, c) => { const lit = (r * 7 + c * 5) % 11 === 0 || (r * 3 + c) % 13 === 0; return <span key={c} className={'swall-bin' + (lit ? ' lit' : '')} style={{ ['--d' as string]: ((r * cols + c) % 9) * 0.6 + 's' } as React.CSSProperties}><i /></span>; })}
+        </div>
+      ))}
+    </div>
+  );
 }
 
 export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
@@ -85,7 +98,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
     <div className={'shop' + (mode === 'deals' ? ' is-deals' : '')}>
       {/* header: the hero's language — graphite, live circuits, the search, Samsoom ready to help */}
       <section className="shop-hd" data-tone="dark">
-        <CircuitField tone="dark" seed={mode === 'deals' ? 23 : 5} />
+        <WarehouseWall />
         <div className="sp-wrap">
           <nav className="sp-crumb"><a href="/">{T('Home')}</a><i /><span>{mode === 'deals' ? T('Deals & arrivals') : T('Shop')}</span></nav>
           <div className="shop-hd-row">
@@ -97,10 +110,9 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
               <span><b><CountUp to={products().length} /></b><small>{T('parts')}</small></span>
               <span><b><CountUp to={D.models.length} /></b><small>{T('models')}</small></span>
               <span><b>{D.brands.length}</b><small>{T('brands')}</small></span>
-              <span className="shop-sam" title="Samsoom" onClick={() => window.dispatchEvent(new CustomEvent('se:help'))}><LiveSam size={56} mood="think" /></span>
             </div>
           </div>
-          <ShopSearch q={f.q} onQ={(q) => set({ q })} onFmp={openFmp} />
+          <div className="shop-scan"><i className="shop-beam" aria-hidden="true" /><ShopSearch q={f.q} onQ={(q) => set({ q })} onFmp={openFmp} /></div>
           <div className="shop-devs" data-tour-step="2" data-tour-title="My devices" data-tour-text="Add the phones you fix most. I will mark every part that fits them.">
             <span>{T('My devices')}:</span>
             {st.devices.map((d) => <button key={d.model_id} type="button" className={'sp-chip' + (f.models.includes(d.model_id) ? ' y' : '')} onClick={() => tog('models', d.model_id)}>{d.nick || d.name}<span className="x" onClick={(e) => { e.stopPropagation(); store.device(d); }}>×</span></button>)}
@@ -109,13 +121,12 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
         </div>
       </section>
 
-      {mode === 'deals' ? (
-        <div className="sp-wrap deals-tabs" data-tour-step="3" data-tour-title="Deals, arrivals, limited" data-tour-text="Switch between offers, new stock and parts that are nearly gone.">
-          {([['deals', 'Offers', counts.deals, 'Discounts that end on a date'], ['new', 'New arrivals', counts.new, 'Fresh from this week’s shipments'], ['limited', 'Limited stock', counts.limited, 'Only a few left'], ['all', 'Everything', products().length, 'The whole shop']] as [Scope, string, number, string][]).map(([k, l, n, d]) => (
-            <button key={k} type="button" className={'dt' + (scope === k ? ' on' : '')} onClick={() => setScope(k)}><b>{T(l)}</b><small>{T(d)}</small><span>{n}</span></button>
-          ))}
-        </div>
-      ) : null}
+      {/* R10 P1: Shop and Deals are one place; offers, new arrivals and limited stock are tabs (the /deals page opens here) */}
+      <div className="sp-wrap deals-tabs" data-tour-step="3" data-tour-title="Deals, arrivals, limited" data-tour-text="Switch between offers, new stock and parts that are nearly gone.">
+        {([['all', 'Everything', products().length, 'The whole shop'], ['deals', 'Offers', counts.deals, 'Discounts that end on a date'], ['new', 'New arrivals', counts.new, 'Fresh from this week’s shipments'], ['limited', 'Limited stock', counts.limited, 'Only a few left']] as [Scope, string, number, string][]).map(([k, l, n, d]) => (
+          <button key={k} type="button" className={'dt' + (scope === k ? ' on' : '')} onClick={() => setScope(k)}><b>{T(l)}</b><small>{T(d)}</small><span>{n}</span></button>
+        ))}
+      </div>
 
       <div className="sp-wrap">
         {/* the categories, as big tiles with the part on its carton */}
@@ -126,7 +137,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
             </button>
           ))}
         </div>
-        {mode === 'shop' && !f.q && !chips.length ? <Banners onDeals={() => (location.href = '/deals')} onCat={(c) => set({ cats: [c] })} /> : null}
+        {scope === 'all' && !f.q && !chips.length ? <Banners onDeals={() => setScope('deals')} onCat={(c) => set({ cats: [c] })} /> : null}
 
         <div className="shop-body">
           {/* quick filters on the left; the full panel is one tap away */}
@@ -136,6 +147,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0" /><circle cx="16" cy="6" r="2" /><circle cx="10" cy="12" r="2" /><circle cx="18" cy="18" r="2" /></svg>
                 <span><b>{T('Customize everything')}</b><small>{T('Price, quality, color, warranty…')}</small></span>
               </button>
+              <span className="sf-qk">{T('Quick filters')}</span>
               <div className="sf"><b>{T('Availability')}</b>
                 {([['inStock', 'In stock'], ['deals', 'On offer'], ['isNew', 'New arrivals']] as const).map(([k, l]) => <label key={k} className="sf-tg"><input type="checkbox" checked={f[k]} onChange={(e) => set({ [k]: e.target.checked })} /><i /><span>{T(l)}</span></label>)}
               </div>

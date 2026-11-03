@@ -29,6 +29,32 @@ function Countdown({ to }: { to: number }) {
   return <span className="pv-cd">{T('Ends in')} <b>{Math.floor(s / 86400)}{T('d')} {p(Math.floor((s % 86400) / 3600))}:{p(Math.floor((s % 3600) / 60))}:{p(s % 60)}</b></span>;
 }
 
+const PV_D: Record<string, string> = {
+  star: 'M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z',
+  cmp: 'M7 4v13M7 17l-3-3M7 17l3-3M17 20V7M17 7l-3 3M17 7l3 3',
+  save: 'M7 3.5h10a1 1 0 0 1 1 1V21l-6-4-6 4V4.5a1 1 0 0 1 1-1z',
+  bell: 'M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9zM10 20a2 2 0 0 0 4 0',
+  share: 'M12 15V3.5M7.5 8L12 3.5 16.5 8M5 12.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19v-6.5',
+  list: 'M8 6h12M8 12h12M8 18h8M4 6h.01M4 12h.01M4 18h.01',
+};
+function PvIc({ k }: { k: string }) { return <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={PV_D[k]} /></svg>; }
+function ListMenu({ id, kits }: { id: string; kits: { name: string; ids: string[] }[] }) {
+  const [open, setOpen] = React.useState(false), [nm, setNm] = React.useState('');
+  const inAny = kits.some((k) => k.ids.includes(id));
+  return (
+    <span className="pv-lists">
+      <button type="button" className={inAny ? 'on' : ''} aria-expanded={open} onClick={() => setOpen(!open)}><PvIc k="list" />{T('Add to a list')}</button>
+      {open ? (
+        <span className="pv-lists-pop" role="dialog" aria-label={T('My lists')}>
+          {kits.length ? kits.map((k) => <label key={k.name}><input type="checkbox" checked={k.ids.includes(id)} onChange={() => store.toList(k.name, id)} /><span>{k.name}</span><small>{k.ids.length}</small></label>) : <small className="pv-lists-none">{T('No lists yet. Name one, e.g. “Shop order June”.')}</small>}
+          <form onSubmit={(e) => { e.preventDefault(); if (nm.trim()) { store.toList(nm, id); setNm(''); } }}><input value={nm} onChange={(e) => setNm(e.target.value)} placeholder={T('New list name')} maxLength={40} /><button type="submit">{T('Add')}</button></form>
+          <a href="/account#saved">{T('See my lists')} →</a>
+        </span>
+      ) : null}
+    </span>
+  );
+}
+
 export default function ProductView({ id, me, onClose, onOpen }: { id: string | null; me: User | null | undefined; onClose: () => void; onOpen: (p: Product) => void }) {
   const p = id ? byId(id) : null, st = useStore(), trade = !!me?.tradeApproved;
   const [qty, setQty] = useState(1), [tab, setTab] = useState<(typeof TABS)[number]>('Description'), [zoom, setZoom] = useState<{ x: number; y: number } | null>(null), [shot, setShot] = useState(0);
@@ -102,12 +128,14 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
               </button>
               <a className="sp-btn wa" href={wa} target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9 0-1.4.7-2 1-2.3.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z" /></svg>{T('Order on WhatsApp')}</a>
             </div>
+            {/* R10 P2: one clean icon set; parts go into the visitor's own named lists */}
             <div className="pv-tools">
-              <button type="button" className={st.favs.includes(p.id) ? 'on' : ''} onClick={() => store.fav(p.id)}>★ {st.favs.includes(p.id) ? T('Starred') : T('Star it')}</button>
-              <button type="button" className={st.compare.includes(p.id) ? 'on' : ''} onClick={() => store.cmp(p.id)}>⇆ {T('Compare')}</button>
-              <button type="button" onClick={() => { store.later(p.id); }}>⏱ {T('Save for later')}</button>
-              <button type="button" className={st.alerts.includes(p.id) ? 'on' : ''} onClick={() => store.alert(p.id)}>🔔 {st.alerts.includes(p.id) ? T('Alert on') : T('Price & stock alert')}</button>
-              <button type="button" onClick={share}>↗ {copied ? T('Link copied') : T('Share')}</button>
+              <button type="button" className={st.favs.includes(p.id) ? 'on' : ''} onClick={() => store.fav(p.id)}><PvIc k="star" />{st.favs.includes(p.id) ? T('Starred') : T('Star it')}</button>
+              <button type="button" className={st.compare.includes(p.id) ? 'on' : ''} onClick={() => store.cmp(p.id)}><PvIc k="cmp" />{T('Compare')}</button>
+              <button type="button" onClick={() => { store.later(p.id); }}><PvIc k="save" />{T('Save for later')}</button>
+              <button type="button" className={st.alerts.includes(p.id) ? 'on' : ''} onClick={() => store.alert(p.id)}><PvIc k="bell" />{st.alerts.includes(p.id) ? T('Alert on') : T('Price & stock alert')}</button>
+              <button type="button" onClick={share}><PvIc k="share" />{copied ? T('Link copied') : T('Share')}</button>
+              <ListMenu id={p.id} kits={st.kits} />
             </div>
             <ul className="pv-promise">
               <li><b>{T('Pick up today')}</b><span>{T('Al Murar, Deira · ready in 20 minutes')}</span></li>
@@ -175,7 +203,7 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
         <section className="pv-more"><div className="sp-head"><div><span className="sp-eb">{T('Similar parts')}</span><h3 className="sp-h2" style={{ fontSize: 28 }}>{T('You may also need')}</h3></div></div>
           <div className="pv-row">{sim.map((s) => <ProductCard key={s.id} p={s} st={st} trade={trade} open={onOpen} />)}</div></section>
         {viewed.length ? <section className="pv-more"><div className="sp-head"><div><span className="sp-eb">{T('Recently viewed')}</span></div></div><div className="pv-row">{viewed.map((s) => <ProductCard key={s.id} p={s} st={st} trade={trade} open={onOpen} />)}</div></section> : null}
-        <p className="pv-foot sp-sample">{fmt(p.stock_qty)} {T('units (estimate)')} · {T('all prices and ratings are samples until the owner’s data arrives')}</p>
+        <p className="pv-foot sp-sample">{fmt(p.stock_qty)} {T('units (estimate)')} · {T('Prices and stock shown are test data while the shop is set up')}</p>
       </div>
     </div>
   );

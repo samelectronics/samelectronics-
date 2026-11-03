@@ -45,6 +45,8 @@ export const store = {
   forget(q?: string) { set({ recent: q ? get().recent.filter((x) => x !== q) : [] }); },
   view(id: string) { set({ viewed: [id, ...get().viewed.filter((x) => x !== id)].slice(0, 16) }); },
   kit(name: string, ids: string[]) { set({ kits: [{ name, ids }, ...get().kits.filter((k) => k.name !== name)].slice(0, 12) }); },
+  /** R10 P2: put a part in (or take it out of) a named list such as "Shop order June" or "For Ahmed" */
+  toList(name: string, id: string) { name = name.trim().slice(0, 40); if (!name) return; const k = get().kits, ex = k.find((x) => x.name === name); set({ kits: ex ? k.map((x) => (x.name === name ? { ...x, ids: x.ids.includes(id) ? x.ids.filter((i) => i !== id) : [id, ...x.ids] } : x)) : [{ name, ids: [id] }, ...k].slice(0, 12) }); },
   replace(s: Partial<State>) { set(s); },
 };
 if (typeof window !== 'undefined') (window as unknown as { seStore: typeof store }).seStore = store;
