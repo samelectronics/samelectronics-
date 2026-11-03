@@ -1,0 +1,21 @@
+<!-- Sam Electronics · "Confirm signup" e-mail. Paste into Supabase › Authentication › Email Templates › Confirm signup -->
+<div style="margin:0;padding:32px 12px;background:#F2F3F4;font-family:Arial,Helvetica,sans-serif;color:#26282B">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;margin:0 auto;background:#ffffff;border-radius:18px;overflow:hidden">
+    <tr><td style="background:#26282B;padding:28px 24px;text-align:center">
+      <img src="https://samelectronics.vercel.app/assets/se-logo-email.png" width="72" height="72" alt="Sam Electronics" style="border-radius:50%;border:3px solid #F7C032">
+      <div style="margin-top:12px;color:#ffffff;font-size:18px;font-weight:bold;letter-spacing:3px">SAM ELECTRONICS</div>
+      <div style="margin-top:4px;color:#F7C032;font-size:11px;letter-spacing:3px">QUALITY · WARRANTY · PRICE</div>
+    </td></tr>
+    <tr><td style="padding:32px 28px;text-align:center">
+      <div style="font-size:22px;font-weight:bold">Welcome to Sam Electronics!</div>
+      <div style="margin-top:10px;font-size:15px;line-height:1.5;color:#4A4D52">Type this code on the website to confirm your e-mail and open your Bench:</div>
+      <div style="margin:24px auto;display:inline-block;padding:16px 26px;background:#26282B;border-radius:14px;color:#F7C032;font-size:34px;font-weight:bold;letter-spacing:10px;font-family:'Courier New',monospace">{{ .Token }}</div>
+      <div style="font-size:14px;color:#4A4D52">Or press the button:</div>
+      <a href="{{ .ConfirmationURL }}" style="display:inline-block;margin-top:12px;padding:14px 28px;background:#F7C032;color:#26282B;border-radius:12px;font-weight:bold;font-size:15px;text-decoration:none">Confirm my e-mail</a>
+      <div style="margin-top:26px;font-size:12px;color:#8C9096">The code works once and expires in 1 hour. If you didn't create an account, ignore this e-mail.</div>
+    </td></tr>
+    <tr><td style="background:#F8F8F6;padding:18px;text-align:center;font-size:12px;color:#6A6D72">
+      Al Murar, Deira, Dubai · +971 4 273 3031 · WhatsApp +971 50 342 0015
+    </td></tr>
+  </table>
+</div>
