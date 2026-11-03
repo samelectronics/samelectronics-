@@ -14,7 +14,7 @@ export default function MemberCard({ kind, name, no, level = 0, shop, tilt = tru
   return (
     <div className={'mc' + (ghost ? ' ghost' : '')} onPointerMove={move} onPointerLeave={leave}>
       <div ref={ref} className={'cx-card k-' + kind}>
-        <span className="cx-holo" aria-hidden="true" />
+        <span className="cx-holo" aria-hidden="true" /><span className="cx-edge" aria-hidden="true" />
         <svg className="cx-trace" viewBox="0 0 400 252" aria-hidden="true">
           <path d="M248 0 V34 L274 60 H332" /><path d="M400 96 H352 L334 114 V150" /><path d="M400 176 H338 L316 154 H262 L244 136 H214" /><path d="M300 0 V14 L314 28 H372" />
           <circle cx="332" cy="60" r="3.4" /><circle cx="334" cy="150" r="3.4" /><circle cx="214" cy="136" r="3.4" /><circle cx="372" cy="28" r="3" />
@@ -31,7 +31,7 @@ export default function MemberCard({ kind, name, no, level = 0, shop, tilt = tru
               </span>
             ) : <span className="cx-seal" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 2l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 15.3 6.8 18l1-5.8L3.6 8.1l5.8-.8z" /></svg></span>}
           </span>
-          <span className="chip" aria-hidden="true"><i /><i /><i /></span>
+          <span className="cx-chiprow" aria-hidden="true"><span className="chip"><i /><i /><i /><i /><i /><i /></span><svg className="cx-nfc" width="22" height="22" viewBox="0 0 24 24"><path d="M8.5 8.5a5 5 0 0 1 0 7M12 6a8.5 8.5 0 0 1 0 12M15.5 3.5a12 12 0 0 1 0 17" /></svg><img className="cx-emb" src="/assets/se-logo-320.webp" alt="" /></span>
           <span className="nm" data-no-i18n="">{name}</span>
           <span className="sh" data-no-i18n="">{shop || ' '}</span>
           <span className="bot">

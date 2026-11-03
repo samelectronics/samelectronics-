@@ -2,12 +2,13 @@
 // P3 · SAM CIRCUIT (/membership): the three cards in detail. The home's card builder at the top, then one full section
 // per card (who it is for, how to get it, every level with its requirement and perks), how points work, the card in
 // My Bench, and questions. Levels, thresholds and perks are the owner's R8 list; numbers are samples until confirmed.
-import React, { useState } from 'react';
+import React from 'react';
 import SECircuit from '@/components/dc/SECircuit';
 import { useMe } from '@/lib/backend';
 import { PageHero, T, useRise } from '@/components/site/ui';
 import MemberCard, { type CardKind } from '@/components/account/MemberCard';
 import { waLink } from '@/lib/catalog';
+import PointsSim from './PointsSim';
 
 const CARDS: { k: CardKind; name: string; for: string; tone: string; intro: string; how: [string, string][]; levels: [string, string, string[]][]; cta: [string, string] }[] = [
   { k: 'circuit', name: 'Sam Circuit', for: 'For customers', tone: 'y', intro: 'The card for everyone who buys parts or repairs with us. Register online, your first purchase activates it, and every dirham you spend charges it up.',
@@ -23,16 +24,9 @@ const CARDS: { k: CardKind; name: string; for: string; tone: string; intro: stri
     levels: [['Sam Circle member', 'By invitation', ['Limited offers nobody else gets', 'Made personally for you', 'First call on rare and new stock', 'A seat at our launches']]],
     cta: ['Ask on WhatsApp', ''] },
 ];
-const FAQ: [string, string][] = [
-  ['Can I have more than one card?', 'Yes. A repair shop owner can hold a Sam Grid card for the business and a Sam Circuit card for personal purchases. Both show in My Bench.'],
-  ['Do points expire?', 'Points stay as long as your account is active (at least one purchase a year). The exact rules are confirmed by the owner before launch.'],
-  ['Do repairs earn points?', 'Yes: the part and the fitting fee both count, AED 1 = 1 point.'],
-  ['I already have a physical card. How do I connect it?', 'Sign in to My Bench, open Points & card and type the number printed on your card (it looks like SC 123 456 2700).'],
-  ['How is the Grid level calculated?', 'From your approved trade orders in the last 30 days. It is reviewed every month; you never drop more than one level at a time.'],
-];
 
 export default function Membership() {
-  const [me] = useMe(), [open, setOpen] = useState<number | null>(0);
+  const [me] = useMe();
   useRise();
   return (
     <>
@@ -63,7 +57,7 @@ export default function Membership() {
               <div className="ms-ladder" data-rise>
                 {c.levels.map(([l, r, perks], i) => (
                   <div key={l} className="ms-lv" style={{ ['--i' as string]: i }}>
-                    <span className="ms-bat">{c.levels.length > 1 ? Array.from({ length: 5 }, (_, j) => <i key={j} className={j <= i ? 'on' : ''} />) : <svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 15.3 6.8 18l1-5.8L3.6 8.1l5.8-.8z" /></svg>}</span>
+                    <span className="ms-bat">{c.levels.length > 1 ? Array.from({ length: 5 }, (_, j) => <i key={j} className={j <= i ? 'on' : ''} style={{ ['--j' as string]: j }} />) : <svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 15.3 6.8 18l1-5.8L3.6 8.1l5.8-.8z" /></svg>}</span>
                     <b>{T(l)}</b><small>{T(r)}</small>
                     <ul>{perks.map((p) => <li key={p}>{T(p)}</li>)}</ul>
                   </div>
@@ -81,20 +75,10 @@ export default function Membership() {
           <div className="sp-grid sp-g3" data-rise>
             {[['Parts', 'Every part, in the shop or online.'], ['Repairs', 'The part and the fitting fee both count.'], ['In your account', 'Points, level and history live in My Bench.']].map(([t, d]) => <div key={t} className="sp-card"><b className="sp-h3">{T(t)}</b><p className="sp-p">{T(d)}</p></div>)}
           </div>
+          <PointsSim />
         </div>
       </section>
 
-      <section className="sp-sec w">
-        <div className="sp-wrap ms-faq">
-          <div className="sp-head"><div><span className="sp-eb">{T('QUESTIONS')}</span><h2 className="sp-h2">{T('Good to know')}</h2></div></div>
-          {FAQ.map(([q, a], i) => (
-            <div key={q} className={'ms-q' + (open === i ? ' open' : '')}>
-              <button type="button" onClick={() => setOpen(open === i ? null : i)} aria-expanded={open === i}><b>{T(q)}</b><i /></button>
-              <div><p className="sp-p">{T(a)}</p></div>
-            </div>
-          ))}
-        </div>
-      </section>
     </>
   );
 }

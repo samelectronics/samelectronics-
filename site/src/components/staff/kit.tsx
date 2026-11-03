@@ -17,7 +17,7 @@ export function useSetting<T>(key: string, fallback: T): [T, (v: T, note?: strin
   return [v, save, ok];
 }
 
-export function Panel({ t, d, right, children, className }: { t: string; d?: string; right?: React.ReactNode; children: React.ReactNode; className?: string }) {
+export function Panel({ t, d, right, children, className }: { t: string; d?: React.ReactNode; right?: React.ReactNode; children: React.ReactNode; className?: string }) {
   return (
     <section className={'cr-panel' + (className ? ' ' + className : '')}>
       <header><div><h3>{t}</h3>{d ? <p>{d}</p> : null}</div>{right ? <span className="cr-ph-r">{right}</span> : null}</header>
@@ -25,7 +25,7 @@ export function Panel({ t, d, right, children, className }: { t: string; d?: str
     </section>
   );
 }
-export function Kpi({ l, v, s, tone, onClick }: { l: string; v: string | number; s?: string; tone?: 'y' | 'g' | 'r' | 'd'; onClick?: () => void }) {
+export function Kpi({ l, v, s, tone, onClick }: { l: React.ReactNode; v: string | number; s?: React.ReactNode; tone?: 'y' | 'g' | 'r' | 'd'; onClick?: () => void }) {
   return <button type="button" className={'cr-kpi' + (tone ? ' ' + tone : '')} onClick={onClick} disabled={!onClick}><small>{l}</small><b>{v}</b>{s ? <span>{s}</span> : null}</button>;
 }
 export function Bars({ data, h = 160, fmt = (n: number) => String(Math.round(n)) }: { data: { l: string; v: number; v2?: number }[]; h?: number; fmt?: (n: number) => string }) {

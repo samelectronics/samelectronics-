@@ -8,6 +8,7 @@ import { backend, useMe, type Message } from '@/lib/backend';
 import { PageHero, T, useRise } from '@/components/site/ui';
 import HoursLive from '@/components/home/HoursLive';
 import LiveSam from '@/components/samsoom/LiveSam';
+import Switchboard from './Switchboard';
 
 const HELP: [string, [string, string][]][] = [
   ['Orders & payment', [['How do I order?', 'Add parts to the cart and place the order, or send your list on WhatsApp. We confirm stock and price before you pay.'], ['Which payments do you take?', 'Cash and card in the shop, bank transfer for trade and export, and a payment link after we confirm. Card payment online is coming.'], ['Do prices include VAT?', 'Prices in the shop are shown without VAT; 5% UAE VAT is added at checkout and shown on your invoice.']]],
@@ -54,12 +55,7 @@ export default function ContactPage() {
         right={<LiveSam circle size={170} mood="idle" play="wave" />} />
 
       <section className="sp-sec w"><div className="sp-wrap">
-        <div className="ct-ways" data-rise>
-          <a className="ct-w wa" href={'https://wa.me/' + (C.wa || '971503420015')} target="_blank" rel="noopener noreferrer"><b>WhatsApp</b><span>{C.mobile || '+971 50 342 0015'}</span><small>{T('Fastest: stock, prices, orders')}</small></a>
-          <a className="ct-w" href={'tel:' + (C.tel || '+97142733031')}><b>{T('Call the shop')}</b><span>{C.phone || '+971 4 273 3031'}</span><small>{T('During opening hours')}</small></a>
-          <a className="ct-w" href={'mailto:' + (C.email || 'samelectronics.uae@gmail.com')}><b>{T('E-mail')}</b><span>{C.email || 'samelectronics.uae@gmail.com'}</span><small>{T('Lists, invoices, documents')}</small></a>
-          <a className="ct-w d" href="https://www.instagram.com/samelectronics.uae" target="_blank" rel="noopener noreferrer"><b>{T('Social')}</b><span>{C.social || '@samelectronics.uae'}</span><small>Instagram · TikTok · Facebook</small></a>
-        </div>
+        <Switchboard c={C} />
       </div></section>
 
       <section id="visit" className="sp-sec g"><div className="sp-wrap ct-visit">
@@ -73,7 +69,7 @@ export default function ContactPage() {
         <div className="ct-map" data-rise><iframe title={T('Map')} src={map} loading="lazy" referrerPolicy="no-referrer-when-downgrade" /></div>
       </div></section>
 
-      <section className="sp-sec w"><div className="sp-wrap ct-two">
+      <section id="chat" className="sp-sec w"><div className="sp-wrap ct-two">
         <div data-rise><span className="sp-eb">{T('LIVE CHAT')}</span><h2 className="sp-h2">{T('A real person, right here.')}</h2><p className="sp-p">{T('Messages go straight to the team’s inbox in the Control Room. For quick answers any time, Samsoom is in the corner.')}</p><LiveChat /></div>
         <div data-rise>
           <span className="sp-eb">{T('WRITE TO US')}</span><h2 className="sp-h2">{T('Send a message')}</h2>

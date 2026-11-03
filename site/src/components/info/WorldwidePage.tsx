@@ -7,6 +7,7 @@ import { data, waLink } from '@/lib/catalog';
 import { backend } from '@/lib/backend';
 import { PageHero, T, useRise, CountUp } from '@/components/site/ui';
 import DotGlobe from '@/components/home/DotGlobe';
+import { RouteMap, ShipWays } from './WorldBits';
 
 const ISO: Record<string, string> = { UAE: 'AE', UK: 'GB', Spain: 'ES', Romania: 'RO', 'Türkiye': 'TR', Azerbaijan: 'AZ', Syria: 'SY', Lebanon: 'LB', Iraq: 'IQ', Iran: 'IR', Tunisia: 'TN', Algeria: 'DZ', Morocco: 'MA', Libya: 'LY', Egypt: 'EG', 'Saudi Arabia': 'SA', Oman: 'OM', Yemen: 'YE', Sudan: 'SD', Eritrea: 'ER', Ethiopia: 'ET', Nigeria: 'NG', Uganda: 'UG', Russia: 'RU', Ukraine: 'UA', India: 'IN', Pakistan: 'PK', 'Burkina Faso': 'BF', Senegal: 'SN' };
 const flag = (n: string) => (ISO[n] ? String.fromCodePoint(...[...ISO[n]].map((c) => 0x1f1a5 + c.charCodeAt(0))) : '🌍');
@@ -34,6 +35,13 @@ export default function WorldwidePage() {
         <span><b>{T('Door to door')}</b><small>{T('tracked and insured')}</small></span>
         <span><b>{T('Your shipper')}</b><small>{T('welcome too')}</small></span>
       </div></section>
+
+      <section id="routes" className="sp-sec d rm-sec"><div className="sp-wrap">
+        <div className="sp-head" data-rise><div><span className="sp-eb">{T('LIVE ROUTES')}</span><h2 className="sp-h2" style={{ color: '#fff' }}>{T('Every week, out of Dubai.')}</h2><p className="sp-p">{T('Planes on the air routes, ships on the sea lanes. Pick a region to see how we ship there.')}</p></div></div>
+        <RouteMap countries={C} reg={reg} setReg={setReg} />
+      </div></section>
+
+      <section className="sp-sec w"><div className="sp-wrap"><ShipWays reg={reg} /></div></section>
 
       <section id="countries" className="sp-sec g"><div className="sp-wrap">
         <div className="sp-head" data-rise><div><span className="sp-eb">{T('WHERE WE SHIP')}</span><h2 className="sp-h2">{T('Our customers, around the world.')}</h2></div>

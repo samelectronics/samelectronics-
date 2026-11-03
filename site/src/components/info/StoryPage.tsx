@@ -7,6 +7,7 @@ import { data } from '@/lib/catalog';
 import { backend } from '@/lib/backend';
 import { PageHero, T, useRise } from '@/components/site/ui';
 import LiveSam from '@/components/samsoom/LiveSam';
+import { BootLog, Branches } from './StoryBits';
 
 const JOBS: [string, string, string, string][] = [
   ['Repair technician', 'Full time · Deira', 'Board-level and module repairs on phones and tablets. Two years’ bench experience.', 'Repairs'],
@@ -52,11 +53,7 @@ export default function StoryPage() {
 
       <section className="sp-sec d"><div className="sp-wrap">
         <div className="sp-head" data-rise><div><span className="sp-eb">{T('OUR VERSIONS')}</span><h2 className="sp-h2" style={{ color: '#fff' }}>{T('Every version of us.')}</h2></div></div>
-        <div className="story-tl">{(D?.history || []).map((h, i) => (
-          <div key={h.v} className={'story-v' + (h.years === 'Coming soon' ? ' soon' : '')} data-rise style={{ ['--i' as string]: i }}>
-            <span className="story-vn">{h.v}</span><b>{T(h.title)}</b><small>{T(h.years)}</small><p>{T(h.d)}</p>
-          </div>
-        ))}</div>
+        <div data-rise><BootLog history={D?.history || []} /></div>
       </div></section>
 
       <section id="team" className="sp-sec w"><div className="sp-wrap">
@@ -68,13 +65,7 @@ export default function StoryPage() {
 
       <section className="sp-sec g"><div className="sp-wrap">
         <div className="sp-head" data-rise><div><span className="sp-eb">{T('BRANCHES')}</span><h2 className="sp-h2">{T('Where to find us.')}</h2></div></div>
-        <div className="sp-grid sp-g2" data-rise>{(D?.branches || []).map((b) => (
-          <div key={b.id} className={'sp-card story-br' + (b.status === 'live' ? ' d' : '')}>
-            <span className={'sp-tag' + (b.status === 'live' ? ' ok' : ' y')}>{b.status === 'live' ? T('Open') : T('Coming soon')}</span>
-            <b className="sp-h2" style={{ fontSize: 30, color: b.status === 'live' ? '#fff' : undefined }}>{T(b.name)}</b><span className="sp-p">{T(b.address)}</span>
-            {b.status === 'live' ? <a className="sp-btn sm" href="/contact#visit">{T('Hours & directions')}</a> : null}
-          </div>
-        ))}</div>
+        <Branches branches={D?.branches || []} />
       </div></section>
 
       <section id="careers" className="sp-sec w"><div className="sp-wrap">

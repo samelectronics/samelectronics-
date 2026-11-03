@@ -12,7 +12,8 @@ import { backend, live, preview, ROLE_NAMES, useStaff, type Perm, type Staff } f
 import { installI18n } from '@/i18n/lang';
 import { installBrandSelects } from '@/lib/brandSelect';
 import { can } from './kit';
-import { Dashboard, Products, Warehouse } from './mods1';
+import { Products, Warehouse } from './mods1';
+import { Dashboard, Activity, QrLabels, Scanner, Tasks, Announcement, Reports, StaffBell, Queue, Claims, Calendar } from './mods4';
 import { Orders, Repairs, Customers, Approvals, Inbox } from './mods2';
 import { SiteEditor, Accounting, Emails, Team, Audit, Settings, MyProfile } from './mods3';
 
@@ -37,8 +38,49 @@ const MODS: Mod[] = [
   { id: 'team', l: 'Staff & roles', d: 'M16 11a4 4 0 1 0-8 0M4 21a8 8 0 0 1 16 0', need: ['staff'], C: Team },
   { id: 'audit', l: 'Audit log', d: 'M12 8v4l3 2M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18z', need: ['audit'], C: Audit },
   { id: 'settings', l: 'Settings', d: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z', need: ['settings'], C: Settings },
+  { id: 'activity', l: 'Activity Center', d: 'M3 12h4l3-8 4 16 3-8h4', need: ['audit'], C: Activity },
+  { id: 'scanner', l: 'Scanner', d: 'M3 7V4h3M18 4h3v3M21 17v3h-3M6 20H3v-3M7 12h10', need: ['stock', 'products'], C: Scanner },
+  { id: 'qr', l: 'QR & labels', d: 'M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h3v3h-3zM20 14v.01M14 20h.01M17 17h4v4', need: ['stock', 'products'], C: QrLabels },
+  { id: 'reports', l: 'Reports', d: 'M4 20V10M10 20V4M16 20v-7M22 20H2', need: ['reports'], C: Reports },
+  { id: 'claims', l: 'Warranty & returns', d: 'M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7zM9 12l2 2 4-4', need: ['repairs', 'stock'], C: Claims },
+  { id: 'queue', l: 'Walk-in queue & TV', d: 'M4 6h16M4 12h10M4 18h6', need: ['orders', 'repairs'], C: Queue },
+  { id: 'calendar', l: 'Calendar', d: 'M4 5h16v16H4zM4 10h16M9 3v4M15 3v4', C: Calendar },
+  { id: 'tasks', l: 'Tasks & announcements', d: 'M9 11l3 3 8-8M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11', C: Tasks },
   { id: 'me', l: 'My profile', d: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0', C: MyProfile },
 ];
+
+// R10 4.0 · the sidebar, grouped like Daftra: short groups that open to their pages. A group shows only the pages
+// this person may open; a group with one page is a plain link.
+const GROUPS: { g: string; d: string; ids: string[] }[] = [
+  { g: 'Home', d: 'M3 11l9-8 9 8v10h-6v-6H9v6H3z', ids: ['dashboard', 'activity'] },
+  { g: 'Sales', d: 'M4 7h16l-1.5 12a2 2 0 0 1-2 1.8H7.5a2 2 0 0 1-2-1.8zM8 7a4 4 0 0 1 8 0', ids: ['orders', 'customers', 'approvals', 'accounting'] },
+  { g: 'Repairs', d: 'M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-2.5z', ids: ['repairs', 'claims'] },
+  { g: 'Inventory', d: 'M20 7l-8-4-8 4 8 4zM4 7v10l8 4 8-4V7M12 11v10', ids: ['products', 'warehouse', 'scanner', 'qr'] },
+  { g: 'Website', d: 'M3 4h18v12H3zM8 20h8M12 16v4', ids: ['site', 'promo'] },
+  { g: 'Documents', d: 'M4 3h11l5 5v13H4zM14 3v6h6', ids: ['excel', 'reports'] },
+  { g: 'Messages', d: 'M4 5h16v11H8l-4 4z', ids: ['inbox', 'emails'] },
+  { g: 'Shop floor', d: 'M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6', ids: ['queue', 'tasks', 'calendar'] },
+  { g: 'Team & security', d: 'M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7z', ids: ['team', 'audit'] },
+  { g: 'Daftra', d: 'M12 2a7 7 0 0 0-7 7c0 2.4 1.2 4.5 3 5.7V18h8v-3.3A7 7 0 0 0 12 2zM9 22h6', ids: ['daftra'] },
+  { g: 'Settings', d: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z', ids: ['settings', 'me'] },
+];
+const Ico = ({ d }: { d: string }) => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={d} /></svg>;
+function SideNav({ mine, cur, go }: { mine: Mod[]; cur: string; go: (m: string) => void }) {
+  const has = new Map(mine.map((m) => [m.id, m]));
+  const groups = GROUPS.map((g) => ({ ...g, items: g.ids.map((i) => has.get(i)).filter(Boolean) as Mod[] })).filter((g) => g.items.length);
+  const [open, setOpen] = useState<string | null>(() => groups.find((g) => g.ids.includes(cur))?.g || 'Home');
+  useEffect(() => { const g = groups.find((x) => x.ids.includes(cur)); if (g) setOpen(g.g); }, [cur]); // eslint-disable-line react-hooks/exhaustive-deps
+  return (
+    <nav className="cr-gnav">{groups.map((g) => g.items.length === 1 ? (
+      <button key={g.g} type="button" className={'cr-g1' + (cur === g.items[0].id ? ' on' : '')} onClick={() => go(g.items[0].id)}><Ico d={g.d} /><span>{g.g === 'Settings' ? g.items[0].l : g.g === 'Daftra' ? 'Daftra · the brain' : g.items[0].l}</span></button>
+    ) : (
+      <div key={g.g} className={'cr-grp' + (open === g.g ? ' open' : '') + (g.ids.includes(cur) ? ' has' : '')}>
+        <button type="button" className="cr-gh" aria-expanded={open === g.g} onClick={() => setOpen(open === g.g ? null : g.g)}><Ico d={g.d} /><span>{g.g}</span><i /></button>
+        <div className="cr-gi"><div>{g.items.map((m) => <button key={m.id} type="button" className={cur === m.id ? 'on' : ''} onClick={() => go(m.id)}><span>{m.l}</span></button>)}</div></div>
+      </div>
+    ))}</nav>
+  );
+}
 
 // R10 S2 · S4 · S6 · S7: the Control Room door. Three locks, one after the other, on a teardown-style stage (no Samsoom):
 //  1. the Control Room key (checked on the server, /api/staff/gate), 2. personal e-mail + password, 3. the personal
@@ -166,7 +208,7 @@ export default function StaffApp() {
     <div className="cr">
       <aside className={'cr-side' + (nav ? ' open' : '')}>
         <a className="cr-brand" href="#dashboard" onClick={() => go('dashboard')}><img src="/assets/se-logo-128.webp" alt="" /><span><b>CONTROL ROOM</b><small>Sam Electronics</small></span></a>
-        <nav>{mine.map((m) => <button key={m.id} type="button" className={cur.id === m.id ? 'on' : ''} onClick={() => go(m.id)}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={m.d} /></svg><span>{m.l}</span></button>)}</nav>
+        <SideNav mine={mine} cur={cur.id} go={go} />
         <div className="cr-who">
           <span className="cr-av">{me.photo ? <img src={me.photo} alt="" /> : me.name.slice(0, 1)}</span>
           <span><b>{me.name}</b><small>{ROLE_NAMES[me.role]} · {me.branch}</small></span>
@@ -178,9 +220,10 @@ export default function StaffApp() {
           <button type="button" className="cr-burger" onClick={() => setNav(!nav)} aria-label="Menu">☰</button>
           <h1>{cur.l}</h1>
           {preview ? <a className="cr-badge y" href="/staff?preview=0" title="Exit the design preview">DESIGN PREVIEW · sample data · exit</a> : !live ? <span className="cr-badge y">DEMO DATA · this browser only</span> : <span className="cr-badge g">LIVE</span>}
+          <StaffBell me={me} go={go} />
           <a className="cr-btn ghost" href="/" target="_blank" rel="noopener">View site ↗</a>
         </header>
-        <div className="cr-body" key={cur.id}><cur.C me={me} go={go} /></div>
+        <div className="cr-body" key={cur.id}>{cur.id === 'dashboard' ? <Announcement /> : null}<cur.C me={me} go={go} /></div>
       </main>
     </div>
   );

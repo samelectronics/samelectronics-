@@ -15,15 +15,15 @@ import LiveSam from '@/components/samsoom/LiveSam';
 
 const T = (s: string) => (typeof window !== 'undefined' && window.seI18n ? window.seI18n.t(s) : s);
 // R10 B4: familiar phone parts, with the plain legal type and a "Read more" (what it stores, how long, why, an example)
-type Cat = { k: 'core' | 'memory' | 'signal' | 'booster'; n: string; type: string; d: string; what: string; long: string; why: string; ex: string };
-const CATS: Cat[] = [
+export type Cat = { k: 'core' | 'memory' | 'signal' | 'booster'; n: string; type: string; d: string; what: string; long: string; why: string; ex: string };
+export const CATS: Cat[] = [
   { k: 'core', n: 'Battery', type: 'Essential · always on', d: 'Keeps the site running: your cart, language and sign-in.', what: 'Your cart, your language, your sign-in session and these privacy choices.', long: 'Until you clear them (sign-in: until you sign out).', why: 'Without them the cart would empty and the site would forget your language on every page.', ex: 'You add a screen to the cart, open another page, and it is still there.' },
   { k: 'memory', n: 'Memory Chip', type: 'Preferences', d: 'Remembers your preferences, saved searches and recent parts.', what: 'Currency, sounds, recent searches, starred parts and your devices.', long: '12 months, or until you clear them.', why: 'So you do not have to set things up again on every visit.', ex: 'You searched "A54 battery" yesterday; today it is first in your recent searches.' },
   { k: 'signal', n: 'Diagnostics', type: 'Anonymous statistics', d: 'Anonymous visit counts that help us improve the site.', what: 'Which pages are opened and how fast they load. Never your name or contact.', long: '13 months.', why: 'To see which pages are slow or confusing and fix them.', ex: 'We notice the Repair page loads slowly on phones and make it faster.' },
   { k: 'booster', n: 'Antenna', type: 'Marketing and offers', d: 'Offers and ads that match what you look for.', what: 'The kinds of parts you look at, to show matching offers.', long: '6 months.', why: 'So the offers you see are for your phones, not random ones.', ex: 'You look at iPhone 13 screens; the next deal we show you is for that screen.' },
 ];
 
-function CatIcon({ k }: { k: Cat['k'] }) {
+export function CatIcon({ k }: { k: Cat['k'] }) {
   const p = { fill: 'none', stroke: 'currentColor', strokeWidth: 1.8, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const };
   return <svg viewBox="0 0 24 24" width="22" height="22">{k === 'core' ? <><rect x="3" y="7" width="16" height="10" rx="2" {...p} /><path d="M21 10.5v3M11.5 9 9.5 12h3l-2 3" {...p} /></> : k === 'memory' ? <><rect x="6" y="6" width="12" height="12" rx="2" {...p} /><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4" {...p} /></> : k === 'signal' ? <><path d="M3 12h4l2-5 4 10 2-5h6" {...p} /></> : <><path d="M12 13v8M8 21h8M12 13a2 2 0 1 0 0-.01M7.5 8.5a6.4 6.4 0 0 1 9 0M4.6 5.6a10.5 10.5 0 0 1 14.8 0" {...p} /></>}</svg>;
 }
@@ -79,7 +79,7 @@ export default function SiteControls() {
       {banner && !panel ? (
         <div className="sc2-banner" role="dialog" aria-label={T('Your privacy, your choice')}>
           <span className="sc2-cookie" aria-hidden="true"><CookieBite /></span>
-          <div className="sc2-btxt"><b>{T('Your privacy, your choice')}</b><span>{T('We use a few small files to make the site work. Pick what you allow.')} <a href="/legal#cookies">{T('Cookies')}</a></span></div>
+          <div className="sc2-btxt"><b>{T('Your privacy, your choice')}</b><span>{T('We use a few small files to make the site work. Pick what you allow.')} <a href="/cookies">{T('Cookies')}</a></span></div>
           <div className="sc2-bacts">
             <button type="button" className="st-btn st-grey" onClick={() => save({ memory: false, signal: false, booster: false })}>{T('Deny all')}</button>
             <button type="button" className="st-btn st-dark" onClick={() => window.dispatchEvent(new CustomEvent('se:settings', { detail: 'privacy' }))}>{T('Choose')}</button>
@@ -111,7 +111,7 @@ export default function SiteControls() {
                   <dl><dt>{T('What it stores')}</dt><dd>{T(c.what)}</dd><dt>{T('How long')}</dt><dd>{T(c.long)}</dd><dt>{T('Why')}</dt><dd>{T(c.why)}</dd><dt>{T('Example')}</dt><dd>{T(c.ex)}</dd></dl>
                 </details>
               ))}
-              <a className="sc2-more" href="/legal#cookies">{T('The full cookies page')} →</a>
+              <a className="sc2-more" href="/cookies">{T('The full cookies page')} →</a>
               <div className="sc2-pacts"><button type="button" className="st-btn st-grey" onClick={() => { save({ memory: false, signal: false, booster: false }); setPanel(false); }}>{T('Deny all')}</button><button type="button" className="st-btn st-go" data-sound="success" onClick={() => { save(draft); setPanel(false); }}>{T('Save my choice')}</button></div>
             </section>
             {panel === 'all' ? (

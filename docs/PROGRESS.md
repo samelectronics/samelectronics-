@@ -2826,3 +2826,38 @@ DONE WHEN
 ○ repair job cards with QR + phone scanner · ○ purchasing & suppliers, lost sales · ○ delivery & drivers · ○ Brand Studio + Excel catalogue/price-list builder and import · ○ messages & campaigns · ○ visual editor with drafts/publish/history · ○ staff Samsoom · ○ shop floor (queue, TV, tablet, tasks) · ○ reports · ○ AI helpers · ○ health & data quality · ○ 2FA · ○ Activity Center widget · ○ translations editor · ○ FAQ editor
 
 **Smoke test (2 Nov):** all 21 pages × EN/AR × desktop/phone: no page errors, no sideways overflow, no broken images, no AED 0.
+
+## R10 (3 Nov 2026) · Stages 1–4
+
+**Stage 1 (owner feedback, 3 Nov).** Picker dim matches the tour, bell badge matches the cart badge, the loader finishes
+its ring and shows a tick, language switch is silent through Samsoom and shows only the battery card when manual (every
+language has its own text), circuits redrawn as calm buses away from section edges, maps embedded, network notices at
+the bottom for 10 s, one-character cookie icon, feed header fixed, footer/Finale as a teardown-style room (no black).
+
+**Stage 2 (security).** Three locks for the Control Room: server-checked key (`CONTROL_ROOM_KEY`, 5 tries then 15 min),
+personal password, 6-digit authenticator code (aal2 required by RLS and by the Daftra bridge). Staff invitations, reset
+two-step, sign out everywhere. `supabase/update-r10.sql` is written and committed but NOT applied yet (needs the
+owner's approval). Customer sign-in door redesigned.
+
+**Stage 3 (detail pages).** P1–P2 Shop (tabs, warehouse wall, scan beam, named lists, deals → shop tab) · P3 Repair Lab
+(exploded phone map, fee gauge, QR job ticket, bench-now status) · P4 Brands (supply chain, makers board, grade compare)
+· P5 Ask Samsoom (photo of a broken phone, model-code helper, hand-over to a person) · P6 My Bench (repairs with a
+timeline, warranty check typed or scanned from the ticket QR, named lists with add-all, trade tools: reorder, quick
+order by pasted codes, printable trade price list) · P7 Wholesale (trade calculator, trade floor pallets with live
+stock, application tracker) · P8 Worldwide (live route map: planes on air routes, ships on sea lanes; ways to ship and
+customs notes per region; times marked as typical until the owner confirms) · P9 Membership (holographic edge, NFC mark,
+embossed logo, charging ladder, points simulator) · P10 Story (boot-log timeline, branch maps with live open status) ·
+P11 Contact (switchboard with live line status) · P12 a full /cookies page (Battery, Memory Chip, Diagnostics, Antenna,
+switches with dates). Themed FAQ at the end of every detail page (new topic "Visiting us"). Footer and My Bench fixed on
+phones. Arabic added for every new string (≈400). Other 22 languages still fall back to English for these new strings.
+
+**Stage 4 (Control Room v2, first part).** Sidebar grouped like Daftra (Home, Sales, Repairs, Inventory, Website,
+Documents, Messages, Shop floor, Team & security, Daftra, Settings). Real charts (line with axes and hover values,
+donut, horizontal bars). Dashboard 4.1 reads Daftra invoices and invoice payments through the bridge (falls back to
+website figures and says so): sales per day (total/paid/unpaid/returns), payments donut, daily payments, low stock,
+website requests, repairs due today, trade applications, live team activity. New modules: Activity Center (filters,
+export), Reports, QR & labels (print), phone Scanner (stock in/out), Walk-in queue + Shop TV, Tasks & announcements,
+staff bell (B9). Control Room Arabic for navigation and the new modules.
+
+**Fix.** Applications (trade, jobs, cards) no longer read back their row after insert: visitors may insert but not
+read applications under RLS, so the old code would have shown an error in live mode.

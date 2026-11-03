@@ -1,4 +1,5 @@
 import SitePage from '@/components/site/SitePage';
+import Faq from '@/components/site/Faq';
 import TabTitle from '@/components/site/TabTitle';
 import ContactPage from '@/components/info/ContactPage';
 
@@ -8,7 +9,7 @@ export default function Page() {
   return (
     <>
       <TabTitle page="Contact" ar="تواصل معنا" />
-      <SitePage><ContactPage /></SitePage>
+      <SitePage><ContactPage /><Faq topic="visit" /></SitePage>
     </>
   );
 }

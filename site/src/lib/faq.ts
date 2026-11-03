@@ -1,6 +1,6 @@
 // R9 · the questions people ask, by topic. Each page shows its own topic; /faq shows them all with a search. Answers that
 // depend on the owner's final terms say "sample". The Control Room can override any topic (site key 'faq').
-export type Topic = 'shop' | 'repair' | 'wholesale' | 'worldwide' | 'payments' | 'membership' | 'account';
+export type Topic = 'shop' | 'repair' | 'wholesale' | 'worldwide' | 'payments' | 'membership' | 'account' | 'visit';
 export const TOPICS: { id: Topic; name: string; theme: string; icon: string }[] = [
   { id: 'shop', name: 'Parts & grades', theme: 'label', icon: 'M21 8 12 3 3 8v8l9 5 9-5zM3 8l9 5 9-5M12 13v8' },
   { id: 'repair', name: 'Repairs', theme: 'ticket', icon: 'M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z' },
@@ -8,6 +8,7 @@ export const TOPICS: { id: Topic; name: string; theme: string; icon: string }[] 
   { id: 'worldwide', name: 'Shipping worldwide', theme: 'ship', icon: 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM2 12h20M12 2c3 3 4 6 4 10s-1 7-4 10c-3-3-4-6-4-10s1-7 4-10' },
   { id: 'payments', name: 'Payments', theme: 'card', icon: 'M2 6h20v12H2zM2 10h20M6 15h4' },
   { id: 'membership', name: 'Sam Circuit cards', theme: 'chip', icon: 'M6 6h12v12H6zM9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4' },
+  { id: 'visit', name: 'Visiting us', theme: 'ticket', icon: 'M12 22s7-6.2 7-12a7 7 0 0 0-14 0c0 5.8 7 12 7 12zM12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z' },
   { id: 'account', name: 'Your account', theme: 'bench', icon: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0' },
 ];
 export const FAQ: Record<Topic, [string, string][]> = {
@@ -46,10 +47,21 @@ export const FAQ: Record<Topic, [string, string][]> = {
     ['What is Sam Circuit?', 'Our membership: one card for customers, one for repair shops and suppliers, and an invitation-only card for our most loyal customers.'],
     ['Do repairs earn points?', 'Yes. The part and the fitting fee both count.'],
     ['How do I join?', 'Create an account. The customer card is yours at once; the trade card follows trade approval.'],
+    ['Can I have more than one card?', 'Yes. A repair shop owner can hold a Sam Grid card for the business and a Sam Circuit card for personal purchases. Both show in My Bench.'],
+    ['Do points expire?', 'Points stay as long as your account is active (at least one purchase a year). The exact rules are confirmed by the owner before launch.'],
+    ['I already have a physical card. How do I connect it?', 'Sign in to My Bench, open Points & card and type the number printed on your card (it looks like SC 123 456 2700).'],
+    ['How is the Grid level calculated?', 'From your approved trade orders in the last 30 days. It is reviewed every month; you never drop more than one level at a time.'],
   ],
   account: [
     ['Do I need an account to order?', 'No. You can check out as a guest. An account keeps your orders, devices, saved parts and points in one place.'],
     ['When can I write a review?', 'After staff confirm your order. Reviews are marked Verified purchase so other buyers can trust them.'],
     ['How do I delete my data?', 'Use the privacy form on the Contact page. We answer within 30 days.'],
+  ],
+  visit: [
+    ['Where is the shop?', 'In Al Murar, Deira, Dubai (Plus Code 78G4+3H2). The map on this page opens directions in Google Maps.'],
+    ['When are you open?', 'Every day except Sunday, in two shifts with a break in the afternoon. The hours on this page are always the current ones, in Dubai time.'],
+    ['Is the Madrid branch open?', 'Not yet. The opening date will be announced here and on our social pages.'],
+    ['Can I message instead of calling?', 'Yes. WhatsApp is the fastest way to reach the shop, also for photos of a part or a broken phone.'],
+    ['Do I need an appointment for a repair?', 'No. Walk in for a free check. Booking online first saves your place on the bench.'],
   ],
 };

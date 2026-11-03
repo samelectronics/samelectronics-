@@ -1,4 +1,5 @@
 import SitePage from '@/components/site/SitePage';
+import Faq from '@/components/site/Faq';
 import TabTitle from '@/components/site/TabTitle';
 import StoryPage from '@/components/info/StoryPage';
 
@@ -8,7 +9,7 @@ export default function Page() {
   return (
     <>
       <TabTitle page="Our story" ar="قصتنا" />
-      <SitePage><StoryPage /></SitePage>
+      <SitePage><StoryPage /><Faq topic="visit" /></SitePage>
     </>
   );
 }

@@ -271,7 +271,7 @@ export default function Footer({ v }: { v: Vals }) {
               <a href="/faq" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')}>
                 Questions
               </a>
-              <a href="/legal#cookies" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')} onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('se:settings', { detail: 'privacy' })); }}>
+              <a href="/cookies" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')} onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('se:settings', { detail: 'privacy' })); }}>
                 Cookie settings
               </a>
               <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('se:settings'))} style={{ color: '#9DA1A6', background: 'none', border: 0, padding: 0, font: 'inherit', cursor: 'pointer' }} className={cx(undefined, 'scp-f2a4cf2e')}>
