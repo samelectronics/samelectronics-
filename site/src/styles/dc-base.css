@@ -1141,3 +1141,6 @@ html[dir='rtl'] .se-qs-sw.on i { transform: translateX(-18px); } html[dir='rtl']
     radial-gradient(360px 300px at 50% 42%, #3E4044 0%, #393B3F 25%, #323438 50%, #2D2F32 75%, #2A2C2F 100%),
     #2A2C2F !important; }
 .st-veil.st-veil-lang .st-l2-floor { display: none !important; }
+/* R10 · site footer on tablets and phones */
+@media (max-width: 1000px) { .se-ft-grid { grid-template-columns: minmax(0,1fr) minmax(0,1fr) !important; gap: 32px 24px !important; } }
+@media (max-width: 600px) { .se-ft-grid { grid-template-columns: minmax(0,1fr) !important; } }

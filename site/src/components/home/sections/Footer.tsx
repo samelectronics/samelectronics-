@@ -32,7 +32,7 @@ export default function Footer({ v }: { v: Vals }) {
       {'\n  '}
       <div style={{ position: 'relative', maxWidth: '1312px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '44px' }}>
         {'\n    '}
-        <div style={{ display: 'grid', gridTemplateColumns: 'minmax(260px,1.3fr) repeat(3,minmax(0,1fr))', gap: '36px' }}>
+        <div className="se-ft-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(260px,1.3fr) repeat(3,minmax(0,1fr))', gap: '36px' }}>
           {'\n      '}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             {'\n        '}
@@ -252,7 +252,7 @@ export default function Footer({ v }: { v: Vals }) {
           {'\n      '}
           <div style={{ display: 'flex', alignItems: 'center', gap: '18px', flexWrap: 'wrap' }}>
             {'\n        '}
-            <span style={{ display: 'flex', gap: '14px' }}>
+            <span style={{ display: 'flex', gap: '8px 14px', flexWrap: 'wrap' }}>
               <a href="/legal#warranty" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')}>
                 Warranty
               </a>

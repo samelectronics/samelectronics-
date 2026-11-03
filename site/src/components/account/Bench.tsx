@@ -10,6 +10,7 @@ import { T } from '@/components/site/ui';
 import LiveSam from '@/components/samsoom/LiveSam';
 import MemberCard, { LEVELS } from './MemberCard';
 import NotesPanel from './NotesPanel';
+import { Repairs, WarrantyCheck, TradeTools } from './BenchTools';
 
 const NAV: [string, string, string][] = [
   ['overview', 'Overview', 'M3 12l9-8 9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z'],
@@ -17,6 +18,7 @@ const NAV: [string, string, string][] = [
   ['saved', 'Cart, saved & stars', 'M12 2l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 16.8 6.1 20.1l1.3-6.6L2.5 8.9l6.6-.8z'],
   ['points', 'Points & card', 'M3 6h18v12H3zM3 10h18'],
   ['companies', 'Companies', 'M3 21V7l6-4 6 4v14M15 21V11h6v10M7 9h4M7 13h4M7 17h4'],
+  ['repairs', 'Repairs & warranty', 'M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-2.5z'],
   ['devices', 'My devices', 'M8 2h8a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM11 18h2'],
   ['chats', 'Samsoom chats', 'M4 5h16v11H8l-4 4z'],
   ['messages', 'Messages', 'M3 6l9 6 9-6M3 6h18v12H3z'],
@@ -61,6 +63,7 @@ export default function Bench({ me, refresh }: { me: User; refresh: () => void }
               <div className="sp-card"><div className="bn-ch"><h3 className="sp-h3">{T('Latest order')}</h3><button type="button" className="shop-clear" onClick={() => go('orders')}>{T('All orders')}</button></div>{orders[0] ? <OrderRow o={orders[0]} /> : <Empty t="No orders yet" a="Go to the shop" h="/shop" />}</div>
               <div className="sp-card bn-cardbox">{me.card ? <MemberCard kind={me.card.kind} name={me.name} no={me.card.no} level={me.card.level} /> : <><h3 className="sp-h3">{T('Your membership card')}</h3><p className="sp-p">{T('Connect your Sam Circuit, Grid or Circle card to collect points and see your level here.')}</p><button type="button" className="sp-btn sm" onClick={() => go('points')}>{T('Connect a card')}</button></>}</div>
             </div>
+            <TradeTools me={me} orders={orders} />
             <div className="bn-quick">
               {([['Find My Part', () => window.dispatchEvent(new CustomEvent('se:fmp', { detail: {} }))], ['Book a repair', () => (location.href = '/repair')], ['Ask Samsoom', () => (location.href = '/samsoom')], ['Message the team', () => go('messages')], [me.tradeApproved ? 'Trade prices are on' : 'Apply for trade prices', () => (location.href = '/wholesale#apply')]] as [string, () => void][]).map(([l, f]) => <button key={l} type="button" className="sp-chip" onClick={f}>{T(l)}</button>)}
             </div>
@@ -74,12 +77,15 @@ export default function Bench({ me, refresh }: { me: User; refresh: () => void }
             <List title="In your cart" ids={st.cart.map((l) => l.id)} act={['Checkout', () => (location.href = '/cart')]} />
             <List title="Saved for later" ids={st.saved} each={['Move to cart', (id) => store.add(id)]} />
             <List title="Stars" ids={st.favs} each={['Remove star', (id) => store.fav(id)]} />
+            {st.kits.map((k) => <List key={k.name} title={k.name} ids={k.ids} act={['Add all to cart', () => k.ids.forEach((id) => store.add(id))]} each={['Remove', (id) => store.toList(k.name, id)]} />)}
             <List title="Price & stock alerts" ids={st.alerts} each={['Stop alert', (id) => store.alert(id)]} note="We will message you when the price drops or stock is back (e-mail alerts start when the database is connected)." />
           </Sec>
         ) : sec === 'points' ? (
           <Points me={me} pts={pts} level={level} lv={lv} refresh={refresh} />
         ) : sec === 'companies' ? (
           <Companies me={me} cos={cos} reload={load} />
+        ) : sec === 'repairs' ? (
+          <Sec t="Repairs & warranty" d="Your repair tickets with their progress, and a warranty check for any order or repair."><Repairs /><WarrantyCheck orders={orders} /></Sec>
         ) : sec === 'devices' ? (
           <Devices />
         ) : sec === 'chats' ? (

@@ -7,6 +7,7 @@ import { backend, useMe } from '@/lib/backend';
 import { products, aed, waLink } from '@/lib/catalog';
 import { PageHero, T, useRise, CountUp } from '@/components/site/ui';
 import PalletDrop from '@/components/home/PalletDrop';
+import { TradeFloor, TradeCalc, AppTracker, markSent } from './WholesaleBits';
 
 export default function WholesalePage() {
   const [me] = useMe(), [done, setDone] = useState(false), [err, setErr] = useState('');
@@ -16,7 +17,7 @@ export default function WholesalePage() {
   useEffect(() => { const iv = window.setInterval(() => { const l = products(); if (l.length) { window.clearInterval(iv); setEx(l.filter((p) => p.category === 'SCR' && p.grade === 'OR').slice(0, 4).map((p) => ({ title: p.title, grade: p.gradeName, r: p.retail_price, w: p.wholesale_price }))); } }, 80); return () => window.clearInterval(iv); }, []);
   useRise();
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => setF({ ...f, [k]: e.target.value });
-  const submit = async (e: React.FormEvent) => { e.preventDefault(); const r = await backend.apply({ type: 'wholesale', name: f.name, email: f.email, phone: f.phone, data: { company: f.company, country: f.country, kind: f.kind, volume: f.volume, licence: f.licence, categories: f.cats.join(', '), note: f.note } }); if (r.ok) setDone(true); else setErr(T(r.error)); };
+  const submit = async (e: React.FormEvent) => { e.preventDefault(); const r = await backend.apply({ type: 'wholesale', name: f.name, email: f.email, phone: f.phone, data: { company: f.company, country: f.country, kind: f.kind, volume: f.volume, licence: f.licence, categories: f.cats.join(', '), note: f.note } }); if (r.ok) { markSent(f.company); window.dispatchEvent(new CustomEvent('se:trade-app')); setDone(true); } else setErr(T(r.error)); };
   return (
     <>
       <PageHero eb={T('WHOLESALE · TRADE ACCOUNTS')} title={T('Stock up.')} accent={T('Cost down.')} crumb={[[T('Wholesale')]]} seed={71}
@@ -41,7 +42,17 @@ export default function WholesalePage() {
         </div>
       </div></section>
 
+      <section className="sp-sec w"><div className="sp-wrap">
+        <div className="sp-head" data-rise><div><span className="sp-eb">{T('TRADE CALCULATOR')}</span><h2 className="sp-h2">{T('What would you save?')}</h2></div></div>
+        <TradeCalc />
+      </div></section>
+
       <section className="sp-sec g"><div className="sp-wrap">
+        <div className="sp-head" data-rise><div><span className="sp-eb">{T('THE TRADE FLOOR')}</span><h2 className="sp-h2">{T('Stock on the floor, by family.')}</h2></div><a className="sp-btn sm ghost" href="/shop">{T('Browse the shop')}</a></div>
+        <TradeFloor />
+      </div></section>
+
+      <section className="sp-sec w"><div className="sp-wrap">
         <div className="sp-head" data-rise><div><span className="sp-eb">{T('WHAT YOU GET')}</span><h2 className="sp-h2">{T('More than a price list.')}</h2></div></div>
         <div className="sp-grid sp-g3" data-rise>
           {[['Trade prices on every grade', 'Original, OLED, Incell and AAA, side by side.'], ['Same-day bulk quotes', 'Send a list on WhatsApp or upload it; we price it the same day.'], ['Credit on approved orders', 'For established accounts (Hub level and above).'], ['A dedicated account manager', 'One person who knows your shop.'], ['First pick of shipments', 'See what lands before it hits the shop.'], ['Export ready', 'Packed, labelled and shipped door to door.']].map(([t, d]) => <div key={t} className="sp-card wh-get"><i /><b>{T(t)}</b><span className="sp-p">{T(d)}</span></div>)}
@@ -54,7 +65,7 @@ export default function WholesalePage() {
         </div>
       </div></section>
 
-      <section className="sp-sec w"><div className="sp-wrap">
+      <section className="sp-sec g"><div className="sp-wrap">
         <div className="sp-head" data-rise><div><span className="sp-eb">{T('HOW IT WORKS')}</span><h2 className="sp-h2">{T('Three steps to trade prices.')}</h2></div></div>
         <ol className="rp-steps light" data-rise>
           {[['Create your account', 'In My Bench, with your company profile.'], ['Apply here', 'Trade licence and a few details.'], ['We verify and approve', 'Usually within one working day.'], ['Shop with your price', 'Both prices on every part, and your Sam Grid card.']].map(([t, d], i) => <li key={t}><i>{i + 1}</i><b>{T(t)}</b><small>{T(d)}</small></li>)}
@@ -65,10 +76,11 @@ export default function WholesalePage() {
         <div data-rise>
           <span className="sp-eb">{T('APPLY')}</span><h2 className="sp-h2">{T('Apply for a trade account')}</h2>
           <p className="sp-p" style={{ color: '#5A4200' }}>{T('Our management team reviews every application by hand. We reply by e-mail and WhatsApp.')}</p>
+          {!done ? <div style={{ marginBottom: 14 }}><AppTracker /></div> : null}
           {!me ? <div className="sp-note" style={{ background: 'rgba(255,255,255,.55)' }}>{T('Tip: create your account first so the approval is linked to it.')} <a href="/account?next=trade">{T('Create account')}</a></div> : null}
           <a className="sp-btn wa" style={{ marginTop: 14 }} href={waLink('Hi Sam Electronics, I would like a bulk quote. My list:')} target="_blank" rel="noopener noreferrer">{T('Just need a bulk quote? WhatsApp us')}</a>
         </div>
-        {done ? <div className="sp-card" data-rise><b className="sp-h3">{T('Application received.')}</b><p className="sp-p">{T('Thank you. We will review it and reply within one working day.')}</p></div> : (
+        {done ? <div style={{ display: 'grid', gap: 14 }}><AppTracker /><div className="sp-card" data-rise><b className="sp-h3">{T('Application received.')}</b><p className="sp-p">{T('Thank you. We will review it and reply within one working day.')}</p></div></div> : (
           <form className="sp-card wh-form" onSubmit={submit} data-rise>
             <label className="sp-field">{T('Company name')}<input required value={f.company} onChange={set('company')} /></label>
             <label className="sp-field">{T('Your name')}<input required value={f.name} onChange={set('name')} /></label>
