@@ -18,7 +18,11 @@ export async function api(path: string, q = '', post?: unknown) {
   const t = await staffToken(); if (t) h.Authorization = 'Bearer ' + t;
   if (post) h['Content-Type'] = 'application/json';
   const r = await fetch('/api/daftra/' + path + (q ? '?' + q : ''), { method: post ? 'POST' : 'GET', headers: h, cache: 'no-store', body: post ? JSON.stringify(post) : undefined }); const j = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error(j.error || 'Error ' + r.status); return j as { id?: string; no?: string; type?: string; rows: Row[]; pagination: { page_count?: number; total_results?: number } | null; connected?: boolean; write?: boolean; subdomain?: string; protectedBy?: string };
+  if (!r.ok) throw new Error(j.error || 'Error ' + r.status);
+  // R11b: Daftra sometimes wraps each row ({ Invoice: {...} }) or sends an object instead of a list: always hand back a flat list
+  const raw = (j as { rows?: unknown }).rows, list = Array.isArray(raw) ? raw : raw && typeof raw === 'object' ? Object.values(raw as object) : [];
+  (j as { rows: unknown }).rows = list.map((x) => { if (x && typeof x === 'object') { const v = Object.values(x as object); if (v.length === 1 && v[0] && typeof v[0] === 'object' && !Array.isArray(v[0])) return v[0]; } return x; }).filter((x) => x && typeof x === 'object');
+  return j as { id?: string; no?: string; type?: string; rows: Row[]; pagination: { page_count?: number; total_results?: number } | null; connected?: boolean; write?: boolean; subdomain?: string; protectedBy?: string };
 }
 const s = (v: unknown) => (v == null ? '' : String(v)), n = (v: unknown) => +s(v) || 0;
 const toks = (x: string) => new Set(norm(x).split(' ').filter((t) => t.length > 1));

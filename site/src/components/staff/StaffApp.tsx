@@ -17,6 +17,17 @@ import { SiteEditor, Accounting, Emails, Team, Audit, Settings, MyProfile } from
 
 // R10 perf: the heavier pages are separate chunks, fetched the first time someone opens them
 type MP = { me: Staff; go: (m: string) => void };
+// R11b: a module that breaks shows its own error here (and can be retried); the rest of the Control Room keeps working
+class ModGuard extends React.Component<{ name: string; children: React.ReactNode }, { err: Error | null }> {
+  state = { err: null as Error | null };
+  static getDerivedStateFromError(err: Error) { return { err }; }
+  componentDidCatch(err: Error) { console.error('[Control Room] ' + this.props.name, err); }
+  render() { if (!this.state.err) return this.props.children; return (
+    <div className="cr-panel" style={{ padding: 24 }}><b style={{ font: '700 18px Space Grotesk, sans-serif' }}>{this.props.name} could not open</b>
+      <p style={{ color: '#6A6D72', margin: '8px 0 14px' }}>The rest of the Control Room still works. Details for the developer: <code>{String(this.state.err.message || this.state.err).slice(0, 300)}</code></p>
+      <button type="button" className="cr-btn y" onClick={() => this.setState({ err: null })}>Try again</button></div>
+  ); }
+}
 const lz = (f: () => Promise<React.ComponentType<MP>>) => { const L = React.lazy(() => f().then((C) => ({ default: C }))); const W = (p: MP) => <React.Suspense fallback={<div className="cr-lazy"><i /></div>}><L {...p} /></React.Suspense>; return W; };
 const DaftraMod = lz(() => import('./DaftraMod').then((m) => m.default as React.ComponentType<MP>)), PromoMod = lz(() => import('./PromoMod').then((m) => m.default as React.ComponentType<MP>)), ExcelMod = lz(() => import('./ExcelMod').then((m) => m.default as React.ComponentType<MP>));
 const M5 = () => import('./mods5');
@@ -252,7 +263,7 @@ export default function StaffApp() {
           <a className="cr-btn ghost" href="/" target="_blank" rel="noopener">View site ↗</a>
         </header>
         <Palette mine={mine} go={go} />
-        <div className="cr-body" key={cur.id}>{cur.id === 'dashboard' ? <Announcement /> : null}<cur.C me={me} go={go} /></div>
+        <div className="cr-body" key={cur.id}>{cur.id === 'dashboard' ? <Announcement /> : null}<ModGuard key={cur.id} name={cur.l}><cur.C me={me} go={go} /></ModGuard></div>
       </main>
     </div>
   );
