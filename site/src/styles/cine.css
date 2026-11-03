@@ -213,3 +213,6 @@ html[dir='rtl'] .cine-word { transform: translateY(-50%); }
 .cine-word, .sp-cine[data-v] .cine-word, .shop-cine > .cine-word { inset: auto !important; right: 3vw !important; left: auto !important; top: 50% !important; }
 html[dir='rtl'] .cine-word, html[dir='rtl'] .sp-cine[data-v] .cine-word { right: auto !important; left: 3vw !important; }
 .shop-cine > .cine-word { font-size: clamp(70px, 8vw, 120px) !important; opacity: .7; }
+/* R11b (owner): the loading screen is calm and premium: the logo, its ring and one line of text, no icons */
+.se-boot-ic { display: none !important; }
+.se-boot-txt { gap: 0 !important; font-weight: 500 !important; letter-spacing: .02em; }
