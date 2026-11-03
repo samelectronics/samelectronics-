@@ -123,3 +123,17 @@ html[dir='rtl'] .au-tabs i { left: auto; right: 4px; } html[dir='rtl'] .au-tabs 
 .au-door .au-form { padding: 24px; border-radius: 18px; background: #fff; color: #26282B; }
 .au-door .cr-brand small { color: #F7C032; }
 @media (max-width: 560px) { .au.au-door { padding: 24px 10px; border-radius: 20px; } .au-door .au-form { padding: 18px; } }
+/* R10 P5 · Ask Samsoom: capabilities, model-code helper, photo attach, "talk to a person" */
+.ak-human { margin-inline-start: auto; display: inline-flex; align-items: center; gap: 7px; height: 36px; padding: 0 14px; border-radius: 10px; background: #26282B; color: #fff; font: 600 13px Inter, sans-serif; text-decoration: none; white-space: nowrap; }
+.ak-human:hover { background: #F7C032; color: #26282B; }
+.ak-can { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; width: min(620px, 100%); margin: 6px auto 0; text-align: start; }
+.ak-can span { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: 12px; background: #F4F5F6; } .ak-can b { font: 600 13.5px Inter, sans-serif; color: #26282B; } .ak-can small { font: 400 12.5px Inter, sans-serif; color: #6A6D72; }
+.ak-codebtn { margin: 10px auto 0; border: 0; background: none; color: #C98A12; font: 600 13.5px Inter, sans-serif; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+.ak-codes { display: flex; flex-direction: column; gap: 8px; width: min(620px, 100%); margin: 8px auto 0; padding: 14px; border-radius: 14px; background: #fff; box-shadow: 0 0 0 1px #ECEDEF; text-align: start; }
+.ak-codes div { display: grid; grid-template-columns: 150px 1fr; gap: 10px; font: 400 13px/1.45 Inter, sans-serif; color: #4A4D52; } .ak-codes b { color: #26282B; font-weight: 600; } .ak-codes .sp-btn { align-self: flex-start; }
+.ak-img { display: block; max-width: 220px; border-radius: 12px; margin-bottom: 6px; }
+.ak-att { display: flex; align-items: center; gap: 10px; margin: 0 auto 6px; width: min(860px, calc(100% - 32px)); padding: 6px 10px; border-radius: 12px; background: #F4F5F6; font: 500 13px Inter, sans-serif; color: #4A4D52; }
+.ak-att img { width: 44px; height: 44px; object-fit: cover; border-radius: 8px; } .ak-att button { margin-inline-start: auto; width: 28px; height: 28px; border: 0; border-radius: 50%; background: #fff; cursor: pointer; font-size: 16px; }
+.ak-clip { flex: none; display: grid; place-items: center; width: 42px; height: 42px; border: 0; border-radius: 12px; background: #F4F5F6; color: #4A4D52; cursor: pointer; } .ak-clip:hover { background: #F7C032; color: #26282B; }
+@media (max-width: 560px) { .ak-can { grid-template-columns: 1fr; } .ak-codes div { grid-template-columns: 1fr; gap: 2px; } .ak-human span { display: none; } }
+@media (max-width: 560px) { .ak-human { font-size: 0; gap: 0; width: 40px; padding: 0; justify-content: center; } }

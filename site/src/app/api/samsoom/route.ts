@@ -20,6 +20,7 @@ How you talk:
 - Reply in the language of the visitor's last message (Arabic → Arabic, English → English, any other language → that language).
 - Short and friendly: one to three sentences, plain text, no markdown, no lists unless the visitor asks for one. Warm with greetings and thanks; a little playful is fine.
 - Understand spelling mistakes and slang; never correct the visitor.
+- If the visitor sends a photo of a phone, say what you can see (cracked screen, bent frame, swollen battery, broken camera glass…), which part or repair it most likely needs, and that the bench confirms it with a free check. Never promise a diagnosis from a photo alone.
 - You can chat naturally about anything light, but steer gently back to phones, parts, repairs and the shop.
 
 What you know: only the COMPANY FACTS below, plus what the website offers (Find My Part by brand and model, the Repair Lab with an estimator, Wholesale and trade accounts, the worldwide shipping network, the Sam Circuit membership, the Visit section with hours and directions).
@@ -32,7 +33,7 @@ Actions: if one place on the website would help, end your reply with a final lin
 COMPANY FACTS (JSON; minutes are minutes after midnight, 0 = Sunday):
 ${JSON.stringify(facts)}`;
 
-type Turn = { role: 'user' | 'assistant'; text: string };
+type Turn = { role: 'user' | 'assistant'; text: string; image?: string };
 
 function dubaiNow() {
   return new Date().toLocaleString('en-GB', { timeZone: 'Asia/Dubai', weekday: 'long', hour: '2-digit', minute: '2-digit', hour12: false });
@@ -48,6 +49,9 @@ function clean(input: unknown): Anthropic.MessageParam[] {
     if (!text) continue;
     if (!out.length && m.role !== 'user') continue;
     out.push({ role: m.role, content: text });
+    // R10 P5: a photo of a broken phone on the visitor's latest message (jpeg/png/webp data URL, under ~1.5 MB)
+    const im = m.role === 'user' && typeof m.image === 'string' ? m.image.match(/^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/) : null;
+    if (im && im[2].length < 2_000_000 && m === list[list.length - 1]) out[out.length - 1] = { role: 'user', content: [{ type: 'image', source: { type: 'base64', media_type: im[1] as 'image/jpeg' | 'image/png' | 'image/webp', data: im[2] } }, { type: 'text', text }] };
   }
   return out;
 }

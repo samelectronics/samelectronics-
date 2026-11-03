@@ -9,17 +9,23 @@ import { fallbackAnswer, emoteFor } from './brain';
 import { T, flyToCart } from '@/components/site/ui';
 import LiveSam from './LiveSam';
 
-type Msg = { t: string; me: boolean; emote?: string | null; own?: boolean; n?: number; parts?: string[] };
+type Msg = { t: string; me: boolean; emote?: string | null; own?: boolean; n?: number; parts?: string[]; img?: string };
 type Chat = { id: string; title: string; named: boolean; msgs: Msg[]; at: number };
 const KEY = 'se-chats';
 const read = (): Chat[] => { try { const v = JSON.parse(localStorage.getItem(KEY) || '[]'); return Array.isArray(v) ? v : []; } catch { return []; } };
 const write = (l: Chat[]) => { try { localStorage.setItem(KEY, JSON.stringify(l.slice(0, 30))); } catch { /* */ } };
 const START = [['Find my part', 'Do you have the Galaxy A54 screen in Service Pack?'], ['Which grade?', 'What is the difference between Original, OLED and Incell?'], ['Are you open?', 'Are you open right now?'], ['Shipping', 'Do you ship to Nigeria?'], ['Repairs', 'How much to fit an iPhone 13 battery?'], ['Trade', 'How do I get trade prices for my shop?']];
+// R10 P5: shrink a photo on the phone before it is sent (long side 1024px for Samsoom, 220px kept in the chat history)
+const shrink = (f: File, max: number, q = 0.82): Promise<string> => new Promise((res, rej) => { const u = URL.createObjectURL(f), im = new Image(); im.onload = () => { const k = Math.min(1, max / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k); c.getContext('2d')!.drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(u); res(c.toDataURL('image/jpeg', q)); }; im.onerror = () => { URL.revokeObjectURL(u); rej(new Error('bad image')); }; im.src = u; });
+const CAN = [['Finds parts', 'Any model, any grade, with the price and stock'], ['Explains grades', 'Original, OLED, Incell, AAA: what you get'], ['Reads photos', 'Send a photo of the broken phone'], ['Hands you to a person', 'The team on WhatsApp, with your chat']];
+const CODES: [string, string][] = [['iPhone', 'Settings → General → About → Model Number. Tap it once to see the A-number (e.g. A2633). Or read it on the SIM tray slot.'], ['Samsung', 'Settings → About phone → Model number (SM-A546B…). Also on the box label.'], ['Xiaomi / Redmi / POCO', 'Settings → About phone → All specs → Model.'], ['Huawei / Honor', 'Settings → About phone → Model.'], ['Google Pixel', 'Settings → About phone → Model (e.g. GD1YQ).'], ['Any phone', 'Dial *#06# for the IMEI and send it to us: we find the exact model.']];
 const ACT: Record<string, [string, string]> = { visit: ['Opening hours & directions', '/contact#visit'], repair: ['Repair Lab', '/repair'], wholesale: ['Wholesale', '/wholesale'], network: ['Worldwide shipping', '/worldwide'], models: ['Brands & grades', '/brands'], fmp: ['Open the shop', '/shop'], story: ['Our story', '/story'], circuit: ['Sam Circuit', '/membership'], whatsapp: ['WhatsApp the team', 'https://wa.me/971503420015'] };
 
 export default function AskPage() {
   const [chats, setChats] = useState<Chat[]>([]), [id, setId] = useState<string | null>(null), [q, setQ] = useState(''), [typing, setTyping] = useState(false), [mood, setMood] = useState<string | undefined>('wave');
-  const [ren, setRen] = useState<string | null>(null), [rname, setRname] = useState(''), [side, setSide] = useState(false);
+  const [ren, setRen] = useState<string | null>(null), [rname, setRname] = useState(''), [side, setSide] = useState(false), [img, setImg] = useState<{ big: string; small: string } | null>(null), [codes, setCodes] = useState(false);
+  const file = useRef<HTMLInputElement>(null);
+  const pickImg = async (f?: File | null) => { if (!f || !/^image\//.test(f.type)) return; try { setImg({ big: await shrink(f, 1024), small: await shrink(f, 220, 0.7) }); } catch { /* unreadable */ } };
   const box = useRef<HTMLDivElement>(null), inp = useRef<HTMLTextAreaElement>(null);
   useEffect(() => { const l = read(); setChats(l); const c = new URLSearchParams(location.search).get('c'); if (c && l.some((x) => x.id === c)) setId(c); }, []);
   const cur = chats.find((c) => c.id === id) || null, msgs = cur ? cur.msgs : [];
@@ -33,20 +39,21 @@ export default function AskPage() {
     return fb ? { t: fb.t, act: fb.act || undefined, emote: fb.emote } : { t: T('I didn’t catch that one. Try a model and a part, like “A54 battery”, or ask about grades, hours or shipping.'), emote: 'think' };
   };
   const ask = async (text: string) => {
-    text = text.trim(); if (!text) return; setQ('');
+    text = text.trim(); const pic = img; if (!text && !pic) return; if (!text) text = T('Here is a photo of my phone. What does it need?'); setQ(''); setImg(null);
     let cid = id;
     if (!cid) { cid = 'c' + Date.now().toString(36); const c: Chat = { id: cid, title: text.length > 42 ? text.slice(0, 40) + '…' : text, named: false, msgs: [], at: Date.now() }; save((l) => [c, ...l]); setId(cid); history.replaceState(null, '', '/samsoom?c=' + cid); }
-    const me: Msg = { t: text, me: true };
+    const me: Msg = { t: text, me: true, ...(pic ? { img: pic.small } : {}) };
     save((l) => l.map((c) => (c.id === cid ? { ...c, msgs: [...c.msgs, me], at: Date.now() } : c)));
     setTyping(true); setMood('think');
-    const hist = [...(read().find((c) => c.id === cid)?.msgs || [])].map((m) => ({ role: m.me ? 'user' : 'assistant', text: m.t })).slice(-12);
+    const hist: { role: string; text: string; image?: string }[] = [...(read().find((c) => c.id === cid)?.msgs || [])].map((m) => ({ role: m.me ? 'user' : 'assistant', text: m.t })).slice(-12);
+    if (pic && hist.length) hist[hist.length - 1].image = pic.big;
     let ans: { t: string; act?: string; emote?: string; parts?: string[] };
     try {
       const r = await fetch('/api/samsoom', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages: hist, lang: window.seI18n ? window.seI18n.lang() : 'en' }) });
       const j = r.ok ? await r.json() : { fallback: true };
-      const lk = local(text);
+      const lk = pic ? { t: T('Thanks for the photo! I can’t look at photos right now, so send it to the team on WhatsApp and they will tell you the part and the price.'), act: 'whatsapp', emote: 'think' } : local(text);
       ans = j && !j.fallback && j.text ? (lk.parts ? { ...lk, t: j.text } : { t: j.text, act: j.action, emote: emoteFor(text, j.text) || 'happy' }) : lk;
-    } catch { ans = local(text); }
+    } catch { ans = pic ? { t: T('Thanks for the photo! Send it to the team on WhatsApp and they will tell you the part and the price.'), act: 'whatsapp', emote: 'think' } : local(text); }
     await new Promise((r) => setTimeout(r, 500));
     setTyping(false); setMood(ans.emote || 'happy');
     const bot: Msg & { act?: string } = { t: ans.t, me: false, emote: ans.emote || null, own: true, parts: ans.parts, ...(ans.act ? { act: ans.act } : {}) };
@@ -82,6 +89,7 @@ export default function AskPage() {
           <button type="button" className="ak-menu" onClick={() => setSide(!side)} aria-label={T('Chats')}>☰</button>
           <span className="ak-who"><span className="ak-av"><LiveSam size={34} mood="idle" /></span><span><b>Samsoom</b><small><i />{T('Online · parts assistant')}</small></span></span>
           <span className="ak-title">{cur ? cur.title : T('New chat')}</span>
+          <a className="ak-human" href={'https://wa.me/971503420015?text=' + encodeURIComponent('Hi Sam Electronics, I was chatting with Samsoom on the website.' + (msgs.length ? '\n\n' + msgs.slice(-6).map((m) => (m.me ? 'Me: ' : 'Samsoom: ') + m.t).join('\n') : ''))} target="_blank" rel="noopener noreferrer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M16 11a4 4 0 1 0-8 0M4 21a8 8 0 0 1 16 0M12 3a4 4 0 0 1 0 8" /></svg>{T('Talk to a person')}</a>
         </header>
         <div className="ak-msgs" ref={box}>
           {!msgs.length ? (
@@ -89,12 +97,16 @@ export default function AskPage() {
               <span className="ak-big"><LiveSam size={170} mood="idle" play={mood} /></span>
               <h1 className="sp-h2">{T('Ask me anything.')}</h1>
               <p className="sp-p">{T('Parts, grades, prices, repairs, shipping, opening hours: I know the shop inside out. Spelling mistakes are fine, and I speak your language.')}</p>
+              <div className="ak-can">{CAN.map(([t, d]) => <span key={t}><b>{T(t)}</b><small>{T(d)}</small></span>)}</div>
+              <button type="button" className="ak-codebtn" onClick={() => setCodes(!codes)} aria-expanded={codes}>{T('Where do I find my model code?')}</button>
+              {codes ? <div className="ak-codes">{CODES.map(([b, d]) => <div key={b}><b>{b}</b><span>{T(d)}</span></div>)}<button type="button" className="sp-btn sm" onClick={() => { setCodes(false); ask(T('I have my model code: ')); }}>{T('I have it, ask Samsoom')}</button></div> : null}
               <div className="ak-start">{START.map(([t, qq]) => <button key={t} type="button" onClick={() => ask(T(qq))}><b>{T(t)}</b><small>{T(qq)}</small></button>)}</div>
             </div>
           ) : msgs.map((m, i) => (
             <div key={i} className={'ak-m' + (m.me ? ' me' : '')}>
               {!m.me ? <span className="ak-mav"><LiveSam size={30} mood="idle" play={i === msgs.length - 1 ? m.emote || undefined : undefined} /></span> : null}
               <div className="ak-bub">
+                {m.img ? <img className="ak-img" src={m.img} alt={T('Your photo')} /> : null}
                 <p>{m.t}</p>
                 {m.parts ? <div className="ak-parts">{m.parts.map((pid) => { const p = byId(pid); return p ? <PartCard key={pid} p={p} /> : null; })}</div> : null}
                 {(m as Msg & { act?: string }).act && ACT[(m as Msg & { act?: string }).act!] ? <a className="sp-btn sm dark" href={ACT[(m as Msg & { act?: string }).act!][1]} target={ACT[(m as Msg & { act?: string }).act!][1].startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer">{T(ACT[(m as Msg & { act?: string }).act!][0])} →</a> : null}
@@ -103,9 +115,12 @@ export default function AskPage() {
           ))}
           {typing ? <div className="ak-m"><span className="ak-mav"><LiveSam size={30} mood="think" /></span><div className="ak-bub ak-typing"><i /><i /><i /></div></div> : null}
         </div>
+        {img ? <div className="ak-att"><img src={img.small} alt="" /><span>{T('Photo ready to send')}</span><button type="button" onClick={() => setImg(null)} aria-label={T('Remove the photo')}>×</button></div> : null}
         <form className="ak-in" onSubmit={(e) => { e.preventDefault(); ask(q); }}>
+          <input ref={file} type="file" accept="image/*" capture="environment" hidden onChange={(e) => { pickImg(e.target.files?.[0]); e.target.value = ''; }} />
+          <button type="button" className="ak-clip" onClick={() => file.current?.click()} aria-label={T('Attach a photo of the phone')} title={T('Attach a photo of the phone')}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3.5" /></svg></button>
           <textarea ref={inp} rows={1} value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ask(q); } }} placeholder={T('Message Samsoom…')} aria-label={T('Message Samsoom')} />
-          <button type="submit" className="ak-send" disabled={!q.trim() || typing} aria-label={T('Send')}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button>
+          <button type="submit" className="ak-send" disabled={(!q.trim() && !img) || typing} aria-label={T('Send')}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button>
         </form>
         <small className="ak-note">{T('Samsoom can make mistakes. Prices and stock are confirmed by the team on WhatsApp.')}</small>
       </section>
