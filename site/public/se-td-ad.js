@@ -42,7 +42,7 @@
     let lang = null, imgs = [];
     const load = () => { lang = AR(); imgs = SCN.map((q) => { const im = new Image(); im.decoding = 'async'; im.src = window.SE_SHOTS ? window.SE_SHOTS.url(q.id, 960) : ''; return im; }); };
     load();
-    const logo = new Image(); logo.src = (opts && opts.logo) || '/assets/se-logo.png';
+    const logo = new Image(); logo.src = (opts && opts.logo) || '/assets/se-logo-512.webp';
     // particles for the close: they come in from the edges and settle on the logo ring
     const PN = 180, PT = Array.from({ length: PN }, (_, i) => { const a = Math.random() * Math.PI * 2, e = Math.random(); const side = i % 4; const sx = side === 0 ? -0.1 : side === 1 ? 1.1 : Math.random(), sy = side === 2 ? -0.1 : side === 3 ? 1.1 : Math.random(); return { sx, sy, a, r: 0.86 + e * 0.14, s: 0.5 + Math.random() * 1.4, d: Math.random() * 0.35, sw: (Math.random() - 0.5) * 1.6 }; });
     const ok = (im) => im && im.complete && im.naturalWidth;

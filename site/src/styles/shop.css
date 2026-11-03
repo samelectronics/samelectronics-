@@ -504,3 +504,8 @@ html[dir='rtl'] .dp-panel { left: auto; right: 0; }
 .swall-row::after { height: 4px; }
 @media (max-width: 700px) { .swall-row { grid-template-columns: repeat(12, 1fr); } .swall-row .swall-bin:nth-child(n+13) { display: none; } }
 .deals-tabs { margin-top: 22px !important; position: relative; z-index: 2; }
+/* R10 4.9 · coupon field in the cart summary */
+.cart-cp { display: flex; gap: 6px; margin-top: 6px; } .cart-cp input { flex: 1; min-width: 0; height: 38px; border-radius: 10px; border: 0; padding: 0 12px; background: rgba(255,255,255,.08); color: #fff; font: 600 13px 'JetBrains Mono', monospace; text-transform: uppercase; }
+.cart-cp input::placeholder { text-transform: none; color: #8E9196; font-family: Inter, sans-serif; }
+.cart-cp button { height: 38px; padding: 0 14px; border: 0; border-radius: 10px; background: #F7C032; color: #26282B; font: 700 13px Inter, sans-serif; cursor: pointer; }
+.cart-cpx { color: #FF9B9B; font-size: 12px; }

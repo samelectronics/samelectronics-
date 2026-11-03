@@ -11,12 +11,14 @@ import { store, useStore } from '@/lib/store';
 import { backend, useMe, type Company, type Order } from '@/lib/backend';
 import { T, PageHero, useRise } from '@/components/site/ui';
 import LiveSam from '@/components/samsoom/LiveSam';
+type Coupon = { code: string; kind: 'pct' | 'aed'; value: number; min?: number; until?: number; trade?: boolean; active?: boolean };
 
 const DL = () => siteSetting('delivery', { uae: 25, freeOver: 500, pickupReady: '20 minutes' }); // set in the Control Room → Settings
 
 export default function CartPage() {
   const st = useStore(), [me] = useMe(), [ready, setReady] = useState(false), [cos, setCos] = useState<Company[]>([]);
   const [del, setDel] = useState<'pickup' | 'uae' | 'world'>('pickup'), [pay, setPay] = useState<Order['pay']>('whatsapp');
+  const [cpCode, setCpCode] = useState(''), [cpIn, setCpIn] = useState('');
   const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', country: 'United Arab Emirates', note: '', company: '' });
   const [busy, setBusy] = useState(false), [err, setErr] = useState(''), [done, setDone] = useState<Order | null>(null), [code, setCode] = useState(''), [codeMsg, setCodeMsg] = useState('');
   useEffect(() => { const iv = window.setInterval(() => { if (data()) { window.clearInterval(iv); setReady(true); } }, 60); return () => window.clearInterval(iv); }, []);
@@ -32,7 +34,11 @@ export default function CartPage() {
   const sub = lines.reduce((a, { l, p }) => a + unit(p) * l.qty, 0), save = lines.reduce((a, { l, p }) => a + (fixed(p) ? (p.retail_price - unit(p)) * l.qty : 0), 0);
   // R9: what the customer sees for a price that is confirmed on WhatsApp
   const hint = (p: Product) => (p.price <= 0 ? '' : (!p.price_mode || p.price_mode === 'exact') && p.stock_qty <= 0 ? aed(trade ? p.wholesale_price : p.price, false) : p.price_mode === 'from' ? T('From') + ' ' + aed(p.price, false) : p.price_mode === 'range' ? aed(p.price, false) + ' – ' + aed(p.price_max || p.price, false).replace(/^AED /, '') : '');
-  const ship = del === 'uae' ? (sub >= FREE ? 0 : SHIP.uae) : 0, vat = Math.round((sub + ship) * VAT * 100) / 100, total = sub + ship + vat;
+  // R10 4.9: coupons made in the Control Room (Pricing). The team still confirms every order, so the code also goes in the note.
+  const cps = siteRaw<Coupon[]>('coupons', []) || [];
+  const cp = cpCode ? cps.find((c) => c.active !== false && c.code.toUpperCase() === cpCode.toUpperCase() && (!c.until || c.until > Date.now()) && (!c.min || sub >= c.min) && (!c.trade || trade)) : undefined;
+  const disc = cp ? Math.min(sub, Math.round((cp.kind === 'pct' ? (sub * cp.value) / 100 : cp.value) * 100) / 100) : 0;
+  const ship = del === 'uae' ? (sub >= FREE ? 0 : SHIP.uae) : 0, vat = Math.round((sub - disc + ship) * VAT * 100) / 100, total = sub - disc + ship + vat;
   const saved = st.saved.map(byId).filter(Boolean) as Product[], favs = st.favs.map(byId).filter(Boolean) as Product[];
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setForm({ ...form, [k]: e.target.value });
   const place = async (e: React.FormEvent) => {
@@ -42,7 +48,7 @@ export default function CartPage() {
     setBusy(true);
     // with items to confirm, WhatsApp opens right away (a tab opened before the wait is not blocked) and gets the list after
     const tab = toConfirm ? window.open('', '_blank') : null;
-    const r = await backend.placeOrder({ email: form.email, name: form.name, phone: form.phone, lines: lines.map(({ l, p }) => ({ id: p.id, title: p.title, grade: p.gradeName, qty: l.qty, unit: unit(p), ...(fixed(p) ? {} : { confirm: true }) })), sub, vat, ship, total, delivery: del, address: form.address, country: form.country, note: (toConfirm ? '[Prices to confirm on WhatsApp: ' + toConfirm + '] ' : '') + form.note, pay: toConfirm ? 'whatsapp' : pay, company: form.company || undefined, ...(toConfirm ? { pending: true } : {}) });
+    const r = await backend.placeOrder({ email: form.email, name: form.name, phone: form.phone, lines: lines.map(({ l, p }) => ({ id: p.id, title: p.title, grade: p.gradeName, qty: l.qty, unit: unit(p), ...(fixed(p) ? {} : { confirm: true }) })), sub: sub - disc, vat, ship, total, delivery: del, address: form.address, country: form.country, note: (toConfirm ? '[Prices to confirm on WhatsApp: ' + toConfirm + '] ' : '') + (cp ? '[Coupon ' + cp.code + ' −' + disc.toFixed(2) + '] ' : '') + form.note, pay: toConfirm ? 'whatsapp' : pay, company: form.company || undefined, ...(toConfirm ? { pending: true } : {}) });
     setBusy(false);
     if (!r.ok) { tab?.close(); return setErr(T(r.error)); }
     if (toConfirm) { const link = waLink(listMsg(r.data)); if (tab) tab.location.href = link; else window.open(link, '_blank', 'noopener'); }
@@ -137,9 +143,12 @@ export default function CartPage() {
             {!lines.length ? <div className="cart-sum"><span>{T('Your cart is empty')}<b>·</b></span></div> : <div className="cart-sum">
               <span>{T('Subtotal')}<b>{sub > 0 || !toConfirm ? aed(sub, false) : T('To confirm')}</b></span>
               {save > 0 ? <span className="sv">{trade ? T('Trade savings') : T('You save')}<b>−{aed(save, false)}</b></span> : null}
+              {disc > 0 ? <span className="sv">{T('Coupon')} {cp!.code}<b>−{aed(disc, false)}</b></span> : null}
               <span>{T('Delivery')}<b>{del === 'world' ? T('Quoted') : ship ? aed(ship, false) : T('Free')}</b></span>
               <span>{T('VAT 5%')}<b>{sub > 0 || !toConfirm ? aed(vat, false) : T('To confirm')}</b></span>
               <span className="tot">{T('Total')}<b>{sub > 0 || !toConfirm ? aed(total, false) : T('To confirm')}</b></span>
+              <form className="cart-cp" onSubmit={(e) => { e.preventDefault(); setCpCode(cpIn.trim()); }}><input value={cpIn} onChange={(e) => setCpIn(e.target.value)} placeholder={T('Coupon code')} aria-label={T('Coupon code')} /><button type="submit">{T('Apply')}</button></form>
+              {cpCode && !cp ? <small className="cart-cpx">{T('This code is not valid for this cart.')}</small> : null}
               {toConfirm ? <span className="cart-plus">+ {toConfirm} {toConfirm === 1 ? T('item to confirm') : T('items to confirm')}</span> : null}
             </div>}
             {del === 'uae' && sub < FREE && sub > 0 ? <div className="cart-free"><small>{T('Add')} {aed(FREE - sub, false)} {T('more for free UAE delivery')}</small><i><em style={{ width: Math.min(100, (sub / FREE) * 100) + '%' }} /></i></div> : null}

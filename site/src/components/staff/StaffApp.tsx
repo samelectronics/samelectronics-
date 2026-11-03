@@ -4,9 +4,7 @@
 // prices, stock & warehouse, orders, repairs, customers, approvals, inbox (live chat), site editing (banners, Samsoom,
 // texts), accounting & VAT reports, automated e-mails, staff & roles, audit log and settings.
 // Demo log-ins (until Supabase is connected): owner@sam.demo / demo1234 · manager@ · sales@ · tech@ (same password).
-import DaftraMod from './DaftraMod';
-import PromoMod from './PromoMod';
-import ExcelMod from './ExcelMod';
+import '@/styles/staff.css';
 import React, { useEffect, useState } from 'react';
 import { backend, live, preview, ROLE_NAMES, useStaff, type Perm, type Staff } from '@/lib/backend';
 import { installI18n } from '@/i18n/lang';
@@ -17,6 +15,14 @@ import { Dashboard, Activity, QrLabels, Scanner, Tasks, Announcement, Reports, S
 import { Orders, Repairs, Customers, Approvals, Inbox } from './mods2';
 import { SiteEditor, Accounting, Emails, Team, Audit, Settings, MyProfile } from './mods3';
 
+// R10 perf: the heavier pages are separate chunks, fetched the first time someone opens them
+type MP = { me: Staff; go: (m: string) => void };
+const lz = (f: () => Promise<React.ComponentType<MP>>) => { const L = React.lazy(() => f().then((C) => ({ default: C }))); const W = (p: MP) => <React.Suspense fallback={<div className="cr-lazy"><i /></div>}><L {...p} /></React.Suspense>; return W; };
+const DaftraMod = lz(() => import('./DaftraMod').then((m) => m.default as React.ComponentType<MP>)), PromoMod = lz(() => import('./PromoMod').then((m) => m.default as React.ComponentType<MP>)), ExcelMod = lz(() => import('./ExcelMod').then((m) => m.default as React.ComponentType<MP>));
+const M5 = () => import('./mods5');
+const VisualEditor = lz(() => import('./VisualEditor').then((m) => m.default));
+const Pricing = lz(() => M5().then((m) => m.Pricing)), Credit = lz(() => M5().then((m) => m.Credit)), Shipments = lz(() => M5().then((m) => m.Shipments)), BrandStudio = lz(() => M5().then((m) => m.BrandStudio)), Reminders = lz(() => M5().then((m) => m.Reminders)),
+  Health = lz(() => M5().then((m) => m.Health as React.ComponentType<MP>)), Training = lz(() => M5().then((m) => m.Training)), Summary = lz(() => M5().then((m) => m.Summary)), NameParser = lz(() => M5().then((m) => m.NameParser as React.ComponentType<MP>)), StaffSam = lz(() => M5().then((m) => m.StaffSam));
 if (typeof window !== 'undefined') installI18n();
 
 type Mod = { id: string; l: string; d: string; need?: Perm[]; C: React.ComponentType<{ me: Staff; go: (m: string) => void }> };
@@ -46,23 +52,34 @@ const MODS: Mod[] = [
   { id: 'queue', l: 'Walk-in queue & TV', d: 'M4 6h16M4 12h10M4 18h6', need: ['orders', 'repairs'], C: Queue },
   { id: 'calendar', l: 'Calendar', d: 'M4 5h16v16H4zM4 10h16M9 3v4M15 3v4', C: Calendar },
   { id: 'tasks', l: 'Tasks & announcements', d: 'M9 11l3 3 8-8M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11', C: Tasks },
+  { id: 'editor', l: 'Visual editor', d: 'M12 20h9M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z', need: ['content'], C: VisualEditor },
+  { id: 'pricing', l: 'Pricing & coupons', d: 'M20 12l-8 8-9-9V3h8zM7.5 7.5h.01', need: ['prices'], C: Pricing },
+  { id: 'credit', l: 'Customers & credit', d: 'M4 6h16v12H4zM4 10h16M8 15h4', need: ['customers'], C: Credit },
+  { id: 'shipments', l: 'Shipments', d: 'M3 7h11v10H3zM14 10h4l3 3v4h-7M7 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM17 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4z', need: ['orders'], C: Shipments },
+  { id: 'brand', l: 'Brand Studio', d: 'M12 3l2.5 5.5L20 9l-4 4 1 6-5-3-5 3 1-6-4-4 5.5-.5z', need: ['content', 'orders'], C: BrandStudio },
+  { id: 'reminders', l: 'Reminders & campaigns', d: 'M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9', need: ['orders', 'customers', 'emails'], C: Reminders },
+  { id: 'health', l: 'Health & data', d: 'M3 12h4l3-8 4 16 3-8h4', need: ['products', 'settings'], C: Health },
+  { id: 'training', l: 'Training', d: 'M4 19V5a2 2 0 0 1 2-2h12v18H6a2 2 0 0 1-2-2zM8 7h6', C: Training },
+  { id: 'summary', l: 'Today’s summary', d: 'M4 4h16v16H4zM8 9h8M8 13h8M8 17h5', need: ['reports'], C: Summary },
+  { id: 'parser', l: 'Name parser', d: 'M4 7h16M4 12h10M4 17h6', need: ['products'], C: NameParser },
+  { id: 'ask', l: 'Ask Samsoom', d: 'M8 3h8a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM10 9h.01M14 9h.01M10 13a3 3 0 0 0 4 0', C: StaffSam },
   { id: 'me', l: 'My profile', d: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0', C: MyProfile },
 ];
 
 // R10 4.0 · the sidebar, grouped like Daftra: short groups that open to their pages. A group shows only the pages
 // this person may open; a group with one page is a plain link.
 const GROUPS: { g: string; d: string; ids: string[] }[] = [
-  { g: 'Home', d: 'M3 11l9-8 9 8v10h-6v-6H9v6H3z', ids: ['dashboard', 'activity'] },
-  { g: 'Sales', d: 'M4 7h16l-1.5 12a2 2 0 0 1-2 1.8H7.5a2 2 0 0 1-2-1.8zM8 7a4 4 0 0 1 8 0', ids: ['orders', 'customers', 'approvals', 'accounting'] },
+  { g: 'Home', d: 'M3 11l9-8 9 8v10h-6v-6H9v6H3z', ids: ['dashboard', 'activity', 'summary', 'ask'] },
+  { g: 'Sales', d: 'M4 7h16l-1.5 12a2 2 0 0 1-2 1.8H7.5a2 2 0 0 1-2-1.8zM8 7a4 4 0 0 1 8 0', ids: ['orders', 'customers', 'credit', 'approvals', 'pricing', 'accounting'] },
   { g: 'Repairs', d: 'M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.5-2.5z', ids: ['repairs', 'claims'] },
-  { g: 'Inventory', d: 'M20 7l-8-4-8 4 8 4zM4 7v10l8 4 8-4V7M12 11v10', ids: ['products', 'warehouse', 'scanner', 'qr'] },
-  { g: 'Website', d: 'M3 4h18v12H3zM8 20h8M12 16v4', ids: ['site', 'promo'] },
-  { g: 'Documents', d: 'M4 3h11l5 5v13H4zM14 3v6h6', ids: ['excel', 'reports'] },
-  { g: 'Messages', d: 'M4 5h16v11H8l-4 4z', ids: ['inbox', 'emails'] },
+  { g: 'Inventory', d: 'M20 7l-8-4-8 4 8 4zM4 7v10l8 4 8-4V7M12 11v10', ids: ['products', 'warehouse', 'shipments', 'scanner', 'qr'] },
+  { g: 'Website', d: 'M3 4h18v12H3zM8 20h8M12 16v4', ids: ['editor', 'site', 'promo'] },
+  { g: 'Documents', d: 'M4 3h11l5 5v13H4zM14 3v6h6', ids: ['brand', 'excel', 'reports'] },
+  { g: 'Messages', d: 'M4 5h16v11H8l-4 4z', ids: ['inbox', 'reminders', 'emails'] },
   { g: 'Shop floor', d: 'M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6', ids: ['queue', 'tasks', 'calendar'] },
   { g: 'Team & security', d: 'M12 3l7 4v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V7z', ids: ['team', 'audit'] },
-  { g: 'Daftra', d: 'M12 2a7 7 0 0 0-7 7c0 2.4 1.2 4.5 3 5.7V18h8v-3.3A7 7 0 0 0 12 2zM9 22h6', ids: ['daftra'] },
-  { g: 'Settings', d: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z', ids: ['settings', 'me'] },
+  { g: 'Daftra', d: 'M12 2a7 7 0 0 0-7 7c0 2.4 1.2 4.5 3 5.7V18h8v-3.3A7 7 0 0 0 12 2zM9 22h6', ids: ['daftra', 'parser'] },
+  { g: 'Settings', d: 'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z', ids: ['settings', 'health', 'training', 'me'] },
 ];
 const Ico = ({ d }: { d: string }) => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={d} /></svg>;
 function SideNav({ mine, cur, go }: { mine: Mod[]; cur: string; go: (m: string) => void }) {
@@ -80,6 +97,16 @@ function SideNav({ mine, cur, go }: { mine: Mod[]; cur: string; go: (m: string) 
       </div>
     ))}</nav>
   );
+}
+
+
+function Palette({ mine, go }: { mine: Mod[]; go: (m: string) => void }) {
+  const [open, setOpen] = useState(false), [q, setQ] = useState(''), [i, setI] = useState(0);
+  useEffect(() => { const k = (e: KeyboardEvent) => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); setOpen((o) => !o); setQ(''); setI(0); } else if (e.key === 'Escape') setOpen(false); }; const o = () => { setOpen(true); setQ(''); setI(0); }; window.addEventListener('keydown', k); window.addEventListener('cr:palette', o); return () => { window.removeEventListener('keydown', k); window.removeEventListener('cr:palette', o); }; }, []);
+  if (!open) return null;
+  const hits = mine.filter((m) => !q || m.l.toLowerCase().includes(q.toLowerCase())).slice(0, 9);
+  const pick = (m: Mod) => { setOpen(false); go(m.id); };
+  return <div className="cr-pal" onClick={() => setOpen(false)}><div onClick={(e) => e.stopPropagation()}><input autoFocus value={q} placeholder="Go to…  (Ctrl+K)" onChange={(e) => { setQ(e.target.value); setI(0); }} onKeyDown={(e) => { if (e.key === 'ArrowDown') setI(Math.min(hits.length - 1, i + 1)); if (e.key === 'ArrowUp') setI(Math.max(0, i - 1)); if (e.key === 'Enter' && hits[i]) pick(hits[i]); }} />{hits.map((m, k) => <button key={m.id} type="button" className={k === i ? 'on' : ''} onClick={() => pick(m)}>{m.l}</button>)}</div></div>;
 }
 
 // R10 S2 · S4 · S6 · S7: the Control Room door. Three locks, one after the other, on a teardown-style stage (no Samsoom):
@@ -220,9 +247,11 @@ export default function StaffApp() {
           <button type="button" className="cr-burger" onClick={() => setNav(!nav)} aria-label="Menu">☰</button>
           <h1>{cur.l}</h1>
           {preview ? <a className="cr-badge y" href="/staff?preview=0" title="Exit the design preview">DESIGN PREVIEW · sample data · exit</a> : !live ? <span className="cr-badge y">DEMO DATA · this browser only</span> : <span className="cr-badge g">LIVE</span>}
+          <button type="button" className="cr-btn ghost cr-find" onClick={() => window.dispatchEvent(new CustomEvent('cr:palette'))} title="Ctrl+K">⌕ Find</button>
           <StaffBell me={me} go={go} />
           <a className="cr-btn ghost" href="/" target="_blank" rel="noopener">View site ↗</a>
         </header>
+        <Palette mine={mine} go={go} />
         <div className="cr-body" key={cur.id}>{cur.id === 'dashboard' ? <Announcement /> : null}<cur.C me={me} go={go} /></div>
       </main>
     </div>

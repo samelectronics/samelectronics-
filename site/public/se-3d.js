@@ -68,7 +68,7 @@ export function buildPhone({ THREE, RoundedBoxGeometry }, o = {}) {
   g.userData.parts = parts; g.userData.M = M;
   return g;
 }
-function logoTexture(THREE) { return new Promise((res) => new THREE.TextureLoader().load(new URL('assets/se-logo.png', document.baseURI).href, (t) => { t.colorSpace = THREE.SRGBColorSpace; res(t); }, undefined, () => res(null))); }
+function logoTexture(THREE) { return new Promise((res) => new THREE.TextureLoader().load(new URL('assets/se-logo-512.webp', document.baseURI).href, (t) => { t.colorSpace = THREE.SRGBColorSpace; res(t); }, undefined, () => res(null))); }
 function loop(host, r, cam, scene, onFrame) {
   let alive = true, vis = true, w = 0, h = 0, t0 = performance.now();
   const io = new IntersectionObserver(([e]) => (vis = e.isIntersecting), { threshold: 0.01 }); io.observe(host);

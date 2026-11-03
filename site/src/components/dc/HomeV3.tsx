@@ -28,7 +28,7 @@ const HomeRest = dynamic(() => import('./HomeRest'), { ssr: false });
 function render(v: Vals) {
   return (
     <>
-      <div ref={v.rootRef} style={{ position: 'relative', minHeight: '100vh' }}>
+      <div ref={v.rootRef} data-home-root="" style={{ position: 'relative', minHeight: '100vh' }}>
         <BootIntro v={v} />
         <Nav v={v} />
         <Hero v={v} />

@@ -35,17 +35,18 @@ image-slot:not([data-filled]){display:none !important}
 @keyframes seBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 @keyframes hrFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
 @keyframes hrShadow{0%,100%{transform:scaleX(1);opacity:1}50%{transform:scaleX(.88);opacity:.72}}
-section:not([data-in]) *,footer:not([data-in]) *{animation-play-state:paused !important}
-section:not([data-in]) iframe{visibility:hidden}
+/* R10: only the home page pauses off-screen sections (it marks them with data-in); detail pages and the Control Room never did */
+[data-home-root] section:not([data-in]) *,[data-home-root] footer:not([data-in]) *{animation-play-state:paused !important}
+[data-home-root] section:not([data-in]) iframe{visibility:hidden}
 @media (max-width:1499px){[data-bus]{display:none !important}}
 @keyframes busFlow{from{background-position:0 0}to{background-position:0 240px}}
 @keyframes bootRing{from{stroke-dashoffset:302}to{stroke-dashoffset:0}}
 @keyframes bootOut{0%,80%{opacity:1}100%{opacity:0;visibility:hidden}}
 @keyframes bootLogo{0%{opacity:0;transform:scale(.85)}40%,100%{opacity:1;transform:none}}
 @keyframes magIn{from{transform:none}}
-section:not([data-in]) [data-replay],section:not([data-in]) [data-replay] *{animation:none !important}
+[data-home-root] section:not([data-in]) [data-replay],[data-home-root] section:not([data-in]) [data-replay] *{animation:none !important}
 [data-reveal]{transition:opacity .7s cubic-bezier(.2,.8,.2,1),transform .7s cubic-bezier(.2,.8,.2,1)}
-section:not([data-in]) [data-reveal]{opacity:0;transform:translateY(28px)}
+[data-home-root] section:not([data-in]) [data-reveal]{opacity:0;transform:translateY(28px)}
 @keyframes seWob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-8px) rotate(3deg)}}
 @keyframes seCardSweep{0%,70%{transform:translateX(-200%) skewX(-18deg)}100%{transform:translateX(450%) skewX(-18deg)}}
 @keyframes rpLbl0{0%,0%{opacity:0;transform:translateY(6px)}2%,19%{opacity:1;transform:none}20%,100%{opacity:0}}

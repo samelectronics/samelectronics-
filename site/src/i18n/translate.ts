@@ -174,11 +174,7 @@ function translateCore(s: string): string | null {
  * codes "SE-4544") in left-to-right order: wrap each run in Unicode isolates (LRI … PDI) so the bidi
  * algorithm cannot reorder its parts.
  */
-const NUM_RUN = /[A-Z]{1,4}-\d[\dA-Z-]*|\+?\d[\d,.:]*(?:(?:\s?[–\-\/×:]\s?|\s)\+?\d[\d,.:]*)+/g;
-export function isolateNumbers(s: string): string {
-  if (!/\d/.test(s)) return s;
-  return s.replace(NUM_RUN, (m) => '\u2066' + m + '\u2069');
-}
+export { isolateNumbers } from './isolate';
 
 /** True when a text still contains Latin words that should have been translated (used by the coverage check). */
 export function looksUntranslated(s: string): boolean {

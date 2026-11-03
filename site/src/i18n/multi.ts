@@ -4,7 +4,7 @@
  *   exact text → patterns (hours, stock, prices, "<model> <part>") → pieces joined by " · " → unchanged.
  * Brand and model names, codes and AED prices stay as they are, the way shops write them.
  */
-import { PARTS } from './ar';
+import { PARTS } from './ar-parts';
 
 export type Other = 'es' | 'fr' | 'fa' | 'ru' | 'hi' | 'ur' | 'tl' | 'ml' | 'ca' | 'de' | 'it' | 'pt' | 'ro' | 'zh' | 'gl' | 'eu' | 'sw' | 'am' | 'ha' | 'yo' | 'om' | 'ig';
 const norm = (s: string) => s.replace(/\s+/g, ' ').trim();

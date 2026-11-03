@@ -31,7 +31,7 @@ import '@/styles/shop.css';
 import '@/styles/account.css';
 import '@/styles/ask.css';
 import '@/styles/info.css';
-import '@/styles/staff.css';
+import '@/styles/staff-door.css';
 import '@/styles/studio.css';
 import '@/styles/system.css';
 import '@/styles/phone.css';

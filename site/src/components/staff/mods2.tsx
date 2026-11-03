@@ -4,6 +4,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { backend, type Application, type Message, type Order, type Staff, type Thread, type User } from '@/lib/backend';
 import { data, products, repairFee } from '@/lib/catalog';
 import { Panel, Kpi, Table, Drawer, Badge, csv, can, money, when, useSetting } from './kit';
+import { JobExtras, statusText, type JobX } from './jobcard';
 import SendToDaftra, { DaftraBadge } from './SendToDaftra';
 
 type P = { me: Staff; go: (m: string) => void };
@@ -70,14 +71,14 @@ export function Orders({ me }: P) {
 }
 
 // ── Repairs board ────────────────────────────────────────────────────────────────────────────────────────────
-type Job = { id: string; no: string; name: string; phone: string; model: string; problem: string; part?: string; partPrice: number; fee: number; adjust: number; tech?: string; status: string; note?: string; at: number };
+type Job = JobX & { id: string; no: string; name: string; phone: string; model: string; problem: string; part?: string; partPrice: number; fee: number; adjust: number; tech?: string; status: string; note?: string; at: number };
 const COLS = ['Booked', 'Diagnosing', 'Waiting for part', 'Repairing', 'Testing', 'Ready', 'Collected'];
 export function Repairs({ me }: P) {
   const [jobs, setJobs] = useSetting<Job[]>('repair-jobs', []), [staff, setStaff] = useState<Staff[]>([]), [ed, setEd] = useState<Job | null>(null);
   useEffect(() => { backend.staffList().then(setStaff); }, []);
   const D = data(), R = ((D as unknown as { repairs?: { id: string; name: string; cat: string | null }[] })?.repairs) || [];
   const blank = (): Job => ({ id: 'j' + Date.now(), no: 'R-' + String(1000 + jobs.length + 1), name: '', phone: '', model: '', problem: R[0]?.name || '', partPrice: 0, fee: 25, adjust: 0, status: 'Booked', at: Date.now() });
-  const save = async (j: Job) => { const next = jobs.some((x) => x.id === j.id) ? jobs.map((x) => (x.id === j.id ? j : x)) : [j, ...jobs]; await setJobs(next, j.no + ' · ' + j.status); setEd(null); };
+  const save = async (j: Job) => { if (j.part && !j.stockOut && COLS.indexOf(j.status) >= COLS.indexOf('Repairing')) { const r = await backend.stockMove(j.part, -1, 'Repair ' + j.no, j.no); if (r.ok) j = { ...j, stockOut: true }; } const next = jobs.some((x) => x.id === j.id) ? jobs.map((x) => (x.id === j.id ? j : x)) : [j, ...jobs]; await setJobs(next, j.no + ' · ' + j.status); setEd(null); };
   const move = (j: Job, dir: number) => { const i = COLS.indexOf(j.status) + dir; if (i < 0 || i >= COLS.length) return; save({ ...j, status: COLS[i] }); };
   return (
     <div className="cr-grid">
@@ -121,8 +122,9 @@ function JobForm({ j, R, staff, onSave }: { j: Job; R: { id: string; name: strin
         <label>Technician<select className="cr-in" value={f.tech || ''} onChange={(e) => setF({ ...f, tech: e.target.value })}><option value="">—</option>{staff.map((s) => <option key={s.id}>{s.name}</option>)}</select></label>
         <label>Status<select className="cr-in" value={f.status} onChange={(e) => setF({ ...f, status: e.target.value })}>{COLS.map((c) => <option key={c}>{c}</option>)}</select></label>
       </div>
+      <JobExtras f={f} set={setF} />
       <label>Notes<textarea className="cr-in" rows={3} value={f.note || ''} onChange={(e) => setF({ ...f, note: e.target.value })} placeholder="Passcode, condition, what the customer said…" /></label>
-      <div className="cr-acts"><button type="submit" className="cr-btn y">Save job</button><a className="cr-btn wa" href={'https://wa.me/' + f.phone.replace(/\D/g, '') + '?text=' + encodeURIComponent('Hi ' + f.name.split(' ')[0] + ', your ' + f.model + ' repair (' + f.no + ') is: ' + f.status + '. Sam Electronics')} target="_blank" rel="noopener noreferrer">Send status on WhatsApp</a></div>
+      <div className="cr-acts"><button type="submit" className="cr-btn y">Save job</button><a className="cr-btn wa" href={'https://wa.me/' + f.phone.replace(/\D/g, '') + '?text=' + encodeURIComponent(statusText(f.status, f))} target="_blank" rel="noopener noreferrer">Send status on WhatsApp</a></div>
     </form>
   );
 }

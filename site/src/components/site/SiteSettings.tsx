@@ -6,9 +6,15 @@ import React, { useEffect, useState } from 'react';
 import { backend, live } from '@/lib/backend';
 import { siteRaw } from '@/lib/catalog';
 
-const KEYS = ['repair-fees', 'delivery', 'shop-banners', 'announcement', 'samsoom', 'text-overrides', 'business'];
+const KEYS = ['repair-fees', 'delivery', 'shop-banners', 'announcement', 'samsoom', 'text-overrides', 'business', 'coupons', 'faq', 'hidden-sections'];
 type Ann = { on: boolean; text: string; href: string; tone: string };
 
+// R10 4.15: sections the team switched off in the visual editor (matched by their section label)
+function applyHidden() {
+  const h = siteRaw<string[]>('hidden-sections', []) || []; let el = document.getElementById('se-hidden-css') as HTMLStyleElement | null;
+  if (!el) { el = document.createElement('style'); el.id = 'se-hidden-css'; document.head.appendChild(el); }
+  el.textContent = h.map((l) => `[data-screen-label="${l.replace(/"/g, '')}"]{display:none!important}`).join('');
+}
 function applyTexts() {
   const list = siteRaw<[string, string][]>('text-overrides', []).filter(([a, b]) => a && b && a !== b);
   if (!list.length || (document.documentElement.lang && document.documentElement.lang !== 'en')) return;
@@ -21,13 +27,13 @@ export default function SiteSettings() {
   const [ann, setAnn] = useState<Ann | null>(null), [hide, setHide] = useState(false);
   useEffect(() => {
     const read = () => setAnn(siteRaw<Ann | null>('announcement', null));
-    read();
-    if (live) Promise.all(KEYS.map((k) => backend.setting(k, null).then((v) => { try { if (v != null) localStorage.setItem('se-set-' + k, JSON.stringify(v)); } catch { /* */ } }))).then(() => { read(); window.dispatchEvent(new CustomEvent('se:site-settings')); });
+    read(); applyHidden();
+    if (live) Promise.all(KEYS.map((k) => backend.setting(k, null).then((v) => { try { if (v != null) localStorage.setItem('se-set-' + k, JSON.stringify(v)); } catch { /* */ } }))).then(() => { read(); applyHidden(); window.dispatchEvent(new CustomEvent('se:site-settings')); });
     try { setHide(sessionStorage.getItem('se-ann-x') === '1'); } catch { /* */ }
     let t = 0; const mo = new MutationObserver(() => { window.clearTimeout(t); t = window.setTimeout(applyTexts, 250); });
     mo.observe(document.body, { childList: true, subtree: true, characterData: true }); applyTexts();
-    window.addEventListener('se:db', read);
-    return () => { mo.disconnect(); window.removeEventListener('se:db', read); };
+    const onDb = () => { read(); applyHidden(); applyTexts(); }; window.addEventListener('se:db', onDb);
+    return () => { mo.disconnect(); window.removeEventListener('se:db', onDb); };
   }, []);
   if (!ann || !ann.on || hide || !ann.text) return null;
   return (

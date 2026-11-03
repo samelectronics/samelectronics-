@@ -9,7 +9,12 @@
  *   (clocks, reels, chat). Switching back restores the original English exactly.
  * - Canvas engines and the map iframe use window.seI18n.t(text) and listen for the 'se:lang' event.
  */
-import { isolateNumbers, tr } from './translate';
+import { isolateNumbers } from './isolate';
+// R10: the Arabic translator (and its big dictionary) is its own file: fetched at once for Arabic visitors, otherwise
+// preloaded in the background with Spanish and French once the page is idle. The other 20 languages load when picked.
+let TR: ((s: string) => string) | null = null;
+let arP: Promise<void> | null = null;
+const loadAr = () => (arP = arP || import('./translate').then((m) => { TR = m.tr; }));
 import { LANG_KEY } from './prepaint';
 import { hasDict, loadDict, trOther, type Other } from './multi';
 
@@ -48,7 +53,11 @@ export const LANGS: { id: Lang; name: string; en: string }[] = [
 export const isRtl = (l: string) => l === 'ar' || l === 'fa' || l === 'ur';
 const valid = (l: unknown): l is Lang => typeof l === 'string' && LANGS.some((x) => x.id === l);
 /** The current language's translation of one English text. */
-const trCur = (en: string) => (lang === 'en' ? en : lang === 'ar' ? tr(en) : trOther(lang as Other, en));
+const trRaw = (en: string) => (lang === 'en' ? en : lang === 'ar' ? (TR ? TR(en) : en) : trOther(lang as Other, en));
+// R10: remember every translation handed out, so text a component rendered already translated (T() during render)
+// can still be switched back to its English when the visitor changes language
+const REV = new Map<string, string>();
+const trCur = (en: string) => { const out = trRaw(en); if (out !== en && REV.size < 20000) REV.set(out, en); return out; };
 const KEY = LANG_KEY;
 const ATTRS = ['placeholder', 'title', 'aria-label', 'alt'] as const;
 /** Subtrees never translated: brand wordmarks, code, inputs the visitor types into. */
@@ -74,7 +83,7 @@ function doText(n: Text) {
   const cur = n.data;
   const o = textOrig.get(n);
   // React (or a logic class) changed the text since we translated it: that new text is the English.
-  const en = o && cur === o.out ? o.en : cur;
+  const en = o && cur === o.out ? o.en : REV.get(cur) ?? REV.get(cur.replace(/[\u2066\u2069]/g, '')) ?? cur;
   const out = lang === 'en' ? en : isRtl(lang) ? isolateNumbers(trCur(en)) : trCur(en);
   if (out !== cur) n.data = out;
   if (lang !== 'en') textOrig.set(n, { en, out });
@@ -88,7 +97,7 @@ function doAttrs(el: Element) {
     const cur = el.getAttribute(a);
     if (cur == null) continue;
     const o = m?.get(a);
-    const en = o && cur === o.out ? o.en : cur;
+    const en = o && cur === o.out ? o.en : REV.get(cur) ?? cur;
     const out = trCur(en);
     if (out !== cur) el.setAttribute(a, out);
     if (lang !== 'en') {
@@ -146,6 +155,11 @@ export function loadArabicFonts() {
 export function setLang(next: Lang) {
   if (next === lang || !valid(next)) return;
   // Spanish, French and Persian load their dictionary first, then switch (a few kB, once)
+  if (next === 'ar' && !TR) {
+    window.dispatchEvent(new CustomEvent('se:lang-loading', { detail: next }));
+    loadAr().then(() => { window.dispatchEvent(new CustomEvent('se:lang-loading', { detail: null })); apply(next); }).catch(() => window.dispatchEvent(new CustomEvent('se:lang-loading', { detail: null })));
+    return;
+  }
   if (next !== 'en' && next !== 'ar') {
     // R9: languages not yet on this device show "Switching language…" while their words arrive
     if (!hasDict(next as Other)) window.dispatchEvent(new CustomEvent('se:lang-loading', { detail: next }));
@@ -209,11 +223,10 @@ export function installI18n() {
   patchCanvasText();
   if (isRtl(lang)) loadArabicFonts();
   // R9: Spanish and French are ready before anyone asks (fetched once the page is idle); the rest load when picked
-  const pre = () => { (['es', 'fr'] as Other[]).forEach((l) => { loadDict(l).catch(() => {}); }); };
+  const pre = () => { loadAr().catch(() => {}); (['es', 'fr'] as Other[]).forEach((l) => { loadDict(l).catch(() => {}); }); };
   if (document.readyState === 'complete') setTimeout(pre, 2500); else window.addEventListener('load', () => setTimeout(pre, 2500), { once: true });
   if (lang === 'ar') {
-    startObserver();
-    if (document.body) walk(document.body);
+    loadAr().then(() => { if (lang !== 'ar') return; startObserver(); if (document.body) walk(document.body); window.dispatchEvent(new CustomEvent('se:lang', { detail: 'ar' })); });
   } else if (lang !== 'en') {
     const l = lang;
     loadDict(l as Other).then(() => { if (lang !== l) return; startObserver(); if (document.body) walk(document.body); window.dispatchEvent(new CustomEvent('se:lang', { detail: l })); });
