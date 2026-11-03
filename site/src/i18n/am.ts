@@ -1151,5 +1151,14 @@ const DICT: Record<string, string> = {
   "Only customers who bought this part can review it, after we confirm their order.": "ይህን ክፍል የገዙ ደንበኞች ብቻ ትዕዛዛቸው ከተረጋገጠ በኋላ አስተያየት መስጠት ይችላሉ።",
   "Prices and stock shown are test data while the shop is set up": "ሱቁ እስኪዘጋጅ ድረስ ዋጋና ክምችት የሙከራ ዳታ ናቸው",
   "Quick filters": "ፈጣን ማጣሪያዎች",
+  "Samsoom’s voice": "የሳምሱም ድምፅ",
+  "Want a quick walk around?": "አጭር ጉብኝት?",
+  "Yes, show me": "አዎ፣ አሳየኝ",
+  "Unmute Samsoom": "የሳምሱምን ድምፅ ክፈት",
+  "Mute Samsoom": "ሳምሱምን ዝጋ",
+  "Language and settings": "ቋንቋ እና ቅንብሮች",
+  "Your notifications": "ማሳወቂያዎችዎ",
+  "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "አንድ ቁልፍ፣ ሁለት ግማሽ፦ ሉሉ የጣቢያውን ቋንቋ ይቀይራል፣ ማርሹ ቅንብሮችን ይከፍታል፦ ድምጾች፣ ድምፄ፣ ምንዛሬ እና ግላዊነት።",
+  "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "ትዕዛዞች፣ ጥገናዎች፣ የክምችት ማንቂያዎች እና ቅናሾች እዚህ ይደርሳሉ። ለስላሳ ድምፅ ይሰማሉ፣ የአሳሹ ትር ቢጫ ነጥብ ያሳያል።",
 };
 export default DICT;

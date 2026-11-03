@@ -556,7 +556,7 @@ function render(v: Vals) {
                       </>
                     ) : null}
                     {'\n              '}
-                    <div
+                    <div data-sm-mouth=""
                       style={{
                         position: 'absolute',
                         left: '0',

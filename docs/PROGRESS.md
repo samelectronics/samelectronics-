@@ -2881,3 +2881,32 @@ still one file, because splitting it risks the home page's cascade order.
 **Still open.** Automatic e-mail, WhatsApp and SMS need outside providers (shown in Reminders). The Daftra dashboard was
 not tested against live Daftra (staff test it). The Control Room is in English and Arabic only. Older strings from
 before R10 (about 750) are still English in the newer languages.
+
+## R11 (3 Nov 2026) · owner's review round
+
+**Speed.** Teardown: fast scrolling no longer fast-forwards and jumps; steps queue and play quicker, the end glides out
+(no jump), and the film's own scrolls no longer count as a "jump" that made it skip on every later visit. Its floor
+reflection (copying the 3D canvas every frame, by far the most expensive work on the page) is redrawn every third frame
+and skipped without a graphics chip. Side circuits repaint only their own layer, without filters. Detail pages pause
+off-screen animations. Lights behind the teardown are brighter and drift faster again.
+
+**Site-wide.** Notification chime and a blinking yellow dot on the browser tab. Page-tour offer is a toast under the nav.
+WhatsApp buttons in the site's colours. Brand yellow only (small titles on light backgrounds are graphite chips with
+yellow text). One FAQ style everywhere. Moving glow line on every section's top edge. Deals removed from the menu. Split
+language / settings icon. Scrollbars fitted inside rounded boxes. Full settings in My Bench › Profile & settings.
+
+**Samsoom.** Web Audio voice (cute / deeper / robot) that babbles while he talks, mouth in time, mute in the bubble;
+tour sounds (pulse and rising tone, whoosh per step, sparkle and jump at the end). Tour explains language/settings and
+notifications. Sounds follow Sounds on/off + volume, never in the Control Room, only after the first interaction.
+
+**Pages.** Every page title is a cinematic stage (studio wall, beam, drifting yellow lights, floor, the page's own giant
+outlined word); no circuits and no side pictures. Home textures and pointer shine on every section. Shop: same stage,
+pinned search, device picker that scrolls, premium product toolbar. Brands: journey removed, spaced brand cards, clean
+manufacturer cards, four grade cards with battery-cell meters, brand-only grade colours. Repair: content that appears
+after picking a model now always shows. Worldwide: four region cards with their own dot maps, opening every country.
+Story: "Syria Tell → Sam Electronics" sign scene. Membership / Wholesale / My Bench: animated step-by-step tutorials
+with the site's own screens. Sign-in on the cinematic stage. Contact without the big Samsoom. Finale glow no longer cut,
+circuits closer. Offer cards: ghost reflection removed. Showcase arrows fixed. Team badges swing.
+
+**Accounts.** Sign-up e-mails link back to the live site (not localhost); 60s resend timer. Owner invite added for the
+owner's son. Remaining in Supabase settings (owner): Site URL, the code in the e-mail template, own sender (SMTP).

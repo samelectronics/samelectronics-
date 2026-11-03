@@ -10,6 +10,7 @@ import React, { useEffect, useState } from 'react';
 import { prefs, setPrefs, type Currency, type Pack, type Prefs } from '@/lib/prefs';
 import { play, type Snd } from '@/lib/sound';
 import { installBrandSelects } from '@/lib/brandSelect';
+import SoundSettings from './SoundSettings';
 import SitePromo from './SitePromo';
 import LiveSam from '@/components/samsoom/LiveSam';
 
@@ -94,9 +95,7 @@ export default function SiteControls() {
             {panel === 'all' ? (
               <section>
                 <h4>{T('Sound effects')}</h4>
-                <div className="sc2-row"><span>{T('Sounds')}</span><Switch on={snd.on} label={T('Sounds')} set={(v) => setPrefs({ sound: { ...snd, on: v } })} /></div>
-                <div className="sc2-row"><span>{T('Volume')}</span><input type="range" min={0} max={1} step={0.05} value={snd.vol} onChange={(e) => setPrefs({ sound: { ...snd, vol: +e.target.value } })} onPointerUp={() => play('click', true)} aria-label={T('Volume')} /></div>
-                <div className="sc2-row"><span>{T('Sound pack')}</span><span className="sc2-seg">{(['classic', 'soft', 'studio'] as Pack[]).map((k) => <button key={k} type="button" className={snd.pack === k ? 'on' : ''} data-no-sound="" onClick={() => { setPrefs({ sound: { ...snd, pack: k } }); window.setTimeout(() => play('success', true), 30); }}>{T(k[0].toUpperCase() + k.slice(1))}</button>)}</span></div>
+                <SoundSettings currency={false} />
               </section>
             ) : null}
             <section>
@@ -119,6 +118,7 @@ export default function SiteControls() {
                 <h4>{T('Price')}</h4>
                 <div className="sc2-row"><span>AED · USD · EUR</span><span className="sc2-seg">{(['AED', 'USD', 'EUR'] as Currency[]).map((c) => <button key={c} type="button" className={p.currency === c ? 'on' : ''} onClick={() => { setPrefs({ currency: c }); window.dispatchEvent(new CustomEvent('se:catalog')); }}>{c}</button>)}</span></div>
                 <div className="sc2-row"><span>{T('Language')}</span><button type="button" className="st-btn st-dark sc2-small" onClick={() => { setPanel(false); (window as unknown as { seTour?: () => void }).seTour?.(); }}>{T('Change language')}</button></div>
+                <div className="sc2-row"><span>{T('More settings')}</span><a className="st-btn st-go sc2-small" href="/account#profile">{T('Open My Bench')}</a></div>
                 {inst ? <div className="sc2-row"><span>{T('Install the app')}</span><button type="button" className="st-btn st-go sc2-small" onClick={() => { inst.prompt(); setInst(null); }}>{T('Install')}</button></div> : null}
               </section>
             ) : null}

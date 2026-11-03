@@ -1107,5 +1107,14 @@ const DICT: Record<string, string> = {
   "Only customers who bought this part can review it, after we confirm their order.": "Ang mga customer lang na bumili ng piyesang ito ang makakapag-review, pagkatapos makumpirma ang order.",
   "Prices and stock shown are test data while the shop is set up": "Test data ang presyo at stock habang inihahanda ang shop",
   "Quick filters": "Mabilis na filter",
+  "Samsoom’s voice": "Boses ni Samsoom",
+  "Want a quick walk around?": "Mabilis na paglibot?",
+  "Yes, show me": "Oo, ipakita mo",
+  "Unmute Samsoom": "I-unmute si Samsoom",
+  "Mute Samsoom": "I-mute si Samsoom",
+  "Language and settings": "Wika at settings",
+  "Your notifications": "Mga abiso mo",
+  "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "Isang button, dalawang kalahati: ang globo ang nagpapalit ng wika ng buong site, ang gear ang nagbubukas ng settings: tunog, boses ko, pera at privacy.",
+  "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "Dito dumarating ang mga order, repair, alerto sa stock at alok. May maririnig kang mahinang tunog, at may dilaw na tuldok sa tab ng browser.",
 };
 export default DICT;

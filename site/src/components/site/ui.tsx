@@ -2,15 +2,24 @@
 // P1 · Small building blocks shared by every page: the page hero (a compact home hero), stars, the "rise in" effect,
 // translation of attribute text, and the add-to-cart flight.
 import React, { useEffect, useRef } from 'react';
-import CircuitField from '@/components/home/CircuitField';
 
 /** text that is not a DOM text node (placeholders, aria-labels, titles) goes through the dictionary here */
 export const T = (s: string) => (typeof window !== 'undefined' && window.seI18n ? window.seI18n.t(s) : s);
 
-export function PageHero({ eb, title, accent, sub, crumb, children, right, seed = 11 }: { eb: string; title: string; accent?: string; sub?: string; crumb?: [string, string?][]; children?: React.ReactNode; right?: React.ReactNode; seed?: number }) {
+// R11 (owner): every page title is a cinematic stage, like the teardown: a graphite studio, a soft light falling from above,
+// blurred yellow lights drifting slowly in the distance, a reflective floor, fine grain, and one huge outlined word that
+// belongs to that page only (a light sweeps across it). No circuits and no side pictures: the title area is only the title.
+const WORD: Record<string, [string, number]> = { shop: ['PARTS', 0], deals: ['DEALS', 0], repair: ['REPAIR', 1], wholesale: ['TRADE', 2], worldwide: ['WORLD', 3], story: ['2003', 1], membership: ['CIRCUIT', 3], brands: ['BRANDS', 2], contact: ['HELLO', 0], account: ['BENCH', 1], faq: ['ANSWERS', 2], legal: ['TERMS', 3], cookies: ['COOKIES', 0], payments: ['PAY', 1], cart: ['CART', 2], samsoom: ['SAMSOOM', 3] };
+export function PageHero({ eb, title, accent, sub, crumb, children }: { eb: string; title: string; accent?: string; sub?: string; crumb?: [string, string?][]; children?: React.ReactNode; right?: React.ReactNode; seed?: number }) {
+  const key = typeof location !== 'undefined' ? location.pathname.split('/')[1] || 'home' : 'home', [word, v] = WORD[key] || [(eb.split(/[·&]/)[0] || '').trim().split(' ')[0], 0];
   return (
-    <section className="sp-hero" data-tone="dark">
-      <CircuitField tone="dark" seed={seed} />
+    <section className="sp-hero sp-cine" data-tone="dark" data-v={v}>
+      <div className="cine-bg" aria-hidden="true">
+        <i className="cine-wall" /><i className="cine-beam" />
+        <span className="cine-bokeh">{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} style={{ ['--k' as string]: k } as React.CSSProperties} />)}</span>
+        <i className="cine-floor" /><i className="cine-grain" />
+      </div>
+      <span className="cine-word" aria-hidden="true" data-no-i18n="">{word}</span>
       <div className="sp-wrap sp-hero-in">
         <div className="sp-hero-l">
           {crumb ? (
@@ -24,7 +33,6 @@ export function PageHero({ eb, title, accent, sub, crumb, children, right, seed 
           {sub ? <p className="sp-p">{sub}</p> : null}
           {children}
         </div>
-        {right ? <div className="sp-hero-r">{right}</div> : null}
       </div>
     </section>
   );
@@ -47,7 +55,11 @@ export function useRise(dep?: unknown) {
     const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
     const scan = () => document.querySelectorAll('[data-rise]:not(.in)').forEach((el) => io.observe(el));
     scan(); const t = window.setTimeout(scan, 400);
-    return () => { io.disconnect(); window.clearTimeout(t); };
+    // R11: anything that appears later (a model's repairs, a filtered list) fades in too, never stays invisible
+    let q = 0; const mo = new MutationObserver(() => { if (!q) q = window.setTimeout(() => { q = 0; scan(); }, 60); });
+    mo.observe(document.body, { childList: true, subtree: true });
+    const safety = window.setInterval(() => document.querySelectorAll('[data-rise]:not(.in)').forEach((el) => { const r = el.getBoundingClientRect(); if (r.top < innerHeight && r.bottom > 0) el.classList.add('in'); }), 1500);
+    return () => { io.disconnect(); mo.disconnect(); window.clearTimeout(t); window.clearTimeout(q); window.clearInterval(safety); };
   }, [dep]);
 }
 

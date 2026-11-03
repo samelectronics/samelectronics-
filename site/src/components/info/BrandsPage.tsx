@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { data, products } from '@/lib/catalog';
 import { PageHero, T, useRise } from '@/components/site/ui';
 import SEBrandLogo from '@/components/dc/SEBrandLogo';
-import { SupplyChain, MakerBoard, GradeCompare } from './BrandsBits';
+import { MakerBoard, GradeCompare } from './BrandsBits';
 
 const MAKER: Record<string, [string, string, string]> = {
   'service-pack': ['The brand’s own part', 'Original parts in the brand’s service packaging, the same ones authorised service centres fit. Exact colors, brightness, touch and battery life.', 'Original · 6 months'],
@@ -33,11 +33,6 @@ export default function BrandsPage() {
         sub={T('The phones we stock parts for, and the factories behind every part, so you always know exactly what you are buying.')}>
         <div className="sp-acts"><a className="sp-btn" href="#brands">{T('Phone brands')}</a><a className="sp-btn ghost" href="#makers">{T('Part manufacturers')}</a></div>
       </PageHero>
-
-      <section className="sp-sec d bc-sec"><div className="sp-wrap">
-        <div className="sp-head" data-rise><div><span className="sp-eb">{T('FROM FACTORY TO YOUR BENCH')}</span><h2 className="sp-h2" style={{ color: '#fff' }}>{T('Every part has a journey.')}</h2></div></div>
-        <SupplyChain />
-      </div></section>
 
       <section id="brands" className="sp-sec w"><div className="sp-wrap">
         <div className="sp-head" data-rise><div><span className="sp-eb">{T('PHONE BRANDS')}</span><h2 className="sp-h2">{D.brands.length} {T('brands,')} {D.models.length} {T('models')}</h2></div></div>

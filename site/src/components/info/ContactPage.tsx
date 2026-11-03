@@ -51,8 +51,7 @@ export default function ContactPage() {
   return (
     <>
       <PageHero eb={T('CONTACT & HELP')} title={T('Talk to us.')} accent={T('Any way you like.')} crumb={[[T('Contact')]]} seed={97}
-        sub={T('Call, WhatsApp, e-mail, chat here with the team, or come to the counter in Deira. We answer in Arabic, English and more.')}
-        right={<LiveSam circle size={170} mood="idle" play="wave" />} />
+        sub={T('Call, WhatsApp, e-mail, chat here with the team, or come to the counter in Deira. We answer in Arabic, English and more.')} />
 
       <section className="sp-sec w"><div className="sp-wrap">
         <Switchboard c={C} />

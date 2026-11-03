@@ -1151,5 +1151,14 @@ const DICT: Record<string, string> = {
   "Only customers who bought this part can review it, after we confirm their order.": "ഈ പാർട്ട് വാങ്ങിയ ഉപഭോക്താക്കൾക്ക് മാത്രമേ ഓർഡർ സ്ഥിരീകരിച്ചശേഷം റിവ്യൂ ചെയ്യാനാകൂ.",
   "Prices and stock shown are test data while the shop is set up": "ഷോപ്പ് തയ്യാറാകുന്നതുവരെ വിലയും സ്റ്റോക്കും ടെസ്റ്റ് ഡാറ്റയാണ്",
   "Quick filters": "വേഗത്തിലുള്ള ഫിൽട്ടറുകൾ",
+  "Samsoom’s voice": "സാംസൂമിന്റെ ശബ്ദം",
+  "Want a quick walk around?": "ഒരു ചെറിയ ടൂർ?",
+  "Yes, show me": "അതെ, കാണിക്കൂ",
+  "Unmute Samsoom": "സാംസൂമിനെ അൺമ്യൂട്ട് ചെയ്യുക",
+  "Mute Samsoom": "സാംസൂമിനെ മ്യൂട്ട് ചെയ്യുക",
+  "Language and settings": "ഭാഷയും ക്രമീകരണങ്ങളും",
+  "Your notifications": "നിങ്ങളുടെ അറിയിപ്പുകൾ",
+  "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "ഒരു ബട്ടൺ, രണ്ട് പകുതി: ഗ്ലോബ് സൈറ്റിന്റെ മുഴുവൻ ഭാഷ മാറ്റുന്നു, ഗിയർ ക്രമീകരണങ്ങൾ തുറക്കുന്നു: ശബ്ദങ്ങൾ, എന്റെ ശബ്ദം, കറൻസി, സ്വകാര്യത.",
+  "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "ഓർഡറുകൾ, റിപ്പയറുകൾ, സ്റ്റോക്ക് അലേർട്ടുകൾ, ഓഫറുകൾ ഇവിടെ വരും. മൃദുവായ ഒരു ശബ്ദം കേൾക്കും, ബ്രൗസർ ടാബിൽ മഞ്ഞ കുത്ത് കാണാം.",
 };
 export default DICT;

@@ -102,7 +102,7 @@
 .rv { position: relative; overflow: hidden; padding: 96px 0 80px; background: radial-gradient(60% 70% at 18% 20%, rgba(247, 192, 50, .35), rgba(247, 192, 50, 0) 70%), #FFFFFF; color: #26282B; }
 .rv-in { width: 1272px; max-width: calc(100% - 48px); margin: 0 auto; }
 .rv-head { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }
-.rv-eb { font: 600 12px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #8A6A1E; }
+.rv-eb { font: 600 12px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #F7C032; }
 .rv-h { max-width: 560px; margin: 14px 0 0; font: 700 46px/1.06 'Space Grotesk', sans-serif; letter-spacing: -.035em; }
 .rv-g { display: flex; align-items: center; gap: 18px; padding: 20px 22px; border-radius: 22px; background: #fff; box-shadow: 0 20px 44px -20px rgba(90, 60, 10, .35), inset 0 0 0 1px rgba(26, 27, 29, .06); }
 .rv-g-logo { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 16px; background: #F2F3F4; }

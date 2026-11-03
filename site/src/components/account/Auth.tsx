@@ -11,7 +11,8 @@ const strength = (p: string) => [p.length >= 8, /[A-Z]/.test(p) && /[a-z]/.test(
 export default function Auth({ onDone }: { onDone: () => void }) {
   const [mode, setMode] = useState<Mode>(() => (typeof location !== 'undefined' && new URLSearchParams(location.search).get('signup') ? 'up' : 'in')), [busy, setBusy] = useState(false), [err, setErr] = useState(''), [info, setInfo] = useState('');
   const [f, setF] = useState({ name: '', email: '', password: '', phone: '', kind: 'customer' as 'customer' | 'wholesale', agree: false, code: '' });
-  const [demo, setDemo] = useState(''), [show, setShow] = useState(false);
+  const [demo, setDemo] = useState(''), [show, setShow] = useState(false), [wait, setWait] = useState(0);
+  React.useEffect(() => { if (wait <= 0) return; const t = setTimeout(() => setWait(wait - 1), 1000); return () => clearTimeout(t); }, [wait]);
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement>) => setF({ ...f, [k]: e.target.type === 'checkbox' ? e.target.checked : e.target.value });
   const go = (m: Mode) => { setMode(m); setErr(''); setInfo(''); };
   const run = async (fn: () => Promise<void>) => { setBusy(true); setErr(''); try { await fn(); } finally { setBusy(false); } };
@@ -23,7 +24,7 @@ export default function Auth({ onDone }: { onDone: () => void }) {
       if (!f.agree) return setErr(T('Please accept the terms and privacy policy.'));
       const r = await backend.signUp({ email: f.email, password: f.password, name: f.name, phone: f.phone, kind: f.kind });
       if (!r.ok) return setErr(T(r.error));
-      setDemo(r.data.demoCode || ''); go('code'); setInfo(T('We sent a 6-digit code to') + ' ' + f.email + '.');
+      setDemo(r.data.demoCode || ''); go('code'); setWait(60); setInfo(T('We sent a 6-digit code to') + ' ' + f.email + '.');
     } else if (mode === 'code') { const r = await backend.verify(f.email, f.code); if (r.ok) onDone(); else setErr(T(r.error)); }
     else { const r = await backend.resetPassword(f.email); if (r.ok) { setInfo(T('If an account exists for that e-mail, a reset link is on its way.')); if (r.data.demoCode) setDemo(r.data.demoCode); } else setErr(T(r.error)); }
   }); };
@@ -67,7 +68,8 @@ export default function Auth({ onDone }: { onDone: () => void }) {
           <>
             <p className="sp-p">{T('Enter the 6-digit code we e-mailed to')} <b>{f.email}</b>.</p>
             <input className="au-code" required inputMode="numeric" pattern="[0-9]{6}" maxLength={6} value={f.code} onChange={set('code')} placeholder="••••••" autoComplete="one-time-code" />
-            <button type="button" className="shop-clear" onClick={() => run(async () => { const r = await backend.resend(f.email); if (r.ok) { setInfo(T('A new code is on its way.')); if (r.data.demoCode) setDemo(r.data.demoCode); } })}>{T('Send a new code')}</button>
+            <button type="button" className="shop-clear" disabled={wait > 0 || busy} onClick={() => run(async () => { const r = await backend.resend(f.email); if (r.ok) { setInfo(T('A new code is on its way.')); setWait(60); if (r.data.demoCode) setDemo(r.data.demoCode); } else { setErr(T(r.error)); const m = /(\d+)\s*seconds?/.exec(r.error); setWait(m ? +m[1] : 60); } })}>{wait > 0 ? T('Send a new code in') + ' ' + wait + 's' : T('Send a new code')}</button>
+            <small className="au-hint">{T('No e-mail? Check spam. You can also press the link in the e-mail instead of typing the code.')}</small>
           </>
         ) : null}
         {demo ? <div className="sp-note">{T('Demo: your code is')} <b style={{ fontFamily: 'JetBrains Mono, monospace', letterSpacing: '.2em' }}>{demo}</b> · {T('real e-mails start when the database is connected.')}</div> : null}

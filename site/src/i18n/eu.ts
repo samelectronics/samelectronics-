@@ -1149,5 +1149,14 @@ const DICT: Record<string, string> = {
   "Only customers who bought this part can review it, after we confirm their order.": "Pieza hau erosi duten bezeroek bakarrik balora dezakete, eskaera berretsi ondoren.",
   "Prices and stock shown are test data while the shop is set up": "Prezioak eta stocka proba-datuak dira denda prestatzen den bitartean",
   "Quick filters": "Iragazki azkarrak",
+  "Samsoom’s voice": "Samsoomen ahotsa",
+  "Want a quick walk around?": "Bisita azkar bat?",
+  "Yes, show me": "Bai, erakutsi",
+  "Unmute Samsoom": "Samsoom aktibatu",
+  "Mute Samsoom": "Samsoom isildu",
+  "Language and settings": "Hizkuntza eta ezarpenak",
+  "Your notifications": "Zure jakinarazpenak",
+  "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "Botoi bat, bi erdi: munduak gune osoaren hizkuntza aldatzen du, engranajeak ezarpenak irekitzen ditu: soinuak, nire ahotsa, txanpona eta pribatutasuna.",
+  "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "Eskaerak, konponketak, stock abisuak eta eskaintzak hemen iristen dira. Soinu leun bat entzungo duzu, eta nabigatzailearen fitxak puntu hori bat erakutsiko du.",
 };
 export default DICT;

@@ -4,7 +4,7 @@
 // silent in the Control Room and when the visitor asked the system for reduced motion.
 import { prefs } from './prefs';
 
-export type Snd = 'click' | 'add' | 'next' | 'back' | 'skip' | 'toggle' | 'open' | 'close' | 'error' | 'success' | 'send';
+export type Snd = 'click' | 'add' | 'next' | 'back' | 'skip' | 'toggle' | 'open' | 'close' | 'error' | 'success' | 'send' | 'notify';
 type Note = [freq: number, at: number, dur: number, type?: OscillatorType, glideTo?: number];
 // R10 B8: one family built around the bell's "open" sound the owner likes: soft, low, rich. Sine and triangle only,
 // everything under ~900 Hz and through a gentle low-pass, so nothing squeaks. Open and close keep their heavier sweep.
@@ -20,6 +20,8 @@ const SHAPES: Record<Snd, Note[]> = {
   success: [[440, 0, 0.08, 'sine'], [554, 0.08, 0.08, 'sine'], [659, 0.16, 0.18, 'sine']],
   send: [[300, 0, 0.16, 'sine', 720]],
   error: [[196, 0, 0.12, 'triangle'], [165, 0.13, 0.16, 'triangle']],
+  // R11: a notification: two soft bell tones in the same family as 'open'
+  notify: [[587, 0, 0.16, 'sine'], [880, 0.12, 0.32, 'sine'], [294, 0, 0.3, 'sine']],
 };
 // Classic: the set as written. Soft: lower and quieter. Studio: a touch brighter and warmer, with a short room echo.
 const PACK = { classic: { mul: 1, gain: 1, type: null as OscillatorType | null, lp: 1800, echo: 0 }, soft: { mul: 0.8, gain: 0.65, type: 'sine' as OscillatorType, lp: 1200, echo: 0 }, studio: { mul: 1.12, gain: 0.85, type: null as OscillatorType | null, lp: 2400, echo: 0.18 } };

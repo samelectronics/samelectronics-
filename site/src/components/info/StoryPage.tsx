@@ -6,8 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { data } from '@/lib/catalog';
 import { backend } from '@/lib/backend';
 import { PageHero, T, useRise } from '@/components/site/ui';
-import LiveSam from '@/components/samsoom/LiveSam';
-import { BootLog, Branches } from './StoryBits';
+import { BootLog, Branches, BrandShift } from './StoryBits';
 
 const JOBS: [string, string, string, string][] = [
   ['Repair technician', 'Full time · Deira', 'Board-level and module repairs on phones and tablets. Two years’ bench experience.', 'Repairs'],
@@ -26,7 +25,11 @@ export default function StoryPage() {
     <>
       <PageHero eb={T('OUR STORY · SINCE 2003')} title={T('Twenty years.')} accent={T('One counter.')} crumb={[[T('Our story')]]} seed={91}
         sub={T('From a small shop called Syria Tell in Deira to Sam Electronics: the same family, the same street, the same promise. Quality, warranty, price.')}
-        right={<div className="st-year"><b>2003</b><small>{T('Deira, Dubai')}</small><LiveSam circle size={90} mood="idle" play="wave" /></div>} />
+      />
+      <section className="sp-sec d bs-sec"><div className="sp-wrap">
+        <div className="sp-head" data-rise><div><span className="sp-eb">{T('2003 → TODAY')}</span><h2 className="sp-h2" style={{ color: '#fff' }}>{T('One sign came down. Another lit up.')}</h2><p className="sp-p">{T('Scroll to watch twenty years pass on our own street.')}</p></div></div>
+        <BrandShift />
+      </div></section>
 
       <section className="sp-sec w"><div className="sp-wrap story-about">
         <div data-rise><span className="sp-eb">{T('WHO WE ARE')}</span><h2 className="sp-h2">{T('A parts shop that grew up with the smartphone.')}</h2></div>

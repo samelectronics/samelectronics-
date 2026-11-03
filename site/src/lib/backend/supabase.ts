@@ -24,11 +24,11 @@ export const supabase: Backend = {
   mode: 'supabase',
   async me() { const id = await uid(); if (!id) return null; const { data } = await db().from('profiles').select('*').eq('id', id).single(); return data ? toUser(data) : null; },
   async signUp(i) {
-    const { error } = await db().auth.signUp({ email: i.email.trim(), password: i.password, options: { data: { name: i.name, phone: i.phone || null, kind: i.kind || 'customer' } } });
+    const { error } = await db().auth.signUp({ email: i.email.trim(), password: i.password, options: { emailRedirectTo: location.origin + '/account?verified=1', data: { name: i.name, phone: i.phone || null, kind: i.kind || 'customer' } } });
     return error ? no(error.message) : ok({ needsVerify: true });
   },
   async verify(email, code) { const { error } = await db().auth.verifyOtp({ email: email.trim(), token: code.trim(), type: 'signup' }); if (error) return no(error.message); const u = await this.me(); return u ? ok(u) : no('Signed in, but the profile is missing.'); },
-  async resend(email) { const { error } = await db().auth.resend({ type: 'signup', email: email.trim() }); return error ? no(error.message) : ok({}); },
+  async resend(email) { const { error } = await db().auth.resend({ type: 'signup', email: email.trim(), options: { emailRedirectTo: location.origin + '/account?verified=1' } }); return error ? no(error.message) : ok({}); },
   async signIn(email, password) { const { error } = await db().auth.signInWithPassword({ email: email.trim(), password }); if (error) return no(error.message); const u = await this.me(); return u ? ok(u) : no('Profile missing.'); },
   async signOut() { await db().auth.signOut(); },
   async resetPassword(email) { const { error } = await db().auth.resetPasswordForEmail(email.trim(), { redirectTo: location.origin + '/account?reset=1' }); return error ? no(error.message) : ok({}); },

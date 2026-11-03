@@ -6,8 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { data, waLink } from '@/lib/catalog';
 import { backend } from '@/lib/backend';
 import { PageHero, T, useRise, CountUp } from '@/components/site/ui';
-import DotGlobe from '@/components/home/DotGlobe';
-import { RouteMap, ShipWays } from './WorldBits';
+import { RouteMap, ShipWays, RegionCards } from './WorldBits';
 
 const ISO: Record<string, string> = { UAE: 'AE', UK: 'GB', Spain: 'ES', Romania: 'RO', 'Türkiye': 'TR', Azerbaijan: 'AZ', Syria: 'SY', Lebanon: 'LB', Iraq: 'IQ', Iran: 'IR', Tunisia: 'TN', Algeria: 'DZ', Morocco: 'MA', Libya: 'LY', Egypt: 'EG', 'Saudi Arabia': 'SA', Oman: 'OM', Yemen: 'YE', Sudan: 'SD', Eritrea: 'ER', Ethiopia: 'ET', Nigeria: 'NG', Uganda: 'UG', Russia: 'RU', Ukraine: 'UA', India: 'IN', Pakistan: 'PK', 'Burkina Faso': 'BF', Senegal: 'SN' };
 const flag = (n: string) => (ISO[n] ? String.fromCodePoint(...[...ISO[n]].map((c) => 0x1f1a5 + c.charCodeAt(0))) : '🌍');
@@ -25,7 +24,7 @@ export default function WorldwidePage() {
     <>
       <PageHero eb={T('WORLDWIDE SHIPPING')} title={T('From Deira')} accent={T('to your door.')} crumb={[[T('Worldwide')]]} seed={83}
         sub={T('We ship parts every week to repair shops and traders across the Middle East, Africa, Europe and Asia: door to door with our partners, or with your own shipper.')}
-        right={<div className="ww-globe"><DotGlobe size={300} speed={5} /></div>}>
+        >
         <div className="sp-acts"><a className="sp-btn" href="#quote">{T('Get a shipping quote')}</a><a className="sp-btn ghost" href="#countries">{T('Where we ship')}</a></div>
       </PageHero>
 
@@ -45,16 +44,8 @@ export default function WorldwidePage() {
 
       <section id="countries" className="sp-sec g"><div className="sp-wrap">
         <div className="sp-head" data-rise><div><span className="sp-eb">{T('WHERE WE SHIP')}</span><h2 className="sp-h2">{T('Our customers, around the world.')}</h2></div>
-          <div className="ww-tabs">{REG.map(([k, l]) => <button key={k} type="button" className={'sp-chip' + (reg === k ? ' on' : '')} onClick={() => setReg(k)}>{T(l)} <small>{k === 'all' ? C.length : C.filter((c) => c.region === k).length}</small></button>)}</div>
         </div>
-        <div className="ww-grid">
-          {shown.map((c, i) => (
-            <div key={c.name} className="ww-c" style={{ animationDelay: (i % 12) * 0.04 + 's' }}>
-              <span className="ww-photo"><span className="ww-flag">{flag(c.name)}</span><span className="ww-ph">{T('Photo coming')}</span><i /></span>
-              <b>{T(c.name)}</b><small>{T(REG.find((r) => r[0] === c.region)?.[1] || '')}</small>
-            </div>
-          ))}
-        </div>
+        <RegionCards countries={C} flag={flag} />
         <small className="sp-muted">{T('Not on the list? We ship almost anywhere: ask us.')}</small>
       </div></section>
 

@@ -1150,5 +1150,14 @@ const DICT: Record<string, string> = {
   "Only customers who bought this part can review it, after we confirm their order.": "Maamiltoota kutaa kana bitan qofatu ajajni isaanii erga mirkanaa'ee booda yaada kennuu danda'a.",
   "Prices and stock shown are test data while the shop is set up": "Gatii fi kuusaan hanga suuqiin qophaa'utti daataa qorannoo ti",
   "Quick filters": "Calalii saffisaa",
+  "Samsoom’s voice": "Sagalee Samsoom",
+  "Want a quick walk around?": "Daawwannaa gabaabaa?",
+  "Yes, show me": "Eeyyee, natti agarsiisi",
+  "Unmute Samsoom": "Sagalee Samsoom bani",
+  "Mute Samsoom": "Sagalee Samsoom cufi",
+  "Language and settings": "Afaan fi qindaa'ina",
+  "Your notifications": "Beeksisoota keessan",
+  "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "Qabduu tokko, walakkaa lama: lafti afaan marsariitii guutuu jijjiira, gaariin qindaa'ina bana: sagalee, sagalee koo, maallaqa fi dhuunfaa.",
+  "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "Ajajni, suphaan, akeekkachiisni kuusaa fi dhiyeessiin asitti dhufu. Sagalee laafaa ni dhageessu, gabateen barbaadaa tuqaa keelloo agarsiisa.",
 };
 export default DICT;

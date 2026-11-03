@@ -4,7 +4,7 @@
 .vs::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 100% at 50% 40%, rgba(150, 95, 0, 0) 55%, rgba(150, 95, 0, .2)); }
 .vs-in { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 28px; width: 1272px; max-width: calc(100% - 48px); margin: 0 auto; padding: 96px 0; align-items: start; }
 .vs-eb { font: 600 12px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #F7C032; }
-.vs-eb.dk { color: #8A6A1E; }
+.vs-eb.dk { color: #F7C032; }
 .vs-con { padding: 28px; border-radius: 26px; background: linear-gradient(180deg, rgba(46, 48, 51, .97), rgba(30, 31, 34, .97)); color: #fff; box-shadow: 0 40px 80px -36px rgba(90, 55, 0, .8), inset 0 1px 0 rgba(255, 255, 255, .12), inset 0 0 0 1px rgba(255, 255, 255, .06); }
 .vs-h { margin: 12px 0 0; font: 700 36px/1.08 'Space Grotesk', sans-serif; letter-spacing: -.03em; }
 .vs-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 20px; }

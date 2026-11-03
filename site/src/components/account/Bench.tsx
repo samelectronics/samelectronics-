@@ -10,6 +10,7 @@ import { T } from '@/components/site/ui';
 import LiveSam from '@/components/samsoom/LiveSam';
 import MemberCard, { LEVELS } from './MemberCard';
 import NotesPanel from './NotesPanel';
+import SoundSettings from '@/components/site/SoundSettings';
 import { Repairs, WarrantyCheck, TradeTools } from './BenchTools';
 
 const NAV: [string, string, string][] = [
@@ -54,7 +55,7 @@ export default function Bench({ me, refresh }: { me: User; refresh: () => void }
           <>
             <div className="bn-hello">
               <div><span className="sp-eb">{T('MY BENCH')}</span><h1 className="sp-h2">{T('Hello')}, {first}.</h1><p className="sp-p">{T('Everything you keep with us, in one place.')}</p></div>
-              <LiveSam circle size={110} mood="idle" play="wave" />
+              <span className="bn-hello-av">{me.avatar ? <img src={me.avatar} alt="" /> : (me.name || me.email).slice(0, 1).toUpperCase()}</span>
             </div>
             <div className="bn-stats">
               {([['Orders', orders.length, 'orders'], ['In your cart', st.cart.reduce((a, l) => a + l.qty, 0), 'saved'], ['Stars', st.favs.length, 'saved'], ['Points', pts, 'points']] as [string, number, string][]).map(([l, n, s]) => <button key={l} type="button" className="bn-stat" onClick={() => go(s)}><b>{n.toLocaleString('en-US')}</b><small>{T(l)}</small></button>)}
@@ -97,7 +98,13 @@ export default function Bench({ me, refresh }: { me: User; refresh: () => void }
             <NotesPanel />
           </Sec>
         ) : (
-          <Profile me={me} refresh={refresh} />
+          <><Profile me={me} refresh={refresh} />
+          <Sec t="Site settings" d="Sounds, Samsoom’s voice, currency, language and privacy on this device.">
+            <div className="sp-card"><SoundSettings />
+              <div className="ss-row"><span><b>{T('Language')}</b></span><button type="button" className="sp-btn sm dark" onClick={() => (window as unknown as { seTour?: () => void }).seTour?.()}>{T('Change language')}</button></div>
+              <div className="ss-row"><span><b>{T('Privacy choices')}</b></span><button type="button" className="sp-btn sm" onClick={() => window.dispatchEvent(new CustomEvent('se:settings', { detail: 'privacy' }))}>{T('Open')}</button></div>
+            </div>
+          </Sec></>
         )}
       </div>
     </div>

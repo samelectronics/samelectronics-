@@ -1,7 +1,7 @@
 'use client';
 // R9 · the bell in the nav: the visitor's notifications (orders, repairs, stock alerts, offers). Styles: dc-base.css (.nb-*).
 import React, { useEffect, useRef, useState } from 'react';
-import { notes, markRead, clearNotes, seedNotes, type Note } from '@/lib/notes';
+import { notes, markRead, clearNotes, seedNotes, tabDot, type Note } from '@/lib/notes';
 
 const T = (s: string) => (typeof window !== 'undefined' && window.seI18n ? window.seI18n.t(s) : s);
 const ICON: Record<Note['kind'], string> = { order: 'M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18', repair: 'M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4z', stock: 'M21 8 12 3 3 8v8l9 5 9-5zM3 8l9 5 9-5M12 13v8', offer: 'M20 12 12 20 4 12V4h8zM8 8h.01', info: 'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 16v-4M12 8h.01' };
@@ -17,6 +17,7 @@ export default function NoteBell() {
     return () => { window.removeEventListener('se:notes', r); window.removeEventListener('se:lang', r); document.removeEventListener('pointerdown', out); document.removeEventListener('keydown', esc); };
   }, []);
   const unread = l.filter((x) => !x.read).length;
+  useEffect(() => { tabDot(unread); }, [unread]);
   return (
     <span ref={box} className={'nb' + (open ? ' open' : '')}>
       <button type="button" className="se-ico nb-btn" title={T('Notifications')} aria-label={T('Notifications')} aria-expanded={open} data-sound={open ? 'close' : 'open'} onClick={() => setOpen(!open)}>

@@ -2854,5 +2854,14 @@ const DICT: Record<string, string> = {
   "Only customers who bought this part can review it, after we confirm their order.": "Оценить деталь могут только купившие её клиенты после подтверждения заказа.",
   "Prices and stock shown are test data while the shop is set up": "Цены и наличие — тестовые данные, пока магазин настраивается",
   "Quick filters": "Быстрые фильтры",
+  "Samsoom’s voice": "Голос Самсума",
+  "Want a quick walk around?": "Быстрая экскурсия?",
+  "Yes, show me": "Да, покажи",
+  "Unmute Samsoom": "Включить звук Самсума",
+  "Mute Samsoom": "Выключить звук Самсума",
+  "Language and settings": "Язык и настройки",
+  "Your notifications": "Ваши уведомления",
+  "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "Одна кнопка, две половинки: глобус меняет язык всего сайта, шестерёнка открывает настройки: звуки, мой голос, валюту и конфиденциальность.",
+  "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "Сюда приходят заказы, ремонты, уведомления о наличии и предложения. Вы услышите мягкий сигнал, а на вкладке браузера появится жёлтая точка.",
 };
 export default DICT;

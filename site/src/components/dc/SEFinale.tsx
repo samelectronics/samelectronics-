@@ -8,7 +8,8 @@ import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SEFinale.logic.js';
 import FinaleRoom from './FinaleRoom';
 
-const LEFT = ['M0 120 H230 L270 90 H470 L540 160 H607', 'M0 230 H170 L210 200 H600', 'M0 330 H250 L290 290 H470 L540 240 H607'];
+// R11 (owner): the traces run closer together into the ring
+const LEFT = ['M0 158 H250 L282 136 H468 L522 170 H608', 'M0 214 H190 L214 200 H602', 'M0 266 H240 L272 290 H468 L522 230 H608'];
 const mirror = (d: string) => d.replace(/([MHL]) ?(\d+)/g, (m, c, x) => c + (1440 - Number(x)));
 const RIGHT = LEFT.map(mirror);
 const WORDS = ['QUALITY', 'WARRANTY', 'PRICE'];
@@ -25,7 +26,7 @@ function render(v: Vals) {
           <defs>
             <radialGradient id="fzHalo"><stop offset="0" stopColor="#F7C032" stopOpacity=".28" /><stop offset="1" stopColor="#F7C032" stopOpacity="0" /></radialGradient>
           </defs>
-          <circle cx="720" cy="200" r="230" fill="url(#fzHalo)" className="fz-halo" />
+          <circle cx="720" cy="200" r="196" fill="url(#fzHalo)" className="fz-halo" />
           {[...LEFT, ...RIGHT].map((d, i) => (
             <g key={i} style={{ ['--i' as string]: i % 3 } as React.CSSProperties}>
               <path d={d} className="base" />

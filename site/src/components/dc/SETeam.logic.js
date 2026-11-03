@@ -15,7 +15,7 @@ export const ROLES = [
   { code: 'T04', role: 'Finance & Checkout', mono: 'FC', bio: 'Handles invoices, payments and trade accounts.', help: ['Invoices and receipts', 'Payment options', 'Trade account questions'] },
   { code: 'T05', role: 'Founder', mono: 'TA', founder: true, bio: '', help: ['Partnerships and distribution', 'Large trade agreements', 'Feedback on our service'] },
 ];
-const K = 9, C = 1.15, G = 2600, KY = 900, CY = 26; // pendulum (1/s²), damping, gravity and lanyard stretch (px)
+const K = 7, C = .55, G = 2600, KY = 900, CY = 26; // pendulum (1/s²), damping, gravity and lanyard stretch (px)
 const CYCLE = 12, STOP = 0.42, MOVE = 0.26; // the order ticket: every 12s, a short stop at each badge
 
 class Component extends DCLogic {
@@ -23,7 +23,7 @@ class Component extends DCLogic {
   state = { seen: false, flip: -1 };
   componentDidMount() {
     this.offRp = onReplay(() => this.secRef.current, () => { this.b.forEach((b) => { b.th = 0; b.w = 0; b.y = -720; b.vy = 0; b.dropAt = Infinity; b.landed = false; b.pth = null; }); this.t0 = null; this._g = null; this.setState({ seen: false, flip: -1 }); }); // 14 Oct · H-G2: replay from the start
-    this.b = ROLES.map((_, i) => ({ th: 0, w: 0, y: -720, vy: 0, dropAt: Infinity, ph: i * 1.7 + 0.4, om: 2.3 + i * 0.17, amp: 3.2 + (i % 3) * 0.8 }));
+    this.b = ROLES.map((_, i) => ({ th: 0, w: 0, y: -720, vy: 0, dropAt: Infinity, ph: i * 1.7 + 0.4, om: 2.3 + i * 0.17, amp: 9 + (i % 3) * 2.5 }));
     this.mx = null; this.alive = true; this.t = 0; let last = performance.now();
     this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) this.start(); }, { threshold: 0.2 });
     setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
@@ -44,7 +44,7 @@ class Component extends DCLogic {
       if (!b.landed && b.y > 0) { b.landed = true; b.w += (i % 2 ? -1 : 1) * 26; } // lands with a swing
       // pendulum: idle forcing (each its own rhythm) + the mouse nudging it away
       let F = b.amp * Math.sin(b.om * t + b.ph);
-      if (this.mx != null && this.cx) { const dx = this.cx[i] - this.mx, ady = Math.abs(this.my - 300); if (Math.abs(dx) < 170 && ady < 280) F += -Math.sign(dx || 1) * (170 - Math.abs(dx)) * 0.55; }
+      if (this.mx != null && this.cx) { const dx = this.cx[i] - this.mx, ady = Math.abs(this.my - 300); if (Math.abs(dx) < 170 && ady < 280) F += -Math.sign(dx || 1) * (170 - Math.abs(dx)) * 0.9; }
       b.w += (-K * b.th - C * b.w + F) * dt; b.th += b.w * dt;
     });
   }
@@ -55,7 +55,7 @@ class Component extends DCLogic {
     this.b.forEach((b, i) => { const g = this._g[i], h = this._h[i]; if (!g) return; const y = this.t < b.dropAt ? -720 : b.y;
       if (b.pth != null && Math.abs(b.th - b.pth) < 0.06 && Math.abs(y - b.py) < 0.3) return; b.pth = b.th; b.py = y; // sub-pixel changes are skipped (fewer repaints at idle)
       // R10: never swing into a neighbour (laptops have less room between badges): the drawn angle is limited by the free gap
-      const room = this._room || (this._room = (() => { const sl = R.querySelector('.tm-slot'), cd = R.querySelector('.tm-card'); if (!sl || !cd) return 6; const gap = Math.max(4, sl.getBoundingClientRect().width - cd.getBoundingClientRect().width); return Math.max(1.5, Math.min(8, Math.atan(gap / 2 / 470) * 180 / Math.PI)); })());
+      const room = this._room || (this._room = (() => { const sl = R.querySelector('.tm-slot'), cd = R.querySelector('.tm-card'); if (!sl || !cd) return 6; const gap = Math.max(4, sl.getBoundingClientRect().width - cd.getBoundingClientRect().width); return Math.max(5, Math.min(12, Math.atan(gap / 2 / 260) * 180 / Math.PI)); /* R11 (owner): they swing visibly */ })());
       const th = Math.max(-room, Math.min(room, b.th));
       g.style.transform = 'translateY(' + y.toFixed(1) + 'px) rotate(' + th.toFixed(2) + 'deg)';
       if (h) h.style.transform = 'translateX(' + (b.th * 9 + Math.sin(this.t * 0.7 + i) * 8).toFixed(1) + '%)'; });

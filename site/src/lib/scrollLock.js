@@ -12,7 +12,10 @@ const KEYS = new Set(['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End
 export function lockScroll() {
   if (typeof document === 'undefined') return () => {};
   if (n++ === 0) {
-    const block = (e) => e.preventDefault();
+    // R11 (owner): any scrollable box inside the open layer (product view, device list, dropdowns) scrolls with the wheel
+    // and touch; only the page behind stays still
+    const canScroll = (e) => { const dy = e.type === 'wheel' ? e.deltaY : 0; for (let el = e.target; el && el !== document.body && el !== document.documentElement; el = el.parentElement) { if (!(el instanceof Element)) continue; const oy = getComputedStyle(el).overflowY; if ((oy === 'auto' || oy === 'scroll') && el.scrollHeight > el.clientHeight + 1) { if (e.type !== 'wheel') return true; if ((dy < 0 && el.scrollTop > 0) || (dy > 0 && el.scrollTop + el.clientHeight < el.scrollHeight - 1)) return true; } } return false; };
+    const block = (e) => { if (!canScroll(e)) e.preventDefault(); };
     const key = (e) => { const t = e.target; if (KEYS.has(e.key) && !(t && (t.closest && t.closest('input,textarea,select,[contenteditable]')))) e.preventDefault(); };
     window.addEventListener('wheel', block, { passive: false }); window.addEventListener('touchmove', block, { passive: false }); window.addEventListener('keydown', key);
     off = () => { window.removeEventListener('wheel', block); window.removeEventListener('touchmove', block); window.removeEventListener('keydown', key); };

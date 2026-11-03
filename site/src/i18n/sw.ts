@@ -1150,5 +1150,14 @@ const DICT: Record<string, string> = {
   "Only customers who bought this part can review it, after we confirm their order.": "Wateja walionunua kipuri hiki pekee ndio wanaweza kukitathmini, baada ya agizo lao kuthibitishwa.",
   "Prices and stock shown are test data while the shop is set up": "Bei na hisa ni data ya majaribio wakati duka linaandaliwa",
   "Quick filters": "Vichujio vya haraka",
+  "Samsoom’s voice": "Sauti ya Samsoom",
+  "Want a quick walk around?": "Matembezi mafupi?",
+  "Yes, show me": "Ndiyo, nionyeshe",
+  "Unmute Samsoom": "Washa sauti ya Samsoom",
+  "Mute Samsoom": "Zima sauti ya Samsoom",
+  "Language and settings": "Lugha na mipangilio",
+  "Your notifications": "Arifa zako",
+  "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "Kitufe kimoja, nusu mbili: dunia hubadilisha lugha ya tovuti yote, gia hufungua mipangilio: sauti, sauti yangu, sarafu na faragha.",
+  "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "Oda, matengenezo, arifa za stoo na ofa hufika hapa. Utasikia mlio laini, na kichupo cha kivinjari kitaonyesha nukta ya njano.",
 };
 export default DICT;

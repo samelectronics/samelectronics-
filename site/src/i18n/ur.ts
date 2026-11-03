@@ -2854,5 +2854,14 @@ const DICT: Record<string, string> = {
   "Only customers who bought this part can review it, after we confirm their order.": "صرف وہ صارفین جنہوں نے یہ پارٹ خریدا، آرڈر کی تصدیق کے بعد ریویو دے سکتے ہیں۔",
   "Prices and stock shown are test data while the shop is set up": "دکان تیار ہونے تک دکھائی گئی قیمتیں اور اسٹاک ٹیسٹ ڈیٹا ہیں",
   "Quick filters": "فوری فلٹرز",
+  "Samsoom’s voice": "سیمسوم کی آواز",
+  "Want a quick walk around?": "ایک مختصر سیر؟",
+  "Yes, show me": "جی ہاں، دکھائیں",
+  "Unmute Samsoom": "سیمسوم کی آواز کھولیں",
+  "Mute Samsoom": "سیمسوم کو خاموش کریں",
+  "Language and settings": "زبان اور سیٹنگز",
+  "Your notifications": "آپ کی اطلاعات",
+  "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "ایک بٹن، دو حصے: گلوب پوری سائٹ کی زبان بدلتا ہے، گیئر سیٹنگز کھولتا ہے: آوازیں، میری آواز، کرنسی اور پرائیویسی۔",
+  "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "آرڈر، مرمت، اسٹاک الرٹ اور آفرز یہاں آتے ہیں۔ آپ کو ہلکی گھنٹی سنائی دے گی، اور براؤزر ٹیب پر پیلا نقطہ نظر آئے گا۔",
 };
 export default DICT;

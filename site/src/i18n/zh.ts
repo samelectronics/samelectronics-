@@ -1151,5 +1151,14 @@ const DICT: Record<string, string> = {
   "Only customers who bought this part can review it, after we confirm their order.": "只有购买过此配件的顾客，在订单确认后才能评价。",
   "Prices and stock shown are test data while the shop is set up": "显示的价格和库存为商店筹备期间的测试数据",
   "Quick filters": "快捷筛选",
+  "Samsoom’s voice": "Samsoom 的声音",
+  "Want a quick walk around?": "快速参观一下？",
+  "Yes, show me": "好的，带我看看",
+  "Unmute Samsoom": "取消 Samsoom 静音",
+  "Mute Samsoom": "Samsoom 静音",
+  "Language and settings": "语言和设置",
+  "Your notifications": "你的通知",
+  "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "一个按钮，两半：地球切换整个网站的语言，齿轮打开设置：声音、我的声音、货币和隐私。",
+  "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "订单、维修、库存提醒和优惠都会出现在这里。你会听到轻柔的提示音，浏览器标签上会出现黄点。",
 };
 export default DICT;

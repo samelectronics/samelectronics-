@@ -1150,5 +1150,14 @@ const DICT: Record<string, string> = {
   "Only customers who bought this part can review it, after we confirm their order.": "Àwọn oníbàárà tó ra apá yìí nìkan ló lè ṣe àyẹ̀wò lẹ́yìn tí a bá jẹ́rìí sí ọ̀dà wọn.",
   "Prices and stock shown are test data while the shop is set up": "Iye àti ọjà jẹ́ dátà ìdánwò títí ṣọ́ọ̀bù yóò fi ṣetán",
   "Quick filters": "Àlẹ̀mọ́ kíákíá",
+  "Samsoom’s voice": "Ohùn Samsoom",
+  "Want a quick walk around?": "Ìrìn kúkúrú?",
+  "Yes, show me": "Bẹ́ẹ̀ni, fi hàn mí",
+  "Unmute Samsoom": "Tan ohùn Samsoom",
+  "Mute Samsoom": "Pa ohùn Samsoom",
+  "Language and settings": "Èdè àti ètò",
+  "Your notifications": "Àwọn ìfitónilétí rẹ",
+  "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "Bọ́tìnì kan, ìdajì méjì: àgbáyé ń yí èdè gbogbo ojú-òpó padà, gíà ń ṣí ètò: ohùn, ohùn mi, owó àti ìpamọ́.",
+  "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "Ọ̀dà, àtúnṣe, ìkìlọ̀ ọjà àti ìfilọ̀ ń dé síbí. Wàá gbọ́ ohùn rírọ̀, táàbù aṣàwákiri yóò sì fi àmì ofeefee hàn.",
 };
 export default DICT;

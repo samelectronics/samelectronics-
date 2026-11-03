@@ -3,8 +3,8 @@
 // per card (who it is for, how to get it, every level with its requirement and perks), how points work, the card in
 // My Bench, and questions. Levels, thresholds and perks are the owner's R8 list; numbers are samples until confirmed.
 import React from 'react';
-import SECircuit from '@/components/dc/SECircuit';
 import { useMe } from '@/lib/backend';
+import HowTo from '@/components/site/HowTo';
 import { PageHero, T, useRise } from '@/components/site/ui';
 import MemberCard, { type CardKind } from '@/components/account/MemberCard';
 import { waLink } from '@/lib/catalog';
@@ -36,7 +36,15 @@ export default function Membership() {
         <div className="sp-acts">{me ? <a className="sp-btn" href="/account#points">{me.card ? T('See my card') : T('Connect my card')}</a> : <a className="sp-btn" href="/account">{T('Register online')}</a>}<a className="sp-btn ghost" href="#cards">{T('Compare the cards')}</a></div>
       </PageHero>
 
-      <div className="ms-builder"><SECircuit /></div>
+      {/* R11 (owner): a real walk-through of joining, instead of the home page's cards again */}
+      <section className="sp-sec w"><div className="sp-wrap">
+        <HowTo eb="HOW TO JOIN" title="Your card in three screens." steps={[
+          { t: 'Create your account', d: 'My Bench › Create account: your name, e-mail and a password.', url: '/account?signup=1', screen: { h: 'Create your account', rows: ['Full name', 'E-mail', 'Password'], btn: 'Create account' } },
+          { t: 'Confirm your e-mail', d: 'Type the 6-digit code we e-mail you. Your Sam Circuit card is ready.', url: '/account', screen: { h: 'Confirm your e-mail', rows: ['6-digit code'], btn: 'Confirm', done: 'Card ready' } },
+          { t: 'Shop and charge it', d: 'Your first purchase activates it. AED 1 = 1 point, on parts and repairs.', url: '/account#points', screen: { h: 'Points & card', card: 'circuit', btn: 'See my card' } },
+          { t: 'Trade? Get the Grid card', d: 'Apply with your trade licence; management activates it by hand.', url: '/wholesale#apply', screen: { h: 'Apply for a trade account', card: 'grid', rows: ['Trade licence number'], btn: 'Send application' } },
+        ]} />
+      </div></section>
 
       <div id="cards">
         {CARDS.map((c, ci) => (

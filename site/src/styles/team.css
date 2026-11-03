@@ -20,7 +20,7 @@
 .tm-ticket { position: absolute; left: 0; top: 4px; z-index: 4; width: 0; opacity: 0; }
 .tm-ticket .hook { position: absolute; left: -7px; top: 0; width: 14px; height: 24px; border-radius: 7px 7px 2px 2px; background: linear-gradient(90deg, #8E9196, #F2F3F4, #8E9196); box-shadow: 0 2px 4px rgba(0, 0, 0, .4); }
 .tm-ticket .paper { position: absolute; left: -38px; top: 22px; display: flex; flex-direction: column; align-items: center; gap: 1px; width: 76px; padding: 6px 0 8px; background: #FBFAF6; color: #26282B; border-radius: 2px; box-shadow: 0 6px 12px rgba(0, 0, 0, .45); transform: rotate(-3deg); clip-path: polygon(0 0, 100% 0, 100% 88%, 92% 100%, 84% 88%, 76% 100%, 68% 88%, 60% 100%, 52% 88%, 44% 100%, 36% 88%, 28% 100%, 20% 88%, 12% 100%, 4% 88%, 0 100%); }
-.tm-ticket .paper b { font: 700 9px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #8A6A1E; }
+.tm-ticket .paper b { font: 700 9px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #F7C032; }
 .tm-ticket .paper span { font: 700 14px 'JetBrains Mono', monospace; }
 .tm-row { position: absolute; left: 0; right: 0; top: 16px; display: grid; grid-template-columns: repeat(5, 1fr); }
 .tm-slot { display: flex; justify-content: center; }
@@ -50,7 +50,7 @@
 .tm-band span { font: 700 9px 'JetBrains Mono', monospace; letter-spacing: .12em; }
 .tm-photo { display: grid; place-items: center; width: 108px; height: 108px; margin-top: 16px; border-radius: 14px; background: radial-gradient(circle at 40% 30%, #4A4D52, #26282B 70%); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08), 0 6px 12px -4px rgba(0, 0, 0, .35); }
 .tm-photo span { font: 700 42px 'Space Grotesk', sans-serif; letter-spacing: -.02em; color: #F7C032; }
-.tm-code { margin-top: 12px; font: 700 11px 'JetBrains Mono', monospace; letter-spacing: .14em; color: #8A6A1E; }
+.tm-code { margin-top: 12px; font: 700 11px 'JetBrains Mono', monospace; letter-spacing: .14em; color: #F7C032; }
 .tm-face.front h3 { margin: 3px 0 0; font: 700 18px/1.15 'Space Grotesk', sans-serif; text-align: center; letter-spacing: -.01em; }
 .tm-name { margin-top: 4px; font: 600 13px Inter, sans-serif; color: #26282B; }
 .tm-yrs { margin-top: 2px; font: 500 11px 'JetBrains Mono', monospace; color: #5E6064; }

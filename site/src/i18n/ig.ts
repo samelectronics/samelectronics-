@@ -1149,5 +1149,14 @@ const DICT: Record<string, string> = {
   "Only customers who bought this part can review it, after we confirm their order.": "Naanị ndị ahịa zụrụ akụkụ a nwere ike inye nyocha mgbe akwadoro ịtụ ha.",
   "Prices and stock shown are test data while the shop is set up": "Ọnụahịa na ngwaahịa bụ data nnwale ruo mgbe ụlọ ahịa dị njikere",
   "Quick filters": "Nzacha ngwa ngwa",
+  "Samsoom’s voice": "Olu Samsoom",
+  "Want a quick walk around?": "Obere njem?",
+  "Yes, show me": "Ee, gosi m",
+  "Unmute Samsoom": "Mepee olu Samsoom",
+  "Mute Samsoom": "Mechie olu Samsoom",
+  "Language and settings": "Asụsụ na ntọala",
+  "Your notifications": "Ọkwa gị",
+  "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "Otu bọtịnụ, ọkara abụọ: ụwa na-agbanwe asụsụ saịtị niile, gia na-emepe ntọala: ụda, olu m, ego na nzuzo.",
+  "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "Ịtụ, ndozi, ọkwa ngwaahịa na onyinye na-abịa ebe a. Ị ga-anụ ụda dị nro, taabụ ihe nchọgharị ga-egosi ntụpọ odo.",
 };
 export default DICT;

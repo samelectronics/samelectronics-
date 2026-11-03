@@ -1,6 +1,6 @@
 /* P1 · Shared look for every page beyond the home: the same graphite + Signal Yellow language as the home hero (circuit
    traces, Space Grotesk titles, mono eyebrows, soft deep shadows, white/grey/yellow section rotation). */
-:root { --g9: #1F2023; --g8: #26282B; --g7: #2E3033; --g6: #3D3E3F; --g4: #6A6D72; --g3: #9DA1A6; --g2: #D5D7DA; --g1: #F2F3F4; --g0: #F8F8F6; --y: #F7C032; --y2: #FFD566; --yd: #C98A12; --ok: #2BB673; --bad: #E5484D; --r: 18px; }
+:root { --g9: #1F2023; --g8: #26282B; --g7: #2E3033; --g6: #3D3E3F; --g4: #6A6D72; --g3: #9DA1A6; --g2: #D5D7DA; --g1: #F2F3F4; --g0: #F8F8F6; --y: #F7C032; --y2: #FFD566; --yd: #26282B; --ok: #2BB673; --bad: #E5484D; --r: 18px; }
 html.se-page body { background: var(--g0); }
 .sp-boot { min-height: 100vh; background: var(--g8); }
 .sp-main { display: block; min-height: 60vh; padding-top: 74px; }
@@ -93,3 +93,23 @@ html.se-page body { background: var(--g0); }
 .se-ann a { color: inherit; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .se-ann b { margin-inline-start: 4px; }
 .se-ann button { position: absolute; inset-inline-end: 10px; width: 26px; height: 26px; border: 0; border-radius: 50%; background: rgba(0,0,0,.08); color: inherit; cursor: pointer; }
 .se-ann.t-y { background: #F7C032; color: #26282B; } .se-ann.t-d { background: #1F2023; color: #F7C032; } .se-ann.t-g { background: #2BB673; color: #fff; } .se-ann.t-r { background: #E5484D; color: #fff; }
+/* R11 (owner): WhatsApp buttons use the site's colours: graphite with the WhatsApp mark in brand yellow, never green */
+.sp-btn.wa, .pt-ask.wa, .cr-btn.wa { background: #26282B !important; color: #fff !important; box-shadow: inset 0 0 0 1.5px rgba(247, 192, 50, .55), 0 12px 28px -16px rgba(0, 0, 0, .55) !important; }
+.sp-btn.wa svg, .pt-ask.wa svg, .cr-btn.wa svg { color: #F7C032; fill: currentColor; }
+.sp-btn.wa:hover, .pt-ask.wa:hover { box-shadow: inset 0 0 0 1.5px #F7C032, 0 0 22px -4px rgba(247, 192, 50, .5) !important; }
+.sp-sec.d .sp-btn.wa, [data-tone='dark'] .sp-btn.wa { background: #F7C032 !important; color: #26282B !important; box-shadow: 0 12px 28px -14px rgba(247, 192, 50, .7) !important; }
+.sp-sec.d .sp-btn.wa svg, [data-tone='dark'] .sp-btn.wa svg { color: #26282B; }
+.ct-w.wa { background: #26282B !important; color: #fff !important; box-shadow: inset 0 0 0 1.5px rgba(247, 192, 50, .5); } .ct-w.wa small { color: #C5C7CA !important; } .ct-w.wa svg { color: #F7C032; }
+/* R11 (owner): only the brand yellow. Small titles on light backgrounds become a graphite chip with yellow text (readable,
+   and the yellow stays the real brand yellow); on dark and yellow backgrounds they stay plain */
+.sp-eb, .wh-eb, .st-eb, .rv-eb, .vs-eb.dk, .rp-gh { color: #F7C032; }
+.sp-sec.w .sp-eb, .sp-sec.g .sp-eb, .sp-sec:not(.d):not(.y) .sp-eb, .wh-eb, .st-eb, .rv-eb, .vs-eb.dk, .rp-gh { width: fit-content; padding: 6px 12px 5px; border-radius: 999px; background: #26282B; box-shadow: 0 6px 16px -10px rgba(0, 0, 0, .5); }
+.sp-hero .sp-eb, .sp-sec.d .sp-eb, [data-tone='dark'] .sp-eb { padding: 0; background: none; box-shadow: none; }
+.sp-sec.y .sp-eb { color: #26282B; padding: 0; background: none; box-shadow: none; }
+.shop-clear, .ss-h button, .pv-rate button, .cart-paylink, .pt-trade a, .au-links a, .au-links button { text-decoration: underline; text-decoration-color: #F7C032; text-decoration-thickness: 2px; text-underline-offset: 4px; }
+/* R11 (owner): every question list on the site has ONE look (the FAQ card): white card, thin edge, yellow edge when open */
+.fq-n { color: #26282B !important; display: inline-grid; place-items: center; min-width: 30px; height: 24px; border-radius: 8px; background: #F7C032; }
+.ms-q { margin-top: 10px; border: 0 !important; border-radius: 16px; background: #fff; box-shadow: inset 0 0 0 1px #E6E8EA; overflow: hidden; transition: box-shadow .25s; }
+.ms-q.open { box-shadow: inset 0 0 0 1.5px #F7C032, 0 14px 30px -18px rgba(0, 0, 0, .25); }
+.ms-q > button { padding: 16px 18px !important; } .ms-q b { font: 600 15px/1.35 Inter, sans-serif !important; }
+.ms-q > div > p { margin: 0; padding: 0 18px !important; font: 400 14.5px/1.6 Inter, sans-serif; color: #4A4D52; } .ms-q.open > div > p { padding-bottom: 16px !important; }

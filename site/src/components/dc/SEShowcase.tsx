@@ -108,7 +108,8 @@ function render(v: Vals) {
                 <b>{v.price}</b>
               </span>
             ) : null}
-            <div className="sc-nav">
+          </div>
+            <div className="sc-nav sc-nav-fixed">
               <button type="button" aria-label="Previous ad" onClick={v.prev}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round">
                   <path d="m15 6-6 6 6 6" />
@@ -120,7 +121,6 @@ function render(v: Vals) {
                 </svg>
               </button>
             </div>
-          </div>
         </div>
       </div>
       </div>

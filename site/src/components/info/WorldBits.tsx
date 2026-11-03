@@ -69,3 +69,59 @@ export function ShipWays({ reg }: { reg: string }) {
     </div>
   );
 }
+
+// R11 (owner): where we ship, by region. Four big cards, each a dot map of its own region (land dots, our cities lit,
+// the route from Dubai), with the way we ship there; a card opens the region: every country with its photo frame and
+// how we get there.
+const RB: Record<string, [number, number, number, number, string, string]> = { // lon0, lon1, lat0, lat1, title, line
+  me: [24, 64, 10, 44, 'Middle East', 'Our home market: next-day to the Gulf, a few days to the Levant.'],
+  af: [-20, 56, -12, 38, 'Africa', 'North, East and West Africa by courier, cargo or sea.'],
+  eu: [-12, 52, 34, 60, 'Europe', 'From London to Kyiv: express, air cargo or sea via Suez.'],
+  as: [44, 92, 4, 42, 'Asia', 'India, Pakistan and the Caucasus, by air and by sea.'],
+};
+function RegionMap({ r, countries, g }: { r: string; countries: C[]; g: G | null }) {
+  const [l0, l1, a0, a1] = RB[r], w = 400, h = Math.round((w * (a1 - a0)) / (l1 - l0) * 1.15);
+  const p = (lo: number, la: number) => [((lo - l0) / (l1 - l0)) * w, ((a1 - la) / (a1 - a0)) * h];
+  const land = useMemo(() => { if (!g) return ''; let d = ''; for (let i = 0; i < g.land.length; i += 2) { const lo = g.land[i], la = g.land[i + 1]; if (lo < l0 || lo > l1 || la < a0 || la > a1) continue; const [x, y] = p(lo, la); d += `M${x.toFixed(1)},${y.toFixed(1)}h0`; } return d; }, [g]);
+  const [ox, oy] = p(55.3, 25.27);
+  return (
+    <svg className="rg-map" viewBox={`0 0 ${w} ${h}`} aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+      <path d={land} className="rg-land" />
+      {countries.filter((c) => c.region === r && POS[c.name]).map((c, i) => { const [x, y] = p(...POS[c.name]); const mx = (ox + x) / 2, my = Math.min(oy, y) - Math.abs(x - ox) * 0.18 - 10; return (
+        <g key={c.name}><path d={`M${ox.toFixed(1)},${oy.toFixed(1)} Q${mx.toFixed(1)},${my.toFixed(1)} ${x.toFixed(1)},${y.toFixed(1)}`} className="rg-arc" style={{ animationDelay: (i * 0.35).toFixed(2) + 's' }} /><circle cx={x} cy={y} r="4" className="rg-pin" /></g>
+      ); })}
+      {ox >= 0 && ox <= w && oy >= 0 && oy <= h ? <g><circle cx={ox} cy={oy} r="12" className="rg-dxb-h" /><circle cx={ox} cy={oy} r="5" className="rg-dxb" /></g> : null}
+    </svg>
+  );
+}
+export function RegionCards({ countries, flag }: { countries: C[]; flag: (n: string) => string }) {
+  const [g, setG] = useState<G | null>(null), [open, setOpen] = useState<string | null>(null);
+  useEffect(() => { const iv = window.setInterval(() => { const x = (window as unknown as { SE_GLOBE?: G }).SE_GLOBE; if (x) { window.clearInterval(iv); setG(x); } }, 80); return () => window.clearInterval(iv); }, []);
+  const R = ['me', 'eu', 'af', 'as'], list = open ? countries.filter((c) => c.region === open) : [];
+  return (
+    <div className="rg">
+      <div className="rg-grid">{R.map((r) => { const n = countries.filter((c) => c.region === r).length, w = WAYS[r]; return (
+        <button key={r} type="button" className={'rg-c' + (open === r ? ' on' : '')} onClick={() => { setOpen(open === r ? null : r); window.setTimeout(() => document.getElementById('rg-open')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 80); }} aria-expanded={open === r}>
+          <RegionMap r={r} countries={countries} g={g} />
+          <span className="rg-in">
+            <span className="rg-n"><b>{n}</b><small>{T('countries')}</small></span>
+            <b className="rg-t">{T(RB[r][4])}</b><span className="rg-d">{T(RB[r][5])}</span>
+            <span className="rg-ways">{w.m.map(([m, t]) => <span key={m}><small>{T(m)}</small><b>{t}</b></span>)}</span>
+            <span className="rg-go">{open === r ? T('Close') : T('See every country')} →</span>
+          </span>
+        </button>
+      ); })}</div>
+      {open ? (
+        <div className="rg-open" id="rg-open" key={open}>
+          <div className="rg-oh"><b>{T(RB[open][4])}</b><small>{list.length} {T('countries')} · {T('photos of each city arrive with the owner’s pictures')}</small></div>
+          <div className="rg-list">{list.map((c, i) => (
+            <div key={c.name} className="rg-cc" style={{ animationDelay: i * 0.04 + 's' }}>
+              <span className="rg-ph"><span className="rg-fl">{flag(c.name)}</span><i /></span>
+              <b>{T(c.name)}</b><small>{T(WAYS[open].m[0][0])} · {WAYS[open].m[0][1]}</small>
+            </div>
+          ))}</div>
+        </div>
+      ) : null}
+    </div>
+  );
+}

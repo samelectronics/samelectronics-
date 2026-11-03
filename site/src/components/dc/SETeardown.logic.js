@@ -44,14 +44,15 @@ class Component extends DCLogic {
       if (this.mode === 'film') { if (this.waitOp && !this.ready3d && (this.failed3d || performance.now() - this.waitAt > 10000)) { this.waitOp = false; this.opShow('3D not ready'); return; } if (this.waitOp && this.ready3d) { this.waitOp = false; console.info('[SE Teardown] opening started (stage pinned, 3D ready)'); this.opPlay(false); } return; }
       if (rs.top > 1) { if (this.side !== 'above') { this.side = 'above'; this.opReset(); } return; }
       if (rs.bottom < vh - 1) { this.side = 'below'; return; }
-      if (this.releasing && performance.now() - this.releasing < 900) return;
+      if (this.releasing && performance.now() - this.releasing < 1400) return;
       const pinned = r.top <= 1 && r.bottom >= vh - 1; if (!pinned) return;
       if (this.side === 'below') { this.enterFilm(true); this.opShow(); this.td.tossAt = null; this.setState({ gT: 1.1 }); return; }
-      this.opReset(); this.enterFilm(false); window.scrollTo(0, this.yFor(0));
+      this.opReset(); this.enterFilm(false); this.ownTo(this.yFor(0));
       if (this.ready3d) { console.info('[SE Teardown] opening started (stage pinned, 3D ready)'); this.opPlay(false); } else if (this.failed3d) this.opShow('3D failed to load'); else { this.waitOp = true; this.waitAt = performance.now(); }
     } catch (e) { this.opShow('opCheck error: ' + (e && e.message)); } }
   measureTitle() { const h = this.h2Ref.current, pin = this.pin(); if (!h || !pin) return; const l1 = h.firstElementChild; if (!l1) return; let st = this._stage; if (!st || !st.contains(h)) { st = h.parentElement; while (st && st !== pin && !/sticky|fixed/.test(getComputedStyle(st).position)) st = st.parentElement; this._stage = st = st || pin; } const r = h.getBoundingClientRect(), pr = st.getBoundingClientRect(); const tl = { l: (document.documentElement.dir === 'rtl' ? r.right - l1.offsetWidth : r.left) - pr.left, t: r.top - pr.top, w: l1.offsetWidth, h: l1.offsetHeight }; /* owner (28 Oct): in Arabic the line starts at the RIGHT, so the centred title was off */ /* measured against the sticky stage the title lives in, not the tall scrolling wrapper: otherwise any page scroll during the toss threw the title off the top */ const o = this.tl; if (!o || Math.abs(o.l - tl.l) > 0.5 || Math.abs(o.t - tl.t) > 0.5 || Math.abs(o.w - tl.w) > 0.5) { this.tl = tl; this.forceUpdate(); } }
   isMob() { return !!this.props.mob || (this.props.fw || this.state.vw) < 768; }
+  ownTo(y) { window.__seOwnScroll = true; window.scrollTo(0, y); clearTimeout(this._ownT); this._ownT = setTimeout(() => { if (!this.scrolling) window.__seOwnScroll = false; }, 120); }
   pin() { const el = this.secRef.current; return el && el.firstElementChild; }
   SH() { return Math.round(window.innerHeight * 0.6); }
   pFromF(f) { const S = this.S, i = Math.min(S.length - 2, Math.max(0, Math.floor(f))), k = Math.min(1, Math.max(0, f - i)); return S[i] + (S[i + 1] - S[i]) * k; }
@@ -105,7 +106,7 @@ class Component extends DCLogic {
   release(dir) {
     const sec = this.secRef.current; if (!sec) return; this.mode = 'out'; this.releasing = performance.now();
     const r = sec.getBoundingClientRect(), y = dir < 0 ? window.scrollY + r.top - Math.round(window.innerHeight * 0.55) : window.scrollY + r.bottom - 72;
-    jumpTo(Math.max(0, y));
+    this.side = dir > 0 ? 'below' : 'above'; jumpTo(Math.max(0, y), 1000);
   }
   step(dir) {
     const F = this.FS, last = F.length - 1, cur = this.idx || 0, nx = cur + dir; if (nx < 0 || nx > last) return false;
@@ -118,14 +119,14 @@ class Component extends DCLogic {
     this.busyUntil = now + Math.round(700 * k); goTo(nx, 900); return true; // 14 Oct §07 A: input opens again once the step has visibly landed
   }
   /** Enter the film at step 0 (from above) or at the final call (from below). */
-  enterFilm(atEnd) { this.mode = 'film'; this.gUsed = true; this.lastW = performance.now(); if (atEnd) { const last = this.FS.length - 1; this.idx = last; this.td.faceBack = false; this.td.p = 1; this.td.snap = true; this.setState({ p: 1 }); window.scrollTo(0, this.yFor(last)); } else { this.idx = 0; this.td.faceBack = true; this.td.p = this.FS[0]; this.td.snap = true; this.setState({ p: this.FS[0] }); } }
+  enterFilm(atEnd) { this.mode = 'film'; this.gUsed = true; this.lastW = performance.now(); if (atEnd) { const last = this.FS.length - 1; this.idx = last; this.td.faceBack = false; this.td.p = 1; this.td.snap = true; this.setState({ p: 1 }); this.ownTo(this.yFor(last)); } else { this.idx = 0; this.td.faceBack = true; this.td.p = this.FS[0]; this.td.snap = true; this.setState({ p: this.FS[0] }); } }
   componentDidMount() {
     // G16: the teardown keeps its WebGL context for the whole visit; the budget counts it (src/dc/gl-budget.ts).
     this.unregGL = registerScene({ id: 'teardown', fixed: true, el: () => null, mount: async () => {} });
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 60);
     this.on = () => { if (this.props.fw) { this.manual = true; return; } const vw = document.documentElement.clientWidth, vh = window.innerHeight; if (vw !== this.state.vw || vh !== this.state.vh) this.setState({ vw, vh }); if (this.isMob() || this.manual) return; const pin = this.pin(), sec = this.secRef.current; if (!pin || !sec) return; const r = pin.getBoundingClientRect(), rs = sec.getBoundingClientRect(), ent = Math.max(0, Math.min(1, r.top / vh));
       if (this.mode === 'film' && jumping() && (!this.scrolling || (window.__seJumpForced || 0) > performance.now())) { cancelAnimationFrame(this.sraf); this.scrolling = false; window.__seOwnScroll = false; this.pass(window.scrollY > this.yFor(this.idx || 0) ? 1 : -1); } /* owner (28 Oct): the logo / any jump passes at once, even mid-step */
-      if (this.mode === 'film') { if (!this.inside() && !this.scrolling) { this.mode = 'out'; } else if (!this.scrolling && !this.anim) { const y = this.yFor(this.idx || 0); if (Math.abs(window.scrollY - y) > 2 && Math.abs(window.scrollY - y) < vh * 0.9) window.scrollTo(0, y); } }
+      if (this.mode === 'film') { if (!this.inside() && !this.scrolling) { this.mode = 'out'; } else if (!this.scrolling && !this.anim) { const y = this.yFor(this.idx || 0); if (Math.abs(window.scrollY - y) > 2 && Math.abs(window.scrollY - y) < vh * 0.9) this.ownTo(y); } }
       if (this.mode !== 'film' && !this.opRunning) { const p = this.passing ? (this.passing > 0 ? 1 : this.FS[0]) : rs.bottom < vh * 0.98 && rs.top < 0 ? 1 : this.FS[0]; if (p !== this.td.p && !this.anim) { this.td.p = p; this.td.snap = true; this.td.faceBack = p < 1; } }
       const q = Math.round(this.td.p * 1000) / 1000; if (q !== this.state.p || Math.abs(ent - this.state.ent) > 0.01) this.setState({ p: q, ent }); };
     // one gesture = one step; input while animating (and trackpad inertia) is swallowed; the two ends release the page
@@ -139,7 +140,7 @@ class Component extends DCLogic {
       // R6 Part B: three gestures within 1.4s, a big flick or a jump → pass straight through
       if (quiet) { this.gSum = 0; (this.fresh = this.fresh || []).push(now); while (this.fresh.length && now - this.fresh[0] > 1400) this.fresh.shift(); }
       this.gSum = (this.gSum || 0) + Math.abs(dy0); const VW = (this.vw = this.vw || []); VW.push([now, Math.abs(dy0)]); while (VW.length && now - VW[0][0] > 600) VW.shift(); const v6 = VW.reduce((a2, x2) => a2 + x2[1], 0); /* owner (28 Oct): 'fast' = speed (px in the last 0.6s), not the total of a long steady scroll */
-      if (jumping() || (this.fresh && this.fresh.length >= 6) || v6 > 2600 || Math.abs(dy0) > 700) /* Urgent 3: 3 unhurried wheel notches used to count as 'fast' and skip the whole film */ { this.lastW = now; e.preventDefault(); this.quick(Math.sign(dy0)); return; }
+      if (jumping() && !window.__seOwnScroll) /* Urgent 3: 3 unhurried wheel notches used to count as 'fast' and skip the whole film */ { this.lastW = now; e.preventDefault(); this.quick(Math.sign(dy0)); return; }
       e.preventDefault(); this.lastW = now; if (quiet) { this.gAcc = 0; this.gUsed = false; }
       // owner (28 Oct): the visitor drives it. Every ~260px of continuous scroll (the first push of a gesture: 40px) is one
       // step; steps asked for while one is playing are QUEUED (up to 3) and everything speeds up, so nobody waits for a

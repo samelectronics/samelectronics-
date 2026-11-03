@@ -14,6 +14,7 @@
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import LiveSam from '../samsoom/LiveSam';
 import { LANGS, RANK, type Lang } from '@/i18n/lang';
+import { babble, hush, tourStart, tourStep, tourEnd, tourStop, isMuted, setMuted } from '@/lib/voice';
 import { siteRaw } from '@/lib/catalog';
 // Control Room → Site & Samsoom: tour on/off, welcome message and emote
 const cfg = () => siteRaw<{ tour?: boolean; greeting?: string; welcome?: string }>('samsoom', {});
@@ -23,7 +24,8 @@ type Step = { sel?: string; el?: HTMLElement; mood: string; t: string; d: string
 const NAV: Step[] = [
   { sel: '[data-tour="fmp"]', mood: 'pt-smile', t: 'Find My Part', d: 'Pick a brand, a model and a part: every grade we have, in seconds.' },
   { sel: '[data-tour="nav"]', mood: 'pt-happy', t: 'Jump anywhere', d: 'The shop, repairs, trade prices and how to reach us.' },
-  { sel: '.se-lm', mood: 'pt-blush', t: 'Your language', d: 'Pick your language and the whole site follows.', open: '.se-lm-btn' },
+  { sel: '.se-lm', mood: 'pt-blush', t: 'Language and settings', d: 'One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.', open: '.se-lm-btn' },
+  { sel: '.nb', mood: 'pt-wink', t: 'Your notifications', d: 'Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.' },
   { sel: '[data-tour="hours"]', mood: 'pt-wink', t: 'Open right now?', d: 'Live opening hours, in Dubai time.' },
   { sel: '[data-tour="cart"]', mood: 'pt-smile', t: 'Your cart', d: 'Add parts as you browse; we confirm stock and price on WhatsApp.' },
   { sel: '[data-tour="menu"]', mood: 'pt-think', t: 'The whole site', d: 'Every page and section, in one menu.' },
@@ -63,19 +65,21 @@ function buildSteps(): Step[] {
       const d = (pp?.textContent || '').trim(); page.push({ el, mood: k ? 'pt-smile' : 'pt-happy', t: (h.innerText || h.textContent || '').replace(/\s+/g, ' ').trim(), d: d.length > 140 ? d.slice(0, d.lastIndexOf(' ', 136)) + '…' : d || (eb?.textContent || '') });
     });
   }
-  const nav = (home ? NAV : NAV.filter((s) => s.sel === '[data-tour="fmp"]' || s.sel === '[data-tour="cart"]')).filter((s) => visible(document.querySelector(s.sel!)) && (s.sel !== '[data-tour="nav"]' || !!document.querySelector('[data-tour="nav"] > a')));
+  const nav = (home ? NAV : NAV.filter((s) => s.sel === '[data-tour="fmp"]' || s.sel === '[data-tour="cart"]' || s.sel === '.se-lm' || s.sel === '.nb')).filter((s) => visible(document.querySelector(s.sel!)) && (s.sel !== '[data-tour="nav"]' || !!document.querySelector('[data-tour="nav"] > a')));
   const end = END.filter((s) => visible(document.querySelector(s.sel!)));
   return home ? [...nav, ...page, ...end] : [...page, ...nav, ...end];
 }
 
 export default function SamsoomTour() {
   const [phase, setPhase] = useState<'off' | 'lang' | 'hello' | 'recall' | 'walk' | 'bye'>('off'), [i, setI] = useState(0), [box, setBox] = useState<DOMRect | null>(null);
-  const [offer, setOffer] = useState(false);
+  const [offer, setOffer] = useState(false), [jump, setJump] = useState(false), [mute, setMute] = useState(false);
+  useEffect(() => { setMute(isMuted()); const f = () => setMute(isMuted()); window.addEventListener('se:sam-mute', f); return () => window.removeEventListener('se:sam-mute', f); }, []);
+  useEffect(() => { if (phase !== 'walk') setJump(false); }, [phase]);
   const [steps, setSteps] = useState<Step[]>([]), [ci, setCi] = useState(0), [, force] = useReducer((n: number) => n + 1, 0);
   const done = () => { try { localStorage.setItem('se-tour2', '1'); } catch { /* private mode */ } };
   const closeLang = () => { const m = document.querySelector('.se-lm.open .se-lm-btn') as HTMLElement | null; if (m) m.click(); };
-  const bye = useCallback((ms = 2800) => { closeLang(); done(); setPhase('bye'); window.setTimeout(() => setPhase('off'), ms); }, []);
-  const walk = () => { const s = buildSteps(); if (!s.length) return bye(); setSteps(s); setI(0); setPhase('walk'); };
+  const bye = useCallback((ms = 2800) => { closeLang(); done(); hush(); tourStop(); setPhase('bye'); window.setTimeout(() => setPhase('off'), ms); }, []);
+  const walk = () => { const s = buildSteps(); if (!s.length) return bye(); setSteps(s); setI(0); setPhase('walk'); tourStart(); };
 
   // re-render in the new language as soon as it is applied
   useEffect(() => { const on = () => force(); window.addEventListener('se:lang', on); return () => window.removeEventListener('se:lang', on); }, []);
@@ -131,7 +135,10 @@ export default function SamsoomTour() {
     return () => cancelAnimationFrame(raf);
   }, [phase, i, steps]);
 
-  const next = () => { if (i >= steps.length - 1) bye(3200); else setI(i + 1); };
+  const next = () => { if (i >= steps.length - 1) { tourEnd(); setJump(true); window.setTimeout(() => bye(3200), 650); } else setI(i + 1); };
+  // he talks on every step (and the tour builds a little); the bubble types along
+  useEffect(() => { if (phase !== 'walk' || !steps[i]) return; tourStep(i, steps.length); const st = steps[i]; const stop = babble(T(st.t) + '. ' + T(st.d)); return () => stop(); }, [phase, i]);
+  useEffect(() => { if (phase === 'hello') { const stop = babble(T('Welcome to Sam Electronics!') + ' ' + T('Want a quick walk around?')); return () => stop(); } if (phase === 'recall') { const stop = babble(T('You called me?')); return () => stop(); } }, [phase]);
   useEffect(() => {
     if (phase === 'off') return;
     const k = (e: KeyboardEvent) => { if (e.key === 'Escape') { if (phase === 'lang') setPhase('hello'); else bye(); } if (phase === 'walk' && e.key === 'ArrowRight') next(); if (phase === 'walk' && e.key === 'ArrowLeft') setI((n) => Math.max(0, n - 1)); };
@@ -139,10 +146,11 @@ export default function SamsoomTour() {
   });
 
   if (phase === 'off') return offer ? (
-    <div className="st-offer" role="dialog" aria-label={T('Want a tour of this page?')}>
+    <div className="se-netp st-offer2" role="status" aria-live="polite">
+      <i className="dot" aria-hidden="true" />
       <b>{T('Want a tour of this page?')}</b>
-      <button type="button" className="st-btn st-go" data-sound="next" onClick={() => { setOffer(false); walk(); }}>{T('Yes')}</button>
-      <button type="button" className="st-x" data-sound="skip" onClick={() => setOffer(false)} aria-label={T('Not now')}>✕</button>
+      <button type="button" className="st-o2-go" data-sound="next" onClick={() => { setOffer(false); walk(); }}>{T('Yes, show me')}</button>
+      <button type="button" className="st-o2-x" data-sound="skip" onClick={() => setOffer(false)} aria-label={T('Not now')}>✕</button>
     </div>
   ) : null;
   if (phase === 'lang') {
@@ -170,7 +178,7 @@ export default function SamsoomTour() {
     return (
       <div className="st-veil" role="dialog" aria-modal="true" aria-label={T('Welcome')} onClick={(e) => { if (e.target === e.currentTarget && phase !== 'bye') bye(1); }}>
         <div className={'st-hello' + (phase === 'bye' ? ' bye' : '')}>
-          <span className="st-sam"><LiveSam size={120} mood="idle" play={phase === 'bye' ? 'kiss' : phase === 'recall' ? 'happy' : cfg().welcome || 'wave'} /></span>
+          <span className="st-sam" data-sam-talk=""><LiveSam size={120} mood="idle" play={phase === 'bye' ? 'kiss' : phase === 'recall' ? 'happy' : cfg().welcome || 'wave'} /></span>
           {phase === 'hello' ? (
             <>
               <b>{T('Welcome to Sam Electronics!')}</b>
@@ -227,7 +235,8 @@ export default function SamsoomTour() {
       {hole ? <span className="st-hole" style={hole} /> : <span className="st-dim" />}
       <div className="st-bub" style={{ left: bx, top: by, width: bw }}>
         <button type="button" className="st-x" data-sound="skip" onClick={() => bye()}>{T('Skip')} <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg></button>
-        <span className="st-bsam" style={flip ? { transform: 'scaleX(-1)' } : undefined}><LiveSam size={58} pose={s.mood} pointA={Math.round(ang)} /></span>
+        <span className={'st-bsam' + (jump ? ' st-jump' : '')} data-sam-talk="" style={flip ? { transform: 'scaleX(-1)' } : undefined}><LiveSam size={58} pose={s.mood} pointA={Math.round(ang)} /></span>
+        <button type="button" className="st-mute" data-no-sound="" aria-pressed={mute} title={mute ? T('Unmute Samsoom') : T('Mute Samsoom')} aria-label={mute ? T('Unmute Samsoom') : T('Mute Samsoom')} onClick={() => { setMuted(!mute); if (!mute) hush(); }}>{mute ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 9h4l5-4v14l-5-4H4zM17 9l5 6M22 9l-5 6" /></svg> : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 9h4l5-4v14l-5-4H4zM17 8a5 5 0 0 1 0 8M19.5 5.5a9 9 0 0 1 0 13" /></svg>}</button>
         <span className="st-btx" key={i}>
           <small>{i + 1} / {steps.length}</small>
           <b>{T(s.t)}</b>

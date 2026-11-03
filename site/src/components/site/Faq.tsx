@@ -12,7 +12,7 @@ const data = (): Record<Topic, [string, string][]> => ({ ...FAQ, ...(siteRaw<Par
 function List({ topic, items }: { topic: Topic; items: [string, string][] }) {
   const [open, setOpen] = useState<number | null>(0); const tp = TOPICS.find((x) => x.id === topic)!;
   return (
-    <div className={'fq-list fq-' + tp.theme}>
+    <div className="fq-list">
       {items.map(([q, a], i) => (
         <div key={q} className={'fq-q' + (open === i ? ' open' : '')}>
           <button type="button" onClick={() => setOpen(open === i ? null : i)} aria-expanded={open === i} data-sound="toggle">

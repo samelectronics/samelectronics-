@@ -1145,5 +1145,14 @@ const DICT: Record<string, string> = {
   "Only customers who bought this part can review it, after we confirm their order.": "Doar clienții care au cumpărat această piesă o pot evalua, după confirmarea comenzii.",
   "Prices and stock shown are test data while the shop is set up": "Prețurile și stocul sunt date de test cât timp magazinul e pregătit",
   "Quick filters": "Filtre rapide",
+  "Samsoom’s voice": "Vocea lui Samsoom",
+  "Want a quick walk around?": "Un tur rapid?",
+  "Yes, show me": "Da, arată-mi",
+  "Unmute Samsoom": "Pornește-l pe Samsoom",
+  "Mute Samsoom": "Oprește sunetul lui Samsoom",
+  "Language and settings": "Limbă și setări",
+  "Your notifications": "Notificările tale",
+  "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "Un buton, două jumătăți: globul schimbă limba întregului site, rotița deschide setările: sunete, vocea mea, moneda și confidențialitatea.",
+  "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "Comenzile, reparațiile, alertele de stoc și ofertele ajung aici. Auzi un sunet blând, iar fila browserului arată un punct galben.",
 };
 export default DICT;

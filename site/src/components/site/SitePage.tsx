@@ -11,6 +11,8 @@ import SiteSettings from './SiteSettings';
 import LangLoading from './LangLoading';
 import SiteControls from './SiteControls';
 import FitText from './FitText';
+import PageLife from './PageLife';
+import OffscreenPause from '@/components/perf/OffscreenPause';
 
 if (typeof window !== 'undefined') {
   installI18n(); loadRemoteCatalog();
@@ -29,6 +31,8 @@ export default function SitePage({ children }: { children: React.ReactNode }) {
       <NetNotice />
       <SamsoomTour />
       <FitText />
+      <PageLife />
+      <OffscreenPause />
       <LangLoading />
       <SiteControls />
     </div>

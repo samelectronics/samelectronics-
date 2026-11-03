@@ -5,6 +5,7 @@
 import React, { useEffect, useState } from 'react';
 import { backend, useMe } from '@/lib/backend';
 import { products, aed, waLink } from '@/lib/catalog';
+import HowTo from '@/components/site/HowTo';
 import { PageHero, T, useRise, CountUp } from '@/components/site/ui';
 import PalletDrop from '@/components/home/PalletDrop';
 import { TradeFloor, TradeCalc, AppTracker, markSent } from './WholesaleBits';
@@ -66,10 +67,12 @@ export default function WholesalePage() {
       </div></section>
 
       <section className="sp-sec g"><div className="sp-wrap">
-        <div className="sp-head" data-rise><div><span className="sp-eb">{T('HOW IT WORKS')}</span><h2 className="sp-h2">{T('Three steps to trade prices.')}</h2></div></div>
-        <ol className="rp-steps light" data-rise>
-          {[['Create your account', 'In My Bench, with your company profile.'], ['Apply here', 'Trade licence and a few details.'], ['We verify and approve', 'Usually within one working day.'], ['Shop with your price', 'Both prices on every part, and your Sam Grid card.']].map(([t, d], i) => <li key={t}><i>{i + 1}</i><b>{T(t)}</b><small>{T(d)}</small></li>)}
-        </ol>
+        <HowTo eb="HOW IT WORKS" title="Four screens to trade prices." steps={[
+          { t: 'Create your account', d: 'In My Bench, with your company profile.', url: '/account?signup=1', screen: { h: 'Create your account', rows: ['Company name', 'E-mail', 'Password'], btn: 'Create account' } },
+          { t: 'Apply here', d: 'Trade licence and a few details.', url: '/wholesale#apply', screen: { h: 'Apply for a trade account', rows: ['Trade licence number', 'Monthly volume'], btn: 'Send application' } },
+          { t: 'We verify and approve', d: 'Usually within one working day, by e-mail and WhatsApp.', url: '/account', screen: { h: 'Your application', btn: 'Approved', done: 'Trade prices on' } },
+          { t: 'Shop with your price', d: 'Both prices on every part, and your Sam Grid card.', url: '/shop', screen: { h: 'Sam Grid', card: 'grid', btn: 'Shop with trade prices' } },
+        ]} />
       </div></section>
 
       <section id="apply" className="sp-sec y"><div className="sp-wrap wh-apply">

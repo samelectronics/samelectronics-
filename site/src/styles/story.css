@@ -7,7 +7,7 @@
 .st-grain { position: absolute; inset: 0; opacity: .035; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
 .st-box { position: absolute; left: 50%; top: 72px; width: 1440px; height: 800px; padding: 40px 84px 0; box-sizing: border-box; transform: translateX(-50%) scale(var(--sc, 1)); transform-origin: top center; }
 .st-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }
-.st-eb { font: 600 12px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #8A6A1E; }
+.st-eb { font: 600 12px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #F7C032; }
 .st-h { display: flex; flex-direction: column; margin: 14px 0 0; font: 700 50px/1.06 'Space Grotesk', sans-serif; letter-spacing: -.035em; }
 .st-h span:nth-child(2) { color: #5E6064; }
 .st-yr { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
@@ -93,7 +93,7 @@
 .st-open { position: absolute; right: 14px; bottom: 14px; display: inline-flex; align-items: center; gap: 6px; height: 34px; padding: 0 12px; border-radius: 9px; background: rgba(26, 27, 29, .82); color: #fff; font: 600 13px Inter, sans-serif; white-space: nowrap; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .14); }
 .st-soon-tag { position: absolute; left: 14px; top: 14px; padding: 6px 10px; border-radius: 8px; background: #F7C032; color: #26282B; font: 700 11px 'JetBrains Mono', monospace; letter-spacing: .1em; }
 .st-bc-in { display: flex; flex-direction: column; gap: 8px; padding: 22px 26px 26px; }
-.st-k { display: inline-flex; align-items: center; gap: 8px; font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .14em; color: #8A6A1E; }
+.st-k { display: inline-flex; align-items: center; gap: 8px; font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .14em; color: #F7C032; }
 .st-k i { width: 8px; height: 8px; border-radius: 50%; }
 .st-k i.live { background: #E5484D; box-shadow: 0 0 0 3px rgba(229, 72, 77, .18); }
 .st-k i.soon { background: #F7C032; box-shadow: 0 0 0 3px rgba(247, 192, 50, .25); }
@@ -124,17 +124,17 @@
 @media (max-width: 1100px) { .st-circ { display: none; } }
 /* R9 (owner): the history bar glows and keeps shining (a soft light runs along the filled part all the time), the dots are
    clean LEDs (no black ring): grey when off, a glowing yellow core when reached */
-.st-line { background-image: linear-gradient(90deg, #E9A91C 0%, #F7C032 30%, #FFE9A6 45%, #FFFFFF 50%, #FFE9A6 55%, #F7C032 70%, #E9A91C 100%) !important; background-size: 320px 4px !important; animation: stShine 1.6s linear infinite; box-shadow: 0 0 12px rgba(247, 192, 50, .75), 0 0 3px rgba(255, 220, 120, 1) !important; }
+.st-line { background-image: linear-gradient(90deg, #F7C032 0%, #F7C032 30%, #FFE9A6 45%, #FFFFFF 50%, #FFE9A6 55%, #F7C032 70%, #F7C032 100%) !important; background-size: 320px 4px !important; animation: stShine 1.6s linear infinite; box-shadow: 0 0 12px rgba(247, 192, 50, .75), 0 0 3px rgba(255, 220, 120, 1) !important; }
 @keyframes stShine { from { background-position: 0 0; } to { background-position: 320px 0; } }
 .st-node { background: #E6E8EB !important; box-shadow: inset 0 1px 2px rgba(0, 0, 0, .12), 0 1px 0 #fff !important; }
-.st-node.on { background: radial-gradient(circle at 40% 35%, #FFF4D1 0%, #F7C032 45%, #E9A91C 100%) !important; box-shadow: 0 0 0 4px rgba(247, 192, 50, .22), 0 0 14px 2px rgba(247, 192, 50, .7) !important; animation: stLed 2.4s ease-in-out infinite; }
+.st-node.on { background: radial-gradient(circle at 40% 35%, #FFF4D1 0%, #F7C032 45%, #F7C032 100%) !important; box-shadow: 0 0 0 4px rgba(247, 192, 50, .22), 0 0 14px 2px rgba(247, 192, 50, .7) !important; animation: stLed 2.4s ease-in-out infinite; }
 @keyframes stLed { 0%, 100% { box-shadow: 0 0 0 4px rgba(247, 192, 50, .22), 0 0 14px 2px rgba(247, 192, 50, .7); } 50% { box-shadow: 0 0 0 6px rgba(247, 192, 50, .14), 0 0 22px 4px rgba(247, 192, 50, .85); } }
 @media (prefers-reduced-motion: reduce) { .st-line, .st-node.on { animation: none; } }
 .st-bc { transition: opacity .45s, transform .6s cubic-bezier(.16, 1, .3, 1) !important; } .st-br.in .st-bc + .st-bc { transition-delay: .08s !important; }
 /* R10 G1 · timeline markers as glossy LED nodes in the bar's colours: unlit = smoked glass with a dark rim, lit = a glowing
    yellow LED with a specular highlight and a soft halo */
 .st-node { width: 20px !important; height: 20px !important; margin-left: -10px !important; background: radial-gradient(circle at 35% 30%, #FFFFFF 0 12%, #D9DBDF 18%, #9DA1A6 70%, #6E7378 100%) !important; box-shadow: inset 0 0 0 2px #3D3E3F, inset 0 -3px 4px rgba(0, 0, 0, .35), 0 2px 4px rgba(0, 0, 0, .18) !important; }
-.st-node.on { background: radial-gradient(circle at 35% 30%, #FFFFFF 0 12%, #FFE7A3 20%, #F7C032 55%, #C98A12 100%) !important; box-shadow: inset 0 0 0 2px #26282B, inset 0 -3px 4px rgba(120, 70, 0, .35), 0 0 0 5px rgba(247, 192, 50, .22), 0 0 18px 4px rgba(247, 192, 50, .55) !important; }
+.st-node.on { background: radial-gradient(circle at 35% 30%, #FFFFFF 0 12%, #FFE7A3 20%, #F7C032 55%, #F7C032 100%) !important; box-shadow: inset 0 0 0 2px #26282B, inset 0 -3px 4px rgba(120, 70, 0, .35), 0 0 0 5px rgba(247, 192, 50, .22), 0 0 18px 4px rgba(247, 192, 50, .55) !important; }
 /* R10 G2: the real map sits over the drawn one (which shows while it loads or if Google is blocked), dark-toned to match */
 .st-map .st-gmap { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; filter: grayscale(.25) invert(.92) hue-rotate(180deg) contrast(.92) brightness(.95); }
 .st-map .st-open, .st-map .st-soon-tag { z-index: 2; text-decoration: none; }

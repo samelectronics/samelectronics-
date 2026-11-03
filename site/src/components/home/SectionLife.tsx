@@ -96,6 +96,8 @@ function texture(sec: HTMLElement, t: 'dark' | 'light' | 'yel', k: number) {
   d.innerHTML = t === 'dark' ? '<i class="pl"></i><i class="st"></i><i class="led"></i><i class="gr"></i><i class="sh"></i>' : '<i class="gr"></i><i class="lt"></i><i class="sh"></i>';
   if (getComputedStyle(sec).position === 'static') sec.style.position = 'relative';
   sec.style.isolation = 'isolate'; sec.prepend(d);
+  // R11 (owner): the footer's moving glow line runs along the top edge of every section
+  if (!sec.querySelector(':scope > .se-edge')) { const e = document.createElement('i'); e.className = 'se-edge'; e.setAttribute('aria-hidden', 'true'); e.style.setProperty('--ed', (-(k * 1.7) % 7).toFixed(1) + 's'); sec.prepend(e); }
 }
 
 function markEntries(sec: HTMLElement) {

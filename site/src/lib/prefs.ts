@@ -7,9 +7,10 @@
 //   Booster       · offers and ads that match what you look at
 export type Currency = 'AED' | 'USD' | 'EUR';
 export type Pack = 'classic' | 'soft' | 'studio';
-export type Prefs = { consent: { memory: boolean; signal: boolean; booster: boolean; at: number } | null; sound: { on: boolean; vol: number; pack: Pack }; currency: Currency };
+export type Voice = 'cute' | 'deep' | 'robot';
+export type Prefs = { consent: { memory: boolean; signal: boolean; booster: boolean; at: number } | null; sound: { on: boolean; vol: number; pack: Pack; talk?: boolean; voice?: Voice }; currency: Currency };
 const KEY = 'se-prefs';
-const DEF: Prefs = { consent: null, sound: { on: true, vol: 0.35, pack: 'classic' }, currency: 'AED' };
+const DEF: Prefs = { consent: null, sound: { on: true, vol: 0.35, pack: 'classic', talk: true, voice: 'cute' }, currency: 'AED' };
 // sample rates; the Control Room sets the real ones (Settings › currencies)
 export const RATES: Record<Currency, number> = { AED: 1, USD: 0.2723, EUR: 0.2510 };
 let cur: Prefs | null = null;

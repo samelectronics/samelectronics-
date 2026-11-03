@@ -49,3 +49,22 @@ export function Branches({ branches }: { branches: B[] }) {
     </div>
   );
 }
+
+// R11 (owner): the change of name, told as a scene. The old shop sign ("Syria Tell", 2003) hangs lit on a graphite wall;
+// as the visitor scrolls, its light flickers out, the sign turns, and the Sam Electronics emblem powers up in its place,
+// with the years running underneath. Same family, same street.
+export function BrandShift() {
+  const ref = React.useRef<HTMLDivElement>(null), [k, setK] = React.useState(0);
+  React.useEffect(() => { const el = ref.current; if (!el) return; let rq = 0; const on = () => { if (rq) return; rq = requestAnimationFrame(() => { rq = 0; const r = el.getBoundingClientRect(); setK(Math.max(0, Math.min(1, (innerHeight * 0.8 - r.top) / (r.height * 0.9)))); }); }; on(); addEventListener('scroll', on, { passive: true }); return () => { removeEventListener('scroll', on); cancelAnimationFrame(rq); }; }, []);
+  const yr = Math.round(2003 + k * 23), turned = k > 0.5;
+  return (
+    <div className="bs" ref={ref} style={{ ['--k' as string]: k } as React.CSSProperties}>
+      <div className={'bs-sign' + (turned ? ' new' : '')}>
+        <div className="bs-face old"><span className="bs-bulbs" aria-hidden="true">{Array.from({ length: 14 }, (_, i) => <i key={i} />)}</span><b data-no-i18n="">SYRIA TELL</b><small data-no-i18n="">سوريا تل · MOBILE</small></div>
+        <div className="bs-face new"><img src="/assets/se-logo-320.webp" alt="Sam Electronics" /><b data-no-i18n="">SAM ELECTRONICS</b><small>QUALITY · WARRANTY · PRICE</small></div>
+      </div>
+      <div className="bs-year"><b data-no-i18n="">{yr > 2026 ? 2026 : yr}</b><span>{turned ? T('Sam Electronics: same management, new name.') : T('Syria Tell opens in Deira.')}</span></div>
+      <div className="bs-rail" aria-hidden="true"><i style={{ width: k * 100 + '%' }} />{[2003, 2011, 2015, 2020, 2026].map((y) => <span key={y} style={{ left: ((y - 2003) / 23) * 100 + '%' }} className={2003 + k * 23 >= y ? 'on' : ''}><em>{y}</em></span>)}</div>
+    </div>
+  );
+}
