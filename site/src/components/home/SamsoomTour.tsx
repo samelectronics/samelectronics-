@@ -14,6 +14,7 @@
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import LiveSam from '../samsoom/LiveSam';
 import { LANGS, RANK, type Lang } from '@/i18n/lang';
+import Typed from '@/components/samsoom/Typed';
 import { babble, hush, tourStart, tourStep, tourEnd, tourStop, isMuted, setMuted } from '@/lib/voice';
 import { siteRaw } from '@/lib/catalog';
 // Control Room → Site & Samsoom: tour on/off, welcome message and emote
@@ -138,7 +139,7 @@ export default function SamsoomTour() {
   const next = () => { if (i >= steps.length - 1) { tourEnd(); setJump(true); window.setTimeout(() => bye(3200), 650); } else setI(i + 1); };
   // he talks on every step (and the tour builds a little); the bubble types along
   useEffect(() => { if (phase !== 'walk' || !steps[i]) return; tourStep(i, steps.length); const st = steps[i]; const stop = babble(T(st.t) + '. ' + T(st.d)); return () => stop(); }, [phase, i]);
-  useEffect(() => { if (phase === 'hello') { const stop = babble(T('Welcome to Sam Electronics!') + ' ' + T('Want a quick walk around?')); return () => stop(); } if (phase === 'recall') { const stop = babble(T('You called me?')); return () => stop(); } }, [phase]);
+  useEffect(() => { if (phase === 'hello') { const stop = babble(T('Welcome to Sam Electronics!') + ' ' + (cfg().greeting ? T(cfg().greeting!) : T('I’m Samsoom, your parts assistant. Want a quick walk around? It takes 20 seconds.'))); return () => stop(); } if (phase === 'recall') { const stop = babble(T('You called me?')); return () => stop(); } }, [phase]);
   useEffect(() => {
     if (phase === 'off') return;
     const k = (e: KeyboardEvent) => { if (e.key === 'Escape') { if (phase === 'lang') setPhase('hello'); else bye(); } if (phase === 'walk' && e.key === 'ArrowRight') next(); if (phase === 'walk' && e.key === 'ArrowLeft') setI((n) => Math.max(0, n - 1)); };
@@ -149,8 +150,8 @@ export default function SamsoomTour() {
     <div className="se-netp st-offer2" role="status" aria-live="polite">
       <i className="dot" aria-hidden="true" />
       <b>{T('Want a tour of this page?')}</b>
-      <button type="button" className="st-o2-go" data-sound="next" onClick={() => { setOffer(false); walk(); }}>{T('Yes, show me')}</button>
-      <button type="button" className="st-o2-x" data-sound="skip" onClick={() => setOffer(false)} aria-label={T('Not now')}>✕</button>
+      <button type="button" className="st-o2-go" data-sound="next" aria-label={T('Yes, show me')} title={T('Yes, show me')} onClick={() => { setOffer(false); walk(); }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></button>
+      <button type="button" className="st-o2-x" data-sound="skip" onClick={() => setOffer(false)} aria-label={T('Not now')} title={T('Not now')}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
     </div>
   ) : null;
   if (phase === 'lang') {
@@ -181,8 +182,8 @@ export default function SamsoomTour() {
           <span className="st-sam" data-sam-talk=""><LiveSam size={120} mood="idle" play={phase === 'bye' ? 'kiss' : phase === 'recall' ? 'happy' : cfg().welcome || 'wave'} /></span>
           {phase === 'hello' ? (
             <>
-              <b>{T('Welcome to Sam Electronics!')}</b>
-              <p>{cfg().greeting ? T(cfg().greeting!) : T('I’m Samsoom, your parts assistant. Want a quick walk around? It takes 20 seconds.')}</p>
+              <b><Typed text={T('Welcome to Sam Electronics!')} /></b>
+              <p><Typed delay={900} text={cfg().greeting ? T(cfg().greeting!) : T('I’m Samsoom, your parts assistant. Want a quick walk around? It takes 20 seconds.')} /></p>
               <span className="st-acts">
                 <button type="button" className="st-btn st-go" data-sound="next" onClick={walk}>{T('Show me around')}</button>
                 <button type="button" className="st-btn st-grey" onClick={() => bye()}>{T('Skip')}</button>
@@ -234,13 +235,13 @@ export default function SamsoomTour() {
     <div className="st-walk" role="dialog" aria-modal="true" aria-label={T(s.t)}>
       {hole ? <span className="st-hole" style={hole} /> : <span className="st-dim" />}
       <div className="st-bub" style={{ left: bx, top: by, width: bw }}>
-        <button type="button" className="st-x" data-sound="skip" onClick={() => bye()}>{T('Skip')} <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg></button>
+        <span className="st-tools"><button type="button" className="st-mute" data-no-sound="" aria-pressed={mute} title={mute ? T('Unmute Samsoom') : T('Mute Samsoom')} aria-label={mute ? T('Unmute Samsoom') : T('Mute Samsoom')} onClick={() => { setMuted(!mute); if (!mute) hush(); }}>{mute ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 9h4l5-4v14l-5-4H4zM17 9l5 6M22 9l-5 6" /></svg> : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 9h4l5-4v14l-5-4H4zM17 8a5 5 0 0 1 0 8M19.5 5.5a9 9 0 0 1 0 13" /></svg>}</button><button type="button" className="st-x" data-sound="skip" onClick={() => bye()}>{T('Skip')} <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg></button></span>
         <span className={'st-bsam' + (jump ? ' st-jump' : '')} data-sam-talk="" style={flip ? { transform: 'scaleX(-1)' } : undefined}><LiveSam size={58} pose={s.mood} pointA={Math.round(ang)} /></span>
-        <button type="button" className="st-mute" data-no-sound="" aria-pressed={mute} title={mute ? T('Unmute Samsoom') : T('Mute Samsoom')} aria-label={mute ? T('Unmute Samsoom') : T('Mute Samsoom')} onClick={() => { setMuted(!mute); if (!mute) hush(); }}>{mute ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 9h4l5-4v14l-5-4H4zM17 9l5 6M22 9l-5 6" /></svg> : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 9h4l5-4v14l-5-4H4zM17 8a5 5 0 0 1 0 8M19.5 5.5a9 9 0 0 1 0 13" /></svg>}</button>
+        
         <span className="st-btx" key={i}>
           <small>{i + 1} / {steps.length}</small>
-          <b>{T(s.t)}</b>
-          <span>{T(s.d)}</span>
+          <b><Typed text={T(s.t)} /></b>
+          <span><Typed text={T(s.d)} delay={Math.round((T(s.t).length + 2) * 1000 / 34)} /></span>
         </span>
         <span className="st-bacts">
           <button type="button" className="st-btn st-grey" data-sound="back" disabled={i === 0} onClick={() => setI(Math.max(0, i - 1))}>{T('Back')}</button>

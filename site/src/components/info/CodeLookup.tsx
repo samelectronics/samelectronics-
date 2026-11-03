@@ -2,7 +2,7 @@
 // R9 · "Find your phone by its model code": type the code from Settings (SM-A546B, A2846, 2201117TY…) and we find the model;
 // with a how-to for each brand. Apple numbers are a built-in table; Samsung codes come from the catalogue names. The match
 // is always "check with us": a wrong part is worse than a question.
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { data } from '@/lib/catalog';
 import { T } from '@/components/site/ui';
 
@@ -23,6 +23,11 @@ const HOW: [string, string, string][] = [
 
 export default function CodeLookup({ onModel }: { onModel: (id: string, brand: string) => void }) {
   const [q, setQ] = useState(''), D = data();
+  // R11b: the example codes type themselves into the empty field, like the shop's search
+  const [ph, setPh] = useState('');
+  useEffect(() => { const EX = ['SM-A546B', 'A2846', 'RMX3771', 'SM-S911B', '23021RAAEG', 'CPH2591']; let k = 0, n = 0, del = false, tm = 0;
+    const go = () => { const w = EX[k % EX.length]; if (!del) { n++; setPh(w.slice(0, n)); if (n >= w.length) { del = true; tm = window.setTimeout(go, 1400); return; } } else { n--; setPh(w.slice(0, n)); if (n <= 0) { del = false; k++; } } tm = window.setTimeout(go, del ? 45 : 95); };
+    tm = window.setTimeout(go, 600); return () => window.clearTimeout(tm); }, []);
   const hits = useMemo(() => {
     if (!D) return [];
     const s = q.trim().toUpperCase().replace(/^SM-/, '').replace(/\/.*$/, ''); if (s.length < 3) return [];
@@ -39,7 +44,7 @@ export default function CodeLookup({ onModel }: { onModel: (id: string, brand: s
       <div className="cl-l">
         <span className="sp-eb">{T('NOT SURE WHICH MODEL?')}</span>
         <h3 className="cl-h">{T('Find it by its model code')}</h3>
-        <label className="cl-in"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="6" y="2" width="12" height="20" rx="3" /><path d="M11 18h2" /></svg><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="SM-A546B · A2846 · RMX3771" spellCheck={false} autoCapitalize="characters" /></label>
+        <label className="cl-in"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="6" y="2" width="12" height="20" rx="3" /><path d="M11 18h2" /></svg><input value={q} onChange={(e) => setQ(e.target.value)} placeholder={T('e.g.') + ' ' + ph} spellCheck={false} autoCapitalize="characters" /></label>
         {q.trim().length >= 3 ? (hits.length ? <div className="cl-hits">{hits.map(({ m, why }) => <button key={m.id} type="button" onClick={() => onModel(m.id, m.brand_id)}><b>{m.name}</b><small>{D.brands.find((b) => b.id === m.brand_id)?.name}{why ? ' · ' + why : ''}</small><i>→</i></button>)}<small className="cl-chk">{T('Please check the model with us before ordering a part.')}</small></div>
           : <p className="cl-none">{T('We could not match that code. Send it to us on WhatsApp and we will tell you.')}</p>) : null}
       </div>

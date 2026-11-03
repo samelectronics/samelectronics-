@@ -17,7 +17,7 @@ export function tabDot(unread: number) {
   const set = (href: string) => links.forEach((l) => { l.href = href; });
   if (!unread) { set(fvBase); return; }
   const draw = (on: boolean) => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'); if (!x) return; if (fvImg && fvImg.complete) x.drawImage(fvImg, 0, 0, 64, 64);
-    x.beginPath(); x.arc(49, 15, 13, 0, 7); x.fillStyle = '#26282B'; x.fill(); x.beginPath(); x.arc(49, 15, 10, 0, 7); x.fillStyle = on ? '#F7C032' : 'rgba(247,192,50,.35)'; x.shadowColor = '#F7C032'; x.shadowBlur = on ? 10 : 0; x.fill(); try { set(c.toDataURL('image/png')); } catch {} };
+    /* R11b: a small red dot in the bottom-right corner, like an app badge; it never covers the logo */ x.beginPath(); x.arc(53, 53, 10, 0, 7); x.fillStyle = '#FFFFFF'; x.fill(); x.beginPath(); x.arc(53, 53, 7.5, 0, 7); x.fillStyle = on ? '#E5484D' : 'rgba(229,72,77,.45)'; x.fill(); try { set(c.toDataURL('image/png')); } catch {} };
   const go = () => { let on = true; draw(on); fvIv = window.setInterval(() => { on = !on; draw(on); }, 900); };
   if (!fvImg) { fvImg = new Image(); fvImg.crossOrigin = 'anonymous'; fvImg.onload = go; fvImg.src = '/assets/se-logo-128.webp'; } else go();
 }

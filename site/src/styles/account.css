@@ -172,3 +172,13 @@ html[dir='rtl'] .au-tabs i { left: auto; right: 4px; } html[dir='rtl'] .au-tabs 
 .ss-seg button { height: 32px; padding: 0 12px; border: 0; border-radius: 9px; background: none; color: #4A4D52; font: 600 13px Inter, sans-serif; cursor: pointer; }
 .ss-seg button.on { background: #26282B; color: #F7C032; }
 .sc2-panel .ss-row b { color: inherit; } .sc2-panel .ss-row { border-color: rgba(127,127,127,.18); }
+/* R11 · auth forms: readable labels and hints, the terms box on the same line as its text, our own messages */
+.au-form .sp-field { color: #26282B !important; font: 600 13.5px Inter, sans-serif !important; }
+.au-form .sp-field input { font-size: 15px !important; color: #26282B; }
+.au-form .sp-field input::placeholder { color: #8C9096; opacity: 1; }
+.au-agree { display: flex !important; flex-direction: row !important; align-items: flex-start; gap: 10px; font: 500 13.5px/1.45 Inter, sans-serif; color: #3D3E3F; cursor: pointer; }
+.au-agree input { flex: none; width: 18px; height: 18px; margin: 1px 0 0; accent-color: #F7C032; }
+.au-agree a { color: #26282B; text-decoration: underline; text-decoration-color: #F7C032; text-decoration-thickness: 2px; }
+.au-hint { display: block; font: 500 12.5px/1.45 Inter, sans-serif; color: #5E6064; }
+.au-err, .au-form .sp-note[style*='229,72,77'] { background: #FDECEC !important; color: #9B1C20 !important; font: 600 13.5px/1.45 Inter, sans-serif; box-shadow: inset 3px 0 0 #E5484D; }
+.au-ok { background: #E8F7EF !important; color: #157A4A !important; font: 600 13.5px Inter, sans-serif; }

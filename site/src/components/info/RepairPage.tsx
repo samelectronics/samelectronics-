@@ -4,7 +4,7 @@
 // 500; the bench may adjust it up or down for the part and the work (the final price is confirmed before we start).
 // Repairs without a stocked part (water damage, buttons, software…) are "diagnosis first". Then how it works and booking.
 import React, { useEffect, useMemo, useState } from 'react';
-import { PhoneMap, FeeGauge, JobTicket, BenchNow } from './RepairBits';
+import { PhoneMap, FeeGauge, JobTicket } from './RepairBits';
 import { saveJob } from '@/components/account/BenchTools';
 import { data, products, repairFee, aed, waLink, type Product , priceText } from '@/lib/catalog';
 import { backend, useMe } from '@/lib/backend';
@@ -51,7 +51,6 @@ export default function RepairPage() {
         sub={T('Pick your phone and see every repair we do for it: the part in each grade, the fitting fee and the total, before you come in.')}
         right={<div className="rp-film"><RepairFlip w={480} fit="contain" zoom={1.25} /></div>}>
         <div className="sp-acts"><a className="sp-btn" href="#pick">{T('Find my repair')}</a><a className="sp-btn ghost" href="#fees">{T('How fees work')}</a></div>
-        <BenchNow />
       </PageHero>
 
       <section id="pick" className="sp-sec g">

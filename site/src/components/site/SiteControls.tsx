@@ -66,10 +66,15 @@ export default function SiteControls() {
     const bip = (e: Event) => { e.preventDefault(); setInst(e as unknown as { prompt: () => void }); }; window.addEventListener('beforeinstallprompt', bip);
     // every click gives its own quiet sound (buttons and links; the element can name one with data-sound)
     const click = (e: MouseEvent) => { const el = (e.target as Element | null)?.closest?.('button, a, [role="button"], [role="tab"], [role="option"]') as HTMLElement | null; if (!el || el.closest('[data-no-sound]')) return; const s = (el.closest('[data-sound]') as HTMLElement | null)?.dataset.sound as Snd | undefined; play(s || 'click'); };
+    // R11b: every WhatsApp message a visitor starts from the website is also saved in the Control Room inbox (topic
+    // "WhatsApp"), with the page it came from, so the team keeps each customer's requests and history in one place
+    const waLog = (e: MouseEvent) => { const a = (e.target as Element | null)?.closest?.('a[href*="wa.me/"]') as HTMLAnchorElement | null; if (!a || location.pathname.startsWith('/staff')) return;
+      try { const u = new URL(a.href), txt = u.searchParams.get('text') || ''; import('@/lib/backend').then(async ({ backend }) => { const me = await backend.me().catch(() => null); await backend.send({ name: me?.name || 'Website visitor', email: me?.email, topic: 'WhatsApp', text: (txt || '(opened WhatsApp)') + '\n\n— from ' + location.pathname + (me ? '' : ' · not signed in') }); }).catch(() => {}); } catch { /* */ } };
+    document.addEventListener('click', waLog, true);
     const cart = () => play('add');
     const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setPanel(false); }; document.addEventListener('keydown', esc);
     window.addEventListener('se:prefs', onP); window.addEventListener('se:settings', onOpen); window.addEventListener('se:lang', onLang); document.addEventListener('click', click, true); window.addEventListener('se:cart', cart);
-    return () => { window.clearInterval(iv); window.removeEventListener('se:prefs', onP); window.removeEventListener('se:settings', onOpen); window.removeEventListener('se:lang', onLang); document.removeEventListener('click', click, true); window.removeEventListener('se:cart', cart); window.removeEventListener('beforeinstallprompt', bip); document.removeEventListener('keydown', esc); };
+    return () => { window.clearInterval(iv); window.removeEventListener('se:prefs', onP); window.removeEventListener('se:settings', onOpen); window.removeEventListener('se:lang', onLang); document.removeEventListener('click', click, true); document.removeEventListener('click', waLog, true); window.removeEventListener('se:cart', cart); window.removeEventListener('beforeinstallprompt', bip); document.removeEventListener('keydown', esc); };
   }, []);
   if (!p) return null;
   const save = (c: { memory: boolean; signal: boolean; booster: boolean }) => { setPrefs({ consent: { ...c, at: Date.now() } }); setBanner(false); };

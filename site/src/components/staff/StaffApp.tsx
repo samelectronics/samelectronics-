@@ -153,7 +153,7 @@ function Login({ onDone, start }: { onDone: () => void; start?: Step }) {
   const doPw = async (e: React.FormEvent) => {
     e.preventDefault(); const l = lockLeft(); if (l) { setErr('Too many wrong passwords on this device. Try again in ' + l + ' min.'); return; }
     setBusy(true); setErr(''); const r = await backend.staffSignIn(email, pw); setBusy(false); setPw('');
-    if (!r.ok) { const left = failOnce(); setErr(left ? r.error + ' (' + left + ' tries left)' : 'Too many wrong passwords. The form is locked for 15 minutes.'); return; }
+    if (!r.ok) { const left = failOnce(), m = /invalid login|credentials/i.test(r.error) ? 'Wrong e-mail or password. Staff sign in with the same password as their website account (reset it from “Forgot password”).' : /not confirmed/i.test(r.error) ? 'This e-mail is not confirmed yet: open the code e-mail first, or create the account on the website.' : /not a staff/i.test(r.error) ? 'This account is not on the team yet. The owner invites staff in Team & security.' : r.error; setErr(left ? m + ' (' + left + ' tries left)' : 'Too many wrong passwords. The form is locked for 15 minutes.'); return; }
     try { localStorage.removeItem(LOCK_KEY); } catch { /* */ } await toMfa();
   };
   const doCode = async (e: React.FormEvent) => { e.preventDefault(); if (!factor) return; setBusy(true); setErr(''); const m = await (await sb()).mfaVerify(factor, code); setBusy(false); setCode(''); if (m) setErr(m); else onDone(); };

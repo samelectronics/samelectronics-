@@ -1178,3 +1178,11 @@ html[data-sam-done] [data-sam-talk] [data-sm-mouth] > span:first-child { width: 
    stroke under a drop-shadow forced the whole tall SVG to re-rasterise every frame) */
 .se-gut { will-change: transform; contain: strict; }
 .se-gut-light .fl { filter: none !important; stroke-width: 2.8; }
+/* R11b · Samsoom's typing + tour tools row (mute next to Skip, same size) + the tour toast with ✓ / ✕ */
+.sam-typed { position: relative; } .sam-ghost { visibility: hidden; } .sam-caret { display: inline-block; width: 2px; height: 1em; margin-inline-start: 1px; vertical-align: -2px; background: #F7C032; animation: samCaret .8s steps(2) infinite; }
+@keyframes samCaret { 50% { opacity: 0; } }
+.st-tools { position: absolute; top: 10px; inset-inline-end: 10px; display: flex; align-items: center; gap: 6px; z-index: 3; }
+.st-tools .st-x { position: static !important; }
+.st-mute { position: static !important; width: 30px !important; height: 30px !important; border-radius: 9px !important; background: rgba(38, 40, 43, .07) !important; }
+.st-o2-go, .st-o2-x { display: grid; place-items: center; width: 34px !important; height: 34px !important; padding: 0 !important; border-radius: 50% !important; }
+.st-offer2 { gap: 10px !important; padding: 6px 6px 6px 16px !important; }

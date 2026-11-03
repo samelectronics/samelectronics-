@@ -24,8 +24,11 @@ export const supabase: Backend = {
   mode: 'supabase',
   async me() { const id = await uid(); if (!id) return null; const { data } = await db().from('profiles').select('*').eq('id', id).single(); return data ? toUser(data) : null; },
   async signUp(i) {
-    const { error } = await db().auth.signUp({ email: i.email.trim(), password: i.password, options: { emailRedirectTo: location.origin + '/account?verified=1', data: { name: i.name, phone: i.phone || null, kind: i.kind || 'customer' } } });
-    return error ? no(error.message) : ok({ needsVerify: true });
+    const { data: su, error } = await db().auth.signUp({ email: i.email.trim(), password: i.password, options: { emailRedirectTo: location.origin + '/account?verified=1', data: { name: i.name, phone: i.phone || null, kind: i.kind || 'customer' } } });
+    if (error) return no(error.message);
+    // Supabase answers a sign-up for an existing e-mail with a user that has no identities and sends nothing
+    if (su?.user && Array.isArray(su.user.identities) && su.user.identities.length === 0) return no('already registered');
+    return ok({ needsVerify: true });
   },
   async verify(email, code) { const { error } = await db().auth.verifyOtp({ email: email.trim(), token: code.trim(), type: 'signup' }); if (error) return no(error.message); const u = await this.me(); return u ? ok(u) : no('Signed in, but the profile is missing.'); },
   async resend(email) { const { error } = await db().auth.resend({ type: 'signup', email: email.trim(), options: { emailRedirectTo: location.origin + '/account?verified=1' } }); return error ? no(error.message) : ok({}); },

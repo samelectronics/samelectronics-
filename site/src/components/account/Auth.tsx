@@ -6,6 +6,18 @@ import { backend, live } from '@/lib/backend';
 import { T } from '@/components/site/ui';
 
 type Mode = 'in' | 'up' | 'code' | 'forgot';
+// R11: clear, human messages for every auth failure
+const nice = (m: string) => {
+  const x = (m || '').toLowerCase();
+  if (x.includes('already registered') || x.includes('already been registered')) return T('This e-mail already has an account. Sign in, or use “Forgot your password?”.');
+  if (x.includes('invalid login') || x.includes('invalid credentials')) return T('Wrong e-mail or password. Check both, or reset your password.');
+  if (x.includes('not confirmed')) return T('Please confirm your e-mail first: we sent you a new code.');
+  if (x.includes('expired') || x.includes('invalid') && x.includes('token')) return T('That code is wrong or has expired. Ask for a new one.');
+  if (x.includes('rate') || x.includes('seconds') || x.includes('too many')) return T('Too many tries. Please wait a minute and try again.');
+  if (x.includes('password') && (x.includes('short') || x.includes('least'))) return T('Your password needs at least 8 characters.');
+  if (x.includes('email') && x.includes('invalid')) return T('That e-mail address does not look right.');
+  return T(m);
+};
 const strength = (p: string) => [p.length >= 8, /[A-Z]/.test(p) && /[a-z]/.test(p), /\d/.test(p), /[^A-Za-z0-9]/.test(p), p.length >= 12].filter(Boolean).length;
 
 export default function Auth({ onDone }: { onDone: () => void }) {
@@ -18,14 +30,21 @@ export default function Auth({ onDone }: { onDone: () => void }) {
   const run = async (fn: () => Promise<void>) => { setBusy(true); setErr(''); try { await fn(); } finally { setBusy(false); } };
   const s = strength(f.password);
 
-  const submit = (e: React.FormEvent) => { e.preventDefault(); run(async () => {
-    if (mode === 'in') { const r = await backend.signIn(f.email, f.password); if (r.ok) onDone(); else { setErr(T(r.error)); if (/confirm/i.test(r.error)) { const x = await backend.resend(f.email); if (x.ok && x.data.demoCode) setDemo(x.data.demoCode); go('code'); } } }
+  const submit = (e: React.FormEvent) => { e.preventDefault();
+    const em = f.email.trim(), need = (c: boolean, m: string) => { if (c) { setErr(T(m)); return true; } return false; };
+    if (mode === 'up' && need(!f.name.trim(), 'Please type your full name.')) return;
+    if (mode !== 'code' && need(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em), 'Please type a valid e-mail address.')) return;
+    if ((mode === 'in' || mode === 'up') && need(!f.password, 'Please type your password.')) return;
+    if (mode === 'up' && need(f.password.length < 8, 'Your password needs at least 8 characters.')) return;
+    if (mode === 'code' && need(!/^\d{6}$/.test(f.code.trim()), 'Type the 6-digit code from the e-mail.')) return;
+    run(async () => {
+    if (mode === 'in') { const r = await backend.signIn(f.email, f.password); if (r.ok) onDone(); else { setErr(nice(r.error)); if (/confirm/i.test(r.error)) { const x = await backend.resend(f.email); if (x.ok && x.data.demoCode) setDemo(x.data.demoCode); go('code'); } } }
     else if (mode === 'up') {
       if (!f.agree) return setErr(T('Please accept the terms and privacy policy.'));
       const r = await backend.signUp({ email: f.email, password: f.password, name: f.name, phone: f.phone, kind: f.kind });
-      if (!r.ok) return setErr(T(r.error));
+      if (!r.ok) { if (/already/i.test(r.error)) go('in'); return setErr(nice(r.error)); }
       setDemo(r.data.demoCode || ''); go('code'); setWait(60); setInfo(T('We sent a 6-digit code to') + ' ' + f.email + '.');
-    } else if (mode === 'code') { const r = await backend.verify(f.email, f.code); if (r.ok) onDone(); else setErr(T(r.error)); }
+    } else if (mode === 'code') { const r = await backend.verify(f.email, f.code); if (r.ok) onDone(); else setErr(nice(r.error)); }
     else { const r = await backend.resetPassword(f.email); if (r.ok) { setInfo(T('If an account exists for that e-mail, a reset link is on its way.')); if (r.data.demoCode) setDemo(r.data.demoCode); } else setErr(T(r.error)); }
   }); };
 
@@ -36,7 +55,7 @@ export default function Auth({ onDone }: { onDone: () => void }) {
       <div className="cr-door-card au-card">
       <span className="cr-brand"><img src="/assets/se-logo-128.webp" alt="" /><span><b>SAM ELECTRONICS</b><small>{mode === 'up' ? T('CREATE YOUR ACCOUNT') : T('MY BENCH · SIGN IN')}</small></span></span>
       {!live ? <span className="cr-note">{T('Demo mode: accounts are kept in this browser until the database is connected.')}</span> : null}
-      <form className="au-form" onSubmit={submit}>
+      <form className="au-form" onSubmit={submit} noValidate>
         {mode === 'in' || mode === 'up' ? (
           <div className="au-tabs" role="tablist">
             <button type="button" role="tab" aria-selected={mode === 'in'} className={mode === 'in' ? 'on' : ''} onClick={() => go('in')}>{T('Sign in')}</button>
@@ -68,7 +87,7 @@ export default function Auth({ onDone }: { onDone: () => void }) {
           <>
             <p className="sp-p">{T('Enter the 6-digit code we e-mailed to')} <b>{f.email}</b>.</p>
             <input className="au-code" required inputMode="numeric" pattern="[0-9]{6}" maxLength={6} value={f.code} onChange={set('code')} placeholder="••••••" autoComplete="one-time-code" />
-            <button type="button" className="shop-clear" disabled={wait > 0 || busy} onClick={() => run(async () => { const r = await backend.resend(f.email); if (r.ok) { setInfo(T('A new code is on its way.')); setWait(60); if (r.data.demoCode) setDemo(r.data.demoCode); } else { setErr(T(r.error)); const m = /(\d+)\s*seconds?/.exec(r.error); setWait(m ? +m[1] : 60); } })}>{wait > 0 ? T('Send a new code in') + ' ' + wait + 's' : T('Send a new code')}</button>
+            <button type="button" className="shop-clear" disabled={wait > 0 || busy} onClick={() => run(async () => { const r = await backend.resend(f.email); if (r.ok) { setInfo(T('A new code is on its way.')); setWait(60); if (r.data.demoCode) setDemo(r.data.demoCode); } else { setErr(nice(r.error)); const m = /(\d+)\s*seconds?/.exec(r.error); setWait(m ? +m[1] : 60); } })}>{wait > 0 ? T('Send a new code in') + ' ' + wait + 's' : T('Send a new code')}</button>
             <small className="au-hint">{T('No e-mail? Check spam. You can also press the link in the e-mail instead of typing the code.')}</small>
           </>
         ) : null}
@@ -82,7 +101,7 @@ export default function Auth({ onDone }: { onDone: () => void }) {
           <a href="/staff">{T('Staff? Control Room log-in')}</a>
         </span>
       </form>
-      <div className="cr-door-help"><a href={'https://wa.me/971503420015?text=' + encodeURIComponent('Hi, I need help with my account.')} target="_blank" rel="noopener noreferrer">{T('Talk to a person')}</a><span>·</span><a href="/samsoom">{T('Ask Samsoom')}</a></div>
+      <div className="cr-door-help"><span>{T('Talk to a person:')}</span><a href="/contact#chat">{T('Chat on the website')}</a><span>·</span><a href={'https://wa.me/971503420015?text=' + encodeURIComponent('Hi, I need help with my account.')} target="_blank" rel="noopener noreferrer">WhatsApp</a><span>·</span><a href="/samsoom">{T('Ask Samsoom')}</a></div>
       </div>
     </div>
   );

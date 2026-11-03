@@ -8,6 +8,7 @@ import { search, aed, data, byId, type Product , priceText } from '@/lib/catalog
 import { fallbackAnswer, emoteFor } from './brain';
 import { T, flyToCart } from '@/components/site/ui';
 import LiveSam from './LiveSam';
+import Typed from './Typed';
 
 type Msg = { t: string; me: boolean; emote?: string | null; own?: boolean; n?: number; parts?: string[]; img?: string };
 type Chat = { id: string; title: string; named: boolean; msgs: Msg[]; at: number };
@@ -87,7 +88,7 @@ export default function AskPage() {
       <section className="ak-main">
         <header className="ak-top">
           <button type="button" className="ak-menu" onClick={() => setSide(!side)} aria-label={T('Chats')}>☰</button>
-          <span className="ak-who"><span className="ak-av"><LiveSam size={34} mood="idle" /></span><span><b>Samsoom</b><small><i />{T('Online · parts assistant')}</small></span></span>
+          <span className="ak-who"><span className="ak-av" data-sam-talk=""><LiveSam size={34} mood="idle" /></span><span><b>Samsoom</b><small><i />{T('Online · parts assistant')}</small></span></span>
           <span className="ak-title">{cur ? cur.title : T('New chat')}</span>
           <a className="ak-human" href={'https://wa.me/971503420015?text=' + encodeURIComponent('Hi Sam Electronics, I was chatting with Samsoom on the website.' + (msgs.length ? '\n\n' + msgs.slice(-6).map((m) => (m.me ? 'Me: ' : 'Samsoom: ') + m.t).join('\n') : ''))} target="_blank" rel="noopener noreferrer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M16 11a4 4 0 1 0-8 0M4 21a8 8 0 0 1 16 0M12 3a4 4 0 0 1 0 8" /></svg>{T('Talk to a person')}</a>
         </header>
@@ -104,10 +105,10 @@ export default function AskPage() {
             </div>
           ) : msgs.map((m, i) => (
             <div key={i} className={'ak-m' + (m.me ? ' me' : '')}>
-              {!m.me ? <span className="ak-mav"><LiveSam size={30} mood="idle" play={i === msgs.length - 1 ? m.emote || undefined : undefined} /></span> : null}
+              {!m.me ? <span className="ak-mav" data-sam-talk=""><LiveSam size={30} mood="idle" play={i === msgs.length - 1 ? m.emote || undefined : undefined} /></span> : null}
               <div className="ak-bub">
                 {m.img ? <img className="ak-img" src={m.img} alt={T('Your photo')} /> : null}
-                <p>{m.t}</p>
+                <p>{!m.me && i === msgs.length - 1 && (m as { own?: boolean }).own ? <Typed text={m.t} /> : m.t}</p>
                 {m.parts ? <div className="ak-parts">{m.parts.map((pid) => { const p = byId(pid); return p ? <PartCard key={pid} p={p} /> : null; })}</div> : null}
                 {(m as Msg & { act?: string }).act && ACT[(m as Msg & { act?: string }).act!] ? <a className="sp-btn sm dark" href={ACT[(m as Msg & { act?: string }).act!][1]} target={ACT[(m as Msg & { act?: string }).act!][1].startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer">{T(ACT[(m as Msg & { act?: string }).act!][0])} →</a> : null}
               </div>

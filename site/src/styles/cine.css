@@ -173,3 +173,43 @@ html[dir='rtl'] .rg-map { -webkit-mask-image: linear-gradient(270deg, transparen
 .bs-rail span { position: absolute; top: -5px; width: 12px; height: 12px; margin-left: -6px; border-radius: 50%; background: #3A3C40; box-shadow: inset 0 0 0 2px #6A6D72; } .bs-rail span.on { background: #F7C032; box-shadow: 0 0 12px #F7C032; }
 .bs-rail em { position: absolute; top: 18px; left: 50%; transform: translateX(-50%); font: 600 12px 'JetBrains Mono', monospace; font-style: normal; color: #9DA1A6; }
 
+/* ===== R11b (owner) ===== */
+/* no moving lines on section edges (only the footer keeps its own) */
+.se-edge { display: none !important; }
+/* small titles: plain brand-yellow text again, no dark chip, no icon boxes */
+.sp-eb, .wh-eb, .st-eb, .rv-eb, .vs-eb.dk, .rp-gh, .sp-sec .sp-eb, .sp-sec.w .sp-eb, .sp-sec.g .sp-eb, .sp-sec:not(.d):not(.y) .sp-eb { padding: 0 !important; background: none !important; box-shadow: none !important; border-radius: 0 !important; color: #F7C032 !important; font-weight: 700 !important; }
+.sp-sec.y .sp-eb { color: #26282B !important; }
+.sp-eb:empty { display: none !important; }
+.fq-ico { display: none !important; }
+.fq-head a, .fq-all, a.fq-more { color: #F7C032 !important; }
+/* the product tools: one clean row of icon + label, no box around them */
+.pv-tools { display: flex !important; flex-wrap: wrap; gap: 4px 18px !important; padding: 6px 0 !important; background: none !important; box-shadow: none !important; border-radius: 0 !important; }
+.pv-tools > button, .pv-tools > span > button { flex-direction: row !important; min-height: 38px !important; padding: 6px 4px !important; gap: 8px !important; color: #26282B !important; font: 600 13.5px Inter, sans-serif !important; background: none !important; }
+.pv-tools > button svg, .pv-tools > span > button svg { width: 20px !important; height: 20px !important; padding: 0 !important; border-radius: 0 !important; background: none !important; box-shadow: none !important; color: #26282B !important; }
+.pv-tools > button:hover { transform: none !important; color: #000 !important; } .pv-tools > button:hover svg { color: #F7C032 !important; box-shadow: none !important; }
+.pv-tools > button.on svg { background: none !important; color: #F7C032 !important; fill: rgba(247, 192, 50, .35) !important; box-shadow: none !important; }
+/* every page title: same height, always left to right (right to left in Arabic), the page's word climbs up the far side */
+.sp-cine { min-height: 560px !important; height: 560px; padding: 110px 0 60px !important; }
+.sp-cine[data-v] .sp-hero-l { margin-inline: 0 !important; align-items: flex-start !important; text-align: start !important; max-width: min(760px, 62%); }
+.sp-cine[data-v] .sp-p { margin-inline: 0 !important; }
+.sp-cine .sp-h1 { font-size: clamp(42px, 5.6vw, 80px) !important; }
+.cine-word, .sp-cine[data-v] .cine-word { inset-inline: auto !important; inset-inline-end: 3vw !important; top: 50% !important; bottom: auto !important; font-size: clamp(90px, 11vw, 170px) !important; writing-mode: vertical-rl; transform: translateY(-50%) rotate(180deg); text-align: center; letter-spacing: .02em; -webkit-mask-image: none !important; mask-image: none !important; animation: cineClimb 1.4s cubic-bezier(.2, 1, .3, 1) both, cineSweepV 6s ease-in-out 1.4s infinite !important; background: linear-gradient(0deg, transparent 0 40%, rgba(247, 192, 50, .4) 50%, transparent 60% 100%) 0 0 / 100% 300% no-repeat !important; -webkit-background-clip: text !important; background-clip: text !important; }
+html[dir='rtl'] .cine-word { transform: translateY(-50%); }
+@keyframes cineClimb { from { opacity: 0; translate: 0 60px; } to { opacity: 1; translate: 0 0; } }
+@keyframes cineSweepV { 0% { background-position: 0 0; } 55%, 100% { background-position: 0 100%; } }
+@media (max-width: 760px) { .sp-cine { height: auto; min-height: 480px !important; } .sp-cine[data-v] .sp-hero-l { max-width: 100%; } .cine-word { opacity: .35; } }
+/* the lights in the distance move clearly */
+.cine-bokeh i { animation-duration: calc(7s + var(--k, 0) * 1.3s) !important; }
+.cine-bokeh i:nth-child(1) { --k: 0; } .cine-bokeh i:nth-child(2) { --k: 1; } .cine-bokeh i:nth-child(3) { --k: 2; } .cine-bokeh i:nth-child(4) { --k: 3; } .cine-bokeh i:nth-child(5) { --k: 4; } .cine-bokeh i:nth-child(6) { --k: 5; } .cine-bokeh i:nth-child(7) { --k: 6; } .cine-bokeh i:nth-child(8) { --k: 7; }
+@keyframes cineDrift { 0% { transform: translate(0, 0) scale(1); } 33% { transform: translate(9vw, -8vh) scale(1.2); } 66% { transform: translate(-6vw, 6vh) scale(.85); } 100% { transform: translate(4vw, -3vh) scale(1.05); } }
+/* the shop's pinned search: slim and quiet */
+.shop-pin { top: 72px !important; padding: 6px 0 !important; animation: shopPin .35s cubic-bezier(.2, 1, .3, 1) both !important; }
+.shop-pin .ss, .shop-pin form, .shop-pin [class*='ss-box'] { transform: scale(.82); transform-origin: center top; margin-bottom: -10px; }
+.shop-pin .sp-wrap { max-width: 760px; }
+.wo-pose { -webkit-box-reflect: none !important; } /* R11b: the reflection showed as a ghost product behind the chips */
+.br-grid { grid-auto-rows: auto !important; align-items: stretch !important; } .br-c { height: auto !important; min-height: 230px; }
+.pv-bar { position: relative !important; background: none !important; } .pv-gal { top: 20px !important; } /* R11b: the path no longer rides along over the content */
+.pv-tools > button, .pv-tools > span > button { white-space: nowrap; }
+.cine-word, .sp-cine[data-v] .cine-word, .shop-cine > .cine-word { inset: auto !important; right: 3vw !important; left: auto !important; top: 50% !important; }
+html[dir='rtl'] .cine-word, html[dir='rtl'] .sp-cine[data-v] .cine-word { right: auto !important; left: 3vw !important; }
+.shop-cine > .cine-word { font-size: clamp(70px, 8vw, 120px) !important; opacity: .7; }
