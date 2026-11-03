@@ -985,10 +985,14 @@ html[dir='rtl'] .nb-list { right: auto; left: -60px; }
 .sam-ring { display: inline-grid; place-items: center; /* R10 B2: Samsoom sits fully inside with even padding: no hand, antenna or shadow leaves the circle */ width: var(--sr); height: var(--sr); flex: none; border-radius: 50%; overflow: hidden; background: radial-gradient(circle at 40% 30%, #FFD566, #F7C032 65%); box-shadow: 0 0 0 4px rgba(247,192,50,.18), 0 14px 30px -10px rgba(0,0,0,.45); }
 .sam-ring > * { transform: translateY(3%); }
 /* R9 · "Want a tour of this page?" */
-.st-offer { position: fixed; right: 96px; bottom: 26px; z-index: 9200; display: flex; align-items: center; gap: 12px; padding: 8px 10px 8px 8px; border-radius: 999px; background: #fff; color: #26282B; box-shadow: 0 24px 50px -18px rgba(0,0,0,.5), inset 0 0 0 1.5px #F7C032; animation: stPop .45s cubic-bezier(.2,1.3,.4,1) both; }
-html[dir='rtl'] .st-offer { right: auto; left: 96px; }
+/* owner (3 Nov): the floating Samsoom himself asks. The pill grows out of his circle (he sits on its end, z 70 > 69). */
+.st-offer { position: fixed; inset-inline-end: 24px; bottom: 24px; z-index: 69; display: flex; align-items: center; gap: 10px; height: 56px; box-sizing: border-box; padding-block: 0; padding-inline: 20px 70px; border-radius: 28px; background: #fff; color: #26282B; box-shadow: 0 20px 44px -18px rgba(0,0,0,.45), inset 0 0 0 1.5px #F7C032; animation: stGrow .6s cubic-bezier(.2,.9,.25,1) both; }
+@keyframes stGrow { from { clip-path: inset(0 0 0 calc(100% - 56px) round 28px); } to { clip-path: inset(0 0 0 0 round 28px); } }
+@keyframes stGrowR { from { clip-path: inset(0 calc(100% - 56px) 0 0 round 28px); } to { clip-path: inset(0 0 0 0 round 28px); } }
+.st-offer > * { animation: stOfferIn .3s .35s ease-out both; } @keyframes stOfferIn { from { opacity: 0; transform: translateX(8px); } }
+html[dir='rtl'] .st-offer { animation-name: stGrowR; }
 .st-offer b { font: 600 14.5px Inter, sans-serif; white-space: nowrap; } .st-offer .st-btn { height: 36px; min-width: 0; padding: 0 16px; font-size: 14px; } .st-offer .st-x { position: static; }
-@media (max-width: 560px) { .st-offer { left: 12px; right: 12px; bottom: 90px; border-radius: 18px; } .st-offer b { white-space: normal; flex: 1; } }
+@media (max-width: 560px) { .st-offer { inset-inline-start: 12px; height: auto; min-height: 56px; padding-block: 8px; } .st-offer b { white-space: normal; flex: 1; font-size: 13.5px; } }
 /* R9 · the bell joined the nav: on mid-size screens the staff lock moves to the footer and the shop name gives way */
 @media (max-width: 1480px) { .se-nav-right > .se-nav-staff { display: none !important; } }
 @media (max-width: 1360px) { .se-nav-name { display: none !important; } }

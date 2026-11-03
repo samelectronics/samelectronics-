@@ -140,7 +140,6 @@ export default function SamsoomTour() {
 
   if (phase === 'off') return offer ? (
     <div className="st-offer" role="dialog" aria-label={T('Want a tour of this page?')}>
-      <span className="st-offer-av"><LiveSam circle size={46} mood="idle" play="wave" /></span>
       <b>{T('Want a tour of this page?')}</b>
       <button type="button" className="st-btn st-go" data-sound="next" onClick={() => { setOffer(false); walk(); }}>{T('Yes')}</button>
       <button type="button" className="st-x" data-sound="skip" onClick={() => setOffer(false)} aria-label={T('Not now')}>✕</button>
