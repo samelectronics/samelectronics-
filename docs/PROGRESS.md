@@ -2849,7 +2849,7 @@ customs notes per region; times marked as typical until the owner confirms) · P
 embossed logo, charging ladder, points simulator) · P10 Story (boot-log timeline, branch maps with live open status) ·
 P11 Contact (switchboard with live line status) · P12 a full /cookies page (Battery, Memory Chip, Diagnostics, Antenna,
 switches with dates). Themed FAQ at the end of every detail page (new topic "Visiting us"). Footer and My Bench fixed on
-phones. Arabic added for every new string (≈400). Other 22 languages still fall back to English for these new strings.
+phones. Arabic added for every new string (≈400). The 220 new detail-page strings are now translated in all 24 languages.
 
 **Stage 4 (Control Room v2, first part).** Sidebar grouped like Daftra (Home, Sales, Repairs, Inventory, Website,
 Documents, Messages, Shop floor, Team & security, Daftra, Settings). Real charts (line with axes and hover values,
@@ -2861,3 +2861,23 @@ staff bell (B9). Control Room Arabic for navigation and the new modules.
 
 **Fix.** Applications (trade, jobs, cards) no longer read back their row after insert: visitors may insert but not
 read applications under RLS, so the old code would have shown an error in live mode.
+
+**Stage 4 (part 2).** Claims (warranty returns), Calendar, Pricing (bulk change on every matching product with preview,
+rounding and price modes, coupons that work in the cart, price history), Customers & credit (tags, limits, statements),
+Shipments (carriers, tracking links, packing list, commercial invoice with battery note), Brand Studio (brand kit and
+document templates with live preview and print), Reminders & campaigns, Health & data, Training, Today's summary,
+Name parser, Staff Samsoom (answers from the knowledge base), command palette (Ctrl+K), visual page editor (click text to
+change it, hide sections, draft → publish with version history), repair job card extras (model code, IMEI, arrival
+checklist, damage photos, warranty days, pickup signature, printed ticket and warranty sticker with QR). Arabic for all
+of it.
+
+**Speed.** Only English loads with the page. Arabic loads at once if it is the saved language, otherwise it preloads
+when the page is idle together with Spanish and French; the other 20 languages load only when picked. The Control Room,
+its styles and its heavy modules load only when /staff is opened; the database client loads on first use. Per-page
+JavaScript is about 300 KB lighter. The logo used by the 3D scenes is now a 512 px WebP instead of a 177 KB PNG. On
+devices without a graphics chip the teardown drops to a lower resolution. Not done: the global CSS (about 600 KB) is
+still one file, because splitting it risks the home page's cascade order.
+
+**Still open.** Automatic e-mail, WhatsApp and SMS need outside providers (shown in Reminders). The Daftra dashboard was
+not tested against live Daftra (staff test it). The Control Room is in English and Arabic only. Older strings from
+before R10 (about 750) are still English in the newer languages.
