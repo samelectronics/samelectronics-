@@ -24,9 +24,9 @@ const vol = () => Math.min(1, Math.max(0, prefs().sound.vol));
 // R11 (owner): cute and funny, never buzzy. Each syllable is a tiny "bloop": a soft sine/triangle that bends up or down
 // (randomly, like a little creature talking), shaped by a gentle filter, with silence between syllables.
 const V: Record<Voice, { f: number; type: OscillatorType; lp: number; d: number; bend: number; robot?: boolean }> = {
-  cute: { f: 430, type: 'sine', lp: 1700, d: 0.085, bend: 0.45 },
-  deep: { f: 230, type: 'triangle', lp: 1100, d: 0.1, bend: 0.3 },
-  robot: { f: 330, type: 'triangle', lp: 1300, d: 0.07, bend: 0, robot: true },
+  cute: { f: 760, type: 'sine', lp: 4200, d: 0.085, bend: 0.45 },
+  deep: { f: 360, type: 'triangle', lp: 2200, d: 0.1, bend: 0.3 },
+  robot: { f: 520, type: 'triangle', lp: 2600, d: 0.07, bend: 0, robot: true },
 };
 let master: GainNode | null = null;
 const out = () => { const c = ac(); if (!master) { master = c.createGain(); const comp = c.createDynamicsCompressor(); master.connect(comp); comp.connect(c.destination); } master.gain.value = vol() * 0.5; return master; };
@@ -45,7 +45,7 @@ function blip(f: number, d: number, v: Voice, up: boolean) {
 
 let stopCur: (() => void) | null = null;
 // R11c: ONE clock for his voice and his typing, so they always start and finish together
-export const CPS = 52;
+export const CPS = 62;
 export const charMs = (ch: string) => (/[.,;:!?…،؟。，]/.test(ch) ? 3000 / CPS : 1000 / CPS);
 export const typeMs = (t: string) => Array.from(t || '').reduce((a, c) => a + charMs(c), 0);
 const mouth = (o: boolean) => { const r = document.documentElement; if (o) r.setAttribute('data-sam-mouth', 'o'); else r.removeAttribute('data-sam-mouth'); };
@@ -61,20 +61,25 @@ export function babble(text: string, opts: { onEnd?: () => void } = {}) {
   if (can()) { try { const c = ac(), lp = c.createBiquadFilter(), lp2 = c.createBiquadFilter(); o = c.createOscillator(); g = c.createGain();
     o.type = cfg.type; lp.type = 'lowpass'; lp.frequency.value = cfg.lp; lp.Q.value = 0.3; lp2.type = 'lowpass'; lp2.frequency.value = cfg.lp * 1.4; lp2.Q.value = 0.2;
     o.frequency.value = base; g.gain.value = 0.0001; o.connect(lp); lp.connect(lp2); lp2.connect(g); g.connect(out()); o.start(); } catch { o = null; } }
-  const peak = 0.075;
+  const peak = 0.17;
   const end = () => { if (g && o) { const c = ac(), now = c.currentTime; g.gain.cancelScheduledValues(now); g.gain.setTargetAtTime(0.0001, now, 0.05); try { o.stop(now + 0.4); } catch { /* */ } } o = null; };
   const wordLen = (k: number) => { let n = 0; while (k + n < chars.length && !/[\s.,;:!?…،؟。，]/.test(chars[k + n])) n++; return n; };
   const tick = () => {
     if (!alive) return;
     if (i >= chars.length) { mouth(false); end(); document.documentElement.setAttribute('data-sam-done', ''); window.setTimeout(() => document.documentElement.removeAttribute('data-sam-done'), 1400); opts.onEnd && opts.onEnd(); alive = false; return; }
     const ch = chars[i], wait = charMs(ch), now = o ? ac().currentTime : 0;
-    if (/[\s.,;:!?…،؟。，]/.test(ch)) { if (inWord) { mouth(false); if (g) g.gain.setTargetAtTime(0.0001, now, 0.035); } inWord = false; }
+    if (/[\s.,;:!?…،؟。，]/.test(ch)) { if (inWord) { mouth(false); if (g) g.gain.setTargetAtTime(0.0001, now, 0.02); } inWord = false; }
     else if (!inWord) { // a new word: one smooth contour for the whole word
       inWord = true; w++; const n = wordLen(i), dur = (n * 1000) / CPS / 1000, left = chars.length - i, last = left <= n + 2;
       const f0 = base * (1 + (Math.random() * 2 - 1) * 0.09 + (w % 3 === 0 ? 0.06 : 0)), f1 = f0 * (ask && last ? 1.28 : Math.random() < 0.5 ? 1.07 : 0.94);
       mouth(true); const flap = window.setInterval(() => { if (!alive || !inWord) { window.clearInterval(flap); return; } document.documentElement.toggleAttribute('data-sam-mouth', !document.documentElement.hasAttribute('data-sam-mouth')); if (document.documentElement.hasAttribute('data-sam-mouth')) document.documentElement.setAttribute('data-sam-mouth', 'o'); }, 110);
-      if (o && g) { o.frequency.cancelScheduledValues(now); o.frequency.setTargetAtTime(f0, now, 0.03); o.frequency.setTargetAtTime(f1, now + dur * 0.35, Math.max(0.05, dur * 0.4));
-        g.gain.cancelScheduledValues(now); g.gain.setTargetAtTime(peak, now, 0.03); }
+      if (o && g) { o.frequency.cancelScheduledValues(now); o.frequency.setTargetAtTime(f0, now, 0.03); o.frequency.setTargetAtTime(f1, now + dur * 0.5, 0.04);
+        g.gain.cancelScheduledValues(now); g.gain.setTargetAtTime(peak, now, 0.012); }
+    }
+    else if (o && g && /[aeiouyáéíóúàèìòùâêîôûäëïöüаеёиоуыэюяاوي]/i.test(ch) && i > 0 && !/[aeiouyáéíóúàèìòùâêîôûäëïöüаеёиоуыэюяاوي]/i.test(chars[i - 1])) {
+      // R11e: a new syllable inside the word: a quick, small, smooth hop (cute and bouncy, never a jump)
+      const f = base * (1 + (Math.random() * 2 - 1) * 0.07); o.frequency.cancelScheduledValues(now); o.frequency.setTargetAtTime(f, now, 0.018);
+      g.gain.cancelScheduledValues(now); g.gain.setTargetAtTime(peak * 0.72, now, 0.008); g.gain.setTargetAtTime(peak, now + 0.02, 0.02);
     }
     i++; tm = window.setTimeout(tick, wait);
   };

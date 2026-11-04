@@ -14,7 +14,7 @@
 .stp-c b { margin-top: auto; font: 700 24px/1.1 'Space Grotesk', sans-serif; } .stp-c small { font: 400 13.5px Inter, sans-serif; color: #B5B8BC; }
 .stp-mono { display: inline-flex; align-items: center; gap: 10px; }
 .stp-mono img { width: 34px; height: 34px; border-radius: 10px; box-shadow: 0 0 0 1px rgba(255,255,255,.14); }
-.stp-mono em { font: 800 13px 'JetBrains Mono', monospace; font-style: normal; letter-spacing: .22em; color: #F7C032; }
+.stp-mono em { text-transform: uppercase; font: 800 13px 'JetBrains Mono', monospace; font-style: normal; letter-spacing: .22em; color: #F7C032; }
 .stp-mono-soon i { width: 34px; height: 34px; border-radius: 10px; border: 1.5px dashed rgba(255,255,255,.28); background: repeating-linear-gradient(135deg, rgba(255,255,255,.05) 0 6px, transparent 6px 12px); }
 .stp-mono-soon em { color: #8C9096; }
 .stp-sky { position: absolute; inset-inline-end: 0; bottom: 0; display: flex; align-items: flex-end; gap: 4px; height: 120px; padding: 0 18px; opacity: .28; pointer-events: none; }
@@ -56,3 +56,6 @@ button.stp-sw-i { cursor: pointer; }
 .stp-sw-i.soon em { font-style: normal; color: #F7C032; animation: stpBlink 1.2s steps(2) infinite; }
 .stp-sw-ph { width: 26px; height: 26px; border-radius: 8px; flex: none; border: 1.5px dashed rgba(255,255,255,.3); box-sizing: border-box; }
 @keyframes stpBlink { 50% { opacity: .2; } }
+
+/* R11e: no bars behind the store cards */
+.stp-sky { display: none !important; }

@@ -17,15 +17,13 @@ export function StoreCards({ onPick }: { onPick: (s: StoreId) => void }) {
   return (
     <div className="stp-cards">
       <button type="button" className={'stp-c dxb' + (cur === 'dxb' ? ' on' : '')} onClick={() => { setStore('dxb'); onPick('dxb'); }}>
-        <span className="stp-sky" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /></span>
-        <span className="stp-mono" aria-hidden="true"><img src="/assets/se-logo-128.webp" alt="" width="34" height="34" /><em>DXB</em></span>
+        <span className="stp-mono" aria-hidden="true"><img src="/assets/se-logo-128.webp" alt="" width="34" height="34" /><em>UAE</em></span>
         <span className="stp-live"><i />{T('Open now · since 2003')}</span>
         <b>Dubai · Deira</b><small>{T('Al Murar, Deira · our home counter')}</small>
         <span className="stp-go">{cur === 'dxb' ? '✓ ' + T('Your store') : T('Choose Deira') + ' →'}</span>
       </button>
       <div className="stp-c mad" aria-disabled="true">
-        <span className="stp-sky" aria-hidden="true"><i /><i /><i /><i /><i /></span>
-        <span className="stp-mono stp-mono-soon" aria-hidden="true"><i /><em>MAD</em></span>
+        <span className="stp-mono stp-mono-soon" aria-hidden="true"><i /><em>Spain</em></span>
         <span className="stp-pend mono">[ ···· ] v5.0 <em>PENDING</em></span>
         <b>Madrid · Plaza Mayor</b><small>{T('Allo Madrid · opening soon')}</small>
         <span className="stp-bar" aria-label={T('Loading')}><i style={{ width: pct + '%' }} /></span>
