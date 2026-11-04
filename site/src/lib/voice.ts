@@ -45,7 +45,7 @@ function blip(f: number, d: number, v: Voice, up: boolean) {
 
 let stopCur: (() => void) | null = null;
 // R11c: ONE clock for his voice and his typing, so they always start and finish together
-export const CPS = 64;
+export const CPS = 52;
 export const charMs = (ch: string) => (/[.,;:!?…،؟。，]/.test(ch) ? 2000 / CPS : 1000 / CPS);
 export const typeMs = (t: string) => Array.from(t || '').reduce((a, c) => a + charMs(c), 0);
 const mouth = (o: boolean) => { const r = document.documentElement; if (o) r.setAttribute('data-sam-mouth', 'o'); else r.removeAttribute('data-sam-mouth'); };
@@ -77,22 +77,27 @@ export function babble(text: string, opts: { onEnd?: () => void } = {}) {
     const tc = at[k] + 0.5 / CPS * 1.0; P.push([tc, base * Math.pow(2, semi / 12)]); const [a, b] = vowOf(chars[k]); F1.push([tc, a]); F2.push([tc, b]); });
   if (!P.length) P.push([0, base]);
   // loudness: on through a word, a soft dip between words, silence at punctuation
-  let on = false; chars.forEach((ch, k) => { const t0 = at[k];
+  // R11g: articulation so he speaks words, not "ooooo": every consonant is a quick soft dip, every vowel opens up again
+  const ticks: number[] = []; let on = false; chars.forEach((ch, k) => { const t0 = at[k];
     if (/[.,;:!?…،؟。，]/.test(ch)) { if (on) G.push([t0 + 0.01, 0]); on = false; }
-    else if (/\s/.test(ch)) { if (on) G.push([t0 + 0.012, 0.35]); }
-    else { if (!on || (G.length && G[G.length - 1][1] < 1)) G.push([t0 + 0.015, 1]); on = true; } });
+    else if (/\s/.test(ch)) { if (on) G.push([t0 + 0.01, 0.12]); on = false; }
+    else if (isV(ch)) { G.push([t0 + 0.012, 1]); on = true; }
+    else { G.push([t0 + 0.006, on ? 0.38 : 0.3]); on = true; if (/[tkpsczfxشسصتكقث]/i.test(ch)) ticks.push(t0); } });
   G.push([total, on ? 1 : 0], [total + 0.06, 0]);
   const pk = [[0, P[0][1]] as [number, number], ...P, [total + 0.1, P[P.length - 1][1]] as [number, number]];
   let o: OscillatorNode | null = null, g: GainNode | null = null, alive = true, raf = 0, endTm = 0;
-  const peak = cfg.robot ? 0.12 : 0.5, DT = 0.01, len = total + 0.12;
+  const peak = cfg.robot ? 0.12 : 0.36, DT = 0.008, len = total + 0.12;
   if (can()) { try { const c = ac(), now = c.currentTime + 0.02; o = c.createOscillator(); g = c.createGain(); const f1 = c.createBiquadFilter(), f2 = c.createBiquadFilter(), g2 = c.createGain(), lp = c.createBiquadFilter();
-    o.type = cfg.robot ? 'square' : 'triangle'; f1.type = 'bandpass'; f1.Q.value = 2.5; f2.type = 'bandpass'; f2.Q.value = 4; g2.gain.value = 0.5; lp.type = 'lowpass'; lp.frequency.value = 2600; lp.Q.value = 0.3;
+    o.type = cfg.robot ? 'square' : 'sawtooth'; f1.type = 'bandpass'; f1.Q.value = 2; f2.type = 'bandpass'; f2.Q.value = 3; g2.gain.value = 0.6; lp.type = 'lowpass'; lp.frequency.value = 3200; lp.Q.value = 0.3;
     o.connect(f1); o.connect(f2); f1.connect(lp); f2.connect(g2); g2.connect(lp); lp.connect(g); g.connect(out());
     o.frequency.setValueCurveAtTime(curve(pk, len, DT), now, len);
     const fk = (F: [number, number][]) => (F.length ? [[0, F[0][1]] as [number, number], ...F, [len, F[F.length - 1][1]] as [number, number]] : [[0, 700], [len, 700]] as [number, number][]);
     f1.frequency.setValueCurveAtTime(curve(fk(F1), len, DT), now, len); f2.frequency.setValueCurveAtTime(curve(fk(F2), len, DT), now, len);
     const gc = curve(G, len, DT).map((v) => Math.max(0.0001, v * peak)); g.gain.setValueAtTime(0.0001, now); g.gain.setValueCurveAtTime(gc, now + 0.001, len);
     o.start(now); o.stop(now + len + 0.05);
+    if (ticks.length) { // tiny breathy clicks on t, k, p, s: the "speech" texture
+      const nb = c.createBuffer(1, Math.ceil(c.sampleRate * 0.03), c.sampleRate), d = nb.getChannelData(0); for (let q = 0; q < d.length; q++) d[q] = (Math.random() * 2 - 1) * (1 - q / d.length);
+      ticks.forEach((tt) => { const src = c.createBufferSource(), hp = c.createBiquadFilter(), tg = c.createGain(); src.buffer = nb; hp.type = 'highpass'; hp.frequency.value = 3500; tg.gain.value = 0.05; src.connect(hp); hp.connect(tg); tg.connect(out()); src.start(now + tt); }); }
     if (happy) { // a tiny "he-he" right after the line
       const h = c.createOscillator(), hg = c.createGain(), hf = c.createBiquadFilter(); h.type = 'triangle'; hf.type = 'bandpass'; hf.frequency.value = 1700; hf.Q.value = 2; h.connect(hf); hf.connect(hg); hg.connect(out());
       const s0 = now + len + 0.03, top = base * 1.5; h.frequency.setValueAtTime(top, s0); h.frequency.linearRampToValueAtTime(top * 1.12, s0 + 0.09); h.frequency.setValueAtTime(top * 1.2, s0 + 0.13); h.frequency.linearRampToValueAtTime(top * 1.32, s0 + 0.22);

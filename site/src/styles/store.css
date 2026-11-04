@@ -59,3 +59,11 @@ button.stp-sw-i { cursor: pointer; }
 
 /* R11e: no bars behind the store cards */
 .stp-sky { display: none !important; }
+
+/* R11g (owner): each card fades from graphite on the left into its real map on the right */
+.stp-map { position: absolute; inset: 0 0 0 30%; z-index: 0; pointer-events: none; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 55%); mask-image: linear-gradient(90deg, transparent, #000 55%); }
+.stp-map iframe { width: 100%; height: 100%; border: 0; filter: grayscale(.35) contrast(.95) brightness(.85); }
+.stp-map.soon iframe { filter: grayscale(1) brightness(.6); }
+.stp-map::after { content: ''; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(38,40,43,.85), transparent 55%); }
+.stp-c > *:not(.stp-sky):not(.stp-map) { position: relative; z-index: 1; }
+.stp-c.mad > .stp-map { opacity: 1 !important; }

@@ -15,7 +15,10 @@ import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import LiveSam from '../samsoom/LiveSam';
 import { LANGS, RANK, type Lang } from '@/i18n/lang';
 import Typed from '@/components/samsoom/Typed';
-import { StoreCards, hasStore } from '@/components/site/StorePicker';
+import { StoreCards, hasStore, setStore } from '@/components/site/StorePicker';
+// R11g (owner): the store question only comes once, in the first welcome on the home page. Anywhere else (shop, etc.)
+// Deira is set quietly; the store can be changed any time from the arrow by the logo or Settings.
+const nextAfterLang = (): 'hello' | 'store' => { if (hasStore()) return 'hello'; if (location.pathname !== '/') { setStore('dxb'); return 'hello'; } return 'store'; };
 import { typeMs } from '@/lib/voice';
 import { babble, hush, tourStart, tourStep, tourEnd, tourStop, isMuted, setMuted } from '@/lib/voice';
 import { siteRaw } from '@/lib/catalog';
@@ -103,7 +106,7 @@ export default function SamsoomTour() {
         const busy = document.documentElement.classList.contains('se-boot') || document.querySelector('.se-bootv, .lp, .se-net-veil, .rp-full, .vs-full') || !document.querySelector('[data-tour="cart"]');
         if (busy) { t = 0; return; }
         if (!t) t = Date.now();
-        if (Date.now() - t >= 900) { window.clearInterval(iv); setPhase(chose ? (hasStore() ? 'hello' : 'store') : 'lang'); }
+        if (Date.now() - t >= 900) { window.clearInterval(iv); setPhase(chose ? nextAfterLang() : 'lang'); }
       }, 250);
     }
     // on a page someone opens for the first time (after the first welcome), he offers a tour of that page once
@@ -158,7 +161,7 @@ export default function SamsoomTour() {
   ) : null;
   if (phase === 'lang') {
     const cr = CHOOSE_R(), [cl, ct] = cr[ci % cr.length], d = detect(), all = ranked(), list = d ? [all.find((x) => x.id === d)!, ...all.filter((x) => x.id !== d)] : all;
-    const pick = (id: Lang) => { window.seI18n && window.seI18n.now(id); try { localStorage.setItem('se-lang', id); } catch { /* */ } setPhase(hasStore() ? 'hello' : 'store'); };
+    const pick = (id: Lang) => { window.seI18n && window.seI18n.now(id); try { localStorage.setItem('se-lang', id); } catch { /* */ } setPhase(nextAfterLang()); };
     const hint = d || cl;
     return (
       <div className="st-veil st-veil-lang" role="dialog" aria-modal="true" aria-label="Choose your language" data-no-i18n="">
