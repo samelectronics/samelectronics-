@@ -123,7 +123,7 @@ export default function SiteControls() {
                 <h4>{T('Price')}</h4>
                 <div className="sc2-row"><span>AED · USD · EUR</span><span className="sc2-seg">{(['AED', 'USD', 'EUR'] as Currency[]).map((c) => <button key={c} type="button" className={p.currency === c ? 'on' : ''} onClick={() => { setPrefs({ currency: c }); window.dispatchEvent(new CustomEvent('se:catalog')); }}>{c}</button>)}</span></div>
                 <div className="sc2-row"><span>{T('Language')}</span><button type="button" className="st-btn st-dark sc2-small" onClick={() => { setPanel(false); (window as unknown as { seTour?: () => void }).seTour?.(); }}>{T('Change language')}</button></div>
-                <div className="sc2-row"><span>{T('Store')}</span><button type="button" className="st-btn st-dark sc2-small" onClick={() => { setPanel(false); window.dispatchEvent(new CustomEvent('se:store')); }}>{T('Change store')}</button></div>
+                <div className="sc2-row"><span>{T('Store')}</span><button type="button" className="st-btn st-dark sc2-small" onClick={() => { setPanel(false); window.dispatchEvent(new CustomEvent('se:store-pick')); }}>{T('Change store')}</button></div>
                 <div className="sc2-row"><span>{T('More settings')}</span><a className="st-btn st-go sc2-small" href="/account#profile">{T('Open My Bench')}</a></div>
                 {inst ? <div className="sc2-row"><span>{T('Install the app')}</span><button type="button" className="st-btn st-go sc2-small" onClick={() => { inst.prompt(); setInst(null); }}>{T('Install')}</button></div> : null}
               </section>

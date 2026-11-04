@@ -43,7 +43,7 @@ function ListMenu({ id, kits }: { id: string; kits: { name: string; ids: string[
   const inAny = kits.some((k) => k.ids.includes(id));
   return (
     <span className="pv-lists">
-      <button type="button" className={inAny ? 'on' : ''} aria-expanded={open} onClick={() => setOpen(!open)}><PvIc k="list" />{T('Add to a list')}</button>
+      <button type="button" className={inAny ? 'on' : ''} aria-expanded={open} onClick={() => setOpen(!open)}><PvIc k="list" />{T('List')}</button>
       {open ? (
         <span className="pv-lists-pop" role="dialog" aria-label={T('My lists')}>
           {kits.length ? kits.map((k) => <label key={k.name}><input type="checkbox" checked={k.ids.includes(id)} onChange={() => store.toList(k.name, id)} /><span>{k.name}</span><small>{k.ids.length}</small></label>) : <small className="pv-lists-none">{T('No lists yet. Name one, e.g. “Shop order June”.')}</small>}
@@ -130,11 +130,11 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
             </div>
             {/* R10 P2: one clean icon set; parts go into the visitor's own named lists */}
             <div className="pv-tools">
-              <button type="button" className={st.favs.includes(p.id) ? 'on' : ''} onClick={() => store.fav(p.id)}><PvIc k="star" />{st.favs.includes(p.id) ? T('Starred') : T('Star it')}</button>
+              <button type="button" className={st.favs.includes(p.id) ? 'on' : ''} onClick={() => store.fav(p.id)}><PvIc k="star" />{st.favs.includes(p.id) ? T('Starred') : T('Star')}</button>
               <button type="button" className={st.compare.includes(p.id) ? 'on' : ''} onClick={() => store.cmp(p.id)}><PvIc k="cmp" />{T('Compare')}</button>
-              <button type="button" onClick={() => { store.later(p.id); }}><PvIc k="save" />{T('Save for later')}</button>
-              <button type="button" className={st.alerts.includes(p.id) ? 'on' : ''} onClick={() => store.alert(p.id)}><PvIc k="bell" />{st.alerts.includes(p.id) ? T('Alert on') : T('Price & stock alert')}</button>
-              <button type="button" onClick={share}><PvIc k="share" />{copied ? T('Link copied') : T('Share')}</button>
+              <button type="button" onClick={() => { store.later(p.id); }}><PvIc k="save" />{T('Save')}</button>
+              <button type="button" className={st.alerts.includes(p.id) ? 'on' : ''} onClick={() => store.alert(p.id)}><PvIc k="bell" />{st.alerts.includes(p.id) ? T('Alert on') : T('Alert')}</button>
+              <button type="button" onClick={share}><PvIc k="share" />{copied ? T('Copied') : T('Share')}</button>
               <ListMenu id={p.id} kits={st.kits} />
             </div>
             <ul className="pv-promise">

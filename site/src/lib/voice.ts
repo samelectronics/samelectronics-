@@ -45,7 +45,7 @@ function blip(f: number, d: number, v: Voice, up: boolean) {
 
 let stopCur: (() => void) | null = null;
 // R11c: ONE clock for his voice and his typing, so they always start and finish together
-export const CPS = 52;
+export const CPS = 42;
 export const charMs = (ch: string) => (/[.,;:!?…،؟。，]/.test(ch) ? 2000 / CPS : 1000 / CPS);
 export const typeMs = (t: string) => Array.from(t || '').reduce((a, c) => a + charMs(c), 0);
 const mouth = (o: boolean) => { const r = document.documentElement; if (o) r.setAttribute('data-sam-mouth', 'o'); else r.removeAttribute('data-sam-mouth'); };
@@ -82,7 +82,7 @@ export function babble(text: string, opts: { onEnd?: () => void } = {}) {
     if (/[.,;:!?…،؟。，]/.test(ch)) { if (on) G.push([t0 + 0.01, 0]); on = false; }
     else if (/\s/.test(ch)) { if (on) G.push([t0 + 0.01, 0.12]); on = false; }
     else if (isV(ch)) { G.push([t0 + 0.012, 1]); on = true; }
-    else { G.push([t0 + 0.006, on ? 0.38 : 0.3]); on = true; if (/[tkpsczfxشسصتكقث]/i.test(ch)) ticks.push(t0); } });
+    else { G.push([t0 + 0.01, on ? 0.5 : 0.35]); on = true; if (/[tkpsczfxشسصتكقث]/i.test(ch)) ticks.push(t0); } });
   G.push([total, on ? 1 : 0], [total + 0.06, 0]);
   const pk = [[0, P[0][1]] as [number, number], ...P, [total + 0.1, P[P.length - 1][1]] as [number, number]];
   let o: OscillatorNode | null = null, g: GainNode | null = null, alive = true, raf = 0, endTm = 0;
@@ -95,7 +95,7 @@ export function babble(text: string, opts: { onEnd?: () => void } = {}) {
     f1.frequency.setValueCurveAtTime(curve(fk(F1), len, DT), now, len); f2.frequency.setValueCurveAtTime(curve(fk(F2), len, DT), now, len);
     const gc = curve(G, len, DT).map((v) => Math.max(0.0001, v * peak)); g.gain.setValueAtTime(0.0001, now); g.gain.setValueCurveAtTime(gc, now + 0.001, len);
     o.start(now); o.stop(now + len + 0.05);
-    if (ticks.length) { // tiny breathy clicks on t, k, p, s: the "speech" texture
+    if (false && ticks.length) { // R11h (owner): no clicks, they sounded like plastic // tiny breathy clicks on t, k, p, s: the "speech" texture
       const nb = c.createBuffer(1, Math.ceil(c.sampleRate * 0.03), c.sampleRate), d = nb.getChannelData(0); for (let q = 0; q < d.length; q++) d[q] = (Math.random() * 2 - 1) * (1 - q / d.length);
       ticks.forEach((tt) => { const src = c.createBufferSource(), hp = c.createBiquadFilter(), tg = c.createGain(); src.buffer = nb; hp.type = 'highpass'; hp.frequency.value = 3500; tg.gain.value = 0.05; src.connect(hp); hp.connect(tg); tg.connect(out()); src.start(now + tt); }); }
     if (happy) { // a tiny "he-he" right after the line

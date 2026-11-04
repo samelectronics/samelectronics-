@@ -102,7 +102,7 @@ export default function Bench({ me, refresh }: { me: User; refresh: () => void }
           <Sec t="Site settings" d="Sounds, Samsoom’s voice, currency, language and privacy on this device.">
             <div className="sp-card"><SoundSettings />
               <div className="ss-row"><span><b>{T('Language')}</b></span><button type="button" className="sp-btn sm dark" onClick={() => (window as unknown as { seTour?: () => void }).seTour?.()}>{T('Change language')}</button></div>
-              <div className="ss-row"><span><b>{T('Store')}</b></span><button type="button" className="sp-btn sm" onClick={() => window.dispatchEvent(new CustomEvent('se:store'))}>{T('Change store')}</button></div>
+              <div className="ss-row"><span><b>{T('Store')}</b></span><button type="button" className="sp-btn sm" onClick={() => window.dispatchEvent(new CustomEvent('se:store-pick'))}>{T('Change store')}</button></div>
               <div className="ss-row"><span><b>{T('Privacy choices')}</b></span><button type="button" className="sp-btn sm" onClick={() => window.dispatchEvent(new CustomEvent('se:settings', { detail: 'privacy' }))}>{T('Open')}</button></div>
             </div>
           </Sec></>

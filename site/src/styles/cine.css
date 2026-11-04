@@ -219,3 +219,12 @@ html[dir='rtl'] .cine-word, html[dir='rtl'] .sp-cine[data-v] .cine-word { right:
 /* R11e (owner): the shop header is shorter, so its vertical word is smaller and sits clear of the nav and the white area */
 .shop-cine .cine-word { font-size: calc(262px / (var(--n, 5) * .56)) !important; top: calc(50% + 2px) !important; inset-inline-end: 12px !important; overflow: visible !important; height: max-content !important; }
 @media (min-width: 900px) { .shop-cine > .sp-wrap { padding-inline-end: 104px; box-sizing: border-box; } }
+
+/* R11h (owner): product tools are one tidy row of chips, like the buttons in the nav; pressed = brand yellow */
+html body .pv-tools { display: flex !important; flex-wrap: wrap !important; gap: 8px !important; padding: 0 !important; }
+html body .pv-tools > button, html body .pv-tools > span > button, html body .pv-tools > .lm > button { flex: none !important; flex-direction: row !important; height: 38px !important; min-height: 0 !important; padding: 0 13px 0 11px !important; gap: 7px !important; border-radius: 10px !important; background: #fff !important; box-shadow: inset 0 0 0 1px #E2E2DE, 0 1px 2px rgba(38,40,43,.06) !important; color: #26282B !important; font: 600 13px Inter, sans-serif !important; transition: background .18s, box-shadow .18s, transform .12s !important; }
+html body .pv-tools > button svg, html body .pv-tools > span > button svg, html body .pv-tools > .lm > button svg { width: 17px !important; height: 17px !important; padding: 0 !important; background: none !important; box-shadow: none !important; color: #26282B !important; }
+html body .pv-tools > button:hover, html body .pv-tools > span > button:hover, html body .pv-tools > .lm > button:hover { box-shadow: inset 0 0 0 1.5px #F7C032, 0 4px 12px -4px rgba(247,192,50,.5) !important; transform: translateY(-1px) !important; }
+html body .pv-tools > button:active, html body .pv-tools > span > button:active { transform: scale(.96) !important; }
+html body .pv-tools > button.on, html body .pv-tools > span > button.on, html body .pv-tools > .lm > button.on { background: #F7C032 !important; box-shadow: 0 6px 16px -6px rgba(247,192,50,.8) !important; color: #26282B !important; }
+html body .pv-tools > button.on svg, html body .pv-tools > span > button.on svg, html body .pv-tools > .lm > button.on svg { color: #26282B !important; fill: #26282B !important; }
