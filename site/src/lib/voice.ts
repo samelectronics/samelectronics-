@@ -24,7 +24,7 @@ const vol = () => Math.min(1, Math.max(0, prefs().sound.vol));
 // R11 (owner): cute and funny, never buzzy. Each syllable is a tiny "bloop": a soft sine/triangle that bends up or down
 // (randomly, like a little creature talking), shaped by a gentle filter, with silence between syllables.
 const V: Record<Voice, { f: number; type: OscillatorType; lp: number; d: number; bend: number; robot?: boolean }> = {
-  cute: { f: 440, type: 'sine', lp: 4200, d: 0.085, bend: 0.45 },
+  cute: { f: 400, type: 'sine', lp: 4200, d: 0.085, bend: 0.45 },
   deep: { f: 250, type: 'triangle', lp: 2200, d: 0.1, bend: 0.3 },
   robot: { f: 330, type: 'triangle', lp: 2600, d: 0.07, bend: 0, robot: true },
 };
@@ -86,15 +86,21 @@ export function babble(text: string, opts: { onEnd?: () => void } = {}) {
   G.push([total, on ? 1 : 0], [total + 0.06, 0]);
   const pk = [[0, P[0][1]] as [number, number], ...P, [total + 0.1, P[P.length - 1][1]] as [number, number]];
   let o: OscillatorNode | null = null, g: GainNode | null = null, alive = true, raf = 0, endTm = 0;
-  const peak = cfg.robot ? 0.12 : 0.36, DT = 0.008, len = total + 0.12;
+  let coreRef = {} as { core: OscillatorNode; vib: OscillatorNode };
+  const peak = cfg.robot ? 0.12 : 0.21, DT = 0.008, len = total + 0.12;
   if (can()) { try { const c = ac(), now = c.currentTime + 0.02; o = c.createOscillator(); g = c.createGain(); const f1 = c.createBiquadFilter(), f2 = c.createBiquadFilter(), g2 = c.createGain(), lp = c.createBiquadFilter();
-    o.type = cfg.robot ? 'square' : 'sawtooth'; f1.type = 'bandpass'; f1.Q.value = 2; f2.type = 'bandpass'; f2.Q.value = 3; g2.gain.value = 0.6; lp.type = 'lowpass'; lp.frequency.value = 3200; lp.Q.value = 0.3;
-    o.connect(f1); o.connect(f2); f1.connect(lp); f2.connect(g2); g2.connect(lp); lp.connect(g); g.connect(out());
-    o.frequency.setValueCurveAtTime(curve(pk, len, DT), now, len);
+    o.type = cfg.robot ? 'square' : 'triangle'; f1.type = 'bandpass'; f1.Q.value = 0.9; f2.type = 'bandpass'; f2.Q.value = 1.4; g2.gain.value = 0.35; lp.type = 'lowpass'; lp.frequency.value = 2200; lp.Q.value = 0.2;
+    // R11j (owner: "mosquito with a closed nose"): a warm round core (pure tone at his pitch) carries the voice, the vowel
+    // colour sits on top, wide and soft; the buzzy top end is trimmed. A light, slow wobble keeps him alive and friendly.
+    const core = c.createOscillator(), cg = c.createGain(); core.type = 'sine'; cg.gain.value = 0.55; core.connect(cg); cg.connect(lp);
+    const vib = c.createOscillator(), vg = c.createGain(); vib.frequency.value = 5.2; vg.gain.value = 6; vib.connect(vg); vg.connect(o.frequency); vg.connect(core.frequency);
+    const fg = c.createGain(); fg.gain.value = 0.6; o.connect(f1); o.connect(f2); f1.connect(fg); f2.connect(g2); g2.connect(fg); fg.connect(lp); lp.connect(g); g.connect(out());
+    coreRef = { core, vib };
+    const pc = curve(pk, len, DT); o.frequency.setValueCurveAtTime(pc, now, len); coreRef.core.frequency.setValueCurveAtTime(pc, now, len);
     const fk = (F: [number, number][]) => (F.length ? [[0, F[0][1]] as [number, number], ...F, [len, F[F.length - 1][1]] as [number, number]] : [[0, 700], [len, 700]] as [number, number][]);
     f1.frequency.setValueCurveAtTime(curve(fk(F1), len, DT), now, len); f2.frequency.setValueCurveAtTime(curve(fk(F2), len, DT), now, len);
     const gc = curve(G, len, DT).map((v) => Math.max(0.0001, v * peak)); g.gain.setValueAtTime(0.0001, now); g.gain.setValueCurveAtTime(gc, now + 0.001, len);
-    o.start(now); o.stop(now + len + 0.05);
+    o.start(now); o.stop(now + len + 0.05); coreRef.core.start(now); coreRef.core.stop(now + len + 0.05); coreRef.vib.start(now); coreRef.vib.stop(now + len + 0.05);
     if (false && ticks.length) { // R11h (owner): no clicks, they sounded like plastic // tiny breathy clicks on t, k, p, s: the "speech" texture
       const nb = c.createBuffer(1, Math.ceil(c.sampleRate * 0.03), c.sampleRate), d = nb.getChannelData(0); for (let q = 0; q < d.length; q++) d[q] = (Math.random() * 2 - 1) * (1 - q / d.length);
       ticks.forEach((tt) => { const src = c.createBufferSource(), hp = c.createBiquadFilter(), tg = c.createGain(); src.buffer = nb; hp.type = 'highpass'; hp.frequency.value = 3500; tg.gain.value = 0.05; src.connect(hp); hp.connect(tg); tg.connect(out()); src.start(now + tt); }); }
