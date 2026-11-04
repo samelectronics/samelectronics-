@@ -24,9 +24,9 @@ const vol = () => Math.min(1, Math.max(0, prefs().sound.vol));
 // R11 (owner): cute and funny, never buzzy. Each syllable is a tiny "bloop": a soft sine/triangle that bends up or down
 // (randomly, like a little creature talking), shaped by a gentle filter, with silence between syllables.
 const V: Record<Voice, { f: number; type: OscillatorType; lp: number; d: number; bend: number; robot?: boolean }> = {
-  cute: { f: 640, type: 'sine', lp: 3200, d: 0.085, bend: 0.45 },
-  deep: { f: 300, type: 'triangle', lp: 1500, d: 0.1, bend: 0.3 },
-  robot: { f: 460, type: 'square', lp: 1800, d: 0.07, bend: 0, robot: true },
+  cute: { f: 430, type: 'sine', lp: 1700, d: 0.085, bend: 0.45 },
+  deep: { f: 230, type: 'triangle', lp: 1100, d: 0.1, bend: 0.3 },
+  robot: { f: 330, type: 'triangle', lp: 1300, d: 0.07, bend: 0, robot: true },
 };
 let master: GainNode | null = null;
 const out = () => { const c = ac(); if (!master) { master = c.createGain(); const comp = c.createDynamicsCompressor(); master.connect(comp); comp.connect(c.destination); } master.gain.value = vol() * 0.5; return master; };
@@ -45,39 +45,38 @@ function blip(f: number, d: number, v: Voice, up: boolean) {
 
 let stopCur: (() => void) | null = null;
 // R11c: ONE clock for his voice and his typing, so they always start and finish together
-export const CPS = 40;
+export const CPS = 52;
 export const charMs = (ch: string) => (/[.,;:!?…،؟。，]/.test(ch) ? 3000 / CPS : 1000 / CPS);
 export const typeMs = (t: string) => Array.from(t || '').reduce((a, c) => a + charMs(c), 0);
 const mouth = (o: boolean) => { const r = document.documentElement; if (o) r.setAttribute('data-sam-mouth', 'o'); else r.removeAttribute('data-sam-mouth'); };
-/** Babble a line in time with its typing. One continuous voice per line (no separate beeps): a single oscillator that
- *  glides from pitch to pitch, swelling on every syllable, dipping between them, silent only at spaces and punctuation. */
+/** Babble a line in time with its typing. R11d: each WORD is one smooth sound: one gentle pitch contour that glides
+ *  across the whole word (a little rise or fall, like a sung syllable), a soft fade in and out per word, quiet between
+ *  words. No per-letter ups and downs, nothing sharp; low and warm so it never stings. */
 export function babble(text: string, opts: { onEnd?: () => void } = {}) {
   stopCur && stopCur();
   const voice = prefs().sound.voice || 'cute', cfg = V[voice], t = (text || '').trim(), ask = /\?\s*$/.test(t), hype = /!\s*$/.test(t);
-  const base = cfg.f * (hype ? 1.1 : 1), chars = Array.from(t);
-  let i = 0, tm = 0, alive = true, inVowel = false, n = 0;
-  const VOW = /[aeiouyáéíóúàèìòùâêîôûäëïöüæøåаеёиоуыэюяاأإآويىةَُِऀ-ॿ一-鿿]/i;
-  // the voice: oscillator → soft filter → gain (the "mouth"), plus a slow vibrato
-  let o: OscillatorNode | null = null, g: GainNode | null = null, lfo: OscillatorNode | null = null;
-  if (can()) { try { const c = ac(), lp = c.createBiquadFilter(), lg = c.createGain(); o = c.createOscillator(); g = c.createGain(); lfo = c.createOscillator();
-    o.type = cfg.type === 'square' ? 'square' : cfg.type; lp.type = 'lowpass'; lp.frequency.value = cfg.lp; lp.Q.value = 0.8;
-    lfo.frequency.value = 5.5; lg.gain.value = cfg.robot ? 0 : base * 0.025; lfo.connect(lg); lg.connect(o.frequency);
-    o.frequency.value = base; g.gain.value = 0.0001; o.connect(lp); lp.connect(g); g.connect(out()); o.start(); lfo.start(); } catch { o = null; } }
-  const peak = cfg.type === 'square' ? 0.045 : 0.14;
-  const end = () => { if (g && o) { const c = ac(), now = c.currentTime; g.gain.cancelScheduledValues(now); g.gain.setTargetAtTime(0.0001, now, 0.04); try { o.stop(now + 0.3); lfo && lfo.stop(now + 0.3); } catch { /* */ } } o = null; };
+  const base = cfg.f * (hype ? 1.08 : 1), chars = Array.from(t);
+  let i = 0, tm = 0, alive = true, inWord = false, w = 0;
+  let o: OscillatorNode | null = null, g: GainNode | null = null;
+  if (can()) { try { const c = ac(), lp = c.createBiquadFilter(), lp2 = c.createBiquadFilter(); o = c.createOscillator(); g = c.createGain();
+    o.type = cfg.type; lp.type = 'lowpass'; lp.frequency.value = cfg.lp; lp.Q.value = 0.3; lp2.type = 'lowpass'; lp2.frequency.value = cfg.lp * 1.4; lp2.Q.value = 0.2;
+    o.frequency.value = base; g.gain.value = 0.0001; o.connect(lp); lp.connect(lp2); lp2.connect(g); g.connect(out()); o.start(); } catch { o = null; } }
+  const peak = 0.075;
+  const end = () => { if (g && o) { const c = ac(), now = c.currentTime; g.gain.cancelScheduledValues(now); g.gain.setTargetAtTime(0.0001, now, 0.05); try { o.stop(now + 0.4); } catch { /* */ } } o = null; };
+  const wordLen = (k: number) => { let n = 0; while (k + n < chars.length && !/[\s.,;:!?…،؟。，]/.test(chars[k + n])) n++; return n; };
   const tick = () => {
     if (!alive) return;
     if (i >= chars.length) { mouth(false); end(); document.documentElement.setAttribute('data-sam-done', ''); window.setTimeout(() => document.documentElement.removeAttribute('data-sam-done'), 1400); opts.onEnd && opts.onEnd(); alive = false; return; }
-    const ch = chars[i++], wait = charMs(ch), now = o ? ac().currentTime : 0;
-    if (/[.,;:!?…،؟。，\s]/.test(ch)) { mouth(false); inVowel = false; if (g) g.gain.setTargetAtTime(0.0001, now, 0.025); }
-    else { const v = VOW.test(ch);
-      if (v && !inVowel) { n++; mouth(true); window.setTimeout(() => alive && mouth(false), Math.min(120, wait * 2.5));
-        if (o && g) { const left = chars.length - i, rise = ask && left < 8 ? 1 + (8 - left) * 0.05 : 1, f = base * rise * (1 + (Math.random() * 2 - 1) * 0.16 + (n % 4 === 1 ? 0.1 : 0));
-          if (cfg.robot) o.frequency.setValueAtTime(f, now); else o.frequency.setTargetAtTime(f, now, 0.03); // a glide, not a jump
-          g.gain.setTargetAtTime(peak, now, 0.012); g.gain.setTargetAtTime(peak * 0.35, now + 0.06, 0.04); } // swell, then settle (never fully off inside a word)
-      } else if (!v && g && n) g.gain.setTargetAtTime(peak * 0.3, now, 0.03);
-      inVowel = v; }
-    tm = window.setTimeout(tick, wait);
+    const ch = chars[i], wait = charMs(ch), now = o ? ac().currentTime : 0;
+    if (/[\s.,;:!?…،؟。，]/.test(ch)) { if (inWord) { mouth(false); if (g) g.gain.setTargetAtTime(0.0001, now, 0.035); } inWord = false; }
+    else if (!inWord) { // a new word: one smooth contour for the whole word
+      inWord = true; w++; const n = wordLen(i), dur = (n * 1000) / CPS / 1000, left = chars.length - i, last = left <= n + 2;
+      const f0 = base * (1 + (Math.random() * 2 - 1) * 0.09 + (w % 3 === 0 ? 0.06 : 0)), f1 = f0 * (ask && last ? 1.28 : Math.random() < 0.5 ? 1.07 : 0.94);
+      mouth(true); const flap = window.setInterval(() => { if (!alive || !inWord) { window.clearInterval(flap); return; } document.documentElement.toggleAttribute('data-sam-mouth', !document.documentElement.hasAttribute('data-sam-mouth')); if (document.documentElement.hasAttribute('data-sam-mouth')) document.documentElement.setAttribute('data-sam-mouth', 'o'); }, 110);
+      if (o && g) { o.frequency.cancelScheduledValues(now); o.frequency.setTargetAtTime(f0, now, 0.03); o.frequency.setTargetAtTime(f1, now + dur * 0.35, Math.max(0.05, dur * 0.4));
+        g.gain.cancelScheduledValues(now); g.gain.setTargetAtTime(peak, now, 0.03); }
+    }
+    i++; tm = window.setTimeout(tick, wait);
   };
   document.documentElement.removeAttribute('data-sam-done'); tick();
   stopCur = () => { alive = false; window.clearTimeout(tm); mouth(false); end(); };

@@ -15,10 +15,9 @@ export function tabDot(unread: number) {
   if (!links.length) return; if (fvBase == null) fvBase = links[0].href;
   window.clearInterval(fvIv);
   const set = (href: string) => links.forEach((l) => { l.href = href; });
-  if (!unread) { set(fvBase); return; }
   const draw = (on: boolean) => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'); if (!x) return; if (fvImg && fvImg.complete) x.drawImage(fvImg, 0, 0, 64, 64);
-    /* R11b: a small red dot in the bottom-right corner, like an app badge; it never covers the logo */ x.beginPath(); x.arc(53, 53, 10, 0, 7); x.fillStyle = '#FFFFFF'; x.fill(); x.beginPath(); x.arc(53, 53, 7.5, 0, 7); x.fillStyle = on ? '#E5484D' : 'rgba(229,72,77,.45)'; x.fill(); try { set(c.toDataURL('image/png')); } catch {} };
-  const go = () => { let on = true; draw(on); fvIv = window.setInterval(() => { on = !on; draw(on); }, 900); };
+    /* R11b: a small red dot in the bottom-right corner, like an app badge; it never covers the logo */ x.beginPath(); x.arc(53, 53, 10, 0, 7); x.fillStyle = '#26282B'; x.fill(); x.beginPath(); x.arc(53, 53, 7, 0, 7); x.fillStyle = unread && on ? '#F7C032' : '#8C9096'; x.fill(); /* R11d: grey = nothing new; blinking yellow = new notifications */ try { set(c.toDataURL('image/png')); } catch {} };
+  const go = () => { let on = true; draw(on); if (unread) fvIv = window.setInterval(() => { on = !on; draw(on); }, 900); };
   if (!fvImg) { fvImg = new Image(); fvImg.crossOrigin = 'anonymous'; fvImg.onload = go; fvImg.src = '/assets/se-logo-128.webp'; } else go();
 }
 export const markRead = (id?: string) => write(read().map((x) => (!id || x.id === id ? { ...x, read: true } : x)));

@@ -18,14 +18,14 @@ export function StoreCards({ onPick }: { onPick: (s: StoreId) => void }) {
     <div className="stp-cards">
       <button type="button" className={'stp-c dxb' + (cur === 'dxb' ? ' on' : '')} onClick={() => { setStore('dxb'); onPick('dxb'); }}>
         <span className="stp-sky" aria-hidden="true"><i /><i /><i /><i /><i /><i /><i /></span>
-        <span className="stp-flag" aria-hidden="true">🇦🇪</span>
+        <span className="stp-mono" aria-hidden="true"><img src="/assets/se-logo-128.webp" alt="" width="34" height="34" /><em>DXB</em></span>
         <span className="stp-live"><i />{T('Open now · since 2003')}</span>
         <b>Dubai · Deira</b><small>{T('Al Murar, Deira · our home counter')}</small>
         <span className="stp-go">{cur === 'dxb' ? '✓ ' + T('Your store') : T('Choose Deira') + ' →'}</span>
       </button>
       <div className="stp-c mad" aria-disabled="true">
         <span className="stp-sky" aria-hidden="true"><i /><i /><i /><i /><i /></span>
-        <span className="stp-flag" aria-hidden="true">🇪🇸</span>
+        <span className="stp-mono stp-mono-soon" aria-hidden="true"><i /><em>MAD</em></span>
         <span className="stp-pend mono">[ ···· ] v5.0 <em>PENDING</em></span>
         <b>Madrid · Plaza Mayor</b><small>{T('Allo Madrid · opening soon')}</small>
         <span className="stp-bar" aria-label={T('Loading')}><i style={{ width: pct + '%' }} /></span>
@@ -51,14 +51,28 @@ export function StorePicker() {
   );
 }
 
+/** R11d: a small arrow beside the logo. Hover or click shows the stores underneath, like the hours card. */
 export function StoreChip() {
   const [s, setS] = useState<StoreId>('dxb');
-  useEffect(() => { setS(getStore()); const f = (e: Event) => setS((e as CustomEvent).detail); window.addEventListener('se:store-set', f); return () => window.removeEventListener('se:store-set', f); }, []);
+  const [open, setOpen] = useState(false);
+  useEffect(() => { setS(getStore()); const f = (e: Event) => setS((e as CustomEvent).detail); window.addEventListener('se:store-set', f); const c = () => setOpen(false); document.addEventListener('click', c); return () => { window.removeEventListener('se:store-set', f); document.removeEventListener('click', c); }; }, []);
   return (
-    <button type="button" className="stp-chip" onClick={() => window.dispatchEvent(new CustomEvent('se:store'))} title={T('Change store')} aria-label={T('Change store')}>
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12z" /><circle cx="12" cy="9" r="2.5" /></svg>
-      <span>{s === 'mad' ? 'Madrid' : 'Deira'}</span>
-      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M6 9l6 6 6-6" /></svg>
-    </button>
+    <span className={'stp-sw' + (open ? ' on' : '')} onClick={(e) => e.stopPropagation()}>
+      <button type="button" className="stp-sw-b" onClick={() => setOpen((o) => !o)} title={T('Change store')} aria-label={T('Change store')} aria-expanded={open}>
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3"><path d="M6 9l6 6 6-6" /></svg>
+      </button>
+      <span className="stp-sw-pop" role="menu">
+        <span className="stp-sw-h mono">{T('Our stores')}</span>
+        <button type="button" role="menuitem" className="stp-sw-i cur" onClick={() => { setStore('dxb'); setOpen(false); }}>
+          <img src="/assets/se-logo-128.webp" alt="" width="26" height="26" />
+          <span><b>Sam Electronics · Deira</b><small><i className="stp-sw-dot" />{T('Open now · since 2003')}</small></span>
+          {s === 'dxb' && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F7C032" strokeWidth="3"><path d="M5 12l5 5 9-10" /></svg>}
+        </button>
+        <span className="stp-sw-i soon" role="menuitem" aria-disabled="true">
+          <span className="stp-sw-ph" />
+          <span><b>Allo Madrid</b><small className="mono">{T('Coming soon')} <em>···</em></small></span>
+        </span>
+      </span>
+    </span>
   );
 }
