@@ -58,6 +58,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
   useEffect(() => { try { localStorage.setItem('se-shop-view', JSON.stringify(view)); } catch { /* */ } }, [view]);
   const open = useCallback((p: Product) => setPid(p.id), []);
   const close = useCallback(() => setPid(null), []);
+  useEffect(() => { const o = () => { setPid(null); setCmpOpen(true); }; window.addEventListener('se:cmp-open', o); return () => window.removeEventListener('se:cmp-open', o); }, []);
 
   const base = useMemo(() => { if (!ready) return []; const all = products(); return scope === 'deals' ? all.filter((p) => p.deal > 0) : scope === 'new' ? all.filter((p) => p.isNew) : scope === 'limited' ? all.filter((p) => p.stock_qty > 0 && p.stock_qty < 6) : all; }, [ready, scope, cv]);
   const res = useMemo(() => (ready ? apply(f, base) : []), [f, base, ready]);
@@ -188,9 +189,9 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
       {/* compare tray */}
       {cmp.length ? (
         <div className="cmp-tray">
-          <span className="cmp-l"><b>{T('Compare')}</b><small>{cmp.length} / 4</small></span>
+          <span className="cmp-l"><b>{T('Compare')}</b><small>{cmp.length < 2 ? T('Pick another part to compare') : cmp.length + ' / 3'}</small></span>
           <span className="cmp-items">{cmp.map((p) => <span key={p.id} className="cmp-it"><img src={p.img} alt="" /><small>{p.title}</small><button type="button" onClick={() => store.cmp(p.id)} aria-label={T('Remove')}>×</button></span>)}</span>
-          <button type="button" className="sp-btn sm" disabled={cmp.length < 2} onClick={() => setCmpOpen(true)}>{T('Compare now')}</button>
+          <button type="button" className="sp-btn sm" disabled={cmp.length < 2} onClick={() => { close(); setCmpOpen(true); }}>{T('Compare now')}</button>
           <button type="button" className="cmp-clr" onClick={() => cmp.forEach((p) => store.cmp(p.id))}>{T('Clear')}</button>
         </div>
       ) : null}

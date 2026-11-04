@@ -2936,5 +2936,7 @@ const DICT: Record<string, string> = {
   "Change store": "Changer de boutique",
   "Madrid is on its way": "Madrid arrive",
   "We will tell you here the day Allo Madrid opens.": "Nous vous préviendrons ici le jour de l’ouverture d’Allo Madrid.",
+  "Where are you shopping from today?": "D'où faites-vous vos achats aujourd'hui ?",
+  "Our Deira store in Dubai is open now. Allo Madrid opens soon, and I can let you know the day it does.": "Notre magasin de Deira à Dubaï est ouvert. Allo Madrid ouvre bientôt, je peux vous prévenir le jour J.",
 };
 export default DICT;

@@ -85,3 +85,17 @@ button.stp-sw-i { cursor: pointer; }
 .stp-c.mad > .stp-id { opacity: .7 !important; }
 .stp-c .stp-go, .stp-c .stp-notify { margin-top: 6px; align-self: flex-start; }
 .stp-c > .stp-bar { width: auto !important; align-self: stretch; }
+
+/* R11i (owner): both cards share the same rows, so names, status lines and buttons sit on the same lines */
+.stp-c { display: grid !important; grid-template-rows: 170px auto auto auto 1fr auto; align-items: start; justify-items: start; row-gap: 10px !important; }
+.stp-c > .stp-map { grid-row: 1; justify-self: stretch; }
+.stp-c > .stp-id { grid-row: 2; }
+.stp-c > .stp-live { grid-row: 3; }
+.stp-c > .stp-row { grid-row: 4; display: flex; flex-direction: column; gap: 6px; justify-self: stretch; }
+.stp-c > .stp-go, .stp-c > .stp-notify { grid-row: 6; margin-top: 4px !important; }
+.stp-c > .stp-row .stp-bar { width: 100% !important; }
+.stp-pendl { color: #B9BBBF !important; } .stp-pendl i { background: #8C9096 !important; box-shadow: none !important; animation: stpBlink 1.2s steps(2) infinite; } .stp-pendl em { font-style: normal; color: #F7C032; letter-spacing: .08em; font-size: 11px; }
+.stp-c.mad > .stp-live { opacity: 1 !important; }
+.st-store { width: min(900px, calc(100vw - 32px)) !important; }
+.st-store .stp-cards { width: 100%; }
+.stp-c.dxb.on { transform: none !important; } .stp-c.dxb, .stp-c.mad { border: 0 !important; } .stp-c.dxb { box-shadow: inset 0 0 0 2px #F7C032 !important; } .stp-c.mad { box-shadow: inset 0 0 0 2px rgba(255,255,255,.06) !important; }

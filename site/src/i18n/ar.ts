@@ -3467,4 +3467,6 @@ export const R8: Record<string, string> = {
   "Store": "المتجر",
   "Madrid is on its way": "مدريد في الطريق",
   "We will tell you here the day Allo Madrid opens.": "سنخبرك هنا يوم افتتاح ألو مدريد.",
+  "Where are you shopping from today?": "من أين تتسوق اليوم؟",
+  "Our Deira store in Dubai is open now. Allo Madrid opens soon, and I can let you know the day it does.": "متجرنا في ديرة بدبي مفتوح الآن. ألو مدريد يفتح قريباً، ويمكنني إخبارك يوم افتتاحه.",
 };

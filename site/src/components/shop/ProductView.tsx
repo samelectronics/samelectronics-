@@ -131,7 +131,7 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
             {/* R10 P2: one clean icon set; parts go into the visitor's own named lists */}
             <div className="pv-tools">
               <button type="button" className={st.favs.includes(p.id) ? 'on' : ''} onClick={() => store.fav(p.id)}><PvIc k="star" />{st.favs.includes(p.id) ? T('Starred') : T('Star')}</button>
-              <button type="button" className={st.compare.includes(p.id) ? 'on' : ''} onClick={() => store.cmp(p.id)}><PvIc k="cmp" />{T('Compare')}</button>
+              <button type="button" className={st.compare.includes(p.id) ? 'on' : ''} onClick={() => { const had = st.compare.includes(p.id); store.cmp(p.id); if (had) return; const n = Math.min(3, st.compare.length + 1); onClose(); if (n >= 2) window.setTimeout(() => window.dispatchEvent(new CustomEvent('se:cmp-open')), 120); }}><PvIc k="cmp" />{T('Compare')}</button>
               <button type="button" onClick={() => { store.later(p.id); }}><PvIc k="save" />{T('Save')}</button>
               <button type="button" className={st.alerts.includes(p.id) ? 'on' : ''} onClick={() => store.alert(p.id)}><PvIc k="bell" />{st.alerts.includes(p.id) ? T('Alert on') : T('Alert')}</button>
               <button type="button" onClick={share}><PvIc k="share" />{copied ? T('Copied') : T('Share')}</button>

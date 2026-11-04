@@ -56,7 +56,7 @@ export default function AskPage() {
       ans = j && !j.fallback && j.text ? (lk.parts ? { ...lk, t: j.text } : { t: j.text, act: j.action, emote: emoteFor(text, j.text) || 'happy' }) : lk;
     } catch { ans = pic ? { t: T('Thanks for the photo! Send it to the team on WhatsApp and they will tell you the part and the price.'), act: 'whatsapp', emote: 'think' } : local(text); }
     await new Promise((r) => setTimeout(r, 500));
-    setTyping(false); setMood(ans.emote || 'happy'); import('@/lib/voice').then((m) => m.babble(String(ans.t || '').slice(0, 160))).catch(() => {});
+    setTyping(false); setMood(ans.emote || 'happy'); import('@/lib/voice').then((m) => m.babble(String(ans.t || ''))).catch(() => {});
     const bot: Msg & { act?: string } = { t: ans.t, me: false, emote: ans.emote || null, own: true, parts: ans.parts, ...(ans.act ? { act: ans.act } : {}) };
     save((l) => l.map((c) => (c.id === cid ? { ...c, msgs: [...c.msgs, bot], at: Date.now() } : c)));
   };

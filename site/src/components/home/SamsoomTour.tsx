@@ -144,7 +144,7 @@ export default function SamsoomTour() {
   const next = () => { if (i >= steps.length - 1) { tourEnd(); setJump(true); window.setTimeout(() => bye(3200), 650); } else setI(i + 1); };
   // he talks on every step (and the tour builds a little); the bubble types along
   useEffect(() => { if (phase !== 'walk' || !steps[i]) return; tourStep(i, steps.length); const st = steps[i]; const stop = babble(T(st.t) + '. ' + T(st.d)); return () => stop(); }, [phase, i]);
-  useEffect(() => { if (phase === 'hello') { const stop = babble(T('Welcome to Sam Electronics!') + ' ' + (cfg().greeting ? T(cfg().greeting!) : T('I’m Samsoom, your parts assistant. Want a quick walk around? It takes 20 seconds.'))); return () => stop(); } if (phase === 'recall') { const stop = babble(T('You called me?')); return () => stop(); } if (phase === 'store') { const stop = babble(T('Which store are you shopping at?') + ' ' + T('Deira is open now. Madrid is loading: you can ask me to tell you when it opens.')); return () => stop(); } }, [phase]);
+  useEffect(() => { if (phase === 'hello') { const stop = babble(T('Welcome to Sam Electronics!') + ' ' + (cfg().greeting ? T(cfg().greeting!) : T('I’m Samsoom, your parts assistant. Want a quick walk around? It takes 20 seconds.'))); return () => stop(); } if (phase === 'recall') { const stop = babble(T('You called me?')); return () => stop(); } if (phase === 'store') { const stop = babble(T('Where are you shopping from today?') + ' ' + T('Our Deira store in Dubai is open now. Allo Madrid opens soon, and I can let you know the day it does.')); return () => stop(); } }, [phase]);
   useEffect(() => {
     if (phase === 'off') return;
     const k = (e: KeyboardEvent) => { if (e.key === 'Escape') { if (phase === 'lang') setPhase('hello'); else bye(); } if (phase === 'walk' && e.key === 'ArrowRight') next(); if (phase === 'walk' && e.key === 'ArrowLeft') setI((n) => Math.max(0, n - 1)); };
@@ -184,8 +184,8 @@ export default function SamsoomTour() {
     <div className="st-veil" role="dialog" aria-modal="true" aria-label={T('Choose your store')}>
       <div className="st-hello st-store">
         <span className="st-sam" data-sam-talk=""><LiveSam size={96} mood="idle" play="happy" /></span>
-        <b><Typed text={T('Which store are you shopping at?')} /></b>
-        <p><Typed delay={Math.round(typeMs(T('Which store are you shopping at?') + ' '))} text={T('Deira is open now. Madrid is loading: you can ask me to tell you when it opens.')} /></p>
+        <b><Typed text={T('Where are you shopping from today?')} /></b>
+        <p><Typed delay={Math.round(typeMs(T('Where are you shopping from today?') + ' '))} text={T('Our Deira store in Dubai is open now. Allo Madrid opens soon, and I can let you know the day it does.')} /></p>
         <StoreCards onPick={() => window.setTimeout(() => setPhase('hello'), 500)} />
       </div>
     </div>

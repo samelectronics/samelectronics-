@@ -5,6 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 import SESamsoom from '../../dc/SESamsoom';
 import { createScheduler } from '@/components/samsoom/scheduler';
+import { babble, charMs } from '@/lib/voice';
 
 type Msg = { t: string; me: boolean; emote: string | null; n: number; own: boolean; [k: string]: unknown };
 
@@ -40,10 +41,12 @@ function useChatLife(open: boolean, typing: boolean, msgs: Msg[], listRef: React
   useEffect(() => {
     if (!open || !last || last.me || !last.n || last.n <= seen.current) return;
     seen.current = last.n;
-    const len = last.t.length, dur = Math.min(1600, Math.max(450, len * 14)), t0 = performance.now();
+    // R11i (owner): the answer types on the same clock as his voice, and his mouth moves while he says it
+    const txt = String(last.t || ''), len = txt.length, cum: number[] = []; let a = 0; for (const ch of txt) { a += charMs(ch); cum.push(a); }
+    const t0 = performance.now(); const stopV = babble(txt);
     let raf = 0;
     const step = () => {
-      const k = Math.min(len, Math.ceil(((performance.now() - t0) / dur) * len));
+      const el0 = performance.now() - t0; let k = 0; while (k < cum.length && cum[k] <= el0) k++; k = Math.min(len, k);
       setReveal(k >= len ? null : { n: last.n, k });
       const el = listRef.current;
       if (el) el.scrollTop = el.scrollHeight;
@@ -51,7 +54,7 @@ function useChatLife(open: boolean, typing: boolean, msgs: Msg[], listRef: React
       else sch.current?.play(last.emote || 'happy');
     };
     raf = requestAnimationFrame(step);
-    return () => cancelAnimationFrame(raf);
+    return () => { cancelAnimationFrame(raf); stopV(); };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, last?.n]);
   return { mood, reveal };
@@ -153,7 +156,7 @@ export default function SamsoomChat({ v }: { v: Vals }) {
                     overflow: 'hidden',
                   }}
                 >
-                  <SESamsoom mood={mood} size={30} />
+                  <span data-sam-talk="" style={{ display: 'contents' }}><SESamsoom mood={mood} size={30} /></span>
                 </span>
                 <span style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
                   <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: '600', fontSize: '16px' }}>Samsoom</span>
