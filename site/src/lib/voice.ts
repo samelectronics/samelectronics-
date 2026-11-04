@@ -45,66 +45,67 @@ function blip(f: number, d: number, v: Voice, up: boolean) {
 
 let stopCur: (() => void) | null = null;
 // R11c: ONE clock for his voice and his typing, so they always start and finish together
-export const CPS = 56;
+export const CPS = 64;
 export const charMs = (ch: string) => (/[.,;:!?…،؟。，]/.test(ch) ? 2000 / CPS : 1000 / CPS);
 export const typeMs = (t: string) => Array.from(t || '').reduce((a, c) => a + charMs(c), 0);
 const mouth = (o: boolean) => { const r = document.documentElement; if (o) r.setAttribute('data-sam-mouth', 'o'); else r.removeAttribute('data-sam-mouth'); };
-/** R11e (owner): Samsoom talks like a cute little character, not a ringing tone.
- *  - Steady rhythm: one soft "note" per syllable, timed from the same typing clock, so his speed never drifts.
- *  - A warm buzzy-soft source (triangle) shaped by two vowel filters, so A/E/I/O/U each sound like a little vowel
- *    instead of a pure whistle that rings in the ear.
- *  - Real intonation: a sentence starts a bit higher and relaxes, statements end with a small fall,
- *    questions end going up, and happy lines (welcome, hi, thanks, great, !) are brighter with little upward scoops
- *    and a tiny "hehe" at the end. */
+/** R11f (owner): each word is one little melody, not separate notes. The whole line is planned up front on the audio
+ *  clock: the pitch flows smoothly up and down through the syllables like "uowowowo", the vowel colour slides with it,
+ *  the sound only softens between words and stops at full stops. Nothing runs on timers, so it never lags or drifts.
+ *  Happy lines are brighter and end with a little "he-he"; questions end going up; statements settle down. */
 const VOW: Record<string, [number, number]> = { a: [800, 1250], e: [520, 1900], i: [330, 2300], o: [520, 900], u: [360, 820], y: [330, 2200] };
 const vowOf = (ch: string): [number, number] => { const k = ch.normalize('NFD').charAt(0).toLowerCase(); return VOW[k] || (/[اآ]/.test(ch) ? VOW.a : /[و]/.test(ch) ? VOW.u : /[ي]/.test(ch) ? VOW.i : VOW.a); };
 const isV = (ch: string) => /[aeiouyáéíóúàèìòùâêîôûäëïöüаеёиоуыэюяاآوي]/i.test(ch);
 const HAPPY = /\b(welcome|hi|hey|hello|yay|great|thanks|thank you|awesome|nice|love|ha+|bienvenid|hola|gracias|bienvenue|merci|salut)\b|أهلا|مرحب|شكرا|!/i;
-const MELODY = [0, 2, -1, 3, 1, -2, 2, 0]; // semitone steps, a little tune that repeats, never random jumps
+const TUNE = [0, 4, 1, 5, 2, 6, 3, 5]; // gentle up-down wave in semitones, never a jump bigger than 4
+const smooth = (a: number, b: number, k: number) => a + (b - a) * (0.5 - 0.5 * Math.cos(Math.PI * k));
+/** sample a smooth curve through [time, value] keys every `dt` seconds */
+const curve = (keys: [number, number][], dur: number, dt: number) => { const n = Math.max(2, Math.ceil(dur / dt) + 1), out = new Float32Array(n); let j = 0;
+  for (let q = 0; q < n; q++) { const t = q * dt; while (j < keys.length - 2 && keys[j + 1][0] <= t) j++; const [t0, v0] = keys[j], [t1, v1] = keys[Math.min(j + 1, keys.length - 1)]; out[q] = t1 > t0 ? smooth(v0, v1, Math.min(1, Math.max(0, (t - t0) / (t1 - t0)))) : v1; } return out; };
 
 export function babble(text: string, opts: { onEnd?: () => void } = {}) {
   stopCur && stopCur();
   const voice = prefs().sound.voice || 'cute', cfg = V[voice], t = (text || '').trim();
   const ask = /\?\s*$/.test(t), happy = HAPPY.test(t), chars = Array.from(t);
   const base = cfg.f * (happy ? 1.1 : 1);
-  // which syllable is the last one of the line (for the ending tone)
-  let nSyl = 0; chars.forEach((c, k) => { if (isV(c) && (k === 0 || !isV(chars[k - 1]))) nSyl++; });
-  let i = 0, tm = 0, alive = true, syl = 0;
-  let o: OscillatorNode | null = null, g: GainNode | null = null, f1: BiquadFilterNode | null = null, f2: BiquadFilterNode | null = null;
-  if (can()) { try { const c = ac(); o = c.createOscillator(); g = c.createGain(); f1 = c.createBiquadFilter(); f2 = c.createBiquadFilter();
-    const g1 = c.createGain(), g2 = c.createGain(), lp = c.createBiquadFilter();
-    o.type = cfg.robot ? 'square' : 'triangle'; o.frequency.value = base;
-    f1.type = 'bandpass'; f1.Q.value = 3; f1.frequency.value = 700; f2.type = 'bandpass'; f2.Q.value = 5; f2.frequency.value = 1400;
-    g1.gain.value = 1; g2.gain.value = 0.55; lp.type = 'lowpass'; lp.frequency.value = 2600; lp.Q.value = 0.4;
-    o.connect(f1); o.connect(f2); f1.connect(g1); f2.connect(g2); g1.connect(lp); g2.connect(lp); lp.connect(g); g.gain.value = 0.0001; g.connect(out()); o.start(); } catch { o = null; } }
-  const peak = cfg.robot ? 0.12 : 0.5; // band-passed, so the level is still gentle
-  const end = () => { if (g && o) { const c = ac(), now = c.currentTime; g.gain.cancelScheduledValues(now); g.gain.setTargetAtTime(0.0001, now, 0.04); try { o.stop(now + 0.3); } catch { /* */ } } o = null; };
-  const hehe = () => { if (!o || !g) return; const c = ac(), now = c.currentTime; [0, 0.13].forEach((d, k) => { const f = base * (1.35 + k * 0.18);
-    o!.frequency.setTargetAtTime(f, now + d, 0.01); f1!.frequency.setTargetAtTime(520, now + d, 0.01); f2!.frequency.setTargetAtTime(1900, now + d, 0.01);
-    g!.gain.setTargetAtTime(peak * 0.8, now + d, 0.008); g!.gain.setTargetAtTime(0.0001, now + d + 0.07, 0.02); }); };
-  const tick = () => {
-    if (!alive) return;
-    if (i >= chars.length) { mouth(false); if (happy) { hehe(); window.setTimeout(end, 320); } else end(); document.documentElement.setAttribute('data-sam-done', ''); window.setTimeout(() => document.documentElement.removeAttribute('data-sam-done'), 1400); opts.onEnd && opts.onEnd(); alive = false; return; }
-    const ch = chars[i], wait = charMs(ch), now = o ? ac().currentTime : 0;
-    if (!/[\p{L}\p{N}]/u.test(ch)) { mouth(false); if (g) g.gain.setTargetAtTime(0.0001, now, 0.018); }
-    else if (isV(ch) && (i === 0 || !isV(chars[i - 1]))) {
-      // a syllable: one soft note. Pitch = little tune + sentence shape (+ ending tone)
-      const k = syl++, pos = nSyl > 1 ? k / (nSyl - 1) : 0, last = k === nSyl - 1, nearEnd = k >= nSyl - 2;
-      let semi = MELODY[k % MELODY.length] + 2 - pos * 3; // starts up, relaxes down
-      if (ask && nearEnd) semi += last ? 7 : 3; else if (!happy && last) semi -= 3; else if (happy && last) semi += 4;
-      const f = base * Math.pow(2, semi / 12), [a, b] = vowOf(ch);
-      mouth(true); document.documentElement.setAttribute('data-sam-mouth', /[oua]/i.test(ch) ? 'o' : '');
-      if (o && g && f1 && f2) {
-        o.frequency.cancelScheduledValues(now);
-        if (happy) { o.frequency.setValueAtTime(f * 0.9, now); o.frequency.setTargetAtTime(f, now, 0.025); } else o.frequency.setTargetAtTime(f, now, 0.012);
-        f1.frequency.setTargetAtTime(a, now, 0.015); f2.frequency.setTargetAtTime(b, now, 0.015);
-        g.gain.cancelScheduledValues(now); g.gain.setTargetAtTime(peak, now, 0.01); g.gain.setTargetAtTime(peak * 0.55, now + 0.05, 0.04);
-      }
-    } else if (!isV(ch) && g) { const lead = i + 1 < chars.length && isV(chars[i + 1]); if (lead) g.gain.setTargetAtTime(peak * 0.25, now, 0.012); } // a consonant: a quick soft dip before the next vowel
-    i++; tm = window.setTimeout(tick, wait);
-  };
-  document.documentElement.removeAttribute('data-sam-done'); tick();
-  stopCur = () => { alive = false; window.clearTimeout(tm); mouth(false); end(); };
+  // timeline (seconds), same clock as the typing
+  const at: number[] = []; let acc = 0; for (const ch of chars) { at.push(acc); acc += charMs(ch) / 1000; } const total = acc;
+  const syl: number[] = []; chars.forEach((c, k) => { if (isV(c) && (k === 0 || !isV(chars[k - 1]))) syl.push(k); });
+  const P: [number, number][] = [], G: [number, number][] = [[0, 0]], F1: [number, number][] = [], F2: [number, number][] = [];
+  syl.forEach((k, n) => { const pos = syl.length > 1 ? n / (syl.length - 1) : 0, last = n === syl.length - 1, near = n >= syl.length - 2;
+    let semi = TUNE[n % TUNE.length] - pos * 3; if (ask && near) semi += last ? 8 : 4; else if (last) semi += happy ? 5 : -3; if (happy) semi += 1;
+    const tc = at[k] + 0.5 / CPS * 1.0; P.push([tc, base * Math.pow(2, semi / 12)]); const [a, b] = vowOf(chars[k]); F1.push([tc, a]); F2.push([tc, b]); });
+  if (!P.length) P.push([0, base]);
+  // loudness: on through a word, a soft dip between words, silence at punctuation
+  let on = false; chars.forEach((ch, k) => { const t0 = at[k];
+    if (/[.,;:!?…،؟。，]/.test(ch)) { if (on) G.push([t0 + 0.01, 0]); on = false; }
+    else if (/\s/.test(ch)) { if (on) G.push([t0 + 0.012, 0.35]); }
+    else { if (!on || (G.length && G[G.length - 1][1] < 1)) G.push([t0 + 0.015, 1]); on = true; } });
+  G.push([total, on ? 1 : 0], [total + 0.06, 0]);
+  const pk = [[0, P[0][1]] as [number, number], ...P, [total + 0.1, P[P.length - 1][1]] as [number, number]];
+  let o: OscillatorNode | null = null, g: GainNode | null = null, alive = true, raf = 0, endTm = 0;
+  const peak = cfg.robot ? 0.12 : 0.5, DT = 0.01, len = total + 0.12;
+  if (can()) { try { const c = ac(), now = c.currentTime + 0.02; o = c.createOscillator(); g = c.createGain(); const f1 = c.createBiquadFilter(), f2 = c.createBiquadFilter(), g2 = c.createGain(), lp = c.createBiquadFilter();
+    o.type = cfg.robot ? 'square' : 'triangle'; f1.type = 'bandpass'; f1.Q.value = 2.5; f2.type = 'bandpass'; f2.Q.value = 4; g2.gain.value = 0.5; lp.type = 'lowpass'; lp.frequency.value = 2600; lp.Q.value = 0.3;
+    o.connect(f1); o.connect(f2); f1.connect(lp); f2.connect(g2); g2.connect(lp); lp.connect(g); g.connect(out());
+    o.frequency.setValueCurveAtTime(curve(pk, len, DT), now, len);
+    const fk = (F: [number, number][]) => (F.length ? [[0, F[0][1]] as [number, number], ...F, [len, F[F.length - 1][1]] as [number, number]] : [[0, 700], [len, 700]] as [number, number][]);
+    f1.frequency.setValueCurveAtTime(curve(fk(F1), len, DT), now, len); f2.frequency.setValueCurveAtTime(curve(fk(F2), len, DT), now, len);
+    const gc = curve(G, len, DT).map((v) => Math.max(0.0001, v * peak)); g.gain.setValueAtTime(0.0001, now); g.gain.setValueCurveAtTime(gc, now + 0.001, len);
+    o.start(now); o.stop(now + len + 0.05);
+    if (happy) { // a tiny "he-he" right after the line
+      const h = c.createOscillator(), hg = c.createGain(), hf = c.createBiquadFilter(); h.type = 'triangle'; hf.type = 'bandpass'; hf.frequency.value = 1700; hf.Q.value = 2; h.connect(hf); hf.connect(hg); hg.connect(out());
+      const s0 = now + len + 0.03, top = base * 1.5; h.frequency.setValueAtTime(top, s0); h.frequency.linearRampToValueAtTime(top * 1.12, s0 + 0.09); h.frequency.setValueAtTime(top * 1.2, s0 + 0.13); h.frequency.linearRampToValueAtTime(top * 1.32, s0 + 0.22);
+      hg.gain.setValueAtTime(0.0001, s0); hg.gain.linearRampToValueAtTime(0.3, s0 + 0.02); hg.gain.linearRampToValueAtTime(0.02, s0 + 0.09); hg.gain.linearRampToValueAtTime(0.3, s0 + 0.15); hg.gain.linearRampToValueAtTime(0.0001, s0 + 0.24);
+      h.start(s0); h.stop(s0 + 0.26); }
+  } catch { o = null; } }
+  // mouth follows the same timeline
+  const t0 = performance.now(), gk = G;
+  const flap = () => { if (!alive) return; const el = (performance.now() - t0) / 1000; let j = 0; while (j < gk.length - 1 && gk[j + 1][0] <= el) j++;
+    const loud = gk[j][1] > 0.6, wob = Math.sin(el * 2 * Math.PI * 7) > -0.2; if (loud && wob) mouth(true); else mouth(false); if (el < total) raf = requestAnimationFrame(flap); else mouth(false); };
+  document.documentElement.removeAttribute('data-sam-done'); raf = requestAnimationFrame(flap);
+  endTm = window.setTimeout(() => { if (!alive) return; alive = false; mouth(false); document.documentElement.setAttribute('data-sam-done', ''); window.setTimeout(() => document.documentElement.removeAttribute('data-sam-done'), 1400); opts.onEnd && opts.onEnd(); }, total * 1000);
+  stopCur = () => { alive = false; cancelAnimationFrame(raf); window.clearTimeout(endTm); mouth(false); if (o && g) { const gg = g; try { const c = ac(), n = c.currentTime; (gg.gain as AudioParam & { cancelAndHoldAtTime?: (t: number) => void }).cancelAndHoldAtTime?.(n); gg.gain.setTargetAtTime(0.0001, n, 0.03); } catch { /* */ } window.setTimeout(() => { try { gg.disconnect(); } catch { /* */ } }, 150); } o = null; };
   return stopCur;
 }
 export function hush() { stopCur && stopCur(); }

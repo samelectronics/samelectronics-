@@ -217,5 +217,5 @@ html[dir='rtl'] .cine-word, html[dir='rtl'] .sp-cine[data-v] .cine-word { right:
 .se-boot-ic { display: none !important; }
 .se-boot-txt { gap: 0 !important; font-weight: 500 !important; letter-spacing: .02em; }
 /* R11e (owner): the shop header is shorter, so its vertical word is smaller and sits clear of the nav and the white area */
-.shop-cine .cine-word { font-size: calc(240px / (var(--n, 5) * .74)) !important; top: calc(50% - 24px) !important; inset-inline-end: 14px !important; }
-@media (min-width: 900px) { .shop-cine > .sp-wrap { padding-inline-end: 64px; box-sizing: border-box; } }
+.shop-cine .cine-word { font-size: calc(262px / (var(--n, 5) * .56)) !important; top: calc(50% + 2px) !important; inset-inline-end: 12px !important; overflow: visible !important; height: max-content !important; }
+@media (min-width: 900px) { .shop-cine > .sp-wrap { padding-inline-end: 104px; box-sizing: border-box; } }
