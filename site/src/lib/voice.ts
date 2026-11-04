@@ -44,34 +44,48 @@ function blip(f: number, d: number, v: Voice, up: boolean) {
 }
 
 let stopCur: (() => void) | null = null;
+// R11c: ONE clock for his voice and his typing, so they always start and finish together
+export const CPS = 40;
+export const charMs = (ch: string) => (/[.,;:!?…،؟。，]/.test(ch) ? 3000 / CPS : 1000 / CPS);
+export const typeMs = (t: string) => Array.from(t || '').reduce((a, c) => a + charMs(c), 0);
 const mouth = (o: boolean) => { const r = document.documentElement; if (o) r.setAttribute('data-sam-mouth', 'o'); else r.removeAttribute('data-sam-mouth'); };
-/** Babble a line in time with its typing (≈ cps characters a second). Returns a stop function. */
-export function babble(text: string, opts: { cps?: number; onEnd?: () => void } = {}) {
+/** Babble a line in time with its typing. One continuous voice per line (no separate beeps): a single oscillator that
+ *  glides from pitch to pitch, swelling on every syllable, dipping between them, silent only at spaces and punctuation. */
+export function babble(text: string, opts: { onEnd?: () => void } = {}) {
   stopCur && stopCur();
   const voice = prefs().sound.voice || 'cute', cfg = V[voice], t = (text || '').trim(), ask = /\?\s*$/.test(t), hype = /!\s*$/.test(t);
-  const cps = (opts.cps || 34) * (hype ? 1.15 : 1), base = cfg.f * (hype ? 1.12 : 1), chars = Array.from(t);
+  const base = cfg.f * (hype ? 1.1 : 1), chars = Array.from(t);
   let i = 0, tm = 0, alive = true, inVowel = false, n = 0;
   const VOW = /[aeiouyáéíóúàèìòùâêîôûäëïöüæøåаеёиоуыэюяاأإآويىةَُِऀ-ॿ一-鿿]/i;
+  // the voice: oscillator → soft filter → gain (the "mouth"), plus a slow vibrato
+  let o: OscillatorNode | null = null, g: GainNode | null = null, lfo: OscillatorNode | null = null;
+  if (can()) { try { const c = ac(), lp = c.createBiquadFilter(), lg = c.createGain(); o = c.createOscillator(); g = c.createGain(); lfo = c.createOscillator();
+    o.type = cfg.type === 'square' ? 'square' : cfg.type; lp.type = 'lowpass'; lp.frequency.value = cfg.lp; lp.Q.value = 0.8;
+    lfo.frequency.value = 5.5; lg.gain.value = cfg.robot ? 0 : base * 0.025; lfo.connect(lg); lg.connect(o.frequency);
+    o.frequency.value = base; g.gain.value = 0.0001; o.connect(lp); lp.connect(g); g.connect(out()); o.start(); lfo.start(); } catch { o = null; } }
+  const peak = cfg.type === 'square' ? 0.045 : 0.14;
+  const end = () => { if (g && o) { const c = ac(), now = c.currentTime; g.gain.cancelScheduledValues(now); g.gain.setTargetAtTime(0.0001, now, 0.04); try { o.stop(now + 0.3); lfo && lfo.stop(now + 0.3); } catch { /* */ } } o = null; };
   const tick = () => {
-    if (!alive) return; if (i >= chars.length) { mouth(false); document.documentElement.setAttribute('data-sam-done', ''); window.setTimeout(() => document.documentElement.removeAttribute('data-sam-done'), 1400); opts.onEnd && opts.onEnd(); alive = false; return; }
-    const ch = chars[i++]; let wait = 1000 / cps;
-    if (/[.,;:!?…،؟。，]/.test(ch)) { mouth(false); wait *= 3; inVowel = false; }
-    else if (/\s/.test(ch)) { mouth(false); wait *= 1.2; inVowel = false; }
+    if (!alive) return;
+    if (i >= chars.length) { mouth(false); end(); document.documentElement.setAttribute('data-sam-done', ''); window.setTimeout(() => document.documentElement.removeAttribute('data-sam-done'), 1400); opts.onEnd && opts.onEnd(); alive = false; return; }
+    const ch = chars[i++], wait = charMs(ch), now = o ? ac().currentTime : 0;
+    if (/[.,;:!?…،؟。，\s]/.test(ch)) { mouth(false); inVowel = false; if (g) g.gain.setTargetAtTime(0.0001, now, 0.025); }
     else { const v = VOW.test(ch);
-      if (v && !inVowel) { // a new syllable: one bloop, the mouth opens
-        n++; mouth(true); window.setTimeout(() => alive && mouth(false), Math.min(110, wait * 2.2));
-        if (can()) { const left = chars.length - i, rise = ask && left < 8 ? 1 + (8 - left) * 0.06 : 1, jit = 1 + (Math.random() * 2 - 1) * 0.18 + (n % 3 === 0 ? 0.12 : 0); try { blip(base * jit * rise, cfg.d * (0.85 + Math.random() * 0.3), voice, ask ? left < 8 : Math.random() < 0.6); } catch { /* */ } }
-      }
+      if (v && !inVowel) { n++; mouth(true); window.setTimeout(() => alive && mouth(false), Math.min(120, wait * 2.5));
+        if (o && g) { const left = chars.length - i, rise = ask && left < 8 ? 1 + (8 - left) * 0.05 : 1, f = base * rise * (1 + (Math.random() * 2 - 1) * 0.16 + (n % 4 === 1 ? 0.1 : 0));
+          if (cfg.robot) o.frequency.setValueAtTime(f, now); else o.frequency.setTargetAtTime(f, now, 0.03); // a glide, not a jump
+          g.gain.setTargetAtTime(peak, now, 0.012); g.gain.setTargetAtTime(peak * 0.35, now + 0.06, 0.04); } // swell, then settle (never fully off inside a word)
+      } else if (!v && g && n) g.gain.setTargetAtTime(peak * 0.3, now, 0.03);
       inVowel = v; }
     tm = window.setTimeout(tick, wait);
   };
   document.documentElement.removeAttribute('data-sam-done'); tick();
-  stopCur = () => { alive = false; window.clearTimeout(tm); mouth(false); };
+  stopCur = () => { alive = false; window.clearTimeout(tm); mouth(false); end(); };
   return stopCur;
 }
 export function hush() { stopCur && stopCur(); }
 /** A short sample of a voice (Settings). */
-export function preview(v: Voice) { if (!gest) gest = true; const p = prefs().sound; if (!p.on) return; const save = p.voice; p.voice = v; babble('Hi! I am Samsoom. Need a part?', { cps: 30 }); p.voice = save; }
+export function preview(v: Voice) { if (!gest) gest = true; const p = prefs().sound; if (!p.on) return; const save = p.voice; p.voice = v; babble('Hi! I am Samsoom. Need a part?'); p.voice = save; }
 
 // ── tour sounds ── (R11: no continuous tone at all; short soft chimes that climb a little each step)
 const chime = (f: number, at: number, d: number, g = 0.08) => { const c = ac(), t = c.currentTime + at, o = c.createOscillator(), a = c.createGain(); o.type = 'sine'; o.frequency.value = f; a.gain.setValueAtTime(0.0001, t); a.gain.exponentialRampToValueAtTime(g, t + 0.015); a.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(a); a.connect(out()); o.start(t); o.stop(t + d + 0.05); };

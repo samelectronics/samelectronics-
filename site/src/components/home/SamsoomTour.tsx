@@ -15,6 +15,7 @@ import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import LiveSam from '../samsoom/LiveSam';
 import { LANGS, RANK, type Lang } from '@/i18n/lang';
 import Typed from '@/components/samsoom/Typed';
+import { typeMs } from '@/lib/voice';
 import { babble, hush, tourStart, tourStep, tourEnd, tourStop, isMuted, setMuted } from '@/lib/voice';
 import { siteRaw } from '@/lib/catalog';
 // Control Room → Site & Samsoom: tour on/off, welcome message and emote
@@ -183,7 +184,7 @@ export default function SamsoomTour() {
           {phase === 'hello' ? (
             <>
               <b><Typed text={T('Welcome to Sam Electronics!')} /></b>
-              <p><Typed delay={900} text={cfg().greeting ? T(cfg().greeting!) : T('I’m Samsoom, your parts assistant. Want a quick walk around? It takes 20 seconds.')} /></p>
+              <p><Typed delay={Math.round(typeMs(T('Welcome to Sam Electronics!') + ' '))} text={cfg().greeting ? T(cfg().greeting!) : T('I’m Samsoom, your parts assistant. Want a quick walk around? It takes 20 seconds.')} /></p>
               <span className="st-acts">
                 <button type="button" className="st-btn st-go" data-sound="next" onClick={walk}>{T('Show me around')}</button>
                 <button type="button" className="st-btn st-grey" onClick={() => bye()}>{T('Skip')}</button>
@@ -241,7 +242,7 @@ export default function SamsoomTour() {
         <span className="st-btx" key={i}>
           <small>{i + 1} / {steps.length}</small>
           <b><Typed text={T(s.t)} /></b>
-          <span><Typed text={T(s.d)} delay={Math.round((T(s.t).length + 2) * 1000 / 34)} /></span>
+          <span><Typed text={T(s.d)} delay={Math.round(typeMs(T(s.t) + '. '))} /></span>
         </span>
         <span className="st-bacts">
           <button type="button" className="st-btn st-grey" data-sound="back" disabled={i === 0} onClick={() => setI(Math.max(0, i - 1))}>{T('Back')}</button>
