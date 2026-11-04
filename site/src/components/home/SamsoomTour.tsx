@@ -15,6 +15,7 @@ import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import LiveSam from '../samsoom/LiveSam';
 import { LANGS, RANK, type Lang } from '@/i18n/lang';
 import Typed from '@/components/samsoom/Typed';
+import { StoreCards, hasStore } from '@/components/site/StorePicker';
 import { typeMs } from '@/lib/voice';
 import { babble, hush, tourStart, tourStep, tourEnd, tourStop, isMuted, setMuted } from '@/lib/voice';
 import { siteRaw } from '@/lib/catalog';
@@ -73,7 +74,7 @@ function buildSteps(): Step[] {
 }
 
 export default function SamsoomTour() {
-  const [phase, setPhase] = useState<'off' | 'lang' | 'hello' | 'recall' | 'walk' | 'bye'>('off'), [i, setI] = useState(0), [box, setBox] = useState<DOMRect | null>(null);
+  const [phase, setPhase] = useState<'off' | 'lang' | 'store' | 'hello' | 'recall' | 'walk' | 'bye'>('off'), [i, setI] = useState(0), [box, setBox] = useState<DOMRect | null>(null);
   const [offer, setOffer] = useState(false), [jump, setJump] = useState(false), [mute, setMute] = useState(false);
   useEffect(() => { setMute(isMuted()); const f = () => setMute(isMuted()); window.addEventListener('se:sam-mute', f); return () => window.removeEventListener('se:sam-mute', f); }, []);
   useEffect(() => { if (phase !== 'walk') setJump(false); }, [phase]);
@@ -102,7 +103,7 @@ export default function SamsoomTour() {
         const busy = document.documentElement.classList.contains('se-boot') || document.querySelector('.se-bootv, .lp, .se-net-veil, .rp-full, .vs-full') || !document.querySelector('[data-tour="cart"]');
         if (busy) { t = 0; return; }
         if (!t) t = Date.now();
-        if (Date.now() - t >= 900) { window.clearInterval(iv); setPhase(chose ? 'hello' : 'lang'); }
+        if (Date.now() - t >= 900) { window.clearInterval(iv); setPhase(chose ? (hasStore() ? 'hello' : 'store') : 'lang'); }
       }, 250);
     }
     // on a page someone opens for the first time (after the first welcome), he offers a tour of that page once
@@ -140,7 +141,7 @@ export default function SamsoomTour() {
   const next = () => { if (i >= steps.length - 1) { tourEnd(); setJump(true); window.setTimeout(() => bye(3200), 650); } else setI(i + 1); };
   // he talks on every step (and the tour builds a little); the bubble types along
   useEffect(() => { if (phase !== 'walk' || !steps[i]) return; tourStep(i, steps.length); const st = steps[i]; const stop = babble(T(st.t) + '. ' + T(st.d)); return () => stop(); }, [phase, i]);
-  useEffect(() => { if (phase === 'hello') { const stop = babble(T('Welcome to Sam Electronics!') + ' ' + (cfg().greeting ? T(cfg().greeting!) : T('I’m Samsoom, your parts assistant. Want a quick walk around? It takes 20 seconds.'))); return () => stop(); } if (phase === 'recall') { const stop = babble(T('You called me?')); return () => stop(); } }, [phase]);
+  useEffect(() => { if (phase === 'hello') { const stop = babble(T('Welcome to Sam Electronics!') + ' ' + (cfg().greeting ? T(cfg().greeting!) : T('I’m Samsoom, your parts assistant. Want a quick walk around? It takes 20 seconds.'))); return () => stop(); } if (phase === 'recall') { const stop = babble(T('You called me?')); return () => stop(); } if (phase === 'store') { const stop = babble(T('Which store are you shopping at?') + ' ' + T('Deira is open now. Madrid is loading: you can ask me to tell you when it opens.')); return () => stop(); } }, [phase]);
   useEffect(() => {
     if (phase === 'off') return;
     const k = (e: KeyboardEvent) => { if (e.key === 'Escape') { if (phase === 'lang') setPhase('hello'); else bye(); } if (phase === 'walk' && e.key === 'ArrowRight') next(); if (phase === 'walk' && e.key === 'ArrowLeft') setI((n) => Math.max(0, n - 1)); };
@@ -157,7 +158,7 @@ export default function SamsoomTour() {
   ) : null;
   if (phase === 'lang') {
     const cr = CHOOSE_R(), [cl, ct] = cr[ci % cr.length], d = detect(), all = ranked(), list = d ? [all.find((x) => x.id === d)!, ...all.filter((x) => x.id !== d)] : all;
-    const pick = (id: Lang) => { window.seI18n && window.seI18n.now(id); try { localStorage.setItem('se-lang', id); } catch { /* */ } setPhase('hello'); };
+    const pick = (id: Lang) => { window.seI18n && window.seI18n.now(id); try { localStorage.setItem('se-lang', id); } catch { /* */ } setPhase(hasStore() ? 'hello' : 'store'); };
     const hint = d || cl;
     return (
       <div className="st-veil st-veil-lang" role="dialog" aria-modal="true" aria-label="Choose your language" data-no-i18n="">
@@ -176,6 +177,16 @@ export default function SamsoomTour() {
       </div>
     );
   }
+  if (phase === 'store') return (
+    <div className="st-veil" role="dialog" aria-modal="true" aria-label={T('Choose your store')}>
+      <div className="st-hello st-store">
+        <span className="st-sam" data-sam-talk=""><LiveSam size={96} mood="idle" play="happy" /></span>
+        <b><Typed text={T('Which store are you shopping at?')} /></b>
+        <p><Typed delay={Math.round(typeMs(T('Which store are you shopping at?') + ' '))} text={T('Deira is open now. Madrid is loading: you can ask me to tell you when it opens.')} /></p>
+        <StoreCards onPick={() => window.setTimeout(() => setPhase('hello'), 500)} />
+      </div>
+    </div>
+  );
   if (phase === 'hello' || phase === 'bye' || phase === 'recall') {
     return (
       <div className="st-veil" role="dialog" aria-modal="true" aria-label={T('Welcome')} onClick={(e) => { if (e.target === e.currentTarget && phase !== 'bye') bye(1); }}>

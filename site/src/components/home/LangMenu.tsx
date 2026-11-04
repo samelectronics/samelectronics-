@@ -57,6 +57,7 @@ export default function LangMenu({ up = false, dark = false }: { up?: boolean; d
               <span className="se-qs-row"><span>{tr('Currency')}</span><span className="se-qs-seg">{(['AED', 'USD', 'EUR'] as Currency[]).map((c) => <button key={c} type="button" className={P.currency === c ? 'on' : ''} onClick={() => { setPrefs({ currency: c }); bump((n) => n + 1); }}>{c}</button>)}</span></span>
               <button type="button" className="se-qs-link" onClick={() => { setOpen(false); window.dispatchEvent(new CustomEvent('se:settings', { detail: 'privacy' })); }}>{tr('Privacy choices')} <em>→</em></button>
               <button type="button" className="se-qs-link" onClick={() => { setOpen(false); window.dispatchEvent(new CustomEvent('se:settings')); }}>{tr('All settings')} <em>→</em></button>
+              <button type="button" className="se-qs-link" onClick={() => { setOpen(false); window.dispatchEvent(new CustomEvent('se:store')); }}>{tr('Store')} <em>→</em></button>
               <a className="se-qs-link" href="/account#profile" onClick={() => setOpen(false)}>{tr('Full settings in My Bench')} <em>→</em></a>
             </span>
           )}

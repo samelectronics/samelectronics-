@@ -1,6 +1,7 @@
 // Converted from design/project/Sam Electronics Home v3.dc.html (12 Oct 2026); maintained by hand since.
 // Home v3 section "Nav". Renders against the home page's values (`v`, from HomeV3's logic class).
 'use client';
+import { StoreChip, StorePicker } from '@/components/site/StorePicker';
 import LangMenu from '../LangMenu';
 import NoteBell from '@/components/site/NoteBell';
 import ProgressScrub from '@/components/home/ProgressScrub';
@@ -69,6 +70,8 @@ export default function Nav({ v }: { v: Vals }) {
           </span>
           {'\n    '}
         </a>
+        <StoreChip />
+        <StorePicker />
         {'\n    '}
         <nav data-tour="nav" style={{ display: 'flex', alignItems: 'center', gap: 'clamp(14px,2vw,28px)', fontSize: '15px', fontWeight: '500' }}>
           {'\n      '}

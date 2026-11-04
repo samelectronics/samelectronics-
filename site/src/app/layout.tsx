@@ -28,6 +28,7 @@ import '@/styles/boot.css';
 import '@/styles/langpop.css';
 import '@/styles/pages.css';
 import '@/styles/cine.css';
+import '@/styles/store.css';
 import '@/styles/shop.css';
 import '@/styles/account.css';
 import '@/styles/ask.css';
