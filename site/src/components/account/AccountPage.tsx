@@ -40,7 +40,7 @@ export default function AccountPage() {
       {/* R11 (owner): signing in is the first thing you see, on the teardown's stage with the soft yellow lights */}
       <section className="sp-cine au-stage" data-tone="dark" data-v="1">
         <div className="cine-bg" aria-hidden="true"><i className="cine-wall" /><i className="cine-beam" /><span className="cine-bokeh">{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</span><i className="cine-floor" /><i className="cine-grain" /></div>
-        <span className="cine-word" aria-hidden="true" data-no-i18n="">BENCH</span>
+        <span className="cine-word" style={{ ['--n' as string]: 'BENCH'.length }} aria-hidden="true" data-no-i18n="">BENCH</span>
         <div className="sp-wrap au-stage-in"><Auth onDone={done} /></div>
       </section>
       {typeof location !== 'undefined' && location.hash === '#notifications' ? <section className="sp-sec"><div className="sp-wrap"><h2 className="sp-h2">{T('Notifications')}</h2><NotesPanel /></div></section> : null}

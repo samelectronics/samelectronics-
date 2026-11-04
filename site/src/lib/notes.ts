@@ -15,7 +15,7 @@ export function tabDot(unread: number) {
   if (!links.length) return; if (fvBase == null) fvBase = links[0].href;
   window.clearInterval(fvIv);
   const set = (href: string) => links.forEach((l) => { l.href = href; });
-  const draw = (on: boolean) => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'); if (!x) return; if (fvImg && fvImg.complete) x.drawImage(fvImg, 0, 0, 64, 64);
+  const draw = (on: boolean) => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'); if (!x) return; x.beginPath(); x.arc(30, 30, 29, 0, 7); x.fillStyle = '#F7C032'; x.fill(); /* R11e: the yellow round frame, like the logo on the site */ if (fvImg && fvImg.complete) { x.save(); x.beginPath(); x.arc(30, 30, 24.5, 0, 7); x.clip(); x.drawImage(fvImg, 4, 4, 52, 52); x.restore(); }
     /* R11b: a small red dot in the bottom-right corner, like an app badge; it never covers the logo */ x.beginPath(); x.arc(53, 53, 10, 0, 7); x.fillStyle = '#26282B'; x.fill(); x.beginPath(); x.arc(53, 53, 7, 0, 7); x.fillStyle = unread && on ? '#F7C032' : '#8C9096'; x.fill(); /* R11d: grey = nothing new; blinking yellow = new notifications */ try { set(c.toDataURL('image/png')); } catch {} };
   const go = () => { let on = true; draw(on); if (unread) fvIv = window.setInterval(() => { on = !on; draw(on); }, 900); };
   if (!fvImg) { fvImg = new Image(); fvImg.crossOrigin = 'anonymous'; fvImg.onload = go; fvImg.src = '/assets/se-logo-128.webp'; } else go();

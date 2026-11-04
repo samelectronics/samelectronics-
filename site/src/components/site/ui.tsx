@@ -19,7 +19,7 @@ export function PageHero({ eb, title, accent, sub, crumb, children }: { eb: stri
         <span className="cine-bokeh">{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} style={{ ['--k' as string]: k } as React.CSSProperties} />)}</span>
         <i className="cine-floor" /><i className="cine-grain" />
       </div>
-      <span className="cine-word" aria-hidden="true" data-no-i18n="">{word}</span>
+      <span className="cine-word" style={{ ['--n' as string]: String(word).length }} aria-hidden="true" data-no-i18n="">{word}</span>
       <div className="sp-wrap sp-hero-in">
         <div className="sp-hero-l">
           {crumb ? (

@@ -24,9 +24,9 @@ const vol = () => Math.min(1, Math.max(0, prefs().sound.vol));
 // R11 (owner): cute and funny, never buzzy. Each syllable is a tiny "bloop": a soft sine/triangle that bends up or down
 // (randomly, like a little creature talking), shaped by a gentle filter, with silence between syllables.
 const V: Record<Voice, { f: number; type: OscillatorType; lp: number; d: number; bend: number; robot?: boolean }> = {
-  cute: { f: 760, type: 'sine', lp: 4200, d: 0.085, bend: 0.45 },
-  deep: { f: 360, type: 'triangle', lp: 2200, d: 0.1, bend: 0.3 },
-  robot: { f: 520, type: 'triangle', lp: 2600, d: 0.07, bend: 0, robot: true },
+  cute: { f: 440, type: 'sine', lp: 4200, d: 0.085, bend: 0.45 },
+  deep: { f: 250, type: 'triangle', lp: 2200, d: 0.1, bend: 0.3 },
+  robot: { f: 330, type: 'triangle', lp: 2600, d: 0.07, bend: 0, robot: true },
 };
 let master: GainNode | null = null;
 const out = () => { const c = ac(); if (!master) { master = c.createGain(); const comp = c.createDynamicsCompressor(); master.connect(comp); comp.connect(c.destination); } master.gain.value = vol() * 0.5; return master; };
@@ -45,42 +45,62 @@ function blip(f: number, d: number, v: Voice, up: boolean) {
 
 let stopCur: (() => void) | null = null;
 // R11c: ONE clock for his voice and his typing, so they always start and finish together
-export const CPS = 62;
-export const charMs = (ch: string) => (/[.,;:!?…،؟。，]/.test(ch) ? 3000 / CPS : 1000 / CPS);
+export const CPS = 56;
+export const charMs = (ch: string) => (/[.,;:!?…،؟。，]/.test(ch) ? 2000 / CPS : 1000 / CPS);
 export const typeMs = (t: string) => Array.from(t || '').reduce((a, c) => a + charMs(c), 0);
 const mouth = (o: boolean) => { const r = document.documentElement; if (o) r.setAttribute('data-sam-mouth', 'o'); else r.removeAttribute('data-sam-mouth'); };
-/** Babble a line in time with its typing. R11d: each WORD is one smooth sound: one gentle pitch contour that glides
- *  across the whole word (a little rise or fall, like a sung syllable), a soft fade in and out per word, quiet between
- *  words. No per-letter ups and downs, nothing sharp; low and warm so it never stings. */
+/** R11e (owner): Samsoom talks like a cute little character, not a ringing tone.
+ *  - Steady rhythm: one soft "note" per syllable, timed from the same typing clock, so his speed never drifts.
+ *  - A warm buzzy-soft source (triangle) shaped by two vowel filters, so A/E/I/O/U each sound like a little vowel
+ *    instead of a pure whistle that rings in the ear.
+ *  - Real intonation: a sentence starts a bit higher and relaxes, statements end with a small fall,
+ *    questions end going up, and happy lines (welcome, hi, thanks, great, !) are brighter with little upward scoops
+ *    and a tiny "hehe" at the end. */
+const VOW: Record<string, [number, number]> = { a: [800, 1250], e: [520, 1900], i: [330, 2300], o: [520, 900], u: [360, 820], y: [330, 2200] };
+const vowOf = (ch: string): [number, number] => { const k = ch.normalize('NFD').charAt(0).toLowerCase(); return VOW[k] || (/[اآ]/.test(ch) ? VOW.a : /[و]/.test(ch) ? VOW.u : /[ي]/.test(ch) ? VOW.i : VOW.a); };
+const isV = (ch: string) => /[aeiouyáéíóúàèìòùâêîôûäëïöüаеёиоуыэюяاآوي]/i.test(ch);
+const HAPPY = /\b(welcome|hi|hey|hello|yay|great|thanks|thank you|awesome|nice|love|ha+|bienvenid|hola|gracias|bienvenue|merci|salut)\b|أهلا|مرحب|شكرا|!/i;
+const MELODY = [0, 2, -1, 3, 1, -2, 2, 0]; // semitone steps, a little tune that repeats, never random jumps
+
 export function babble(text: string, opts: { onEnd?: () => void } = {}) {
   stopCur && stopCur();
-  const voice = prefs().sound.voice || 'cute', cfg = V[voice], t = (text || '').trim(), ask = /\?\s*$/.test(t), hype = /!\s*$/.test(t);
-  const base = cfg.f * (hype ? 1.08 : 1), chars = Array.from(t);
-  let i = 0, tm = 0, alive = true, inWord = false, w = 0;
-  let o: OscillatorNode | null = null, g: GainNode | null = null;
-  if (can()) { try { const c = ac(), lp = c.createBiquadFilter(), lp2 = c.createBiquadFilter(); o = c.createOscillator(); g = c.createGain();
-    o.type = cfg.type; lp.type = 'lowpass'; lp.frequency.value = cfg.lp; lp.Q.value = 0.3; lp2.type = 'lowpass'; lp2.frequency.value = cfg.lp * 1.4; lp2.Q.value = 0.2;
-    o.frequency.value = base; g.gain.value = 0.0001; o.connect(lp); lp.connect(lp2); lp2.connect(g); g.connect(out()); o.start(); } catch { o = null; } }
-  const peak = 0.17;
-  const end = () => { if (g && o) { const c = ac(), now = c.currentTime; g.gain.cancelScheduledValues(now); g.gain.setTargetAtTime(0.0001, now, 0.05); try { o.stop(now + 0.4); } catch { /* */ } } o = null; };
-  const wordLen = (k: number) => { let n = 0; while (k + n < chars.length && !/[\s.,;:!?…،؟。，]/.test(chars[k + n])) n++; return n; };
+  const voice = prefs().sound.voice || 'cute', cfg = V[voice], t = (text || '').trim();
+  const ask = /\?\s*$/.test(t), happy = HAPPY.test(t), chars = Array.from(t);
+  const base = cfg.f * (happy ? 1.1 : 1);
+  // which syllable is the last one of the line (for the ending tone)
+  let nSyl = 0; chars.forEach((c, k) => { if (isV(c) && (k === 0 || !isV(chars[k - 1]))) nSyl++; });
+  let i = 0, tm = 0, alive = true, syl = 0;
+  let o: OscillatorNode | null = null, g: GainNode | null = null, f1: BiquadFilterNode | null = null, f2: BiquadFilterNode | null = null;
+  if (can()) { try { const c = ac(); o = c.createOscillator(); g = c.createGain(); f1 = c.createBiquadFilter(); f2 = c.createBiquadFilter();
+    const g1 = c.createGain(), g2 = c.createGain(), lp = c.createBiquadFilter();
+    o.type = cfg.robot ? 'square' : 'triangle'; o.frequency.value = base;
+    f1.type = 'bandpass'; f1.Q.value = 3; f1.frequency.value = 700; f2.type = 'bandpass'; f2.Q.value = 5; f2.frequency.value = 1400;
+    g1.gain.value = 1; g2.gain.value = 0.55; lp.type = 'lowpass'; lp.frequency.value = 2600; lp.Q.value = 0.4;
+    o.connect(f1); o.connect(f2); f1.connect(g1); f2.connect(g2); g1.connect(lp); g2.connect(lp); lp.connect(g); g.gain.value = 0.0001; g.connect(out()); o.start(); } catch { o = null; } }
+  const peak = cfg.robot ? 0.12 : 0.5; // band-passed, so the level is still gentle
+  const end = () => { if (g && o) { const c = ac(), now = c.currentTime; g.gain.cancelScheduledValues(now); g.gain.setTargetAtTime(0.0001, now, 0.04); try { o.stop(now + 0.3); } catch { /* */ } } o = null; };
+  const hehe = () => { if (!o || !g) return; const c = ac(), now = c.currentTime; [0, 0.13].forEach((d, k) => { const f = base * (1.35 + k * 0.18);
+    o!.frequency.setTargetAtTime(f, now + d, 0.01); f1!.frequency.setTargetAtTime(520, now + d, 0.01); f2!.frequency.setTargetAtTime(1900, now + d, 0.01);
+    g!.gain.setTargetAtTime(peak * 0.8, now + d, 0.008); g!.gain.setTargetAtTime(0.0001, now + d + 0.07, 0.02); }); };
   const tick = () => {
     if (!alive) return;
-    if (i >= chars.length) { mouth(false); end(); document.documentElement.setAttribute('data-sam-done', ''); window.setTimeout(() => document.documentElement.removeAttribute('data-sam-done'), 1400); opts.onEnd && opts.onEnd(); alive = false; return; }
+    if (i >= chars.length) { mouth(false); if (happy) { hehe(); window.setTimeout(end, 320); } else end(); document.documentElement.setAttribute('data-sam-done', ''); window.setTimeout(() => document.documentElement.removeAttribute('data-sam-done'), 1400); opts.onEnd && opts.onEnd(); alive = false; return; }
     const ch = chars[i], wait = charMs(ch), now = o ? ac().currentTime : 0;
-    if (/[\s.,;:!?…،؟。，]/.test(ch)) { if (inWord) { mouth(false); if (g) g.gain.setTargetAtTime(0.0001, now, 0.02); } inWord = false; }
-    else if (!inWord) { // a new word: one smooth contour for the whole word
-      inWord = true; w++; const n = wordLen(i), dur = (n * 1000) / CPS / 1000, left = chars.length - i, last = left <= n + 2;
-      const f0 = base * (1 + (Math.random() * 2 - 1) * 0.09 + (w % 3 === 0 ? 0.06 : 0)), f1 = f0 * (ask && last ? 1.28 : Math.random() < 0.5 ? 1.07 : 0.94);
-      mouth(true); const flap = window.setInterval(() => { if (!alive || !inWord) { window.clearInterval(flap); return; } document.documentElement.toggleAttribute('data-sam-mouth', !document.documentElement.hasAttribute('data-sam-mouth')); if (document.documentElement.hasAttribute('data-sam-mouth')) document.documentElement.setAttribute('data-sam-mouth', 'o'); }, 110);
-      if (o && g) { o.frequency.cancelScheduledValues(now); o.frequency.setTargetAtTime(f0, now, 0.03); o.frequency.setTargetAtTime(f1, now + dur * 0.5, 0.04);
-        g.gain.cancelScheduledValues(now); g.gain.setTargetAtTime(peak, now, 0.012); }
-    }
-    else if (o && g && /[aeiouyáéíóúàèìòùâêîôûäëïöüаеёиоуыэюяاوي]/i.test(ch) && i > 0 && !/[aeiouyáéíóúàèìòùâêîôûäëïöüаеёиоуыэюяاوي]/i.test(chars[i - 1])) {
-      // R11e: a new syllable inside the word: a quick, small, smooth hop (cute and bouncy, never a jump)
-      const f = base * (1 + (Math.random() * 2 - 1) * 0.07); o.frequency.cancelScheduledValues(now); o.frequency.setTargetAtTime(f, now, 0.018);
-      g.gain.cancelScheduledValues(now); g.gain.setTargetAtTime(peak * 0.72, now, 0.008); g.gain.setTargetAtTime(peak, now + 0.02, 0.02);
-    }
+    if (!/[\p{L}\p{N}]/u.test(ch)) { mouth(false); if (g) g.gain.setTargetAtTime(0.0001, now, 0.018); }
+    else if (isV(ch) && (i === 0 || !isV(chars[i - 1]))) {
+      // a syllable: one soft note. Pitch = little tune + sentence shape (+ ending tone)
+      const k = syl++, pos = nSyl > 1 ? k / (nSyl - 1) : 0, last = k === nSyl - 1, nearEnd = k >= nSyl - 2;
+      let semi = MELODY[k % MELODY.length] + 2 - pos * 3; // starts up, relaxes down
+      if (ask && nearEnd) semi += last ? 7 : 3; else if (!happy && last) semi -= 3; else if (happy && last) semi += 4;
+      const f = base * Math.pow(2, semi / 12), [a, b] = vowOf(ch);
+      mouth(true); document.documentElement.setAttribute('data-sam-mouth', /[oua]/i.test(ch) ? 'o' : '');
+      if (o && g && f1 && f2) {
+        o.frequency.cancelScheduledValues(now);
+        if (happy) { o.frequency.setValueAtTime(f * 0.9, now); o.frequency.setTargetAtTime(f, now, 0.025); } else o.frequency.setTargetAtTime(f, now, 0.012);
+        f1.frequency.setTargetAtTime(a, now, 0.015); f2.frequency.setTargetAtTime(b, now, 0.015);
+        g.gain.cancelScheduledValues(now); g.gain.setTargetAtTime(peak, now, 0.01); g.gain.setTargetAtTime(peak * 0.55, now + 0.05, 0.04);
+      }
+    } else if (!isV(ch) && g) { const lead = i + 1 < chars.length && isV(chars[i + 1]); if (lead) g.gain.setTargetAtTime(peak * 0.25, now, 0.012); } // a consonant: a quick soft dip before the next vowel
     i++; tm = window.setTimeout(tick, wait);
   };
   document.documentElement.removeAttribute('data-sam-done'); tick();

@@ -43,8 +43,7 @@ function toUrl(f: Filters, p: string | null, scope: Scope) {
 
 // R10 P1 · "Parts warehouse" cover: a wall of shelving with labelled bins, some lit; it is the shop's own signature
 export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
-  const scanRef = useRef<HTMLDivElement>(null), [pinned, setPinned] = useState(false);
-  useEffect(() => { const el = scanRef.current; if (!el) return; const io = new IntersectionObserver(([e]) => setPinned(!e.isIntersecting && e.boundingClientRect.top < 0), { rootMargin: '-80px 0px 0px 0px' }); io.observe(el); return () => io.disconnect(); });
+  const scanRef = useRef<HTMLDivElement>(null);
   const [ready, setReady] = useState(false), [f, setF] = useState<Filters>(EMPTY), [pid, setPid] = useState<string | null>(null), [scope, setScope] = useState<Scope>(mode === 'deals' ? 'deals' : 'all');
   const [view, setView] = useState<View>({ cols: 4, list: false, trade: true, per: 24 }), [page, setPage] = useState(1), [cz, setCz] = useState(false), [cmpOpen, setCmpOpen] = useState(false), [side, setSide] = useState(false);
   const st = useStore(), [me] = useMe(), trade = !!me?.tradeApproved, [cv, setCv] = useState(0);
@@ -88,7 +87,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
       {/* header: the hero's language — graphite, live circuits, the search, Samsoom ready to help */}
       <section className="shop-hd shop-cine" data-tone="dark">
         <div className="cine-bg" aria-hidden="true"><i className="cine-wall" /><i className="cine-beam" /><span className="cine-bokeh">{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</span><i className="cine-floor" /><i className="cine-grain" /></div>
-        <span className="cine-word" aria-hidden="true" data-no-i18n="">{mode === 'deals' ? 'DEALS' : 'PARTS'}</span>
+        <span className="cine-word" style={{ ['--n' as string]: (mode === 'deals' ? 'DEALS' : 'PARTS').length }} aria-hidden="true" data-no-i18n="">{mode === 'deals' ? 'DEALS' : 'PARTS'}</span>
         <div className="sp-wrap">
           <nav className="sp-crumb"><a href="/">{T('Home')}</a><i /><span>{mode === 'deals' ? T('Deals & arrivals') : T('Shop')}</span></nav>
           <div className="shop-hd-row">
@@ -104,7 +103,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
           </div>
           <div className="shop-scan" ref={scanRef}><i className="shop-beam" aria-hidden="true" /><ShopSearch q={f.q} onQ={(q) => set({ q })} onFmp={openFmp} /></div>
           {/* R11 (owner): once the header scrolls away, the search stays with you, pinned under the nav */}
-          {pinned ? <div className="shop-pin"><div className="sp-wrap"><ShopSearch q={f.q} onQ={(q) => set({ q })} onFmp={openFmp} /></div></div> : null}
+          {/* R11e (owner): no search bar following you down, it crowded the page */}
           <div className="shop-devs" data-tour-step="2" data-tour-title="My devices" data-tour-text="Add the phones you fix most. I will mark every part that fits them.">
             <span>{T('My devices')}:</span>
             {st.devices.map((d) => <button key={d.model_id} type="button" className={'sp-chip' + (f.models.includes(d.model_id) ? ' y' : '')} onClick={() => tog('models', d.model_id)}>{d.nick || d.name}<span className="x" onClick={(e) => { e.stopPropagation(); store.device(d); }}>×</span></button>)}
