@@ -154,7 +154,9 @@ function render(v: Vals) {
                           `position:relative;display:flex;white-space:nowrap;transform-origin:0 0;transform:translate(${s(v.op?.tx)}px,${s(v.op?.ty)}px) scale(${s(v.op?.sc)});will-change:transform`,
                         )}
                       >
-                        <span data-ko="s" style={{ display: 'flex', columnGap: '.24em' }}>
+                        <span data-ko="s" style={{ display: 'flex', columnGap: '.24em', position: 'relative' }}>
+                          {/* owner (15 Nov): ONE smooth light over the whole line, blended into the letters only (multiply keeps the dark background dark) */}
+                          <span className="td-sweep" aria-hidden="true" style={{ '--x': v.opSw?.x + '%', opacity: v.opSw?.o } as React.CSSProperties} />
                           {(Array.isArray(v.opWords) ? v.opWords : []).map((__it: any, __i: number) => {
                             const v2 = { ...v, w: __it, $index: __i };
                             return ((v: Vals) => (

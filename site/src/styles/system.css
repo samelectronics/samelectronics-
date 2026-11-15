@@ -239,14 +239,11 @@ a.scp-5861bbd1:has(.se-hb-thumbs) { overflow: visible; }
 .se-hb-info { display: flex; gap: 6px; margin-inline-end: 4px; }
 .se-hb-info > span { display: inline-flex; align-items: baseline; gap: 5px; padding: 5px 10px; border-radius: 999px; background: rgba(26,27,29,.1); box-shadow: inset 0 0 0 1px rgba(26,27,29,.08); font: 500 12px Inter, sans-serif; color: rgba(38,40,43,.72); white-space: nowrap; }
 .se-hb-info b { font: 700 13px 'Space Grotesk', sans-serif; color: #26282B; }
-/* R13b · bar: every icon button is the same 38px tile with the same soft frame, evenly spaced (owner: equal distancing) */
-header .se-nav-right { gap: 8px !important; }
-header .se-nav-right .se-lm-btn, header .se-nav-right .nb > button, header .se-nav-right .se-ico, header .se-nav-right .scp-71e4b6d9 {
-  width: 38px !important; height: 38px !important; min-width: 38px; padding: 0 !important; display: grid !important; place-items: center !important; box-sizing: border-box;
-  border-radius: 11px !important; border: 1px solid rgba(255,255,255,.12) !important; background: rgba(255,255,255,.04) !important; transition: background .2s, border-color .2s; }
-header .se-nav-right .se-lm-btn:hover, header .se-nav-right .nb > button:hover, header .se-nav-right .se-ico:hover, header .se-nav-right .scp-71e4b6d9:hover { background: rgba(255,255,255,.1) !important; border-color: rgba(247,192,50,.5) !important; }
+/* R13c · bar (owner: no squares): clean icons, one size, one equal gap between every item; only the menu keeps its frame */
+header .se-nav-right { gap: 14px !important; }
+header .se-nav-right .se-lm-btn, header .se-nav-right .nb > button, header .se-nav-right .se-ico { width: 34px !important; height: 34px !important; padding: 0 !important; display: grid !important; place-items: center !important; border: 0 !important; background: transparent !important; border-radius: 10px !important; transition: background .2s; }
+header .se-nav-right .se-lm-btn:hover, header .se-nav-right .nb > button:hover, header .se-nav-right .se-ico:hover { background: rgba(255,255,255,.08) !important; }
 header .se-nav-right .nb, header .se-nav-right .se-lm { display: grid; }
-header .se-status > button, header .se-status > a { height: 38px; box-sizing: border-box; }
 header .se-nav-right .se-nav-staff { display: none !important; }
 
 /* R13 · the hero iPad, in use: status bar, endless forward scroll, taps that add to the cart */
@@ -275,3 +272,7 @@ header .se-nav-right .se-nav-staff { display: none !important; }
 .hero-shop .hs-status { padding: 0 28px; height: 20px; } .hero-shop .hs-track { top: 20px; }
 .hs-cart { right: auto; left: 14px; bottom: 14px; }
 html[dir='rtl'] .hs-cart { left: auto; right: 14px; }
+/* R13 · "Take any phone apart.": one wide, soft, warm light glides across the whole line; the letters glow as it passes */
+.td-sweep { position: absolute; z-index: 3; top: -10%; bottom: -10%; left: var(--x, -35%); width: 46%; pointer-events: none; mix-blend-mode: multiply;
+  background: radial-gradient(50% 70% at 50% 50%, #F7C032 0%, #FFD45E 34%, rgba(255,236,190,.6) 62%, rgba(255,255,255,0) 100%); filter: blur(6px); }
+[data-ko="s"]:has(.td-sweep) { text-shadow: none; }

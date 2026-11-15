@@ -70,7 +70,6 @@ export async function mount(host, state) {
       a[j + 3] = Math.round(255 * Math.min(1, Math.max(0, rad - dist + 0.5))); } g.putImageData(d, 0, 0); } catch (e) {}
     res(c); }; i.onerror = () => res(null); i.src = new URL('assets/se-logo-512.webp', document.baseURI).href; });
 
-  await new Promise((r) => setTimeout(r, 0)); // owner (15 Nov, freeze on entry): build in slices so the page keeps breathing
   // textures
   const fritTex = tex(512, TH, (x, w, h) => { x.fillStyle = '#060607'; x.beginPath(); x.roundRect(0, 0, w, h, R * PX); x.fill(); x.globalCompositeOperation = 'destination-out'; x.beginPath(); x.roundRect(6, 6, w - 12, h - 12, R * PX - 6); x.fill(); x.globalCompositeOperation = 'source-over'; const [cx, cy] = u2p(0, H / 2 - 0.12); x.strokeStyle = '#060607'; x.lineWidth = 3; x.beginPath(); x.arc(cx, cy, 0.024 * PX, 0, PI * 2); x.stroke(); });
   const SCW = 768, SCH = Math.round(SCW * H / W), scrC = cvs(SCW, SCH), scrX = scrC.getContext('2d'), scrTex = new THREE.CanvasTexture(scrC); scrTex.colorSpace = THREE.SRGBColorSpace; scrTex.anisotropy = ANI;
@@ -198,7 +197,6 @@ export async function mount(host, state) {
   const b2b = (g, x, y, z, rot = 0) => { const sf = rb(0.24, 0.1, 0.004, 0.0015, M.steel, x, y, z - 0.015); sf.rotation.z = rot; g.add(sf); const a = rb(0.2, 0.075, 0.026, 0.008, M.black, x, y, z); a.rotation.z = rot; g.add(a); const b = rb(0.17, 0.02, 0.006, 0.002, M.gold, x, y, z + 0.015); b.rotation.z = rot; g.add(b); };
   const caps = (g, n, region, z, avoid = []) => { let k = 0, guard = 0; while (k < n && guard++ < n * 30) { const x = region[0] + rand() * (region[1] - region[0]), y = region[2] + rand() * (region[3] - region[2]); if (avoid.some(([a, b, c, d]) => x > a && x < b && y > c && y < d)) continue; const big = rand() < 0.2, w = big ? 0.05 : 0.028, h = big ? 0.028 : 0.016; const m = [M.capA, M.capB, M.capC, M.steel][Math.floor(rand() * 4)]; const c = rb(w, h, 0.016, 0.003, m, x, y, z); if (rand() < 0.5) c.rotation.z = PI / 2; g.add(c); k++; } };
 
-  await new Promise((r) => setTimeout(r, 0)); // owner (15 Nov, freeze on entry): build in slices so the page keeps breathing
   // 0 · Screen assembly (a) cover glass, printed border, earpiece slot
   { const g = SG[0];
     g.add(mesh(extr(Sh(W - 0.012, H - 0.012, R - 0.006), 0.016, 0.006), [M.glass, M.glassEdge]));
@@ -214,7 +212,6 @@ export async function mount(host, state) {
     g.add(mesh(extr(tail, 0.006, 0, [-0.31, 0.31, y0, y0 + 0.5]), [M.amber, M.amberH], 0, 0, -0.0115));
     g.add(rb(0.34, 0.03, 0.02, 0.01, M.amberH, 0, -H / 2 + 0.09, -0.004));
     g.add(rb(0.24, 0.06, 0.004, 0.0015, M.steel, 0, y0 + 0.1, -0.0135)); g.add(rb(0.5, 0.13, 0.004, 0.0015, M.black, 0, y0 + 0.4, -0.0135)); g.add(rb(0.42, 0.04, 0.0015, 0.0005, M.gold, 0, y0 + 0.4, -0.0157)); }
-  await new Promise((r) => setTimeout(r, 0)); // owner (15 Nov, freeze on entry): build in slices so the page keeps breathing
   // 1 · Frame
   { const g = L[1];
     const band = Sh(W - 0.02, H - 0.02, R - 0.01); band.holes.push(Hp(W - 0.085, H - 0.085, R - 0.045));
@@ -241,7 +238,6 @@ export async function mount(host, state) {
     const coax = new THREE.CatmullRomCurve3([new THREE.Vector3(-0.69, -1.18, z), new THREE.Vector3(-0.69, -0.4, z), new THREE.Vector3(-0.69, 0.6, z), new THREE.Vector3(-0.685, 1.24, z), new THREE.Vector3(-0.6, 1.38, z)]);
     g.add(mesh(new THREE.TubeGeometry(coax, 60, 0.011, 10), std({ color: 0x5a5d62, roughness: 0.5 })));
     [[-0.69, -1.18], [-0.6, 1.38]].forEach(([x, y]) => g.add(cyl(0.022, 0.02, M.gold, x, y, z))); }
-  await new Promise((r) => setTimeout(r, 0)); // owner (15 Nov, freeze on entry): build in slices so the page keeps breathing
   // 4 · Logic board
   { const g = L[3], t = 0.022, zt = t / 2;
     const bs = new THREE.Shape(); bs.moveTo(-0.66, 0.2); bs.lineTo(0.2, 0.2); bs.lineTo(0.2, 1.42); bs.lineTo(-0.66, 1.42); bs.lineTo(-0.66, 0.2);
@@ -262,7 +258,6 @@ export async function mount(host, state) {
     ribbon(g, [[0.36, 0.14], [0.36, 0.3]], 0.12, 0.03); b2b(g, 0.36, 0.3, 0.046);
     const trk = mesh(new THREE.PlaneGeometry(0.72, 0.04), new THREE.MeshBasicMaterial({ color: 0x2a2b2e }), 0, -1.0, 0.0414); trk.castShadow = false; g.add(trk);
     const chg = mesh(new THREE.PlaneGeometry(0.72, 0.04), new THREE.MeshBasicMaterial({ color: 0xf7c032, toneMapped: false }), -0.36, -1.0, 0.0416); chg.geometry.translate(0.36, 0, 0); chg.position.x = -0.36; chg.scale.x = 0.0001; chg.castShadow = false; g.add(chg); g.userData.chg = chg; chg.name = 'chg'; }
-  await new Promise((r) => setTimeout(r, 0)); // owner (15 Nov, freeze on entry): build in slices so the page keeps breathing
   // 5 · Cameras
   { const g = L[5];
     g.add(rb(ISL.w, ISL.h, 0.02, 0.12, M.aluDark, ISL.x, ISL.y, -0.03));
@@ -289,7 +284,6 @@ export async function mount(host, state) {
     { const ad = Sh(W - 0.03, H - 0.03, R - 0.015); ad.holes.push(Hp(W - 0.07, H - 0.07, R - 0.035)); const am = mesh(flat(ad), std({ color: 0x0c0c0d, roughness: 0.9 }), 0, 0, 0.0081); am.castShadow = false; g.add(am); }
     const coil = mesh(new THREE.PlaneGeometry(0.88, 0.88), M.coil, 0, -0.32, 0.0115); coil.castShadow = false; g.add(coil); }
 
-  await new Promise((r) => setTimeout(r, 0)); // owner (15 Nov, freeze on entry): build in slices so the page keeps breathing
   // 6 · Small parts — SIM tray, side buttons, taptic motor, speaker, USB-C port, screws on a clear tray (matte)
   { const g = L[6], mt = std({ color: 0xa4a8ad, metalness: 0.7, roughness: 0.58 }), mk = std({ color: 0x1c1d1f, roughness: 0.82 }), ma = std({ color: 0x686c71, metalness: 0.7, roughness: 0.55 });
     /* owner (27 Oct): no see-through tray behind the small parts (it read as a faded rectangle) */
@@ -300,7 +294,6 @@ export async function mount(host, state) {
     g.add(rb(0.74, 0.26, 0.07, 0.03, mk, 0, -0.42, 0.02)); for (let r = 0; r < 2; r++) for (let i = 0; i < 9; i++) g.add(cyl(0.011, 0.004, ma, -0.2 + i * 0.05, -0.4 - r * 0.045, 0.056, 12));
     g.add(rb(0.6, 0.2, 0.006, 0.004, M.amberH, 0, -0.98, -0.006)); g.add(rb(0.22, 0.09, 0.06, 0.04, mt, -0.08, -0.98, 0.024)); g.add(rb(0.15, 0.035, 0.064, 0.016, mk, -0.08, -0.98, 0.026)); g.add(rb(0.12, 0.08, 0.02, 0.004, mk, 0.2, -0.98, 0.006));
     [[-0.5, 1.3], [-0.3, 1.3], [-0.1, 1.3], [0.1, 1.3], [0.3, 1.3], [0.5, 1.3], [-0.42, -1.3], [-0.14, -1.3], [0.14, -1.3], [0.42, -1.3]].forEach(([x, y]) => { g.add(cyl(0.03, 0.014, mt, x, y, -0.006, 24)); const sg = new THREE.Group(); sg.position.set(x, y, 0.002); const a = rb(0.036, 0.007, 0.004, 0.001, mk, 0, 0, 0); sg.add(a); const b = a.clone(); b.rotation.z = PI / 2; sg.add(b); g.add(sg); SCREWS.push(sg); }); }
-  await new Promise((r) => setTimeout(r, 0)); // owner (15 Nov, freeze on entry): build in slices so the page keeps breathing
   // per-layer material clones: dim + yellow glow without touching shared materials
   L.forEach((g) => g.traverse((m) => { if (!m.isMesh) return; const one = (mt) => { if (mt === M.screen) return mt; const c = mt.clone(); c.userData.base = { c: c.color ? c.color.clone() : null, e: c.envMapIntensity, em: c.emissive ? c.emissive.clone() : null }; return c; }; m.material = Array.isArray(m.material) ? m.material.map(one) : one(m.material); }));
   L.forEach((g) => g.traverse((m) => { if (m.isMesh && (Array.isArray(m.material) ? m.material : [m.material]).some((mt) => mt.transparent)) m.castShadow = false; }));
@@ -318,7 +311,6 @@ export async function mount(host, state) {
   const hBand = tex(512, 512, (x, w2, h2) => { const g = x.createLinearGradient(0, 0, w2, h2); g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(0.36, 'rgba(255,255,255,0)'); g.addColorStop(0.45, 'rgba(255,250,238,.22)'); g.addColorStop(0.5, 'rgba(255,255,255,.62)'); g.addColorStop(0.55, 'rgba(255,250,238,.22)'); g.addColorStop(0.64, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(0, 0, w2, h2); x.clearRect(0, 0, w2, 3); x.clearRect(0, h2 - 3, w2, 3); x.clearRect(0, 0, 3, h2); x.clearRect(w2 - 3, 0, 3, h2); }); // a clear 3px border: the clamped edge texels stay transparent (no streak at the screen edge)
   const gSweep = new THREE.Mesh(flat(Sh(W - 0.03, H - 0.03, R - 0.015)), new THREE.MeshBasicMaterial({ map: hBand, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, opacity: 0 })); gSweep.position.z = 0.0117; gSweep.renderOrder = 5; gSweep.visible = false; SG[0].add(gSweep);
 
-  await new Promise((r) => setTimeout(r, 0)); // owner (15 Nov, freeze on entry): build in slices so the page keeps breathing
   // ── Finale commercial: 10s loop rendered live into a high-res render target (lit 3D parts + kinetic type)
   const AW = state.mob ? 680 : 1132, AH = Math.round(AW * H / W), fq = AW / 1132;
   const rt = new THREE.WebGLRenderTarget(AW, AH, { samples: state.mob ? 0 : 4, generateMipmaps: true, minFilter: THREE.LinearMipmapLinearFilter, magFilter: THREE.LinearFilter });
@@ -386,7 +378,6 @@ export async function mount(host, state) {
   const stDark = mkStatus('#1A1B1D'), stLight = mkStatus('#FFFFFF');
   const LG = 1024, LR = 380, logoTex = tex(LG, LG, (x) => { x.fillStyle = '#FFFFFF'; x.beginPath(); x.arc(LG / 2, LG / 2, LR, 0, PI * 2); x.fill(); if (logoImg) x.drawImage(logoImg, LG / 2 - LR, LG / 2 - LR, 2 * LR, 2 * LR); x.lineWidth = 12; x.strokeStyle = '#F7C032'; x.beginPath(); x.arc(LG / 2, LG / 2, LR + 10, 0, PI * 2); x.stroke(); });
   const LGS = AW * 0.62, logoQ = quad(LGS, LGS, ovMat({ map: logoTex }), 5), sweepQ = quad(0, 0, ovMat({ map: bandTex('255,255,255', 0.75), blending: THREE.AdditiveBlending }), 6, new THREE.CircleGeometry(LGS * (LR + 16) / LG, 72));
-  await new Promise((r) => setTimeout(r, 0)); // owner (15 Nov, freeze on entry): build in slices so the page keeps breathing
   // ── the commercial: 11 scenes (~19s), back plate (outline word, streak, shadow) → lit 3D part → kinetic type
   const ovB = new THREE.Scene(); const quadB = (wq, hq, m, ro, geo) => { const q = new THREE.Mesh(geo || new THREE.PlaneGeometry(wq, hq), m); q.renderOrder = ro; q.visible = false; ovB.add(q); return q; };
   const mkOut = (t, col) => { const sz = Math.round(560 * fq), c0 = cvs(8, 8).getContext('2d'); c0.font = '700 ' + sz + 'px ' + FAM.sg; const mw = c0.measureText(t).width, cw = Math.ceil(mw + sz * 0.3), ch = Math.ceil(sz * 1.2);
@@ -521,7 +512,6 @@ export async function mount(host, state) {
     return i;
   };
   const renderAd = (t) => { if (adErr) return -1; try { return renderAd0(t); } catch (e) { adErr = true; renderer.setRenderTarget(null); console.warn('ad', e && e.message); return -1; } };
-  let stageCompiled = false; // owner (15 Nov, freeze on entry): the warm-up frame waits for the background compile
   // precompile the commercial's shaders asynchronously so the first frame never stalls; then render 3D chip thumbnails
   let adReady = false;
   const renderThumbs = (TS0, quiet) => { try { resetAd(); const OS = TS0 || 192, TS = Math.min(1024, Math.round(OS * 1.5)), trt = new THREE.WebGLRenderTarget(TS, TS, { samples: 4 }); trt.texture.colorSpace = THREE.SRGBColorSpace; const bg0 = adS.background, cc = renderer.getClearColor(new THREE.Color()), ca = renderer.getClearAlpha(); adS.background = null; glint.visible = shG.visible = shB.visible = false;
@@ -542,7 +532,7 @@ export async function mount(host, state) {
     renderer.setRenderTarget(null); vis.forEach(([o, v]) => (o.visible = v)); pr.then(done, done); };
   if (!state.shelf) setTimeout(precompile, 1200);
   // owner (27 Oct): the main stage's shaders too (they used to compile on the first visible frame = a stall on arrival)
-  if (!state.shelf && renderer.compileAsync) { const idle = window.requestIdleCallback || ((f) => setTimeout(f, 300)); idle(() => { try { renderer.compileAsync(scene, cam).then(() => { stageCompiled = true; }).catch(() => { stageCompiled = true; }); } catch (e) { stageCompiled = true; } }); } else stageCompiled = true;
+  if (!state.shelf && renderer.compileAsync) { const idle = window.requestIdleCallback || ((f) => setTimeout(f, 300)); idle(() => { try { renderer.compileAsync(scene, cam).catch(() => {}); } catch (e) {} }); }
   state.renderLib = (TS) => renderThumbs(TS, true);
   // final-call ad = Template B of the shared phone-ad engine (se-phone-ad.js); 3D renderAd stays as fallback
   let ad2 = null, ad2Cv = null, ad2Tex = null, ad2Wait = 0;
@@ -624,7 +614,7 @@ export async function mount(host, state) {
       visible = inView; const r = { width: nearV ? 1 : 0, top: 0, bottom: 0 }, vh = 1;
       // owner (27 Oct): warm-up. Until it has drawn once, the stage draws one frame (off-screen, invisible) as soon as it is
       // within ~3 screens, so textures upload and shaders link BEFORE the visitor arrives, not on the first scroll into it
-      if (!visible) { if (stageCompiled && !warmed && nearV && (window.__seBooted || performance.now() > 12000) && performance.now() - warmAt > 700) { warmAt = performance.now(); try { frame(); warmed = true; } catch (e) {} } return; } }
+      if (!visible) { if (!warmed && nearV && (window.__seBooted || performance.now() > 12000) && performance.now() - warmAt > 700) { warmAt = performance.now(); try { frame(); warmed = true; } catch (e) {} } return; } }
     // R12 speed (owner: fans at full power): full 60 fps only while the scroll is moving the stack; when it is just
     // turning slowly in the studio, 30 fps looks the same and halves the work
     { const now = performance.now(), moving = Math.abs(state.p - p) > 0.0004 || state.snap; if (!moving && now - lastDraw < 31) return; lastDraw = now; }
