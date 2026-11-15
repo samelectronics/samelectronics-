@@ -1116,7 +1116,7 @@ html[dir='rtl'] .se-qs-sw.on i { transform: translateX(-18px); } html[dir='rtl']
 .nb-n { top: -4px !important; right: -6px !important; min-width: 18px !important; height: 18px !important; padding: 0 4px !important; box-sizing: border-box; border-radius: 9px !important; display: grid !important; place-items: center; font: 700 11px/1 Inter, sans-serif !important; box-shadow: none !important; }
 /* R10 (owner): connection notices sit at the bottom centre, above everything, for 10s */
 .se-netp { top: auto !important; bottom: 24px; overflow: hidden; animation-name: seNetpUp !important; }
-.se-netp-t { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: currentColor; opacity: .35; transform-origin: left; animation: seNetpT 10s linear forwards; }
+.se-netp-t { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: currentColor; opacity: .35; transform-origin: left; animation: seNetpT 20s linear forwards; }
 .se-netp.off .se-netp-t { background: #E5484D; opacity: .8; } .se-netp.back .se-netp-t { background: #2BB673; opacity: .8; } .se-netp.slow .se-netp-t { background: #F7C032; opacity: .8; }
 @keyframes seNetpT { to { transform: scaleX(0); } }
 @keyframes seNetpUp { from { opacity: 0; transform: translate(-50%, 16px); } to { opacity: 1; transform: translate(-50%, 0); } }

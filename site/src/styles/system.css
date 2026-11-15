@@ -55,3 +55,13 @@
 /* R12 (owner): every status / progress / availability dot glows in and out smoothly (no expanding waves, no on/off blink) */
 @keyframes sePing { 0%, 100% { transform: scale(1.5); opacity: .12; filter: blur(1.5px); } 50% { transform: scale(2.1); opacity: .6; filter: blur(2.5px); } }
 @keyframes seBreath { 0%, 100% { opacity: .65; transform: scale(.94); } 50% { opacity: 1; transform: scale(1.06); } }
+/* R12 (owner): the progress line: one seamless, endless soft shimmer (the light loops exactly, so it never jumps),
+   a gentle glow, and a solid lit head dot (no dark centre) */
+[data-prog='bar'] { background-image: linear-gradient(90deg, #F7C032 0px, #F7C032 70px, #FFE39A 110px, #F7C032 150px, #F7C032 220px) !important; background-size: 220px 100% !important; background-repeat: repeat-x !important; animation: seProgFlow 2.2s linear infinite !important; box-shadow: 0 0 10px rgba(247, 192, 50, .45) !important; }
+html[dir='rtl'] [data-prog='bar'] { background-image: linear-gradient(270deg, #F7C032 0px, #F7C032 70px, #FFE39A 110px, #F7C032 150px, #F7C032 220px) !important; animation-direction: reverse !important; }
+@keyframes seProgFlow { from { background-position: 0 0; } to { background-position: 220px 0; } }
+[data-prog='dot'] { background: radial-gradient(circle at 40% 35%, #FFF1C2, #F7C032 60%) !important; border: 0 !important; box-shadow: 0 0 10px 2px rgba(247, 192, 50, .7) !important; animation: seBreath 2.8s ease-in-out infinite !important; }
+@media (prefers-reduced-motion: reduce) { [data-prog='bar'], [data-prog='dot'] { animation: none !important; } }
+/* R12 (owner): one live-eyebrow style everywhere: yellow mono text (numbers too), one rich green dot glowing in and out */
+.dl-eb .dl-live b { color: #F7C032 !important; }
+.lb-eb i, .dl-eb .dl-live i, .dl-live i { width: 8px !important; height: 8px !important; background: radial-gradient(circle at 40% 35%, #9BF0C4, #2BB673 70%) !important; box-shadow: 0 0 8px 1px rgba(43, 182, 115, .65) !important; animation: seBreath 2.8s ease-in-out infinite !important; }

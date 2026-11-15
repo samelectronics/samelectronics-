@@ -41,6 +41,15 @@ export function play(s: Snd, force = false) {
     lp.type = 'lowpass'; lp.frequency.value = pk.lp; lp.Q.value = 0.5;
     master.gain.value = Math.min(1, Math.max(0, p.vol)) * 0.26 * pk.gain; master.connect(lp); lp.connect(ctx.destination);
     if (pk.echo) { const dl = ctx.createDelay(), eg = ctx.createGain(); dl.delayTime.value = 0.07; eg.gain.value = pk.echo; lp.connect(dl); dl.connect(eg); eg.connect(ctx.destination); }
+    // R12 (owner: "a coil sound"): the click is a real button click: a short low thump with body and a soft, felted
+    // edge (no sliding pitch, no high tick). Rich and heavy, never plastic.
+    if (s === 'click') {
+      const th = ctx.createOscillator(), tg = ctx.createGain(); th.type = 'sine'; th.frequency.setValueAtTime(165, t0); th.frequency.exponentialRampToValueAtTime(62, t0 + 0.07);
+      tg.gain.setValueAtTime(0.0001, t0); tg.gain.exponentialRampToValueAtTime(1.15, t0 + 0.004); tg.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.085); th.connect(tg); tg.connect(master); th.start(t0); th.stop(t0 + 0.1);
+      const n = ctx.createBuffer(1, Math.ceil(ctx.sampleRate * 0.02), ctx.sampleRate), d = n.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 3);
+      const ns = ctx.createBufferSource(), bp = ctx.createBiquadFilter(), ng = ctx.createGain(); ns.buffer = n; bp.type = 'bandpass'; bp.frequency.value = 1100; bp.Q.value = 0.9; ng.gain.value = 0.32; ns.connect(bp); bp.connect(ng); ng.connect(master); ns.start(t0);
+      return;
+    }
     for (const [f, at, d, type, to] of SHAPES[s]) {
       const o = ctx.createOscillator(), g = ctx.createGain();
       o.type = pk.type || type || 'sine'; o.frequency.setValueAtTime(f * pk.mul, t0 + at);

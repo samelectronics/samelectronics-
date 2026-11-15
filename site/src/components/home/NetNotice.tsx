@@ -15,7 +15,7 @@ export default function NetNotice() {
     const check = () => {
       clearTimeout(backT.current);
       // R10 (owner): every state shows at the bottom for 10s (a thin bar drains), then hides itself; × closes it sooner
-      const show = (x: 'off' | 'slow' | 'back') => { setShut(false); setSt(x); setK((n) => n + 1); backT.current = window.setTimeout(() => setSt(''), 10000); };
+      const show = (x: 'off' | 'slow' | 'back') => { setShut(false); setSt(x); setK((n) => n + 1); backT.current = window.setTimeout(() => setSt(''), 20000); };
       if (!navigator.onLine) { wasOff.current = true; show('off'); return; }
       if (wasOff.current) { wasOff.current = false; show('back'); return; }
       const slow = !!c && (/(^|-)2g$/.test(c.effectiveType || '') || !!c.saveData);
