@@ -6,6 +6,7 @@ import React from 'react';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 import SEBrandLogo from '../../dc/SEBrandLogo';
 import HeroSearch from '../HeroSearch';
+import HeroIpadShop from '../HeroIpadShop';
 import SEPart from '../../dc/SEPart';
 
 // R13 (owner: phone/tablet need safe spacing, nothing may touch): on phones the devices sit a fixed safe gap under the
@@ -575,7 +576,7 @@ export default function Hero({ v }: { v: Vals }) {
                 <span className="se-glass" style={{ zIndex: 5 }}></span>
                 <span className="se-glass-sweep" style={{ zIndex: 6, animationDelay: '0s', ['--d' as string]: '300px', ['--sw' as string]: v.sweepIp } as React.CSSProperties}></span>
                 {/* R12 (owner): the iPad shows our real shop, browsing slowly: pause, scroll, pause, back to the top */}
-                <div className="hero-shop" aria-hidden="true"><img src="/assets/hero-shop.webp" alt="" width={640} height={2498} decoding="async" /></div>
+                <HeroIpadShop />
                 <div
                   style={{
                     position: 'absolute',

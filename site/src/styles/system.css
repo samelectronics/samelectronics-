@@ -248,3 +248,30 @@ header .se-nav-right .se-lm-btn:hover, header .se-nav-right .nb > button:hover, 
 header .se-nav-right .nb, header .se-nav-right .se-lm { display: grid; }
 header .se-status > button, header .se-status > a { height: 38px; box-sizing: border-box; }
 header .se-nav-right .se-nav-staff { display: none !important; }
+
+/* R13 · the hero iPad, in use: status bar, endless forward scroll, taps that add to the cart */
+.hero-shop img { animation: none !important; }
+.hero-shop .hs-track { position: absolute; left: 0; right: 0; top: 18px; will-change: transform; animation: hsScroll 84s linear infinite; }
+.hero-shop .hs-track img { display: block; width: 100%; height: auto; }
+@keyframes hsScroll { 0% { transform: translateY(0); } 6% { transform: translateY(-2.5%); } 10% { transform: translateY(-2.5%); } 22% { transform: translateY(-11%); } 26% { transform: translateY(-11%); } 40% { transform: translateY(-21%); } 44% { transform: translateY(-21%); } 60% { transform: translateY(-32%); } 64% { transform: translateY(-32%); } 82% { transform: translateY(-43%); } 86% { transform: translateY(-43%); } 100% { transform: translateY(-50%); } }
+.hero-shop .hs-status { position: absolute; z-index: 3; left: 0; right: 0; top: 0; height: 18px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; background: #1F2023; color: #fff; font: 600 9px Inter, sans-serif; }
+.hs-ic { display: flex; align-items: center; gap: 5px; } .hs-ic svg { fill: #fff; }
+.hs-ic small { font: 600 8px Inter, sans-serif; }
+.hs-bat { position: relative; display: block; width: 19px; height: 9px; border-radius: 2.5px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.55); padding: 1.5px; box-sizing: border-box; }
+.hs-bat::after { content: ''; position: absolute; right: -2.5px; top: 3px; width: 1.5px; height: 3px; border-radius: 0 1px 1px 0; background: rgba(255,255,255,.55); }
+.hs-bat > i { display: block; height: 100%; border-radius: 1px; background: #fff; transition: width 1s; }
+.hs-bat.low > i { background: #FF5A5F; } .hs-bat.chg > i { background: #3ECF8E; }
+.hs-tap { position: absolute; z-index: 4; width: 26px; height: 26px; margin: -13px 0 0 -13px; border-radius: 50%; background: rgba(255,255,255,.55); box-shadow: 0 0 0 2px rgba(38,40,43,.25); opacity: 0; pointer-events: none; }
+.hs-tap.go { animation: hsTap .7s ease-out both; }
+@keyframes hsTap { 0% { opacity: 0; transform: scale(1.6); } 30% { opacity: 1; transform: scale(.85); } 100% { opacity: 0; transform: scale(1.3); } }
+.hs-toast { position: absolute; z-index: 4; left: 50%; top: 26px; display: flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 999px; background: #26282B; color: #fff; font: 600 10px Inter, sans-serif; white-space: nowrap; box-shadow: 0 8px 18px -6px rgba(0,0,0,.5); opacity: 0; transform: translate(-50%, -12px); pointer-events: none; }
+.hs-toast i { font-style: normal; display: grid; place-items: center; width: 14px; height: 14px; border-radius: 50%; background: #3ECF8E; color: #fff; font-size: 9px; }
+.hs-toast.go { animation: hsToast 2.4s .5s cubic-bezier(.16,1,.3,1) both; }
+@keyframes hsToast { 0% { opacity: 0; transform: translate(-50%, -12px); } 15%, 80% { opacity: 1; transform: translate(-50%, 0); } 100% { opacity: 0; transform: translate(-50%, -8px); } }
+.hs-cart { position: absolute; z-index: 4; right: 12px; bottom: 12px; display: flex; align-items: center; gap: 5px; padding: 7px 10px; border-radius: 12px; background: #F7C032; color: #26282B; box-shadow: 0 8px 18px -6px rgba(0,0,0,.4); }
+.hs-cart b { font: 700 11px 'Space Grotesk', sans-serif; animation: hsBump .45s cubic-bezier(.3,1.6,.5,1); }
+@keyframes hsBump { from { transform: scale(1.8); } }
+@media (prefers-reduced-motion: reduce) { .hero-shop .hs-track { animation: none; } }
+.hero-shop .hs-status { padding: 0 28px; height: 20px; } .hero-shop .hs-track { top: 20px; }
+.hs-cart { right: auto; left: 14px; bottom: 14px; }
+html[dir='rtl'] .hs-cart { left: auto; right: 14px; }
