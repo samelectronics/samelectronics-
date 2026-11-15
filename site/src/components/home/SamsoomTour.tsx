@@ -176,7 +176,7 @@ export default function SamsoomTour() {
             <span className="st-l2-av"><LiveSam size={150} mood="idle" play="wave" /><span className="st-l2-floor" aria-hidden="true" /></span>
           </div>
           <div className="st-l2-list">
-            <LangScroll list={list} d={d} cl={cl} pick={pick} />
+            <LangPanel list={list} d={d} cl={cl} pick={pick} />
             <span className="st-l2-more" lang={hint} aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path d="M6 9l6 6 6-6" /></svg>{SCROLL[hint] || SCROLL.en}</span>
           </div>
         </div>
@@ -275,12 +275,27 @@ export default function SamsoomTour() {
 
 /** R10 B1: the language list follows the bubble (smoothly scrolls the language being shown into the middle) until the
  *  visitor touches the list; soft fades at the top and bottom. */
+// owner (15 Nov, "something is missing"): the list gets a real header (title in the visitor's detected language + English)
+// and a filter box, so 12+ languages are one keystroke away instead of a long scroll.
+function LangPanel({ list, d, cl, pick }: { list: { id: Lang; name: string; en: string }[]; d: Lang | null; cl: Lang; pick: (id: Lang) => void }) {
+  const [q, setQ] = useState('');
+  const k = q.trim().toLowerCase(), shown = k ? list.filter((l) => l.name.toLowerCase().includes(k) || l.en.toLowerCase().includes(k) || l.id.startsWith(k)) : list;
+  return (
+    <>
+      <div className="st-l2-head">
+        <b>Choose your language</b>
+        <label className="st-l2-q"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg><input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Type a language" aria-label="Filter languages" /></label>
+      </div>
+      {shown.length ? <LangScroll list={shown} d={d} cl={k ? shown[0].id : cl} pick={pick} /> : <p className="st-l2-none">No match. Try English or العربية.</p>}
+    </>
+  );
+}
 function LangScroll({ list, d, cl, pick }: { list: { id: Lang; name: string; en: string }[]; d: Lang | null; cl: Lang; pick: (id: Lang) => void }) {
   const ref = React.useRef<HTMLDivElement>(null), touched = React.useRef(false);
   useEffect(() => {
     const el = ref.current; if (!el || touched.current) return;
     const b = el.querySelector<HTMLElement>(`[data-l="${cl}"]`); if (!b) return;
-    const top = cl === d ? 0 : b.offsetTop - el.clientHeight / 2 + b.offsetHeight / 2;
+    const top = 0; // owner (15 Nov): the list stays at the top (the detected language first); the cycling highlight never scrolls it
     el.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
   }, [cl, d]);
   const stop = () => { touched.current = true; };
