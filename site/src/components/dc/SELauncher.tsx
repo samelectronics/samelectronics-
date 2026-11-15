@@ -63,7 +63,7 @@ function render(v: Vals) {
         <span
           aria-hidden="true"
           style={cssToObj(
-            `position:absolute;left:40px;top:6px;width:10px;height:10px;border-radius:50%;background:#5FD49A;box-shadow:0 0 0 2px #26282B;animation:${s(v.dotAnim)};pointer-events:none`,
+            `position:absolute;left:40px;top:6px;width:10px;height:10px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#9BF0C4,#3ECF8E 70%);box-shadow:0 0 8px 1px rgba(62,207,142,.75);animation:${s(v.dotAnim)};pointer-events:none`,
           )}
         ></span>
       </div>

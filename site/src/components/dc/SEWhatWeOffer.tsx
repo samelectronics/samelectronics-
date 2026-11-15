@@ -222,7 +222,7 @@ function render(v: Vals) {
                   </span>
                   {'\n            '}
                   <span style={{ display: 'block', overflow: 'hidden', paddingBottom: '4px', marginBottom: '-4px' }}>
-                    <span data-w="hl1" style={{ display: 'block', color: 'rgba(38,40,43,.6)' }}>
+                    <span data-w="hl1" style={{ display: 'block', color: '#F7C032' }}>
                       One shop in Deira.
                     </span>
                   </span>

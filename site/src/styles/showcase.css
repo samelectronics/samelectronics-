@@ -89,7 +89,7 @@ html[dir='rtl'] .sc-ulid { transform-origin: 80% 100%; }
 .sc-ubox { bottom: 112px; height: 278px; }
 .sc-uback { bottom: 112px; height: 292px; }
 .sc-ufront { bottom: 72px; }
-.sc-un img { filter: drop-shadow(0 14px 14px rgba(110, 72, 0, .28)); -webkit-box-reflect: below 0 linear-gradient(transparent 82%, rgba(0, 0, 0, .14)); }
+.sc-un img { filter: drop-shadow(0 14px 14px rgba(110, 72, 0, .28)); }
 /* Urgent 4 · nav: flat graphite circles with a #F7C032 arrow */
 .sc-nav { right: 24px; bottom: 22px; gap: 8px; }
 html[dir='rtl'] .sc-nav { right: auto; left: 24px; }

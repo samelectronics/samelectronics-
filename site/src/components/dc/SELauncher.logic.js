@@ -66,7 +66,7 @@ class Component extends DCLogic {
       w, msg, mi: s.mi, txtO: s.open ? 1 : 0,
       padL: over ? 10 : 0, padR: over ? 14 : 0, tx: over ? -(tw - MAXT) : 0, tick: over && s.open && !this.rm ? 'lnTick ' + dur.toFixed(1) + 's linear .6s infinite' : 'lnIn .3s cubic-bezier(.2,.8,.2,1) both',
       mask: over ? 'linear-gradient(90deg,transparent 0,#000 10px,#000 calc(100% - 14px),transparent)' : 'none',
-      dotAnim: this.rm ? 'none' : 'lnDot 2.2s cubic-bezier(.45,0,.55,1) infinite'
+      dotAnim: this.rm ? 'none' : 'seBreath 2.8s ease-in-out infinite'
     };
   }
 }

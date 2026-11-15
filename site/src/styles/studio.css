@@ -59,8 +59,21 @@
 .pv-stage::before, .pc-stage::after { background: radial-gradient(closest-side, rgba(38, 40, 43, .26), rgba(38, 40, 43, .1) 55%, rgba(38, 40, 43, 0)); }
 .sc-floor, .sc-floor::after, .dl-spot-light, .dl-card-shadow, .dl-spot-shadow, .wo-floor, .wo-puck, .wo-ring { display: none !important; }
 /* the faint mirror on the polished floor (Chromium/Safari; others simply show no reflection) */
-.wo-pose { -webkit-box-reflect: below -28px linear-gradient(transparent 15%, rgba(0, 0, 0, .26) 17%, rgba(0, 0, 0, 0) 36%); }
-.dl-spot-art img { -webkit-box-reflect: below -35px linear-gradient(transparent 15%, rgba(0, 0, 0, .26) 17%, rgba(0, 0, 0, 0) 36%); }
-.dl-card-art img { -webkit-box-reflect: below -27px linear-gradient(transparent 15%, rgba(0, 0, 0, .26) 17%, rgba(0, 0, 0, 0) 36%); }
-.sc-pose { -webkit-box-reflect: below -9% linear-gradient(transparent 15%, rgba(0, 0, 0, .24) 17%, rgba(0, 0, 0, 0) 36%); }
-.pv-stage img, .pc-stage ~ img, .pc-stage + img { -webkit-box-reflect: below -12% linear-gradient(transparent 15%, rgba(0, 0, 0, .4) 17%, rgba(0, 0, 0, 0) 36%); }
+
+/* R12 (owner): a real studio, everywhere a product sits in a box. No hard wall/floor line: the wall melts into the floor,
+   a soft spotlight falls from above, a pool of light sits under the product, and the floor and corners fall away into
+   darkness. Same three moods (dark / warm / light), same variables. */
+:root {
+  --st-dark: radial-gradient(42% 58% at 50% -12%, rgba(255, 244, 222, .26), rgba(255, 244, 222, .06) 60%, rgba(255, 244, 222, 0) 88%),
+    radial-gradient(46% 22% at 50% var(--st-hz, 70%), rgba(255, 244, 222, .10), rgba(255, 244, 222, 0) 100%),
+    radial-gradient(130% 95% at 50% 38%, rgba(0, 0, 0, 0) 52%, rgba(0, 0, 0, .55) 100%),
+    linear-gradient(180deg, #35373B 0%, #2E3034 calc(var(--st-hz, 70%) - 14%), #2B2D30 var(--st-hz, 70%), #1F2023 calc(var(--st-hz, 70%) + 20%), #161719 100%);
+  --st-warm: radial-gradient(42% 58% at 50% -12%, rgba(255, 214, 110, .36), rgba(255, 214, 110, .08) 60%, rgba(255, 214, 110, 0) 88%),
+    radial-gradient(46% 22% at 50% var(--st-hz, 70%), rgba(255, 220, 140, .12), rgba(255, 220, 140, 0) 100%),
+    radial-gradient(130% 95% at 50% 38%, rgba(0, 0, 0, 0) 52%, rgba(0, 0, 0, .5) 100%),
+    linear-gradient(180deg, #3A3835 0%, #312F2D calc(var(--st-hz, 70%) - 14%), #2C2B2A var(--st-hz, 70%), #201F20 calc(var(--st-hz, 70%) + 20%), #171718 100%);
+  --st-light: radial-gradient(42% 58% at 50% -12%, #FFFFFF, rgba(255, 255, 255, .55) 60%, rgba(255, 255, 255, 0) 88%),
+    radial-gradient(46% 22% at 50% var(--st-hz, 70%), rgba(255, 255, 255, .95), rgba(255, 255, 255, 0) 100%),
+    radial-gradient(130% 95% at 50% 38%, rgba(0, 0, 0, 0) 55%, rgba(38, 40, 43, .14) 100%),
+    linear-gradient(180deg, #EEF0F2 0%, #E8EAED calc(var(--st-hz, 70%) - 14%), #E6E8EB var(--st-hz, 70%), #DADDE1 calc(var(--st-hz, 70%) + 22%), #CFD2D6 100%);
+}

@@ -211,11 +211,12 @@ export default function SamsoomTour() {
             <>
               <b>{T('You called me?')}</b>
               <p>{T('I’m here to help. What would you like?')}</p>
-              <span className="st-acts st-acts4">
-                <button type="button" className="st-btn st-go" onClick={walk}>{T('Show me this page')}</button>
-                <button type="button" className="st-btn st-dark" onClick={() => { setPhase('off'); window.dispatchEvent(new CustomEvent('se:chat', { detail: {} })); }}>{T('Chat with me')}</button>
-                <button type="button" className="st-btn st-dark" onClick={() => setPhase('lang')}>{T('Change language')}</button>
-                <button type="button" className="st-btn st-grey" onClick={() => bye()}>{T('Close')}</button>
+              {/* R12 (owner): one premium menu: a single yellow action, the rest as matching rows (no four colours) */}
+              <span className="st-menu">
+                <button type="button" className="st-btn st-go st-menu-main" onClick={walk}>{T('Show me this page')}</button>
+                <button type="button" className="st-opt" onClick={() => { setPhase('off'); window.dispatchEvent(new CustomEvent('se:chat', { detail: {} })); }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" /></svg><span>{T('Chat with me')}</span><i aria-hidden="true">›</i></button>
+                <button type="button" className="st-opt" onClick={() => setPhase('lang')}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c2.6 3 2.6 15 0 18M12 3c-2.6 3-2.6 15 0 18" /></svg><span>{T('Change language')}</span><i aria-hidden="true">›</i></button>
+                <button type="button" className="st-menu-close" onClick={() => bye()}>{T('Close')}</button>
               </span>
             </>
           ) : (

@@ -116,3 +116,10 @@ html[data-sam-speaking] [data-sam-talk] > * { animation: samTalk 1.1s ease-in-ou
 .st-l2-i:hover, .st-l2-i:focus-visible { background: #fff !important; box-shadow: inset 0 0 0 1.5px #F7C032, 0 8px 18px -12px rgba(110,72,0,.45) !important; transform: translateX(2px); outline: none; }
 .st-l2-i.det { background: #26282B !important; color: #fff !important; box-shadow: none !important; } .st-l2-i.det small { color: #F7C032 !important; }
 @media (max-width: 680px) { .st-veil-lang .st-lang2 { grid-template-columns: min(340px, calc(100vw - 32px)) !important; height: min(580px, calc(100vh - 32px)) !important; } }
+/* R12: Samsoom's help menu: one yellow action, matching rows, a quiet close */
+.st-menu { display: flex; flex-direction: column; gap: 8px; width: 100%; margin-top: 8px; }
+.st-menu-main { width: 100%; justify-content: center; }
+.st-opt { display: flex; align-items: center; gap: 12px; width: 100%; height: 48px; padding: 0 14px; border: 0; border-radius: 14px; background: #F4F5F6; box-shadow: inset 0 0 0 1px rgba(38,40,43,.07); color: #26282B; font: 600 14.5px Inter, sans-serif; text-align: start; cursor: pointer; transition: background .18s, box-shadow .18s, transform .15s; }
+.st-opt svg { flex: none; color: #26282B; } .st-opt span { flex: 1; } .st-opt i { font-style: normal; font-size: 20px; color: #9EA1A5; }
+.st-opt:hover, .st-opt:focus-visible { background: #fff; box-shadow: inset 0 0 0 1.5px #F7C032, 0 8px 18px -12px rgba(110,72,0,.45); transform: translateY(-1px); outline: none; } .st-opt:hover i { color: #F7C032; }
+.st-menu-close { align-self: center; margin-top: 2px; padding: 6px 12px; border: 0; background: none; color: #6A6D72; font: 600 13px Inter, sans-serif; cursor: pointer; } .st-menu-close:hover { color: #26282B; text-decoration: underline; text-underline-offset: 3px; }

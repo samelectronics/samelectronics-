@@ -392,7 +392,7 @@ class Component extends DCLogic {
     const hist = (this.state.chatMsgs || []).filter((m) => !m.intro).map((m) => ({ role: m.me ? 'user' : 'assistant', text: m.t }));
     this.setState((s) => ({ chatMsgs: [...(s.chatMsgs || []), { me: true, t: q }], chatTyping: true, chatTouched: true, chatOpen: true }));
     const t0 = Date.now(), lang = window.seI18n ? window.seI18n.lang() : 'en';
-    const land = (r) => { const wait = Math.max(0, 650 - (Date.now() - t0)); setTimeout(() => { if (!this.dead) import('@/lib/voice').then((m) => m.babble(String(r.t || '').slice(0, 160))).catch(() => {}); }, wait); setTimeout(() => !this.dead && this.setState((s) => ({ chatTyping: false, chatMsgs: [...(s.chatMsgs || []), { t: r.t, act: r.act, lbl: r.lbl, emote: r.emote, own: true, n: (s.chatMsgs || []).length + 1 }] })), wait); };
+    const land = (r) => { const wait = Math.max(0, 650 - (Date.now() - t0)); setTimeout(() => { if (!this.dead) import('@/lib/voice').then((m) => m.babble(String(r.t || ''))).catch(() => {}); }, wait); setTimeout(() => !this.dead && this.setState((s) => ({ chatTyping: false, chatMsgs: [...(s.chatMsgs || []), { t: r.t, act: r.act, lbl: r.lbl, emote: r.emote, own: true, n: (s.chatMsgs || []).length + 1 }] })), wait); };
     const local = () => land(this.reply(q));
     fetch('/api/samsoom', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages: [...hist, { role: 'user', text: q }].slice(-12), lang }) })
       .then((r) => (r.ok ? r.json() : { fallback: true }))

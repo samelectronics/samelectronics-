@@ -49,7 +49,7 @@ function lanes(gw: number, H: number, side: 1 | -1, s0: number) {
   const inX = 10 + rnd() * Math.max(6, W - 46 - n * gap - step);
   for (let i = 0; i < n; i++) {
     const yi = y0 + i * gap, xa = inX + (n - 1 - i) * gap, xb = xa + step;
-    const yb = yi + step, ye = yb + run - i * gap * 0.6;
+    const yb = yi + step, ye = yb + run - i * gap * 0.6 + i * (60 + rnd() * 70); // R12 (owner): parallel traces never stop at the same height
     const out = rnd() < 0.5; // half of them bend back out to the edge, the rest stop on a pad
     let d = `M${f(X(0))} ${f(yi)} H${f(X(xa))} L${f(X(xb))} ${f(yb)} V${f(ye)}`, len = xa + step * 1.41 + (ye - yb);
     if (out && i === 0) { d += ` L${f(X(xb - step))} ${f(ye + step)} H${f(X(0))}`; len += step * 1.41 + xb; }

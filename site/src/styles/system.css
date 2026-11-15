@@ -8,7 +8,7 @@
 
 /* ── U5 · one title palette. Dark sections: white + yellow second line. Yellow sections: graphite. Light (white / fog)
    sections: graphite, never golden-yellow on white (the second line keeps its own weight, no highlighter) ── */
-:root { --title-on-light: #26282B; }
+:root { --title-on-light: #F7C032; } /* R12 (owner): no black-on-white second lines: brand yellow, like the hero */
 #families h2 > span:last-child > span, #showcase h2 > span:last-child, #story h2 > span:last-child, #repair h2 > span:last-child,
 #everyone h2 > span:last-child, #reviews h2 > span:last-child, #everyone h2 span[style*='F7C032'], #reviews h2 span[style*='F7C032'] { color: var(--title-on-light) !important; }
 
@@ -44,3 +44,14 @@
 .se-tex-light .sh { background: radial-gradient(closest-side, rgba(247, 192, 50, .16), rgba(247, 192, 50, .06) 50%, rgba(247, 192, 50, 0)) !important; }
 .se-tex-yel .sh { background: radial-gradient(closest-side, rgba(255, 246, 214, .42), rgba(255, 246, 214, .12) 50%, rgba(255, 246, 214, 0)) !important; }
 @media (hover: none) { .se-tex .sh { display: none; } }
+/* R12 (owner): circuit pads are solid lit dots (never a ring with a dark centre, never a black outline), breathing slowly */
+.se-gut-dark .nd, .se-gut-dark .jn { fill: #F7C032 !important; stroke: rgba(247, 192, 50, .28) !important; stroke-width: 5 !important; filter: drop-shadow(0 0 4px rgba(247, 192, 50, .75)); }
+.se-gut-light .nd, .se-gut-light .jn { fill: #F7C032 !important; stroke: rgba(247, 192, 50, .25) !important; stroke-width: 5 !important; }
+.se-gut-yel .nd, .se-gut-yel .jn { fill: #26282B !important; stroke: rgba(38, 40, 43, .18) !important; stroke-width: 5 !important; }
+.se-gut .nd { animation: seNdBreath 3.6s ease-in-out infinite; }
+.se-gut .nd:nth-of-type(2n) { animation-delay: -1.2s; } .se-gut .nd:nth-of-type(3n) { animation-delay: -2.4s; }
+@keyframes seNdBreath { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .se-gut .nd { animation: none; } }
+/* R12 (owner): every status / progress / availability dot glows in and out smoothly (no expanding waves, no on/off blink) */
+@keyframes sePing { 0%, 100% { transform: scale(1.5); opacity: .12; filter: blur(1.5px); } 50% { transform: scale(2.1); opacity: .6; filter: blur(2.5px); } }
+@keyframes seBreath { 0%, 100% { opacity: .65; transform: scale(.94); } 50% { opacity: 1; transform: scale(1.06); } }
