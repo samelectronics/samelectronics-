@@ -254,3 +254,18 @@ html[dir='rtl'] .fd-user svg { transform: scaleX(-1); }
 @media (min-width: 1181px) { .fd-grid { grid-template-columns: minmax(0, 1.05fr) 340px minmax(0, .9fr); } .fd-info .fd-top2 .fd-h { font-size: clamp(40px, 3.6vw, 56px); } }
 @media (min-width: 1181px) { .fd-info .fd-top2 .fd-h { font-size: clamp(36px, 3.1vw, 48px) !important; line-height: 1.04; } .fd-stage { align-self: center !important; } }
 @media (min-width: 1181px) { .fd-info .fd-top2 .fd-h { font-size: clamp(32px, 2.8vw, 44px) !important; } .fd-info .fd-top2 .fd-h > span { white-space: nowrap; display: block; } }
+
+/* R13 (owner: "messy, leftovers pasted together"): one composition. Three columns of equal weight, top-aligned:
+   the story + one scan row (left), the phone (centre), and ONE timeline card for the week (right, hairline dividers,
+   the next landing as its footer). Nothing floats on its own. */
+@media (min-width: 1181px) {
+  .fd-grid { grid-template-columns: minmax(0, 1fr) 360px minmax(0, 1fr) !important; gap: 48px !important; align-items: center !important; }
+  .fd-info { align-self: center !important; }
+}
+.fd-drops { display: flex; flex-direction: column; padding: 20px 22px 0; border-radius: 22px; background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.025)); box-shadow: inset 0 1px 0 rgba(255,255,255,.1), inset 0 0 0 1px rgba(255,255,255,.06), 0 30px 60px -30px rgba(0,0,0,.7); overflow: hidden; }
+.fd-drops .fd-k { margin-bottom: 6px; }
+.fd-drops .fd-drop { background: transparent !important; box-shadow: none !important; border-radius: 0 !important; padding: 14px 0 !important; margin: 0 !important; border-top: 1px solid rgba(255,255,255,.08); }
+.fd-drops .fd-drop:first-of-type { border-top: 0; }
+.fd-drops .fd-next { margin: 14px -22px 0 !important; border-radius: 0 !important; padding: 16px 22px 18px !important; }
+.fd-follow .fd-fl { box-shadow: inset 0 0 0 1px rgba(255,255,255,.1) !important; background: rgba(255,255,255,.04) !important; }
+.fd-follow .fd-fl.on { box-shadow: inset 0 0 0 1.5px rgba(247,192,50,.7) !important; }
