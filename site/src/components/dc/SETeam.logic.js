@@ -60,7 +60,7 @@ class Component extends DCLogic {
     this.b.forEach((b, i) => { const g = this._g[i], h = this._h[i]; if (!g) return; const y = this.t < b.dropAt ? -720 : b.y;
       if (b.pth != null && Math.abs(b.th - b.pth) < 0.06 && Math.abs(y - b.py) < 0.3) return; b.pth = b.th; b.py = y; // sub-pixel changes are skipped (fewer repaints at idle)
       // R10: never swing into a neighbour (laptops have less room between badges): the drawn angle is limited by the free gap
-      const room = this._room || (this._room = (() => { const sl = R.querySelector('.tm-slot'), cd = R.querySelector('.tm-card'); if (!sl || !cd) return 6; const gap = Math.max(4, sl.getBoundingClientRect().width - cd.getBoundingClientRect().width); return Math.max(8, Math.min(16, Math.atan(gap / 2 / 260) * 180 / Math.PI)); /* R11 (owner): they swing visibly */ })());
+      const room = this._room || (this._room = (() => { const sl = R.querySelector('.tm-slot'), cd = R.querySelector('.tm-card'); if (!sl || !cd) return 6; const gap = Math.max(4, sl.getBoundingClientRect().width - cd.getBoundingClientRect().width); return Math.max(4, Math.min(12, Math.atan(gap / 2 / 300) * 180 / Math.PI)); /* R11 (owner): they swing visibly */ })());
       const th = room * Math.tanh(b.th / room); /* soft limit: never a hard stop that looks stuck */
       g.style.transform = 'translateY(' + y.toFixed(1) + 'px) rotate(' + th.toFixed(2) + 'deg)';
       if (h) h.style.transform = 'translateX(' + (b.th * 9 + Math.sin(this.t * 0.7 + i) * 8).toFixed(1) + '%)'; });

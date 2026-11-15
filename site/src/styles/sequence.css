@@ -77,3 +77,20 @@ section.st { background: radial-gradient(60% 50% at 20% 0%, rgba(255,236,170,.6)
 .st .st-node { background: rgba(38,40,43,.25) !important; }
 .st .st-node.on { background: #26282B !important; box-shadow: 0 0 0 4px rgba(38,40,43,.15) !important; }
 .st .st-h > *:nth-child(2), .st .st-h > *:nth-child(2) * { color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF; }
+
+/* Team → WHITE (the PVC badges keep their own look) */
+section.tm { background: radial-gradient(60% 50% at 50% 0%, rgba(247,192,50,.10), rgba(247,192,50,0) 70%), var(--sq-white) !important; color: #26282B !important; }
+.tm .tm-eb { color: #B8860B !important; }
+.tm .tm-h > span:first-child > span { color: var(--sq-ink) !important; }
+.tm .tm-h > span:nth-child(2) > span, .tm .tm-h > span:last-child:not(:first-child) > span { color: #F7C032 !important; }
+.tm .tm-p, .tm p { color: #5C6066; }
+
+/* Meet Samsoom → GREY (yellow Samsoom pops on graphite; the chat panel stays light) */
+section.mt { background: radial-gradient(45% 55% at 22% 55%, rgba(247,192,50,.18), rgba(247,192,50,0) 70%), var(--sq-grey) !important; color: #FFFFFF !important; }
+.mt .mt-eb { color: #F7C032 !important; }
+.mt .mt-h > span:first-child > span { color: #FFFFFF !important; }
+.mt .mt-h > span:nth-child(2) > span { color: #F7C032 !important; }
+.mt .mt-p { color: #C9CCD0 !important; }
+.mt .mt-asks + *, .mt [class*="try"], .mt .mt-k { color: #A7ABB1; }
+.mt .mt-asks button { background: rgba(255,255,255,.07) !important; color: #FFFFFF !important; box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); }
+.mt .mt-asks button.on, .mt .mt-asks button[aria-pressed="true"] { background: #F7C032 !important; color: #26282B !important; }
