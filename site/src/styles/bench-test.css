@@ -192,3 +192,18 @@ html[dir='rtl'] .bt-try > svg:last-child { transform: scaleX(-1); }
 @media (min-width: 701px) { .bt-left { width: 668px; } .bt-acts { flex-wrap: nowrap !important; } }
 /* R10 (owner): the same safe distance from the edges as every other section (content 84px in from each side at 1440) */
 @media (min-width: 701px) { .bt-left { left: 84px !important; width: 600px !important; } .bt-rigwrap { left: 736px !important; } html[dir='rtl'] .bt-left { left: 756px !important; } html[dir='rtl'] .bt-rigwrap { left: 84px !important; } }
+
+/* R12 (owner: "the platform is 2D, the phone is a flat piece"): real materials. The rig is a thick brushed-aluminium slab
+   with a bevelled, light-catching edge and real depth below it; the bay is a dark anodised tray; the phone has a
+   titanium frame, a black glass border and a reflective screen, and the Sam Electronics logo powers on with a glow and a
+   turn as the section comes into view (scroll-driven, so it plays each time you arrive). */
+.bt-rig { box-shadow: inset 0 1px 0 rgba(255, 255, 255, .95), inset 0 -2px 0 rgba(0, 0, 0, .12), 0 2px 0 #C9CCD0, 0 5px 0 #A9ADB2, 0 8px 0 #8E9298, 0 30px 46px -10px rgba(60, 40, 0, .45), 0 60px 90px -30px rgba(0, 0, 0, .35) !important; }
+.bt-bay { background: radial-gradient(80% 60% at 50% 10%, #3A3C41, #24262A 60%, #1C1D20) !important; box-shadow: inset 0 3px 10px rgba(0, 0, 0, .55), inset 0 0 0 1px rgba(0, 0, 0, .4), 0 1px 0 rgba(255, 255, 255, .7) !important; }
+.bt-phone { background: linear-gradient(90deg, #6C7075 0%, #E8EAEC 2.5%, #A2A6AB 6%, #C9CCD0 16%, #B3B7BB 50%, #C4C7CB 84%, #979BA0 94%, #E2E4E6 97.5%, #63676C 100%) !important; box-shadow: 0 0 0 .7px rgba(12, 13, 14, .6), 0 22px 30px -6px rgba(0, 0, 0, .55), 0 6px 10px rgba(0, 0, 0, .35) !important; }
+.bt-screen { inset: 5px !important; border-radius: 30px !important; box-shadow: inset 0 0 0 4px #050506; }
+.bt-screen::after { content: ''; position: absolute; inset: 0; z-index: 7; pointer-events: none; border-radius: inherit; background: linear-gradient(118deg, rgba(255, 255, 255, .16) 0%, rgba(255, 255, 255, .05) 18%, rgba(255, 255, 255, 0) 34%, rgba(255, 255, 255, 0) 74%, rgba(255, 255, 255, .05) 90%, rgba(255, 255, 255, 0) 100%); }
+.bt-screen::before { content: ''; position: absolute; left: 50%; top: 50%; z-index: 0; width: 120px; height: 120px; margin: -60px 0 0 -60px; border-radius: 50%; pointer-events: none;
+  background: url('/assets/se-logo-128.webp') center / 100% no-repeat; box-shadow: 0 0 0 3px #F7C032, 0 0 40px 6px rgba(247, 192, 50, .45);
+  opacity: .9; animation: btLogoOn linear both; animation-timeline: view(); animation-range: entry 10% cover 40%; }
+@keyframes btLogoOn { 0% { opacity: 0; transform: perspective(400px) rotateY(-75deg) scale(.4); filter: blur(6px); } 60% { opacity: 1; transform: perspective(400px) rotateY(12deg) scale(1.08); filter: blur(0); } 100% { opacity: .22; transform: none; } }
+@supports not (animation-timeline: view()) { .bt-screen::before { animation: none; opacity: .22; } }
