@@ -207,3 +207,125 @@ html[dir='rtl'] .bt-try > svg:last-child { transform: scaleX(-1); }
   opacity: .9; animation: btLogoOn linear both; animation-timeline: view(); animation-range: entry 10% cover 40%; }
 @keyframes btLogoOn { 0% { opacity: 0; transform: perspective(400px) rotateY(-75deg) scale(.4); filter: blur(6px); } 60% { opacity: 1; transform: perspective(400px) rotateY(12deg) scale(1.08); filter: blur(0); } 100% { opacity: .22; transform: none; } }
 @supports not (animation-timeline: view()) { .bt-screen::before { animation: none; opacity: .22; } }
+
+/* ===== R13 · Bench Test: real materials (owner: "still cheap… must be more realistic") ===== */
+/* object in space: slight 3/4 view, real slab thickness, light from top-left */
+.bt-rigwrap { perspective: 2200px; perspective-origin: 30% 20%; }
+.bt-rig {
+  transform: rotateX(7deg) rotateY(-11deg) rotateZ(.6deg);
+  transform-origin: 50% 60%;
+  transform-style: preserve-3d;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .52  0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    radial-gradient(90% 60% at 8% -5%, rgba(255,255,255,.75), rgba(255,255,255,0) 55%),
+    radial-gradient(70% 50% at 100% 105%, rgba(40,44,50,.28), rgba(40,44,50,0) 60%),
+    linear-gradient(158deg, #F1F2F4 0%, #D6D9DD 30%, #C3C7CC 62%, #A9AEB4 100%) !important;
+  box-shadow:
+    inset 0 2px 0 rgba(255,255,255,1),
+    inset 2px 0 0 rgba(255,255,255,.55),
+    inset 0 -2px 1px rgba(60,64,70,.35),
+    inset -2px 0 1px rgba(60,64,70,.18),
+    0 1px 0 #B9BDC2, 0 2px 0 #AEB2B7, 0 3px 0 #A3A7AD, 0 4px 0 #989CA2, 0 5px 0 #8D9197,
+    0 6px 0 #82868C, 0 7px 0 #777B81, 0 8px 0 #6C7076, 0 9px 0 #61656B, 0 10px 0 #565A60,
+    0 11px 2px rgba(0,0,0,.35),
+    0 26px 30px -8px rgba(70,44,0,.5),
+    0 60px 80px -24px rgba(70,44,0,.45),
+    -30px 90px 120px -40px rgba(40,24,0,.35) !important;
+}
+/* moving specular sheen across the metal, slow like turning it under a lamp */
+.bt-rig::before { background: linear-gradient(112deg, rgba(255,255,255,0) 28%, rgba(255,255,255,.55) 40%, rgba(255,255,255,.12) 46%, rgba(255,255,255,0) 58%) !important; mix-blend-mode: soft-light; background-size: 260% 100% !important; animation: btSheen 9s ease-in-out infinite alternate !important; opacity: 1 !important; }
+@keyframes btSheen { from { background-position: 100% 0 } to { background-position: 0 0 } }
+/* chamfered rim + four countersunk Phillips screws */
+.bt-rig::after {
+  inset: 6px !important; border-radius: 23px !important;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.9), inset 0 -1px 0 rgba(0,0,0,.18), 0 0 0 1px rgba(90,94,100,.18) !important;
+  background:
+    linear-gradient(0deg, transparent 47%, #4A4E54 47% 53%, transparent 53%) 12px 12px / 12px 12px no-repeat,
+    linear-gradient(90deg, transparent 47%, #4A4E54 47% 53%, transparent 53%) 12px 12px / 12px 12px no-repeat,
+    linear-gradient(0deg, transparent 47%, #4A4E54 47% 53%, transparent 53%) calc(100% - 12px) 12px / 12px 12px no-repeat,
+    linear-gradient(90deg, transparent 47%, #4A4E54 47% 53%, transparent 53%) calc(100% - 12px) 12px / 12px 12px no-repeat,
+    linear-gradient(0deg, transparent 47%, #4A4E54 47% 53%, transparent 53%) 12px calc(100% - 12px) / 12px 12px no-repeat,
+    linear-gradient(90deg, transparent 47%, #4A4E54 47% 53%, transparent 53%) 12px calc(100% - 12px) / 12px 12px no-repeat,
+    linear-gradient(0deg, transparent 47%, #4A4E54 47% 53%, transparent 53%) calc(100% - 12px) calc(100% - 12px) / 12px 12px no-repeat,
+    linear-gradient(90deg, transparent 47%, #4A4E54 47% 53%, transparent 53%) calc(100% - 12px) calc(100% - 12px) / 12px 12px no-repeat,
+    radial-gradient(circle at 18px 18px, #F4F5F6 0, #B5B9BE 4.5px, #6E7278 6px, rgba(0,0,0,.25) 7px, transparent 8px),
+    radial-gradient(circle at calc(100% - 18px) 18px, #F4F5F6 0, #B5B9BE 4.5px, #6E7278 6px, rgba(0,0,0,.25) 7px, transparent 8px),
+    radial-gradient(circle at 18px calc(100% - 18px), #F4F5F6 0, #B5B9BE 4.5px, #6E7278 6px, rgba(0,0,0,.25) 7px, transparent 8px),
+    radial-gradient(circle at calc(100% - 18px) calc(100% - 18px), #F4F5F6 0, #B5B9BE 4.5px, #6E7278 6px, rgba(0,0,0,.25) 7px, transparent 8px) !important;
+}
+/* real cast shadow on the yellow wall: contact + soft penumbra, multiplied */
+.bt-shadow { top: 560px !important; left: -10px !important; right: 40px !important; height: 110px !important; background: radial-gradient(closest-side, rgba(80,46,0,.55), rgba(80,46,0,.18) 60%, rgba(80,46,0,0)) !important; filter: blur(14px) !important; mix-blend-mode: multiply; transform: skewX(-18deg); }
+
+/* recessed bay lined with a dark ESD bench mat: chamfer lip catches the light at the bottom */
+.bt-bay {
+  background:
+    radial-gradient(70% 45% at 50% 8%, rgba(255,255,255,.07), rgba(255,255,255,0) 70%),
+    linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px) 0 0 / 22px 22px,
+    linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px) 0 0 / 22px 22px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, #2B2D31, #202226 55%, #1A1B1E) !important;
+  box-shadow:
+    inset 0 10px 18px -4px rgba(0,0,0,.75),
+    inset 0 2px 3px rgba(0,0,0,.6),
+    inset 6px 0 12px -6px rgba(0,0,0,.5),
+    inset 0 0 0 1px rgba(0,0,0,.5),
+    0 -1px 0 rgba(90,94,100,.35),
+    0 1.5px 0 rgba(255,255,255,.95),
+    0 3px 3px -1px rgba(255,255,255,.5) !important;
+}
+.bt-tiles .bt-tile, .bt-top {
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.07),
+    inset 0 8px 14px -8px rgba(0,0,0,.8),
+    inset 0 0 0 1px rgba(0,0,0,.55),
+    0 -1px 0 rgba(90,94,100,.35),
+    0 1.5px 0 rgba(255,255,255,.95) !important;
+  background:
+    linear-gradient(125deg, rgba(255,255,255,.07) 0%, rgba(255,255,255,.015) 34%, rgba(255,255,255,0) 35%),
+    linear-gradient(180deg, #24262A, #18191C) !important;
+}
+.bt-tiles .bt-tile.run { box-shadow: inset 0 8px 14px -8px rgba(0,0,0,.8), inset 0 0 0 1.5px rgba(247,192,50,.7), 0 0 18px -4px rgba(247,192,50,.45), 0 1.5px 0 rgba(255,255,255,.95) !important; }
+.bt-tiles .bt-tile.pass { box-shadow: inset 0 8px 14px -8px rgba(0,0,0,.8), inset 0 0 0 1.5px rgba(95,212,154,.6), 0 0 18px -4px rgba(95,212,154,.35), 0 1.5px 0 rgba(255,255,255,.95) !important; }
+
+/* guide rail: polished steel rod + machined carriage */
+.bt-rail { background: linear-gradient(180deg, #F4F5F6 0%, #A6AAB0 35%, #5D6167 60%, #8E9298 85%, #C9CCD0 100%) !important; box-shadow: 0 3px 4px rgba(0,0,0,.6) !important; height: 7px !important; }
+.bt-rail i { background: linear-gradient(180deg, #FAFAFB, #BFC3C8 45%, #8A8E94 55%, #D2D5D9) !important; box-shadow: 0 4px 6px rgba(0,0,0,.6), inset 0 0 0 1px rgba(60,64,70,.5) !important; }
+
+/* clamps: machined aluminium jaws with a rubber pad + knurled thumb screw */
+.bt-clamp { background: linear-gradient(90deg, #8A8E94 0%, #F2F3F5 18%, #C7CACE 50%, #A1A5AA 82%, #6C7076 100%) !important; box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 rgba(0,0,0,.35), 0 10px 14px -2px rgba(0,0,0,.65), 0 2px 3px rgba(0,0,0,.5) !important; }
+.bt-clamp::before { content: ''; position: absolute; top: 10px; bottom: 10px; width: 5px; border-radius: 3px; background: linear-gradient(90deg, #111214, #2A2C30); box-shadow: inset 0 1px 1px rgba(255,255,255,.08); }
+.bt-clamp.l::before { right: -2px; }
+.bt-clamp.r::before { left: -2px; }
+.bt-clamp::after { content: ''; position: absolute; left: 50%; top: 12px; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #9DA1A6 55%, #4E5258); box-shadow: 0 0 0 1px rgba(0,0,0,.25), 0 87px 0 0 #9DA1A6; }
+.bt-knob { background: repeating-linear-gradient(0deg, #4E5258 0 1.5px, #E2E4E7 1.5px 2.5px, #9DA1A6 2.5px 3.5px) !important; box-shadow: inset 0 0 0 1px rgba(40,42,46,.55), inset 3px 0 4px rgba(255,255,255,.35), inset -3px 0 4px rgba(0,0,0,.35), 0 4px 6px rgba(0,0,0,.55) !important; }
+
+/* the phone: brushed titanium band, antenna lines, side buttons, real cover glass */
+.bt-phone {
+  background:
+    linear-gradient(180deg, transparent 13%, rgba(30,32,36,.55) 13% 13.6%, transparent 13.6% 86.4%, rgba(30,32,36,.55) 86.4% 87%, transparent 87%),
+    linear-gradient(90deg, #4C5056 0%, #EDEEF0 2%, #8F9399 5%, #C8CBCF 12%, #A4A8AD 30%, #D4D7DA 50%, #A6AAAF 70%, #C3C6CA 88%, #8C9096 95%, #E9EAEC 98%, #474B51 100%) !important;
+  box-shadow:
+    0 0 0 .8px rgba(10,11,12,.7),
+    inset 0 1px 0 rgba(255,255,255,.8),
+    inset 0 -1px 0 rgba(0,0,0,.4),
+    0 2px 2px rgba(0,0,0,.6),
+    0 14px 18px -4px rgba(0,0,0,.65),
+    0 34px 44px -10px rgba(0,0,0,.6) !important;
+}
+.bt-phone::before { content: ''; position: absolute; left: -3px; top: 96px; width: 3px; height: 30px; border-radius: 2px 0 0 2px; background: linear-gradient(90deg, #6C7076, #D9DBDE); box-shadow: 0 44px 0 #A6AAAF, 0 44px 0 0 #A6AAAF; }
+.bt-phone::after { content: ''; position: absolute; right: -3px; top: 120px; width: 3px; height: 54px; border-radius: 0 2px 2px 0; background: linear-gradient(90deg, #D9DBDE, #6C7076); }
+.bt-screen { box-shadow: inset 0 0 0 3.5px #030304, inset 0 0 0 4.5px rgba(255,255,255,.06) !important; }
+.bt-screen::after {
+  background:
+    linear-gradient(118deg, rgba(255,255,255,.2) 0%, rgba(255,255,255,.06) 20%, rgba(255,255,255,0) 21%),
+    linear-gradient(118deg, rgba(255,255,255,0) 56%, rgba(255,255,255,.07) 57%, rgba(255,255,255,.02) 70%, rgba(255,255,255,0) 71%),
+    radial-gradient(120% 60% at 50% -10%, rgba(255,255,255,.08), rgba(255,255,255,0) 60%) !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.1), inset 0 1px 0 rgba(255,255,255,.18);
+}
+.bt-island { box-shadow: inset 0 0 0 1px rgba(255,255,255,.05); background: radial-gradient(circle at 78% 50%, #1B2A3A 0 2.5px, #0A0B0D 3.5px, #000 4.5px) !important; }
+
+/* braided cable plugs into a strain-relief boot */
+.bt-cable { filter: drop-shadow(4px 10px 8px rgba(70,44,0,.45)); }
+
+@media (prefers-reduced-motion: reduce) { .bt-rig::before { animation: none !important; } }
+@media (max-width: 1100px) { .bt-rig { transform: none; } }
