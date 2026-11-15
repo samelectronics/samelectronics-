@@ -591,3 +591,16 @@ body:has(.sp-modal, .sp-veil, [aria-modal='true']) .st-offer2 { opacity: 0; poin
 .sg-ft { display: flex; justify-content: space-between; width: 100%; margin-top: 6px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,.08); color: #C9CBCE; font: 500 12px Inter, sans-serif; } .sg-ft b { color: #fff; }
 @media (max-width: 1100px) { .sg-row { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 520px) { .sg { padding: 16px; } .sg-row { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; } .sg-c { flex: 0 0 78%; scroll-snap-align: start; } }
+/* Shop phone pass */
+@media (max-width: 700px) {
+  .shop-dock-in { gap: 8px; }
+  .shop-dock .ss { min-width: 0; flex: 1 1 auto; }
+  .shop-dock-f { flex: none; width: 42px; height: 42px; padding: 0 !important; justify-content: center; position: relative; }
+  .shop-dock-f .t { display: none; }
+  .deals-tabs .dt b { font-size: 15px; white-space: normal; overflow-wrap: anywhere; line-height: 1.15; }
+  .deals-tabs .dt { min-width: 0; }
+}
+
+.shop-dock-f { gap: 6px; align-items: center; } .shop-dock-f em { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--y); color: var(--g8); font: 700 11px Inter, sans-serif; font-style: normal; display: inline-grid; place-items: center; }
+@media (max-width: 700px) { .shop-dock-f em { position: absolute; top: -5px; right: -5px; } }
+@media (max-width: 700px) { .deals-tabs .dt b, .deals-tabs .dt small { padding-inline-end: 38px; hyphens: auto; } }
