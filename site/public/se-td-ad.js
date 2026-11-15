@@ -144,21 +144,94 @@
       x.globalAlpha = 0.9; x.fillStyle = c; x.textAlign = 'left'; x.textBaseline = 'middle'; x.font = '600 ' + 3.4 * u + 'px ' + F.in; x.fillText(hh + ':' + mm, M, 6.4 * u + Y0);
       for (let j = 0; j < 4; j++) x.fillRect(W - M - 11.5 * u + j * 1.3 * u, 6.6 * u + Y0 - (j + 1) * 0.55 * u, 0.85 * u, (j + 1) * 0.55 * u);
       x.strokeStyle = c; x.lineWidth = 0.3 * u; rr(x, W - M - 5.6 * u, 4.6 * u + Y0, 5 * u, 2.4 * u, 0.6 * u); x.stroke(); x.fillRect(W - M - 5.1 * u, 5.1 * u + Y0, 3.6 * u, 1.4 * u); x.globalAlpha = 1; x.textBaseline = 'alphabetic'; }
+    // ───────── R12 (owner: "redo it all: zoom in, zoom out, texts, energetic, not a copy of the hero") ─────────
+    // A fast kinetic commercial: one word per beat, hard cuts, every beat its own move (slam, zoom-out, spin, split),
+    // products crashing in (spin-zoom, swing, punch, flip, drop) with giant vertical words and live counters, a strobe of
+    // every part, the grades flashing, then IN STOCK IN DEIRA + a bouncing SHOP NOW, then the logo close.
+    const BEATS = [
+      { d: 0.55, f: (l) => slam('TAKE', l, 'dark', 'zoom') },
+      { d: 0.5, f: (l) => slam('ANY', l, 'yel', 'side') },
+      { d: 0.5, f: (l) => slam('PHONE', l, 'light', 'spin') },
+      { d: 0.65, f: (l) => slam('APART.', l, 'dark', 'split') },
+      { d: 1.0, f: (l) => prod(0, l, 'yel', 'spin', 'SCREENS', '1,902') },
+      { d: 1.0, f: (l) => prod(1, l, 'dark', 'swing', 'BATTERIES', '1,455') },
+      { d: 1.0, f: (l) => prod(3, l, 'light', 'punch', 'CAMERAS', '494') },
+      { d: 1.0, f: (l) => prod(2, l, 'yel', 'flip', 'BACK COVERS', '1,436') },
+      { d: 1.0, f: (l) => prod(5, l, 'dark', 'drop', 'FLEX & SMALL', '331') },
+      { d: 0.72, f: (l) => strobe(l) },
+      { d: 1.1, f: (l) => grades(l) },
+      { d: 1.7, f: (l) => finale(l) },
+    ];
+    const BT = BEATS.reduce((a2, b2) => a2 + b2.d, 0);
+    const fill = (th) => { const c = th === 'yel' ? Y : th === 'light' ? '#F4F2EE' : '#1E1F21'; x.fillStyle = c; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); };
+    const inkOf = (th) => (th === 'dark' ? '#FFFFFF' : G), accOf = (th) => (th === 'dark' ? Y : th === 'yel' ? '#FFFFFF' : Y);
+    const flash = (l, c = '#FFFFFF') => { if (l < 0.07) { x.globalAlpha = (1 - l / 0.07) * 0.8; x.fillStyle = c; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); x.globalAlpha = 1; } };
+    const shake = (l, amt) => { const k = l < 0.22 ? (1 - l / 0.22) * amt * u : 0; return [(Math.random() * 2 - 1) * k, (Math.random() * 2 - 1) * k]; };
+    const streaks = (l, th, ang) => { x.save(); x.translate(W / 2, H / 2); x.rotate(ang); for (let k2 = 0; k2 < 7; k2++) { const off = (((l * 1.8 + k2 * 0.17) % 1) - 0.5) * H * 2; x.fillStyle = (th === 'yel' ? 'rgba(38,40,43,' : 'rgba(247,192,50,') + (0.06 + 0.04 * (k2 % 2)) + ')'; x.fillRect(-W, off, W * 2, (2 + (k2 % 3) * 2.5) * u); } x.restore(); };
+    const big = (str, size, col, X, Yy, al = 'center', stroke = false) => { x.font = '800 ' + size + 'px ' + F.sg; x.textAlign = al; x.textBaseline = 'middle'; if (stroke) { x.lineWidth = 0.45 * u; x.strokeStyle = col; x.strokeText(str, X, Yy); } else { x.fillStyle = col; x.fillText(str, X, Yy); } x.textBaseline = 'alphabetic'; };
+    function slam(word, l, th, mode) {
+      fill(th); streaks(l, th, mode === 'side' ? 0 : -0.5); const w2 = T(word), ink = inkOf(th), sz = Math.min(30 * u, (W * 1.5) / Math.max(3, w2.length));
+      const [sx, sy] = shake(l - 0.1, 2.2); x.save(); x.translate(W / 2 + sx, H / 2 + sy);
+      if (mode === 'zoom') { const s2 = lerp(5, 1, eo5(K(l, 0, 0.22))); x.scale(s2, s2); }
+      if (mode === 'side') { x.translate(lerp(-W * 1.2, 0, back(K(l, 0, 0.26))), 0); }
+      if (mode === 'spin') { const k = back(K(l, 0, 0.3)); x.rotate((1 - k) * -0.9); x.scale(lerp(0.2, 1, k), lerp(0.2, 1, k)); }
+      if (mode === 'split') { const k = eo5(K(l, 0, 0.25)), gap = (1 - k) * H * 0.6; x.save(); x.beginPath(); x.rect(-W, -H, W * 2, H); x.clip(); big(w2, sz, ink, 0, -gap); x.restore(); x.save(); x.beginPath(); x.rect(-W, 0, W * 2, H); x.clip(); big(w2, sz, Y, 0, gap); x.restore(); }
+      else big(w2, sz, ink, 0, 0);
+      x.restore();
+      // a ghost echo of the word, zooming past
+      x.save(); x.globalAlpha = 0.12 * (1 - K(l, 0.1, 0.4)); x.translate(W / 2, H / 2); const e2 = lerp(1, 2.4, K(l, 0.05, 0.45)); x.scale(e2, e2); big(w2, sz, accOf(th), 0, 0, 'center', true); x.restore();
+      flash(l, th === 'dark' ? Y : '#FFFFFF');
+    }
+    function prod(i, l, th, mode, label, n) {
+      fill(th); streaks(l, th, -0.35); const im = imgs[i], ink = inkOf(th), acc = accOf(th), ar = AR();
+      // giant vertical word climbing behind
+      x.save(); x.translate(ar ? W * 0.14 : W * 0.86, lerp(H * 0.95, H * 0.35, eo(K(l, 0, 0.9)))); x.rotate(-Math.PI / 2); x.globalAlpha = 0.16; big(T(label), 15 * u, acc, 0, 0, 'left', true); x.restore();
+      // the product crashing in
+      const [sx, sy] = shake(l - 0.3, 2.6); let S = W * 0.95, rot = 0, dx = 0, dy = 0, sc = 1, a = 1;
+      const k = K(l, 0.08, 0.32), e = back(k), e5 = eo5(k);
+      if (mode === 'spin') { rot = (1 - e5) * Math.PI * 1.4; sc = lerp(0.05, 1, e); }
+      if (mode === 'swing') { dx = lerp(-W * 1.1, 0, e); rot = (1 - e) * -0.6; }
+      if (mode === 'punch') { sc = lerp(2.6, 1, e5); a = cl(k * 3); }
+      if (mode === 'flip') { sc = 1; x.save(); }
+      if (mode === 'drop') { dy = lerp(-H * 0.9, 0, back(k)); }
+      const push = 1 + 0.06 * K(l, 0.4, 0.6);
+      x.save(); x.translate(W / 2 + dx + sx, H * 0.47 + dy + sy); x.rotate(rot); x.scale(sc * push * (mode === 'flip' ? Math.max(0.02, Math.abs(Math.cos((1 - e5) * Math.PI))) : 1), sc * push);
+      x.globalAlpha = a; if (ok(im)) x.drawImage(im, -S / 2, -S / 2, S, S); x.restore(); if (mode === 'flip') x.restore(); x.globalAlpha = 1;
+      // landing boom
+      const land = l - 0.38; if (land > 0 && land < 0.45) { const b = land / 0.45; x.save(); x.globalAlpha = (1 - b) * 0.85; x.strokeStyle = acc; x.lineWidth = (1 - b) * 2.4 * u; x.beginPath(); x.arc(W / 2, H * 0.47, W * (0.18 + b * 0.6), 0, 7); x.stroke(); for (let r2 = 0; r2 < 14; r2++) { const a2 = r2 * Math.PI / 7 + i, r0 = W * (0.26 + b * 0.32); x.beginPath(); x.moveTo(W / 2 + Math.cos(a2) * r0, H * 0.47 + Math.sin(a2) * r0); x.lineTo(W / 2 + Math.cos(a2) * (r0 + W * 0.1 * (1 - b)), H * 0.47 + Math.sin(a2) * (r0 + W * 0.1 * (1 - b))); x.stroke(); } x.restore(); }
+      // label slams in from the top, the counter rolls at the bottom
+      const lk = back(K(l, 0.3, 0.3)); x.save(); x.translate(W / 2, lerp(-10 * u, 17 * u, lk)); big(T(label), Math.min(11 * u, (W * 1.6) / Math.max(4, T(label).length)), ink, 0, 0); x.restore();
+      const ck = eo(K(l, 0.45, 0.45)), num = Math.round(parseInt(n.replace(/,/g, ''), 10) * ck).toLocaleString('en-US');
+      x.globalAlpha = cl(K(l, 0.45, 0.15) * 3); big(num, 12 * u, acc, W / 2, H * 0.82); x.font = '600 ' + 3.3 * u + 'px ' + F.jb; x.fillStyle = ink; x.textAlign = 'center'; x.fillText(T('IN STOCK IN DEIRA'), W / 2, H * 0.89); x.globalAlpha = 1;
+      flash(l);
+    }
+    function strobe(l) { // every part, 0.09s each, colours swapping
+      const n = Math.floor(l / 0.09), th = ['yel', 'dark', 'light'][n % 3]; fill(th); const im = imgs[n % imgs.length], S = W * (0.8 + 0.25 * ((n * 37) % 7) / 7);
+      x.save(); x.translate(W / 2, H * 0.48); x.rotate(((n * 53) % 9 - 4) * 0.06); if (ok(im)) x.drawImage(im, -S / 2, -S / 2, S, S); x.restore();
+      big(T(['SCREENS', 'BATTERIES', 'CAMERAS', 'COVERS', 'FLEX', 'BOARDS'][n % 6]), 9 * u, inkOf(th), W / 2, H * 0.16); flash((l % 0.09) * 0.8, th === 'dark' ? Y : '#FFFFFF');
+    }
+    function grades(l) { // the grades flash one by one, each its own colour
+      const G4 = ['ORIGINAL', 'OLED', 'INCELL', 'AAA'], n = Math.min(3, Math.floor(l / 0.24)), th = ['dark', 'yel', 'light', 'dark'][n], ll = l - n * 0.24; fill(th); streaks(ll, th, 0.5);
+      const k = back(K(ll, 0, 0.18)), sz = Math.min(26 * u, (W * 1.5) / G4[n].length); x.save(); x.translate(W / 2, H * 0.46); x.scale(lerp(1.8, 1, k), lerp(1.8, 1, k)); big(T(G4[n]), sz, n === 3 ? Y : inkOf(th), 0, 0); x.restore();
+      x.font = '600 ' + 3.4 * u + 'px ' + F.jb; x.textAlign = 'center'; x.fillStyle = th === 'dark' ? '#D5D7DA' : G; x.fillText(T('EVERY GRADE · HONEST LABELS'), W / 2, H * 0.62); flash(ll);
+    }
+    function finale(l) { // IN STOCK / IN DEIRA. then a bouncing SHOP NOW pill
+      fill('dark'); streaks(l, 'dark', -0.5);
+      [['IN STOCK', '#FFFFFF'], ['IN DEIRA.', Y]].forEach(([w2, c], j) => { const k = eo5(K(l, j * 0.14, 0.3)); x.save(); x.translate(lerp(j ? W * 1.4 : -W * 0.4, W / 2, k), H * (0.36 + j * 0.13)); big(T(w2), 15 * u, c, 0, 0); x.restore(); });
+      const pk = back(K(l, 0.45, 0.35)), bob = 1 + 0.05 * Math.sin(Math.max(0, l - 0.8) * 9) * cl(l - 0.8); x.save(); x.translate(W / 2, H * 0.74); x.scale(pk * bob, pk * bob); x.fillStyle = Y; rr(x, -30 * u, -6.5 * u, 60 * u, 13 * u, 6.5 * u); x.fill();
+      x.font = '700 ' + 5.4 * u + 'px ' + F.in; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = G; x.fillText(T('SHOP NOW') + (AR() ? '  ←' : '  →'), 0, 0.3 * u); x.textBaseline = 'alphabetic'; x.restore();
+      flash(l, Y);
+    }
     function draw(t) {
       if (AR() !== lang) load();
-      t = ((t % TOT) + TOT) % TOT; x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, W, H);
+      t = ((t % (BT + CLOSE)) + (BT + CLOSE)) % (BT + CLOSE); x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, W, H);
       const inset = () => x.setTransform(SAFE.s, 0, 0, SAFE.s, (W - W * SAFE.s) / 2, H * SAFE.top); inset();
       let dark = true;
-      if (t < S0) open(t);
-      else if (t < M0) { const i = Math.floor((t - S0) / SD), lt = t - S0 - i * SD; dark = SCN[i].th === 'dark';
-        if (i === 0) { if (lt < 0.3) { x.fillStyle = Y; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); x.globalAlpha = 1 - lt / 0.3; open(OPEN); x.globalAlpha = 1; x.save(); x.globalAlpha = eo(lt / 0.3); scene(0, lt); x.restore(); } else scene(0, lt); }
-        else into(i, lt, () => scene(i - 1, SD + lt)); }
-      else if (t < C0) { montage(t - M0); dark = ['yel', 'dark', 'light'][Math.min(5, Math.floor((t - M0) / (MONT / 6))) % 3] === 'dark'; }
-      else if (t < L0) { call(t - C0); dark = t - C0 >= 1.15; }
-      else close(t - L0);
+      if (t < BT) { let acc2 = 0, bi = 0; while (bi < BEATS.length - 1 && t >= acc2 + BEATS[bi].d) { acc2 += BEATS[bi].d; bi++; } BEATS[bi].f(t - acc2); const th = [0, 3, 5, 8, 11].includes(bi) ? 'dark' : 'x'; dark = th === 'dark' || (bi === 9 && Math.floor((t - acc2) / 0.09) % 3 === 1); }
+      else close(t - BT);
       x.setTransform(1, 0, 0, 1, 0, 0); status(dark);
     }
-    return { draw, dur: TOT, logoT: LOGO_T, setLib: () => {} };
+    return { draw, dur: BT + CLOSE, logoT: BT + 0.9, setLib: () => {} };
   }
   window.SETdAd = { create };
 })();
