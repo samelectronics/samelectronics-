@@ -300,3 +300,19 @@ html[dir='rtl'] .cx-lvl-bat .charge { left: auto; right: 6px; }
 .cx-lvl-bat button.on { background: transparent !important; box-shadow: none !important; color: #26282B !important; }
 .cx-lvl-bat button.on + button.on::before { content: ''; position: absolute; inset-inline-start: -3px; top: 10px; bottom: 10px; width: 1px; background: rgba(38, 40, 43, .25); }
 .cx-lvl-bat button.cur small { font-weight: 800; }
+
+/* R13 (owner: "boxes over boxes, boring"): open layout. The name + level sit on the yellow directly (no panel); the three
+   steps are one circuit line with lit pads, not three boxes; the tabs become slim switches with a lit underline. */
+.cx-form { background: transparent !important; box-shadow: none !important; padding: 0 !important; }
+.cx-pick { gap: 0 !important; border-bottom: 2px solid rgba(38,40,43,.14); }
+.cx-pick button { background: transparent !important; border-radius: 0 !important; box-shadow: none !important; transform: none !important; color: #26282B !important; min-height: 64px; position: relative; }
+.cx-pick button::after { content: ''; position: absolute; left: 14px; right: 14px; bottom: -2px; height: 3px; border-radius: 2px; background: #26282B; transform: scaleX(0); transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+.cx-pick button.on::after { transform: scaleX(1); }
+.cx-pick button:not(.on) { opacity: .62; } .cx-pick button:hover { opacity: 1; }
+.cx-steps { position: relative; display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 18px !important; padding-top: 26px !important; }
+.cx-steps::before { content: ''; position: absolute; left: 14px; right: 14px; top: 13px; height: 2px; background: linear-gradient(90deg, #26282B, rgba(38,40,43,.35)); }
+.cx-steps li { background: transparent !important; box-shadow: none !important; padding: 0 !important; display: flex !important; flex-direction: column; gap: 8px; position: relative; }
+.cx-steps li > i { position: absolute !important; top: -26px; left: 0; width: 28px !important; height: 28px !important; display: grid !important; place-items: center; border-radius: 50%; background: #26282B !important; color: #F7C032 !important; font: 700 13px 'Space Grotesk', sans-serif; font-style: normal; box-shadow: 0 0 0 5px rgba(38,40,43,.12); }
+.cx-steps li > span { padding-top: 14px; }
+html[dir='rtl'] .cx-steps li > i { left: auto; right: 0; }
+.cx-pick button.on small, .cx-pick button.on b { color: #26282B !important; }
