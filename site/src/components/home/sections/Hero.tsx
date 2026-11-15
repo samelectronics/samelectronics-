@@ -17,7 +17,7 @@ export default function Hero({ v }: { v: Vals }) {
       data-in={v.bootOn ? undefined : ''} /* R6 §03: the power-on entrance starts when the loading screen hands over */
       onMouseMove={(e) => { // R6 §03 (reviewer's idea): a very soft light follows the cursor over the hero background
         const g = (e.currentTarget as HTMLElement).querySelector<HTMLElement>('[data-hero-glow]'), r = e.currentTarget.getBoundingClientRect(), z = Number(v.z) || 1;
-        const x = (e.clientX - r.left) / z; if (g) { g.style.left = (document.documentElement.dir === 'rtl' ? 1440 - x : x) + 'px'; /* the scene is mirrored in Arabic */ g.style.top = (e.clientY - r.top) / z + 'px'; }
+        const x = (e.clientX - r.left) / z; if (g) { const gx = document.documentElement.dir === 'rtl' ? 1440 - x : x, gy = (e.clientY - r.top) / z; /* R12 (owner: slow to follow): moved on the GPU with a short ease, so it keeps up */ g.style.transform = `translate3d(${(gx - Number(v.glowX || 0)).toFixed(0)}px, ${(gy - Number(v.glowY || 0)).toFixed(0)}px, 0)`; }
       }}
       style={cssToObj(`position:relative;width:100%;height:${s(v.heroH)}px;overflow:hidden;background:#1A1B1D`)}
     >
@@ -60,7 +60,7 @@ export default function Hero({ v }: { v: Vals }) {
           <div
             data-hero-glow=""
             style={cssToObj(
-              `position:absolute;left:${s(v.glowX)}px;top:${s(v.glowY)}px;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;background:radial-gradient(closest-side,rgba(247,192,50,.16),rgba(247,192,50,0));pointer-events:none;transition:left .6s ease-out,top .6s ease-out`,
+              `position:absolute;left:${s(v.glowX)}px;top:${s(v.glowY)}px;width:560px;height:560px;margin:-280px 0 0 -280px;border-radius:50%;background:radial-gradient(closest-side,rgba(247,192,50,.16),rgba(247,192,50,0));pointer-events:none;will-change:transform;transition:transform .12s ease-out`,
             )}
           ></div>
           {'\n      '}
@@ -557,6 +557,8 @@ export default function Hero({ v }: { v: Vals }) {
                 {/* 14 Oct §05 C/D: the iPad sweeps first (phone 2.7s later, never together); real glass on top */}
                 <span className="se-glass" style={{ zIndex: 5 }}></span>
                 <span className="se-glass-sweep" style={{ zIndex: 6, animationDelay: '0s', ['--d' as string]: '300px', ['--sw' as string]: v.sweepIp } as React.CSSProperties}></span>
+                {/* R12 (owner): the iPad shows our real shop, browsing slowly: pause, scroll, pause, back to the top */}
+                <div className="hero-shop" aria-hidden="true"><img src="/assets/hero-shop.webp" alt="" width={640} height={2498} decoding="async" /></div>
                 <div
                   style={{
                     position: 'absolute',

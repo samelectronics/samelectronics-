@@ -16,8 +16,11 @@ export function tabDot(unread: number) {
   window.clearInterval(fvIv);
   const set = (href: string) => links.forEach((l) => { l.href = href; });
   const draw = (on: boolean) => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'); if (!x) return; x.beginPath(); x.arc(30, 30, 29, 0, 7); x.fillStyle = '#F7C032'; x.fill(); /* R11e: the yellow round frame, like the logo on the site */ if (fvImg && fvImg.complete) { x.save(); x.beginPath(); x.arc(30, 30, 24.5, 0, 7); x.clip(); x.drawImage(fvImg, 4, 4, 52, 52); x.restore(); }
-    /* R11b: a small red dot in the bottom-right corner, like an app badge; it never covers the logo */ x.beginPath(); x.arc(53, 53, 10, 0, 7); x.fillStyle = '#26282B'; x.fill(); x.beginPath(); x.arc(53, 53, 7, 0, 7); x.fillStyle = unread && on ? '#F7C032' : '#8C9096'; x.fill(); /* R11d: grey = nothing new; blinking yellow = new notifications */ try { set(c.toDataURL('image/png')); } catch {} };
-  const go = () => { let on = true; draw(on); if (unread) fvIv = window.setInterval(() => { on = !on; draw(on); }, 900); };
+    /* R11b: a small red dot in the bottom-right corner, like an app badge; it never covers the logo */ x.beginPath(); x.arc(53, 53, 10, 0, 7); x.fillStyle = '#26282B'; x.fill();
+    /* R12 (owner): new notifications = a yellow dot glowing softly in and out (never blinking); nothing new = grey */
+    if (unread) { const k = 0.5 + 0.5 * Math.sin(performance.now() / 420), gl = x.createRadialGradient(53, 53, 2, 53, 53, 11); gl.addColorStop(0, 'rgba(247,192,50,' + (0.55 + 0.45 * k).toFixed(2) + ')'); gl.addColorStop(1, 'rgba(247,192,50,0)'); x.fillStyle = gl; x.beginPath(); x.arc(53, 53, 11, 0, 7); x.fill(); x.beginPath(); x.arc(53, 53, 6.5, 0, 7); x.fillStyle = 'rgba(247,192,50,' + (0.6 + 0.4 * k).toFixed(2) + ')'; x.fill(); }
+    else { x.beginPath(); x.arc(53, 53, 7, 0, 7); x.fillStyle = '#8C9096'; x.fill(); } /* R11d: grey = nothing new; blinking yellow = new notifications */ try { set(c.toDataURL('image/png')); } catch {} };
+  const go = () => { draw(true); if (unread) fvIv = window.setInterval(() => draw(true), 140); };
   if (!fvImg) { fvImg = new Image(); fvImg.crossOrigin = 'anonymous'; fvImg.onload = go; fvImg.src = '/assets/se-logo-128.webp'; } else go();
 }
 export const markRead = (id?: string) => write(read().map((x) => (!id || x.id === id ? { ...x, read: true } : x)));
