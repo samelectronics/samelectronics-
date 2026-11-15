@@ -70,9 +70,9 @@ function render(v: Vals) {
                 {'\n          '}
                 <svg
                   aria-hidden="true"
-                  viewBox="0 0 16 20"
-                  width="18.5"
-                  height="23"
+                  viewBox="0 0 17 20"
+                  width="17"
+                  height="20"
                   style={{ position: 'absolute', left: '-1px', top: '43px', overflow: 'visible', filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
                 >
                   {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
@@ -80,16 +80,12 @@ function render(v: Vals) {
                     <linearGradient id="samHandL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
                   <g>
-                    <rect x="3.2" y="0" width="7.6" height="3.2" rx="1.6" fill="#F7C032" />
-                    <rect x="3.6" y="0.5" width="6.8" height="1" rx=".5" fill="#FFE29A" opacity=".8" />
-                    <path d="M3 3.4h8c1.1 0 1.9.9 1.9 2v4.1c0 2.6-2 4.6-4.6 4.6H6.4C4 14.1 2.4 12.4 2.4 10V5.4c0-1.1.5-2 .6-2z" fill="url(#samHandL)" />
-                    <rect x="2.3" y="11.2" width="2.3" height="6.6" rx="1.15" fill="url(#samHandL)" />
-                    <rect x="4.9" y="12" width="2.3" height="7.6" rx="1.15" fill="url(#samHandL)" />
-                    <rect x="7.5" y="12" width="2.3" height="7.4" rx="1.15" fill="url(#samHandL)" />
-                    <rect x="10.1" y="11.4" width="2.2" height="6.4" rx="1.1" fill="url(#samHandL)" />
-                    <rect x="12.1" y="6.2" width="2.3" height="5.6" rx="1.15" transform="rotate(-28 13.2 6.2)" fill="url(#samHandL)" />
-                    <path d="M4 4.6c1.6-.5 4-.6 6.4-.2" stroke="rgba(255,255,255,.9)" strokeWidth=".7" strokeLinecap="round" fill="none" />
-                    <circle cx="7.2" cy="8.4" r="1" fill="#F7C032" opacity=".85" />
+                    {/* owner (15 Nov): one smooth mitten hand in titanium with an etched circuit, not fingers or a plug */}
+                    <rect x="3.4" y="0" width="7.2" height="3" rx="1.5" fill="#F7C032" />
+                    <path d="M3.2 3.2h7.4c1.3 0 2.3 1 2.3 2.3v2.2l1.6-1.1c.9-.6 2.1-.2 2.4.8.2.6 0 1.3-.5 1.7l-3.6 3.2v1.4c0 3.2-2.4 5.6-5.4 5.6S2 16.9 2 13.7V4.4c0-.7.5-1.2 1.2-1.2z" fill="url(#samHandL)" />
+                    <path d="M3.6 4.4c2-.4 4.6-.4 7 0" stroke="rgba(255,255,255,.9)" strokeWidth=".7" strokeLinecap="round" fill="none" />
+                    <path d="M7.4 5.6v4.2l-1.8 1.8v2.4M7.4 9.8l2 2v2" stroke="#E0A61E" strokeWidth=".7" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                    <circle cx="7.4" cy="5.6" r=".9" fill="#F7C032" /><circle cx="5.6" cy="14" r=".75" fill="#F7C032" /><circle cx="9.4" cy="13.8" r=".75" fill="#F7C032" />
                   </g>
                 </svg>
                 {'\n          '}
@@ -145,26 +141,22 @@ function render(v: Vals) {
                 {'\n          '}
                 <svg
                   aria-hidden="true"
-                  viewBox="0 0 16 20"
-                  width="18.5"
-                  height="23"
+                  viewBox="0 0 17 20"
+                  width="17"
+                  height="20"
                   style={{ position: 'absolute', left: '5px', top: '43px', overflow: 'visible', filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
                 >
                   {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
                   <defs>
                     <linearGradient id="samHandR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
-                  <g transform="translate(16 0) scale(-1 1)">
-                    <rect x="3.2" y="0" width="7.6" height="3.2" rx="1.6" fill="#F7C032" />
-                    <rect x="3.6" y="0.5" width="6.8" height="1" rx=".5" fill="#FFE29A" opacity=".8" />
-                    <path d="M3 3.4h8c1.1 0 1.9.9 1.9 2v4.1c0 2.6-2 4.6-4.6 4.6H6.4C4 14.1 2.4 12.4 2.4 10V5.4c0-1.1.5-2 .6-2z" fill="url(#samHandR)" />
-                    <rect x="2.3" y="11.2" width="2.3" height="6.6" rx="1.15" fill="url(#samHandR)" />
-                    <rect x="4.9" y="12" width="2.3" height="7.6" rx="1.15" fill="url(#samHandR)" />
-                    <rect x="7.5" y="12" width="2.3" height="7.4" rx="1.15" fill="url(#samHandR)" />
-                    <rect x="10.1" y="11.4" width="2.2" height="6.4" rx="1.1" fill="url(#samHandR)" />
-                    <rect x="12.1" y="6.2" width="2.3" height="5.6" rx="1.15" transform="rotate(-28 13.2 6.2)" fill="url(#samHandR)" />
-                    <path d="M4 4.6c1.6-.5 4-.6 6.4-.2" stroke="rgba(255,255,255,.9)" strokeWidth=".7" strokeLinecap="round" fill="none" />
-                    <circle cx="7.2" cy="8.4" r="1" fill="#F7C032" opacity=".85" />
+                  <g transform="translate(17 0) scale(-1 1)">
+                    {/* owner (15 Nov): one smooth mitten hand in titanium with an etched circuit, not fingers or a plug */}
+                    <rect x="3.4" y="0" width="7.2" height="3" rx="1.5" fill="#F7C032" />
+                    <path d="M3.2 3.2h7.4c1.3 0 2.3 1 2.3 2.3v2.2l1.6-1.1c.9-.6 2.1-.2 2.4.8.2.6 0 1.3-.5 1.7l-3.6 3.2v1.4c0 3.2-2.4 5.6-5.4 5.6S2 16.9 2 13.7V4.4c0-.7.5-1.2 1.2-1.2z" fill="url(#samHandR)" />
+                    <path d="M3.6 4.4c2-.4 4.6-.4 7 0" stroke="rgba(255,255,255,.9)" strokeWidth=".7" strokeLinecap="round" fill="none" />
+                    <path d="M7.4 5.6v4.2l-1.8 1.8v2.4M7.4 9.8l2 2v2" stroke="#E0A61E" strokeWidth=".7" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                    <circle cx="7.4" cy="5.6" r=".9" fill="#F7C032" /><circle cx="5.6" cy="14" r=".75" fill="#F7C032" /><circle cx="9.4" cy="13.8" r=".75" fill="#F7C032" />
                   </g>
                 </svg>
                 {'\n          '}
