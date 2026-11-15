@@ -118,3 +118,22 @@
   .se-nav-right { gap: 4px !important; }
   .se-nav-right > *, .se-nav-right button { flex: none; }
 }
+/* R12 (owner: phone bar looked odd/missing): one row of identical 38px buttons on the right (search in yellow first),
+   help back in the row, the logo a little smaller on the left */
+@media (max-width: 760px) {
+  .se-help { display: grid !important; }
+  .se-nav-right { margin-inline-start: auto; }
+  [data-tour="fmp"] { margin-inline-start: auto !important; }
+  [data-tour="fmp"] > button { width: 38px !important; height: 38px !important; border-radius: 11px !important; }
+  .se-lm-btn, .se-help, .nb > button, [data-tour="cart"], [data-tour="menu"] { width: 38px !important; height: 38px !important; min-width: 38px; padding: 0 !important; display: grid !important; place-items: center !important; border-radius: 11px !important; border: 0 !important; background: rgba(255, 255, 255, .07) !important; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1) !important; }
+  .se-nav-right { gap: 6px !important; }
+  header a[href="/"] img, nav a[href="/"] img { width: 42px !important; height: 42px !important; }
+}
+@media (max-width: 380px) { .se-help { display: none !important; } }
+@media (max-width: 760px) { [data-tour="nav"] { margin-inline-start: auto !important; flex: none !important; gap: 0 !important; } [data-tour="fmp"] { margin-inline-start: 0 !important; } .se-nav-right { margin-inline-start: 6px !important; } }
+/* R12 (owner): on phones the logo and every button spread out evenly across the bar, like on the computer */
+@media (max-width: 1100px) {
+  header > div:first-of-type { justify-content: space-between !important; gap: 0 !important; }
+  header [data-tour="nav"], header .se-nav-right, header .se-lm { display: contents !important; }
+}
+@media (max-width: 760px) { header [data-tour="nav"] > a { display: none !important; } }
