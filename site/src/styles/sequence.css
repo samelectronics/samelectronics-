@@ -118,3 +118,13 @@ section.fd::before, section.fd::after { display: none !important; }
 .fd .fd-h > span:first-child { -webkit-text-fill-color: #26282B !important; }
 .fd .fd-h > span:nth-child(2), .fd .fd-h > span:nth-child(2) * { -webkit-text-fill-color: #FFFFFF !important; }
 .fd .fd-refl { display: none !important; } .fd .fd-ph-in::before { background: radial-gradient(closest-side, rgba(90,60,0,.45), rgba(90,60,0,0)) !important; }
+
+/* Reviews → GREY (the review cards and the Google rating card stay white, lifted) */
+section.rv#reviews { background: radial-gradient(60% 50% at 25% 10%, rgba(247,192,50,.12), rgba(247,192,50,0) 70%), var(--sq-grey) !important; color: #FFFFFF !important; }
+#reviews h2 > span:first-child { color: #FFFFFF !important; }
+#reviews h2 > span:last-child:not(:first-child) { color: #F7C032 !important; }
+#reviews h2 + p, #reviews .rv-p { color: #C9CCD0 !important; }
+#reviews .rv-fade.l { background: linear-gradient(90deg, #2A2C2F, rgba(42,44,47,0)) !important; }
+#reviews .rv-fade.r { background: linear-gradient(270deg, #2A2C2F, rgba(42,44,47,0)) !important; }
+#reviews .rv-card, #reviews .rv-card *:not(.rv-stars):not(.rv-av) { color: #26282B; }
+#reviews .rv-g, #reviews .rv-g .rv-g-n, #reviews .rv-g .rv-g-t, #reviews .rv-g b { color: #26282B !important; }
