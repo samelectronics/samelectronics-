@@ -157,7 +157,7 @@ export default function HeroSearch({ examples, openFmp }: { examples: string[]; 
           }}
         />
       </span>
-      <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontFamily: "'JetBrains Mono',monospace", fontSize: '12px', color: '#8C9096', padding: '4px 8px', borderRadius: '6px', boxShadow: 'inset 0 0 0 1px rgba(26,27,29,.14)' }}>
+      <span className="se-hs-kbd" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontFamily: "'JetBrains Mono',monospace", fontSize: '12px', color: '#8C9096', padding: '4px 8px', borderRadius: '6px', boxShadow: 'inset 0 0 0 1px rgba(26,27,29,.14)' }}>
         Ctrl K
       </span>
       <button

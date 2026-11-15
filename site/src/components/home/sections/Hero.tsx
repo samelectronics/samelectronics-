@@ -68,7 +68,7 @@ export default function Hero({ v }: { v: Vals }) {
             style={{
               position: 'absolute',
               inset: '0',
-              clipPath: 'polygon(960px 0,1440px 0,1440px 860px,660px 860px)',
+              clipPath: 'polygon(1000px 0,1440px 0,1440px 860px,740px 860px)',
               background: '#F7C032',
             }}
           >
@@ -156,7 +156,7 @@ export default function Hero({ v }: { v: Vals }) {
             {'\n        '}
             <defs>
               <clipPath id="seDarkSide">
-                <polygon points="0,0 960,0 660,860 0,860"></polygon>
+                <polygon points="0,0 1000,0 740,860 0,860"></polygon>
               </clipPath>
             </defs>
             <line x1="960" y1="0" x2="660" y2="860" stroke="#F7C032" strokeWidth="16" opacity=".14" style={{ display: 'none' /* R12 (owner): the pulsing shadow on the diagonal is gone */ }}></line>
@@ -1605,7 +1605,7 @@ export default function Hero({ v }: { v: Vals }) {
                       {'\n            '}
                     </span>
                     {'\n            '}
-                    <span style={{ flex: '1', whiteSpace: 'nowrap' }}>{t(v.b?.label)}{v.b?.sub ? <small className="se-hb-sub">{v.b.sub}</small> : null}</span>
+                    <span style={{ flex: '1', whiteSpace: 'nowrap' }}>{t(v.b?.label)}</span>{v.b?.shop ? <span className="se-hb-thumbs" aria-hidden="true">{['scr', 'bat', 'bcv', 'cam'].map((k) => <img key={k} src={`/assets/pose/solo-${k}-240.webp`} alt="" />)}</span> : null}
                     {'\n            '}
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
                       <path d="M5 12h14M13 6l6 6-6 6"></path>

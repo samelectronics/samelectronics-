@@ -214,3 +214,23 @@ html body [data-hero-screen] { box-shadow: inset 0 0 0 2px #040405, inset 0 0 0 
 .wc-btn { display: grid; place-items: center; height: 46px; border: 0; border-radius: 12px; background: #26282B; color: #fff; font: 600 15px Inter, sans-serif; text-decoration: none; cursor: pointer; }
 .wc-btn.go { background: #07C160; }
 .se-hb-sub { margin-inline-start: 10px; padding: 3px 8px; border-radius: 999px; background: rgba(26,27,29,.12); font: 600 11px 'JetBrains Mono', monospace; vertical-align: 2px; }
+/* the shop button shows the shelf: four real parts peek out of it, so it reads as a store */
+.se-hb-thumbs { display: flex; align-items: center; height: 100%; margin-inline-end: 6px; }
+.se-hb-thumbs img { width: 46px; height: 46px; object-fit: contain; margin-inline-start: -14px; filter: drop-shadow(0 4px 5px rgba(60,40,0,.35)); transition: transform .35s cubic-bezier(.3,1.5,.5,1); }
+.scp-5861bbd1:hover .se-hb-thumbs img { transform: translateY(-4px) rotate(-4deg); }
+.scp-5861bbd1:hover .se-hb-thumbs img:nth-child(2) { transition-delay: .04s; } .scp-5861bbd1:hover .se-hb-thumbs img:nth-child(3) { transition-delay: .08s; } .scp-5861bbd1:hover .se-hb-thumbs img:nth-child(4) { transition-delay: .12s; }
+/* the bar search is short: the Find My Part name, a field look, nothing long */
+@media (min-width: 1101px) {
+  html body .scp-90837cfd { min-width: 0 !important; width: auto; padding: 0 14px !important; }
+  html body .scp-90837cfd .se-fmp-q, html body .scp-90837cfd .se-fmp-k { display: none !important; }
+  html body .scp-90837cfd .se-fmp-t { display: inline !important; color: #E9EBED; font-size: 14px; }
+}
+@media (min-width: 761px) and (max-width: 1100px) {
+  html body header .scp-90837cfd { min-width: 0 !important; }
+  html body header .scp-90837cfd .se-fmp-q { display: none !important; }
+  html body header .scp-90837cfd .se-fmp-t { display: inline !important; color: #E9EBED; font-size: 14px; }
+}
+.se-hb-thumbs { position: relative; height: 52px; width: 190px; margin-inline-end: 4px; }
+.se-hb-thumbs img { position: absolute; top: -18px; width: 78px; height: 78px; margin: 0; }
+.se-hb-thumbs img:nth-child(1) { inset-inline-start: 0; } .se-hb-thumbs img:nth-child(2) { inset-inline-start: 38px; top: -14px; } .se-hb-thumbs img:nth-child(3) { inset-inline-start: 76px; top: -16px; } .se-hb-thumbs img:nth-child(4) { inset-inline-start: 114px; top: -13px; }
+a.scp-5861bbd1:has(.se-hb-thumbs) { overflow: visible; }
