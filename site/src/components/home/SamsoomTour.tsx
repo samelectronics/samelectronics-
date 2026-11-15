@@ -169,24 +169,15 @@ export default function SamsoomTour() {
     return (
       <div className="st-veil st-veil-lang" role="dialog" aria-modal="true" aria-label="Choose your language" data-no-i18n="">
         <span className="st-cine" aria-hidden="true"><i /><i /><i /></span>
-        {/* R12 (owner): one dark card. Samsoom greets on top, the main languages are big tiles, every other language is a
-            small chip below: everything visible at once, nothing to scroll, one look with the rest of the site. */}
-        <div className="st-lang3">
-          <div className="st-l3-top">
-            <span className="st-l3-av" data-sam-talk=""><LiveSam size={118} mood="idle" play="wave" /></span>
-            <span className="st-l3-bubble" key={ci} lang={cl} dir={LANG_SET.has(cl) ? 'rtl' : 'ltr'}>{ct}</span>
+        <div className="st-lang2">
+          <div className="st-l2-sam">
+            <span className="st-l2-bubble" key={ci} lang={cl} dir={LANG_SET.has(cl) ? 'rtl' : 'ltr'}>{ct}</span>
+            <span className="st-l2-spot" aria-hidden="true" />
+            <span className="st-l2-av"><LiveSam size={150} mood="idle" play="wave" /><span className="st-l2-floor" aria-hidden="true" /></span>
           </div>
-          <div className="st-l3-main">
-            {list.slice(0, 6).map((l) => (
-              <button key={l.id} type="button" lang={l.id} className={'st-l3-t' + (l.id === d ? ' det' : '') + (l.id === cl ? ' hint' : '')} onClick={() => pick(l.id)}>
-                <b dir="auto">{l.name}</b><small>{l.id === d ? (DETECTED[l.id] || DETECTED.en) : l.en}</small>
-              </button>
-            ))}
-          </div>
-          <div className="st-l3-more">
-            {list.slice(6).map((l) => (
-              <button key={l.id} type="button" lang={l.id} className={'st-l3-c' + (l.id === cl ? ' hint' : '')} onClick={() => pick(l.id)} title={l.en}><span dir="auto">{l.name}</span></button>
-            ))}
+          <div className="st-l2-list">
+            <LangScroll list={list} d={d} cl={cl} pick={pick} />
+            <span className="st-l2-more" lang={hint} aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path d="M6 9l6 6 6-6" /></svg>{SCROLL[hint] || SCROLL.en}</span>
           </div>
         </div>
       </div>
