@@ -105,12 +105,12 @@ export default function Hero({ v }: { v: Vals }) {
             strokeLinejoin="round"
           >
             {'\n        '}
-            <g clipPath="url(#seDarkSide)" stroke="rgba(247,192,50,.5)" strokeWidth="3">
+            <g clipPath="url(#seDarkSide)" stroke="rgba(247,192,50,.78)" strokeWidth="3">
               <path d="M36 78 V112 L22 126 V560 L36 574"></path>
               <path d="M760 600 H790 L810 580 H850"></path>
             </g>
             {'\n        '}
-            <g clipPath="url(#seDarkSide)" stroke="rgba(247,192,50,.28)">
+            <g clipPath="url(#seDarkSide)" stroke="rgba(247,192,50,.45)">
               {'\n          '}
               <path d="M760 640 V660 L780 680 H800" strokeWidth="2"></path>
               {'\n          '}
@@ -159,8 +159,8 @@ export default function Hero({ v }: { v: Vals }) {
                 <polygon points="0,0 960,0 660,860 0,860"></polygon>
               </clipPath>
             </defs>
-            <line x1="960" y1="0" x2="660" y2="860" stroke="#F7C032" strokeWidth="16" opacity=".14" style={{ animation: 'seEdgeGlow 4s ease-in-out infinite' }}></line>
-            <line x1="960" y1="0" x2="660" y2="860" stroke="#F7C032" strokeWidth="7" opacity=".3" style={{ animation: 'seEdgeGlow 4s ease-in-out infinite' }}></line
+            <line x1="960" y1="0" x2="660" y2="860" stroke="#F7C032" strokeWidth="16" opacity=".14" style={{ display: 'none' /* R12 (owner): the pulsing shadow on the diagonal is gone */ }}></line>
+            <line x1="960" y1="0" x2="660" y2="860" stroke="#F7C032" strokeWidth="7" opacity=".3" style={{ display: 'none' /* R12 (owner): the pulsing shadow on the diagonal is gone */ }}></line
             >
             <line
               x1="960"
@@ -169,9 +169,7 @@ export default function Hero({ v }: { v: Vals }) {
               y2="860"
               stroke="#F7C032"
               strokeWidth="3"
-              style={{
-                animation: 'seEdgeGlow 4s ease-in-out infinite',
-              }}
+              style={{ display: 'none' }}
             ></line>
             {'\n        '}
             {/* owner (28 Oct, lag): the glow is a soft wide copy of each pulse, not a drop-shadow filter (a filter over the whole
@@ -367,7 +365,7 @@ export default function Hero({ v }: { v: Vals }) {
               {'\n        '}
             </g>
             {'\n        '}
-            <g clipPath="url(#seDarkSide)" fill="#26282B" stroke="#F7C032" strokeWidth="2">
+            <g clipPath="url(#seDarkSide)" fill="#F7C032" stroke="rgba(247,192,50,.3)" strokeWidth="6">
               {'\n          '}
               <circle cx="22" cy="126" r="5"></circle>
               <circle cx="36" cy="574" r="5"></circle>
@@ -389,7 +387,7 @@ export default function Hero({ v }: { v: Vals }) {
               {'\n        '}
             </g>
             {'\n        '}
-            <g fill="#F7C032" stroke="rgba(61,62,63,.55)" strokeWidth="2">
+            <g fill="#26282B" stroke="rgba(38,40,43,.18)" strokeWidth="6">
               {'\n          '}
               <circle cx="1300" cy="160" r="4.5"></circle>
               <circle cx="1392" cy="184" r="4"></circle>
@@ -1538,7 +1536,7 @@ export default function Hero({ v }: { v: Vals }) {
             examples={(Array.isArray(v.typedWords) ? v.typedWords : []).map((w: any) => String(w.t)) /* R6 §03 A: JS typewriter */}
           />
           {'\n      '}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '620px' }}>
+          <div data-hero-btns="" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', width: '620px' }}>
             {'\n        '}
             {(Array.isArray(v.heroBtns) ? v.heroBtns : []).map((__it: any, __i: number) => {
               const v2 = { ...v, b: __it, $index: __i };
@@ -1587,6 +1585,7 @@ export default function Hero({ v }: { v: Vals }) {
                         </>
                       ) : null}
                       {'\n              '}
+                      {v.b?.iChat ? <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#F7C032" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" /><path d="M8.5 12h.01M12 12h.01M15.5 12h.01" strokeWidth="2.6" /></svg> : null}
                       {v.b?.iWa ? (
                         <>
                           <span

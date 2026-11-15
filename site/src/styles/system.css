@@ -87,3 +87,4 @@ html[dir='rtl'] [data-prog='bar'] { background-image: linear-gradient(270deg, #F
 @keyframes heroShop { 0%, 10% { transform: translateY(0); } 22%, 32% { transform: translateY(-17%); } 44%, 54% { transform: translateY(-33%); } 66%, 76% { transform: translateY(-50%); } 88%, 100% { transform: translateY(0); } }
 [data-ipad] [data-hero-screen] > :not(.se-glass):not(.se-glass-sweep):not(.hero-shop) { display: none !important; }
 @media (prefers-reduced-motion: reduce) { .hero-shop img { animation: none; } }
+[data-hero-btns] > a:first-child { grid-column: 1 / -1; }
