@@ -30,8 +30,8 @@ const POOL: Msg[] = [
 ];
 const WAKE_MSG: Record<string, string> = { en: 'Waking Samsoom up', ar: 'نوقظ سمسوم', es: 'Despertando a Samsoom', fr: 'On réveille Samsoom', fa: 'بیدار کردن سامسوم', ru: 'Будим Samsoom', hi: 'Samsoom को जगा रहे हैं', ur: 'سمسوم کو جگا رہے ہیں', de: 'Samsoom wird geweckt', zh: '正在唤醒 Samsoom', pt: 'Acordando o Samsoom', it: 'Svegliamo Samsoom' };
 const READY_MSG: Record<string, string> = { en: 'All set', ar: 'كل شيء جاهز', es: 'Todo listo', fr: 'Tout est prêt', fa: 'همه چیز آماده است', ru: 'Всё готово', hi: 'सब तैयार है', ur: 'سب تیار ہے', de: 'Alles bereit', zh: '一切就绪', pt: 'Tudo pronto', it: 'Tutto pronto' };
-const WAKE = 1.3; // s for Samsoom: asleep → yawn → blink → wave
-const MIN = 2.4, MAX = 6, STEP = 0.62, R = 92; // R10 A1: never shorter than 2.4s, never longer than 6s; ring radius = 80 (logo) + 12
+const WAKE = 0.9; // s for Samsoom: asleep → yawn → blink → wave
+const MIN = 1.2, MAX = 3.2, STEP = 0.4, R = 92; // owner (15 Nov: "why does it take a while"): 1.2–3.2s // R10 A1: never shorter than 2.4s, never longer than 6s; ring radius = 80 (logo) + 12
 const ICON = 22; // every icon (Samsoom included) sits in the same 22px box
 
 /** the language the visitor will most likely read: their saved choice, else the browser's */
@@ -118,7 +118,7 @@ export default function BootIntro({ v }: { v: Vals }) {
       if (exitAt && shown >= 1 && !readyAt) { readyAt = t; setReady(true); }
       // R12 (owner: froze, then suddenly in the site): the fade always plays, even if a frame came late, and the page
       // only takes over once the fade has really been on screen for a moment
-      if (readyAt && t - readyAt >= 0.6 && !leaveAt) { leaveAt = t; setLeaving(true); }
+      if (readyAt && t - readyAt >= 0.35 && !leaveAt) { leaveAt = t; setLeaving(true); }
       if (leaveAt && t - leaveAt >= 0.5) { W0.__seBooted = 1; window.dispatchEvent(new CustomEvent('se:booted')); done.current && done.current(); return; }
       raf = requestAnimationFrame(frame);
     };
