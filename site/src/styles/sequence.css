@@ -1,10 +1,14 @@
 /* R13 · Home colour sequence (owner, 15 Nov): from What we offer down, White → Grey → Yellow, repeating.
    Section backgrounds only; cards and devices keep their own material. Titles: on white = graphite + yellow line;
    on grey = white + yellow line; on yellow = graphite + white line. */
-:root { --sq-white: #F2F3F4; --sq-grey: #2A2C2F; --sq-yellow: #F7C032; --sq-ink: #3A3D42; }
+:root { --sq-white: #F2F3F4; --sq-grey: #2A2C2F; --sq-yellow: #F7C032; --sq-ink: #3A3D42;
+  /* the three standard materials, copied from the reference sections (What we offer / Live board / Bench test) */
+  --mat-white: #F2F3F4;
+  --mat-grey: radial-gradient(60% 50% at 50% 0, rgba(214,222,230,.07), rgba(214,222,230,0) 70%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), linear-gradient(180deg, #2A2C2F, #34363A);
+  --mat-yellow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), #F7C032; }
 
 /* Deals → WHITE */
-#deals.dl { background: radial-gradient(42% 55% at 14% 26%, rgba(247,192,50,.12), rgba(247,192,50,0) 70%), var(--sq-white) !important; color: #26282B !important; }
+#deals.dl { background: var(--mat-white) !important; color: #26282B !important; }
 #deals .dl-h > span:first-child > span { color: var(--sq-ink) !important; }
 #deals .dl-h > span:nth-child(2) > span { color: #F7C032 !important; }
 #deals .dl-eb, #deals .dl-k { color: #B8860B; }
@@ -18,7 +22,7 @@
 #deals .dl-ship p, #deals .dl-pre p, #deals .dl-ship-h > div > :not(.dl-k) { color: #D5D7DA; }
 
 /* Wholesale → GREY */
-#wholesale.wf, .wf { background: radial-gradient(50% 50% at 80% 10%, rgba(247,192,50,.10), rgba(247,192,50,0) 70%), var(--sq-grey) !important; color: #FFFFFF !important; }
+#wholesale.wf, .wf { background: var(--mat-grey) !important; color: #FFFFFF !important; }
 .wf .wf-h > span:first-child > span { color: #FFFFFF !important; }
 .wf .wf-h > span:nth-child(2) > span { color: #F7C032 !important; }
 .wf .wf-eb { color: #F7C032 !important; }
@@ -33,7 +37,7 @@
 .wf .wf-sd { color: #FFFFFF; }
 
 /* Repair → YELLOW */
-section.rp#repair { background: radial-gradient(60% 50% at 20% 0%, rgba(255,236,170,.6), rgba(255,236,170,0) 70%), var(--sq-yellow) !important; color: #26282B !important; }
+section.rp#repair { background: var(--mat-yellow) !important; color: #26282B !important; }
 #repair h2 > span:first-child { color: #26282B !important; }
 #repair h2 > span:nth-child(2), #repair h2 > span:last-child:not(:first-child) { color: #FFFFFF !important; text-shadow: 0 2px 14px rgba(150,100,0,.25); }
 #repair .rp-eb, #repair [class*="eb"] { color: #26282B !important; }
@@ -41,13 +45,13 @@ section.rp#repair { background: radial-gradient(60% 50% at 20% 0%, rgba(255,236,
 #repair h2 ~ *, #repair > div > div > span:first-child, #repair span[style*="JetBrains"] { color: #26282B !important; }
 
 /* Worldwide → WHITE (the map and the shipments list stay dark panels) */
-section#network { background: radial-gradient(60% 50% at 70% 20%, rgba(247,192,50,.10), rgba(247,192,50,0) 70%), var(--sq-white) !important; color: #26282B !important; }
+section#network { background: var(--mat-white) !important; color: #26282B !important; }
 #network h2 > span:first-child { color: var(--sq-ink) !important; }
 #network h2 ~ p, #network h2 + p, #network p { color: #5C6066 !important; }
 #network div:has(> button) { background: #2A2C2F !important; box-shadow: 0 10px 24px -12px rgba(0,0,0,.4) !important; }
 
 /* Membership → GREY (the gold card shines on graphite) */
-section.cx { background: radial-gradient(50% 60% at 75% 30%, rgba(247,192,50,.14), rgba(247,192,50,0) 70%), var(--sq-grey) !important; color: #FFFFFF !important; }
+section.cx { background: var(--mat-grey) !important; color: #FFFFFF !important; }
 .cx .cx-eb { color: #F7C032 !important; }
 .cx .cx-h > span:first-child, .cx .cx-h { color: #FFFFFF !important; }
 .cx .cx-h > span:nth-child(2), .cx .cx-h > span:last-child:not(:first-child) { color: #F7C032 !important; }
@@ -65,7 +69,7 @@ section.cx { background: radial-gradient(50% 60% at 75% 30%, rgba(247,192,50,.14
 .cx .cx-form > label, .cx .cx-form > span, .cx .cx-form b, .cx .cx-form small:not(.cx-lvl-bat *) { color: #FFFFFF !important; }
 
 /* Story → YELLOW (the polaroid cards stay white) */
-section.st { background: radial-gradient(60% 50% at 20% 0%, rgba(255,236,170,.6), rgba(255,236,170,0) 70%), var(--sq-yellow) !important; color: #26282B !important; }
+section.st { background: var(--mat-yellow) !important; color: #26282B !important; }
 .st .st-h > span:first-child { color: #26282B !important; }
 .st .st-h > span:nth-child(2) { color: #FFFFFF !important; text-shadow: 0 2px 14px rgba(150,100,0,.25); }
 .st .st-eb, .st [class*="st-eb"], .st .st-yr-k { color: #26282B !important; }
@@ -79,14 +83,14 @@ section.st { background: radial-gradient(60% 50% at 20% 0%, rgba(255,236,170,.6)
 .st .st-h > *:nth-child(2), .st .st-h > *:nth-child(2) * { color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF; }
 
 /* Team → WHITE (the PVC badges keep their own look) */
-section.tm { background: radial-gradient(60% 50% at 50% 0%, rgba(247,192,50,.10), rgba(247,192,50,0) 70%), var(--sq-white) !important; color: #26282B !important; }
+section.tm { background: var(--mat-white) !important; color: #26282B !important; }
 .tm .tm-eb { color: #B8860B !important; }
 .tm .tm-h > span:first-child > span { color: var(--sq-ink) !important; }
 .tm .tm-h > span:nth-child(2) > span, .tm .tm-h > span:last-child:not(:first-child) > span { color: #F7C032 !important; }
 .tm .tm-p, .tm p { color: #5C6066; }
 
 /* Meet Samsoom → GREY (yellow Samsoom pops on graphite; the chat panel stays light) */
-section.mt { background: radial-gradient(45% 55% at 22% 55%, rgba(247,192,50,.18), rgba(247,192,50,0) 70%), var(--sq-grey) !important; color: #FFFFFF !important; }
+section.mt { background: var(--mat-grey) !important; color: #FFFFFF !important; }
 .mt .mt-eb { color: #F7C032 !important; }
 .mt .mt-h > span:first-child > span { color: #FFFFFF !important; }
 .mt .mt-h > span:nth-child(2) > span { color: #F7C032 !important; }
@@ -96,7 +100,7 @@ section.mt { background: radial-gradient(45% 55% at 22% 55%, rgba(247,192,50,.18
 .mt .mt-asks button.on, .mt .mt-asks button[aria-pressed="true"] { background: #F7C032 !important; color: #26282B !important; }
 
 /* Feed → YELLOW (QR cards, phone and the week timeline stay graphite) */
-section.fd { background: radial-gradient(45% 60% at 50% 55%, rgba(255,240,190,.55), rgba(255,240,190,0) 70%), var(--sq-yellow) !important; color: #26282B !important; }
+section.fd { background: var(--mat-yellow) !important; color: #26282B !important; }
 .fd .fd-eb { color: #26282B !important; }
 .fd .fd-h > span:first-child { color: #26282B !important; }
 .fd .fd-h > span:nth-child(2), .fd .fd-h > span:nth-child(2) * { color: #FFFFFF !important; text-shadow: 0 2px 14px rgba(150,100,0,.25); }
@@ -111,7 +115,7 @@ section.fd { background: radial-gradient(45% 60% at 50% 55%, rgba(255,240,190,.5
 .fd .fd-info { position: relative; z-index: 2; }
 
 /* Visit → WHITE (the request console stays graphite, the hours card stays white with a lifted rim) */
-section.vs { background: radial-gradient(60% 50% at 30% 20%, rgba(247,192,50,.12), rgba(247,192,50,0) 70%), var(--sq-white) !important; }
+section.vs { background: var(--mat-white) !important; }
 section.vs > * [class*="vs-hours"], section.vs .vs-card, section.vs > div > div > div:last-child > div:first-child { box-shadow: 0 0 0 1px rgba(38,40,43,.08), 0 30px 60px -30px rgba(38,40,43,.35); }
 section.fd::before, section.fd::after { display: none !important; }
 .fd .fd-h, .fd .fd-h > span { background-image: none !important; -webkit-background-clip: border-box !important; background-clip: border-box !important; white-space: normal !important; }
@@ -120,7 +124,7 @@ section.fd::before, section.fd::after { display: none !important; }
 .fd .fd-refl { display: none !important; } .fd .fd-ph-in::before { background: radial-gradient(closest-side, rgba(90,60,0,.45), rgba(90,60,0,0)) !important; }
 
 /* Reviews → GREY (the review cards and the Google rating card stay white, lifted) */
-section.rv#reviews { background: radial-gradient(60% 50% at 25% 10%, rgba(247,192,50,.12), rgba(247,192,50,0) 70%), var(--sq-grey) !important; color: #FFFFFF !important; }
+section.rv#reviews { background: var(--mat-grey) !important; color: #FFFFFF !important; }
 #reviews h2 > span:first-child { color: #FFFFFF !important; }
 #reviews h2 > span:last-child:not(:first-child) { color: #F7C032 !important; }
 #reviews h2 + p, #reviews .rv-p { color: #C9CCD0 !important; }
