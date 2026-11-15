@@ -165,12 +165,11 @@ function render(v: Vals) {
               {v.flyQ}
             </span>
           ) : null}
-          <button type="button" className="mt-ask" onClick={v.ask}>
-            Ask Samsoom your own question
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
-              <path d="M5 12h14M13 6l6 6-6 6" />
-            </svg>
-          </button>
+          {/* owner (15 Nov): a real composer: the question types in here, the send button lights, then it is sent */}
+          <div className="mt-compose" role="button" tabIndex={0} onClick={v.ask} onKeyDown={(e) => { if (e.key === 'Enter') v.ask(); }} aria-label="Ask Samsoom your own question">
+            <span className="mt-field">{v.compose ? <>{v.compose}<i className="mt-caret" /></> : <span className="mt-ph">Ask Samsoom your own question…</span>}</span>
+            <span className={'mt-send' + (v.ready ? ' on' : '') + (v.sent ? ' go' : '')} aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>
+          </div>
         </div>
       </div>
     </section>

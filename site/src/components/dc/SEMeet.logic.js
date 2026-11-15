@@ -8,7 +8,7 @@ import React from 'react';
 import { DCLogic } from '@/dc/runtime';
 import { onReplay } from '@/components/perf/SectionFX';
 
-const T_Q = 0, T_TYPE = 0.7, T_ANS = 2.3, T_CARD = 2.7, DUR = 7.4;
+const T_Q = 1.8, T_TYPE = 2.5, T_ANS = 4.1, T_CARD = 4.5, DUR = 9.2; // owner (15 Nov): each question is first TYPED in the composer (0 → 1.6s), then sent
 export const CONVOS = [
   { q: 'Do you have a Galaxy A54 battery?', a: 'Yes. Original grade, in stock in Deira.', card: 'product', land: 'found' },
   { q: 'Which grade should I pick for an iPhone 13 screen?', a: 'Depends on your budget. Every grade is labelled on your order:', card: 'grades', land: 'happy' },
@@ -67,6 +67,7 @@ class Component extends DCLogic {
     return { secRef: this.secRef, seen: s.seen, mood: !live ? 'idle' : st === 1 ? 'think' : 'type', still: !live, front: lib && lib.front ? lib.front : null, phone: img(9), msgs, ci: s.ci, n: CONVOS.length, flyQ: st === 1 ? c.q : '',
       ask: () => window.dispatchEvent(new CustomEvent('se:chat', { detail: {} })), drift: DRIFT,
       // owner (28 Oct): a 'try asking' question plays right here in the chat on screen (typed in, answered), not in a new window
+      compose: st === 0 && s.seen ? c.q.slice(0, Math.min(c.q.length, Math.floor((s.t / 1.55) * c.q.length))) : '', ready: st === 0 && s.seen && s.t >= 1.55, sent: st === 1,
       tries: CONVOS.map((c, j) => ({ q: c.q, on: j === s.ci, go: () => { this.ov = null; this.t = 0; this._st = null; this.setState({ ci: j, t: 0, seen: true }); } })) };
   }
 }
