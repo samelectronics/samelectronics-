@@ -142,3 +142,11 @@
 /* R10 (owner): the action rows line up with the text above them, same height, nothing pushed in or centred */
 .st-bc .st-acts { justify-content: flex-start !important; align-items: center; margin-inline-start: 0 !important; padding: 0 !important; gap: 10px; }
 .st-bc .st-acts > .st-btn { margin: 0 !important; height: 48px !important; min-height: 0 !important; padding: 0 18px !important; font-size: 14.5px !important; flex: 0 0 auto; transform: none; }
+
+/* R13 (owner: pins cartoonish; Open in Maps twice). Section stays light. */
+.st-line { height: 2px !important; top: 11px !important; box-shadow: 0 0 8px rgba(247,192,50,.6) !important; }
+.st-tip { height: 4px !important; top: 10px !important; width: 46px !important; left: -46px !important; box-shadow: 0 0 12px 2px rgba(247,192,50,.55) !important; }
+.st-node { width: 10px !important; height: 10px !important; margin-left: -5px !important; top: 7px !important; background: #C9CCD0 !important; box-shadow: none !important; }
+.st-node.on { background: #F7C032 !important; box-shadow: 0 0 0 4px rgba(247,192,50,.25), 0 0 10px rgba(247,192,50,.7) !important; transform: none !important; }
+.st-map { overflow: hidden !important; }
+.st-map .st-gmap { inset: -64px 0 0 0 !important; height: calc(100% + 64px) !important; }

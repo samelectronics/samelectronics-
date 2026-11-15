@@ -288,11 +288,6 @@ html[dir='rtl'] .hs-cart { left: auto; right: 14px; }
 [data-tour="samsoom"] + span::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: #3ECF8E; animation: sePing 2.8s ease-in-out infinite; }
 /* owner (15 Nov): the device shadow on the yellow reads as one soft contact shadow, not a dark smear growing down the diagonal */
 [data-hero-dev] { filter: drop-shadow(0 18px 22px rgba(60,40,0,.22)) drop-shadow(0 4px 6px rgba(10,11,12,.22)) !important; }
-/* R13 · What we offer on a graphite studio: white title + yellow line, light body text, cards lifted with a light rim */
-#families h2, #families [data-w="hl0"] { color: #FFFFFF !important; }
-#families .wo-head p, #families [data-w="A"] p { color: #C9CCD0 !important; }
-#families .wo-spots { opacity: .5; }
-#families .wo-grid > * { box-shadow: inset 0 1px 0 rgba(255,255,255,.12), inset 0 0 0 1px rgba(255,255,255,.07), 0 24px 44px -20px rgba(0,0,0,.7) !important; }
 .wwo-boxes > [data-w='R'] { box-shadow: inset 0 1px 0 rgba(255,255,255,.14), inset 0 0 0 1px rgba(255,255,255,.08), 0 30px 50px -22px rgba(0,0,0,.75) !important; }
 /* UNIVERSAL (owner, 15 Nov): circuit pads never have a dark centre: solid lit pads with a soft halo, everywhere */
 .k-grid svg.cx-trace circle, .se-gut-dark .nd, .lp-pad { fill: #F7C032 !important; stroke: rgba(247,192,50,.3) !important; stroke-width: 4 !important; }
