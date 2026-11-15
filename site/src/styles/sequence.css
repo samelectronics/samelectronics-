@@ -94,3 +94,27 @@ section.mt { background: radial-gradient(45% 55% at 22% 55%, rgba(247,192,50,.18
 .mt .mt-asks + *, .mt [class*="try"], .mt .mt-k { color: #A7ABB1; }
 .mt .mt-asks button { background: rgba(255,255,255,.07) !important; color: #FFFFFF !important; box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); }
 .mt .mt-asks button.on, .mt .mt-asks button[aria-pressed="true"] { background: #F7C032 !important; color: #26282B !important; }
+
+/* Feed → YELLOW (QR cards, phone and the week timeline stay graphite) */
+section.fd { background: radial-gradient(45% 60% at 50% 55%, rgba(255,240,190,.55), rgba(255,240,190,0) 70%), var(--sq-yellow) !important; color: #26282B !important; }
+.fd .fd-eb { color: #26282B !important; }
+.fd .fd-h > span:first-child { color: #26282B !important; }
+.fd .fd-h > span:nth-child(2), .fd .fd-h > span:nth-child(2) * { color: #FFFFFF !important; text-shadow: 0 2px 14px rgba(150,100,0,.25); }
+.fd .fd-p { color: #3A3D42 !important; }
+.fd .fd-user { background: #26282B !important; color: #FFFFFF !important; }
+.fd .fd-follow .fd-fl { background: #26282B !important; box-shadow: 0 16px 30px -16px rgba(80,55,0,.55) !important; }
+.fd .fd-follow .fd-fl.on { box-shadow: inset 0 0 0 2px #FFFFFF, 0 16px 30px -16px rgba(80,55,0,.55) !important; }
+.fd .fd-drops { background: #26282B !important; color: #FFFFFF; }
+.fd .fd-chan { color: #26282B !important; }
+.fd .fd-pool, .fd .fd-ground { display: none !important; }
+.fd .fd-stage { background: transparent !important; }
+.fd .fd-info { position: relative; z-index: 2; }
+
+/* Visit → WHITE (the request console stays graphite, the hours card stays white with a lifted rim) */
+section.vs { background: radial-gradient(60% 50% at 30% 20%, rgba(247,192,50,.12), rgba(247,192,50,0) 70%), var(--sq-white) !important; }
+section.vs > * [class*="vs-hours"], section.vs .vs-card, section.vs > div > div > div:last-child > div:first-child { box-shadow: 0 0 0 1px rgba(38,40,43,.08), 0 30px 60px -30px rgba(38,40,43,.35); }
+section.fd::before, section.fd::after { display: none !important; }
+.fd .fd-h, .fd .fd-h > span { background-image: none !important; -webkit-background-clip: border-box !important; background-clip: border-box !important; white-space: normal !important; }
+.fd .fd-h > span:first-child { -webkit-text-fill-color: #26282B !important; }
+.fd .fd-h > span:nth-child(2), .fd .fd-h > span:nth-child(2) * { -webkit-text-fill-color: #FFFFFF !important; }
+.fd .fd-refl { display: none !important; } .fd .fd-ph-in::before { background: radial-gradient(closest-side, rgba(90,60,0,.45), rgba(90,60,0,0)) !important; }
