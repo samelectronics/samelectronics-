@@ -70,9 +70,9 @@ function render(v: Vals) {
                 {'\n          '}
                 <svg
                   aria-hidden="true"
-                  viewBox="0 0 17 20"
-                  width="17"
-                  height="20"
+                  viewBox="0 0 24 26"
+                  width="22"
+                  height="24"
                   style={{ position: 'absolute', left: '-1px', top: '43px', overflow: 'visible', filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
                 >
                   {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
@@ -80,12 +80,18 @@ function render(v: Vals) {
                     <linearGradient id="samHandL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
                   <g>
-                    {/* owner (15 Nov): one smooth mitten hand in titanium with an etched circuit, not fingers or a plug */}
-                    <rect x="3.4" y="0" width="7.2" height="3" rx="1.5" fill="#F7C032" />
-                    <path d="M3.2 3.2h7.4c1.3 0 2.3 1 2.3 2.3v2.2l1.6-1.1c.9-.6 2.1-.2 2.4.8.2.6 0 1.3-.5 1.7l-3.6 3.2v1.4c0 3.2-2.4 5.6-5.4 5.6S2 16.9 2 13.7V4.4c0-.7.5-1.2 1.2-1.2z" fill="url(#samHandL)" />
-                    <path d="M3.6 4.4c2-.4 4.6-.4 7 0" stroke="rgba(255,255,255,.9)" strokeWidth=".7" strokeLinecap="round" fill="none" />
-                    <path d="M7.4 5.6v4.2l-1.8 1.8v2.4M7.4 9.8l2 2v2" stroke="#E0A61E" strokeWidth=".7" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                    <circle cx="7.4" cy="5.6" r=".9" fill="#F7C032" /><circle cx="5.6" cy="14" r=".75" fill="#F7C032" /><circle cx="9.4" cy="13.8" r=".75" fill="#F7C032" />
+                    {/* owner (15 Nov): one proper mascot hand: titanium glove, three fused fingers and a thumb, soft creases, a glowing circuit node */}
+                    <rect x="6.6" y="0" width="10.8" height="4.2" rx="2.1" fill="#F7C032" />
+                    <rect x="7.4" y=".7" width="9.2" height="1.1" rx=".55" fill="#FFE29A" opacity=".8" />
+                    <rect x="5" y="3.6" width="14" height="11" rx="4.6" fill="url(#samHandL)" />
+                    <rect x="17" y="6.4" width="4.6" height="8.6" rx="2.3" transform="rotate(-32 19.3 10.7)" fill="url(#samHandL)" />
+                    <rect x="5" y="10.5" width="4.8" height="11.6" rx="2.4" fill="url(#samHandL)" />
+                    <rect x="9.6" y="11" width="4.8" height="13" rx="2.4" fill="url(#samHandL)" />
+                    <rect x="14.2" y="10.5" width="4.6" height="11" rx="2.3" fill="url(#samHandL)" />
+                    <path d="M9.7 15.5v5M14.3 15.5v4.6" stroke="rgba(60,64,70,.35)" strokeWidth=".6" strokeLinecap="round" />
+                    <path d="M7 5.4c3-.9 7-.9 10 0" stroke="rgba(255,255,255,.95)" strokeWidth=".8" strokeLinecap="round" fill="none" />
+                    <path d="M12 4.2v3.6l-2 2" stroke="#E0A61E" strokeWidth=".7" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                    <circle cx="10" cy="9.8" r="1.25" fill="#F7C032" /><circle cx="10" cy="9.8" r="2.4" fill="#F7C032" opacity=".22" />
                   </g>
                 </svg>
                 {'\n          '}
@@ -141,22 +147,28 @@ function render(v: Vals) {
                 {'\n          '}
                 <svg
                   aria-hidden="true"
-                  viewBox="0 0 17 20"
-                  width="17"
-                  height="20"
+                  viewBox="0 0 24 26"
+                  width="22"
+                  height="24"
                   style={{ position: 'absolute', left: '5px', top: '43px', overflow: 'visible', filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
                 >
                   {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
                   <defs>
                     <linearGradient id="samHandR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
-                  <g transform="translate(17 0) scale(-1 1)">
-                    {/* owner (15 Nov): one smooth mitten hand in titanium with an etched circuit, not fingers or a plug */}
-                    <rect x="3.4" y="0" width="7.2" height="3" rx="1.5" fill="#F7C032" />
-                    <path d="M3.2 3.2h7.4c1.3 0 2.3 1 2.3 2.3v2.2l1.6-1.1c.9-.6 2.1-.2 2.4.8.2.6 0 1.3-.5 1.7l-3.6 3.2v1.4c0 3.2-2.4 5.6-5.4 5.6S2 16.9 2 13.7V4.4c0-.7.5-1.2 1.2-1.2z" fill="url(#samHandR)" />
-                    <path d="M3.6 4.4c2-.4 4.6-.4 7 0" stroke="rgba(255,255,255,.9)" strokeWidth=".7" strokeLinecap="round" fill="none" />
-                    <path d="M7.4 5.6v4.2l-1.8 1.8v2.4M7.4 9.8l2 2v2" stroke="#E0A61E" strokeWidth=".7" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                    <circle cx="7.4" cy="5.6" r=".9" fill="#F7C032" /><circle cx="5.6" cy="14" r=".75" fill="#F7C032" /><circle cx="9.4" cy="13.8" r=".75" fill="#F7C032" />
+                  <g transform="translate(24 0) scale(-1 1)">
+                    {/* owner (15 Nov): one proper mascot hand: titanium glove, three fused fingers and a thumb, soft creases, a glowing circuit node */}
+                    <rect x="6.6" y="0" width="10.8" height="4.2" rx="2.1" fill="#F7C032" />
+                    <rect x="7.4" y=".7" width="9.2" height="1.1" rx=".55" fill="#FFE29A" opacity=".8" />
+                    <rect x="5" y="3.6" width="14" height="11" rx="4.6" fill="url(#samHandR)" />
+                    <rect x="17" y="6.4" width="4.6" height="8.6" rx="2.3" transform="rotate(-32 19.3 10.7)" fill="url(#samHandR)" />
+                    <rect x="5" y="10.5" width="4.8" height="11.6" rx="2.4" fill="url(#samHandR)" />
+                    <rect x="9.6" y="11" width="4.8" height="13" rx="2.4" fill="url(#samHandR)" />
+                    <rect x="14.2" y="10.5" width="4.6" height="11" rx="2.3" fill="url(#samHandR)" />
+                    <path d="M9.7 15.5v5M14.3 15.5v4.6" stroke="rgba(60,64,70,.35)" strokeWidth=".6" strokeLinecap="round" />
+                    <path d="M7 5.4c3-.9 7-.9 10 0" stroke="rgba(255,255,255,.95)" strokeWidth=".8" strokeLinecap="round" fill="none" />
+                    <path d="M12 4.2v3.6l-2 2" stroke="#E0A61E" strokeWidth=".7" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                    <circle cx="10" cy="9.8" r="1.25" fill="#F7C032" /><circle cx="10" cy="9.8" r="2.4" fill="#F7C032" opacity=".22" />
                   </g>
                 </svg>
                 {'\n          '}

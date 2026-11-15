@@ -235,3 +235,7 @@
 }
 .hero-shop .hs-status { padding: 0 38px !important; top: 6px !important; background: transparent !important; } .hero-shop .hs-track { top: 0 !important; }
 .hero-shop::before { content: ''; position: absolute; z-index: 2; left: 0; right: 0; top: 0; height: 28px; background: linear-gradient(180deg, rgba(20,21,23,.92), rgba(20,21,23,.7) 70%, rgba(20,21,23,0)); pointer-events: none; }
+/* R13 · phones: hero circuits fade out before the screen edge instead of being chopped */
+@media (max-width: 720px) {
+  #top [data-hero-scene] svg { -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(200vw - 120px), transparent calc(200vw - 10px)); mask-image: linear-gradient(90deg, #000 0, #000 calc(200vw - 120px), transparent calc(200vw - 10px)); }
+}
