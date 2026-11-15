@@ -174,3 +174,12 @@ a[href*="wa.me/"]:not(:has(svg, img, [style*="mask"]))::before { content: ''; di
 .wf .wf-pool { background: radial-gradient(closest-side, rgba(255,236,190,.26), rgba(255,226,170,.08) 55%, rgba(255,226,170,0)) !important; }
 .wf .wf-floor-cap, .wf .wf-floor-cap * { color: #A7ABB1 !important; }
 .wf .wf-floor-cap b { color: #F7C032 !important; }
+
+/* R13 · Home hero devices: the titanium frames are RENDERS now (scripts/productshot/devframe.html): a rolled, polished
+   titanium band that catches the light along its whole edge, machined side keys, and a black glass bezel ring.
+   The live screens show through the frame's opening. */
+html body div:has(> [data-hero-screen]) { background: transparent !important; box-shadow: 0 30px 60px -18px rgba(0,0,0,.55), 0 12px 24px -10px rgba(0,0,0,.4) !important; }
+div:has(> [data-hero-screen]) > .se-hwb { display: none !important; }
+div:has(> [data-hero-screen])::before { content: ''; position: absolute; inset: -6px; z-index: 5; pointer-events: none; background: url(/assets/frame-phone.webp) 0 0 / 100% 100% no-repeat; }
+div:has(> .se-hwb-t):has(> [data-hero-screen])::before { background-image: url(/assets/frame-ipad.webp); }
+html body [data-hero-screen] { box-shadow: inset 0 0 0 2px #040405, inset 0 0 0 2.6px rgba(255,255,255,.05) !important; background: #08090A !important; }

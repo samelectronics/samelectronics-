@@ -315,7 +315,7 @@ if (!prod.userData.noBox) {
 }
 if (LINE) { // owner (27 Oct): every box of a range, lined up behind each other (each ~70% showing), the screen in front
   let prev = box; for (let j = BOXL.length - 2; j >= 0; j--) { const b2 = await carton(pw, PH0, BOXL[j]); stand.add(b2); const cw2 = b2.userData.bw; b2.position.set(prev.position.x + SIDE * (prev.userData.bw / 2 + cw2 / 2 - 0.3 * cw2), b2.userData.bh / 2, prev.position.z - prev.userData.depth / 2 - b2.userData.depth / 2 - 0.05); prev = b2; } }
-if ((ITEM === 'crack' || ITEM === 'fixed' || ITEM === 'open') && !Q.get('front')) { // R9 (owner: "the tools look cheap"): real bench tools, modelled like the real ones
+if ((ITEM === 'crack' || ITEM === 'fixed' || ITEM === 'open' || ITEM === 'film') && !Q.get('front')) { // R9 (owner: "the tools look cheap"): real bench tools, modelled like the real ones
   const tools = new THREE.Group();
   // 1 · precision screwdriver: knurled anodised aluminium handle, polished swivel cap, tapered nose, chrome hex bit holder and bit
   const knurl = cv(256, 512, (x, w, h) => { x.fillStyle = '#808080'; x.fillRect(0, 0, w, h); x.strokeStyle = '#ffffff'; x.lineWidth = 2; for (let i = -h; i < w + h; i += 9) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i + h * 0.6, h); x.stroke(); x.beginPath(); x.moveTo(i + h * 0.6, 0); x.lineTo(i, h); x.stroke(); } });
