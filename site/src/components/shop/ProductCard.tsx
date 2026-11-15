@@ -30,7 +30,7 @@ export default function ProductCard({ p, st, trade, open, list, fits }: { p: Pro
         <button type="button" className={'pc-ic' + (fav ? ' on' : '')} onClick={() => store.fav(p.id)} aria-pressed={fav} title={fav ? T('Starred') : T('Star it')}>
           <svg viewBox="0 0 24 24" width="17" height="17"><path d="M12 2l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 16.8 6.1 20.1l1.3-6.6L2.5 8.9l6.6-.8z" fill={fav ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" /></svg>
         </button>
-        <button type="button" className={'pc-ic' + (cmp ? ' on' : '')} onClick={() => store.cmp(p.id)} aria-pressed={cmp} title={T('Compare')}>
+        <button type="button" className={'pc-ic' + (cmp ? ' on' : '')} onClick={() => store.cmp(p.id)} aria-pressed={cmp} title={T('Compare')} aria-label={T('Compare')}>
           <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round"><path d="M8 3v18M16 3v18M3 8h5M16 16h5" /></svg>
         </button>
       </div>

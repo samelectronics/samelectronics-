@@ -42,10 +42,20 @@ function toUrl(f: Filters, p: string | null, scope: Scope) {
 }
 
 // R10 P1 · "Parts warehouse" cover: a wall of shelving with labelled bins, some lit; it is the shop's own signature
+const WMONTHS = (w: string) => { const m = /(\d+)\s*(month|year)/i.exec(w || ''); return m ? +m[1] * (/year/i.test(m[2]) ? 12 : 1) : /life/i.test(w || '') ? 999 : 0; };
+// compare rows: label, value, and (when one is better) a score where higher wins
+const CMP_ROWS: [string, (p: Product) => string, ((p: Product) => number)?][] = [
+  ['Price', (p) => priceText(p.price), (p) => -p.price], ['Grade', (p) => p.gradeName], ['Manufacturer', (p) => p.makerName], ['Quality', (p) => p.qualityName],
+  ['Warranty', (p) => p.warranty, (p) => WMONTHS(p.warranty)], ['Rating', (p) => p.rating + ' ★', (p) => p.rating], ['Stock (estimate)', (p) => String(p.stock_qty), (p) => p.stock_qty], ['Model', (p) => p.modelName],
+];
+
 export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
-  const scanRef = useRef<HTMLDivElement>(null);
+  const scanRef = useRef<HTMLDivElement>(null), [dock, setDock] = useState(false);
+  // owner: once the big search scrolls away, a slim one follows you smoothly under the bar (search, results, Customize)
+  useEffect(() => { const el = scanRef.current; if (!el || typeof IntersectionObserver === 'undefined') return; const io = new IntersectionObserver(([e]) => setDock(!e.isIntersecting && e.boundingClientRect.top < 0), { rootMargin: '-72px 0px 0px 0px' }); io.observe(el); return () => io.disconnect(); });
+  useEffect(() => { document.documentElement.toggleAttribute('data-shop-dock', dock); return () => document.documentElement.removeAttribute('data-shop-dock'); }, [dock]);
   const [ready, setReady] = useState(false), [f, setF] = useState<Filters>(EMPTY), [pid, setPid] = useState<string | null>(null), [scope, setScope] = useState<Scope>(mode === 'deals' ? 'deals' : 'all');
-  const [view, setView] = useState<View>({ cols: 4, list: false, trade: true, per: 24 }), [page, setPage] = useState(1), [cz, setCz] = useState(false), [cmpOpen, setCmpOpen] = useState(false), [side, setSide] = useState(false);
+  const [view, setView] = useState<View>({ cols: 4, list: false, trade: true, per: 24 }), [page, setPage] = useState(1), [cz, setCz] = useState(false), [cmpOpen, setCmpOpen] = useState(false), [diffOnly, setDiffOnly] = useState(false), [side, setSide] = useState(false);
   const st = useStore(), [me] = useMe(), trade = !!me?.tradeApproved, [cv, setCv] = useState(0);
   useEffect(() => { const on = () => setCv((n) => n + 1); window.addEventListener('se:catalog', on); return () => window.removeEventListener('se:catalog', on); }, []);
   // the data is loaded by the page's scripts; wait for it, then read the link
@@ -103,8 +113,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
             </div>
           </div>
           <div className="shop-scan" ref={scanRef}><i className="shop-beam" aria-hidden="true" /><ShopSearch q={f.q} onQ={(q) => set({ q })} onFmp={openFmp} /></div>
-          {/* R11 (owner): once the header scrolls away, the search stays with you, pinned under the nav */}
-          {/* R11e (owner): no search bar following you down, it crowded the page */}
+          {/* owner (latest): a smaller, professional search that follows smoothly (see .shop-dock) */}
           <div className="shop-devs" data-tour-step="2" data-tour-title="My devices" data-tour-text="Add the phones you fix most. I will mark every part that fits them.">
             <span>{T('My devices')}:</span>
             {st.devices.map((d) => <button key={d.model_id} type="button" className={'sp-chip' + (f.models.includes(d.model_id) ? ' y' : '')} onClick={() => tog('models', d.model_id)}>{d.nick || d.name}<span className="x" onClick={(e) => { e.stopPropagation(); store.device(d); }}>×</span></button>)}
@@ -186,6 +195,15 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
         </div>
       </div>
 
+      <div className={'shop-dock' + (dock ? ' on' : '')} aria-hidden={!dock}>
+        <div className="sp-wrap shop-dock-in">
+          <ShopSearch compact q={f.q} onQ={(q) => { set({ q }); }} onFmp={openFmp} />
+          <span className="shop-dock-n"><b>{fmt(res.length)}</b> {T('results')}</span>
+          <button type="button" className="sp-chip shop-dock-f" onClick={() => setSide(true)}>☰ {T('Filters')}{chips.length ? ' · ' + chips.length : ''}</button>
+          <button type="button" className="sp-chip y" onClick={() => setCz(true)}>{T('Customize')}</button>
+        </div>
+      </div>
+
       {/* compare tray */}
       {cmp.length ? (
         <div className="cmp-tray">
@@ -200,13 +218,15 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
           <div className="sp-veil" onClick={() => setCmpOpen(false)} />
           <div className="sp-modal cmp-m">
             <button type="button" className="sp-x" onClick={() => setCmpOpen(false)} aria-label={T('Close')}>×</button>
-            <h3 className="sp-h3">{T('Side by side')}</h3>
+            <div className="cmp-hd"><h3 className="sp-h3">{T('Side by side')}</h3>
+              <label className="sf-tg cmp-diff"><input type="checkbox" checked={diffOnly} onChange={(e) => setDiffOnly(e.target.checked)} /><i /><span>{T('Only differences')}</span></label></div>
+            {/* owner: a better compare: the best value in each row is marked, rows that are all the same can be hidden,
+                and any part can be taken out right here */}
             <div className="cmp-scroll"><table className="sp-table cmp-t"><tbody>
-              <tr><th /> {cmp.map((p) => <td key={p.id}><img src={p.img} alt="" /><b>{p.title}</b></td>)}</tr>
-              {([['Price', (p: Product) => priceText(p.price)], ['Grade', (p: Product) => p.gradeName], ['Manufacturer', (p: Product) => p.makerName], ['Quality', (p: Product) => p.qualityName], ['Warranty', (p: Product) => p.warranty], ['Rating', (p: Product) => p.rating + ' ★'], ['Stock (estimate)', (p: Product) => String(p.stock_qty)], ['Model', (p: Product) => p.modelName]] as [string, (p: Product) => string][]).map(([k, fn]) => (
-                <tr key={k}><th>{T(k)}</th>{cmp.map((p) => <td key={p.id}>{fn(p)}</td>)}</tr>
-              ))}
-              <tr><th /> {cmp.map((p) => <td key={p.id}><button type="button" className="sp-btn sm" onClick={(e) => { window.dispatchEvent(new CustomEvent('se:cart', { detail: { id: p.id, clientX: e.clientX, clientY: e.clientY } })); }}>{T('Add to cart')}</button></td>)}</tr>
+              <tr className="cmp-top"><th /> {cmp.map((p) => <td key={p.id}><button type="button" className="cmp-rm" onClick={() => store.cmp(p.id)} aria-label={T('Remove')}>×</button><img src={p.img} alt="" /><b>{p.title}</b><small>{p.brandName}</small></td>)}</tr>
+              {(CMP_ROWS.filter(([, fn]) => !diffOnly || new Set(cmp.map((p) => fn(p))).size > 1)).map(([k, fn, score]) => { const sc = score ? cmp.map((p) => score(p)) : null, top = sc ? Math.max(...sc) : null, win = sc && new Set(sc).size > 1;
+                return <tr key={k}><th>{T(k)}</th>{cmp.map((p, j) => <td key={p.id} className={win && sc![j] === top ? 'best' : ''}>{T(fn(p))}{win && sc![j] === top ? <em className="cmp-best">{T('Best')}</em> : null}</td>)}</tr>; })}
+              <tr><th /> {cmp.map((p) => <td key={p.id}><button type="button" className="sp-btn sm" onClick={(e) => { window.dispatchEvent(new CustomEvent('se:cart', { detail: { id: p.id, clientX: e.clientX, clientY: e.clientY } })); }}>{T('Add to cart')}</button><button type="button" className="cmp-view" onClick={() => { setCmpOpen(false); open(p); }}>{T('View details')}</button></td>)}</tr>
             </tbody></table></div>
           </div>
         </>

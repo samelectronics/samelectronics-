@@ -8,14 +8,14 @@ import { T } from '@/components/site/ui';
 
 const TRY = ['iPhone 13 screen', 'A54 battery', 'Redmi Note 12 charging flex', 'S23 back cover', 'Pixel 7 camera'];
 
-export default function ShopSearch({ q, onQ, onFmp }: { q: string; onQ: (q: string) => void; onFmp: () => void }) {
+export default function ShopSearch({ q, onQ, onFmp, compact }: { q: string; onQ: (q: string) => void; onFmp: () => void; compact?: boolean }) {
   const [v, setV] = useState(q), [open, setOpen] = useState(false), [hi, setHi] = useState(-1), [ph, setPh] = useState(0);
   const st = useStore(), box = useRef<HTMLDivElement>(null), inp = useRef<HTMLInputElement>(null);
   useEffect(() => setV(q), [q]);
   useEffect(() => { const iv = window.setInterval(() => setPh((n) => (n + 1) % TRY.length), 2600); return () => window.clearInterval(iv); }, []);
   useEffect(() => { const out = (e: PointerEvent) => { if (box.current && !box.current.contains(e.target as Node)) setOpen(false); }; document.addEventListener('pointerdown', out); return () => document.removeEventListener('pointerdown', out); }, []);
   // "/" focuses the search from anywhere in the shop
-  useEffect(() => { const k = (e: KeyboardEvent) => { if (e.key === '/' && !(e.target as HTMLElement).closest('input,textarea')) { e.preventDefault(); inp.current?.focus(); } }; window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k); }, []);
+  useEffect(() => { if (compact) return; const k = (e: KeyboardEvent) => { if (e.key === '/' && !(e.target as HTMLElement).closest('input,textarea')) { e.preventDefault(); inp.current?.focus(); } }; window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k); }, []);
   const sug = useMemo(() => (v.trim() ? suggest(v, 8) : []), [v]);
   const fx = useMemo(() => (v.trim().length > 2 ? fix(v) : null), [v]);
   const go = (s: string) => { store.searched(s); onQ(s); setV(s); setOpen(false); inp.current?.blur(); };
@@ -28,7 +28,7 @@ export default function ShopSearch({ q, onQ, onFmp }: { q: string; onQ: (q: stri
     else if (e.key === 'Escape') setOpen(false);
   };
   return (
-    <div ref={box} className={'ss' + (open ? ' open' : '')} data-tour-step="1" data-tour-title="Search anything" data-tour-text="Type a model, a part or both. Spelling mistakes are fine: I will understand.">
+    <div ref={box} className={'ss' + (open ? ' open' : '') + (compact ? ' sm' : '')} {...(compact ? {} : { 'data-tour-step': '1', 'data-tour-title': 'Search anything', 'data-tour-text': 'Type a model, a part or both. Spelling mistakes are fine: I will understand.' })}>
       <div className="ss-bar">
         <svg className="ss-ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
         <input ref={inp} value={v} onChange={(e) => { setV(e.target.value); setOpen(true); setHi(-1); }} onFocus={() => setOpen(true)} onKeyDown={key}
