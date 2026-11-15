@@ -18,15 +18,21 @@ export default function InfoTip({ name, kind = 'quality', dark = true }: { name:
     return () => { window.removeEventListener('pointerdown', close); window.removeEventListener('keydown', close); window.removeEventListener('scroll', close); };
   }, [at]);
   if (!info) return null;
-  const open = (e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); if (at) return setAt(null); const r = btn.current!.getBoundingClientRect(); const up = r.top > window.innerHeight * 0.55; setAt({ x: Math.min(window.innerWidth - 150, Math.max(150, r.left + r.width / 2)), y: up ? r.top - 8 : r.bottom + 8, up }); };
+  // R12 (owner): opens on hover and on tap, and always lands where it can be read: below when there is room, above
+  // otherwise, never off the side of the screen
+  const show = () => { const r = btn.current!.getBoundingClientRect(), half = Math.min(150, (window.innerWidth - 24) / 2), below = window.innerHeight - r.bottom, up = below < 250 && r.top > below; setAt({ x: Math.min(window.innerWidth - 12 - half, Math.max(12 + half, r.left + r.width / 2)), y: up ? r.top - 8 : r.bottom + 8, up }); };
+  const open = (e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); if (at) return setAt(null); show(); };
+  const hoverT = React.useRef(0);
+  const enter = () => { window.clearTimeout(hoverT.current); if (!at && matchMedia('(hover: hover)').matches) show(); };
+  const leave = () => { window.clearTimeout(hoverT.current); hoverT.current = window.setTimeout(() => setAt(null), 260); };
   return (
     <>
-      <button ref={btn} type="button" className={'se-info' + (dark ? '' : ' light')} aria-label={T('About') + ' ' + T(name)} aria-expanded={!!at} onClick={open}>
+      <button ref={btn} type="button" className={'se-info' + (dark ? '' : ' light')} aria-label={T('About') + ' ' + T(name)} aria-expanded={!!at} onClick={open} onMouseEnter={enter} onMouseLeave={leave}>
         i
       </button>
       {at && typeof document !== 'undefined'
         ? createPortal(
-            <div className={'se-info-card' + (at.up ? ' up' : '')} role="dialog" style={{ left: at.x, top: at.y }}>
+            <div className={'se-info-card' + (at.up ? ' up' : '')} role="dialog" style={{ left: at.x, top: at.y }} onMouseEnter={() => window.clearTimeout(hoverT.current)} onMouseLeave={leave}>
               <b>{T(name)}</b>
               <p>{T(info.what)}</p>
               <dl>

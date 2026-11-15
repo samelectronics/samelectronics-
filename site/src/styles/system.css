@@ -100,3 +100,7 @@ button:hover .fp-dev-ic svg, .on .fp-dev-ic svg { transform: translateY(-4px) ro
 .se-hwb-r, .se-hwb-l { width: 2.4px !important; margin-inline: .6px; border-radius: 1.2px !important; background: linear-gradient(90deg, #8C9095, #D3D6D9 55%, #9A9EA3) !important; box-shadow: 0 0 0 .4px rgba(12, 13, 14, .35) !important; }
 .se-hwb-t { height: 2.4px !important; margin-top: .6px; border-radius: 1.2px !important; background: linear-gradient(180deg, #D3D6D9, #8C9095) !important; box-shadow: 0 0 0 .4px rgba(12, 13, 14, .35) !important; }
 .se-chamfer { opacity: .5; }
+/* R12 (owner: "a big circle"): the info dot is sized from the text it sits in, so it always fits inside its chip */
+.se-info { font: italic 700 .72em/1 Georgia, serif !important; width: 1.6em !important; height: 1.6em !important; margin-inline-start: .45em !important; flex: none; }
+.se-info-card { width: min(280px, calc(100vw - 24px)) !important; }
+.se-info-card { animation: seInfoIn .18s ease-out both; } @keyframes seInfoIn { from { opacity: 0; } to { opacity: 1; } }
