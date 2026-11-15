@@ -195,7 +195,7 @@ export default function Hero({ v }: { v: Vals }) {
             {/* owner (28 Oct, lag): the glow is a soft wide copy of each pulse, not a drop-shadow filter (a filter over the whole
                 board was re-rendered every frame and was most of the hero's cost) */}
             {/* R9 (owner): a quicker, brighter pulse with a soft glow that fades out (two wide faint copies), no hard outline */}
-            <g clipPath="url(#seDarkSide)" stroke="#F7C032" strokeWidth="16" strokeDasharray="46 954" strokeLinecap="round" opacity=".07">
+            <g clipPath="url(#seDarkSide)" stroke="#F7C032" strokeWidth="18" strokeDasharray="46 954" strokeLinecap="round" opacity=".14">
               {'\n          '}
               <path className="se-glowcopy" pathLength="1000" d="M36 78 V112 L22 126 V560 L36 574" style={{ animation: 'sePulse 2.08s linear infinite' }}></path>
               {'\n          '}
@@ -237,7 +237,7 @@ export default function Hero({ v }: { v: Vals }) {
               ></path>
               {'\n        '}
             </g>
-            <g clipPath="url(#seDarkSide)" stroke="#F7C032" strokeWidth="8" strokeDasharray="46 954" strokeLinecap="round" opacity=".18">
+            <g clipPath="url(#seDarkSide)" stroke="#F7C032" strokeWidth="9" strokeDasharray="46 954" strokeLinecap="round" opacity=".36">
               {'\n          '}
               <path className="se-glowcopy" pathLength="1000" d="M36 78 V112 L22 126 V560 L36 574" style={{ animation: 'sePulse 2.08s linear infinite' }}></path>
               {'\n          '}
