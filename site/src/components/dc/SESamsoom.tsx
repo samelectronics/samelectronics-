@@ -68,15 +68,30 @@ function render(v: Vals) {
                   <path d="M16 4 C 4 18, 20 30, 8 48" stroke="rgba(255,255,255,.32)" strokeWidth="1.5" transform="translate(-1.1 -0.6)" />
                 </svg>
                 {'\n          '}
-                <span
+                <svg
                   aria-hidden="true"
-                  style={{ position: 'absolute', left: '1px', top: '42px', width: '13px', height: '20px', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,.35))' }}
+                  viewBox="0 0 16 20"
+                  width="18.5"
+                  height="23"
+                  style={{ position: 'absolute', left: '-1px', top: '43px', overflow: 'visible', filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
                 >
-                  <span style={{ position: 'absolute', left: 0, top: 0, width: '13px', height: '9px', borderRadius: '4px 4px 2px 2px', background: 'linear-gradient(180deg,#FFD866,#F7C032 55%,#D9A21E)' }} />
-                  <span style={{ position: 'absolute', left: '2px', top: '8px', width: '9px', height: '11px', borderRadius: '2px 2px 3.5px 3.5px', background: 'linear-gradient(90deg,#9EA3A9,#F4F5F6 45%,#B9BDC2 70%,#8C9096)' }}>
-                    <span style={{ position: 'absolute', left: '2px', right: '2px', top: '4px', height: '3px', borderRadius: '2px', background: '#3A3C40' }} />
-                  </span>
-                </span>
+                  {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
+                  <defs>
+                    <linearGradient id="samHandL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
+                  </defs>
+                  <g>
+                    <rect x="3.2" y="0" width="7.6" height="3.2" rx="1.6" fill="#F7C032" />
+                    <rect x="3.6" y="0.5" width="6.8" height="1" rx=".5" fill="#FFE29A" opacity=".8" />
+                    <path d="M3 3.4h8c1.1 0 1.9.9 1.9 2v4.1c0 2.6-2 4.6-4.6 4.6H6.4C4 14.1 2.4 12.4 2.4 10V5.4c0-1.1.5-2 .6-2z" fill="url(#samHandL)" />
+                    <rect x="2.3" y="11.2" width="2.3" height="6.6" rx="1.15" fill="url(#samHandL)" />
+                    <rect x="4.9" y="12" width="2.3" height="7.6" rx="1.15" fill="url(#samHandL)" />
+                    <rect x="7.5" y="12" width="2.3" height="7.4" rx="1.15" fill="url(#samHandL)" />
+                    <rect x="10.1" y="11.4" width="2.2" height="6.4" rx="1.1" fill="url(#samHandL)" />
+                    <rect x="12.1" y="6.2" width="2.3" height="5.6" rx="1.15" transform="rotate(-28 13.2 6.2)" fill="url(#samHandL)" />
+                    <path d="M4 4.6c1.6-.5 4-.6 6.4-.2" stroke="rgba(255,255,255,.9)" strokeWidth=".7" strokeLinecap="round" fill="none" />
+                    <circle cx="7.2" cy="8.4" r="1" fill="#F7C032" opacity=".85" />
+                  </g>
+                </svg>
                 {'\n          '}
                 {v.tool ? (
                   <>
@@ -128,15 +143,30 @@ function render(v: Vals) {
                   <path d="M4 4 C 16 18, 0 30, 12 48" stroke="rgba(255,255,255,.32)" strokeWidth="1.5" transform="translate(-1.1 -0.6)" />
                 </svg>
                 {'\n          '}
-                <span
+                <svg
                   aria-hidden="true"
-                  style={{ position: 'absolute', left: '5px', top: '42px', width: '13px', height: '20px', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,.35))' }}
+                  viewBox="0 0 16 20"
+                  width="18.5"
+                  height="23"
+                  style={{ position: 'absolute', left: '5px', top: '43px', overflow: 'visible', filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
                 >
-                  <span style={{ position: 'absolute', left: 0, top: 0, width: '13px', height: '9px', borderRadius: '4px 4px 2px 2px', background: 'linear-gradient(180deg,#FFD866,#F7C032 55%,#D9A21E)' }} />
-                  <span style={{ position: 'absolute', left: '2px', top: '8px', width: '9px', height: '11px', borderRadius: '2px 2px 3.5px 3.5px', background: 'linear-gradient(90deg,#9EA3A9,#F4F5F6 45%,#B9BDC2 70%,#8C9096)' }}>
-                    <span style={{ position: 'absolute', left: '2px', right: '2px', top: '4px', height: '3px', borderRadius: '2px', background: '#3A3C40' }} />
-                  </span>
-                </span>
+                  {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
+                  <defs>
+                    <linearGradient id="samHandR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
+                  </defs>
+                  <g transform="translate(16 0) scale(-1 1)">
+                    <rect x="3.2" y="0" width="7.6" height="3.2" rx="1.6" fill="#F7C032" />
+                    <rect x="3.6" y="0.5" width="6.8" height="1" rx=".5" fill="#FFE29A" opacity=".8" />
+                    <path d="M3 3.4h8c1.1 0 1.9.9 1.9 2v4.1c0 2.6-2 4.6-4.6 4.6H6.4C4 14.1 2.4 12.4 2.4 10V5.4c0-1.1.5-2 .6-2z" fill="url(#samHandR)" />
+                    <rect x="2.3" y="11.2" width="2.3" height="6.6" rx="1.15" fill="url(#samHandR)" />
+                    <rect x="4.9" y="12" width="2.3" height="7.6" rx="1.15" fill="url(#samHandR)" />
+                    <rect x="7.5" y="12" width="2.3" height="7.4" rx="1.15" fill="url(#samHandR)" />
+                    <rect x="10.1" y="11.4" width="2.2" height="6.4" rx="1.1" fill="url(#samHandR)" />
+                    <rect x="12.1" y="6.2" width="2.3" height="5.6" rx="1.15" transform="rotate(-28 13.2 6.2)" fill="url(#samHandR)" />
+                    <path d="M4 4.6c1.6-.5 4-.6 6.4-.2" stroke="rgba(255,255,255,.9)" strokeWidth=".7" strokeLinecap="round" fill="none" />
+                    <circle cx="7.2" cy="8.4" r="1" fill="#F7C032" opacity=".85" />
+                  </g>
+                </svg>
                 {'\n          '}
                 {v.hanky ? (
                   <>
