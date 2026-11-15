@@ -64,8 +64,8 @@ function render(v: Vals) {
                   fill="none"
                   strokeLinecap="round"
                 >
-                  <path d="M16 4 C 4 18, 20 30, 8 48" stroke="#2B2D31" strokeWidth="6.5" />
-                  <path d="M16 4 C 4 18, 20 30, 8 48" stroke="rgba(255,255,255,.32)" strokeWidth="1.5" transform="translate(-1.1 -0.6)" />
+                  <path d="M16 4 C 4 18, 20 30, 8 48" stroke="#141517" strokeWidth="7.2" /><path d="M16 4 C 4 18, 20 30, 8 48" stroke="#34373C" strokeWidth="5.6" /><path d="M16 4 C 4 18, 20 30, 8 48" stroke="rgba(255,255,255,.14)" strokeWidth="5.6" strokeDasharray="1.2 1.6" /><path d="M16 4 C 4 18, 20 30, 8 48" stroke="rgba(0,0,0,.35)" strokeWidth="2" strokeDasharray="1.2 1.6" strokeDashoffset="1.4" />
+                  <path d="M16 4 C 4 18, 20 30, 8 48" stroke="rgba(255,255,255,.4)" strokeWidth="1" transform="translate(-1.4 -0.6)" />
                 </svg>
                 {'\n          '}
                 <svg
@@ -81,16 +81,21 @@ function render(v: Vals) {
                     <linearGradient id="samHandL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
                   <g>
-                    {/* owner (15 Nov): no hand. The cable ends in a machined ferrule that fans out into a tiny circuit: three traces, gold pads, one glowing */}
-                    <rect x="9" y="0" width="6" height="5.2" rx="1.6" fill="url(#samHandF)" />
-                    <rect x="9.6" y=".6" width="4.8" height="1" rx=".5" fill="rgba(255,255,255,.75)" />
-                    <rect x="9" y="5" width="6" height="1.2" rx=".4" fill="#F7C032" />
-                    <path d="M12 6.2v4.4M12 8l-4.4 4.2v3.6M12 8l4.4 4.2v3.2" stroke="#2B2D31" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                    <path d="M12 6.2v4.4M12 8l-4.4 4.2v3.6M12 8l4.4 4.2v3.2" stroke="#E0A61E" strokeWidth=".8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                    <circle cx="7.6" cy="16.4" r="1.7" fill="#2B2D31" /><circle cx="7.6" cy="16.4" r="1.05" fill="#F7C032" />
-                    <circle cx="12" cy="11.4" r="1.7" fill="#2B2D31" /><circle cx="12" cy="11.4" r="1.05" fill="#F7C032" />
-                    <circle cx="16.4" cy="16" r="1.7" fill="#2B2D31" /><circle cx="16.4" cy="16" r="1.05" fill="#FFE29A" />
-                    <circle cx="16.4" cy="16" r="3" fill="#F7C032" opacity=".25"><animate attributeName="opacity" values=".08;.4;.08" dur="2.4s" repeatCount="indefinite" /></circle>
+                    {/* owner (15 Nov): the cable ends in a machined connector that gives off electricity: three smooth current arcs with light travelling along them */}
+                    <rect x="8.6" y="0" width="6.8" height="6" rx="1.8" fill="url(#samHandF)" />
+                    <rect x="9.3" y=".7" width="5.4" height="1.1" rx=".55" fill="rgba(255,255,255,.8)" />
+                    <rect x="8.6" y="5.6" width="6.8" height="1.4" rx=".5" fill="#F7C032" />
+                    <circle cx="12" cy="8.6" r="3.4" fill="#F7C032" opacity=".28" className="sam-zap-core" />
+                    <circle cx="12" cy="8.4" r="1.3" fill="#FFF4D1" />
+                    <g className="sam-zap" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 8.6c-1.4 2.2-3.6 3-4.4 6.2" stroke="#F7C032" strokeWidth="1" />
+                      <path d="M12 8.6c.2 2.6-.6 4.6.4 8" stroke="#F7C032" strokeWidth="1" />
+                      <path d="M12 8.6c1.4 2.2 3.6 3 4.4 6.2" stroke="#F7C032" strokeWidth="1" />
+                      <path d="M12 8.6c-1.4 2.2-3.6 3-4.4 6.2" stroke="#FFF4D1" strokeWidth=".9" pathLength="10" strokeDasharray="2.2 7.8" className="sam-zap-run" />
+                      <path d="M12 8.6c.2 2.6-.6 4.6.4 8" stroke="#FFF4D1" strokeWidth=".9" pathLength="10" strokeDasharray="2.2 7.8" className="sam-zap-run b" />
+                      <path d="M12 8.6c1.4 2.2 3.6 3 4.4 6.2" stroke="#FFF4D1" strokeWidth=".9" pathLength="10" strokeDasharray="2.2 7.8" className="sam-zap-run c" />
+                    </g>
+                    <circle cx="7.6" cy="14.8" r=".9" fill="#F7C032" /><circle cx="12.4" cy="16.6" r=".9" fill="#F7C032" /><circle cx="16.4" cy="14.8" r=".9" fill="#F7C032" />
                   </g>
                 </svg>
                 {'\n          '}
@@ -140,8 +145,8 @@ function render(v: Vals) {
                   fill="none"
                   strokeLinecap="round"
                 >
-                  <path d="M4 4 C 16 18, 0 30, 12 48" stroke="#2B2D31" strokeWidth="6.5" />
-                  <path d="M4 4 C 16 18, 0 30, 12 48" stroke="rgba(255,255,255,.32)" strokeWidth="1.5" transform="translate(-1.1 -0.6)" />
+                  <path d="M4 4 C 16 18, 0 30, 12 48" stroke="#141517" strokeWidth="7.2" /><path d="M4 4 C 16 18, 0 30, 12 48" stroke="#34373C" strokeWidth="5.6" /><path d="M4 4 C 16 18, 0 30, 12 48" stroke="rgba(255,255,255,.14)" strokeWidth="5.6" strokeDasharray="1.2 1.6" /><path d="M4 4 C 16 18, 0 30, 12 48" stroke="rgba(0,0,0,.35)" strokeWidth="2" strokeDasharray="1.2 1.6" strokeDashoffset="1.4" />
+                  <path d="M4 4 C 16 18, 0 30, 12 48" stroke="rgba(255,255,255,.4)" strokeWidth="1" transform="translate(-1.4 -0.6)" />
                 </svg>
                 {'\n          '}
                 <svg
@@ -157,16 +162,21 @@ function render(v: Vals) {
                     <linearGradient id="samHandR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
                   <g transform="translate(24 0) scale(-1 1)">
-                    {/* owner (15 Nov): no hand. The cable ends in a machined ferrule that fans out into a tiny circuit: three traces, gold pads, one glowing */}
-                    <rect x="9" y="0" width="6" height="5.2" rx="1.6" fill="url(#samHandF)" />
-                    <rect x="9.6" y=".6" width="4.8" height="1" rx=".5" fill="rgba(255,255,255,.75)" />
-                    <rect x="9" y="5" width="6" height="1.2" rx=".4" fill="#F7C032" />
-                    <path d="M12 6.2v4.4M12 8l-4.4 4.2v3.6M12 8l4.4 4.2v3.2" stroke="#2B2D31" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                    <path d="M12 6.2v4.4M12 8l-4.4 4.2v3.6M12 8l4.4 4.2v3.2" stroke="#E0A61E" strokeWidth=".8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                    <circle cx="7.6" cy="16.4" r="1.7" fill="#2B2D31" /><circle cx="7.6" cy="16.4" r="1.05" fill="#F7C032" />
-                    <circle cx="12" cy="11.4" r="1.7" fill="#2B2D31" /><circle cx="12" cy="11.4" r="1.05" fill="#F7C032" />
-                    <circle cx="16.4" cy="16" r="1.7" fill="#2B2D31" /><circle cx="16.4" cy="16" r="1.05" fill="#FFE29A" />
-                    <circle cx="16.4" cy="16" r="3" fill="#F7C032" opacity=".25"><animate attributeName="opacity" values=".08;.4;.08" dur="2.4s" repeatCount="indefinite" /></circle>
+                    {/* owner (15 Nov): the cable ends in a machined connector that gives off electricity: three smooth current arcs with light travelling along them */}
+                    <rect x="8.6" y="0" width="6.8" height="6" rx="1.8" fill="url(#samHandF)" />
+                    <rect x="9.3" y=".7" width="5.4" height="1.1" rx=".55" fill="rgba(255,255,255,.8)" />
+                    <rect x="8.6" y="5.6" width="6.8" height="1.4" rx=".5" fill="#F7C032" />
+                    <circle cx="12" cy="8.6" r="3.4" fill="#F7C032" opacity=".28" className="sam-zap-core" />
+                    <circle cx="12" cy="8.4" r="1.3" fill="#FFF4D1" />
+                    <g className="sam-zap" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 8.6c-1.4 2.2-3.6 3-4.4 6.2" stroke="#F7C032" strokeWidth="1" />
+                      <path d="M12 8.6c.2 2.6-.6 4.6.4 8" stroke="#F7C032" strokeWidth="1" />
+                      <path d="M12 8.6c1.4 2.2 3.6 3 4.4 6.2" stroke="#F7C032" strokeWidth="1" />
+                      <path d="M12 8.6c-1.4 2.2-3.6 3-4.4 6.2" stroke="#FFF4D1" strokeWidth=".9" pathLength="10" strokeDasharray="2.2 7.8" className="sam-zap-run" />
+                      <path d="M12 8.6c.2 2.6-.6 4.6.4 8" stroke="#FFF4D1" strokeWidth=".9" pathLength="10" strokeDasharray="2.2 7.8" className="sam-zap-run b" />
+                      <path d="M12 8.6c1.4 2.2 3.6 3 4.4 6.2" stroke="#FFF4D1" strokeWidth=".9" pathLength="10" strokeDasharray="2.2 7.8" className="sam-zap-run c" />
+                    </g>
+                    <circle cx="7.6" cy="14.8" r=".9" fill="#F7C032" /><circle cx="12.4" cy="16.6" r=".9" fill="#F7C032" /><circle cx="16.4" cy="14.8" r=".9" fill="#F7C032" />
                   </g>
                 </svg>
                 {'\n          '}
