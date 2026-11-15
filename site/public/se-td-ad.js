@@ -167,7 +167,12 @@
     const inkOf = (th) => (th === 'dark' ? '#FFFFFF' : G), accOf = (th) => (th === 'dark' ? Y : th === 'yel' ? '#FFFFFF' : Y);
     const flash = (l, c = '#FFFFFF') => { if (l < 0.07) { x.globalAlpha = (1 - l / 0.07) * 0.8; x.fillStyle = c; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); x.globalAlpha = 1; } };
     const shake = (l, amt) => { const k = l < 0.22 ? (1 - l / 0.22) * amt * u : 0; return [(Math.random() * 2 - 1) * k, (Math.random() * 2 - 1) * k]; };
-    const streaks = (l, th, ang) => { x.save(); x.translate(W / 2, H / 2); x.rotate(ang); for (let k2 = 0; k2 < 7; k2++) { const off = (((l * 1.8 + k2 * 0.17) % 1) - 0.5) * H * 2; x.fillStyle = (th === 'yel' ? 'rgba(38,40,43,' : 'rgba(247,192,50,') + (0.06 + 0.04 * (k2 % 2)) + ')'; x.fillRect(-W, off, W * 2, (2 + (k2 % 3) * 2.5) * u); } x.restore(); };
+    // owner (15 Nov): the diagonal light reads as real light: soft feathered beams that blend (screen/multiply), not flat bars
+    const streaks = (l, th, ang) => { x.save(); x.translate(W / 2, H / 2); x.rotate(ang); x.globalCompositeOperation = th === 'light' ? 'multiply' : 'screen';
+      for (let k2 = 0; k2 < 5; k2++) { const off = (((l * 1.1 + k2 * 0.23) % 1) - 0.5) * H * 2.2, th2 = (10 + (k2 % 3) * 14) * u * 0.6, g = x.createLinearGradient(0, off - th2, 0, off + th2);
+        const c = th === 'light' ? 'rgba(247,192,50,' : th === 'yel' ? 'rgba(255,248,225,' : 'rgba(255,214,120,', a = th === 'light' ? 0.22 : th === 'yel' ? 0.28 : 0.13 + 0.05 * (k2 % 2);
+        g.addColorStop(0, c + '0)'); g.addColorStop(0.5, c + a + ')'); g.addColorStop(1, c + '0)'); x.fillStyle = g; x.fillRect(-W * 1.2, off - th2, W * 2.4, th2 * 2); }
+      x.restore(); };
     const big = (str, size, col, X, Yy, al = 'center', stroke = false) => { x.font = '800 ' + size + 'px ' + F.sg; x.textAlign = al; x.textBaseline = 'middle'; if (stroke) { x.lineWidth = 0.45 * u; x.strokeStyle = col; x.strokeText(str, X, Yy); } else { x.fillStyle = col; x.fillText(str, X, Yy); } x.textBaseline = 'alphabetic'; };
     function slam(word, l, th, mode) {
       fill(th); streaks(l, th, mode === 'side' ? 0 : -0.5); const w2 = T(word), ink = inkOf(th), sz = Math.min(30 * u, (W * 1.5) / Math.max(3, w2.length));
@@ -198,9 +203,12 @@
       x.save(); x.translate(W / 2 + dx + sx, H * 0.47 + dy + sy); x.rotate(rot); x.scale(sc * push * (mode === 'flip' ? Math.max(0.02, Math.abs(Math.cos((1 - e5) * Math.PI))) : 1), sc * push);
       x.globalAlpha = a; if (ok(im)) x.drawImage(im, -S / 2, -S / 2, S, S); x.restore(); if (mode === 'flip') x.restore(); x.globalAlpha = 1;
       // landing boom
-      const land = l - 0.38; if (land > 0 && land < 0.45) { const b = land / 0.45; x.save(); x.globalAlpha = (1 - b) * 0.85; x.strokeStyle = acc; x.lineWidth = (1 - b) * 2.4 * u; x.beginPath(); x.arc(W / 2, H * 0.47, W * (0.18 + b * 0.6), 0, 7); x.stroke(); for (let r2 = 0; r2 < 14; r2++) { const a2 = r2 * Math.PI / 7 + i, r0 = W * (0.26 + b * 0.32); x.beginPath(); x.moveTo(W / 2 + Math.cos(a2) * r0, H * 0.47 + Math.sin(a2) * r0); x.lineTo(W / 2 + Math.cos(a2) * (r0 + W * 0.1 * (1 - b)), H * 0.47 + Math.sin(a2) * (r0 + W * 0.1 * (1 - b))); x.stroke(); } x.restore(); }
+      // landing: a soft studio light bloom behind the part and one thin shockwave (owner: no sun-like rays)
+      const land = l - 0.38; if (land > 0 && land < 0.6) { const b = land / 0.6, r0 = W * (0.2 + b * 0.55); x.save(); x.globalCompositeOperation = th === 'light' ? 'multiply' : 'screen';
+        const bg = x.createRadialGradient(W / 2, H * 0.47, 0, W / 2, H * 0.47, W * 0.7); bg.addColorStop(0, (th === 'light' ? 'rgba(247,192,50,' : 'rgba(255,226,150,') + (1 - b) * 0.45 + ')'); bg.addColorStop(1, 'rgba(255,226,150,0)'); x.fillStyle = bg; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]);
+        x.globalCompositeOperation = 'source-over'; x.globalAlpha = (1 - b) * 0.6; x.strokeStyle = acc; x.lineWidth = (1 - b) * 0.9 * u; x.beginPath(); x.arc(W / 2, H * 0.47, r0, 0, 7); x.stroke(); x.restore(); }
       // label slams in from the top, the counter rolls at the bottom
-      const lk = back(K(l, 0.3, 0.3)); x.save(); x.translate(W / 2, lerp(-10 * u, 17 * u, lk)); big(T(label), Math.min(11 * u, (W * 1.6) / Math.max(4, T(label).length)), ink, 0, 0); x.restore();
+      const lk0 = K(l, 0.3, 0.32), lk = eo5(lk0); if (lk0 > 0) { x.save(); x.globalAlpha = cl(lk0 * 2.5); x.translate(W / 2, lerp(9 * u, 17 * u, lk)); big(T(label), Math.min(11 * u, (W * 1.6) / Math.max(4, T(label).length)), ink, 0, 0); x.restore(); x.globalAlpha = 1; }
       const ck = eo(K(l, 0.45, 0.45)), num = Math.round(parseInt(n.replace(/,/g, ''), 10) * ck).toLocaleString('en-US');
       x.globalAlpha = cl(K(l, 0.45, 0.15) * 3); big(num, 12 * u, acc, W / 2, H * 0.82); x.font = '600 ' + 3.3 * u + 'px ' + F.jb; x.fillStyle = ink; x.textAlign = 'center'; x.fillText(T('IN STOCK IN DEIRA'), W / 2, H * 0.89); x.globalAlpha = 1;
       flash(l);
