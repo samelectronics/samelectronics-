@@ -159,7 +159,7 @@ export default function BootIntro({ v }: { v: Vals }) {
         <div className="se-boot-line" style={{ marginTop: '32px', height: '48px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           <span key={ready ? 'ready' : line} className={'se-boot-txt' + (ready ? ' ready' : '')} style={{ display: 'inline-flex', alignItems: 'center', gap: '10px', font: (ar ? "500 15px 'IBM Plex Sans Arabic'" : "500 15px Inter") + ', sans-serif', color: 'rgba(255,255,255,.8)', whiteSpace: 'nowrap' }}>
             <span className="se-boot-ic" style={{ width: ICON + 'px', height: ICON + 'px', display: 'grid', placeItems: 'center', flex: 'none' }}>
-              {ready ? <svg viewBox="0 0 22 22" width={ICON} height={ICON} aria-hidden="true"><circle cx="11" cy="11" r="10" fill="#F7C032" /><path d="M6.5 11.3l3 3 6-6.3" fill="none" stroke="#26282B" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" className="se-boot-tick" /></svg> : last ? <SESamsoom mood={mood} size={ICON} still={mood !== 'wave'} /> : <Icon k={picks[Math.min(line, 3)].icon} />}
+              {ready ? null : last ? <SESamsoom mood={mood} size={ICON} still={mood !== 'wave'} /> : <Icon k={picks[Math.min(line, 3)].icon} />}
             </span>
             {(msg[hl] || msg.en) + (ready ? '' : '…')}
           </span>

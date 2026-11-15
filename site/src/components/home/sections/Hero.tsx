@@ -1077,7 +1077,7 @@ export default function Hero({ v }: { v: Vals }) {
                             {'\n                    '}
                             <span
                               style={cssToObj(
-                                `position:absolute;left:${s(v.a?.sL)}px;top:${s(v.a?.sT)}px;width:${s(v.a?.sW)}px;height:12px;border-radius:50%;background:radial-gradient(closest-side,${s(v.a?.shc)},rgba(0,0,0,0));filter:blur(2.5px);animation:${s(v.a?.aFade)};translate:0 ${s(v.a?.dy)}px`,
+                                `position:absolute;left:${s(v.a?.sL)}px;top:${s(v.a?.sT)}px;width:${s(v.a?.sW)}px;height:18px;margin-top:-3px;border-radius:50%;background:radial-gradient(closest-side,${s(v.a?.shc)},rgba(0,0,0,0));filter:blur(6px);opacity:.9;animation:${s(v.a?.aFade)};translate:0 ${s(v.a?.dy)}px`,
                               )}
                             ></span>
                             {'\n                    '}
@@ -1103,13 +1103,13 @@ export default function Hero({ v }: { v: Vals }) {
                                           src={v.a?.img}
                                           alt=""
                                           style={cssToObj(
-                                            `position:absolute;inset:0;width:100%;height:100%;display:block;filter:${s(v.a?.shd)}`,
+                                            `position:absolute;inset:0;width:100%;height:100%;display:block;filter:none` /* R12 (owner: two shadows): one shadow only, the soft floor shadow below */,
                                           )}
                                         />
                                         {'\n                              '}
                                         {v.a?.fix ? (
                                           <>
-                                            <img className="se-rep-fix" src={v.a.fix} alt="" style={{ animation: v.a.aFix, filter: v.a.shd }} />
+                                            <img className="se-rep-fix" src={v.a.fix} alt="" style={{ animation: v.a.aFix }} />
                                             <span className="se-rep-beam" style={{ animation: v.a.aBeam }} />
                                           </>
                                         ) : null /* owner (27 Oct): cracked → yellow repair sweep → repaired phone boots */}

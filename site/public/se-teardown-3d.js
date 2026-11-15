@@ -148,7 +148,7 @@ export async function mount(host, state) {
   const islShT = tex(256, 512, (x, w2, h2) => { x.shadowColor = 'rgba(0,0,0,.9)'; x.shadowBlur = 26; x.fillStyle = 'rgba(0,0,0,.9)'; x.beginPath(); x.roundRect(30, 30, w2 - 60, h2 - 60, 60); x.fill(); });
   const std = (o) => new THREE.MeshStandardMaterial(o), phy = (o) => new THREE.MeshPhysicalMaterial(o);
   const M = {
-    alu: phy({ color: 0xb4b8bd, metalness: 1, roughness: 0.3, clearcoat: 0.7, clearcoatRoughness: 0.12, envMapIntensity: 2.3 }), /* R12 (owner: edges looked fake): brushed natural titanium that catches the studio light */
+    alu: phy({ color: 0x8f949a, metalness: 1, roughness: 0.16, clearcoat: 1, clearcoatRoughness: 0.06, envMapIntensity: 2.8 }), /* R12 (owner: edges looked fake): brushed natural titanium that catches the studio light */
     mid: std({ map: midTex, metalness: 0.85, roughness: 0.42 }),
     aluDark: std({ color: 0x55595e, metalness: 1, roughness: 0.42 }),
     antenna: std({ color: 0x2a2b2e, roughness: 0.6 }),
@@ -202,7 +202,7 @@ export async function mount(host, state) {
     g.add(mesh(extr(Sh(W - 0.012, H - 0.012, R - 0.006), 0.016, 0.006), [M.glass, M.glassEdge]));
     const f = mesh(flat(Sh(W - 0.01, H - 0.01, R - 0.005)), M.frit, 0, 0, -0.0095); f.castShadow = false; f.renderOrder = 2; g.add(f);
     g.add(rb(0.3, 0.02, 0.004, 0.009, M.black, 0, H / 2 - 0.04, 0.0105));
-    const st = mesh(flat(Sh(W - 0.03, H - 0.03, R - 0.015)), phy({ color: 0x000000, roughness: 0.04, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.03, envMapIntensity: 1.6, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }), 0, 0, 0.0092); st.castShadow = false; st.renderOrder = 3; g.add(st); }
+    const st = mesh(flat(Sh(W - 0.03, H - 0.03, R - 0.015)), phy({ color: 0x000000, roughness: 0.0, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.0, envMapIntensity: 3.4, /* R12 (owner: screen not glass): a real reflective cover glass over the screen */ transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }), 0, 0, 0.0092); st.castShadow = false; st.renderOrder = 3; g.add(st); }
   // 0 · Screen assembly (b) OLED panel with live screen, punch-hole, flex tail folded behind
   { const g = SG[1];
     g.add(mesh(extr(Sh(W - 0.02, H - 0.02, R - 0.01), 0.018), [M.screen, M.black]));

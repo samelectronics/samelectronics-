@@ -55,6 +55,16 @@
     function scene(i, lt) { // one product scene, lt = its local time (0 = its transition starts)
       const q = SCN[i], th = TH[q.th], ar = AR(), al = ar ? 'right' : 'left', X0 = ar ? W - M : M, dir = ar ? -1 : 1;
       bg(q.th);
+      // R12 (owner: "energetic, different styles, zoom in and out, text from here and there, boom effects"):
+      // speed stripes sweeping through, a giant outline word sliding across, a camera shake + flash + burst when the
+      // product lands, and a punch zoom-out at the end of every scene
+      const acc = q.th === 'yel' ? 'rgba(38,40,43,' : 'rgba(247,192,50,';
+      x.save(); x.beginPath(); x.rect(FULL[0], FULL[1], FULL[2], FULL[3]); x.clip();
+      { const sp = (lt * 0.9 + i * 0.37) % 1; x.save(); x.translate(W / 2, H / 2); x.rotate(-0.42); for (let k2 = 0; k2 < 5; k2++) { const off = ((sp + k2 * 0.21) % 1) * H * 2.2 - H * 1.1; x.fillStyle = acc + (0.05 + 0.03 * (k2 % 2)) + ')'; x.fillRect(-W, off, W * 2, (3 + k2 * 1.5) * u); } x.restore(); }
+      { const word = T(q.t[0]).toUpperCase(), gx = lerp(W * 1.1, -W * 1.6, K(lt, 0, SD)); x.save(); x.globalAlpha = 0.09; x.translate(gx, H * 0.62); x.rotate(-0.12); x.font = '800 ' + 34 * u + 'px ' + F.sg; x.lineWidth = 0.5 * u; x.strokeStyle = q.th === 'yel' ? G : Y; x.textAlign = 'left'; x.strokeText(word, 0, 0); x.restore(); }
+      x.restore();
+      const land = lt - 0.62, shake = land > 0 && land < 0.28 ? (1 - land / 0.28) * 1.6 * u : 0, zEnd = 1 + 0.07 * eio(K(lt, SD - 0.35, 0.35));
+      x.save(); x.translate(W / 2 + (shake ? (Math.random() * 2 - 1) * shake : 0), H / 2 + (shake ? (Math.random() * 2 - 1) * shake : 0)); x.scale(zEnd, zEnd); x.translate(-W / 2, -H / 2);
       // a soft glow behind the product
       { const g = x.createRadialGradient(W / 2, H * 0.47, 0, W / 2, H * 0.47, W * 0.55); g.addColorStop(0, th.glow); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); }
       dashes(i, q.th, cl(lt / SD));
@@ -67,11 +77,16 @@
       // the product: drops in with a small overshoot, then floats; a slow push-in for the rest of the scene
       { const im = imgs[i], k = K(lt, 0.3, 0.55), e = back(k), fl = Math.sin((lt - 0.85) * 2.4) * 0.6 * u * cl(lt - 0.85), push = 1 + 0.035 * K(lt, 0.6, SD), S = W * 0.98 * push, cy = H * 0.5 + (1 - e) * 12 * u + fl;
         if (ok(im) && k > 0) { x.globalAlpha = cl(k * 2); x.drawImage(im, W / 2 - S / 2, cy - S / 2, S, S); x.globalAlpha = 1; } }
+      // BOOM: when the product lands, a flash ring and burst rays
+      if (land > 0 && land < 0.5) { const b = land / 0.5, cx = W / 2, cy = H * 0.5; x.save(); x.globalAlpha = (1 - b) * 0.9; x.strokeStyle = q.th === 'yel' ? '#FFFFFF' : Y; x.lineWidth = (1 - b) * 2.2 * u; x.beginPath(); x.arc(cx, cy, W * (0.15 + b * 0.55), 0, 7); x.stroke();
+        for (let r2 = 0; r2 < 12; r2++) { const a2 = r2 * Math.PI / 6 + i, r0 = W * (0.22 + b * 0.3), r1 = r0 + W * 0.12 * (1 - b); x.beginPath(); x.moveTo(cx + Math.cos(a2) * r0, cy + Math.sin(a2) * r0); x.lineTo(cx + Math.cos(a2) * r1, cy + Math.sin(a2) * r1); x.stroke(); }
+        if (land < 0.08) { x.globalAlpha = (1 - land / 0.08) * 0.5; x.fillStyle = '#FFFFFF'; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); } x.restore(); }
       // the items, each with a stock dot (green = in stock, grey = on request), ticking in
       q.it.forEach(([name, st], j) => { const k = eo(K(lt, 0.62 + j * 0.09, 0.3)), y = H * 0.745 + j * 5.6 * u; if (k <= 0) return; x.globalAlpha = k; const xo = X0 - dir * (1 - k) * 5 * u;
         x.fillStyle = st ? '#2BB673' : (q.th === 'dark' ? 'rgba(255,255,255,.35)' : 'rgba(38,40,43,.3)'); x.beginPath(); x.arc(ar ? xo - 0.9 * u : xo + 0.9 * u, y - 1.2 * u, 0.9 * u, 0, 7); x.fill();
         text(T(name), ar ? xo - 3 * u : xo + 3 * u, y, '500 ' + 3.7 * u + 'px ' + F.in, th.sub, al);
         text(st ? (ar ? T('in stock') + ' ' + st : st + ' in stock') : T('On request'), ar ? M : W - M, y, '600 ' + 3.1 * u + 'px ' + F.jb, st ? (q.th === 'yel' ? '#1E7A4C' : '#2BB673') : th.kick, ar ? 'left' : 'right'); x.globalAlpha = 1; });
+      x.restore();
       // the Shop pill (full width, like the hero ads)
       { const k = eo(K(lt, 0.85, 0.35)), y = H - 21 * u + (1 - k) * 4 * u; x.globalAlpha = k; x.fillStyle = th.cta; rr(x, M, y, W - 2 * M, 9.5 * u, 4.75 * u); x.fill();
         text(T(q.cta), ar ? W - M - 5 * u : M + 5 * u, y + 6.1 * u, '600 ' + 4 * u + 'px ' + F.in, th.ctaInk, al); text(ar ? '←' : '→', ar ? M + 5 * u : W - M - 5 * u, y + 6.2 * u, '600 ' + 4.4 * u + 'px ' + F.in, th.ctaInk, ar ? 'left' : 'right'); x.globalAlpha = 1; }
