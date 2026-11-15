@@ -16,3 +16,18 @@
 #deals .dl-spot, #deals .dl-card, #deals .dl-ship, #deals .dl-pre { color: #FFFFFF !important; }
 #deals .dl-spot h3, #deals .dl-card h4, #deals .dl-ship h3, #deals .dl-ship b, #deals .dl-pre b, #deals .dl-pre h3, #deals .dl-ship-h b, #deals .dl-ship-h h3 { color: #FFFFFF !important; }
 #deals .dl-ship p, #deals .dl-pre p, #deals .dl-ship-h > div > :not(.dl-k) { color: #D5D7DA; }
+
+/* Wholesale → GREY */
+#wholesale.wf, .wf { background: radial-gradient(50% 50% at 80% 10%, rgba(247,192,50,.10), rgba(247,192,50,0) 70%), var(--sq-grey) !important; color: #FFFFFF !important; }
+.wf .wf-h > span:first-child > span { color: #FFFFFF !important; }
+.wf .wf-h > span:nth-child(2) > span { color: #F7C032 !important; }
+.wf .wf-eb { color: #F7C032 !important; }
+.wf .wf-tr, .wf .wf-tr p, .wf .wf-top p { color: #C9CCD0 !important; }
+.wf .wf-stamp { color: #F7C032 !important; border-color: #F7C032 !important; box-shadow: inset 0 0 0 3px #2A2C2F, inset 0 0 0 6px rgba(247,192,50,.9) !important; }
+.wf .wf-btn.dark { background: #F7C032 !important; color: #26282B !important; } .wf .wf-btn.dark svg { color: #26282B !important; }
+.wf .wf-btn.line { color: #FFFFFF !important; box-shadow: inset 0 0 0 2px rgba(255,255,255,.7) !important; }
+.wf .wf-nums { border-color: rgba(255,255,255,.14) !important; }
+.wf .wf-nums > *, .wf .wf-nums b, .wf .wf-nums strong { color: #FFFFFF !important; border-color: rgba(255,255,255,.12) !important; }
+.wf .wf-nums small, .wf .wf-nums span { color: #A7ABB1 !important; }
+.wf .wf-nums .wf-k, .wf .wf-k { color: #F7C032 !important; }
+.wf .wf-sd { color: #FFFFFF; }
