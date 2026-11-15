@@ -239,3 +239,13 @@
 @media (max-width: 720px) {
   #top [data-hero-scene] svg { -webkit-mask-image: linear-gradient(90deg, #000 0, #000 calc(200vw - 120px), transparent calc(200vw - 10px)); mask-image: linear-gradient(90deg, #000 0, #000 calc(200vw - 120px), transparent calc(200vw - 10px)); }
 }
+/* R13d · phone bar: logo + name + slogan, search, cart, menu (notifications live in the menu's quick row on phones) */
+.smd-bell { display: none; }
+@media (max-width: 760px) {
+  html body header .se-nav-name { display: flex !important; gap: 3px !important; }
+  html body header .se-nav-name > span:first-child { font-size: 13px !important; letter-spacing: .1em !important; }
+  html body header .se-nav-name > span:last-child { font-size: 7.5px !important; letter-spacing: .18em !important; }
+  html body header .se-nav-right .nb { display: none !important; }
+  .smd-bell { display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.04); }
+  html body header a:first-child { gap: 10px !important; }
+}

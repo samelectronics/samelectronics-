@@ -3,6 +3,7 @@
 'use client';
 import React from 'react';
 import LangMenu from '../LangMenu';
+import NoteBell from '../../site/NoteBell';
 import { useScrollLock, stopWheel } from '@/lib/scrollLock';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 
@@ -80,6 +81,7 @@ export default function SystemMapDrawer({ v }: { v: Vals }) {
               {/* R13 (owner: phone bar = essentials only): on phones and tablets, language, help and My Bench live here */}
               <div className="smd-quick">
                 <LangMenu dark />
+                <span className="smd-bell"><NoteBell /></span>
                 <button type="button" className="smd-chip" onClick={() => { v.drawer?.close?.(); window.dispatchEvent(new CustomEvent('se:help')); }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9" /><path d="M9.6 9.2a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.6M12 17h.01" /></svg>{t('Help')}</button>
                 <a className="smd-chip" href="/account"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4" /><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" /></svg>{t('My Bench')}</a>
               </div>
