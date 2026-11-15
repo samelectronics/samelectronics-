@@ -548,7 +548,7 @@ export async function mount(host, state) {
   const shd = document.createElement('canvas'); shd.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none'; host.insertBefore(shd, canvas); const sx = shd.getContext('2d');
   const mkS = (t) => document.createElementNS(NS, t), cPath = mkS('path'), cHalo = mkS('circle'), cDot = mkS('circle');
   cPath.setAttribute('fill', 'none'); cPath.setAttribute('stroke', '#F7C032'); cPath.setAttribute('stroke-width', '1.5'); cPath.setAttribute('stroke-linejoin', 'round'); cPath.style.filter = 'drop-shadow(0 0 4px rgba(247,192,50,.7))';
-  cHalo.setAttribute('r', '9'); cHalo.setAttribute('fill', 'rgba(247,192,50,.22)'); cDot.setAttribute('r', '4'); cDot.setAttribute('fill', '#F7C032'); cDot.setAttribute('stroke', '#1A1B1D'); cDot.setAttribute('stroke-width', '1.5');
+  cHalo.setAttribute('r', '9'); cHalo.setAttribute('fill', 'rgba(247,192,50,.22)'); cDot.setAttribute('r', '4'); cDot.setAttribute('fill', '#F7C032'); cDot.setAttribute('stroke', 'none'); cDot.style.filter = 'drop-shadow(0 0 5px rgba(247,192,50,.9))'; /* R12 (owner): no black outline, a clean lit dot */
   [cPath, cHalo, cDot].forEach((n) => { n.style.opacity = 0; svg.appendChild(n); }); cPath.setAttribute('pathLength', '1'); cPath.setAttribute('stroke-dasharray', '1 1');
   // Urgent: no sound effects anywhere (the lock click and its audio context are gone)
 
@@ -644,7 +644,7 @@ export async function mount(host, state) {
     const hvS = finW > 0.5 && stK >= 1 && state.hover != null ? state.hover : -1, kE = 1 - Math.exp(-dt * 9), kY = 1 - Math.exp(-dt * 10);
     for (let s = 0; s < 8; s++) { hovT[s] = s === hvS ? Math.min(1, hovT[s] + dt / 0.5) : Math.max(0, hovT[s] - dt / 0.4); hovK[s] = hovT[s]; ghK[s] = 1; }
     let hvM = 0, hvI = -1; hovT.forEach((k, s2) => { if (k > hvM) { hvM = k; hvI = s2; } }); const hvSep = hvI >= 1 ? eio(cl(hvM / 0.8)) : 0; yawH = 0; // the phone never tilts or turns on hover (owner, 13 Oct)
-    const offs = sepUp.map((k, s) => (7 - s) * GAP * k + (7 - s) * 18 * upp * hvSep);
+    const offs = sepUp.map((k, s) => (7 - s) * GAP * k + (7 - s) * 18 * upp * hvSep + (s < 7 ? k * 0.022 * Math.sin(t * 1.05 + s * 0.9) : 0)); /* R12: each layer floats a hair up and down on its own rhythm */
     L[6].visible = sepUp[6] > 0.004;
     if (!mob) { mx += (tmx - mx) * 0.06; my += (tmy - my) * 0.06; }
     const lifting = p >= T.l0 && p < T.re0;
@@ -655,7 +655,7 @@ export async function mount(host, state) {
     zMul += ((stepOn && tt > 0.15 ? 0.975 : 1) - zMul) * 0.025;
     const oT2 = state.oT == null ? 9 : state.oT, oVis = cl((oT2 - 1.48) / 0.04), oLit = sm((oT2 - 0.3) / 1.4), oRim = 0, oTr = 1, oo = oVis >= 1 && oLit >= 1 ? 1 : 0, roK = oT2 < 3.4 ? 1 - Math.pow(1 - cl((oT2 - 1.5) / 1.2), 3) : 1, ovK = 0, opR = oLit; oLitG = oLit; oRimG = oRim * (1 - oLit); oTrG = oTr;
     const tA = state.tossAt, tossOn = tA != null, backK = tossOn ? 1 - eio(tA / 1.0) : (state.faceBack || p < 0.178 ? 1 : 0), tossH = !tossOn ? 0 : tA < 0.45 ? 1 - Math.pow(1 - tA / 0.45, 3) : tA < 1.15 ? 1 : tA < 1.95 ? 1 - eio((tA - 1.15) / 0.8) : tA < 2.15 ? -(4 / Math.max(1, (LY.floorY - LY.top) * 0.12)) * Math.sin(PI * cl((tA - 1.95) / 0.2)) : 0, turn = PI * backK + (1 - roK) * 0.35 + PI * 2 * stand;
-    const yaw = turn + showW * 0.26 * Math.sin(t * 0.55)  + orbS * layK + yawH;
+    const yaw = turn + showW * 0.26 * Math.sin(t * 0.55) + layK * 0.34 * Math.sin(t * 0.35) + yawH; /* R12 (owner): while the layers are apart the stack keeps turning slowly back and forth, never stopping at a side */
     qS.setFromAxisAngle(Yax, yaw + mx * 0.052); qP.setFromAxisAngle(Xax, my * 0.052); phone.quaternion.copy(qP).multiply(qS).multiply(qA);
     pose(offs);
     // hover: the ONE real phone opens (no clones): screen lifts off the front and slides right 45% W; any other layer slides right 40% W out of the separated stack

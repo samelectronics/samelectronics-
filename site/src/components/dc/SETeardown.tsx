@@ -169,7 +169,7 @@ function render(v: Vals) {
                                 >
                                   <span
                                     style={cssToObj(
-                                      `display:inline-block;color:transparent;background-image:linear-gradient(100deg,#FFFFFF 0%,#FFFFFF 41%,#F7C032 46%,#F7C032 50%,#F7C032 54%,#FFFFFF 59%,#FFFFFF 100%) /* R6 §05 B: a real yellow scanner light, leaving the letters white */;background-size:300% 100%;background-position:${s(v.w?.bp)}% 0;-webkit-background-clip:text;background-clip:text;opacity:${s(v.w?.o)};filter:${s(v.w?.f)};transform-origin:50% 100%;transform:translateY(${s(v.w?.y)}px) scale(${s(v.w?.sc)});will-change:transform,filter`,
+                                      `display:inline-block;color:transparent;background-image:linear-gradient(100deg,#FFFFFF 0%,#FFFFFF 34%,#FFEDB8 43%,#F7C032 50%,#FFEDB8 57%,#FFFFFF 66%,#FFFFFF 100%) /* R6 §05 B: a real yellow scanner light, leaving the letters white */;background-size:300% 100%;background-position:${s(v.w?.bp)}% 0;-webkit-background-clip:text;background-clip:text;opacity:${s(v.w?.o)};filter:${s(v.w?.f)};transform-origin:50% 100%;transform:translateY(${s(v.w?.y)}px) scale(${s(v.w?.sc)});will-change:transform,filter`,
                                     )}
                                   >
                                     {t(v.w?.w)}
