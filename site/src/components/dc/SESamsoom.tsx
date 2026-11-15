@@ -64,22 +64,19 @@ function render(v: Vals) {
                   fill="none"
                   strokeLinecap="round"
                 >
-                  <path d="M16 4 C 4 18, 20 30, 8 48" stroke="#26282B" strokeWidth="6"></path>
-                  <path d="M16 4 C 4 18, 20 30, 8 48" stroke="#8C9096" strokeWidth="1.6" strokeDasharray="2 3"></path>
+                  <path d="M16 4 C 4 18, 20 30, 8 48" stroke="#2B2D31" strokeWidth="6.5" />
+                  <path d="M16 4 C 4 18, 20 30, 8 48" stroke="rgba(255,255,255,.32)" strokeWidth="1.5" transform="translate(-1.1 -0.6)" />
                 </svg>
                 {'\n          '}
                 <span
-                  style={{
-                    position: 'absolute',
-                    left: '0',
-                    top: '44px',
-                    width: '16px',
-                    height: '16px',
-                    borderRadius: '50%',
-                    background: 'radial-gradient(circle at 35% 30%,#6E7378,#26282B 70%)',
-                    boxShadow: '0 2px 3px rgba(0,0,0,.35)',
-                  }}
-                ></span>
+                  aria-hidden="true"
+                  style={{ position: 'absolute', left: '1px', top: '42px', width: '13px', height: '20px', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,.35))' }}
+                >
+                  <span style={{ position: 'absolute', left: 0, top: 0, width: '13px', height: '9px', borderRadius: '4px 4px 2px 2px', background: 'linear-gradient(180deg,#FFD866,#F7C032 55%,#D9A21E)' }} />
+                  <span style={{ position: 'absolute', left: '2px', top: '8px', width: '9px', height: '11px', borderRadius: '2px 2px 3.5px 3.5px', background: 'linear-gradient(90deg,#9EA3A9,#F4F5F6 45%,#B9BDC2 70%,#8C9096)' }}>
+                    <span style={{ position: 'absolute', left: '2px', right: '2px', top: '4px', height: '3px', borderRadius: '2px', background: '#3A3C40' }} />
+                  </span>
+                </span>
                 {'\n          '}
                 {v.tool ? (
                   <>
@@ -127,22 +124,19 @@ function render(v: Vals) {
                   fill="none"
                   strokeLinecap="round"
                 >
-                  <path d="M4 4 C 16 18, 0 30, 12 48" stroke="#26282B" strokeWidth="6"></path>
-                  <path d="M4 4 C 16 18, 0 30, 12 48" stroke="#8C9096" strokeWidth="1.6" strokeDasharray="2 3"></path>
+                  <path d="M4 4 C 16 18, 0 30, 12 48" stroke="#2B2D31" strokeWidth="6.5" />
+                  <path d="M4 4 C 16 18, 0 30, 12 48" stroke="rgba(255,255,255,.32)" strokeWidth="1.5" transform="translate(-1.1 -0.6)" />
                 </svg>
                 {'\n          '}
                 <span
-                  style={{
-                    position: 'absolute',
-                    left: '4px',
-                    top: '44px',
-                    width: '16px',
-                    height: '16px',
-                    borderRadius: '50%',
-                    background: 'radial-gradient(circle at 35% 30%,#6E7378,#26282B 70%)',
-                    boxShadow: '0 2px 3px rgba(0,0,0,.35)',
-                  }}
-                ></span>
+                  aria-hidden="true"
+                  style={{ position: 'absolute', left: '5px', top: '42px', width: '13px', height: '20px', filter: 'drop-shadow(0 2px 2px rgba(0,0,0,.35))' }}
+                >
+                  <span style={{ position: 'absolute', left: 0, top: 0, width: '13px', height: '9px', borderRadius: '4px 4px 2px 2px', background: 'linear-gradient(180deg,#FFD866,#F7C032 55%,#D9A21E)' }} />
+                  <span style={{ position: 'absolute', left: '2px', top: '8px', width: '9px', height: '11px', borderRadius: '2px 2px 3.5px 3.5px', background: 'linear-gradient(90deg,#9EA3A9,#F4F5F6 45%,#B9BDC2 70%,#8C9096)' }}>
+                    <span style={{ position: 'absolute', left: '2px', right: '2px', top: '4px', height: '3px', borderRadius: '2px', background: '#3A3C40' }} />
+                  </span>
+                </span>
                 {'\n          '}
                 {v.hanky ? (
                   <>
@@ -675,9 +669,9 @@ function render(v: Vals) {
               {'\n        '}
               {v.chin ? (
                 <svg width="200" height="250" viewBox="0 0 200 250" style={{ position: 'absolute', left: 0, top: 0, overflow: 'visible', transformOrigin: '52px 140px', animation: v.chinAnim }} fill="none" strokeLinecap="round" aria-hidden="true">
-                  <path d="M52 140 C 44 176, 78 178, 88 156" stroke="#26282B" strokeWidth="6" />
-                  <path d="M52 140 C 44 176, 78 178, 88 156" stroke="#8C9096" strokeWidth="1.6" strokeDasharray="2 3" />
-                  <circle cx="90" cy="150" r="8" fill="url(#smChinG)" />
+                  <path d="M52 140 C 44 176, 78 178, 88 156" stroke="#2B2D31" strokeWidth="6.5" />
+                  <path d="M52 140 C 44 176, 78 178, 88 156" stroke="rgba(255,255,255,.32)" strokeWidth="1.5" transform="translate(-1.1 -0.6)" />
+                  <rect x="84" y="144" width="12" height="15" rx="3.5" fill="#F7C032" /><rect x="86" y="152" width="8" height="9" rx="2.5" fill="#D5D8DC" />
                   <defs><radialGradient id="smChinG" cx="35%" cy="30%" r="70%"><stop offset="0" stopColor="#6E7378" /><stop offset=".7" stopColor="#26282B" /></radialGradient></defs>
                 </svg>
               ) : null}

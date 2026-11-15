@@ -2941,5 +2941,14 @@ const DICT: Record<string, string> = {
   "We will tell you here the day Allo Madrid opens.": "Te avisaremos aquí el día que abra Allo Madrid.",
   "Where are you shopping from today?": "¿Desde dónde compras hoy?",
   "Our Deira store in Dubai is open now. Allo Madrid opens soon, and I can let you know the day it does.": "Nuestra tienda de Deira en Dubái está abierta. Allo Madrid abre pronto y puedo avisarte el día que abra.",
+  "Brand, model, part: every grade in seconds.": "Marca, modelo, pieza: todas las calidades en segundos.",
+  "Shop, repairs, trade prices and contact.": "Tienda, reparaciones, precios mayoristas y contacto.",
+  "Change the language, sounds and currency here.": "Cambia el idioma, los sonidos y la moneda aquí.",
+  "Orders, repairs and offers land here.": "Pedidos, reparaciones y ofertas llegan aquí.",
+  "Live hours, in Dubai time.": "Horario en vivo, hora de Dubái.",
+  "Add parts; we confirm on WhatsApp.": "Añade piezas; confirmamos por WhatsApp.",
+  "Every page, in one menu.": "Todas las páginas en un menú.",
+  "Tap the ? on any page.": "Pulsa ? en cualquier página.",
+  "Ask me anything, any time.": "Pregúntame lo que quieras, cuando quieras.",
 };
 export default DICT;

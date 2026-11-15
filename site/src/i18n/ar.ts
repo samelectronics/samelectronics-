@@ -3469,4 +3469,13 @@ export const R8: Record<string, string> = {
   "We will tell you here the day Allo Madrid opens.": "سنخبرك هنا يوم افتتاح ألو مدريد.",
   "Where are you shopping from today?": "من أين تتسوق اليوم؟",
   "Our Deira store in Dubai is open now. Allo Madrid opens soon, and I can let you know the day it does.": "متجرنا في ديرة بدبي مفتوح الآن. ألو مدريد يفتح قريباً، ويمكنني إخبارك يوم افتتاحه.",
+  "Brand, model, part: every grade in seconds.": "العلامة، الطراز، القطعة: كل الدرجات في ثوانٍ.",
+  "Shop, repairs, trade prices and contact.": "المتجر، التصليح، أسعار الجملة والتواصل.",
+  "Change the language, sounds and currency here.": "غيّر اللغة والأصوات والعملة من هنا.",
+  "Orders, repairs and offers land here.": "الطلبات والتصليحات والعروض تصل هنا.",
+  "Live hours, in Dubai time.": "ساعات العمل مباشرةً، بتوقيت دبي.",
+  "Add parts; we confirm on WhatsApp.": "أضف القطع، ونؤكد عبر واتساب.",
+  "Every page, in one menu.": "كل الصفحات في قائمة واحدة.",
+  "Tap the ? on any page.": "اضغط ? في أي صفحة.",
+  "Ask me anything, any time.": "اسألني أي شيء، في أي وقت.",
 };

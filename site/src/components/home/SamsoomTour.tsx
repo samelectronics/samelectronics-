@@ -18,7 +18,8 @@ import Typed from '@/components/samsoom/Typed';
 import { StoreCards, hasStore, setStore } from '@/components/site/StorePicker';
 // R11g (owner): the store question only comes once, in the first welcome on the home page. Anywhere else (shop, etc.)
 // Deira is set quietly; the store can be changed any time from the arrow by the logo or Settings.
-const nextAfterLang = (): 'hello' | 'store' => { if (hasStore()) return 'hello'; if (location.pathname !== '/') { setStore('dxb'); return 'hello'; } return 'store'; };
+// R12 (owner): Allo Madrid becomes its own website, so the welcome never asks for a store any more
+const nextAfterLang = (): 'hello' | 'store' => { if (!hasStore()) setStore('dxb'); return 'hello'; };
 import { typeMs } from '@/lib/voice';
 import { babble, hush, tourStart, tourStep, tourEnd, tourStop, isMuted, setMuted } from '@/lib/voice';
 import { siteRaw } from '@/lib/catalog';
@@ -28,17 +29,17 @@ const cfg = () => siteRaw<{ tour?: boolean; greeting?: string; welcome?: string 
 const T = (s: string) => (typeof window !== 'undefined' && window.seI18n ? window.seI18n.t(s) : s);
 type Step = { sel?: string; el?: HTMLElement; mood: string; t: string; d: string; open?: string };
 const NAV: Step[] = [
-  { sel: '[data-tour="fmp"]', mood: 'pt-smile', t: 'Find My Part', d: 'Pick a brand, a model and a part: every grade we have, in seconds.' },
-  { sel: '[data-tour="nav"]', mood: 'pt-happy', t: 'Jump anywhere', d: 'The shop, repairs, trade prices and how to reach us.' },
-  { sel: '.se-lm', mood: 'pt-blush', t: 'Language and settings', d: 'One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.', open: '.se-lm-btn' },
-  { sel: '.nb', mood: 'pt-wink', t: 'Your notifications', d: 'Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.' },
-  { sel: '[data-tour="hours"]', mood: 'pt-wink', t: 'Open right now?', d: 'Live opening hours, in Dubai time.' },
-  { sel: '[data-tour="cart"]', mood: 'pt-smile', t: 'Your cart', d: 'Add parts as you browse; we confirm stock and price on WhatsApp.' },
-  { sel: '[data-tour="menu"]', mood: 'pt-think', t: 'The whole site', d: 'Every page and section, in one menu.' },
+  { sel: '[data-tour="fmp"]', mood: 'pt-smile', t: 'Find My Part', d: 'Brand, model, part: every grade in seconds.' },
+  { sel: '[data-tour="nav"]', mood: 'pt-happy', t: 'Jump anywhere', d: 'Shop, repairs, trade prices and contact.' },
+  { sel: '.se-lm', mood: 'pt-blush', t: 'Language and settings', d: 'Change the language, sounds and currency here.', open: '.se-lm-btn' },
+  { sel: '.nb', mood: 'pt-wink', t: 'Your notifications', d: 'Orders, repairs and offers land here.' },
+  { sel: '[data-tour="hours"]', mood: 'pt-wink', t: 'Open right now?', d: 'Live hours, in Dubai time.' },
+  { sel: '[data-tour="cart"]', mood: 'pt-smile', t: 'Your cart', d: 'Add parts; we confirm on WhatsApp.' },
+  { sel: '[data-tour="menu"]', mood: 'pt-think', t: 'The whole site', d: 'Every page, in one menu.' },
 ];
 const END: Step[] = [
-  { sel: '[data-tour="help"]', mood: 'pt-blush', t: 'Need me again?', d: 'Tap the ? at the top, on any page, and I will show you around.' },
-  { sel: '[data-tour="samsoom"]', mood: 'pt-wow', t: 'And me!', d: 'Ask me about any part, grade or delivery, any time. I am always here.' },
+  { sel: '[data-tour="help"]', mood: 'pt-blush', t: 'Need me again?', d: 'Tap the ? on any page.' },
+  { sel: '[data-tour="samsoom"]', mood: 'celebrate', t: 'And me!', d: 'Ask me anything, any time.' },
 ];
 // "Choose your language" in each language, cycled so everyone recognises theirs (R9: all twenty-four)
 const CHOOSE: [Lang, string][] = [["en", "Choose your language"], ["ar", "اختر لغتك"], ["fr", "Choisissez votre langue"], ["es", "Elige tu idioma"], ["zh", "选择您的语言"], ["hi", "अपनी भाषा चुनें"], ["ur", "اپنی زبان منتخب کریں"], ["fa", "زبان خود را انتخاب کنید"], ["ru", "Выберите язык"], ["de", "Sprache wählen"], ["pt", "Escolha o idioma"], ["it", "Scegli la lingua"], ["sw", "Chagua lugha yako"], ["tl", "Piliin ang wika mo"], ["ml", "നിങ്ങളുടെ ഭാഷ തിരഞ്ഞെടുക്കൂ"], ["am", "ቋንቋዎን ይምረጡ"], ["ha", "Zaɓi harshenka"], ["yo", "Yan èdè rẹ"], ["ig", "Họrọ asụsụ gị"], ["om", "Afaan kee filadhu"], ["ro", "Alege limba"], ["ca", "Tria l’idioma"], ["gl", "Escolle o teu idioma"], ["eu", "Aukeratu zure hizkuntza"]];
@@ -73,7 +74,9 @@ function buildSteps(): Step[] {
   }
   const nav = (home ? NAV : NAV.filter((s) => s.sel === '[data-tour="fmp"]' || s.sel === '[data-tour="cart"]' || s.sel === '.se-lm' || s.sel === '.nb')).filter((s) => visible(document.querySelector(s.sel!)) && (s.sel !== '[data-tour="nav"]' || !!document.querySelector('[data-tour="nav"] > a')));
   const end = END.filter((s) => visible(document.querySelector(s.sel!)));
-  return home ? [...nav, ...page, ...end] : [...page, ...nav, ...end];
+  // R12 (owner): on detail pages the tour shows only what is unique to that page, top to bottom; the nav, language and
+  // help steps live in the home tour only
+  return home ? [...nav, ...page, ...end] : page;
 }
 
 export default function SamsoomTour() {
@@ -166,15 +169,24 @@ export default function SamsoomTour() {
     return (
       <div className="st-veil st-veil-lang" role="dialog" aria-modal="true" aria-label="Choose your language" data-no-i18n="">
         <span className="st-cine" aria-hidden="true"><i /><i /><i /></span>
-        <div className="st-lang2">
-          <div className="st-l2-sam">
-            <span className="st-l2-bubble" key={ci} lang={cl} dir={LANG_SET.has(cl) ? 'rtl' : 'ltr'}>{ct}</span>
-            <span className="st-l2-spot" aria-hidden="true" />
-            <span className="st-l2-av"><LiveSam size={150} mood="idle" play="wave" /><span className="st-l2-floor" aria-hidden="true" /></span>
+        {/* R12 (owner): one dark card. Samsoom greets on top, the main languages are big tiles, every other language is a
+            small chip below: everything visible at once, nothing to scroll, one look with the rest of the site. */}
+        <div className="st-lang3">
+          <div className="st-l3-top">
+            <span className="st-l3-av" data-sam-talk=""><LiveSam size={118} mood="idle" play="wave" /></span>
+            <span className="st-l3-bubble" key={ci} lang={cl} dir={LANG_SET.has(cl) ? 'rtl' : 'ltr'}>{ct}</span>
           </div>
-          <div className="st-l2-list">
-            <LangScroll list={list} d={d} cl={cl} pick={pick} />
-            <span className="st-l2-more" lang={hint} aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path d="M6 9l6 6 6-6" /></svg>{SCROLL[hint] || SCROLL.en}</span>
+          <div className="st-l3-main">
+            {list.slice(0, 6).map((l) => (
+              <button key={l.id} type="button" lang={l.id} className={'st-l3-t' + (l.id === d ? ' det' : '') + (l.id === cl ? ' hint' : '')} onClick={() => pick(l.id)}>
+                <b dir="auto">{l.name}</b><small>{l.id === d ? (DETECTED[l.id] || DETECTED.en) : l.en}</small>
+              </button>
+            ))}
+          </div>
+          <div className="st-l3-more">
+            {list.slice(6).map((l) => (
+              <button key={l.id} type="button" lang={l.id} className={'st-l3-c' + (l.id === cl ? ' hint' : '')} onClick={() => pick(l.id)} title={l.en}><span dir="auto">{l.name}</span></button>
+            ))}
           </div>
         </div>
       </div>

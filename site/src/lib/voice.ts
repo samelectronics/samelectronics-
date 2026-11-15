@@ -48,6 +48,7 @@ let stopCur: (() => void) | null = null;
 export const CPS = 42;
 export const charMs = (ch: string) => (/[.,;:!?…،؟。，]/.test(ch) ? 2000 / CPS : 1000 / CPS);
 export const typeMs = (t: string) => Array.from(t || '').reduce((a, c) => a + charMs(c), 0);
+const speaking = (on: boolean) => { try { document.documentElement.toggleAttribute('data-sam-speaking', on); } catch { /* */ } };
 const mouth = (o: boolean) => { const r = document.documentElement; if (o) r.setAttribute('data-sam-mouth', 'o'); else r.removeAttribute('data-sam-mouth'); };
 /** R11f (owner): each word is one little melody, not separate notes. The whole line is planned up front on the audio
  *  clock: the pitch flows smoothly up and down through the syllables like "uowowowo", the vowel colour slides with it,
@@ -63,7 +64,7 @@ const smooth = (a: number, b: number, k: number) => a + (b - a) * (0.5 - 0.5 * M
 const curve = (keys: [number, number][], dur: number, dt: number) => { const n = Math.max(2, Math.ceil(dur / dt) + 1), out = new Float32Array(n); let j = 0;
   for (let q = 0; q < n; q++) { const t = q * dt; while (j < keys.length - 2 && keys[j + 1][0] <= t) j++; const [t0, v0] = keys[j], [t1, v1] = keys[Math.min(j + 1, keys.length - 1)]; out[q] = t1 > t0 ? smooth(v0, v1, Math.min(1, Math.max(0, (t - t0) / (t1 - t0)))) : v1; } return out; };
 
-export function babble(text: string, opts: { onEnd?: () => void } = {}) {
+function babbleSynth(text: string, opts: { onEnd?: () => void } = {}) {
   stopCur && stopCur();
   const voice = prefs().sound.voice || 'cute', cfg = V[voice], t = (text || '').trim();
   const ask = /\?\s*$/.test(t), happy = HAPPY.test(t), chars = Array.from(t);
@@ -114,9 +115,60 @@ export function babble(text: string, opts: { onEnd?: () => void } = {}) {
   const t0 = performance.now(), gk = G;
   const flap = () => { if (!alive) return; const el = (performance.now() - t0) / 1000; let j = 0; while (j < gk.length - 1 && gk[j + 1][0] <= el) j++;
     const loud = gk[j][1] > 0.6, wob = Math.sin(el * 2 * Math.PI * 7) > -0.2; if (loud && wob) mouth(true); else mouth(false); if (el < total) raf = requestAnimationFrame(flap); else mouth(false); };
-  document.documentElement.removeAttribute('data-sam-done'); raf = requestAnimationFrame(flap);
-  endTm = window.setTimeout(() => { if (!alive) return; alive = false; mouth(false); document.documentElement.setAttribute('data-sam-done', ''); window.setTimeout(() => document.documentElement.removeAttribute('data-sam-done'), 1400); opts.onEnd && opts.onEnd(); }, total * 1000);
-  stopCur = () => { alive = false; cancelAnimationFrame(raf); window.clearTimeout(endTm); mouth(false); if (o && g) { const gg = g; try { const c = ac(), n = c.currentTime; (gg.gain as AudioParam & { cancelAndHoldAtTime?: (t: number) => void }).cancelAndHoldAtTime?.(n); gg.gain.setTargetAtTime(0.0001, n, 0.03); } catch { /* */ } window.setTimeout(() => { try { gg.disconnect(); } catch { /* */ } }, 150); } o = null; };
+  document.documentElement.removeAttribute('data-sam-done'); speaking(true); raf = requestAnimationFrame(flap);
+  endTm = window.setTimeout(() => { if (!alive) return; alive = false; speaking(false); mouth(false); document.documentElement.setAttribute('data-sam-done', ''); window.setTimeout(() => document.documentElement.removeAttribute('data-sam-done'), 1400); opts.onEnd && opts.onEnd(); }, total * 1000);
+  stopCur = () => { alive = false; speaking(false); cancelAnimationFrame(raf); window.clearTimeout(endTm); mouth(false); if (o && g) { const gg = g; try { const c = ac(), n = c.currentTime; (gg.gain as AudioParam & { cancelAndHoldAtTime?: (t: number) => void }).cancelAndHoldAtTime?.(n); gg.gain.setTargetAtTime(0.0001, n, 0.03); } catch { /* */ } window.setTimeout(() => { try { gg.disconnect(); } catch { /* */ } }, 150); } o = null; };
+  return stopCur;
+}
+// ── R12 (owner): Samsoom really speaks ───────────────────────────────────────────────────────────────────────────────
+// He says the actual words with the browser's own voice (free, no files), pitched up to sound like a small friendly robot.
+// The typing and his mouth follow the speech itself: every word the voice reaches is revealed (word-boundary events), with a
+// gentle clock in between, so text never runs ahead of him or lags behind. "Robot" voice style keeps the old synth sound.
+// Muted, sound off, no gesture yet, or no speech engine: the text types on its own clock and the mouth still moves.
+type Spoken = { text: string; idx: number; word: number; t0: number; cps: number; pending: boolean; active: boolean; done: boolean };
+export const spoken: Spoken = { text: '', idx: 0, word: 0, t0: 0, cps: 15, pending: false, active: false, done: false };
+/** How many characters of `text` Samsoom has said so far, or null when he is not speaking it (then type on your own clock). */
+export function spokenProgress(text: string): number | null {
+  if (!text || !(spoken.pending || spoken.active || spoken.done)) return null;
+  const off = spoken.text.indexOf(text); if (off < 0) return null;
+  if (spoken.done) return text.length;
+  if (!spoken.active) return 0;
+  const clock = Math.floor(((performance.now() - spoken.t0) / 1000) * spoken.cps);
+  const reach = spoken.word > 0 ? Math.max(spoken.idx, Math.min(clock, spoken.idx + 14)) : clock; // follow the words; the clock only bridges gaps
+  return Math.max(0, Math.min(text.length, reach - off));
+}
+const VOICE_STYLE: Record<string, { pitch: number; rate: number }> = { cute: { pitch: 1.75, rate: 1.06 }, deep: { pitch: 0.95, rate: 1.0 } };
+let pickedVoice: SpeechSynthesisVoice | null = null, pickedLang = '';
+function pickVoice(lang: string): SpeechSynthesisVoice | null {
+  if (pickedVoice && pickedLang === lang) return pickedVoice;
+  const all = window.speechSynthesis.getVoices(); if (!all.length) return null;
+  const pre = lang.toLowerCase().slice(0, 2), mine = all.filter((v) => v.lang.toLowerCase().startsWith(pre));
+  const pool = mine.length ? mine : all.filter((v) => v.lang.toLowerCase().startsWith('en'));
+  const fav = /samantha|zira|aria|jenny|karen|moira|tessa|female|google uk english female|google us english|hoda|laila|monica|paulina|amelie|helena/i;
+  pickedVoice = pool.find((v) => v.localService && fav.test(v.name)) || pool.find((v) => v.localService) || pool.find((v) => fav.test(v.name)) || pool[0] || null; pickedLang = lang;
+  return pickedVoice;
+}
+if (typeof window !== 'undefined' && 'speechSynthesis' in window) { try { window.speechSynthesis.getVoices(); window.speechSynthesis.addEventListener?.('voiceschanged', () => { pickedVoice = null; }); } catch { /* */ } }
+
+export function babble(text: string, opts: { onEnd?: () => void } = {}) {
+  stopCur && stopCur();
+  const t = (text || '').trim(), style = prefs().sound.voice || 'cute';
+  const ok = can() && style !== 'robot' && typeof window !== 'undefined' && 'speechSynthesis' in window && !!t;
+  const lang = (document.documentElement.lang || 'en').toLowerCase(), v = ok ? pickVoice(lang) : null;
+  if (!ok || !v) { spoken.pending = false; spoken.active = false; spoken.done = false; spoken.text = ''; return babbleSynth(text, opts); }
+  const synth = window.speechSynthesis, st = VOICE_STYLE[style] || VOICE_STYLE.cute, happy = HAPPY.test(t), ask = /\?\s*$/.test(t);
+  const u = new SpeechSynthesisUtterance(t); u.voice = v; u.lang = v.lang; u.pitch = Math.min(2, st.pitch + (happy ? 0.1 : 0) + (ask ? 0.05 : 0)); u.rate = st.rate; u.volume = Math.min(1, Math.max(0, prefs().sound.vol));
+  Object.assign(spoken, { text: t, idx: 0, word: 0, t0: performance.now(), cps: 14.5 * u.rate, pending: true, active: false, done: false });
+  let alive = true, flap = 0, ended = false;
+  const finish = () => { if (ended) return; ended = true; alive = false; speaking(false); window.clearInterval(flap); mouth(false); spoken.active = false; spoken.pending = false; spoken.done = true; spoken.idx = t.length;
+    document.documentElement.setAttribute('data-sam-done', ''); window.setTimeout(() => document.documentElement.removeAttribute('data-sam-done'), 1400); window.setTimeout(() => { if (spoken.done && spoken.text === t) spoken.done = false; }, 3000); opts.onEnd && opts.onEnd(); };
+  u.onstart = () => { if (!alive) return; speaking(true); spoken.t0 = performance.now(); spoken.active = true; spoken.pending = false; let open = false; flap = window.setInterval(() => { open = !open; mouth(open); }, 105); };
+  u.onboundary = (e: SpeechSynthesisEvent) => { if (e.name && e.name !== 'word') return; const len = (e as SpeechSynthesisEvent & { charLength?: number }).charLength || (t.slice(e.charIndex).match(/^\S+/) || [''])[0].length; spoken.idx = e.charIndex + len; spoken.word++; };
+  u.onend = finish; u.onerror = finish;
+  try { synth.cancel(); synth.speak(u); } catch { return babbleSynth(text, opts); }
+  // if the engine never starts (some browsers block it silently), fall back to the synth so he is never silent and frozen
+  const guard = window.setTimeout(() => { if (alive && !spoken.active) { try { synth.cancel(); } catch { /* */ } alive = false; spoken.pending = false; stopCur = null; babbleSynth(text, opts); } }, 1500);
+  stopCur = () => { alive = false; speaking(false); window.clearTimeout(guard); window.clearInterval(flap); mouth(false); try { synth.cancel(); } catch { /* */ } spoken.active = false; spoken.pending = false; };
   return stopCur;
 }
 export function hush() { stopCur && stopCur(); }

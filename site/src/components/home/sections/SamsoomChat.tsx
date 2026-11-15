@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 import SESamsoom from '../../dc/SESamsoom';
 import { createScheduler } from '@/components/samsoom/scheduler';
-import { babble, charMs } from '@/lib/voice';
+import { babble, charMs, spokenProgress } from '@/lib/voice';
 
 type Msg = { t: string; me: boolean; emote: string | null; n: number; own: boolean; [k: string]: unknown };
 
@@ -46,7 +46,7 @@ function useChatLife(open: boolean, typing: boolean, msgs: Msg[], listRef: React
     const t0 = performance.now(); const stopV = babble(txt);
     let raf = 0;
     const step = () => {
-      const el0 = performance.now() - t0; let k = 0; while (k < cum.length && cum[k] <= el0) k++; k = Math.min(len, k);
+      const sp = spokenProgress(txt); let k = 0; if (sp !== null) k = sp; else { const el0 = performance.now() - t0; while (k < cum.length && cum[k] <= el0) k++; } k = Math.min(len, k);
       setReveal(k >= len ? null : { n: last.n, k });
       const el = listRef.current;
       if (el) el.scrollTop = el.scrollHeight;
