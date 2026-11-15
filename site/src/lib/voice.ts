@@ -45,7 +45,7 @@ function blip(f: number, d: number, v: Voice, up: boolean) {
 
 let stopCur: (() => void) | null = null;
 // R11c: ONE clock for his voice and his typing, so they always start and finish together
-export const CPS = 42;
+export const CPS = 30; // owner (15 Nov): typing not slow, not too fast; voice and typing share this clock
 export const charMs = (ch: string) => (/[.,;:!?…،؟。，]/.test(ch) ? 2000 / CPS : 1000 / CPS);
 export const typeMs = (t: string) => Array.from(t || '').reduce((a, c) => a + charMs(c), 0);
 const speaking = (on: boolean) => { try { document.documentElement.toggleAttribute('data-sam-speaking', on); } catch { /* */ } };
@@ -150,25 +150,39 @@ function pickVoice(lang: string): SpeechSynthesisVoice | null {
 }
 if (typeof window !== 'undefined' && 'speechSynthesis' in window) { try { window.speechSynthesis.getVoices(); window.speechSynthesis.addEventListener?.('voiceschanged', () => { pickedVoice = null; }); } catch { /* */ } }
 
+// owner (15 Nov): he does NOT speak words. A cute cartoon "baby" babble: every syllable is one tiny bip (soft sine with a
+// little upward chirp), its pitch taken from the letters (bright vowels higher, round vowels lower, each letter nudges it),
+// so the sound changes with what he says. Planned up front on the audio clock with the SAME timing as the typing, short
+// silences between syllables and at punctuation, nothing sustained, so no hum, no ghost tone.
+const VPITCH: Record<string, number> = { i: 5, y: 5, e: 3, a: 0, o: -2, u: -3 };
 export function babble(text: string, opts: { onEnd?: () => void } = {}) {
   stopCur && stopCur();
-  const t = (text || '').trim(), style = prefs().sound.voice || 'cute';
-  const ok = can() && style !== 'robot' && typeof window !== 'undefined' && 'speechSynthesis' in window && !!t;
-  const lang = (document.documentElement.lang || 'en').toLowerCase(), v = ok ? pickVoice(lang) : null;
-  if (!ok || !v) { spoken.pending = false; spoken.active = false; spoken.done = false; spoken.text = ''; return babbleSynth(text, opts); }
-  const synth = window.speechSynthesis, st = VOICE_STYLE[style] || VOICE_STYLE.cute, happy = HAPPY.test(t), ask = /\?\s*$/.test(t);
-  const u = new SpeechSynthesisUtterance(t); u.voice = v; u.lang = v.lang; u.pitch = Math.min(2, st.pitch + (happy ? 0.1 : 0) + (ask ? 0.05 : 0)); u.rate = st.rate; u.volume = Math.min(1, Math.max(0, prefs().sound.vol));
-  Object.assign(spoken, { text: t, idx: 0, word: 0, t0: performance.now(), cps: 14.5 * u.rate, pending: true, active: false, done: false });
-  let alive = true, flap = 0, ended = false;
-  const finish = () => { if (ended) return; ended = true; alive = false; speaking(false); window.clearInterval(flap); mouth(false); spoken.active = false; spoken.pending = false; spoken.done = true; spoken.idx = t.length;
-    document.documentElement.setAttribute('data-sam-done', ''); window.setTimeout(() => document.documentElement.removeAttribute('data-sam-done'), 1400); window.setTimeout(() => { if (spoken.done && spoken.text === t) spoken.done = false; }, 3000); opts.onEnd && opts.onEnd(); };
-  u.onstart = () => { if (!alive) return; speaking(true); spoken.t0 = performance.now(); spoken.active = true; spoken.pending = false; let open = false; flap = window.setInterval(() => { open = !open; mouth(open); }, 105); };
-  u.onboundary = (e: SpeechSynthesisEvent) => { if (e.name && e.name !== 'word') return; const len = (e as SpeechSynthesisEvent & { charLength?: number }).charLength || (t.slice(e.charIndex).match(/^\S+/) || [''])[0].length; spoken.idx = e.charIndex + len; spoken.word++; };
-  u.onend = finish; u.onerror = finish;
-  try { synth.cancel(); synth.speak(u); } catch { return babbleSynth(text, opts); }
-  // if the engine never starts (some browsers block it silently), fall back to the synth so he is never silent and frozen
-  const guard = window.setTimeout(() => { if (alive && !spoken.active) { try { synth.cancel(); } catch { /* */ } alive = false; spoken.pending = false; stopCur = null; babbleSynth(text, opts); } }, 1500);
-  stopCur = () => { alive = false; speaking(false); window.clearTimeout(guard); window.clearInterval(flap); mouth(false); try { synth.cancel(); } catch { /* */ } spoken.active = false; spoken.pending = false; };
+  spoken.pending = false; spoken.active = false; spoken.done = false; spoken.text = '';
+  const t = (text || '').trim(), chars = Array.from(t), voice = prefs().sound.voice || 'cute';
+  const ask = /\?\s*$/.test(t), happy = HAPPY.test(t), base = (voice === 'deep' ? 330 : 640) * (happy ? 1.06 : 1);
+  const at: number[] = []; let acc = 0; for (const ch of chars) { at.push(acc); acc += charMs(ch) / 1000; } const total = acc;
+  const syl: number[] = []; chars.forEach((c, k) => { if (isV(c) && (k === 0 || !isV(chars[k - 1]))) syl.push(k); });
+  const opens: number[] = [];
+  if (can() && syl.length) { try { const c = ac(), now = c.currentTime + 0.03, bus = out();
+    syl.forEach((k, n) => { const ch = chars[k].normalize('NFD').charAt(0).toLowerCase(), prev = chars[k - 1] || 'a', last = n === syl.length - 1;
+      let semi = (VPITCH[ch] ?? 1) + ((prev.charCodeAt(0) * 7) % 5) - 2; if (ask && last) semi += 7; else if (last) semi += happy ? 4 : -2;
+      const f = base * Math.pow(2, semi / 12), st = now + at[k], d = Math.min(0.11, Math.max(0.055, (at[syl[n + 1]] ?? total) - at[k] - 0.025));
+      const o = c.createOscillator(), o2 = c.createOscillator(), g = c.createGain(), g2 = c.createGain(), lp = c.createBiquadFilter();
+      o.type = 'sine'; o2.type = 'triangle'; lp.type = 'lowpass'; lp.frequency.value = 3200; g2.gain.value = 0.18;
+      o.frequency.setValueAtTime(f * 0.9, st); o.frequency.exponentialRampToValueAtTime(f * 1.12, st + d * 0.45); o.frequency.exponentialRampToValueAtTime(f, st + d);
+      o2.frequency.setValueAtTime(f * 1.8, st); o2.frequency.exponentialRampToValueAtTime(f * 2.24, st + d * 0.45);
+      g.gain.setValueAtTime(0.0001, st); g.gain.exponentialRampToValueAtTime(0.22, st + 0.012); g.gain.setValueAtTime(0.22, st + d * 0.5); g.gain.exponentialRampToValueAtTime(0.0001, st + d);
+      o.connect(lp); o2.connect(g2); g2.connect(lp); lp.connect(g); g.connect(bus); o.start(st); o2.start(st); o.stop(st + d + 0.02); o2.stop(st + d + 0.02);
+      opens.push(at[k]); });
+    if (happy) { const h = c.createOscillator(), hg = c.createGain(), s0 = now + total + 0.04; h.type = 'sine'; h.frequency.setValueAtTime(base * 1.5, s0); h.frequency.exponentialRampToValueAtTime(base * 2, s0 + 0.12);
+      hg.gain.setValueAtTime(0.0001, s0); hg.gain.exponentialRampToValueAtTime(0.16, s0 + 0.015); hg.gain.exponentialRampToValueAtTime(0.0001, s0 + 0.14); h.connect(hg); hg.connect(out()); h.start(s0); h.stop(s0 + 0.16); }
+  } catch { /* silent */ } } else syl.forEach((k) => opens.push(at[k]));
+  // the mouth opens on each bip and closes between them, on the same clock
+  let alive = true, raf = 0; const t0 = performance.now();
+  const flap = () => { if (!alive) return; const el = (performance.now() - t0) / 1000; const open = opens.some((o) => el >= o && el < o + 0.07); mouth(open); if (el < total) raf = requestAnimationFrame(flap); else mouth(false); };
+  document.documentElement.removeAttribute('data-sam-done'); speaking(true); raf = requestAnimationFrame(flap);
+  const endTm = window.setTimeout(() => { if (!alive) return; alive = false; speaking(false); mouth(false); document.documentElement.setAttribute('data-sam-done', ''); window.setTimeout(() => document.documentElement.removeAttribute('data-sam-done'), 1400); opts.onEnd && opts.onEnd(); }, total * 1000);
+  stopCur = () => { alive = false; speaking(false); cancelAnimationFrame(raf); window.clearTimeout(endTm); mouth(false); };
   return stopCur;
 }
 export function hush() { stopCur && stopCur(); }

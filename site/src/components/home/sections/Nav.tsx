@@ -115,7 +115,7 @@ export default function Nav({ v }: { v: Vals }) {
                 ></span>
               </span>
               {/* R12 (owner: the bar is too much): the pill says only the essential; the full line and hours show on hover */}
-              {(() => { const sh = String(v.st?.short || ''), tm = (sh.match(/(\d{1,2}:\d{2})/) || [])[1]; return v.st?.state === 'open' ? t('Open now') : tm ? <>{t('Opens')} {tm}</> : t(sh); })()}
+              {(() => { const sh = String(v.st?.short || ''), tm = (sh.match(/(\d{1,2}:\d{2})/) || [])[1]; void tm; return v.st?.state === 'open' ? t('Open now') : t(sh); /* owner (15 Nov): back to "Closed · opens 10:30" */ })()}
             </button>
             <span id="se-status-pop" role="group" className="se-status-pop">
               <span style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', fontWeight: 600, color: '#FFFFFF' }}>

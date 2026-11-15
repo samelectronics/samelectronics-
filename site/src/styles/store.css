@@ -167,3 +167,6 @@ html[data-sam-hold='wc'] .ln-hold { background: #07C160; } html[data-sam-hold='w
 .st-l2-list .st-l2-scroll { flex: 1; min-height: 0; }
 .st-l2-none { margin: 18px; font: 500 14px Inter, sans-serif; color: #6B6F75; }
 .st-veil-lang .st-l2-bubble { font-size: 17px !important; padding: 12px 18px !important; max-width: 200px; }
+/* owner (15 Nov): while talking he only floats gently, no shaking */
+html[data-sam-speaking] [data-sam-talk] > * { animation: samFloat 2.6s ease-in-out infinite !important; }
+@keyframes samFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }

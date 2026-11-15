@@ -73,7 +73,7 @@ function render(v: Vals) {
                   viewBox="0 0 24 26"
                   width="22"
                   height="24"
-                  style={{ position: 'absolute', left: '-1px', top: '43px', overflow: 'visible', filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
+                  style={{ position: 'absolute', left: '-2.2px', top: '46.6px', overflow: 'visible', transform: 'rotate(33.7deg)', transformOrigin: '11px 0', /* owner (15 Nov): the connector sits ON the cable end, along its direction */ filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
                 >
                   {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
                   <defs>
@@ -154,7 +154,7 @@ function render(v: Vals) {
                   viewBox="0 0 24 26"
                   width="22"
                   height="24"
-                  style={{ position: 'absolute', left: '5px', top: '43px', overflow: 'visible', filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
+                  style={{ position: 'absolute', left: '0.2px', top: '46.6px', overflow: 'visible', transform: 'rotate(-33.7deg)', transformOrigin: '11px 0', filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
                 >
                   {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
                   <defs>
@@ -292,9 +292,9 @@ function render(v: Vals) {
                   top: '30px',
                   width: '96px',
                   height: '184px',
-                  borderRadius: '26px',
-                  background: 'linear-gradient(100deg,#3A3D42 0%,#9DA2A8 4%,#5A5E64 9%,#2C2E32 30%,#43464C 55%,#2A2C30 80%,#7E838A 95%,#33363A 100%)', /* owner (15 Nov): a real titanium band with light on both edges */
-                  boxShadow: '0 0 0 .6px rgba(0,0,0,.6),0 16px 26px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.45),inset 0 -1px 0 rgba(0,0,0,.4),inset 1px 0 0 rgba(255,255,255,.18),inset -1px 0 0 rgba(255,255,255,.12)',
+                  borderRadius: '30px',
+                  background: 'radial-gradient(120% 60% at 30% 0%,#6A6E75 0%,rgba(106,110,117,0) 55%),linear-gradient(160deg,#4A4D53 0%,#2E3034 40%,#222427 75%,#33363B 100%)', /* owner (15 Nov): a cute, soft, glossy graphite shell, not a serious phone */ /* owner (15 Nov): a real titanium band with light on both edges */
+                  boxShadow: '0 16px 26px rgba(0,0,0,.32),inset 0 2px 1px rgba(255,255,255,.28),inset 0 -3px 6px rgba(0,0,0,.45),inset 3px 0 6px rgba(255,255,255,.06)',
                 }}
               >
                 {'\n          '}
@@ -338,8 +338,8 @@ function render(v: Vals) {
                   <div
                     style={{
                       position: 'absolute',
-                      inset: '4px',
-                      borderRadius: '19px',
+                      inset: '5px',
+                      borderRadius: '25px',
                       background: 'radial-gradient(110% 80% at 40% 25%,#FFF1B8 0%,#F7C032 35%,#F7C032 75%,#E0A61E 100%)',
                       overflow: 'hidden',
                     }}

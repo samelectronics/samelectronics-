@@ -283,3 +283,6 @@ html[dir='rtl'] .hs-cart { left: auto; right: 14px; }
 .sam-zap-core { animation: samCore 2.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
 @keyframes samCore { 0%,100% { opacity: .18; transform: scale(.85); } 50% { opacity: .42; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) { .sam-zap-run, .sam-zap-core { animation: none; } }
+/* owner (15 Nov): Samsoom's "available" dot = the same dot as the hours pill: solid colour, a soft glow breathing in and out, no outline */
+[data-tour="samsoom"] + span { background: #3ECF8E !important; box-shadow: none !important; animation: none !important; width: 9px !important; height: 9px !important; }
+[data-tour="samsoom"] + span::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: #3ECF8E; animation: sePing 2.8s ease-in-out infinite; }
