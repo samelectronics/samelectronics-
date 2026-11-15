@@ -6,7 +6,7 @@ import { type Vals } from '@/dc/runtime';
 import SEBenchTest from './SEBenchTest';
 import SEFinale from './SEFinale';
 import SEHomeDeals from './SEHomeDeals';
-import SEShowcase from './SEShowcase';
+// SEShowcase: kept for the Shop screens page
 import SEMeet from './SEMeet';
 import SEFeed from './SEFeed';
 import SEReviews from './SEReviews';
@@ -16,7 +16,7 @@ import SEWhatWeOffer from './SEWhatWeOffer';
 import SEWholesale from './SEWholesale';
 import SEStory from './SEStory';
 import SETeam from './SETeam';
-import SEWho from './SEWho';
+// SEWho: no longer on Home
 import SECircuit from './SECircuit';
 import RepairLab from '../home/sections/RepairLab';
 import RepairLabFull from '../home/RepairLabFull';
@@ -32,7 +32,7 @@ export default function HomeRest({ v }: { v: Vals }) {
       <SEWhatWeOffer />
       <SELiveBoard />
       <SEBenchTest />
-      <SEShowcase />
+      {/* owner (15 Nov): Showcase removed from Home (it repeated the grades; it moves to the Shop screens page) */}
       <SEHomeDeals />
       <SEWholesale />
       <RepairLab v={v} />
@@ -42,7 +42,7 @@ export default function HomeRest({ v }: { v: Vals }) {
       <SEStory todayHours={v.todayHours} dirLink={v.dirLink} wa={v.visit?.wa} notify={v.story?.notify} />
       <SETeam />
       <SEMeet />
-      <SEWho />
+      {/* owner (15 Nov): Who are you removed from Home (it repeated Membership and Wholesale) */}
       <SEFeed />
       <SEVisit />
       <SEReviews />
