@@ -4,12 +4,15 @@ import React from 'react';
 import { type Vals, createDC, cssToObj, cx, s, t } from '@/dc/runtime';
 import Logic from './SELauncher.logic.js';
 import SESamsoom from './SESamsoom';
+import LauncherNudge from './LauncherNudge';
 
 function render(v: Vals) {
   return (
     <>
       <div ref={v.rootRef} style={{ position: 'fixed', insetInlineEnd: '24px', bottom: '24px', zIndex: '70' }} /* R6 Part C6: bottom-left in Arabic */>
         {'\n  '}
+        <LauncherNudge />
+        <span className="ln-hold" aria-hidden="true" />
         <button
           data-tour="samsoom"
           onClick={v.click}
