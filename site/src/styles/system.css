@@ -294,3 +294,7 @@ html[dir='rtl'] .hs-cart { left: auto; right: 14px; }
 #families .wo-spots { opacity: .5; }
 #families .wo-grid > * { box-shadow: inset 0 1px 0 rgba(255,255,255,.12), inset 0 0 0 1px rgba(255,255,255,.07), 0 24px 44px -20px rgba(0,0,0,.7) !important; }
 .wwo-boxes > [data-w='R'] { box-shadow: inset 0 1px 0 rgba(255,255,255,.14), inset 0 0 0 1px rgba(255,255,255,.08), 0 30px 50px -22px rgba(0,0,0,.75) !important; }
+/* UNIVERSAL (owner, 15 Nov): circuit pads never have a dark centre: solid lit pads with a soft halo, everywhere */
+.k-grid svg.cx-trace circle, .se-gut-dark .nd, .lp-pad { fill: #F7C032 !important; stroke: rgba(247,192,50,.3) !important; stroke-width: 4 !important; }
+.se-gut-dark .jn, .se-gut-light .jn { fill: #F7C032 !important; stroke: rgba(247,192,50,.3) !important; }
+.se-gut-yel .jn, .se-gut-yel .nd { fill: #26282B !important; stroke: rgba(38,40,43,.25) !important; }
