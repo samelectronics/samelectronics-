@@ -2,6 +2,7 @@
 // Home v3 section "SystemMapDrawer". Renders against the home page's values (`v`, from HomeV3's logic class).
 'use client';
 import React from 'react';
+import LangMenu from '../LangMenu';
 import { useScrollLock, stopWheel } from '@/lib/scrollLock';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 
@@ -76,6 +77,12 @@ export default function SystemMapDrawer({ v }: { v: Vals }) {
                 </button>
               </div>
               {'\n    '}
+              {/* R13 (owner: phone bar = essentials only): on phones and tablets, language, help and My Bench live here */}
+              <div className="smd-quick">
+                <LangMenu dark />
+                <button type="button" className="smd-chip" onClick={() => { v.drawer?.close?.(); window.dispatchEvent(new CustomEvent('se:help')); }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="9" /><path d="M9.6 9.2a2.5 2.5 0 0 1 4.8.9c0 1.7-2.4 2.2-2.4 3.6M12 17h.01" /></svg>{t('Help')}</button>
+                <a className="smd-chip" href="/account"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4" /><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" /></svg>{t('My Bench')}</a>
+              </div>
               <div style={{ flex: '1', overflowY: 'auto', overscrollBehavior: 'contain', padding: '8px 12px' }}>
                 {'\n      '}
                 {(Array.isArray(v.sysMap) ? v.sysMap : []).map((__it: any, __i: number) => {

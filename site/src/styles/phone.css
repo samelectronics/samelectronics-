@@ -147,3 +147,27 @@
   #top [data-ipad], #top .se-reel[data-hero-dev], #top div:has(+ [data-ipad]) { translate: calc((100vw / .5 - 546px) / 2 - 836px) 690px !important; }
   #top [data-hero-rail] { translate: 0 610px !important; }
 }
+
+/* R13 · the bar on tablets and phones = essentials only (owner: "messy").
+   Phone: logo · search · notifications · cart · menu.  Tablet: logo · search field · hours · notifications · account · cart · menu.
+   Language, help and My Bench move into the top of the menu drawer. */
+.smd-quick { display: none; }
+@media (max-width: 1100px) {
+  .smd-quick { display: flex; flex-wrap: wrap; gap: 8px; padding: 14px 24px; border-bottom: 1px solid rgba(255,255,255,.08); }
+  .smd-chip { display: inline-flex; align-items: center; gap: 8px; height: 38px; padding: 0 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.04); color: #fff; font: 600 14px Inter, sans-serif; text-decoration: none; cursor: pointer; }
+  .smd-quick .se-lm-btn b, .smd-quick .se-lm-btn .chev { display: inline !important; }
+  header .se-lm, header .se-help { display: none !important; }
+}
+@media (min-width: 761px) and (max-width: 1100px) {
+  header .scp-90837cfd { background: rgba(255,255,255,.07) !important; color: #E9EBED !important; box-shadow: inset 0 0 0 1px rgba(255,255,255,.14) !important; min-width: 220px; justify-content: flex-start !important; padding: 0 12px !important; gap: 10px !important; border-radius: 12px !important; font-weight: 500 !important; }
+  header .scp-90837cfd > svg:first-child { color: #F7C032; }
+  header .scp-90837cfd .se-fmp-t, header .scp-90837cfd > svg:last-child { display: none; }
+  header .scp-90837cfd .se-fmp-q { display: inline !important; font-size: 14px; color: #A7ABB1; }
+}
+@media (max-width: 760px) {
+  header .se-nav-bench { display: none !important; }
+}
+@media (max-width: 1100px) { .smd-quick .se-lm-btn { height: 38px; padding: 0 14px !important; gap: 8px; border-radius: 10px; } }
+@media (max-width: 720px) {
+  #top [data-hero-scene] > div[style*="polygon(960px"] { clip-path: polygon(200vw 870px, 200vw 1470px, 0 1470px, 0 1160px) !important; }
+}
