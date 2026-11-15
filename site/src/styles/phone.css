@@ -137,3 +137,13 @@
   header [data-tour="nav"], header .se-nav-right, header .se-lm { display: contents !important; }
 }
 @media (max-width: 760px) { header [data-tour="nav"] > a { display: none !important; } }
+
+/* R13 · phones: the hero keeps its iPad + phone (owner: "what I see on computer I want on phone").
+   The scene runs at zoom .5 on every phone, so the devices are moved under the text, centred, inside a taller scene. */
+@media (max-width: 720px) {
+  #top { height: 822px !important; }
+  header .se-help { display: none !important; }
+  #top [data-hero-scene] { height: 1470px !important; }
+  #top [data-ipad], #top .se-reel[data-hero-dev], #top div:has(+ [data-ipad]) { translate: calc((100vw / .5 - 546px) / 2 - 836px) 690px !important; }
+  #top [data-hero-rail] { translate: 0 610px !important; }
+}

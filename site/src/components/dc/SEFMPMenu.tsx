@@ -42,6 +42,8 @@ function render(v: Vals) {
             <path d="m20 20-3.5-3.5"></path>
           </svg>
           <span className="se-fmp-t">Find My Part</span>
+          <span className="se-fmp-q">Search any part, model or brand</span>
+          <kbd className="se-fmp-k">Ctrl K</kbd>
           <svg
             width="12"
             height="12"

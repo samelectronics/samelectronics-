@@ -183,3 +183,19 @@ div:has(> [data-hero-screen]) > .se-hwb { display: none !important; }
 div:has(> [data-hero-screen])::before { content: ''; position: absolute; inset: -6px; z-index: 5; pointer-events: none; background: url(/assets/frame-phone.webp) 0 0 / 100% 100% no-repeat; }
 div:has(> .se-hwb-t):has(> [data-hero-screen])::before { background-image: url(/assets/frame-ipad.webp); }
 html body [data-hero-screen] { box-shadow: inset 0 0 0 2px #040405, inset 0 0 0 2.6px rgba(255,255,255,.05) !important; background: #08090A !important; }
+
+/* R13 · Top bar, decluttered (owner + boss: "too much", "customers get lost", "we need a free search"):
+   Find My Part reads as the shop's search field; language is the globe alone; settings live inside its menu. */
+@media (min-width: 1101px) {
+  .scp-90837cfd { background: rgba(255,255,255,.07) !important; color: #E9EBED !important; box-shadow: inset 0 0 0 1px rgba(255,255,255,.14) !important; min-width: 250px; justify-content: flex-start !important; padding: 0 8px 0 14px !important; gap: 10px !important; height: 40px; border-radius: 12px !important; font-weight: 500 !important; }
+  .scp-90837cfd:hover { box-shadow: inset 0 0 0 1px rgba(247,192,50,.6), 0 0 18px rgba(247,192,50,.18) !important; }
+  .scp-90837cfd > svg:first-child { color: #F7C032; }
+  .scp-90837cfd .se-fmp-t { display: none; }
+  .scp-90837cfd .se-fmp-q { flex: 1; text-align: start; font-size: 14px; color: #A7ABB1; }
+  .scp-90837cfd .se-fmp-k { font: 500 11px 'JetBrains Mono', monospace; color: #8C9096; padding: 3px 6px; border-radius: 6px; box-shadow: inset 0 0 0 1px rgba(255,255,255,.14); }
+  .scp-90837cfd > svg:last-child { display: none; }
+}
+@media (max-width: 1100px) { .se-fmp-q, .se-fmp-k { display: none; } }
+.se-lm-btn b, .se-lm-btn .chev { display: none !important; }
+.se-lm-gear { display: none !important; }
+@media (min-width: 1101px) { .se-nav-right { gap: 10px !important; } header [data-tour="nav"] { gap: clamp(12px, 1.6vw, 24px) !important; } }
