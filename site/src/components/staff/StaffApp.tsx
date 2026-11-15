@@ -169,7 +169,8 @@ function Login({ onDone, start }: { onDone: () => void; start?: Step }) {
   };
   const doCode = async (e: React.FormEvent) => { e.preventDefault(); if (!factor) return; setBusy(true); setErr(''); const m = await (await sb()).mfaVerify(factor, code); setBusy(false); setCode(''); if (m) setErr(m); else onDone(); };
   const doReset = async () => { if (!email) { setErr('Type your e-mail first, then press "Forgot password?".'); return; } setBusy(true); const m = live ? await (await sb()).staffPasswordReset(email) : null; setBusy(false); if (m) setErr(m); else setStep('sent'); };
-  const doNew = async (e: React.FormEvent) => { e.preventDefault(); if (pw.length < 10) { setErr('Use at least 10 characters.'); return; } if (pw !== pw2) { setErr('The two passwords are not the same.'); return; } setBusy(true); const m = await (await sb()).setNewPassword(pw); setBusy(false); if (m) setErr(m); else { history.replaceState(null, '', '/staff'); await toMfa(); } };
+  const [needPwCode, setNeedPwCode] = useState(false);
+  const doNew = async (e: React.FormEvent) => { e.preventDefault(); if (pw.length < 10) { setErr('Use at least 10 characters.'); return; } if (pw !== pw2) { setErr('The two passwords are not the same.'); return; } setBusy(true); const m = await (await sb()).setNewPassword(pw, code || undefined); setBusy(false); setCode(''); if (m === 'MFA_REQUIRED') { setNeedPwCode(true); setErr('Your account has an authenticator. Type its 6-digit code to save the new password.'); } else if (m) setErr(m); else { history.replaceState(null, '', '/staff'); await toMfa(); } };
   const stepNo = step === 'gate' ? 0 : step === 'pw' || step === 'sent' || step === 'newpw' ? 1 : step === 'checking' ? 0 : 2;
   if (step === 'checking') return <Door step={0}><div className="cr-door-wait"><i /></div></Door>;
   return (
@@ -204,6 +205,7 @@ function Login({ onDone, start }: { onDone: () => void; start?: Step }) {
           <h1>New password</h1><p>At least 10 characters. Then you confirm with your 6-digit code.</p>
           <label>New password<input className="cr-in" type="password" required autoFocus value={pw} onChange={(e) => setPw(e.target.value)} autoComplete="new-password" /></label>
           <label>Repeat it<input className="cr-in" type="password" required value={pw2} onChange={(e) => setPw2(e.target.value)} autoComplete="new-password" /></label>
+          {needPwCode ? <label>6-digit code from your authenticator app<input className="cr-in" inputMode="numeric" maxLength={7} value={code} onChange={(e) => setCode(e.target.value)} autoComplete="one-time-code" /></label> : null}
           {err ? <span className="cr-err">{err}</span> : null}
           <button type="submit" className="cr-btn y big" disabled={busy}>Save password</button>
         </form>

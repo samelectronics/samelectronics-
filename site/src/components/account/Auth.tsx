@@ -36,6 +36,8 @@ export default function Auth({ onDone }: { onDone: () => void }) {
     if (mode !== 'code' && need(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em), 'Please type a valid e-mail address.')) return;
     if ((mode === 'in' || mode === 'up') && need(!f.password, 'Please type your password.')) return;
     if (mode === 'up' && need(f.password.length < 8, 'Your password needs at least 8 characters.')) return;
+    // R12 (owner): every account has a WhatsApp number, so the team can reach the customer
+    if (mode === 'up' && need(f.phone.replace(/[^0-9]/g, '').length < 8, 'Add your WhatsApp number with the country code, e.g. +971 50 123 4567.')) return;
     if (mode === 'code' && need(!/^\d{6}$/.test(f.code.trim()), 'Type the 6-digit code from the e-mail.')) return;
     run(async () => {
     if (mode === 'in') { const r = await backend.signIn(f.email, f.password); if (r.ok) onDone(); else { setErr(nice(r.error)); if (/confirm/i.test(r.error)) { const x = await backend.resend(f.email); if (x.ok && x.data.demoCode) setDemo(x.data.demoCode); go('code'); } } }
@@ -81,7 +83,7 @@ export default function Auth({ onDone }: { onDone: () => void }) {
             {mode === 'up' ? <span className="au-str" data-s={s}><i /><i /><i /><i /><i /><small>{[T('Too short'), T('Weak'), T('Fair'), T('Good'), T('Strong'), T('Very strong')][s]}</small></span> : null}
           </label>
         ) : null}
-        {mode === 'up' ? <label className="sp-field">{T('Phone (WhatsApp, optional)')}<input value={f.phone} onChange={set('phone')} autoComplete="tel" placeholder="+971 5x xxx xxxx" /></label> : null}
+        {mode === 'up' ? <label className="sp-field">{T('WhatsApp number')}<input value={f.phone} onChange={set('phone')} autoComplete="tel" placeholder="+971 5x xxx xxxx" /></label> : null}
         {mode === 'up' ? <label className="au-agree"><input type="checkbox" checked={f.agree} onChange={set('agree')} /><span>{T('I accept the')} <a href="/legal#terms" target="_blank">{T('terms')}</a> {T('and the')} <a href="/legal#privacy" target="_blank">{T('privacy policy')}</a>.</span></label> : null}
         {mode === 'code' ? (
           <>

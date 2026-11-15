@@ -182,3 +182,36 @@ html[dir='rtl'] .au-tabs i { left: auto; right: 4px; } html[dir='rtl'] .au-tabs 
 .au-hint { display: block; font: 500 12.5px/1.45 Inter, sans-serif; color: #5E6064; }
 .au-err, .au-form .sp-note[style*='229,72,77'] { background: #FDECEC !important; color: #9B1C20 !important; font: 600 13.5px/1.45 Inter, sans-serif; box-shadow: inset 3px 0 0 #E5484D; }
 .au-ok { background: #E8F7EF !important; color: #157A4A !important; font: 600 13.5px Inter, sans-serif; }
+
+/* R12 (owner): one clean card. No white box inside a grey box: the whole sign-in is one graphite glass card with safe
+   margins all round; the logo sits inside it; fields are crisp white; messages are readable; help links are tidy pills. */
+.au-door .au-card.cr-door-card { width: min(480px, 100%) !important; padding: 34px 34px 28px !important; gap: 20px !important; border-radius: 28px !important; background: linear-gradient(180deg, rgba(62,64,68,.92), rgba(38,40,43,.94)) !important; -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); box-shadow: 0 0 0 1px rgba(255,255,255,.09), inset 0 1px 0 rgba(255,255,255,.08), 0 40px 90px -30px rgba(0,0,0,.75) !important; box-sizing: border-box; }
+.au-door .au-card .cr-brand { margin: 0 !important; padding: 0 !important; }
+.au-door .au-card .cr-brand img { width: 46px; height: 46px; border-radius: 50%; box-shadow: 0 0 0 2.5px #F7C032; flex: none; }
+.au-door .au-form { padding: 0 !important; background: none !important; border-radius: 0 !important; box-shadow: none !important; color: #fff !important; gap: 14px !important; }
+.au-door .au-form .sp-field { color: #E6E7E9 !important; }
+.au-door .au-form .sp-field input, .au-door .au-pw input { background: #fff !important; color: #26282B !important; border: 0 !important; box-shadow: inset 0 0 0 1px rgba(0,0,0,.06) !important; border-radius: 12px !important; min-height: 48px; }
+.au-door .au-form .sp-field input:focus, .au-door .au-pw input:focus { box-shadow: 0 0 0 3px rgba(247,192,50,.55) !important; outline: none; }
+.au-door .au-tabs { background: rgba(255,255,255,.07) !important; box-shadow: inset 0 0 0 1px rgba(255,255,255,.08) !important; }
+.au-door .au-tabs button { color: #C9CBCE !important; } .au-door .au-tabs button[aria-selected='true'], .au-door .au-tabs button.on { background: #F7C032 !important; color: #26282B !important; box-shadow: 0 6px 16px -8px rgba(247,192,50,.9) !important; }
+.au-door .au-links, .au-door .au-links a, .au-door .au-links button { color: #C9CBCE !important; } .au-door .au-links a:hover, .au-door .au-links button:hover { color: #F7C032 !important; }
+.au-door .au-err { background: rgba(229,72,77,.14) !important; color: #FFD3D4 !important; box-shadow: inset 3px 0 0 #E5484D !important; border-radius: 10px; padding: 10px 12px; font: 600 13.5px/1.45 Inter, sans-serif; }
+.au-door .au-ok { background: rgba(247,192,50,.14) !important; color: #FFE7A6 !important; box-shadow: inset 3px 0 0 #F7C032 !important; border-radius: 10px; padding: 10px 12px; }
+.au-door .au-hint, .au-door .au-lead { color: #B9BBBF !important; font: 500 13.5px/1.5 Inter, sans-serif; margin: 0; }
+/* terms: box first, text beside it on the same line */
+.au-agree { display: flex !important; flex-direction: row !important; align-items: flex-start !important; gap: 10px !important; font: 500 13.5px/1.45 Inter, sans-serif !important; color: #E6E7E9 !important; cursor: pointer; }
+.au-agree input { flex: none; width: 18px !important; height: 18px !important; margin: 1px 0 0 !important; accent-color: #F7C032; }
+.au-agree a { color: #F7C032 !important; text-decoration: underline; text-underline-offset: 2px; }
+/* talk to a person: a tidy row of three pills */
+.cr-door-help { display: flex !important; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px !important; margin-top: 2px; font: 500 12.5px Inter, sans-serif; color: #9EA1A5 !important; }
+.cr-door-help > span:first-child { width: 100%; text-align: center; letter-spacing: .02em; }
+.cr-door-help > span:not(:first-child) { display: none; }
+.cr-door-help a, .cr-door-help button { display: inline-flex; align-items: center; height: 34px; padding: 0 14px; border-radius: 999px; background: rgba(255,255,255,.07); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); color: #fff !important; font: 600 12.5px Inter, sans-serif; text-decoration: none; transition: background .2s, box-shadow .2s; }
+.cr-door-help a:hover, .cr-door-help button:hover { background: rgba(247,192,50,.16); box-shadow: inset 0 0 0 1px #F7C032; }
+.au.au-door { background: transparent !important; box-shadow: none !important; }
+/* the sign-in stage grows with its card: nothing is ever cut at the top or bottom */
+.sp-cine.au-stage { height: auto !important; min-height: 100vh; padding: 110px 0 70px !important; overflow: visible !important; box-sizing: border-box; }
+.sp-cine.au-stage .au.au-door { min-height: 0 !important; padding: 0 16px !important; }
+.au-door .au-tabs { overflow: hidden; border-radius: 14px !important; padding: 4px !important; }
+.au-door .au-kind label, .au-door .au-kind button { color: #fff !important; } .au-door .au-kind small, .au-door .au-kind span small { color: #C9CBCE !important; }
+.au-door .cr-note { color: #FFE7A6 !important; }

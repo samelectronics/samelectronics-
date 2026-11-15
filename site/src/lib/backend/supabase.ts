@@ -129,4 +129,16 @@ export async function cancelInvite(email: string) { await db().from('staff_invit
 /** R10 S7: the owner resets someone's two-step; they set it up again at their next sign-in */
 export async function resetStaffMfa(id: string): Promise<string | null> { const { error } = await db().rpc('reset_staff_mfa', { p_id: id }); return error ? error.message : null; }
 export async function staffPasswordReset(email: string): Promise<string | null> { const { error } = await db().auth.resetPasswordForEmail(email.trim(), { redirectTo: location.origin + '/staff?reset=1' }); return error ? error.message : null; }
-export async function setNewPassword(pw: string): Promise<string | null> { const { error } = await db().auth.updateUser({ password: pw }); return error ? error.message : null; }
+/** R12: accounts with an authenticator must confirm the 6-digit code before a new password can be saved (Supabase AAL2).
+ *  Returns null on success, 'MFA_REQUIRED' when the code is needed, or a readable message. */
+export async function needsMfaForPassword(): Promise<boolean> { try { const s = await mfaState(); return s.enrolled && s.level !== 'aal2'; } catch { return false; } }
+export async function setNewPassword(pw: string, code?: string): Promise<string | null> {
+  const s = await mfaState().catch(() => null);
+  if (s && s.enrolled && s.level !== 'aal2') { if (!code) return 'MFA_REQUIRED'; const m = await mfaVerify(s.factorId!, code); if (m) return /invalid|expired/i.test(m) ? 'That code did not work. Use the newest 6-digit code from your authenticator app.' : m; }
+  const { error } = await db().auth.updateUser({ password: pw });
+  if (!error) return null;
+  if (/AAL2/i.test(error.message)) return 'MFA_REQUIRED';
+  if (/different from the old|same password/i.test(error.message)) return 'Choose a password you have not used before.';
+  if (/session|expired|missing/i.test(error.message)) return 'This reset link has expired. Ask for a new one from the sign-in page.';
+  return error.message;
+}
