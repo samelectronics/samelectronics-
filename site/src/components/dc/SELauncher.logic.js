@@ -56,7 +56,7 @@ class Component extends DCLogic {
     this.setState({ mi, open: true });
   }
   wake() { if (this.ign >= 3) { this.ign = 0; this.tm.forEach(clearTimeout); this.tm = []; this.cycle(); } else this.ign = 0; }
-  measure() { const el = this.txtRef.current; if (!el) return; const w = Math.ceil(el.scrollWidth); if (w && w !== this.state.tw) this.setState({ tw: w }); }
+  measure() { const el = this.txtRef.current; if (!el) return; /* speed: only when the label text or language changed (it forced a layout on every update) */ const key = el.textContent + '|' + document.documentElement.lang + '|' + (document.fonts ? document.fonts.status : ''); if (key === this._mk) return; this._mk = key; const w = Math.ceil(el.scrollWidth); if (w && w !== this.state.tw) this.setState({ tw: w }); }
   renderVals() {
     const s = this.state, MAXT = 280 - 60 - 16, msg = this.msgs()[s.mi], tw = s.tw || msg.length * 8.2, over = tw > MAXT;
     const w = s.open ? Math.round(60 + Math.min(tw, MAXT) + 18) : 56;
