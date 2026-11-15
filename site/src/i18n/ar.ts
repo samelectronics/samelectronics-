@@ -1776,6 +1776,7 @@ export const R7: Record<string, string> = {
 
 /** Round 8: Sam Circuit's three cards, Samsoom's tour and chat menu. */
 export const R8: Record<string, string> = {
+  "Added to cart": "أُضيف إلى السلة",
   "Three cards.": "ثلاث بطاقات.",
   "One is yours.": "واحدة لك.",
   "One for customers, one for suppliers, and one we give to our most loyal customers. Each is earned its own way.": "واحدة للزبائن، وواحدة للموردين، وواحدة نمنحها لأوفى زبائننا. لكل بطاقة طريقتها.",
@@ -3396,7 +3397,7 @@ export const R8: Record<string, string> = {
   "Need a person?": "تحتاج شخصاً؟",
   "WhatsApp us!": "راسلنا على واتساب!",
   "WeChat us!": "راسلنا على WeChat!",
-  "WeChat us": "راسلنا على WeChat",
+  "WeChat us": "ويتشات",
   "Add our number in WeChat and send us a message. We reply in Arabic, English and Chinese.": "أضف رقمنا في WeChat وأرسل لنا رسالة. نرد بالعربية والإنجليزية والصينية.",
   "Copy number": "انسخ الرقم",
   "Open WeChat": "افتح WeChat",

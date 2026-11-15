@@ -2863,5 +2863,8 @@ const DICT: Record<string, string> = {
   "Your notifications": "اعلان‌های شما",
   "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "یک دکمه، دو نیمه: کره زمین زبان کل سایت را عوض می‌کند، چرخ‌دنده تنظیمات را باز می‌کند: صداها، صدای من، ارز و حریم خصوصی.",
   "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "سفارش‌ها، تعمیرها، هشدارهای موجودی و پیشنهادها اینجا می‌آیند. صدای ملایمی می‌شنوید و زبانه مرورگر یک نقطه زرد نشان می‌دهد.",
+  "Search any part, model or brand": "هر قطعه، مدل یا برندی را جستجو کنید",
+  "Added to cart": "به سبد اضافه شد",
+  "WeChat us": "در ویچت پیام دهید",
 };
 export default DICT;

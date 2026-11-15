@@ -1159,5 +1159,9 @@ const DICT: Record<string, string> = {
   "Your notifications": "Beeksisoota keessan",
   "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "Qabduu tokko, walakkaa lama: lafti afaan marsariitii guutuu jijjiira, gaariin qindaa'ina bana: sagalee, sagalee koo, maallaqa fi dhuunfaa.",
   "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "Ajajni, suphaan, akeekkachiisni kuusaa fi dhiyeessiin asitti dhufu. Sagalee laafaa ni dhageessu, gabateen barbaadaa tuqaa keelloo agarsiisa.",
+  "Search any part, model or brand": "Kutaa, moodeela ykn maqaa kamiyyuu barbaadi",
+  "Added to cart": "Gaarii keessa galmeeffame",
+  "Open the shop": "Suuqii bani",
+  "WeChat us": "WeChat",
 };
 export default DICT;

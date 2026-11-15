@@ -2875,7 +2875,7 @@ const DICT: Record<string, string> = {
   "Need a person?": "¿Hablas con una persona?",
   "WhatsApp us!": "¡Escríbenos por WhatsApp!",
   "WeChat us!": "¡Escríbenos por WeChat!",
-  "WeChat us": "Escríbenos por WeChat",
+  "WeChat us": "WeChat",
   "Add our number in WeChat and send us a message. We reply in Arabic, English and Chinese.": "Añade nuestro número en WeChat y escríbenos. Respondemos en árabe, inglés y chino.",
   "Copy number": "Copiar número",
   "Open WeChat": "Abrir WeChat",

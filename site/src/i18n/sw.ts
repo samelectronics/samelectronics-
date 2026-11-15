@@ -1159,5 +1159,9 @@ const DICT: Record<string, string> = {
   "Your notifications": "Arifa zako",
   "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "Kitufe kimoja, nusu mbili: dunia hubadilisha lugha ya tovuti yote, gia hufungua mipangilio: sauti, sauti yangu, sarafu na faragha.",
   "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "Oda, matengenezo, arifa za stoo na ofa hufika hapa. Utasikia mlio laini, na kichupo cha kivinjari kitaonyesha nukta ya njano.",
+  "Search any part, model or brand": "Tafuta kipuri, modeli au chapa yoyote",
+  "Added to cart": "Imeongezwa kwenye kikapu",
+  "Open the shop": "Fungua duka",
+  "WeChat us": "WeChat",
 };
 export default DICT;

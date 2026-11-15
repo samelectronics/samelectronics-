@@ -1160,5 +1160,9 @@ const DICT: Record<string, string> = {
   "Your notifications": "ማሳወቂያዎችዎ",
   "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "አንድ ቁልፍ፣ ሁለት ግማሽ፦ ሉሉ የጣቢያውን ቋንቋ ይቀይራል፣ ማርሹ ቅንብሮችን ይከፍታል፦ ድምጾች፣ ድምፄ፣ ምንዛሬ እና ግላዊነት።",
   "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "ትዕዛዞች፣ ጥገናዎች፣ የክምችት ማንቂያዎች እና ቅናሾች እዚህ ይደርሳሉ። ለስላሳ ድምፅ ይሰማሉ፣ የአሳሹ ትር ቢጫ ነጥብ ያሳያል።",
+  "Search any part, model or brand": "ማንኛውንም ክፍል፣ ሞዴል ወይም ብራንድ ይፈልጉ",
+  "Added to cart": "ወደ ጋሪ ተጨምሯል",
+  "Open the shop": "ሱቁን ይክፈቱ",
+  "WeChat us": "WeChat",
 };
 export default DICT;

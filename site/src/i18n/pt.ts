@@ -1155,5 +1155,9 @@ const DICT: Record<string, string> = {
   "Your notifications": "As suas notificações",
   "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "Um botão, duas metades: o globo muda o idioma de todo o site, a engrenagem abre as definições: sons, a minha voz, moeda e privacidade.",
   "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "Encomendas, reparações, alertas de stock e ofertas chegam aqui. Ouve um toque suave e o separador do navegador mostra um ponto amarelo.",
+  "Search any part, model or brand": "Pesquise qualquer peça, modelo ou marca",
+  "Added to cart": "Adicionado ao carrinho",
+  "Open the shop": "Abrir a loja",
+  "WeChat us": "WeChat",
 };
 export default DICT;

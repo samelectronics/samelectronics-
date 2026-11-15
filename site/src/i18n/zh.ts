@@ -1160,5 +1160,9 @@ const DICT: Record<string, string> = {
   "Your notifications": "你的通知",
   "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "一个按钮，两半：地球切换整个网站的语言，齿轮打开设置：声音、我的声音、货币和隐私。",
   "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "订单、维修、库存提醒和优惠都会出现在这里。你会听到轻柔的提示音，浏览器标签上会出现黄点。",
+  "Search any part, model or brand": "搜索任意配件、型号或品牌",
+  "Added to cart": "已加入购物车",
+  "Open the shop": "打开商店",
+  "WeChat us": "微信",
 };
 export default DICT;

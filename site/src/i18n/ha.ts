@@ -1159,5 +1159,9 @@ const DICT: Record<string, string> = {
   "Your notifications": "Sanarwarku",
   "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "Maɓalli ɗaya, rabi biyu: duniya tana canja harshen dukan shafin, giya tana buɗe saituna: sautuka, muryata, kuɗi da sirri.",
   "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "Oda, gyara, faɗakarwar kaya da tayi suna zuwa nan. Za ku ji ƙara mai laushi, kuma shafin burauza zai nuna digo mai rawaya.",
+  "Search any part, model or brand": "Nemi kowane sashi, samfuri ko alama",
+  "Added to cart": "An saka a kwando",
+  "Open the shop": "Bude shago",
+  "WeChat us": "WeChat",
 };
 export default DICT;

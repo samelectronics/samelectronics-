@@ -1116,5 +1116,9 @@ const DICT: Record<string, string> = {
   "Your notifications": "Mga abiso mo",
   "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "Isang button, dalawang kalahati: ang globo ang nagpapalit ng wika ng buong site, ang gear ang nagbubukas ng settings: tunog, boses ko, pera at privacy.",
   "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "Dito dumarating ang mga order, repair, alerto sa stock at alok. May maririnig kang mahinang tunog, at may dilaw na tuldok sa tab ng browser.",
+  "Search any part, model or brand": "Maghanap ng anumang piyesa, modelo o brand",
+  "Added to cart": "Naidagdag sa cart",
+  "Open the shop": "Buksan ang shop",
+  "WeChat us": "WeChat",
 };
 export default DICT;

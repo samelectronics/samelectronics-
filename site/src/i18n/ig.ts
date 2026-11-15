@@ -1158,5 +1158,9 @@ const DICT: Record<string, string> = {
   "Your notifications": "Ọkwa gị",
   "One button, two halves: the globe changes the language of the whole site, the gear opens settings: sounds, my voice, currency and privacy.": "Otu bọtịnụ, ọkara abụọ: ụwa na-agbanwe asụsụ saịtị niile, gia na-emepe ntọala: ụda, olu m, ego na nzuzo.",
   "Orders, repairs, stock alerts and offers land here. You hear a soft chime, and the browser tab shows a yellow dot.": "Ịtụ, ndozi, ọkwa ngwaahịa na onyinye na-abịa ebe a. Ị ga-anụ ụda dị nro, taabụ ihe nchọgharị ga-egosi ntụpọ odo.",
+  "Search any part, model or brand": "Chọọ akụkụ ọ bụla, ụdị ma ọ bụ akara",
+  "Added to cart": "Etinyere n'ụgbọ",
+  "Open the shop": "Mepee ụlọ ahịa",
+  "WeChat us": "WeChat",
 };
 export default DICT;
