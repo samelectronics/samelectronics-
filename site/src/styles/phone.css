@@ -103,3 +103,18 @@
   #visit .vs-con * { min-width: 0; }
 }
 @media (max-width: 700px) { #visit .vs-acts { flex-wrap: wrap; } #visit .vs-acts > .vs-btn { flex: 1 1 140px; justify-content: center; } }
+
+/* R12 (owner: on phones the bar crashed together): only the essentials, each a clean 40px tap target, nothing overlapping:
+   logo · Find My Part (search) · language (globe) · notifications · cart · menu. Help lives in Samsoom's button,
+   settings in the footer and My Bench. */
+@media (max-width: 760px) {
+  .se-help, .se-lm-gear, .se-status { display: none !important; }
+  .se-lm { flex: none; }
+  .se-lm-btn { width: 40px !important; height: 40px !important; padding: 0 !important; justify-content: center !important; gap: 0 !important; }
+  .se-lm-btn > b, .se-lm-btn > .chev { display: none !important; }
+  [data-tour="fmp"] { flex: none !important; margin: 0 !important; }
+  [data-tour="fmp"] > button { width: 44px !important; height: 40px !important; padding: 0 !important; justify-content: center !important; gap: 0 !important; }
+  [data-tour="fmp"] > button > svg:last-child, .se-fmp-t { display: none !important; }
+  .se-nav-right { gap: 4px !important; }
+  .se-nav-right > *, .se-nav-right button { flex: none; }
+}
