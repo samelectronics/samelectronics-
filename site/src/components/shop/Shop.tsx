@@ -11,6 +11,7 @@ import { useMe } from '@/lib/backend';
 import { T, CountUp, Stars } from '@/components/site/ui';
 import LiveSam from '@/components/samsoom/LiveSam';
 import ShopSearch from './ShopSearch';
+import ScreenGrades from './ScreenGrades';
 import ProductCard from './ProductCard';
 import ProductView from './ProductView';
 import Customize, { type View } from './Customize';
@@ -131,7 +132,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
 
       <div className="sp-wrap">
         {/* the categories, as big tiles with the part on its carton */}
-        <div className="shop-cats" data-tour-step={mode === 'deals' ? '4' : '3'} data-tour-title="Shop by part" data-tour-text="Tap a part to see every model and grade we have of it.">
+        <div className="shop-cats" data-tour-step="4" data-tour-title="Shop by part" data-tour-text="Tap a part to see every model and grade we have of it.">
           {cats.map((c) => (
             <button key={c.id} type="button" className={'shop-cat' + (f.cats.includes(c.id) ? ' on' : '') + (c.soon ? ' soon' : '')} disabled={c.soon} onClick={() => tog('cats', c.id)}>
               <img src={'/assets/pose/' + CAT_IMG[c.id] + '-240.webp'} alt="" loading="lazy" /><b>{T(c.name)}</b><small>{c.soon ? T('Coming soon') : c.n + ' ' + T('parts')}</small>
@@ -144,7 +145,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
           {/* quick filters on the left; the full panel is one tap away */}
           <aside className={'shop-side' + (side ? ' open' : '')} aria-label={T('Filters')}>
             <div className="shop-side-in">
-              <button type="button" className="shop-cz" onClick={() => setCz(true)} data-tour-step={mode === 'deals' ? '5' : '4'} data-tour-title="Customize everything" data-tour-text="Price, quality, manufacturer, color, warranty… set it all exactly how you like, and save it.">
+              <button type="button" className="shop-cz" onClick={() => setCz(true)} data-tour-step="5" data-tour-title="Customize everything" data-tour-text="Price, quality, manufacturer, color, warranty… set it all exactly how you like, and save it.">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0" /><circle cx="16" cy="6" r="2" /><circle cx="10" cy="12" r="2" /><circle cx="18" cy="18" r="2" /></svg>
                 <span><b>{T('Customize everything')}</b><small>{T('Price, quality, color, warranty…')}</small></span>
               </button>
@@ -178,6 +179,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
             {chips.length ? <div className="shop-chips">{chips.map(([l, x], i) => <button key={l + i} type="button" className="sp-chip on" onClick={x}>{l}<span className="x">×</span></button>)}<button type="button" className="shop-clear" onClick={() => setF({ ...EMPTY, sort: f.sort })}>{T('Clear all')}</button></div> : null}
             {!trade ? <div className="sp-note shop-tradenote"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg><span>{T('Prices shown are for everyone. Approved trade accounts see their trade price on every part.')} <a href="/wholesale">{T('How to get trade prices')}</a></span></div> : null}
 
+            {f.cats.length === 1 && f.cats[0] === 'SCR' ? <ScreenGrades items={base.filter((p) => p.category === 'SCR')} on={f.grades} onPick={(g) => tog('grades', g)} /> : null}
             {res.length ? (
               <div className={'shop-grid' + (view.list ? ' list' : '')} style={{ ['--cols' as string]: view.cols }}>
                 {shown.map((p, k) => { const every = (view.list ? 1 : Math.max(1, +view.cols || 4)) * 3; const ad = (k + 1) % every === 0 && k + 1 < shown.length && (k + 1) / every <= 3; return <React.Fragment key={p.id}><ProductCard p={p} st={st} trade={trade} open={open} list={view.list} fits={myModels.get(p.model_id)} />{ad ? <InlineAd slot={(k + 1) / every} lastCat={f.cats[0]} /> : null}</React.Fragment>; })}
