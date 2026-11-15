@@ -36,6 +36,7 @@ import '@/styles/info.css';
 import '@/styles/staff-door.css';
 import '@/styles/studio.css';
 import '@/styles/system.css';
+import '@/styles/sequence.css';
 import '@/styles/phone.css';
 
 export const metadata: Metadata = {

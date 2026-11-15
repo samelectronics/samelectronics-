@@ -1,0 +1,18 @@
+/* R13 · Home colour sequence (owner, 15 Nov): from What we offer down, White → Grey → Yellow, repeating.
+   Section backgrounds only; cards and devices keep their own material. Titles: on white = graphite + yellow line;
+   on grey = white + yellow line; on yellow = graphite + white line. */
+:root { --sq-white: #F2F3F4; --sq-grey: #2A2C2F; --sq-yellow: #F7C032; --sq-ink: #3A3D42; }
+
+/* Deals → WHITE */
+#deals.dl { background: radial-gradient(42% 55% at 14% 26%, rgba(247,192,50,.12), rgba(247,192,50,0) 70%), var(--sq-white) !important; color: #26282B !important; }
+#deals .dl-h > span:first-child > span { color: var(--sq-ink) !important; }
+#deals .dl-h > span:nth-child(2) > span { color: #F7C032 !important; }
+#deals .dl-eb, #deals .dl-k { color: #B8860B; }
+#deals .dl-top p, #deals .dl-sub, #deals .dl-side p { color: #5C6066 !important; }
+#deals .dl-tabs button { background: rgba(38,40,43,.06) !important; color: #3A3D42 !important; }
+#deals .dl-tabs button.on { background: #26282B !important; color: #F7C032 !important; }
+#deals .dl-all { color: #26282B !important; }
+/* inside the dark cards the text stays light */
+#deals .dl-spot, #deals .dl-card, #deals .dl-ship, #deals .dl-pre { color: #FFFFFF !important; }
+#deals .dl-spot h3, #deals .dl-card h4, #deals .dl-ship h3, #deals .dl-ship b, #deals .dl-pre b, #deals .dl-pre h3, #deals .dl-ship-h b, #deals .dl-ship-h h3 { color: #FFFFFF !important; }
+#deals .dl-ship p, #deals .dl-pre p, #deals .dl-ship-h > div > :not(.dl-k) { color: #D5D7DA; }
