@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<!-- Owner (15 Nov): the Bench Test rig plate, rendered as real metal (not CSS gradients): a machined slab of brushed
+     aluminium with polished chamfers on the outer edge and on every pocket (top display, phone bay, the four readouts,
+     the cable slot), four countersunk Phillips screws. Straight-on, transparent, pixel-aligned with the HTML panels
+     (geometry in CSS px from the live rig: 620 × 616). The HTML panels sit inside the pockets. -->
+<head><meta charset="utf-8">
+<style>html,body{margin:0;background:transparent}canvas{display:block}</style>
+<script type="importmap">{ "imports": { "three": "/three/build/three.module.js", "three/addons/": "/three/examples/jsm/" } }</script>
+</head>
+<body>
+<script type="module">
+import * as THREE from 'three';
+const Q = new URLSearchParams(location.search), K = +(Q.get('k') || 3); // px scale
+const RW = 620, RH = 616, W = RW * K, H = RH * K;
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1); renderer.setSize(W, H); renderer.setClearColor(0x000000, 0);
+renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 0.85;
+document.body.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+// the same studio as the product shots: big softbox top-left, warm strip lights, a softbox behind the camera
+{ const pmrem = new THREE.PMREMGenerator(renderer), env = new THREE.Scene();
+  env.add(new THREE.Mesh(new THREE.SphereGeometry(30, 32, 16), new THREE.MeshBasicMaterial({ color: new THREE.Color(0.22, 0.225, 0.235), side: THREE.BackSide })));
+  const panel = (w, h, rgb, pos) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(...rgb), side: THREE.DoubleSide })); m.position.set(...pos); m.lookAt(0, 0, 0); env.add(m); };
+  panel(12, 7, [5.5, 5.5, 5.4], [-8, 9, 10]);   // key softbox, top-left
+  panel(4, 12, [1.6, 1.6, 1.65], [11, -1, 7]);  // fill, right
+  panel(1.4, 16, [3.4, 3.0, 2.4], [-3, 0, 14]); // warm strip light: the vertical sheen band
+  panel(18, 3, [0.7, 0.7, 0.72], [0, -11, 6]);  // floor bounce
+  panel(30, 14, [1.05, 1.06, 1.1], [-2, 5, 22]); // big softbox behind the camera (what flat metal mirrors)
+  panel(30, 6, [0.3, 0.3, 0.32], [2, -9, 20]);  // darker lower half: a real gradient across the plate
+  panel(2.2, 30, [2.2, 2.1, 1.95], [5, 0, 21]);   // a strip light: the soft vertical sheen band
+  scene.environment = pmrem.fromScene(env, 0.035).texture; }
+scene.add(new THREE.HemisphereLight(0xffffff, 0x404246, 0.15));
+const key = new THREE.DirectionalLight(0xffffff, 0.7); key.position.set(-4, 6, 8); scene.add(key);
+
+// px → world: x right, y up, origin at the rig's centre
+const X = (px) => px - RW / 2, Y = (py) => RH / 2 - py;
+const rrect = (path, x, y, w, h, r) => { // x,y top-left in px; true circular corners (match CSS border-radius exactly)
+  const l = X(x), t = Y(y), rr = Math.min(r, w / 2, h / 2), b = t - h, ri = l + w, H2 = Math.PI / 2;
+  path.moveTo(l + rr, t); path.lineTo(ri - rr, t); path.absarc(ri - rr, t - rr, rr, H2, 0, true); path.lineTo(ri, b + rr); path.absarc(ri - rr, b + rr, rr, 0, -H2, true);
+  path.lineTo(l + rr, b); path.absarc(l + rr, b + rr, rr, -H2, -Math.PI, true); path.lineTo(l, t - rr); path.absarc(l + rr, t - rr, rr, Math.PI, H2, true); return path; };
+const BV = 4.2; // chamfer width in px
+const shape = rrect(new THREE.Shape(), BV, BV, RW - 2 * BV, RH - 2 * BV, 28 - BV);
+// pockets: each opening is the panel rect grown by the chamfer, so the chamfer ring lands exactly around each panel
+const P = [[16, 14, 588, 46, 14], [16, 74, 300, 504, 18], [330, 74, 274, 119, 14], [330, 203, 274, 119, 14], [330, 331, 274, 119, 14], [330, 460, 274, 119, 14], [180, 592, 280, 10, 5]];
+P.forEach(([x, y, w, h, r]) => shape.holes.push(rrect(new THREE.Path(), x, y, w, h, r))); // three bevels a hole outward: the chamfer ring lands just outside each panel
+const geo = new THREE.ExtrudeGeometry(shape, { depth: 30, bevelEnabled: true, bevelThickness: 3.4, bevelSize: BV, bevelSegments: 6, curveSegments: 48 });
+geo.translate(0, 0, -30);
+
+// brushed grain: long horizontal streaks (roughness + a touch of bump), so the metal is anisotropic like real brushed aluminium
+const tex = (draw, w = 2048, h = 1024) => { const c = document.createElement('canvas'); c.width = w; c.height = h; draw(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 16; return t; };
+let sd = 11; const rnd = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
+const brush = tex((x, w, h) => { x.fillStyle = '#7a7a7a'; x.fillRect(0, 0, w, h); for (let i = 0; i < 9000; i++) { const y = rnd() * h, v = 90 + rnd() * 80 | 0, a = 0.05 + rnd() * 0.18; x.fillStyle = `rgba(${v},${v},${v},${a})`; x.fillRect(rnd() * w - 200, y, 200 + rnd() * 1400, 0.6 + rnd() * 1.2); } });
+brush.colorSpace = THREE.NoColorSpace;
+// UVs from position so the grain runs straight across the plate
+{ const p = geo.attributes.position, uv = geo.attributes.uv; for (let i = 0; i < p.count; i++) uv.setXY(i, (p.getX(i) + RW / 2) / RW, (p.getY(i) + RH / 2) / RH); uv.needsUpdate = true; }
+const alu = new THREE.MeshPhysicalMaterial({ color: 0xbfc3c8, metalness: 1, roughness: 0.42, roughnessMap: brush, bumpMap: brush, bumpScale: 1.6,
+  anisotropy: 0.75, anisotropyRotation: 0, envMapIntensity: 1.35, clearcoat: 0.15, clearcoatRoughness: 0.2 });
+scene.add(new THREE.Mesh(geo, alu));
+// the pocket floors: dark anodised, so a sub-pixel gap at a panel corner reads as depth, never as the wall behind
+{ const fl = new THREE.Mesh(new THREE.PlaneGeometry(RW - 24, RH - 24), new THREE.MeshStandardMaterial({ color: 0x141518, roughness: 0.8 })); fl.position.z = -20; scene.add(fl); }
+
+// countersunk Phillips screws: polished domed head in a chamfered countersink, a crisp cross recess
+const steel = new THREE.MeshPhysicalMaterial({ color: 0xd9dce0, metalness: 1, roughness: 0.16, envMapIntensity: 1.6 });
+const dark = new THREE.MeshStandardMaterial({ color: 0x1a1b1d, metalness: 0.6, roughness: 0.6 });
+[[20, RH - 19], [RW - 20, RH - 19]].forEach(([sx, sy]) => {
+  const g = new THREE.Group(); g.position.set(X(sx), Y(sy), 3.4);
+  const sink = new THREE.Mesh(new THREE.CylinderGeometry(7.4, 5.6, 2, 48, 1, true), new THREE.MeshPhysicalMaterial({ color: 0x8e9298, metalness: 1, roughness: 0.35, side: THREE.DoubleSide })); sink.rotation.x = Math.PI / 2; sink.position.z = -0.9; g.add(sink);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(12, 64, 16, 0, Math.PI * 2, 0, 0.47), steel); head.rotation.x = Math.PI / 2; head.position.z = -11.4; g.add(head);
+  [0, Math.PI / 2].forEach((a) => { const s = new THREE.Mesh(new THREE.BoxGeometry(6.4, 1.3, 1), dark); s.rotation.z = a + 0.35; s.position.z = 0.2; g.add(s); });
+  scene.add(g); });
+
+// perspective, so each point of the plate mirrors a slightly different part of the studio (real metal never reads flat).
+// The face is a plane parallel to the film, so it maps 1:1: the pockets stay pixel-aligned with the HTML panels.
+const FOV = 28, D = (RH / 2) / Math.tan((FOV * Math.PI / 180) / 2); const cam = new THREE.PerspectiveCamera(FOV, RW / RH, 10, 5000); cam.position.set(0, 0, D + 3.4); cam.lookAt(0, 0, 3.4);
+renderer.render(scene, cam); window.__done = true;
+</script>
+</body>
+</html>

@@ -77,6 +77,7 @@ class Component extends DCLogic {
     this.set('tip', { transform: 'scale(' + (down ? 0.8 : 1) + ')' });
     this.set('carriage', { left: (14 + hx * 0.72).toFixed(2) + '%' });
     TAPS.forEach((_, i) => this.q('tap' + i)?.classList.toggle('on', p >= 0.3 && (i < ti || (i === ti && tf > 0.6) || tk >= 1)));
+    TAPS.forEach((_, i) => this.q('tap' + i)?.classList.toggle('live', p >= 0.28 && p < 0.46)); // owner (15 Nov): the targets only show during the touch test
     this.set('trace', { strokeDashoffset: (1 - cl((ti + (tf > 0.6 ? 1 : 0)) / tn) * (tk > 0 ? 1 : 0)).toFixed(3) });
     this.set('tline', { strokeDashoffset: (1 - tk).toFixed(3) });
     // True Tone: warm → cool, the needle settles

@@ -391,3 +391,28 @@ html[dir='rtl'] .bt-try > svg:last-child { transform: scaleX(-1); }
 .bt-rail { box-shadow: 0 3px 4px rgba(0,0,0,.6), 0 10px 12px -4px rgba(0,0,0,.5) !important; }
 .bt-clamp { box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 rgba(0,0,0,.35), 6px 12px 14px -2px rgba(0,0,0,.7), 2px 3px 3px rgba(0,0,0,.55) !important; }
 .bt-rigwrap { isolation: isolate; }
+
+/* R13d · the rig plate is a RENDER now (scripts/productshot/rig.html): brushed aluminium with real reflections,
+   polished chamfers around the edge and every pocket, Phillips screws. CSS keeps only the slab thickness + shadows. */
+.bt-rig {
+  background: url(/assets/bench-rig.webp) 0 0 / 100% 100% no-repeat !important;
+  box-shadow:
+    0 1px 0 #A9ADB2, 0 2px 0 #9FA3A8, 0 3px 0 #95999E, 0 4px 0 #8B8F94, 0 5px 0 #81858A,
+    0 6px 0 #777B80, 0 7px 0 #6D7176, 0 8px 0 #63676C, 0 9px 0 #595D62, 0 10px 0 #4F5358,
+    0 11px 2px rgba(0,0,0,.35), 0 26px 30px -8px rgba(70,44,0,.5), 0 60px 80px -24px rgba(70,44,0,.45) !important;
+}
+.bt-rig::before, .bt-rig::after { display: none !important; }
+.bt-tiles .bt-tile, .bt-top, .bt-bay { box-shadow: inset 0 1px 0 rgba(255,255,255,.06), inset 0 10px 16px -8px rgba(0,0,0,.85), inset 0 0 0 1px rgba(0,0,0,.6) !important; }
+.bt-tiles .bt-tile.run { box-shadow: inset 0 10px 16px -8px rgba(0,0,0,.85), inset 0 0 0 1.5px rgba(247,192,50,.7), inset 0 0 22px -6px rgba(247,192,50,.35) !important; }
+.bt-tiles .bt-tile.pass { box-shadow: inset 0 10px 16px -8px rgba(0,0,0,.85), inset 0 0 0 1.5px rgba(95,212,154,.6), inset 0 0 22px -6px rgba(95,212,154,.3) !important; }
+.bt-slot { box-shadow: inset 0 3px 4px rgba(0,0,0,.8) !important; background: #141517 !important; }
+
+/* the phone screen: no logo, no tap circles unless that test is running; calmer glass reflection */
+.bt-screen::before { display: none !important; }
+.bt-tap { opacity: 0; transition: opacity .25s, background .2s, box-shadow .2s !important; }
+.bt-tap.live { opacity: 1; }
+.bt-screen::after {
+  background:
+    linear-gradient(125deg, rgba(255,255,255,0) 0 10%, rgba(255,255,255,.06) 10.5% 28%, rgba(255,255,255,.015) 29% 31%, rgba(255,255,255,0) 32%),
+    radial-gradient(120% 50% at 50% -8%, rgba(255,255,255,.05), rgba(255,255,255,0) 60%) !important;
+}
