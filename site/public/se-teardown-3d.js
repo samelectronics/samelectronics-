@@ -148,12 +148,12 @@ export async function mount(host, state) {
   const islShT = tex(256, 512, (x, w2, h2) => { x.shadowColor = 'rgba(0,0,0,.9)'; x.shadowBlur = 26; x.fillStyle = 'rgba(0,0,0,.9)'; x.beginPath(); x.roundRect(30, 30, w2 - 60, h2 - 60, 60); x.fill(); });
   const std = (o) => new THREE.MeshStandardMaterial(o), phy = (o) => new THREE.MeshPhysicalMaterial(o);
   const M = {
-    alu: phy({ color: 0x8a8e94, metalness: 1, roughness: 0.24, clearcoat: 0.55, clearcoatRoughness: 0.16, envMapIntensity: 1.6 }),
+    alu: phy({ color: 0xb4b8bd, metalness: 1, roughness: 0.3, clearcoat: 0.7, clearcoatRoughness: 0.12, envMapIntensity: 2.3 }), /* R12 (owner: edges looked fake): brushed natural titanium that catches the studio light */
     mid: std({ map: midTex, metalness: 0.85, roughness: 0.42 }),
     aluDark: std({ color: 0x55595e, metalness: 1, roughness: 0.42 }),
     antenna: std({ color: 0x2a2b2e, roughness: 0.6 }),
     hole: std({ color: 0x0a0a0b, roughness: 0.85 }),
-    glass: phy({ color: 0x15191b, roughness: 0.02, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.01, envMapIntensity: 1.1, transparent: true, opacity: 0.14, depthWrite: false, side: THREE.DoubleSide }),
+    glass: phy({ color: 0x15191b, roughness: 0.02, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.0, envMapIntensity: 1.9, transparent: true, opacity: 0.2, depthWrite: false, side: THREE.DoubleSide }),
     glassEdge: phy({ color: 0xe4efec, roughness: 0.03, envMapIntensity: 3, transparent: true, opacity: 0.42, depthWrite: false, clearcoat: 1, clearcoatRoughness: 0 }),
     frit: std({ map: fritTex, transparent: true, roughness: 0.15, depthWrite: false }),
     screen: new THREE.MeshBasicMaterial({ map: scrTex, toneMapped: false }),
@@ -641,7 +641,7 @@ export async function mount(host, state) {
     if (state.act != null && state.act >= 0 && p >= T.l0 - 0.02 && p < T.re0) act = state.act;
     pPrev = p;
     const showW = sm((p - T.sh0) / 0.012) * (1 - sm((p - T.sh1 + 0.01) / 0.012)), finW = sm((p - T.fin0) / 0.015);
-    const hvS = finW > 0.5 && stK >= 1 && state.hover != null ? state.hover : -1, kE = 1 - Math.exp(-dt * 9), kY = 1 - Math.exp(-dt * 10);
+    const hvS = finW > 0.5 && state.hover != null ? state.hover : -1 /* R12 (owner: the part buttons did nothing): hover opens the part in the final call too */, kE = 1 - Math.exp(-dt * 9), kY = 1 - Math.exp(-dt * 10);
     for (let s = 0; s < 8; s++) { hovT[s] = s === hvS ? Math.min(1, hovT[s] + dt / 0.5) : Math.max(0, hovT[s] - dt / 0.4); hovK[s] = hovT[s]; ghK[s] = 1; }
     let hvM = 0, hvI = -1; hovT.forEach((k, s2) => { if (k > hvM) { hvM = k; hvI = s2; } }); const hvSep = hvI >= 1 ? eio(cl(hvM / 0.8)) : 0; yawH = 0; // the phone never tilts or turns on hover (owner, 13 Oct)
     const offs = sepUp.map((k, s) => (7 - s) * GAP * k + (7 - s) * 18 * upp * hvSep + (s < 7 ? k * 0.022 * Math.sin(t * 1.05 + s * 0.9) : 0)); /* R12: each layer floats a hair up and down on its own rhythm */
@@ -656,7 +656,7 @@ export async function mount(host, state) {
     const oT2 = state.oT == null ? 9 : state.oT, oVis = cl((oT2 - 1.48) / 0.04), oLit = sm((oT2 - 0.3) / 1.4), oRim = 0, oTr = 1, oo = oVis >= 1 && oLit >= 1 ? 1 : 0, roK = oT2 < 3.4 ? 1 - Math.pow(1 - cl((oT2 - 1.5) / 1.2), 3) : 1, ovK = 0, opR = oLit; oLitG = oLit; oRimG = oRim * (1 - oLit); oTrG = oTr;
     const tA = state.tossAt, tossOn = tA != null, backK = tossOn ? 1 - eio(tA / 1.0) : (state.faceBack || p < 0.178 ? 1 : 0), tossH = !tossOn ? 0 : tA < 0.45 ? 1 - Math.pow(1 - tA / 0.45, 3) : tA < 1.15 ? 1 : tA < 1.95 ? 1 - eio((tA - 1.15) / 0.8) : tA < 2.15 ? -(4 / Math.max(1, (LY.floorY - LY.top) * 0.12)) * Math.sin(PI * cl((tA - 1.95) / 0.2)) : 0, turn = PI * backK + (1 - roK) * 0.35 + PI * 2 * stand;
     const yaw = turn + showW * 0.26 * Math.sin(t * 0.55) + layK * 0.34 * Math.sin(t * 0.35) + yawH; /* R12 (owner): while the layers are apart the stack keeps turning slowly back and forth, never stopping at a side */
-    qS.setFromAxisAngle(Yax, yaw + mx * 0.052); qP.setFromAxisAngle(Xax, my * 0.052); phone.quaternion.copy(qP).multiply(qS).multiply(qA);
+    qS.setFromAxisAngle(Yax, yaw + mx * 0.052 + finW * 0.16 * Math.sin(t * 0.45)); qP.setFromAxisAngle(Xax, my * 0.052 + finW * 0.05 * Math.sin(t * 0.8 + 1)); /* R12 (owner): in the final call the phone floats and turns gently, like it is flying */ phone.quaternion.copy(qP).multiply(qS).multiply(qA);
     pose(offs);
     // hover: the ONE real phone opens (no clones): screen lifts off the front and slides right 45% W; any other layer slides right 40% W out of the separated stack
     { const HD = LY && LY.rtl ? -1 : 1; for (let s = 0; s < 8; s++) { const k = hovT[s]; if (k <= 0.001) continue; if (s === 0) { const xk = 1 - Math.pow(2, -10 * k); L[0].position.x += HD * xk * 0.45 * W; L[0].position.z += xk * 0.04 * W; } else { const xk = 1 - Math.pow(2, -10 * cl((k - 0.1) / 0.9)); L[s].position.x += HD * xk * 1.05 * W; } } } // owner (27 Oct): EVERY part slides the same way, to the right (to the left in Arabic); the phone stays put // Screen: the screen slides right; any other part: the screen (still playing) slides LEFT and the part slides out to the RIGHT, behind it in depth order
