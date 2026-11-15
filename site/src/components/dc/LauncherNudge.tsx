@@ -1,28 +1,51 @@
 'use client';
-// Owner (15 Nov): no extra WhatsApp/WeChat buttons in the bar. Instead Samsoom, now and then, holds up the WhatsApp or the
-// WeChat tile in his hand and says so, alternating. Quiet (owner: "don't overcrowd messages"): only after the language
-// welcome is done, first after 60 s, at most twice a visit, 7 s each, never over another card, never again once closed.
+// Owner (16 Nov): no separate white message. Samsoom HOLDS A PAPER with the logo on it and asks.
+// - once per visit, a few seconds after the welcome and the language are done: a note with both options
+//   (WhatsApp us / WeChat us) and a close; closed = not again until the next visit
+// - later (at most once more, after a few minutes): a small sign with one logo, "WhatsApp us?" or "WeChat us?", for 7 s
+// Every button opens the contact sheet (open on this device, QR, the number to copy). Never over another card.
 import React, { useEffect, useState } from 'react';
-import { t } from '@/dc/runtime';
+import { T as t } from '@/components/site/ui';
+import { openContact } from '@/components/site/WeChatSheet';
 
-const WA = 'https://wa.me/971503420015?text=' + encodeURIComponent('Hi Sam Electronics, I have a question.');
+type K = '' | 'note' | 'wa' | 'wc';
+const busy = () => !!document.querySelector('.st-veil, .st-walk, .st-menu, .wc-veil, [aria-modal="true"], .sc2-banner, .sc2-veil, .st-offer2') || document.hidden;
+const ss = (k: string, v?: string) => { try { if (v != null) sessionStorage.setItem(k, v); return sessionStorage.getItem(k); } catch { return null; } };
 
 export default function LauncherNudge() {
-  const [k, setK] = useState<'' | 'wa' | 'wc'>('');
+  const [k, setK] = useState<K>('');
   useEffect(() => {
-    let off = false; try { off = sessionStorage.getItem('se-nudge-off') === '1'; } catch {}
-    if (off) return;
-    let n = 0, hide = 0;
-    const busy = () => !!document.querySelector('.st-veil, .st-menu, .wc-veil, [aria-modal="true"], .sc2-banner, .sc2-veil') || document.hidden;
-    const show = () => { let done = false; try { done = !!localStorage.getItem('se-tour2'); } catch {} if (!done || busy() || n >= 2) return; const kk = n++ % 2 ? 'wc' : 'wa'; setK(kk); document.documentElement.setAttribute('data-sam-hold', kk); clearTimeout(hide); hide = window.setTimeout(() => { setK(''); document.documentElement.removeAttribute('data-sam-hold'); }, 7000); };
-    (window as unknown as { seNudge?: () => void }).seNudge = show; // also lets the team preview it from the console
-    const first = window.setTimeout(show, 60000), iv = window.setInterval(show, 240000);
-    return () => { clearTimeout(first); clearInterval(iv); clearTimeout(hide); document.documentElement.removeAttribute('data-sam-hold'); };
+    let hide = 0, later = 0, tries = 0;
+    const set = (v: K) => { setK(v); if (v) document.documentElement.setAttribute('data-sam-hold', v); else document.documentElement.removeAttribute('data-sam-hold'); };
+    const done = () => { try { return !!localStorage.getItem('se-tour2'); } catch { return false; } };
+    const note = () => { if (ss('se-note-seen')) return true; if (!done() || busy()) return false; ss('se-note-seen', '1'); set('note'); return true; };
+    const sign = () => { if (ss('se-nudge-off') || Number(ss('se-sign-n') || 0) >= 1) return; if (busy()) { later = window.setTimeout(sign, 20000); return; } ss('se-sign-n', '1'); set(Math.random() < 0.5 ? 'wa' : 'wc'); clearTimeout(hide); hide = window.setTimeout(() => set(''), 7000); };
+    // the note: a few seconds after the welcome is over (checked every 2 s until then, for up to 2 minutes)
+    const iv = window.setInterval(() => { if (note() || ++tries > 60) { window.clearInterval(iv); later = window.setTimeout(sign, 240000); } }, 2000);
+    (window as unknown as { seNudge?: (v?: K) => void }).seNudge = (v: K = 'wa') => set(v);
+    return () => { clearInterval(iv); clearTimeout(hide); clearTimeout(later); document.documentElement.removeAttribute('data-sam-hold'); };
   }, []);
   if (!k) return null;
-  const close = (e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); setK(''); document.documentElement.removeAttribute('data-sam-hold'); try { sessionStorage.setItem('se-nudge-off', '1'); } catch {} };
-  const body = <><i className={'st-brand ' + k} aria-hidden="true" /><span><small>{t('Need a person?')}</small><b>{t(k === 'wa' ? 'WhatsApp us!' : 'WeChat us!')}</b></span><button type="button" className="ln-x" aria-label="Close" onClick={close}>✕</button></>;
-  return k === 'wa'
-    ? <a className="ln-bubble" href={WA} target="_blank" rel="noopener">{body}</a>
-    : <button type="button" className="ln-bubble" onClick={() => window.dispatchEvent(new CustomEvent('se:wechat'))}>{body}</button>;
+  const close = (e: React.MouseEvent) => { e.preventDefault(); e.stopPropagation(); setK(''); document.documentElement.removeAttribute('data-sam-hold'); ss('se-nudge-off', '1'); };
+  const go = (m: 'wa' | 'wc') => (e: React.MouseEvent) => { e.preventDefault(); setK(''); document.documentElement.removeAttribute('data-sam-hold'); openContact(m); };
+  if (k === 'note') return (
+    <div className="ln-paper note" role="dialog" aria-label={t('Talk to a person')}>
+      <button type="button" className="ln-x" aria-label={t('Close')} onClick={close}>✕</button>
+      <small>{t('Need a person?')}</small>
+      <b>{t('Talk to our team')}</b>
+      <span className="ln-acts">
+        <button type="button" className="ln-b wa" onClick={go('wa')}><i className="ct-ic wa" />{t('WhatsApp us')}</button>
+        <button type="button" className="ln-b wc" onClick={go('wc')}><i className="ct-ic wc" />{t('WeChat us')}</button>
+      </span>
+      <i className="ln-hands" aria-hidden="true"><u /><u /></i>
+    </div>
+  );
+  return (
+    <button type="button" className={'ln-paper sign ' + k} onClick={go(k)}>
+      <span className="ln-x" role="button" aria-label={t('Close')} onClick={close}>✕</span>
+      <i className={'ct-ic big ' + k} aria-hidden="true" />
+      <b>{t(k === 'wa' ? 'WhatsApp us?' : 'WeChat us?')}</b>
+      <i className="ln-hands" aria-hidden="true"><u /><u /></i>
+    </button>
+  );
 }

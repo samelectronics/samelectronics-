@@ -284,8 +284,11 @@ html[dir='rtl'] .hs-cart { left: auto; right: 14px; }
 @keyframes samCore { 0%,100% { opacity: .18; transform: scale(.85); } 50% { opacity: .42; transform: scale(1.1); } }
 @media (prefers-reduced-motion: reduce) { .sam-zap-run, .sam-zap-core { animation: none; } }
 /* owner (15 Nov): Samsoom's "available" dot = the same dot as the hours pill: solid colour, a soft glow breathing in and out, no outline */
-[data-tour="samsoom"] + span { background: #3ECF8E !important; box-shadow: none !important; animation: none !important; width: 9px !important; height: 9px !important; }
-[data-tour="samsoom"] + span::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: #3ECF8E; animation: sePing 2.8s ease-in-out infinite; }
+/* owner (16 Nov): the online dot sits ON the edge of his circle (half outside, a graphite ring around it) and glows
+   exactly like the opening-hours dot: the same colour family, the same soft wave going out */
+[data-tour="samsoom"] + span { left: 41px !important; top: 1px !important; width: 11px !important; height: 11px !important; background: #3ECF8E !important; box-shadow: 0 0 0 2.5px #26282B, 0 0 8px rgba(62,207,142,.8) !important; animation: none !important; z-index: 2; }
+[data-tour="samsoom"] + span::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: #3ECF8E; animation: sePing 2.2s ease-out infinite; }
+html[dir='rtl'] [data-tour="samsoom"] + span { left: auto !important; right: 41px !important; }
 /* owner (15 Nov): the device shadow on the yellow reads as one soft contact shadow, not a dark smear growing down the diagonal */
 [data-hero-dev] { filter: drop-shadow(0 18px 22px rgba(60,40,0,.22)) drop-shadow(0 4px 6px rgba(10,11,12,.22)) !important; }
 .wwo-boxes > [data-w='R'] { box-shadow: inset 0 1px 0 rgba(255,255,255,.14), inset 0 0 0 1px rgba(255,255,255,.08), 0 30px 50px -22px rgba(0,0,0,.75) !important; }
@@ -356,3 +359,42 @@ html[dir='rtl'] .hi-cart b { right: auto; left: -5px; }
 .hi-track .hi-row:nth-child(2) { animation-delay: .05s; } .hi-track .hi-row:nth-child(3) { animation-delay: .1s; }
 @keyframes hiRefresh { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
 @keyframes hiRefresh2 { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+/* owner (16 Nov): Find My Part is the yellow button again (it stood out, now it looked like everything else) */
+html body header .scp-90837cfd { background: #F7C032 !important; color: #26282B !important; box-shadow: 0 0 22px rgba(247,192,50,.35), inset 0 -2px 0 rgba(0,0,0,.08) !important; min-width: 0 !important; width: auto !important; padding: 0 16px !important; gap: 9px !important; justify-content: center !important; }
+html body header .scp-90837cfd:hover { transform: translateY(-1px); box-shadow: 0 0 30px rgba(247,192,50,.55), inset 0 -2px 0 rgba(0,0,0,.08) !important; }
+html body header .scp-90837cfd > svg:first-child { color: #26282B !important; }
+html body header .scp-90837cfd .se-fmp-t { display: inline !important; color: #26282B !important; font-weight: 600; font-size: 15px; }
+html body header .scp-90837cfd .se-fmp-q, html body header .scp-90837cfd .se-fmp-k { display: none !important; }
+html body header .scp-90837cfd > svg:last-child { display: inline !important; color: #26282B; }
+/* owner (16 Nov): the right-hand icons light up like the nav titles (the icon turns yellow with a soft glow), never a
+   square frame; only the menu button, which really is a framed square, keeps its frame */
+header .se-nav-right .se-lm-btn:hover, header .se-nav-right .nb > button:hover, header .se-nav-right .se-ico:not([aria-label*='enu']):hover, header .se-nav-right a.se-ico:hover { background: transparent !important; box-shadow: none !important; color: #F7C032 !important; }
+header .se-nav-right .se-lm-btn:hover svg, header .se-nav-right .nb > button:hover svg, header .se-nav-right .se-ico:not([aria-label*='enu']):hover svg { color: #F7C032; filter: drop-shadow(0 0 6px rgba(247,192,50,.65)); transition: filter .2s, color .2s; }
+header .se-nav-right .se-lm-btn, header .se-nav-right .nb > button, header .se-nav-right .se-ico { transition: color .2s !important; }
+/* owner (16 Nov): one rule for every panel the bar opens: light and clean like the notifications and Samsoom
+   (serious things are clean, the colour lives on the page). Hours popup and Find My Part menu are white now. */
+.se-status-pop { background: #FFFFFF !important; color: #26282B !important; box-shadow: 0 0 0 1px rgba(38,40,43,.08), 0 24px 48px -12px rgba(0,0,0,.35) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+.se-status-pop > span:first-child { color: #26282B !important; }
+.se-status-pop > span:nth-child(2) { color: #9A6B00 !important; }
+.se-status-pop .se-hl-t { color: #6B6F75; } .se-status-pop .se-hl-t b { color: #26282B; } .se-status-pop .se-hl-bar { background: #ECEDEF; }
+.se-status-acts a, .se-status-acts button { border-color: #E0E2E5 !important; background: #F4F5F6 !important; color: #26282B !important; }
+.se-status-acts a:first-child { background: #F7C032 !important; border-color: #F7C032 !important; }
+.se-status-acts a:hover, .se-status-acts button:hover { border-color: #F7C032 !important; background: #FFF6DC !important; }
+.fmq { background: #FFFFFF !important; color: #26282B !important; box-shadow: 0 0 0 1px rgba(38,40,43,.08), 0 30px 60px -16px rgba(0,0,0,.4) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+.fmq-brands { background: #F6F7F8 !important; border-inline-end: 1px solid #ECEDEF !important; }
+.fmq-k { color: #9A6B00 !important; }
+.fmq-b { color: #26282B !important; box-shadow: inset 0 -1px 0 #ECEDEF !important; } .fmq-b small { color: #8C9096 !important; }
+.fmq-b.on { background: #F7C032 !important; box-shadow: none !important; } .fmq-b.on small { color: #26282B !important; }
+.fmq-b:hover:not(.on) { background: #ECEDEF !important; }
+.fmq-h b { color: #26282B; } .fmq-h small { color: #8C9096 !important; }
+.fmq-q { background: #F2F3F4 !important; color: #6B6F75 !important; } .fmq-q input { color: #26282B !important; } .fmq-q:focus-within { box-shadow: inset 0 0 0 1.5px #F7C032 !important; color: #26282B !important; }
+.fmq-devs button { background: #F2F3F4 !important; color: #5C6066 !important; } .fmq-devs button.on { background: #26282B !important; color: #fff !important; box-shadow: none !important; }
+.fmq-m { background: #F6F7F8 !important; color: #26282B !important; } .fmq-m:hover { background: #fff !important; box-shadow: inset 0 0 0 1.5px #F7C032, 0 6px 14px -8px rgba(0,0,0,.25) !important; }
+.fmq-m small { color: #8C9096 !important; } .fmq-m small.in, .fmq-ptn small.in { color: #1E9E5A !important; } .fmq-m i { color: #9A6B00 !important; }
+.fmq-mi { background: #ECEDEF !important; color: #3A3D42 !important; }
+.fmq-none { color: #6B6F75 !important; }
+.fmq-pt { background: #F6F7F8 !important; } .fmq-ptn { color: #26282B !important; } .fmq-ptn small { color: #8C9096 !important; } .fmq-ptn:hover b { color: #9A6B00 !important; }
+.fmq-back { background: #ECEDEF !important; color: #26282B !important; }
+.fmq-ph small { color: #9A6B00 !important; }
+.fmq-g { background: #FFF6DC !important; color: #26282B !important; } .fmq-g em { color: #9A6B00 !important; } .fmq-g:hover { box-shadow: inset 0 0 0 1.5px #F7C032 !important; }
+.fmq-all { color: #26282B !important; }

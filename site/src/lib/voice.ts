@@ -150,42 +150,63 @@ function pickVoice(lang: string): SpeechSynthesisVoice | null {
 }
 if (typeof window !== 'undefined' && 'speechSynthesis' in window) { try { window.speechSynthesis.getVoices(); window.speechSynthesis.addEventListener?.('voiceschanged', () => { pickedVoice = null; }); } catch { /* */ } }
 
-// owner (15 Nov): he does NOT speak words. A cute cartoon "baby" babble: every syllable is one tiny bip (soft sine with a
-// little upward chirp), its pitch taken from the letters (bright vowels higher, round vowels lower, each letter nudges it),
-// so the sound changes with what he says. Planned up front on the audio clock with the SAME timing as the typing, short
-// silences between syllables and at punctuation, nothing sustained, so no hum, no ghost tone.
-const VPITCH: Record<string, number> = { i: 5, y: 5, e: 3, a: 0, o: -2, u: -3 };
+// owner (16 Nov): "a nice cute soft voice, not a monkey, not a ghost, not a robot, not repetitive".
+// He still says no real words. Each WORD is one soft, connected little phrase (legato, no separate blips): a warm voice
+// source shaped by two vowel resonances (the real "ah / oh / ee" of a small child's voice), sliding smoothly from vowel
+// to vowel, with a gentle melody that is different for every word (taken from its letters), a breath of air, and a
+// soft start and end. Same clock as the typing. Everything of one line goes through ONE gain, so Skip / Next stop it
+// instantly.
+const FORM: Record<string, [number, number]> = { a: [850, 1400], e: [560, 2100], i: [380, 2600], o: [560, 1000], u: [420, 950], y: [380, 2500] };
+const formOf = (ch: string): [number, number] => { const k = ch.normalize('NFD').charAt(0).toLowerCase(); return FORM[k] || (/[اآ]/.test(ch) ? FORM.a : /[و]/.test(ch) ? FORM.u : /[ي]/.test(ch) ? FORM.i : /[一-鿿]/.test(ch) ? [FORM.a, FORM.o, FORM.e, FORM.i][ch.charCodeAt(0) % 4] : FORM.a); };
+const hash = (w: string) => { let h = 7; for (const c of w) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
+let noiseBuf: AudioBuffer | null = null;
 export function babble(text: string, opts: { onEnd?: () => void } = {}) {
   stopCur && stopCur();
   spoken.pending = false; spoken.active = false; spoken.done = false; spoken.text = '';
   const t = (text || '').trim(), chars = Array.from(t), voice = prefs().sound.voice || 'cute';
-  const ask = /\?\s*$/.test(t), happy = HAPPY.test(t), base = (voice === 'deep' ? 300 : 470) * (happy ? 1.04 : 1);
+  const ask = /\?\s*$/.test(t), happy = HAPPY.test(t), base = voice === 'deep' ? 230 : 330;
   const at: number[] = []; let acc = 0; for (const ch of chars) { at.push(acc); acc += charMs(ch) / 1000; } const total = acc;
-  const syl: number[] = []; chars.forEach((c, k) => { if (isV(c) && (k === 0 || !isV(chars[k - 1]))) syl.push(k); });
-  const opens: number[] = [];
-  if (can() && syl.length) { try { const c = ac(), now = c.currentTime + 0.03, bus = out();
-    syl.forEach((k, n) => { const ch = chars[k].normalize('NFD').charAt(0).toLowerCase(), prev = chars[k - 1] || 'a', last = n === syl.length - 1;
-      // owner (15 Nov): soft baby sounds ("ma", "mwa", "ha"): a round sine that hums in softly like an "m", opens a little,
-      // and fades; small pitch steps only, nothing sharp or chirpy
-      let semi = ((VPITCH[ch] ?? 1) * 0.5) + ((prev.charCodeAt(0) * 7) % 3) - 1; if (ask && last) semi += 5; else if (last) semi += happy ? 2 : -2;
-      const f = base * Math.pow(2, semi / 12), st = now + at[k], d = Math.min(0.15, Math.max(0.085, (at[syl[n + 1]] ?? total) - at[k] - 0.02));
-      const o = c.createOscillator(), o2 = c.createOscillator(), g = c.createGain(), g2 = c.createGain(), lp = c.createBiquadFilter();
-      o.type = 'sine'; o2.type = 'sine'; lp.type = 'lowpass'; lp.Q.value = 0.5; g2.gain.value = 0.07;
-      lp.frequency.setValueAtTime(700, st); lp.frequency.linearRampToValueAtTime(1900, st + d * 0.35); lp.frequency.linearRampToValueAtTime(900, st + d);
-      o.frequency.setValueAtTime(f * 0.94, st); o.frequency.linearRampToValueAtTime(f, st + d * 0.3); o.frequency.linearRampToValueAtTime(f * 0.97, st + d);
-      o2.frequency.setValueAtTime(f * 2, st);
-      g.gain.setValueAtTime(0.0001, st); g.gain.linearRampToValueAtTime(0.09, st + d * 0.18); g.gain.linearRampToValueAtTime(0.2, st + d * 0.4); g.gain.exponentialRampToValueAtTime(0.0001, st + d);
-      o.connect(lp); o2.connect(g2); g2.connect(lp); lp.connect(g); g.connect(bus); o.start(st); o2.start(st); o.stop(st + d + 0.02); o2.stop(st + d + 0.02);
-      opens.push(at[k]); });
-    if (happy) { const h = c.createOscillator(), hg = c.createGain(), s0 = now + total + 0.04; h.type = 'sine'; h.frequency.setValueAtTime(base * 1.2, s0); h.frequency.linearRampToValueAtTime(base * 1.35, s0 + 0.12);
-      hg.gain.setValueAtTime(0.0001, s0); hg.gain.linearRampToValueAtTime(0.1, s0 + 0.04); hg.gain.exponentialRampToValueAtTime(0.0001, s0 + 0.14); h.connect(hg); hg.connect(out()); h.start(s0); h.stop(s0 + 0.16); }
-  } catch { /* silent */ } } else syl.forEach((k) => opens.push(at[k]));
-  // the mouth opens on each bip and closes between them, on the same clock
+  // words: runs of letters; each gets its syllables (vowel starts; CJK: every character)
+  const words: { s: number; e: number; syl: number[] }[] = []; { let s = -1; chars.forEach((c, k) => { const L = /[\p{L}\p{N}]/u.test(c); if (L && s < 0) s = k; if ((!L || k === chars.length - 1) && s >= 0) { const e = L ? k : k - 1, syl: number[] = []; for (let q = s; q <= e; q++) if (/[一-鿿]/.test(chars[q]) || (isV(chars[q]) && (q === s || !isV(chars[q - 1])))) syl.push(q); if (!syl.length) syl.push(s); words.push({ s, e, syl }); s = -1; } }); }
+  const opens: number[] = []; let line: GainNode | null = null;
+  if (can() && words.length) { try { const c = ac(), now = c.currentTime + 0.03; line = c.createGain(); line.gain.value = 1; line.connect(out());
+    if (!noiseBuf) { noiseBuf = c.createBuffer(1, c.sampleRate, c.sampleRate); const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+    words.forEach((w, wi) => { const h = hash(chars.slice(w.s, w.e + 1).join('')), st = now + at[w.s], en = now + (at[w.e + 1] ?? total) - 0.015, dur = Math.max(0.09, en - st), lastW = wi === words.length - 1;
+      // this word's melody: 2–3 gentle steps chosen from its letters (never the same tune twice in a row)
+      const steps = [0, 2, 4, 5, 7, 4, 2, -1], s0 = steps[h % 8] - 2, s1 = steps[(h >> 3) % 8] - 2;
+      const fBase = base * Math.pow(2, ((wi % 2 ? 1 : 0) + (happy ? 1.5 : 0)) / 12);
+      const src = c.createOscillator(), src2 = c.createOscillator(), mix = c.createGain(), f1 = c.createBiquadFilter(), f2 = c.createBiquadFilter(), body = c.createBiquadFilter(), g1 = c.createGain(), g2 = c.createGain(), gb = c.createGain(), env = c.createGain();
+      src.type = 'triangle'; src2.type = 'sine'; src2.detune.value = 6; mix.gain.value = 0.5;
+      f1.type = 'bandpass'; f1.Q.value = 5; f2.type = 'bandpass'; f2.Q.value = 7; body.type = 'lowpass'; body.frequency.value = 650;
+      g1.gain.value = 1.3; g2.gain.value = 0.55; gb.gain.value = 0.35;
+      src.connect(mix); src2.connect(mix); mix.connect(f1); mix.connect(f2); mix.connect(body); f1.connect(g1); f2.connect(g2); body.connect(gb); g1.connect(env); g2.connect(env); gb.connect(env); env.connect(line!);
+      // pitch: smooth glide through the syllables; a question lifts the last word, a statement settles it
+      const pts = w.syl.map((q, j) => [now + at[q], fBase * Math.pow(2, ((j === 0 ? s0 : j === w.syl.length - 1 ? s1 : (s0 + s1) / 2 + 1)) / 12)] as [number, number]);
+      const endF = lastW ? (ask ? pts[pts.length - 1][1] * 1.26 : pts[pts.length - 1][1] * (happy ? 1.06 : 0.9)) : pts[pts.length - 1][1];
+      [src, src2].forEach((o) => { o.frequency.setValueAtTime(pts[0][1] * 0.97, st); pts.forEach(([tt, f]) => o.frequency.linearRampToValueAtTime(f, Math.max(st + 0.01, tt + 0.03))); o.frequency.linearRampToValueAtTime(endF, en); });
+      // vowels: the resonances slide from vowel to vowel (scaled up for a small voice)
+      w.syl.forEach((q, j) => { const [a1, a2] = formOf(chars[q]), tt = Math.max(st, now + at[q]); if (j === 0) { f1.frequency.setValueAtTime(a1 * 1.12, st); f2.frequency.setValueAtTime(a2 * 1.12, st); } f1.frequency.linearRampToValueAtTime(a1 * 1.12, tt + 0.04); f2.frequency.linearRampToValueAtTime(a2 * 1.12, tt + 0.04); opens.push(at[q]); });
+      // loudness: soft "m"-like start, each syllable swells a little, gentle dip between them, soft end
+      env.gain.setValueAtTime(0.0001, st); env.gain.linearRampToValueAtTime(0.22, st + Math.min(0.05, dur * 0.3));
+      w.syl.forEach((q, j) => { if (!j) return; const tt = now + at[q]; if (tt > st + 0.04 && tt < en - 0.03) { env.gain.linearRampToValueAtTime(0.13, tt - 0.015); env.gain.linearRampToValueAtTime(0.22, tt + 0.03); } });
+      env.gain.setValueAtTime(0.2, Math.max(st + 0.05, en - 0.05)); env.gain.exponentialRampToValueAtTime(0.0001, en + 0.04);
+      // a breath of air on the word (very quiet), so it sounds alive and soft, not electronic
+      const n = c.createBufferSource(), nf = c.createBiquadFilter(), ng = c.createGain(); n.buffer = noiseBuf; nf.type = 'bandpass'; nf.frequency.value = 1800; nf.Q.value = 0.8; ng.gain.setValueAtTime(0.0001, st); ng.gain.linearRampToValueAtTime(0.012, st + 0.03); ng.gain.exponentialRampToValueAtTime(0.0001, en + 0.03); n.connect(nf); nf.connect(ng); ng.connect(line!);
+      // a slow, small vibrato only on longer words
+      const vib = c.createOscillator(), vg = c.createGain(); vib.frequency.value = 5.2; vg.gain.value = dur > 0.25 ? fBase * 0.012 : 0; vib.connect(vg); vg.connect(src.frequency); vg.connect(src2.frequency);
+      [src, src2, vib].forEach((o) => { o.start(st); o.stop(en + 0.08); }); n.start(st, (h % 900) / 1000); n.stop(en + 0.06);
+    });
+  } catch { /* silent */ } } else words.forEach((w) => w.syl.forEach((q) => opens.push(at[q])));
+  // the mouth opens on each syllable and closes between them, on the same clock
   let alive = true, raf = 0; const t0 = performance.now();
-  const flap = () => { if (!alive) return; const el = (performance.now() - t0) / 1000; const open = opens.some((o) => el >= o && el < o + 0.07); mouth(open); if (el < total) raf = requestAnimationFrame(flap); else mouth(false); };
+  const flap = () => { if (!alive) return; const el = (performance.now() - t0) / 1000; const open = opens.some((o) => el >= o && el < o + 0.08); mouth(open); if (el < total) raf = requestAnimationFrame(flap); else mouth(false); };
   document.documentElement.removeAttribute('data-sam-done'); speaking(true); raf = requestAnimationFrame(flap);
   const endTm = window.setTimeout(() => { if (!alive) return; alive = false; speaking(false); mouth(false); document.documentElement.setAttribute('data-sam-done', ''); window.setTimeout(() => document.documentElement.removeAttribute('data-sam-done'), 1400); opts.onEnd && opts.onEnd(); }, total * 1000);
-  stopCur = () => { alive = false; speaking(false); cancelAnimationFrame(raf); window.clearTimeout(endTm); mouth(false); };
+  const ln = line as GainNode | null;
+  stopCur = () => { alive = false; speaking(false); cancelAnimationFrame(raf); window.clearTimeout(endTm); mouth(false);
+    // owner: Skip / Next stop him at once: fade this line out in 40 ms and cut it off
+    if (ln) { try { const c = ac(), n0 = c.currentTime; ln.gain.cancelScheduledValues(n0); ln.gain.setValueAtTime(ln.gain.value, n0); ln.gain.linearRampToValueAtTime(0, n0 + 0.04); window.setTimeout(() => { try { ln.disconnect(); } catch { /* */ } }, 80); } catch { /* */ } }
+    stopCur = null; };
   return stopCur;
 }
 export function hush() { stopCur && stopCur(); }

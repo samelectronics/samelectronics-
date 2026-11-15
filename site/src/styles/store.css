@@ -170,3 +170,53 @@ html[data-sam-hold='wc'] .ln-hold { background: #07C160; } html[data-sam-hold='w
 /* owner (15 Nov): while talking he only floats gently, no shaking */
 html[data-sam-speaking] [data-sam-talk] > * { animation: samFloat 2.6s ease-in-out infinite !important; }
 @keyframes samFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+/* owner (16 Nov): the tour bubble is light, so Skip and Mute are graphite (they were white on white) */
+.st-bub .st-tools .st-x, .st-bub .st-x, .st-bub .st-tools .st-mute { background: #F2F3F4 !important; color: #26282B !important; box-shadow: inset 0 0 0 1px rgba(38,40,43,.14) !important; font-weight: 600; }
+.st-bub .st-tools .st-x:hover, .st-bub .st-tools .st-mute:hover { background: #F7C032 !important; color: #26282B !important; box-shadow: none !important; }
+/* owner (16 Nov): Samsoom holds a PAPER (no white chat bubble): off-white paper, a folded corner, his two graphite
+   connector "hands" gripping its bottom edge; it rises from behind him with a little wave */
+.ln-bubble, .ln-hold { display: none !important; }
+.ln-paper { position: absolute; z-index: 3; bottom: 52px; inset-inline-end: -6px; display: flex; flex-direction: column; align-items: flex-start; gap: 4px; box-sizing: border-box; padding: 16px 18px 20px; border: 0; border-radius: 6px 6px 4px 4px; color: #26282B; text-align: start; font: inherit; cursor: pointer;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 .4 0 0 0 0 .35 0 0 0 0 .25 0 0 0 .06 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E"), linear-gradient(170deg, #FFFEFA, #F6F2E8);
+  box-shadow: 0 1px 0 rgba(255,255,255,.8) inset, 0 18px 30px -12px rgba(0,0,0,.45), 0 3px 6px rgba(0,0,0,.18); transform-origin: 70% 100%; animation: lnPaperIn .7s cubic-bezier(.3,1.5,.5,1) both, lnPaperSway 4s 1s ease-in-out infinite; }
+.ln-paper::after { content: ''; position: absolute; top: 0; inset-inline-end: 0; width: 16px; height: 16px; background: linear-gradient(225deg, #2A2C2F 50%, #E7E1D2 50%); border-radius: 0 6px 0 3px; box-shadow: -2px 2px 3px rgba(0,0,0,.12); }
+.ln-paper.note { width: 236px; }
+.ln-paper.sign { flex-direction: row; align-items: center; gap: 10px; padding: 14px 30px 18px 14px; white-space: nowrap; }
+.ln-paper small { font: 500 11.5px Inter, sans-serif; color: #6B6F75; }
+.ln-paper b { font: 700 18px/1.15 'Space Grotesk', sans-serif; letter-spacing: -.01em; }
+.ln-paper.sign b { font-size: 17px; }
+.ln-acts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; margin-top: 8px; }
+.ln-b { display: flex; align-items: center; justify-content: center; gap: 6px; height: 38px; padding: 0 8px; border: 0; border-radius: 10px; color: #fff; font: 600 12.5px Inter, sans-serif; cursor: pointer; white-space: nowrap; transition: transform .2s, filter .2s; }
+.ln-b.wa { background: #25D366; } .ln-b.wc { background: #07C160; } .ln-b:hover { transform: translateY(-1px); filter: brightness(1.05); }
+.ln-paper .ln-x { top: 8px; inset-inline-end: 22px; display: grid; place-items: center; background: rgba(38,40,43,.06); }
+.ct-ic { display: inline-block; width: 16px; height: 16px; flex: none; background: currentColor; -webkit-mask: center / contain no-repeat; mask: center / contain no-repeat; }
+.ct-ic.wa { -webkit-mask-image: url(/icons/whatsapp.svg); mask-image: url(/icons/whatsapp.svg); } .ct-ic.wc { -webkit-mask-image: url(/icons/wechat.svg); mask-image: url(/icons/wechat.svg); }
+.ct-ic.big { width: 34px; height: 34px; border-radius: 10px; -webkit-mask: none; mask: none; position: relative; }
+.ct-ic.big.wa { background: #25D366; } .ct-ic.big.wc { background: #07C160; }
+.ct-ic.big::after { content: ''; position: absolute; inset: 6px; background: #fff; -webkit-mask: center / contain no-repeat; mask: center / contain no-repeat; }
+.ct-ic.big.wa::after { -webkit-mask-image: url(/icons/whatsapp.svg); mask-image: url(/icons/whatsapp.svg); } .ct-ic.big.wc::after { -webkit-mask-image: url(/icons/wechat.svg); mask-image: url(/icons/wechat.svg); }
+.ln-hands { position: absolute; bottom: -10px; inset-inline-end: 20px; display: flex; gap: 22px; pointer-events: none; }
+.ln-hands u { display: block; width: 12px; height: 16px; border-radius: 4px 4px 6px 6px; background: linear-gradient(180deg, #4A4D52, #1F2124); box-shadow: 0 0 0 1px rgba(247,192,50,.55), 0 2px 4px rgba(0,0,0,.35); }
+.ln-hands u::after { content: ''; display: block; width: 4px; height: 4px; margin: 4px auto 0; border-radius: 50%; background: #F7C032; box-shadow: 0 0 6px #F7C032; animation: sePing 2.2s ease-out infinite; }
+@keyframes lnPaperIn { from { opacity: 0; transform: translateY(40px) scale(.6) rotate(8deg); } to { opacity: 1; transform: rotate(-2deg); } }
+@keyframes lnPaperSway { 0%, 100% { transform: rotate(-2deg); } 50% { transform: rotate(1deg) translateY(-2px); } }
+html[dir='rtl'] .ln-paper { transform-origin: 30% 100%; }
+@media (max-width: 520px) { .ln-paper.note { width: min(236px, calc(100vw - 40px)); } }
+@media (prefers-reduced-motion: reduce) { .ln-paper { animation: none; } }
+
+/* the contact sheet: tabs, QR, number with copy, one big action; the page behind is blurred */
+.ct-veil { -webkit-backdrop-filter: blur(10px) saturate(1.1); backdrop-filter: blur(10px) saturate(1.1); background: rgba(20,21,23,.45) !important; animation: lbFade .25s both; }
+.ct-card { width: min(440px, calc(100vw - 32px)) !important; text-align: start !important; animation: spRise .35s cubic-bezier(.2,.8,.2,1) both; }
+.ct-tabs { display: inline-flex; gap: 4px; padding: 4px; margin-bottom: 14px; border-radius: 12px; background: #F2F3F4; }
+.ct-tabs button { display: inline-flex; align-items: center; gap: 7px; height: 34px; padding: 0 14px; border: 0; border-radius: 9px; background: transparent; color: #5C6066; font: 600 13.5px Inter, sans-serif; cursor: pointer; }
+.ct-tabs button.on { background: #fff; color: #26282B; box-shadow: 0 1px 3px rgba(0,0,0,.12); } .ct-tabs .wa .ct-ic { color: #25D366; } .ct-tabs .wc .ct-ic { color: #07C160; }
+.ct-body { display: flex; gap: 16px; align-items: stretch; margin-top: 4px; }
+.ct-qrw { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: none; padding: 10px; border-radius: 14px; background: #fff; box-shadow: inset 0 0 0 1px #E3E5E8; }
+.ct-qr { display: block; width: 120px; height: 120px; } .ct-qr svg { width: 100%; height: 100%; display: block; }
+.ct-qrw small, .ct-numw small { font: 500 11.5px Inter, sans-serif; color: #6B6F75; }
+.ct-numw { flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 8px; min-width: 0; }
+.ct-numw .wc-num { font-size: 19px !important; margin: 0; }
+.ct-copy { height: 38px; border: 0; border-radius: 10px; background: #26282B; color: #fff; font: 600 13.5px Inter, sans-serif; cursor: pointer; }
+.ct-acts { margin-top: 16px; } .ct-acts .wc-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 50px; font-size: 15.5px; text-decoration: none; }
+.ct-acts .wc-btn.wa { background: #25D366; } .ct-acts .ct-ic { width: 20px; height: 20px; }
+@media (max-width: 520px) { .ct-qrw { display: none; } }

@@ -331,3 +331,5 @@
   .se-hb-info > span:first-child { display: inline-block; max-width: 100%; box-sizing: border-box; padding: 4px 9px; white-space: normal; line-height: 1.15; font-size: 10.5px; text-align: center; border-radius: 10px; }
   .se-hb-info b { font-size: 12px; }
 }
+/* owner (16 Nov): the hero WhatsApp / WeChat buttons may take two lines in long languages (accurate "message us on…") */
+@media (max-width: 720px) { #top [data-hero-text] > div:last-child > a, #top [data-hero-text] > div:last-child > button { white-space: normal !important; line-height: 1.15 !important; min-height: 44px; height: auto !important; padding-block: 6px !important; } }

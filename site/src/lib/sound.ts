@@ -43,11 +43,19 @@ export function play(s: Snd, force = false) {
     if (pk.echo) { const dl = ctx.createDelay(), eg = ctx.createGain(); dl.delayTime.value = 0.07; eg.gain.value = pk.echo; lp.connect(dl); dl.connect(eg); eg.connect(ctx.destination); }
     // R12 (owner: "a coil sound"): the click is a real button click: a short low thump with body and a soft, felted
     // edge (no sliding pitch, no high tick). Rich and heavy, never plastic.
+    // owner (16 Nov): a satisfying tick, not a barely-there blip: a crisp switch "tick" (bright transient + a small
+    // resonant body), a soft low thump for weight, and the quieter release click a moment later. Bypasses the low-pass
+    // so the tick stays crisp; still quiet.
     if (s === 'click') {
-      const th = ctx.createOscillator(), tg = ctx.createGain(); th.type = 'sine'; th.frequency.setValueAtTime(165, t0); th.frequency.exponentialRampToValueAtTime(62, t0 + 0.07);
-      tg.gain.setValueAtTime(0.0001, t0); tg.gain.exponentialRampToValueAtTime(1.15, t0 + 0.004); tg.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.085); th.connect(tg); tg.connect(master); th.start(t0); th.stop(t0 + 0.1);
-      const n = ctx.createBuffer(1, Math.ceil(ctx.sampleRate * 0.02), ctx.sampleRate), d = n.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 3);
-      const ns = ctx.createBufferSource(), bp = ctx.createBiquadFilter(), ng = ctx.createGain(); ns.buffer = n; bp.type = 'bandpass'; bp.frequency.value = 1100; bp.Q.value = 0.9; ng.gain.value = 0.32; ns.connect(bp); bp.connect(ng); ng.connect(master); ns.start(t0);
+      const c = ctx, v = Math.min(1, Math.max(0, p.vol)) * 0.3 * pk.gain, bus = c.createGain(); bus.gain.value = v; bus.connect(c.destination);
+      const nb = c.createBuffer(1, Math.ceil(c.sampleRate * 0.012), c.sampleRate), d = nb.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 4);
+      const tick = (t: number, amp: number, fr: number) => {
+        const ns = c.createBufferSource(), hp = c.createBiquadFilter(), ng = c.createGain(); ns.buffer = nb; hp.type = 'bandpass'; hp.frequency.value = fr; hp.Q.value = 1.6; ng.gain.value = amp * 0.9; ns.connect(hp); hp.connect(ng); ng.connect(bus); ns.start(t);
+        const o = c.createOscillator(), og = c.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(fr * 0.62, t); o.frequency.exponentialRampToValueAtTime(fr * 0.45, t + 0.03); og.gain.setValueAtTime(0.0001, t); og.gain.exponentialRampToValueAtTime(amp * 0.5, t + 0.002); og.gain.exponentialRampToValueAtTime(0.0001, t + 0.035); o.connect(og); og.connect(bus); o.start(t); o.stop(t + 0.045); };
+      tick(t0, 1, 3200);
+      const th = c.createOscillator(), tg = c.createGain(); th.type = 'sine'; th.frequency.setValueAtTime(150, t0); th.frequency.exponentialRampToValueAtTime(70, t0 + 0.06);
+      tg.gain.setValueAtTime(0.0001, t0); tg.gain.exponentialRampToValueAtTime(0.7, t0 + 0.003); tg.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.08); th.connect(tg); tg.connect(bus); th.start(t0); th.stop(t0 + 0.09);
+      tick(t0 + 0.055, 0.35, 2600);
       return;
     }
     for (const [f, at, d, type, to] of SHAPES[s]) {

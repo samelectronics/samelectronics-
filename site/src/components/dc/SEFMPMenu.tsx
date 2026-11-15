@@ -63,7 +63,7 @@ function render(v: Vals) {
               <span className="fmq-k">{v.brandsK}</span>
               {(v.brands || []).map((b: any) => (
                 <button key={b.id} type="button" className={'fmq-b' + (b.on ? ' on' : '')} onMouseEnter={b.hover} onFocus={b.hover} onClick={b.pick}>
-                  <span className="fmq-logo"><SEBrandLogo brand={b.id} color={b.on ? '#F7C032' : '#FFFFFF'} h="18" fit="92x18" /></span>
+                  <span className="fmq-logo"><SEBrandLogo brand={b.id} color={b.on ? '#26282B' : '#3A3D42'} h="18" fit="92x18" /></span>
                   <small>{b.q}</small>
                 </button>
               ))}
