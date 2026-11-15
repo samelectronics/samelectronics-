@@ -31,3 +31,17 @@
 .wf .wf-nums small, .wf .wf-nums span { color: #A7ABB1 !important; }
 .wf .wf-nums .wf-k, .wf .wf-k { color: #F7C032 !important; }
 .wf .wf-sd { color: #FFFFFF; }
+
+/* Repair → YELLOW */
+section.rp#repair { background: radial-gradient(60% 50% at 20% 0%, rgba(255,236,170,.6), rgba(255,236,170,0) 70%), var(--sq-yellow) !important; color: #26282B !important; }
+#repair h2 > span:first-child { color: #26282B !important; }
+#repair h2 > span:nth-child(2), #repair h2 > span:last-child:not(:first-child) { color: #FFFFFF !important; text-shadow: 0 2px 14px rgba(150,100,0,.25); }
+#repair .rp-eb, #repair [class*="eb"] { color: #26282B !important; }
+#repair p { color: #3A3D42; }
+#repair h2 ~ *, #repair > div > div > span:first-child, #repair span[style*="JetBrains"] { color: #26282B !important; }
+
+/* Worldwide → WHITE (the map and the shipments list stay dark panels) */
+section#network { background: radial-gradient(60% 50% at 70% 20%, rgba(247,192,50,.10), rgba(247,192,50,0) 70%), var(--sq-white) !important; color: #26282B !important; }
+#network h2 > span:first-child { color: var(--sq-ink) !important; }
+#network h2 ~ p, #network h2 + p, #network p { color: #5C6066 !important; }
+#network div:has(> button) { background: #2A2C2F !important; box-shadow: 0 10px 24px -12px rgba(0,0,0,.4) !important; }
