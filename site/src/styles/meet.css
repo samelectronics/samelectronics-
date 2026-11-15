@@ -181,3 +181,7 @@ html[dir='rtl'] .mt-flyq { right: auto; left: 20px !important; }
 .mt-send.go { background: #F7C032; color: #26282B; animation: mtSend .4s cubic-bezier(.3,1.6,.5,1); }
 @keyframes mtSend { 40% { transform: scale(.86); } 100% { transform: scale(1); } }
 .mt-flyq { display: none !important; }
+/* Home phone + tablet pass: the single column never grows past the screen (a long question no longer widens it) */
+@media (max-width: 1100px) { .mt-in { grid-template-columns: minmax(0, 1fr) !important; } .mt-left, .mt-stage2, .mt-asks { min-width: 0; max-width: 100%; } .mt-asks button { max-width: 100%; white-space: normal; text-align: start; } }
+@media (max-width: 700px) { .mt-stage2 { grid-template-columns: minmax(0, 1fr) !important; } }
+@media (max-width: 700px) { .mt-facts { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 8px; } .mt-facts span { padding: 12px 10px !important; min-height: 84px; } .mt-facts b { font-size: 24px !important; white-space: nowrap; } .mt-facts small { font-size: 11.5px !important; line-height: 1.3; } }
