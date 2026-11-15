@@ -15,7 +15,7 @@ export const ROLES = [
   { code: 'T04', role: 'Finance & Checkout', mono: 'FC', bio: 'Handles invoices, payments and trade accounts.', help: ['Invoices and receipts', 'Payment options', 'Trade account questions'] },
   { code: 'T05', role: 'Founder', mono: 'TA', founder: true, bio: '', help: ['Partnerships and distribution', 'Large trade agreements', 'Feedback on our service'] },
 ];
-const K = 7, C = .55, G = 2600, KY = 900, CY = 26; // pendulum (1/s²), damping, gravity and lanyard stretch (px)
+const K = 6, C = .32, /* owner (15 Nov): they keep swinging and settle slowly, like real lanyards */ G = 2600, KY = 900, CY = 26; // pendulum (1/s²), damping, gravity and lanyard stretch (px)
 const CYCLE = 12, STOP = 0.42, MOVE = 0.26; // the order ticket: every 12s, a short stop at each badge
 
 class Component extends DCLogic {
@@ -43,10 +43,15 @@ class Component extends DCLogic {
       const ay = G - (b.y > 0 ? KY * b.y + CY * b.vy : 0); b.vy += ay * dt; b.y += b.vy * dt;
       if (!b.landed && b.y > 0) { b.landed = true; b.w += (i % 2 ? -1 : 1) * 26; } // lands with a swing
       // pendulum: idle forcing (each its own rhythm) + the mouse nudging it away
-      let F = b.amp * Math.sin(b.om * t + b.ph);
-      if (this.mx != null && this.cx) { const dx = this.cx[i] - this.mx, ady = Math.abs(this.my - 300); if (Math.abs(dx) < 170 && ady < 280) F += -Math.sign(dx || 1) * (170 - Math.abs(dx)) * 0.9; }
+      // idle: a soft breeze, each its own rhythm, plus rare random gusts
+      let F = b.amp * 0.45 * Math.sin(b.om * t + b.ph) + b.amp * 0.25 * Math.sin(b.om * 0.37 * t + b.ph * 2.1);
+      if (Math.random() < dt * 0.08) b.w += (Math.random() - 0.5) * 18;
+      // owner (15 Nov): the mouse BRUSHES them: a passing pointer gives a push in its direction (by its speed), then they
+      // swing freely and settle by themselves. A resting pointer does nothing (they never get stuck pushed aside).
+      if (this.mvx && this.mx != null && this.cx) { const dx = this.cx[i] - this.mx, ady = Math.abs(this.my - 300); if (Math.abs(dx) < 90 && ady < 300) b.w += this.mvx * (1 - Math.abs(dx) / 90) * 0.55; }
       b.w += (-K * b.th - C * b.w + F) * dt; b.th += b.w * dt;
     });
+    this.mvx = (this.mvx || 0) * Math.pow(0.0005, dt); // the brush fades within a fraction of a second
   }
   paint() {
     const R = this.secRef.current; if (!R) return;
@@ -55,8 +60,8 @@ class Component extends DCLogic {
     this.b.forEach((b, i) => { const g = this._g[i], h = this._h[i]; if (!g) return; const y = this.t < b.dropAt ? -720 : b.y;
       if (b.pth != null && Math.abs(b.th - b.pth) < 0.06 && Math.abs(y - b.py) < 0.3) return; b.pth = b.th; b.py = y; // sub-pixel changes are skipped (fewer repaints at idle)
       // R10: never swing into a neighbour (laptops have less room between badges): the drawn angle is limited by the free gap
-      const room = this._room || (this._room = (() => { const sl = R.querySelector('.tm-slot'), cd = R.querySelector('.tm-card'); if (!sl || !cd) return 6; const gap = Math.max(4, sl.getBoundingClientRect().width - cd.getBoundingClientRect().width); return Math.max(5, Math.min(12, Math.atan(gap / 2 / 260) * 180 / Math.PI)); /* R11 (owner): they swing visibly */ })());
-      const th = Math.max(-room, Math.min(room, b.th));
+      const room = this._room || (this._room = (() => { const sl = R.querySelector('.tm-slot'), cd = R.querySelector('.tm-card'); if (!sl || !cd) return 6; const gap = Math.max(4, sl.getBoundingClientRect().width - cd.getBoundingClientRect().width); return Math.max(8, Math.min(16, Math.atan(gap / 2 / 260) * 180 / Math.PI)); /* R11 (owner): they swing visibly */ })());
+      const th = room * Math.tanh(b.th / room); /* soft limit: never a hard stop that looks stuck */
       g.style.transform = 'translateY(' + y.toFixed(1) + 'px) rotate(' + th.toFixed(2) + 'deg)';
       if (h) h.style.transform = 'translateX(' + (b.th * 9 + Math.sin(this.t * 0.7 + i) * 8).toFixed(1) + '%)'; });
     // the order ticket rides the rail: Parts Advisor → Parts Flow Controller → Bench Engineer → Finance & Checkout → Founder
@@ -81,8 +86,8 @@ class Component extends DCLogic {
         ask: r.founder ? 'Ask ' + name.split(' ')[0] : 'Ask on WhatsApp', /* R8: one short label so it always fits */ flipped: this.state.flip === i,
         href: wa + '?text=' + encodeURIComponent('Hi Sam Electronics, I have a question for the ' + (r.founder ? 'founder' : r.role) + '.'),
         flip: (e) => { if (e.target.closest('a')) return; this.b[i].w += 34; const c = e.currentTarget; c.classList.add('anim'); clearTimeout(c._t); c._t = setTimeout(() => c.classList.remove('anim'), 1100); const was = this.state.flip; if (was >= 0 && was !== i) { const o = this._c && this._c[was]; if (o) { o.classList.add('anim'); clearTimeout(o._t); o._t = setTimeout(() => o.classList.remove('anim'), 1100); } } this.setState({ flip: was === i ? -1 : i }); } })),
-      move: (e) => { if (!this.cx) this.measure(); const st = this.secRef.current?.querySelector('.tm-stage'); if (!st) return; const r = st.getBoundingClientRect(); this.mx = e.clientX - r.left; this.my = e.clientY - r.top; },
-      leave: () => { this.mx = null; },
+      move: (e) => { if (!this.cx) this.measure(); const st = this.secRef.current?.querySelector('.tm-stage'); if (!st) return; const r = st.getBoundingClientRect(), nx = e.clientX - r.left, now = performance.now(); if (this.mx != null && this._mt) { const v = (nx - this.mx) / Math.max(8, now - this._mt) * 1000; this.mvx = Math.max(-900, Math.min(900, v)) * 0.06; } this._mt = now; this.mx = nx; this.my = e.clientY - r.top; },
+      leave: () => { this.mx = null; this._mt = 0; },
       ref: () => this.measure() };
   }
 }
