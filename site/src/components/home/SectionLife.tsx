@@ -106,7 +106,13 @@ function markEntries(sec: HTMLElement) {
   const h2 = sec.querySelector('h2'); let i = 0;
   if (h2) { const pre = h2.previousElementSibling; if (pre && (pre as HTMLElement).getBoundingClientRect().height < 60) mark(pre, i++); mark(h2, i++); let n = h2.nextElementSibling, c = 0; while (n && c < 3) { if ((n as HTMLElement).getBoundingClientRect().height < 260) mark(n, i++); n = n.nextElementSibling; c++; } }
   // card groups: 3+ siblings of the same kind, card-sized, not already inside a marked element
-  const groups = new Set<Element>(); sec.querySelectorAll('*').forEach((e) => { const p = e.parentElement; if (!p || groups.has(p) || groups.size >= 3) return; const kids = Array.from(p.children).filter((k) => k.tagName === e.tagName && k.className === e.className); if (kids.length < 3) return; const b = (e as HTMLElement).getBoundingClientRect(); if (b.width < 90 || b.height < 60 || b.width > 900) return; if (p.closest('[data-se-rise]')) return; groups.add(p); });
+  // speed (owner: "website is slow"): each parent is checked once, by its children's signature, instead of filtering the
+  // siblings again for every element (that was O(n²) on the big sections and ran for all of them at load)
+  const groups = new Set<Element>(), seenP = new Set<Element>(); const all = sec.getElementsByTagName('*');
+  for (let x = 0; x < all.length && groups.size < 3; x++) { const p = all[x].parentElement; if (!p || seenP.has(p)) continue; seenP.add(p); if (p.children.length < 3) continue;
+    const cnt = new Map<string, Element>(), num = new Map<string, number>(); for (const k of Array.from(p.children)) { const key = k.tagName + '|' + k.className; num.set(key, (num.get(key) || 0) + 1); if (!cnt.has(key)) cnt.set(key, k); }
+    let first: Element | null = null; for (const [key, c] of num) if (c >= 3) { first = cnt.get(key) || null; break; } if (!first) continue;
+    const b = (first as HTMLElement).getBoundingClientRect(); if (b.width < 90 || b.height < 60 || b.width > 900) continue; if (p.closest('[data-se-rise]')) continue; groups.add(p); }
   groups.forEach((p) => { Array.from(p.children).slice(0, 12).forEach((k, j) => mark(k, Math.min(12, i + 1 + j))); });
 }
 
@@ -117,21 +123,27 @@ const OWN = new Set(['finale']); // these draw their own hero-style circuits
 
 export default function SectionLife() {
   useEffect(() => {
-    let io: IntersectionObserver | null = null, eio: IntersectionObserver | null = null, t1 = 0, t2 = 0;
+    let io: IntersectionObserver | null = null, eio: IntersectionObserver | null = null, pio: IntersectionObserver | null = null, t1 = 0, t2 = 0;
     const run = () => { try {
       const secs = Array.from(document.querySelectorAll('section[id]')).filter((s) => !SKIP.has(s.id) && !s.parentElement?.closest('section')) as HTMLElement[];
       io = io || new IntersectionObserver((es) => es.forEach((e) => { const el = e.target as HTMLElement; if (e.isIntersecting && e.intersectionRatio > 0.08) el.setAttribute('data-se-vis', ''); else if (!e.isIntersecting) el.removeAttribute('data-se-vis'); }), { threshold: [0, 0.08, 0.2] });
       // owner (28 Oct): each marked element plays its entrance when IT comes into view (not when the section's top edge does),
       // so long sections never finish their entrance off-screen; fully out of view resets it so it plays again next time
       eio = eio || new IntersectionObserver((es) => es.forEach((e) => { const el = e.target as HTMLElement; if (e.isIntersecting && e.intersectionRatio > 0.12) el.setAttribute('data-se-on', ''); else if (!e.isIntersecting) el.removeAttribute('data-se-on'); }), { threshold: [0, 0.12, 0.3] });
-      secs.forEach((sec, k) => {
+      // speed: a section is prepared (entrances, texture, gutter circuits) only when it comes within ~1 screen of view,
+      // not all of them at load; the hero area stays instant because the first sections are already near
+      pio = pio || new IntersectionObserver((es) => es.forEach((e) => { if (!e.isIntersecting) return; const sec = e.target as HTMLElement; pio!.unobserve(sec); prep(sec, Number(sec.dataset.seK || 0)); }), { rootMargin: '900px 0px 900px 0px' });
+      secs.forEach((sec, k) => { if (sec.dataset.seQ) { if (sec.dataset.seLife) prep(sec, k); return; } sec.dataset.seQ = '1'; sec.dataset.seK = String(k); pio!.observe(sec); });
+    } catch (err) { console.warn('[SectionLife]', err); } };
+    const prep = (sec: HTMLElement, k: number) => { try {
+      {
         markEntries(sec); io!.observe(sec); texture(sec, tone(sec), k); sec.querySelectorAll('[data-se-rise]').forEach((el) => { if (!(el as HTMLElement).dataset.seObs) { (el as HTMLElement).dataset.seObs = '1'; eio!.observe(el); } });
         // R10 U2: every home section gets the same circuits, only in its empty side gutters (sections with their own
         // hero-style circuits keep theirs: story, finale)
         const host = sec.id === 'quality' ? (sec.querySelector('.bt-pin') as HTMLElement | null) || undefined : undefined;
         if (window.innerWidth >= 1100 && !OWN.has(sec.id) && !(host || sec).querySelector(':scope > .se-gut')) { const t = tone(sec), e = contentEdges(host || sec);
           const hs = Array.from(sec.id).reduce((a, c) => (a * 31 + c.charCodeAt(0)) % 100000, 7); gutter(sec, e.l, 1, t, hs + 101, host); gutter(sec, e.r, -1, t, hs * 3 + 977, host); }
-      });
+      }
     } catch (err) { console.warn('[SectionLife]', err); } };
     (window as unknown as { __seLife?: () => void }).__seLife = run;
     // the shine follows the pointer inside whichever section it is over (one listener, at most one write per frame)
@@ -142,7 +154,7 @@ export default function SectionLife() {
     // the sections arrive late (the home page renders in the browser): keep checking for the first 30s; already-done
     // sections are skipped, so each pass is cheap
     let n = 0; t1 = window.setInterval(() => { run(); if (++n > 15) clearInterval(t1); }, 2000); t2 = window.setTimeout(run, 600);
-    return () => { clearInterval(t1); clearTimeout(t2); io && io.disconnect(); eio && eio.disconnect(); window.removeEventListener('pointermove', mv); cancelAnimationFrame(rq); };
+    return () => { clearInterval(t1); clearTimeout(t2); io && io.disconnect(); eio && eio.disconnect(); pio && pio.disconnect(); window.removeEventListener('pointermove', mv); cancelAnimationFrame(rq); };
   }, []);
   return null;
 }
