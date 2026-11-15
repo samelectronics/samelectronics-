@@ -139,3 +139,10 @@
 @keyframes lbRoad { to { stroke-dashoffset: -6; } }
 @media (max-width: 1100px) { .lb-main { grid-template-columns: 1fr; } .lb-tiles { display: grid; grid-template-columns: 1fr 1fr; } .lb-chan { display: none; } .lb-board { margin-top: 16px; } .lb-top { flex-direction: column; align-items: flex-start; } }
 @media (prefers-reduced-motion: reduce) { .lb *, .lb *::before, .lb *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; } }
+/* R12: the board's corner circuit is alive: brighter, a light running along it, pads breathing */
+.lb-deco { opacity: 1 !important; }
+.lb-deco-pulse { stroke-dasharray: 90 910; animation: lbDecoFlow 4.2s linear infinite; filter: drop-shadow(0 0 3px rgba(247, 192, 50, .8)); }
+.lb-deco-pulse.b { animation-duration: 5.4s; animation-delay: -2s; }
+@keyframes lbDecoFlow { from { stroke-dashoffset: 1000; } to { stroke-dashoffset: 0; } }
+.lb-deco-pad { animation: seNdBreath 3.4s ease-in-out infinite; } .lb-deco-pad.b { animation-delay: -1.1s; } .lb-deco-pad.c { animation-delay: -2.2s; }
+@media (prefers-reduced-motion: reduce) { .lb-deco-pulse, .lb-deco-pad { animation: none; } }

@@ -215,9 +215,14 @@ function render(v: Vals) {
       </div>
       {/* faint decorative circuit in the empty top-right corner (Issue 4: empty areas only, 8–12%) */}
       <svg className="lb-deco" viewBox="0 0 320 140" fill="none" aria-hidden="true">
-        <path d="M320 20 H210 L180 50 H120 L100 70 H0" stroke="#F7C032" strokeWidth="1.2" />
-        <circle cx="180" cy="50" r="3.5" stroke="#F7C032" strokeWidth="1.2" />
-        <circle cx="100" cy="70" r="3.5" stroke="#F7C032" strokeWidth="1.2" />
+        {/* R12 (owner: "a dead circuit"): it carries light now, like the hero's traces */}
+        <path d="M320 20 H210 L180 50 H120 L100 70 H0" stroke="rgba(247,192,50,.45)" strokeWidth="1.6" />
+        <path d="M320 20 H210 L180 50 H120 L100 70 H0" stroke="#FFDB6E" strokeWidth="2.2" strokeLinecap="round" pathLength={1000} className="lb-deco-pulse" />
+        <path d="M320 92 H250 L226 116 H150" stroke="rgba(247,192,50,.35)" strokeWidth="1.4" />
+        <path d="M320 92 H250 L226 116 H150" stroke="#FFDB6E" strokeWidth="2" strokeLinecap="round" pathLength={1000} className="lb-deco-pulse b" />
+        <circle cx="180" cy="50" r="3.6" fill="#F7C032" stroke="rgba(247,192,50,.3)" strokeWidth="5" className="lb-deco-pad" />
+        <circle cx="100" cy="70" r="3.6" fill="#F7C032" stroke="rgba(247,192,50,.3)" strokeWidth="5" className="lb-deco-pad b" />
+        <circle cx="150" cy="116" r="3.2" fill="#F7C032" stroke="rgba(247,192,50,.3)" strokeWidth="5" className="lb-deco-pad c" />
       </svg>
     </section>
   );

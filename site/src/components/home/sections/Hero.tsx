@@ -1593,7 +1593,7 @@ export default function Hero({ v }: { v: Vals }) {
                               display: 'block',
                               width: '16px',
                               height: '16px',
-                              background: '#F7C032',
+                              background: '#25D366',
                               WebkitMask: 'url(/icons/whatsapp.svg) center / contain no-repeat',
                               mask: 'url(/icons/whatsapp.svg) center / contain no-repeat',
                             }}
