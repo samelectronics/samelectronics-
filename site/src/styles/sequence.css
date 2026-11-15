@@ -45,3 +45,35 @@ section#network { background: radial-gradient(60% 50% at 70% 20%, rgba(247,192,5
 #network h2 > span:first-child { color: var(--sq-ink) !important; }
 #network h2 ~ p, #network h2 + p, #network p { color: #5C6066 !important; }
 #network div:has(> button) { background: #2A2C2F !important; box-shadow: 0 10px 24px -12px rgba(0,0,0,.4) !important; }
+
+/* Membership → GREY (the gold card shines on graphite) */
+section.cx { background: radial-gradient(50% 60% at 75% 30%, rgba(247,192,50,.14), rgba(247,192,50,0) 70%), var(--sq-grey) !important; color: #FFFFFF !important; }
+.cx .cx-eb { color: #F7C032 !important; }
+.cx .cx-h > span:first-child, .cx .cx-h { color: #FFFFFF !important; }
+.cx .cx-h > span:nth-child(2), .cx .cx-h > span:last-child:not(:first-child) { color: #F7C032 !important; }
+.cx .cx-p { color: #C9CCD0 !important; }
+.cx .cx-pick { border-bottom-color: rgba(255,255,255,.14) !important; }
+.cx .cx-pick button, .cx .cx-pick button b, .cx .cx-pick button small { color: #FFFFFF !important; }
+.cx .cx-pick button.on b { color: #F7C032 !important; }
+.cx .cx-pick button::after { background: #F7C032 !important; }
+.cx .cx-form, .cx .cx-form label, .cx .cx-lvl-h, .cx .cx-lvl-h * { color: #FFFFFF; }
+.cx .cx-steps::before { background: linear-gradient(90deg, #F7C032, rgba(247,192,50,.25)) !important; }
+.cx .cx-steps li > i { background: #F7C032 !important; color: #26282B !important; box-shadow: 0 0 0 5px rgba(247,192,50,.18) !important; }
+.cx .cx-steps li b { color: #FFFFFF !important; } .cx .cx-steps li small { color: #A7ABB1 !important; }
+.cx .cx-btn { background: #F7C032 !important; color: #26282B !important; }
+.cx .cx-trace path { stroke: rgba(247,192,50,.35); }
+.cx .cx-form > label, .cx .cx-form > span, .cx .cx-form b, .cx .cx-form small:not(.cx-lvl-bat *) { color: #FFFFFF !important; }
+
+/* Story → YELLOW (the polaroid cards stay white) */
+section.st { background: radial-gradient(60% 50% at 20% 0%, rgba(255,236,170,.6), rgba(255,236,170,0) 70%), var(--sq-yellow) !important; color: #26282B !important; }
+.st .st-h > span:first-child { color: #26282B !important; }
+.st .st-h > span:nth-child(2) { color: #FFFFFF !important; text-shadow: 0 2px 14px rgba(150,100,0,.25); }
+.st .st-eb, .st [class*="st-eb"], .st .st-yr-k { color: #26282B !important; }
+.st .st-yr b { color: #26282B !important; text-shadow: none !important; }
+.st .st-more { color: #26282B !important; border-color: #26282B !important; }
+.st .st-rail::before { background: rgba(38,40,43,.18) !important; }
+.st .st-line { background: #26282B !important; box-shadow: none !important; }
+.st .st-tip { background: linear-gradient(90deg, rgba(38,40,43,0), #26282B) !important; box-shadow: none !important; }
+.st .st-node { background: rgba(38,40,43,.25) !important; }
+.st .st-node.on { background: #26282B !important; box-shadow: 0 0 0 4px rgba(38,40,43,.15) !important; }
+.st .st-h > *:nth-child(2), .st .st-h > *:nth-child(2) * { color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF; }
