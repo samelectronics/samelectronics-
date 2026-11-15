@@ -125,7 +125,7 @@
   .se-nav-right { margin-inline-start: auto; }
   [data-tour="fmp"] { margin-inline-start: auto !important; }
   [data-tour="fmp"] > button { width: 38px !important; height: 38px !important; border-radius: 11px !important; }
-  .se-lm-btn, .se-help, .nb > button, [data-tour="cart"], [data-tour="menu"] { width: 38px !important; height: 38px !important; min-width: 38px; padding: 0 !important; display: grid !important; place-items: center !important; border-radius: 11px !important; border: 0 !important; background: rgba(255, 255, 255, .07) !important; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .1) !important; }
+  /* same button looks as the laptop bar; only the spacing differs */
   .se-nav-right { gap: 6px !important; }
   header a[href="/"] img, nav a[href="/"] img { width: 42px !important; height: 42px !important; }
 }
