@@ -64,8 +64,8 @@ function render(v: Vals) {
                   fill="none"
                   strokeLinecap="round"
                 >
-                  <path d="M16 4 C 4 18, 20 30, 8 48" stroke="#141517" strokeWidth="7.2" /><path d="M16 4 C 4 18, 20 30, 8 48" stroke="#34373C" strokeWidth="5.6" /><path d="M16 4 C 4 18, 20 30, 8 48" stroke="rgba(255,255,255,.14)" strokeWidth="5.6" strokeDasharray="1.2 1.6" /><path d="M16 4 C 4 18, 20 30, 8 48" stroke="rgba(0,0,0,.35)" strokeWidth="2" strokeDasharray="1.2 1.6" strokeDashoffset="1.4" />
-                  <path d="M16 4 C 4 18, 20 30, 8 48" stroke="rgba(255,255,255,.4)" strokeWidth="1" transform="translate(-1.4 -0.6)" />
+                  <path d="M16 4 C 4 18, 20 30, 8 48" stroke="#1F2124" strokeWidth="6.6" /><path d="M16 4 C 4 18, 20 30, 8 48" stroke="#3A3D42" strokeWidth="4.8" />
+                  <path d="M16 4 C 4 18, 20 30, 8 48" stroke="rgba(255,255,255,.3)" strokeWidth="1.2" transform="translate(-1.2 -0.6)" />
                 </svg>
                 {'\n          '}
                 <svg
@@ -77,13 +77,13 @@ function render(v: Vals) {
                 >
                   {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
                   <defs>
-                    <linearGradient id="samHandF" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#7E838A" /><stop offset=".45" stopColor="#F4F5F6" /><stop offset="1" stopColor="#8C9096" /></linearGradient>
+                    <linearGradient id="samHandF" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#2A2C30" /><stop offset=".4" stopColor="#5A5E64" /><stop offset="1" stopColor="#26282B" /></linearGradient>
                     <linearGradient id="samHandL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
                   <g>
                     {/* owner (15 Nov): the cable ends in a machined connector that gives off electricity: three smooth current arcs with light travelling along them */}
                     <rect x="8.6" y="0" width="6.8" height="6" rx="1.8" fill="url(#samHandF)" />
-                    <rect x="9.3" y=".7" width="5.4" height="1.1" rx=".55" fill="rgba(255,255,255,.8)" />
+                    <rect x="9.3" y=".7" width="5.4" height="1.1" rx=".55" fill="rgba(255,255,255,.3)" />
                     <rect x="8.6" y="5.6" width="6.8" height="1.4" rx=".5" fill="#F7C032" />
                     <circle cx="12" cy="8.6" r="3.4" fill="#F7C032" opacity=".28" className="sam-zap-core" />
                     <circle cx="12" cy="8.4" r="1.3" fill="#FFF4D1" />
@@ -145,8 +145,8 @@ function render(v: Vals) {
                   fill="none"
                   strokeLinecap="round"
                 >
-                  <path d="M4 4 C 16 18, 0 30, 12 48" stroke="#141517" strokeWidth="7.2" /><path d="M4 4 C 16 18, 0 30, 12 48" stroke="#34373C" strokeWidth="5.6" /><path d="M4 4 C 16 18, 0 30, 12 48" stroke="rgba(255,255,255,.14)" strokeWidth="5.6" strokeDasharray="1.2 1.6" /><path d="M4 4 C 16 18, 0 30, 12 48" stroke="rgba(0,0,0,.35)" strokeWidth="2" strokeDasharray="1.2 1.6" strokeDashoffset="1.4" />
-                  <path d="M4 4 C 16 18, 0 30, 12 48" stroke="rgba(255,255,255,.4)" strokeWidth="1" transform="translate(-1.4 -0.6)" />
+                  <path d="M4 4 C 16 18, 0 30, 12 48" stroke="#1F2124" strokeWidth="6.6" /><path d="M4 4 C 16 18, 0 30, 12 48" stroke="#3A3D42" strokeWidth="4.8" />
+                  <path d="M4 4 C 16 18, 0 30, 12 48" stroke="rgba(255,255,255,.3)" strokeWidth="1.2" transform="translate(-1.2 -0.6)" />
                 </svg>
                 {'\n          '}
                 <svg
@@ -158,13 +158,13 @@ function render(v: Vals) {
                 >
                   {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
                   <defs>
-                    <linearGradient id="samHandF" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#7E838A" /><stop offset=".45" stopColor="#F4F5F6" /><stop offset="1" stopColor="#8C9096" /></linearGradient>
+                    <linearGradient id="samHandF" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#2A2C30" /><stop offset=".4" stopColor="#5A5E64" /><stop offset="1" stopColor="#26282B" /></linearGradient>
                     <linearGradient id="samHandR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
                   <g transform="translate(24 0) scale(-1 1)">
                     {/* owner (15 Nov): the cable ends in a machined connector that gives off electricity: three smooth current arcs with light travelling along them */}
                     <rect x="8.6" y="0" width="6.8" height="6" rx="1.8" fill="url(#samHandF)" />
-                    <rect x="9.3" y=".7" width="5.4" height="1.1" rx=".55" fill="rgba(255,255,255,.8)" />
+                    <rect x="9.3" y=".7" width="5.4" height="1.1" rx=".55" fill="rgba(255,255,255,.3)" />
                     <rect x="8.6" y="5.6" width="6.8" height="1.4" rx=".5" fill="#F7C032" />
                     <circle cx="12" cy="8.6" r="3.4" fill="#F7C032" opacity=".28" className="sam-zap-core" />
                     <circle cx="12" cy="8.4" r="1.3" fill="#FFF4D1" />

@@ -159,23 +159,26 @@ export function babble(text: string, opts: { onEnd?: () => void } = {}) {
   stopCur && stopCur();
   spoken.pending = false; spoken.active = false; spoken.done = false; spoken.text = '';
   const t = (text || '').trim(), chars = Array.from(t), voice = prefs().sound.voice || 'cute';
-  const ask = /\?\s*$/.test(t), happy = HAPPY.test(t), base = (voice === 'deep' ? 330 : 640) * (happy ? 1.06 : 1);
+  const ask = /\?\s*$/.test(t), happy = HAPPY.test(t), base = (voice === 'deep' ? 300 : 470) * (happy ? 1.04 : 1);
   const at: number[] = []; let acc = 0; for (const ch of chars) { at.push(acc); acc += charMs(ch) / 1000; } const total = acc;
   const syl: number[] = []; chars.forEach((c, k) => { if (isV(c) && (k === 0 || !isV(chars[k - 1]))) syl.push(k); });
   const opens: number[] = [];
   if (can() && syl.length) { try { const c = ac(), now = c.currentTime + 0.03, bus = out();
     syl.forEach((k, n) => { const ch = chars[k].normalize('NFD').charAt(0).toLowerCase(), prev = chars[k - 1] || 'a', last = n === syl.length - 1;
-      let semi = (VPITCH[ch] ?? 1) + ((prev.charCodeAt(0) * 7) % 5) - 2; if (ask && last) semi += 7; else if (last) semi += happy ? 4 : -2;
-      const f = base * Math.pow(2, semi / 12), st = now + at[k], d = Math.min(0.11, Math.max(0.055, (at[syl[n + 1]] ?? total) - at[k] - 0.025));
+      // owner (15 Nov): soft baby sounds ("ma", "mwa", "ha"): a round sine that hums in softly like an "m", opens a little,
+      // and fades; small pitch steps only, nothing sharp or chirpy
+      let semi = ((VPITCH[ch] ?? 1) * 0.5) + ((prev.charCodeAt(0) * 7) % 3) - 1; if (ask && last) semi += 5; else if (last) semi += happy ? 2 : -2;
+      const f = base * Math.pow(2, semi / 12), st = now + at[k], d = Math.min(0.15, Math.max(0.085, (at[syl[n + 1]] ?? total) - at[k] - 0.02));
       const o = c.createOscillator(), o2 = c.createOscillator(), g = c.createGain(), g2 = c.createGain(), lp = c.createBiquadFilter();
-      o.type = 'sine'; o2.type = 'triangle'; lp.type = 'lowpass'; lp.frequency.value = 3200; g2.gain.value = 0.18;
-      o.frequency.setValueAtTime(f * 0.9, st); o.frequency.exponentialRampToValueAtTime(f * 1.12, st + d * 0.45); o.frequency.exponentialRampToValueAtTime(f, st + d);
-      o2.frequency.setValueAtTime(f * 1.8, st); o2.frequency.exponentialRampToValueAtTime(f * 2.24, st + d * 0.45);
-      g.gain.setValueAtTime(0.0001, st); g.gain.exponentialRampToValueAtTime(0.22, st + 0.012); g.gain.setValueAtTime(0.22, st + d * 0.5); g.gain.exponentialRampToValueAtTime(0.0001, st + d);
+      o.type = 'sine'; o2.type = 'sine'; lp.type = 'lowpass'; lp.Q.value = 0.5; g2.gain.value = 0.07;
+      lp.frequency.setValueAtTime(700, st); lp.frequency.linearRampToValueAtTime(1900, st + d * 0.35); lp.frequency.linearRampToValueAtTime(900, st + d);
+      o.frequency.setValueAtTime(f * 0.94, st); o.frequency.linearRampToValueAtTime(f, st + d * 0.3); o.frequency.linearRampToValueAtTime(f * 0.97, st + d);
+      o2.frequency.setValueAtTime(f * 2, st);
+      g.gain.setValueAtTime(0.0001, st); g.gain.linearRampToValueAtTime(0.09, st + d * 0.18); g.gain.linearRampToValueAtTime(0.2, st + d * 0.4); g.gain.exponentialRampToValueAtTime(0.0001, st + d);
       o.connect(lp); o2.connect(g2); g2.connect(lp); lp.connect(g); g.connect(bus); o.start(st); o2.start(st); o.stop(st + d + 0.02); o2.stop(st + d + 0.02);
       opens.push(at[k]); });
-    if (happy) { const h = c.createOscillator(), hg = c.createGain(), s0 = now + total + 0.04; h.type = 'sine'; h.frequency.setValueAtTime(base * 1.5, s0); h.frequency.exponentialRampToValueAtTime(base * 2, s0 + 0.12);
-      hg.gain.setValueAtTime(0.0001, s0); hg.gain.exponentialRampToValueAtTime(0.16, s0 + 0.015); hg.gain.exponentialRampToValueAtTime(0.0001, s0 + 0.14); h.connect(hg); hg.connect(out()); h.start(s0); h.stop(s0 + 0.16); }
+    if (happy) { const h = c.createOscillator(), hg = c.createGain(), s0 = now + total + 0.04; h.type = 'sine'; h.frequency.setValueAtTime(base * 1.2, s0); h.frequency.linearRampToValueAtTime(base * 1.35, s0 + 0.12);
+      hg.gain.setValueAtTime(0.0001, s0); hg.gain.linearRampToValueAtTime(0.1, s0 + 0.04); hg.gain.exponentialRampToValueAtTime(0.0001, s0 + 0.14); h.connect(hg); hg.connect(out()); h.start(s0); h.stop(s0 + 0.16); }
   } catch { /* silent */ } } else syl.forEach((k) => opens.push(at[k]));
   // the mouth opens on each bip and closes between them, on the same clock
   let alive = true, raf = 0; const t0 = performance.now();
