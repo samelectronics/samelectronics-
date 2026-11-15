@@ -151,7 +151,7 @@ class Component extends DCLogic {
       this.gUsed = true; this.gAcc = 0; this.ask(dir); };
     this.ask = (dir) => { const now = performance.now();
       if (this.busy()) { if (!this.blockedAt) this.blockedAt = now; if (now - this.blockedAt > 3000 && !this.opBusy()) { this.unstick(); this.blockedAt = 0; this.gesture(dir); return; }
-        const Q = (this.q = this.q || []); if (Q.length && Q[Q.length - 1] !== dir) Q.length = 0; if (Q.length < 3) Q.push(dir); this.pendAt = now; return; }
+        /* R12 (owner): one scroll = one step; anything scrolled while a step plays is ignored, never queued */ this.q = []; return; }
       this.blockedAt = 0; this.gesture(dir); };
     // 14 Oct §07 A: root cause of 'scroll over and over': a gesture made during the opening or a step was dropped AND marked
     // its whole scroll stream as used, so it took a new pause + scroll to react. Now it is held (one deep) and played as soon as
@@ -185,7 +185,7 @@ class Component extends DCLogic {
     const mob = this.isMob(); this._mob = mob; this.td.mob = mob;
     this.dispose && this.dispose(); this.dispose = null; this.io && this.io.disconnect(); this.stopAuto();
     const tok = (this._tok = (this._tok || 0) + 1);
-    const boot = (n) => { const host = this.hostRef.current; if (tok !== this._tok) return; if (!host) { if (n < 80) setTimeout(() => boot(n + 1), 100); else { this.setState({ loading: false }); this.opShow('3D host never mounted'); } return; } import(/* webpackIgnore: true */ new URL('./se-teardown-3d.js', document.baseURI).href).then((m) => m.mount(host, this.td)).then((d) => { if (tok !== this._tok) { d(); return; } this.dispose = d; this.ready3d = true; this.setState({ loading: false }); setTimeout(() => this.opCheck(), 30); }).catch((e) => { this.failed3d = true; this.setState({ loading: false }); this.opShow('3D failed to load: ' + (e && e.message)); }); }; setTimeout(() => boot(0), 60);
+    const boot = (n) => { const host = this.hostRef.current; if (tok !== this._tok) return; if (!host) { if (n < 80) setTimeout(() => boot(n + 1), 100); else { this.setState({ loading: false }); this.opShow('3D host never mounted'); } return; } import(/* webpackIgnore: true */ new URL('./se-teardown-3d.js', document.baseURI).href).then((m) => m.mount(host, this.td)).then((d) => { if (tok !== this._tok) { d(); return; } this.dispose = d; this.ready3d = true; this.setState({ loading: false }); setTimeout(() => this.opCheck(), 30); }).catch((e) => { this.failed3d = true; this.setState({ loading: false }); this.opShow('3D failed to load: ' + (e && e.message)); }); }; /* R12 (owner: entrance froze): the heavy 3D is built only after the loading screen has finished its fade */ const go = () => setTimeout(() => boot(0), 60); if (window.__seBooted || performance.now() > 12000) go(); else { let fired = false; const once = () => { if (fired) return; fired = true; window.removeEventListener('se:booted', once); go(); }; window.addEventListener('se:booted', once); setTimeout(once, 12000); }
     if (mob) { this.at(0.02); setTimeout(() => { const el = this.secRef.current; if (!el) return; this.io = new IntersectionObserver(([e]) => { if (e.isIntersecting) { if (!this.played) { this.played = true; this.play(); } } else if (this.played && e.boundingClientRect.top > 0) { this.played = false; this.stopAuto(); this.at(0.02); } }, { threshold: 0.3 }); this.io.observe(el); }, 80); }
   }
   stopAuto() { (this.tm || []).forEach(clearTimeout); this.tm = []; cancelAnimationFrame(this.twRaf); }

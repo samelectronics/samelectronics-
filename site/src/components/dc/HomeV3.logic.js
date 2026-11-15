@@ -39,7 +39,7 @@ class Component extends DCLogic {
     this.offSeen = new WeakSet(); const scan = () => { document.querySelectorAll('section, footer').forEach((el) => { if (!this.offSeen.has(el)) { this.offSeen.add(el); el.setAttribute('data-off', ''); this.offIO.observe(el); } }); };
     scan(); this.offIv = setInterval(scan, 3000);
     false && setTimeout(() => { const r = this.rootRef.current; if (r) import(/* webpackIgnore: true */ new URL('./se-bus.js', document.baseURI).href).then((m) => { if (!this.dead) this.busOff = m.mount(r); }).catch((e) => console.warn('bus', e && e.message)); }, 300);
-    try { if (!sessionStorage.getItem('se-booted') && !matchMedia('(prefers-reduced-motion: reduce)').matches) { sessionStorage.setItem('se-booted', '1'); this.setState({ bootOn: true }); /* 14 Oct §01: BootIntro decides when to leave (real loading, 1.5–5s) */ } } catch (e) {}
+    try { if (sessionStorage.getItem('se-booted') || matchMedia('(prefers-reduced-motion: reduce)').matches) window.__seBooted = 1; /* R12: no loading screen this time: the 3D may start right away */ if (!sessionStorage.getItem('se-booted') && !matchMedia('(prefers-reduced-motion: reduce)').matches) { sessionStorage.setItem('se-booted', '1'); this.setState({ bootOn: true }); /* 14 Oct §01: BootIntro decides when to leave (real loading, 1.5–5s) */ } } catch (e) {}
     // owner (26 Oct): the opening entrance (title in stages, iPad then phone slide in, brand bar rises) plays once, when the
     // page opens: html.se-intro gates it, and it is removed once the hero has played, so a language switch or scrolling back
     // never replays it.

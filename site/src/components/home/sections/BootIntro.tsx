@@ -76,6 +76,7 @@ export default function BootIntro({ v }: { v: Vals }) {
   const [hl] = useState(() => (typeof window === 'undefined' ? 'en' : loaderLang())); const ar = hl === 'ar' || hl === 'fa' || hl === 'ur';
 
   useEffect(() => {
+    const W0 = window as unknown as { __seBooted?: number };
     if (!on) return;
     document.documentElement.classList.remove('se-boot'); // the pre-paint graphite veil hands over to this screen
     // times are measured from navigation start (performance.now), so the 1.5–5s window includes the time before React
@@ -90,7 +91,7 @@ export default function BootIntro({ v }: { v: Vals }) {
     else window.addEventListener('load', onLoad, { once: true });
     const onLib = () => (tasks.parts = true);
     window.addEventListener('se:parts-lib', onLib, { once: true });
-    let shown = 0, raf = 0, exitAt = 0, lineN = 0, wakeAt = 0, readyAt = 0;
+    let shown = 0, raf = 0, exitAt = 0, lineN = 0, wakeAt = 0, readyAt = 0, leaveAt = 0;
     const C = 2 * Math.PI * R;
     const frame = (now: number) => {
       const t = now / 1000, tm = t - m0;
@@ -115,12 +116,14 @@ export default function BootIntro({ v }: { v: Vals }) {
       if (ring.current) ring.current.style.strokeDashoffset = off;
       if (ringG.current) ringG.current.style.strokeDashoffset = off;
       if (exitAt && shown >= 1 && !readyAt) { readyAt = t; setReady(true); }
-      if (readyAt && t - readyAt >= 0.75 && t - readyAt < 0.8) setLeaving(true);
-      if (readyAt && t - readyAt >= 1.15) { done.current && done.current(); return; }
+      // R12 (owner: froze, then suddenly in the site): the fade always plays, even if a frame came late, and the page
+      // only takes over once the fade has really been on screen for a moment
+      if (readyAt && t - readyAt >= 0.6 && !leaveAt) { leaveAt = t; setLeaving(true); }
+      if (leaveAt && t - leaveAt >= 0.5) { W0.__seBooted = 1; window.dispatchEvent(new CustomEvent('se:booted')); done.current && done.current(); return; }
       raf = requestAnimationFrame(frame);
     };
     raf = requestAnimationFrame(frame);
-    timers.push(window.setTimeout(() => done.current && done.current(), (MAX + 2) * 1000)); // hard stop (after the ring, the tick and the fade)
+    timers.push(window.setTimeout(() => { W0.__seBooted = 1; done.current && done.current(); }, (MAX + 2) * 1000)); // hard stop (after the ring, the tick and the fade)
     return () => {
       cancelAnimationFrame(raf);
       timers.forEach(clearTimeout);

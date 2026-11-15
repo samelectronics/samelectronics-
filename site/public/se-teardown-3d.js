@@ -19,7 +19,7 @@ export async function mount(host, state) {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: false, logarithmicDepthBuffer: true }); renderer.debug.checkShaderErrors = false; /* owner (28 Oct, lag): no buffer copy each frame, no shader-log stalls */ // R6 §05 A: no depth fighting on the back-cover edge at any distance
   // R10 perf: a browser drawing 3D without a graphics card (software WebGL) renders at a lower density so the page never stalls
   const SWGL = (() => { try { const gl = renderer.getContext(), e = gl.getExtension('WEBGL_debug_renderer_info'); return /swiftshader|llvmpipe|softpipe|software/i.test(e ? String(gl.getParameter(e.UNMASKED_RENDERER_WEBGL)) : ''); } catch (x) { return false; } })();
-  renderer.setPixelRatio(SWGL ? 0.6 : Math.min(window.devicePixelRatio || 1, 1.5) /* R6 Part A: 1.5× max */);
+  renderer.setPixelRatio(SWGL ? 0.6 : Math.min(window.devicePixelRatio || 1, 1.25) /* R12 speed: 1.25× max */);
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.05;
@@ -36,7 +36,7 @@ export async function mount(host, state) {
 
   scene.add(new THREE.HemisphereLight(0xffffff, 0x1a1b1d, 0.4));
   const key = new THREE.DirectionalLight(0xffffff, 2.5);
-  key.castShadow = true; key.shadow.mapSize.set(2048, 2048); key.shadow.radius = 10; key.shadow.blurSamples = 16; key.shadow.bias = -0.0006; key.shadow.normalBias = 0.02;
+  key.castShadow = true; key.shadow.mapSize.set(1024, 1024); key.shadow.radius = 6; key.shadow.blurSamples = 8; /* R12 speed: half the shadow cost, same soft look */ key.shadow.bias = -0.0006; key.shadow.normalBias = 0.02;
   Object.assign(key.shadow.camera, { left: -8, right: 8, top: 8, bottom: -8, near: 0.5, far: 40 });
   scene.add(key); scene.add(key.target);
   const rimL = new THREE.DirectionalLight(0xffffff, 2.4); scene.add(rimL); scene.add(rimL.target);
@@ -593,11 +593,11 @@ export async function mount(host, state) {
   const dust = document.createElement('canvas'); dust.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none'; host.insertBefore(dust, refl); const dx = dust.getContext('2d');
   const SPR = {}, dSpr = (bk) => { const k = bk ? 'b' : 'n'; if (SPR[k]) return SPR[k]; const mkS = (c) => { const S = 64, cv = document.createElement('canvas'); cv.width = cv.height = S; const x = cv.getContext('2d'), g = x.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2); g.addColorStop(0, 'rgba(' + c + ',1)'); g.addColorStop(bk ? 0.25 : 0.42, 'rgba(' + c + ',.78)'); g.addColorStop(1, 'rgba(' + c + ',0)'); x.fillStyle = g; x.fillRect(0, 0, S, S); return cv; }; return (SPR[k] = { w: mkS('255,247,234'), g: mkS('247,196,90') }); };
   const BK = Array.from({ length: 11 }, (_, i) => ({ x: 0.45 + Math.random() * 0.55, y: 0.08 + Math.random() * 0.62, r: 18 + Math.random() * 46, a: 0.035 + Math.random() * 0.045, ph: Math.random() * 6.28 }));
-  const DP = Array.from({ length: state.mob ? 90 : 190 }, (_, i) => { const bk = i < (state.mob ? 4 : 9), z = bk ? 1 : Math.random(), g0 = Math.random(), ang = Math.random() * 6.28, sp = (1.5 + Math.random() * 4) * (0.5 + z); return { bk, z, x: Math.random(), y: Math.random(), r: bk ? 2.5 + Math.random() * 2.5 : 0.5 + z * 0.9 + Math.random() * 0.1, a: bk ? 0.03 + Math.random() * 0.03 : 0.1 + z * 0.17 + Math.random() * 0.08, c: [255, Math.round(lerp(255, 238, g0)), Math.round(lerp(255, 222, g0))], vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp * 0.7, ph: Math.random() * 6.28, wb: 0.08 + Math.random() * 0.7, tw: 0.7 + Math.random() * 4.5, fv: 0.6 + Math.random() * 3.6, sx: (Math.random() - 0.5) * 3.2, ph2: Math.random() * 6.28 }; });
+  const DP = Array.from({ length: state.mob ? 60 : 110 }, (_, i) => { const bk = i < (state.mob ? 4 : 9), z = bk ? 1 : Math.random(), g0 = Math.random(), ang = Math.random() * 6.28, sp = (1.5 + Math.random() * 4) * (0.5 + z); return { bk, z, x: Math.random(), y: Math.random(), r: bk ? 2.5 + Math.random() * 2.5 : 0.5 + z * 0.9 + Math.random() * 0.1, a: bk ? 0.03 + Math.random() * 0.03 : 0.1 + z * 0.17 + Math.random() * 0.08, c: [255, Math.round(lerp(255, 238, g0)), Math.round(lerp(255, 222, g0))], vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp * 0.7, ph: Math.random() * 6.28, wb: 0.08 + Math.random() * 0.7, tw: 0.7 + Math.random() * 4.5, fv: 0.6 + Math.random() * 3.6, sx: (Math.random() - 0.5) * 3.2, ph2: Math.random() * 6.28 }; });
   let reflN = 0;
   let BKD = null; const mkBK = () => { const arr = []; let guard = 0; while (arr.length < 15 && guard++ < 6000) { const r = 20 + Math.pow(Math.random(), 1.2) * 60, x = r + Math.random() * Math.max(1, w - 2 * r), y = hgt * 0.06 + r + Math.random() * Math.max(1, hgt * 0.9 - 2 * r); if (arr.every((o) => Math.hypot(o.x - x, o.y - y) > o.r + r + 40)) arr.push({ x, y, r, th: Math.random() * 6.28, om: 0.05 + Math.random() * 0.12, ph: Math.random() * 6.28, v: 16 + (22 * (r - 20)) / 60, a: 0.17 + Math.random() * 0.13, bp: 4 + Math.random() * 2, rim: Math.random() < 0.45, c: [Math.round(lerp(228, 247, Math.random())), Math.round(lerp(150, 192, Math.random())), Math.round(lerp(36, 50, Math.random()))] }); } arr.w = w; arr.h = hgt; return arr; };
   // G16: render density follows the frame rate (window.seQuality from se-perf.js): 2× when smooth, down to 1.25× while it struggles.
-  let prWant = SWGL ? 0.6 : Math.min(window.devicePixelRatio || 1, 1.5); // R6 Part A: WebGL at 1.5× max
+  let prWant = SWGL ? 0.6 : Math.min(window.devicePixelRatio || 1, 1.25); // R12 speed: WebGL at 1.25× max
   const prNow = () => { const q = window.seQuality; if (SWGL) return prWant; return q && q.level < 1 ? Math.max(Math.min(1.25, prWant), +(prWant * (0.55 + 0.45 * q.level)).toFixed(2)) : prWant; };
   const resize = () => { const rw = host.clientWidth, rh = host.clientHeight, pr = prNow(); if (!rw || (rw === w && rh === hgt && LY && LY.mob === !!state.mob && LY.rtl === (document.documentElement.dir === 'rtl') && pr === renderer.getPixelRatio())) return; w = rw; hgt = rh; renderer.setPixelRatio(pr); renderer.setSize(w, hgt, false); dpr = renderer.getPixelRatio(); refl.width = shd.width = dust.width = canvas.width; refl.height = shd.height = dust.height = canvas.height; cam.aspect = w / Math.max(1, hgt); LY = layout(w, hgt, !!state.mob); camD = hgt / (2 * Math.tan((cam.fov * PI) / 360) * LY.ppu); cam.updateProjectionMatrix(); measure(); };
   const hull = (P) => { P.sort((a, b) => a[0] - b[0] || a[1] - b[1]); const cr = (o, a, b) => (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0]); const lo = [], up = []; for (const q of P) { while (lo.length >= 2 && cr(lo[lo.length - 2], lo[lo.length - 1], q) <= 0) lo.pop(); lo.push(q); } for (let i = P.length - 1; i >= 0; i--) { const q = P[i]; while (up.length >= 2 && cr(up[up.length - 2], up[up.length - 1], q) <= 0) up.pop(); up.push(q); } up.pop(); lo.pop(); return lo.concat(up); };
@@ -606,7 +606,7 @@ export async function mount(host, state) {
   const tmp = document.createElement('canvas'), tx2 = tmp.getContext('2d'), lo = document.createElement('canvas'), lx = lo.getContext('2d');
   const onMove = (e) => { tmx = (e.clientX / (window.innerWidth || 1)) * 2 - 1; tmy = (e.clientY / (window.innerHeight || 1)) * 2 - 1; };
   window.addEventListener('pointermove', onMove, { passive: true });
-  let ioV = null, ioN = null, inView = false, nearV = false;
+  let ioV = null, ioN = null, inView = false, nearV = false, lastDraw = 0;
   const tick = () => {
     if (!alive) return; if (document.hidden) setTimeout(tick, 60); else requestAnimationFrame(tick);
     // owner (28 Oct, lag): visibility comes from IntersectionObservers, never from measuring the page every frame
@@ -614,12 +614,15 @@ export async function mount(host, state) {
       visible = inView; const r = { width: nearV ? 1 : 0, top: 0, bottom: 0 }, vh = 1;
       // owner (27 Oct): warm-up. Until it has drawn once, the stage draws one frame (off-screen, invisible) as soon as it is
       // within ~3 screens, so textures upload and shaders link BEFORE the visitor arrives, not on the first scroll into it
-      if (!visible) { if (!warmed && nearV && performance.now() - warmAt > 700) { warmAt = performance.now(); try { frame(); warmed = true; } catch (e) {} } return; } }
+      if (!visible) { if (!warmed && nearV && (window.__seBooted || performance.now() > 12000) && performance.now() - warmAt > 700) { warmAt = performance.now(); try { frame(); warmed = true; } catch (e) {} } return; } }
+    // R12 speed (owner: fans at full power): full 60 fps only while the scroll is moving the stack; when it is just
+    // turning slowly in the studio, 30 fps looks the same and halves the work
+    { const now = performance.now(), moving = Math.abs(state.p - p) > 0.0004 || state.snap; if (!moving && now - lastDraw < 31) return; lastDraw = now; }
     const f0 = performance.now(); try { frame(); window.__tdFt = performance.now() - f0; } catch (e) { if (!window.__tdErr) { window.__tdErr = e.message; console.error('teardown', e); } }
   };
   const frame = () => {
     resize(); if (!LY) return;
-    let snapped = false; if (state.snap) { p = state.p; state.snap = false; snapped = true; } else p += (state.p - p) * 0.16;
+    let snapped = false; if (state.snap) { p = state.p; state.snap = false; snapped = true; } else p += (state.p - p) * (1 - Math.pow(0.84, Math.max(1, Math.min(4, (performance.now() / 1000 - lastT) * 60))));
     const t = performance.now() / 1000, dt = Math.min(0.05, Math.max(0, t - lastT)), mob = LY.mob; lastT = t;
     const rise = sm((p - T.rise0) / (T.rise1 - T.rise0)), pwr = sm((p - T.pwr0) / (T.pwr1 - T.pwr0));
     if (snapped) stK = p >= T.st0 ? 1 : 0; else if (p >= T.st0) stK = Math.min(1, stK + dt / 1.4); else stK = Math.max(0, stK - dt / 0.6); if (state.stKf != null) stK = state.stKf;
@@ -733,7 +736,7 @@ export async function mount(host, state) {
     refl.style.opacity = (rise * 0.36 * opR * opR).toFixed(3);
     /* R11 speed: copying the 3D canvas into 2D canvases is the most expensive thing on the page; the blurred reflection is
        redrawn every third frame (invisible difference) and not at all without a graphics chip */
-    if (!SWGL && (reflN++ % 3 === 0)) {
+    if (!SWGL && (reflN++ % 4 === 0)) {
     rx.setTransform(1, 0, 0, 1, 0, 0); rx.globalCompositeOperation = 'source-over'; rx.clearRect(0, 0, refl.width, refl.height);
     if (rise > 0.01) { const yf = LY.floorY * dpr, oh = Math.max(30, LY.Hs * 0.25) * dpr, ax0 = Math.max(0, (x0 - 40) * dpr), aw = Math.min(refl.width - ax0, (x1 - x0 + 80) * dpr), sh = Math.min(yf, oh * 1.2);
       if (aw > 0 && sh > 0) {
