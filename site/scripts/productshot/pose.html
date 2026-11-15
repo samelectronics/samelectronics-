@@ -160,13 +160,22 @@ function product() {
       g.userData.noBox = true;
       const cl = (v) => Math.max(0, Math.min(1, v)), seg = (f, a, d) => cl((f - a) / d), eio = (v) => (v < 0.5 ? 4 * v * v * v : 1 - Math.pow(-2 * v + 2, 3) / 2);
       g.userData.film = (F, stand) => {
-        const open = eio(seg(F, 0.12, 0.16)) * (1 - eio(seg(F, 0.62, 0.16))), out = eio(seg(F, 0.3, 0.14)), inn = eio(seg(F, 0.45, 0.15)), boot2 = seg(F, 0.8, 0.14);
-        hinge.rotation.y = -1.2 * open;
-        sc.visible = F < 0.46; scNew.visible = F >= 0.44;
-        sc.position.set(PW / 2 + out * 2.6, out * 0.6, 0.03 + out * 0.5); sc.rotation.z = out * 0.25;
-        scNew.position.set(PW / 2 + (1 - inn) * 2.6, (1 - inn) * 0.6, 0.03 + (1 - inn) * 0.5); scNew.rotation.z = (1 - inn) * 0.25;
+        // owner (15 Nov): rebuilt like a real repair. No book-opening, nothing flies at the camera: the cracked screen lifts
+        // straight off the frame, slides sideways out of shot at the SAME depth (so it never changes size), the new screen
+        // slides in the same way, settles onto the frame, and boots.
+        if (stand) { stand.rotation.y += Math.sin(F * Math.PI * 2) * 0.05; stand.updateMatrixWorld(true); }
+        const q = new THREE.Quaternion(); hinge.getWorldQuaternion(q); q.invert();
+        const ws = new THREE.Vector3(); hinge.getWorldScale(ws);
+        const side = new THREE.Vector3(1, 0, 0).applyQuaternion(q).multiplyScalar(1 / ws.x); // world-horizontal, in the screen's own frame
+        side.z = 0; // never toward the camera
+        const lift = 0.16, far = 3.4;
+        const up0 = eio(seg(F, 0.12, 0.1)), out = eio(seg(F, 0.24, 0.16)), inn = eio(seg(F, 0.42, 0.16)), down = eio(seg(F, 0.6, 0.1)), boot2 = seg(F, 0.78, 0.14);
+        hinge.rotation.set(0, 0, 0);
+        sc.visible = F < 0.42; scNew.visible = F >= 0.4;
+        sc.position.set(PW / 2 - side.x * far * out, -side.y * far * out, 0.03 + lift * up0);
+        scNew.position.set(PW / 2 + side.x * far * (1 - inn), side.y * far * (1 - inn), 0.03 + lift * (1 - down));
+        sc.rotation.set(0, 0, 0); scNew.rotation.set(0, 0, 0);
         on.emissiveIntensity = 0.95 * boot2; on.color.setScalar(0.04 + 0.96 * boot2);
-        if (stand) stand.rotation.y += Math.sin(F * Math.PI * 2) * 0.07; // the phone turns a little on the bench, so it is alive
       };
     }
     g.userData.size = [PW, PH]; if (ITEM === 'crack' || ITEM === 'open') g.userData.noBox = true;
@@ -306,7 +315,7 @@ if (!prod.userData.noBox) {
 }
 if (LINE) { // owner (27 Oct): every box of a range, lined up behind each other (each ~70% showing), the screen in front
   let prev = box; for (let j = BOXL.length - 2; j >= 0; j--) { const b2 = await carton(pw, PH0, BOXL[j]); stand.add(b2); const cw2 = b2.userData.bw; b2.position.set(prev.position.x + SIDE * (prev.userData.bw / 2 + cw2 / 2 - 0.3 * cw2), b2.userData.bh / 2, prev.position.z - prev.userData.depth / 2 - b2.userData.depth / 2 - 0.05); prev = b2; } }
-if (ITEM === 'crack' || ITEM === 'fixed' || ITEM === 'open') { // R9 (owner: "the tools look cheap"): real bench tools, modelled like the real ones
+if ((ITEM === 'crack' || ITEM === 'fixed' || ITEM === 'open') && !Q.get('front')) { // R9 (owner: "the tools look cheap"): real bench tools, modelled like the real ones
   const tools = new THREE.Group();
   // 1 · precision screwdriver: knurled anodised aluminium handle, polished swivel cap, tapered nose, chrome hex bit holder and bit
   const knurl = cv(256, 512, (x, w, h) => { x.fillStyle = '#808080'; x.fillRect(0, 0, w, h); x.strokeStyle = '#ffffff'; x.lineWidth = 2; for (let i = -h; i < w + h; i += 9) { x.beginPath(); x.moveTo(i, 0); x.lineTo(i + h * 0.6, h); x.stroke(); x.beginPath(); x.moveTo(i + h * 0.6, 0); x.lineTo(i, h); x.stroke(); } });
@@ -344,6 +353,11 @@ if (prod.userData.film) prod.userData.film(+(Q.get('f') || 0), stand); // after 
 // the fixed camera: same for every render
 { const noBox = !!prod.userData.noBox, c = new THREE.Vector3(noBox ? 0 : LINE ? SIDE * 3.3 : SIDE * 0.62, LINE ? 1.75 : 1.78, -0.3), d = (LINE ? 6.4 : 5.35) / (2 * Math.tan((cam.fov * PI / 180) / 2)); cam.position.set(c.x + SIDE * 0.1, c.y + d * 0.2, c.z + d); cam.lookAt(c);
   key.target.position.copy(c); scene.add(key.target); if (SIDE > 0) { key.position.x *= -1; rimR.position.x *= -1; rimL.position.x *= -1; } }
+if (Q.get('front')) { // owner (15 Nov): the Bench Test phone, straight-on as it lies clamped in the rig (no floor, transparent)
+  stand.rotation.set(0, 0, 0); floor.visible = false; stand.updateMatrixWorld(true);
+  const bb = new THREE.Box3().setFromObject(prod), c = bb.getCenter(new THREE.Vector3()), hh = Math.max(bb.max.y - bb.min.y, (bb.max.x - bb.min.x) * ASP) * 1.035;
+  const d = hh / (2 * Math.tan((cam.fov * PI / 180) / 2)); cam.position.set(c.x, c.y, bb.max.z + d); cam.lookAt(c);
+  key.position.set(-4, 6, 9); key.castShadow = false; }
 renderer.render(scene, cam);
 window.__done = true;
 </script>

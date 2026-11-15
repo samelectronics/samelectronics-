@@ -361,3 +361,33 @@ html[dir='rtl'] .bt-try > svg:last-child { transform: scaleX(-1); }
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.035' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .035 -.01'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") !important;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), inset 1px 1px 0 1px rgba(255,255,255,.08), inset 0 0 6px rgba(255,255,255,.05) !important;
 }
+
+/* R13c · the phone in the rig is now the REAL rendered phone (same 3D model + studio as the product shots):
+   machined rim, glass edge, buttons, true reflections. The live test screen sits exactly in its display area. */
+.bt-phone {
+  background: url(/assets/bench-phone.webp) center / 100% 100% no-repeat !important;
+  border-radius: 34px !important;
+  box-shadow: 4px 8px 6px -2px rgba(0,0,0,.55), 12px 22px 26px -4px rgba(0,0,0,.6), 26px 44px 60px -12px rgba(0,0,0,.45) !important;
+}
+.bt-phone::before, .bt-phone::after { display: none !important; }
+.bt-screen { inset: 2.06% 4.76% 2% 3.99% !important; border-radius: 27px !important; box-shadow: inset 0 0 0 1px rgba(0,0,0,.9), inset 0 0 14px rgba(0,0,0,.85) !important; }
+.bt-island { width: 11px !important; height: 11px !important; margin-left: -5.5px !important; top: 9px !important; border-radius: 50% !important; background: radial-gradient(circle at 40% 38%, #2A3A50 0 2px, #07080A 3px, #000 5.5px) !important; box-shadow: 0 0 0 1px rgba(255,255,255,.04) !important; }
+
+/* R13c · rig metal: true brushed aluminium (fine horizontal grain), not noise; window reflection band; rubber feet;
+   contact shadows where the clamps and rail sit on the mat */
+.bt-rig {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='300'%3E%3Cfilter id='b'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.0025 .95' numOctaves='3' seed='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5  0 0 0 0 .51  0 0 0 0 .53  0 0 0 .55 -.1'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23b)'/%3E%3C/svg%3E"),
+    linear-gradient(100deg, rgba(255,255,255,0) 52%, rgba(255,255,255,.38) 60%, rgba(255,255,255,.12) 66%, rgba(255,255,255,0) 74%),
+    radial-gradient(90% 60% at 8% -5%, rgba(255,255,255,.7), rgba(255,255,255,0) 55%),
+    radial-gradient(70% 50% at 100% 105%, rgba(40,44,50,.3), rgba(40,44,50,0) 60%),
+    linear-gradient(180deg, #ECEEF0 0%, #D3D6DA 28%, #C0C4C9 60%, #A8ADB3 100%) !important;
+  background-size: 600px 300px, 100% 100%, 100% 100%, 100% 100%, 100% 100% !important;
+}
+.bt-rigwrap::before, .bt-rigwrap::after { content: ''; position: absolute; top: 612px; width: 70px; height: 14px; border-radius: 0 0 8px 8px; z-index: -1;
+  background: linear-gradient(180deg, #1E1F22, #2C2E32 60%, #151618); box-shadow: 0 6px 8px rgba(60,38,0,.45), inset 0 1px 0 rgba(255,255,255,.08); }
+.bt-rigwrap::before { left: 40px; }
+.bt-rigwrap::after { left: 510px; }
+.bt-rail { box-shadow: 0 3px 4px rgba(0,0,0,.6), 0 10px 12px -4px rgba(0,0,0,.5) !important; }
+.bt-clamp { box-shadow: inset 0 1px 0 #fff, inset 0 -1px 0 rgba(0,0,0,.35), 6px 12px 14px -2px rgba(0,0,0,.7), 2px 3px 3px rgba(0,0,0,.55) !important; }
+.bt-rigwrap { isolation: isolate; }

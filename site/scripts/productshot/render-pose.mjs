@@ -29,6 +29,7 @@ for (const it of ['scr', 'bat', 'bcv', 'flx', 'cam', 'sml', 'aud', 'frm', 'board
 for (const id of Object.keys(JOBS).filter((k) => !k.startsWith('solo-'))) JOBS[id + '-ar'] = { ...JOBS[id], ar: '1' };
 // owner (28 Oct): the repair film, 48 frames of one continuous 3D repair (crack → open → swap → close → boot); no text, no Arabic twin
 const FILM_N = 48; for (let i = 0; i < FILM_N; i++) JOBS['film-' + String(i).padStart(2, '0')] = { item: 'film', box: 'white', lcd: 'plain', label: '', f: (i / (FILM_N - 1)).toFixed(4) };
+JOBS['bench-phone'] = { item: 'fixed', box: 'white', lcd: 'plain', label: '', nobox: '1', front: '1', aspect: '0.5' }; // owner (15 Nov): the real phone in the Bench Test rig
 const only = args.only ? args.only.split(',') : args.shot ? [args.shot] : Object.keys(JOBS);
 const OUT = path.join(ROOT, 'public/assets/pose'), PNG = path.join(OUT, '.png'); fs.mkdirSync(PNG, { recursive: true });
 const b = await pw.chromium.launch({ args: ['--use-gl=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
