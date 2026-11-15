@@ -293,3 +293,14 @@ html[dir='rtl'] .hs-cart { left: auto; right: 14px; }
 .k-grid svg.cx-trace circle, .se-gut-dark .nd, .lp-pad { fill: #F7C032 !important; stroke: rgba(247,192,50,.3) !important; stroke-width: 4 !important; }
 .se-gut-dark .jn, .se-gut-light .jn { fill: #F7C032 !important; stroke: rgba(247,192,50,.3) !important; }
 .se-gut-yel .jn, .se-gut-yel .nd { fill: #26282B !important; stroke: rgba(38,40,43,.25) !important; }
+
+/* R13 (owner): titles on WHITE sections: the first line is graphite with energy, like the teardown ad: a deep graphite
+   that brightens to steel, with a soft yellow light gliding through the letters every few seconds (not black, not flat). */
+#families [data-w="hl0"], #showcase h2 > span:first-child, #repair h2 > span:first-child, .st-h > span:first-child, #everyone h2 > span:first-child, #reviews h2 > span:first-child {
+  color: transparent !important; -webkit-text-fill-color: transparent;
+  background-image: linear-gradient(100deg, rgba(247,192,50,0) 40%, rgba(247,192,50,.95) 48%, #FFE29A 50%, rgba(247,192,50,.95) 52%, rgba(247,192,50,0) 60%), linear-gradient(180deg, #4E5258 0%, #34373C 55%, #26282B 100%);
+  background-size: 260% 100%, 100% 100%; background-repeat: no-repeat; background-position: 160% 0, 0 0;
+  -webkit-background-clip: text; background-clip: text; animation: seTitleShine 7s cubic-bezier(.45,0,.2,1) infinite;
+}
+@keyframes seTitleShine { 0%, 62% { background-position: 160% 0, 0 0; } 100% { background-position: -60% 0, 0 0; } }
+@media (prefers-reduced-motion: reduce) { #families [data-w="hl0"], #showcase h2 > span:first-child, #repair h2 > span:first-child, .st-h > span:first-child, #everyone h2 > span:first-child, #reviews h2 > span:first-child { animation: none; } }
