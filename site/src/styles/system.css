@@ -296,3 +296,8 @@ html[dir='rtl'] .hs-cart { left: auto; right: 14px; }
 
 /* R13 (owner): titles on WHITE sections: first line solid graphite, second line solid brand yellow. No gradients, no blending. */
 #families [data-w="hl0"], #showcase h2 > span:first-child, #repair h2 > span:first-child, .st-h > span:first-child, #everyone h2 > span:first-child, #reviews h2 > span:first-child { color: #3A3D42 !important; }
+/* R13 · footer studio depth */
+.ft-grain { position: absolute; inset: 0; pointer-events: none; opacity: .5; background: repeating-linear-gradient(90deg, rgba(255,255,255,.012) 0 1px, transparent 1px 3px); }
+.ft-mark { position: absolute; left: 50%; bottom: -0.18em; transform: translateX(-50%); white-space: nowrap; pointer-events: none; font: 800 clamp(80px, 12vw, 190px)/1 'Space Grotesk', sans-serif; letter-spacing: -.03em; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.05); background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,0) 70%); -webkit-background-clip: text; background-clip: text; }
+footer > *:not(.ft-grain):not(.ft-mark) { position: relative; z-index: 1; }
+#finale circle.pad { fill: #F7C032 !important; stroke: rgba(247,192,50,.3) !important; stroke-width: 4 !important; filter: drop-shadow(0 0 3px rgba(247,192,50,.7)); }

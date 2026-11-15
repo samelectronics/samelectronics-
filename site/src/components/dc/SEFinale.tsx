@@ -9,7 +9,8 @@ import Logic from './SEFinale.logic.js';
 import FinaleRoom from './FinaleRoom';
 
 // R11 (owner): the traces run closer together into the ring
-const LEFT = ['M0 158 H250 L282 136 H468 L522 170 H608', 'M0 214 H190 L214 200 H602', 'M0 266 H240 L272 290 H468 L522 230 H608'];
+// owner (15 Nov): never three lines starting/ending together: each trace starts at its own pad, at its own distance
+const LEFT = ['M96 158 H250 L282 136 H468 L522 170 H608', 'M18 214 H190 L214 200 H602', 'M164 266 H240 L272 290 H468 L522 230 H608'];
 const mirror = (d: string) => d.replace(/([MHL]) ?(\d+)/g, (m, c, x) => c + (1440 - Number(x)));
 const RIGHT = LEFT.map(mirror);
 const WORDS = ['QUALITY', 'WARRANTY', 'PRICE'];

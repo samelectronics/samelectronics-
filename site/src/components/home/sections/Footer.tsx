@@ -13,11 +13,14 @@ export default function Footer({ v }: { v: Vals }) {
       style={{
         position: 'relative',
         overflow: 'hidden',
-        background: 'radial-gradient(70% 120% at 50% 0%,rgba(255,255,255,.04),rgba(255,255,255,0) 60%),linear-gradient(180deg,#27292C,#2E3033 45%,#34363A)', /* R8: the finale's floor runs on into the footer (grey, not black) */
+        background: 'radial-gradient(55% 70% at 50% -10%,rgba(255,236,190,.10),rgba(255,236,190,0) 65%),radial-gradient(90% 60% at 50% 120%,rgba(0,0,0,.55),rgba(0,0,0,0) 70%),linear-gradient(180deg,#2B2D31 0%,#232528 55%,#18191B 100%)', /* owner (15 Nov): studio depth: key light from above, the floor falls into darkness */ /* R8: the finale's floor runs on into the footer (grey, not black) */
         color: '#FFFFFF',
         padding: '72px clamp(20px,4vw,64px) 28px',
       }}
     >
+      {/* owner (15 Nov): depth and detail: fine brushed grain, a faint engraved wordmark sitting on the floor */}
+      <span className="ft-grain" aria-hidden="true" />
+      <span className="ft-mark" aria-hidden="true">SAM ELECTRONICS</span>
       {'\n  '}
       <div style={{ position: 'absolute', left: '0', right: '0', top: '0', height: '2px', overflow: 'hidden' }}>
         <div
