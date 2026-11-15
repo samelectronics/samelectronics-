@@ -14,14 +14,14 @@ function render(v: Vals) {
       <section
         id="families"
         ref={v.root}
-        data-tone="light"
+        data-tone="dark"
         data-screen-label="What we offer"
         style={{
           position: 'relative',
           isolation: 'isolate',
           zIndex: '0',
-          background: '#F2F3F4',
-          color: '#26282B',
+          background: 'radial-gradient(70% 45% at 50% 0%,#55585E 0%,rgba(85,88,94,0) 70%),linear-gradient(180deg,#3D3F43 0%,#323438 45%,#2A2C30 100%)', /* owner (15 Nov): no black title on white: a lit graphite studio */
+          color: '#FFFFFF',
           fontFamily: 'Inter,sans-serif',
         }}
       >
