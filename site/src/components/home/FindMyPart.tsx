@@ -188,7 +188,7 @@ export default function FindMyPart({ open, init, onClose, onShop }: { open: bool
                 const n = devCount(d.id), sers = [...new Set(bModels.filter((m) => m.device === d.id).map((m) => m.series).filter(Boolean))];
                 return (
                   <button key={d.id} type="button" className={'fp-dev' + (dev === d.id ? ' on' : '')} disabled={!n} onClick={() => { if (d.id !== dev) { setSer(null); setMs([]); } setDev(d.id); go(2); }}>
-                    <span className="fp-dev-ic"><DeviceIcon kind={d.id} size={34} /></span>
+                    <span className="fp-dev-ic"><DeviceIcon kind={d.id} size={92} /></span>
                     <b>{T(d.name)}</b>
                     <span>{n ? n + ' ' + T('models') : T('None listed')}</span>
                     {sers.length ? <small>{sers.join(' · ')}</small> : null}
