@@ -301,3 +301,18 @@
   .st-ph { height: 200px; }
   .st-card:nth-child(n + 4) .st-ph { height: 230px; }
 }
+
+/* Home tablet pass · Bench test on a portrait tablet: a 900-wide vertical stage (title and words, the rig, then today's
+   counters and the buttons), scaled to the screen width by the JS */
+@media (min-width: 701px) and (max-width: 1100px) and (max-aspect-ratio: 10/11) {
+  .bt { height: calc(72px + 1220px * var(--sc, 1) + 160vh) !important; }
+  .bt-pin { height: calc(56px + 1230px * var(--sc, 1)) !important; }
+  .bt-box { width: 900px; height: 1230px !important; top: 56px; }
+  html[dir] .bt-left { left: 60px !important; top: 38px; width: 780px !important; }
+  .bt-h { font-size: 50px; }
+  .bt-p { font-size: 17px; max-width: none; }
+  .bt-w { font-size: 44px; }
+  html[dir] .bt-rigwrap { left: 50% !important; top: 452px; margin-left: -310px; transform: scale(.68); transform-origin: top center; }
+  .bt-rigwrap .bt-cable { display: none; }
+  .bt-today { margin-top: 540px !important; }
+}

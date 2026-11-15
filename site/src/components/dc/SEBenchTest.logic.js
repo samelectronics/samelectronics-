@@ -26,7 +26,7 @@ class Component extends DCLogic {
     setTimeout(() => this.secRef.current && this.runIO.observe(this.secRef.current), 50);
     const loop = () => { if (!this.alive) return; if (this.near) this.frame(); this.raf = requestAnimationFrame(loop); };
     this.raf = requestAnimationFrame(loop);
-    this.onResize = () => { const vw = document.documentElement.clientWidth, vh = window.innerHeight, sc = vw <= 700 ? vw / 720 : Math.min(1, vw / 1440); /* R10 (owner): scale by width only, like every section; the buttons may sit below the fold */ /* R10: phones get a portrait 720-wide stage */ if (Math.abs(sc - this.state.sc) > 0.002) this.setState({ sc }); };
+    this.onResize = () => { const vw = document.documentElement.clientWidth, vh = window.innerHeight, sc = vw <= 700 ? vw / 720 : vw <= 1100 && vh > vw * 1.1 ? vw / 900 /* tablet portrait: a 900-wide vertical stage */ : Math.min(1, vw / 1440); /* R10 (owner): scale by width only, like every section; the buttons may sit below the fold */ /* R10: phones get a portrait 720-wide stage */ if (Math.abs(sc - this.state.sc) > 0.002) this.setState({ sc }); };
     window.addEventListener('resize', this.onResize); this.onResize();
     window.seBench = (p) => { this.ov = p; this.p = p; this.frame(true); };
   }
