@@ -77,21 +77,20 @@ function render(v: Vals) {
                 >
                   {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
                   <defs>
+                    <linearGradient id="samHandF" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#7E838A" /><stop offset=".45" stopColor="#F4F5F6" /><stop offset="1" stopColor="#8C9096" /></linearGradient>
                     <linearGradient id="samHandL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
                   <g>
-                    {/* owner (15 Nov): one proper mascot hand: titanium glove, three fused fingers and a thumb, soft creases, a glowing circuit node */}
-                    <rect x="6.6" y="0" width="10.8" height="4.2" rx="2.1" fill="#F7C032" />
-                    <rect x="7.4" y=".7" width="9.2" height="1.1" rx=".55" fill="#FFE29A" opacity=".8" />
-                    <rect x="5" y="3.6" width="14" height="11" rx="4.6" fill="url(#samHandL)" />
-                    <rect x="17" y="6.4" width="4.6" height="8.6" rx="2.3" transform="rotate(-32 19.3 10.7)" fill="url(#samHandL)" />
-                    <rect x="5" y="10.5" width="4.8" height="11.6" rx="2.4" fill="url(#samHandL)" />
-                    <rect x="9.6" y="11" width="4.8" height="13" rx="2.4" fill="url(#samHandL)" />
-                    <rect x="14.2" y="10.5" width="4.6" height="11" rx="2.3" fill="url(#samHandL)" />
-                    <path d="M9.7 15.5v5M14.3 15.5v4.6" stroke="rgba(60,64,70,.35)" strokeWidth=".6" strokeLinecap="round" />
-                    <path d="M7 5.4c3-.9 7-.9 10 0" stroke="rgba(255,255,255,.95)" strokeWidth=".8" strokeLinecap="round" fill="none" />
-                    <path d="M12 4.2v3.6l-2 2" stroke="#E0A61E" strokeWidth=".7" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                    <circle cx="10" cy="9.8" r="1.25" fill="#F7C032" /><circle cx="10" cy="9.8" r="2.4" fill="#F7C032" opacity=".22" />
+                    {/* owner (15 Nov): no hand. The cable ends in a machined ferrule that fans out into a tiny circuit: three traces, gold pads, one glowing */}
+                    <rect x="9" y="0" width="6" height="5.2" rx="1.6" fill="url(#samHandF)" />
+                    <rect x="9.6" y=".6" width="4.8" height="1" rx=".5" fill="rgba(255,255,255,.75)" />
+                    <rect x="9" y="5" width="6" height="1.2" rx=".4" fill="#F7C032" />
+                    <path d="M12 6.2v4.4M12 8l-4.4 4.2v3.6M12 8l4.4 4.2v3.2" stroke="#2B2D31" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                    <path d="M12 6.2v4.4M12 8l-4.4 4.2v3.6M12 8l4.4 4.2v3.2" stroke="#E0A61E" strokeWidth=".8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                    <circle cx="7.6" cy="16.4" r="1.7" fill="#2B2D31" /><circle cx="7.6" cy="16.4" r="1.05" fill="#F7C032" />
+                    <circle cx="12" cy="11.4" r="1.7" fill="#2B2D31" /><circle cx="12" cy="11.4" r="1.05" fill="#F7C032" />
+                    <circle cx="16.4" cy="16" r="1.7" fill="#2B2D31" /><circle cx="16.4" cy="16" r="1.05" fill="#FFE29A" />
+                    <circle cx="16.4" cy="16" r="3" fill="#F7C032" opacity=".25"><animate attributeName="opacity" values=".08;.4;.08" dur="2.4s" repeatCount="indefinite" /></circle>
                   </g>
                 </svg>
                 {'\n          '}
@@ -154,21 +153,20 @@ function render(v: Vals) {
                 >
                   {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
                   <defs>
+                    <linearGradient id="samHandF" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#7E838A" /><stop offset=".45" stopColor="#F4F5F6" /><stop offset="1" stopColor="#8C9096" /></linearGradient>
                     <linearGradient id="samHandR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
                   <g transform="translate(24 0) scale(-1 1)">
-                    {/* owner (15 Nov): one proper mascot hand: titanium glove, three fused fingers and a thumb, soft creases, a glowing circuit node */}
-                    <rect x="6.6" y="0" width="10.8" height="4.2" rx="2.1" fill="#F7C032" />
-                    <rect x="7.4" y=".7" width="9.2" height="1.1" rx=".55" fill="#FFE29A" opacity=".8" />
-                    <rect x="5" y="3.6" width="14" height="11" rx="4.6" fill="url(#samHandR)" />
-                    <rect x="17" y="6.4" width="4.6" height="8.6" rx="2.3" transform="rotate(-32 19.3 10.7)" fill="url(#samHandR)" />
-                    <rect x="5" y="10.5" width="4.8" height="11.6" rx="2.4" fill="url(#samHandR)" />
-                    <rect x="9.6" y="11" width="4.8" height="13" rx="2.4" fill="url(#samHandR)" />
-                    <rect x="14.2" y="10.5" width="4.6" height="11" rx="2.3" fill="url(#samHandR)" />
-                    <path d="M9.7 15.5v5M14.3 15.5v4.6" stroke="rgba(60,64,70,.35)" strokeWidth=".6" strokeLinecap="round" />
-                    <path d="M7 5.4c3-.9 7-.9 10 0" stroke="rgba(255,255,255,.95)" strokeWidth=".8" strokeLinecap="round" fill="none" />
-                    <path d="M12 4.2v3.6l-2 2" stroke="#E0A61E" strokeWidth=".7" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-                    <circle cx="10" cy="9.8" r="1.25" fill="#F7C032" /><circle cx="10" cy="9.8" r="2.4" fill="#F7C032" opacity=".22" />
+                    {/* owner (15 Nov): no hand. The cable ends in a machined ferrule that fans out into a tiny circuit: three traces, gold pads, one glowing */}
+                    <rect x="9" y="0" width="6" height="5.2" rx="1.6" fill="url(#samHandF)" />
+                    <rect x="9.6" y=".6" width="4.8" height="1" rx=".5" fill="rgba(255,255,255,.75)" />
+                    <rect x="9" y="5" width="6" height="1.2" rx=".4" fill="#F7C032" />
+                    <path d="M12 6.2v4.4M12 8l-4.4 4.2v3.6M12 8l4.4 4.2v3.2" stroke="#2B2D31" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                    <path d="M12 6.2v4.4M12 8l-4.4 4.2v3.6M12 8l4.4 4.2v3.2" stroke="#E0A61E" strokeWidth=".8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                    <circle cx="7.6" cy="16.4" r="1.7" fill="#2B2D31" /><circle cx="7.6" cy="16.4" r="1.05" fill="#F7C032" />
+                    <circle cx="12" cy="11.4" r="1.7" fill="#2B2D31" /><circle cx="12" cy="11.4" r="1.05" fill="#F7C032" />
+                    <circle cx="16.4" cy="16" r="1.7" fill="#2B2D31" /><circle cx="16.4" cy="16" r="1.05" fill="#FFE29A" />
+                    <circle cx="16.4" cy="16" r="3" fill="#F7C032" opacity=".25"><animate attributeName="opacity" values=".08;.4;.08" dur="2.4s" repeatCount="indefinite" /></circle>
                   </g>
                 </svg>
                 {'\n          '}
@@ -285,23 +283,10 @@ function render(v: Vals) {
                   width: '96px',
                   height: '184px',
                   borderRadius: '26px',
-                  background: 'linear-gradient(115deg,#6E7378 0%,#4A4D52 12%,#2E3033 40%,#4A4D52 64%,#26282B 86%,#3D3E3F 100%)',
-                  boxShadow: '0 0 0 .5px rgba(0,0,0,.5),0 14px 24px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.35)',
+                  background: 'linear-gradient(100deg,#3A3D42 0%,#9DA2A8 4%,#5A5E64 9%,#2C2E32 30%,#43464C 55%,#2A2C30 80%,#7E838A 95%,#33363A 100%)', /* owner (15 Nov): a real titanium band with light on both edges */
+                  boxShadow: '0 0 0 .6px rgba(0,0,0,.6),0 16px 26px rgba(0,0,0,.32),inset 0 1px 0 rgba(255,255,255,.45),inset 0 -1px 0 rgba(0,0,0,.4),inset 1px 0 0 rgba(255,255,255,.18),inset -1px 0 0 rgba(255,255,255,.12)',
                 }}
               >
-                <span
-                  style={{
-                    position: 'absolute',
-                    left: '10px',
-                    top: '-4px',
-                    width: '7px',
-                    height: '7px',
-                    borderRadius: '50%',
-                    background: 'radial-gradient(circle at 40% 35%,#3A4A66,#050506 65%)',
-                    boxShadow: '0 0 0 1px #8C9096',
-                    zIndex: '2',
-                  }}
-                ></span>
                 {'\n          '}
                 <span
                   style={{
@@ -363,6 +348,8 @@ function render(v: Vals) {
                         boxShadow: 'inset 0 0 0 .5px rgba(255,255,255,.12)',
                       }}
                     ></span>
+                    {/* owner (15 Nov, "more realistic"): real cover glass over the display: a soft diagonal reflection and a crisp edge */}
+                    <span aria-hidden="true" style={{ position: 'absolute', inset: 0, zIndex: 5, pointerEvents: 'none', borderRadius: 'inherit', background: 'linear-gradient(128deg,rgba(255,255,255,.34) 0%,rgba(255,255,255,.1) 22%,rgba(255,255,255,0) 23%,rgba(255,255,255,0) 64%,rgba(255,255,255,.07) 65%,rgba(255,255,255,0) 78%)', boxShadow: 'inset 0 0 0 1px rgba(255,255,255,.22),inset 0 0 0 2.5px rgba(0,0,0,.18),inset 0 -10px 18px rgba(160,100,0,.18)' }} />
                     {'\n              '}
                     <div
                       style={cssToObj(
