@@ -8,7 +8,26 @@ import SEBrandLogo from '../../dc/SEBrandLogo';
 import HeroSearch from '../HeroSearch';
 import SEPart from '../../dc/SEPart';
 
+// R13 (owner: phone/tablet need safe spacing, nothing may touch): on phones the devices sit a fixed safe gap under the
+// text block, wherever the text ends (it changes with the language and the screen width), so they never touch.
+function usePhoneHeroLayout() {
+  React.useEffect(() => {
+    const top = document.getElementById('top'), txt = top?.querySelector<HTMLElement>('[data-hero-text]');
+    if (!top || !txt) return;
+    const set = () => {
+      if (window.innerWidth > 720) { ['--hd-y', '--hd-h', '--hd-scene', '--hd-rail', '--hd-d1', '--hd-d2'].forEach((k) => top.style.removeProperty(k)); return; }
+      const end = (txt.getBoundingClientRect().bottom - top.getBoundingClientRect().top) / 0.5; // in scene px
+      const devY = end + 84, scene = devY + 540 + 80; // 42px safe gap above the devices, 40px under them
+      top.style.setProperty('--hd-y', devY - 178 + 'px'); top.style.setProperty('--hd-scene', scene + 'px'); top.style.setProperty('--hd-rail', scene - 860 + 'px');
+      top.style.setProperty('--hd-h', Math.ceil((scene + 172) * 0.5) + 'px'); top.style.setProperty('--hd-d1', devY + 60 + 'px'); top.style.setProperty('--hd-d2', devY + 380 + 'px');
+    };
+    set(); const ro = new ResizeObserver(set); ro.observe(txt); window.addEventListener('resize', set);
+    return () => { ro.disconnect(); window.removeEventListener('resize', set); };
+  }, []);
+}
+
 export default function Hero({ v }: { v: Vals }) {
+  usePhoneHeroLayout();
   return (
     <section
       id="top"
@@ -1605,7 +1624,7 @@ export default function Hero({ v }: { v: Vals }) {
                       {'\n            '}
                     </span>
                     {'\n            '}
-                    <span style={{ flex: '1', whiteSpace: 'nowrap' }}>{t(v.b?.label)}</span>{v.b?.shop ? <span className="se-hb-thumbs" aria-hidden="true">{['scr', 'bat', 'bcv', 'cam'].map((k) => <img key={k} src={`/assets/pose/solo-${k}-240.webp`} alt="" />)}</span> : null}
+                    <span style={{ flex: '1', whiteSpace: 'nowrap' }}>{t(v.b?.label)}</span>{v.b?.shop ? <span className="se-hb-info"><span><b>{Number(v.totalRaw || 0).toLocaleString('en-US')}</b> {t('parts in stock')}</span><span><b>{v.brandCount}</b> {t('brands')}</span></span> : null}
                     {'\n            '}
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
                       <path d="M5 12h14M13 6l6 6-6 6"></path>

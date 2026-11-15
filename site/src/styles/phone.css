@@ -141,11 +141,11 @@
 /* R13 · phones: the hero keeps its iPad + phone (owner: "what I see on computer I want on phone").
    The scene runs at zoom .5 on every phone, so the devices are moved under the text, centred, inside a taller scene. */
 @media (max-width: 720px) {
-  #top { height: 1050px !important; }
+  #top { height: var(--hd-h, 1050px) !important; }
   header .se-help { display: none !important; }
-  #top [data-hero-scene] { height: 1930px !important; }
-  #top [data-ipad], #top .se-reel[data-hero-dev], #top div:has(+ [data-ipad]) { translate: calc((100vw / .5 - 546px) / 2 - 836px) 1170px !important; }
-  #top [data-hero-rail] { translate: 0 1070px !important; }
+  #top [data-hero-scene] { height: var(--hd-scene, 1930px) !important; }
+  #top [data-ipad], #top .se-reel[data-hero-dev], #top div:has(+ [data-ipad]) { translate: calc((100vw / .5 - 546px) / 2 - 836px) var(--hd-y, 1170px) !important; }
+  #top [data-hero-rail] { translate: 0 var(--hd-rail, 1070px) !important; }
 }
 
 /* R13 · the bar on tablets and phones = essentials only (owner: "messy").
@@ -169,7 +169,7 @@
 }
 @media (max-width: 1100px) { .smd-quick .se-lm-btn { height: 38px; padding: 0 14px !important; gap: 8px; border-radius: 10px; } }
 @media (max-width: 720px) {
-  #top [data-hero-scene] > div[style*="polygon(1000px"] { clip-path: polygon(200vw 1310px, 200vw 1930px, 0 1930px, 0 1640px) !important; }
+  #top [data-hero-scene] > div[style*="polygon(1000px"] { clip-path: polygon(200vw var(--hd-d1, 1310px), 200vw var(--hd-scene, 1930px), 0 var(--hd-scene, 1930px), 0 var(--hd-d2, 1640px)) !important; }
 }
 
 /* R13 · phone hero at TRUE phone size (owner: "recalculate sizes, no huge titles"). The scene stays at zoom .5; the text
@@ -209,3 +209,13 @@
 /* R13 · Arabic: the same tablet/phone hero, mirrored (beats the older RTL offsets) */
 @media (min-width: 721px) and (max-width: 1100px) { html[dir='rtl'] #top [data-hero-text] { left: 637px !important; } }
 @media (max-width: 720px) { html[dir='rtl'] #top [data-hero-text] { left: 16px !important; right: auto !important; } }
+@media (max-width: 720px) {
+  #top [data-hero-text] > div:last-child { display: grid !important; grid-template-columns: 1fr 1fr; gap: 10px 12px !important; }
+}
+@media (max-width: 720px) {
+  .se-hb-info > span:nth-child(2) { display: none !important; }
+  #top [data-hero-text] > div:last-child > * { white-space: normal !important; min-width: 0 !important; }
+  #top [data-hero-text] > div:last-child { grid-template-columns: 1fr 1fr !important; }
+  html body header .se-help, html body header .se-nav-bench, html[dir] body header .se-help, html[dir] body header .se-nav-bench { display: none !important; }
+}
+@media (max-width: 1100px) { html[dir] body header .se-lm, html[dir] body header .se-help { display: none !important; } }
