@@ -2947,5 +2947,6 @@ const DICT: Record<string, string> = {
   "Every page, in one menu.": "Toutes les pages dans un menu.",
   "Tap the ? on any page.": "Touchez ? sur n'importe quelle page.",
   "Ask me anything, any time.": "Demandez-moi tout, à tout moment.",
+  "Opens": "Ouvre",
 };
 export default DICT;

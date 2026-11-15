@@ -3478,4 +3478,5 @@ export const R8: Record<string, string> = {
   "Every page, in one menu.": "كل الصفحات في قائمة واحدة.",
   "Tap the ? on any page.": "اضغط ? في أي صفحة.",
   "Ask me anything, any time.": "اسألني أي شيء، في أي وقت.",
+  "Opens": "يفتح",
 };
