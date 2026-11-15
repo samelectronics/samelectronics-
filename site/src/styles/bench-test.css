@@ -210,11 +210,7 @@ html[dir='rtl'] .bt-try > svg:last-child { transform: scaleX(-1); }
 
 /* ===== R13 · Bench Test: real materials (owner: "still cheap… must be more realistic") ===== */
 /* object in space: slight 3/4 view, real slab thickness, light from top-left */
-.bt-rigwrap { perspective: 2200px; perspective-origin: 30% 20%; }
 .bt-rig {
-  transform: rotateX(7deg) rotateY(-11deg) rotateZ(.6deg);
-  transform-origin: 50% 60%;
-  transform-style: preserve-3d;
   background:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .52  0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
     radial-gradient(90% 60% at 8% -5%, rgba(255,255,255,.75), rgba(255,255,255,0) 55%),
@@ -254,7 +250,7 @@ html[dir='rtl'] .bt-try > svg:last-child { transform: scaleX(-1); }
     radial-gradient(circle at calc(100% - 18px) calc(100% - 18px), #F4F5F6 0, #B5B9BE 4.5px, #6E7278 6px, rgba(0,0,0,.25) 7px, transparent 8px) !important;
 }
 /* real cast shadow on the yellow wall: contact + soft penumbra, multiplied */
-.bt-shadow { top: 560px !important; left: -10px !important; right: 40px !important; height: 110px !important; background: radial-gradient(closest-side, rgba(80,46,0,.55), rgba(80,46,0,.18) 60%, rgba(80,46,0,0)) !important; filter: blur(14px) !important; mix-blend-mode: multiply; transform: skewX(-18deg); }
+.bt-shadow { top: 590px !important; left: 10px !important; right: 10px !important; height: 70px !important; background: radial-gradient(closest-side, rgba(80,46,0,.5), rgba(80,46,0,.15) 60%, rgba(80,46,0,0)) !important; filter: blur(10px) !important; mix-blend-mode: multiply; }
 
 /* recessed bay lined with a dark ESD bench mat: chamfer lip catches the light at the bottom */
 .bt-bay {
@@ -328,4 +324,40 @@ html[dir='rtl'] .bt-try > svg:last-child { transform: scaleX(-1); }
 .bt-cable { filter: drop-shadow(4px 10px 8px rgba(70,44,0,.45)); }
 
 @media (prefers-reduced-motion: reduce) { .bt-rig::before { animation: none !important; } }
-@media (max-width: 1100px) { .bt-rig { transform: none; } }
+
+/* R13b · phone depth + texture (owner: "no texture or depth"). Front view, light from top-left:
+   the titanium band shows its thickness on the right/bottom, glass carries a softbox reflection,
+   the panel is a lit OLED (not flat black), and the phone casts a real shadow on the mat. */
+.bt-phone {
+  border-radius: 36px !important;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 .35 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
+    linear-gradient(180deg, transparent 12.5%, rgba(40,42,46,.6) 12.5% 13.1%, transparent 13.1% 86.9%, rgba(40,42,46,.6) 86.9% 87.5%, transparent 87.5%),
+    linear-gradient(135deg, #F4F5F6 0%, #B9BDC2 18%, #8E9298 42%, #A7ABB0 60%, #6C7076 82%, #4A4E54 100%) !important;
+  box-shadow:
+    inset 1.5px 1.5px 0 rgba(255,255,255,.95),
+    inset -1.5px -1.5px 0 rgba(30,32,36,.55),
+    1px 1px 0 #7A7E84, 2px 2px 0 #6E7278, 3px 3px 0 #63676D, 4px 4px 0 #575B61, 5px 5px 0 #4B4F55,
+    6px 7px 4px rgba(0,0,0,.55),
+    14px 22px 26px -2px rgba(0,0,0,.6),
+    28px 46px 60px -10px rgba(0,0,0,.45) !important;
+}
+.bt-phone::before { left: -2px !important; background: linear-gradient(90deg, #8E9298, #F2F3F5 60%, #B9BDC2) !important; box-shadow: 0 40px 0 #B9BDC2, 0 -34px 0 -0.5px #9DA1A6 !important; height: 28px !important; }
+.bt-phone::after { right: -7px !important; width: 4px !important; background: linear-gradient(90deg, #4B4F55, #8E9298 50%, #4B4F55) !important; }
+/* OLED panel lit, deep blacks with a faint graphite wallpaper glow */
+.bt-screen {
+  inset: 6px !important; border-radius: 30px !important;
+  background:
+    radial-gradient(90% 55% at 50% 38%, rgba(70,62,40,.35), rgba(0,0,0,0) 70%),
+    radial-gradient(70% 40% at 50% 100%, rgba(40,48,60,.35), rgba(0,0,0,0) 70%),
+    linear-gradient(180deg, #0E0F12, #060708) !important;
+  box-shadow: inset 0 0 0 3px #020203, inset 0 0 0 4px rgba(255,255,255,.07), inset 0 0 18px rgba(0,0,0,.9) !important;
+}
+/* cover glass: a soft rectangular softbox reflection + faint fingerprint haze + edge refraction */
+.bt-screen::after {
+  background:
+    linear-gradient(125deg, rgba(255,255,255,0) 0 8%, rgba(255,255,255,.13) 8.5% 30%, rgba(255,255,255,.04) 31% 33%, rgba(255,255,255,0) 34%),
+    radial-gradient(40% 18% at 70% 78%, rgba(255,255,255,.035), rgba(255,255,255,0) 70%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.035' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .035 -.01'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E") !important;
+  box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), inset 1px 1px 0 1px rgba(255,255,255,.08), inset 0 0 6px rgba(255,255,255,.05) !important;
+}
