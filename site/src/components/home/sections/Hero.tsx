@@ -1559,6 +1559,8 @@ export default function Hero({ v }: { v: Vals }) {
                       )}
                     >
                       {'\n              '}
+                      {v.b?.iShop ? <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 7h14l-1.2 12.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z" /><path d="M9 10V6a3 3 0 0 1 6 0v4" /></svg> : null}
+                      {v.b?.iWc ? <i className="se-ic-wechat" style={{ width: '19px', height: '19px' }} aria-hidden="true" /> : null}
                       {v.b?.iSearch ? (
                         <>
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
@@ -1593,7 +1595,7 @@ export default function Hero({ v }: { v: Vals }) {
                               display: 'block',
                               width: '16px',
                               height: '16px',
-                              background: '#25D366',
+                              background: '#FFFFFF',
                               WebkitMask: 'url(/icons/whatsapp.svg) center / contain no-repeat',
                               mask: 'url(/icons/whatsapp.svg) center / contain no-repeat',
                             }}
@@ -1603,7 +1605,7 @@ export default function Hero({ v }: { v: Vals }) {
                       {'\n            '}
                     </span>
                     {'\n            '}
-                    <span style={{ flex: '1', whiteSpace: 'nowrap' }}>{t(v.b?.label)}</span>
+                    <span style={{ flex: '1', whiteSpace: 'nowrap' }}>{t(v.b?.label)}{v.b?.sub ? <small className="se-hb-sub">{v.b.sub}</small> : null}</span>
                     {'\n            '}
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
                       <path d="M5 12h14M13 6l6 6-6 6"></path>

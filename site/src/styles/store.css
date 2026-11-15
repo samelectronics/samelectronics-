@@ -126,3 +126,15 @@ html[data-sam-speaking] [data-sam-talk] > * { animation: samTalk 1.1s ease-in-ou
 /* R12 (owner): the picker was too tall with empty space above Samsoom: shorter card, Samsoom and his bubble centred */
 .st-veil-lang .st-lang2 { height: min(450px, calc(100vh - 40px)) !important; }
 .st-veil-lang .st-l2-sam { justify-content: center !important; gap: 16px !important; padding: 20px 18px !important; }
+
+/* R13 · help menu: WhatsApp and WeChat in their own brand tiles, same row style as the rest */
+.st-opt { text-decoration: none; }
+.st-brand { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; flex: none; }
+.st-brand::after { content: ''; width: 16px; height: 16px; background: #fff; -webkit-mask: center / contain no-repeat; mask: center / contain no-repeat; }
+.st-brand.wa { background: #25D366; } .st-brand.wa::after { -webkit-mask-image: url(/icons/whatsapp.svg); mask-image: url(/icons/whatsapp.svg); }
+.st-brand.wc { background: #07C160; } .st-brand.wc::after { -webkit-mask-image: url(/icons/wechat.svg); mask-image: url(/icons/wechat.svg); }
+.st-menu .st-opt > .st-brand { flex: none !important; width: 26px !important; height: 26px; padding: 0 !important; margin: 0 !important; background-image: none; }
+.st-menu .st-opt > .st-brand.wa { background-color: #25D366 !important; }
+.st-menu .st-opt > .st-brand.wc { background-color: #07C160 !important; }
+.st-menu .st-opt.st-opt-wa::before { display: none !important; content: none !important; }
+.st-menu .st-opt-wa, .st-menu .st-opt-wc { width: 100%; box-sizing: border-box; }
