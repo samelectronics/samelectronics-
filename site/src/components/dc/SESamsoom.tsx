@@ -292,7 +292,7 @@ function render(v: Vals) {
                   top: '30px',
                   width: '96px',
                   height: '184px',
-                  borderRadius: '30px',
+                  borderRadius: '24px',
                   background: 'radial-gradient(120% 60% at 30% 0%,#6A6E75 0%,rgba(106,110,117,0) 55%),linear-gradient(160deg,#4A4D53 0%,#2E3034 40%,#222427 75%,#33363B 100%)', /* owner (15 Nov): a cute, soft, glossy graphite shell, not a serious phone */ /* owner (15 Nov): a real titanium band with light on both edges */
                   boxShadow: '0 16px 26px rgba(0,0,0,.32),inset 0 2px 1px rgba(255,255,255,.28),inset 0 -3px 6px rgba(0,0,0,.45),inset 3px 0 6px rgba(255,255,255,.06)',
                 }}
@@ -338,8 +338,8 @@ function render(v: Vals) {
                   <div
                     style={{
                       position: 'absolute',
-                      inset: '5px',
-                      borderRadius: '25px',
+                      inset: '2.5px',
+                      borderRadius: '21.5px',
                       background: 'radial-gradient(110% 80% at 40% 25%,#FFF1B8 0%,#F7C032 35%,#F7C032 75%,#E0A61E 100%)',
                       overflow: 'hidden',
                     }}
@@ -552,6 +552,9 @@ function render(v: Vals) {
                       {'\n              '}
                     </div>
                     {'\n              '}
+                    {/* owner (15 Nov): always a little blush, cute */}
+                    <span aria-hidden="true" style={{ position: 'absolute', left: '11px', top: '93px', width: '16px', height: '8px', borderRadius: '50%', background: 'rgba(255,110,120,.42)', filter: 'blur(2px)', zIndex: 2 }} />
+                    <span aria-hidden="true" style={{ position: 'absolute', right: '11px', top: '93px', width: '16px', height: '8px', borderRadius: '50%', background: 'rgba(255,110,120,.42)', filter: 'blur(2px)', zIndex: 2 }} />
                     {v.blush ? (
                       <>
                         <span
