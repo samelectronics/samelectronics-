@@ -275,3 +275,29 @@
   #deals .dl-card { scroll-snap-align: start; opacity: 1 !important; }
   #deals .dl-card[aria-hidden="true"] { display: none !important; }
 }
+
+/* Home tablet pass (701–1100): What we offer keeps four columns, but the card text wraps and the price sits above a
+   full-width Shop button, so nothing runs past the card edge */
+@media (min-width: 701px) and (max-width: 1100px) {
+  #families .wo-grid { gap: 14px !important; }
+  #families .wo-body { left: 14px; right: 14px; }
+  #families .wo-name { font-size: 18px; }
+  #families .wo-meta { font-size: 11px; white-space: normal; line-height: 1.35; }
+  #families .wo-foot { flex-direction: column; align-items: stretch; gap: 8px; font-size: 13px; }
+  #families .wo-shop { height: 34px; justify-content: center; font-size: 12.5px; }
+}
+
+/* Home tablet pass · Story: a portrait album 900 × 1200 (the JS scales it to the screen), three photos then two wider */
+@media (min-width: 701px) and (max-width: 1100px) and (max-aspect-ratio: 10/11) {
+  .st-box { width: 900px; height: 1200px; padding: 36px 44px 0; }
+  .st-h { font-size: 52px; }
+  .st-yr b { font-size: 104px; }
+  .st-cards { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 20px; row-gap: 26px; }
+  .st-card { grid-column: span 2; }
+  .st-card:nth-child(n + 4) { grid-column: span 3; }
+  .st-card h3 { font-size: 21px; }
+  .st-card p { font-size: 14px; }
+  .st-years, .st-v, .st-st { font-size: 13px; }
+  .st-ph { height: 200px; }
+  .st-card:nth-child(n + 4) .st-ph { height: 230px; }
+}

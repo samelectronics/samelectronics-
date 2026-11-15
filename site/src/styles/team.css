@@ -86,3 +86,16 @@
 .tm-ask { width: 100%; box-sizing: border-box; justify-content: center; height: 42px !important; padding: 0 12px !important; margin-top: auto !important; font-size: 13.5px !important; overflow: hidden; text-overflow: ellipsis; }
 @media (min-width: 1101px) and (max-width: 1400px) { .tm-card { width: 198px; height: 306px; } .tm-slot.f .tm-card { width: 214px; height: 330px; } } /* R10: laptops, more room between the badges */
 @media (max-width: 1400px) { .tm-band { padding-inline: 12px; margin-inline: -16px; } .tm-band b { letter-spacing: .08em; font-size: 9px; } .tm-band span { letter-spacing: .04em; font-size: 8px; } .tm-slot.f .tm-band b { letter-spacing: .04em; } } /* R10 L10: badge band text never cut on laptops */
+/* Home tablet pass (701–1100): three badges on the top rail, the other two on a second rail of their own (a lanyard
+   never hangs from nothing), centred; the order ticket stays on desktop only */
+@media (min-width: 701px) and (max-width: 1100px) {
+  .tm-row { grid-template-columns: repeat(6, minmax(0, 1fr)) !important; row-gap: 56px !important; }
+  .tm-slot { grid-column: span 2; }
+  .tm-slot:nth-child(4) { grid-column: 2 / span 2; grid-row: 2; }
+  .tm-slot:nth-child(5) { grid-column: 4 / span 2; grid-row: 2; }
+  .tm-row::after { content: ''; grid-row: 2; grid-column: 1 / -1; align-self: start; height: 12px; margin-top: -6px; border-radius: 6px; z-index: 3; pointer-events: none;
+    background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .09) 0 1px, rgba(0, 0, 0, 0) 1px 3px), linear-gradient(180deg, #F2F3F4 0%, #B9BCC0 30%, #8E9196 62%, #5E6064 100%);
+    box-shadow: 0 6px 10px -4px rgba(0, 0, 0, .35); }
+  .tm-ticket { display: none; }
+  .tm-stage { padding-bottom: 24px; }
+}
