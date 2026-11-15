@@ -249,3 +249,29 @@
   .smd-bell { display: inline-grid; place-items: center; width: 38px; height: 38px; border-radius: 10px; border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.04); }
   html body header a:first-child { gap: 10px !important; }
 }
+/* R13 · phone Bench Test, vertical order: title + words, then the rig, then today's counters and the buttons (nothing overlaps) */
+@media (max-width: 700px) {
+  .bt { height: calc(72px + 1500px * var(--sc, 1) + 140vh) !important; }
+  .bt-pin { height: calc(56px + 1500px * var(--sc, 1)) !important; }
+  .bt-box { height: 1500px !important; }
+  .bt-rigwrap { top: 600px !important; transform: scale(.62) !important; }
+  .bt-rigwrap .bt-cable { display: none; }
+  .bt-today { margin-top: 470px !important; }
+  .bt { height: calc(72px + 1550px * var(--sc, 1) + 140vh) !important; } .bt-pin { height: calc(56px + 1550px * var(--sc, 1)) !important; } .bt-box { height: 1550px !important; }
+}
+/* R13 · phone Deals: one swipeable chip row (no arrows on top), wide cards that peek the next one */
+@media (max-width: 700px) {
+  #deals .dl-tabs { flex-wrap: nowrap !important; overflow-x: auto; scrollbar-width: none; margin-inline: -20px; padding-inline: 20px; }
+  #deals .dl-tabs::-webkit-scrollbar { display: none; }
+  #deals .dl-tabs button { flex: none !important; white-space: nowrap !important; }
+  #deals .dl-ctl, #deals .dl-arrows, #deals .dl-right > div:has(> button[aria-label*="revious"]) { display: none !important; }
+  #deals .dl-card { width: 74% !important; }
+  #deals .dl-card h4 { min-height: 0 !important; font-size: 15px !important; }
+}
+@media (max-width: 700px) {
+  #deals .dl-track { overflow-x: auto !important; scroll-snap-type: x mandatory; touch-action: pan-x pan-y !important; scrollbar-width: none; margin-inline: -20px !important; padding-inline: 20px !important; scroll-padding-inline: 20px; }
+  #deals .dl-track::-webkit-scrollbar { display: none; }
+  #deals .dl-belt { transform: none !important; }
+  #deals .dl-card { scroll-snap-align: start; opacity: 1 !important; }
+  #deals .dl-card[aria-hidden="true"] { display: none !important; }
+}
