@@ -6,7 +6,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { PhoneMap, FeeGauge, JobTicket } from './RepairBits';
 import { saveJob } from '@/components/account/BenchTools';
-import { data, products, repairFee, aed, waLink, type Product , priceText } from '@/lib/catalog';
+import { data, products, repairFee, aed, waLink, waCard, type Product , priceText } from '@/lib/catalog';
 import { backend, useMe } from '@/lib/backend';
 import { PageHero, T, useRise, flyToCart } from '@/components/site/ui';
 import SEBrandLogo from '@/components/dc/SEBrandLogo';
@@ -40,9 +40,9 @@ export default function RepairPage() {
   const book = async (e: React.FormEvent) => {
     e.preventDefault();
     const what = pick ? pick.rep.name + (pick.p ? ' · ' + pick.p.gradeName + ' (' + aed(pick.p.price + repairFee(pick.p.price), false) + ' est.)' : '') : 'Repair';
-    const text = `Repair booking\nModel: ${M?.name || '—'}\nRepair: ${what}\nWhen: ${f.when || 'as soon as possible'} · ${f.mode}\n${f.note}`;
+    const text = waCard('Repair booking', [['Model', M?.name || '—'], ['Repair', what], ['When', (f.when || 'As soon as possible') + ' · ' + f.mode], ['Note', f.note]], { name: f.name, phone: f.phone });
     await backend.send({ name: f.name, topic: 'Repair booking', text });
-    const jb = 'SE-R' + Date.now().toString(36).toUpperCase().slice(-6); setJob(jb); saveJob({ job: jb, model: M?.name || '', repair: pick ? pick.rep.name + (pick.p ? ' · ' + pick.p.gradeName : '') : 'Check first', total: pick?.p ? aed(pick.p.price + repairFee(pick.p.price)) : 'After the free check', when: f.when, at: Date.now() }); setSent(true); window.open(waLink('Hi Sam Electronics, ' + text + '\nName: ' + f.name + ' · ' + f.phone), '_blank', 'noopener');
+    const jb = 'SE-R' + Date.now().toString(36).toUpperCase().slice(-6); setJob(jb); saveJob({ job: jb, model: M?.name || '', repair: pick ? pick.rep.name + (pick.p ? ' · ' + pick.p.gradeName : '') : 'Check first', total: pick?.p ? aed(pick.p.price + repairFee(pick.p.price)) : 'After the free check', when: f.when, at: Date.now() }); setSent(true); window.open(waLink(text + '\n*Job:* ' + jb), '_blank', 'noopener');
   };
 
   return (

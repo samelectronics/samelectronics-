@@ -106,7 +106,7 @@ export function RegionCards({ countries, flag }: { countries: C[]; flag: (n: str
           <span className="rg-in">
             <span className="rg-n"><b>{n}</b><small>{T('countries')}</small></span>
             <b className="rg-t">{T(RB[r][4])}</b><span className="rg-d">{T(RB[r][5])}</span>
-            <span className="rg-ways">{w.m.map(([m, t]) => <span key={m}><small>{T(m)}</small><b>{t}</b></span>)}</span>
+            <span className="rg-ways">{w.m.map(([m, t]) => <span key={m}><small>{T(m)}</small><b>{tm(t)}</b></span>)}</span>
             <span className="rg-go">{open === r ? T('Close') : T('See every country')} →</span>
           </span>
         </button>
@@ -122,6 +122,60 @@ export function RegionCards({ countries, flag }: { countries: C[]; flag: (n: str
           ))}</div>
         </div>
       ) : null}
+    </div>
+  );
+}
+
+// ───────── owner (16 Nov): the worldwide page uses the HOME's real map and real-looking pieces ─────────
+/** The home's world map (public/SE World Map.html), the region chips drive it, a pin opens that country's card */
+/** '3–4 weeks' → the number stays, the unit is translated */
+const tm = (t: string) => { const m = /^(.*?)\s(days|weeks)$/.exec(t); return m ? m[1] + ' ' + T(m[2]) : T(t); };
+export function HomeMap({ countries, reg, setReg }: { countries: C[]; reg: string; setReg: (r: string) => void }) {
+  const ref = React.useRef<HTMLIFrameElement>(null), [pick, setPick] = useState<{ name: string; region: string; x: number; y: number } | null>(null);
+  useEffect(() => { const f = ref.current; if (f && f.contentWindow) f.contentWindow.postMessage({ type: 'se-region', region: reg }, '*'); }, [reg]);
+  useEffect(() => { const on = (e: MessageEvent) => { const d = e.data || {}; if (d.type === 'se-country') setPick(d); if (d.type === 'se-map-ready' && ref.current?.contentWindow) ref.current.contentWindow.postMessage({ type: 'se-region', region: reg }, '*'); }; window.addEventListener('message', on); return () => window.removeEventListener('message', on); }, [reg]);
+  const w = pick ? WAYS[pick.region] || WAYS.me : null;
+  return (
+    <div className="hm">
+      <div className="hm-frame">
+        <iframe ref={ref} src="/SE%20World%20Map.html" title={T('Countries we ship to')} loading="lazy" />
+        {pick && w ? (
+          <div className="hm-card" style={{ left: Math.min(78, Math.max(4, pick.x * 100 - 10)) + '%', top: Math.min(64, Math.max(4, pick.y * 100 - 30)) + '%' }} key={pick.name}>
+            <button type="button" className="hm-x" onClick={() => setPick(null)} aria-label={T('Close')}>×</button>
+            <small className="mono">{T((REG.find((r) => r[0] === pick.region) || ['', ''])[1])}</small>
+            <b>{T(pick.name)}</b>
+            {w.m.map(([m, t]) => <span key={m}><em>{T(m)}</em><strong className="mono">{tm(t)}</strong></span>)}
+            <a className="hm-go" href="#quote">{T('Get a quote')} →</a>
+          </div>
+        ) : null}
+        <span className="hm-hint mono">{T('Tap a country for times')}</span>
+      </div>
+      <div className="rm-tabs hm-tabs">{REG.map(([k, l]) => <button key={k} type="button" className={'sp-chip' + (reg === k ? ' on' : '')} onClick={() => { setReg(k); setPick(null); }}>{T(l)} <small>{k === 'all' ? countries.length : countries.filter((c) => c.region === k).length}</small></button>)}</div>
+    </div>
+  );
+}
+
+/** HOW WE SHIP: every way, on one ruler from today to four weeks, so the difference is obvious at a glance */
+const MODES: { k: string; n: string; a: number; b: number; d: string; ic: string }[] = [
+  { k: 'pick', n: 'Collect in Deira', a: 0, b: 0.5, d: 'You or your agent picks it up at our counter, same day.', ic: 'M4 21V9l8-6 8 6v12M9 21v-6h6v6' },
+  { k: 'exp', n: 'Express courier', a: 1, b: 4, d: 'Door to door with DHL, UPS, FedEx or Aramex. Urgent parts.', ic: 'M3 7h11v10H3zM14 10h4l3 3v4h-7M7 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4M17 20a2 2 0 1 0 0-4 2 2 0 0 0 0 4' },
+  { k: 'road', n: 'Road freight', a: 1, b: 7, d: 'By truck to Saudi Arabia, Oman and the Gulf.', ic: 'M2 16h20M4 16V8h10v8M14 11h4l2 3v2M7 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4M17 19a2 2 0 1 0 0-4 2 2 0 0 0 0 4' },
+  { k: 'air', n: 'Air cargo', a: 7, b: 10, d: 'Bulk orders to the main airports, best price per kilo.', ic: 'M2 13l9-2 4-7h2l-2 7 5 1 2-2h1l-1 4 1 4h-1l-2-2-5 1 2 7h-2l-4-7-9-2z' },
+  { k: 'sea', n: 'Sea freight', a: 14, b: 28, d: 'Large orders by container, via Suez or East Africa.', ic: 'M3 17l2 4h14l2-4M5 17V9h14v8M9 9V5h6v4M2 21c2 0 2-1 4-1s2 1 4 1 2-1 4-1 2 1 4 1 2-1 4-1' },
+];
+export function ShipRuler() {
+  const MAX = 28, ticks = [0, 7, 14, 21, 28];
+  return (
+    <div className="sr" data-rise>
+      <div className="sr-axis">{ticks.map((d) => <span key={d} style={{ insetInlineStart: (d / MAX) * 100 + '%' }}>{d === 0 ? T('Today') : d / 7 + ' ' + T(d === 7 ? 'week' : 'weeks')}</span>)}</div>
+      {MODES.map((m, i) => (
+        <div key={m.k} className={'sr-row k-' + m.k} style={{ ['--i' as string]: i }}>
+          <span className="sr-n"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={m.ic} /></svg><b>{T(m.n)}</b></span>
+          <span className="sr-track"><i style={{ insetInlineStart: (m.a / MAX) * 100 + '%', width: Math.max(2.2, ((m.b - m.a) / MAX) * 100) + '%' }}><em className="mono">{m.b < 1 ? T('Same day') : m.a >= 14 ? Math.round(m.a / 7) + '–' + Math.round(m.b / 7) + ' ' + T('weeks') : m.a >= 7 ? T('About a week') : m.a + '–' + m.b + ' ' + T('days')}</em></i></span>
+          <small className="sr-d">{T(m.d)}</small>
+        </div>
+      ))}
+      <small className="sp-sample">{T('Typical times for planning. Every shipment is quoted with its own time and price.')}</small>
     </div>
   );
 }

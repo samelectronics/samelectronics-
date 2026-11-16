@@ -6,7 +6,7 @@ import { PAY_DEFAULT } from '@/lib/payments';
 import { siteRaw , priceText } from '@/lib/catalog';
 import { notify } from '@/lib/notes';
 import React, { useEffect, useState } from 'react';
-import { type Product, aed, byId, data, VAT, waLink, fmt, siteSetting, fixedPrice } from '@/lib/catalog';
+import { type Product, aed, byId, data, VAT, waLink, waCard, fmt, siteSetting, fixedPrice } from '@/lib/catalog';
 import { store, useStore } from '@/lib/store';
 import { backend, useMe, type Company, type Order } from '@/lib/backend';
 import { T, PageHero, useRise } from '@/components/site/ui';
@@ -56,10 +56,10 @@ export default function CartPage() {
   };
   // R9: the full list for WhatsApp: name, model, part, grade/quality, color, quantity, price if known; then name + reference
   const listMsg = (o: Order) => {
-    const rows = lines.map(({ l, p }, i) => [`${i + 1}. ${p.title}`, `   ${T('Model')}: ${p.modelName || '—'} · ${T('Part')}: ${p.part_name}`, `   ${T('Grade')}: ${p.gradeName} · ${T('Quality')}: ${p.qualityName}${p.colour ? ' · ' + T('Color') + ': ' + p.colour : ''}`, `   ${T('Quantity')}: ${l.qty}${p.stock_qty <= 0 ? ' · ' + T('out of stock: please check') : ''} · ${fixed(p) ? T('Price') + ': ' + aed(unit(p), false) + ' ' + T('each') : T('Price') + ': ' + T('please confirm') + (hint(p) ? ' (' + hint(p) + ')' : '')}`].join('\n'));
-    return `${T('Hi Sam Electronics, here is my list from the website:')}\n\n${rows.join('\n\n')}\n\n${sub ? T('Known total') + ': ' + aed(total, false) + ' ' + T('incl. VAT') + ' + ' : ''}${toConfirm} ${toConfirm === 1 ? T('item to confirm') : T('items to confirm')}\n${T('Delivery')}: ${T(({ pickup: 'Pick up in Deira', uae: 'Delivery in the UAE', world: 'Worldwide' } as const)[del])}\n\n${form.name}\n${T('Reference')}: ${o.no}`;
+    const rows = lines.map(({ l, p }, i) => [`*${i + 1}. ${p.title}*`, `   ${T('Model')}: ${p.modelName || '—'} · ${T('Part')}: ${p.part_name}`, `   ${T('Grade')}: ${p.gradeName} · ${T('Quality')}: ${p.qualityName}${p.colour ? ' · ' + T('Color') + ': ' + p.colour : ''}`, `   ${T('Quantity')}: ${l.qty}${p.stock_qty <= 0 ? ' · ' + T('out of stock: please check') : ''} · ${fixed(p) ? T('Price') + ': ' + aed(unit(p), false) + ' ' + T('each') : T('Price') + ': ' + T('please confirm') + (hint(p) ? ' (' + hint(p) + ')' : '')}`].join('\n'));
+    return `*${T('PARTS LIST')}* · ${o.no}\n━━━━━━━━━━━━\n${rows.join('\n\n')}\n\n${sub ? T('Known total') + ': ' + aed(total, false) + ' ' + T('incl. VAT') + ' + ' : ''}${toConfirm} ${toConfirm === 1 ? T('item to confirm') : T('items to confirm')}\n${T('Delivery')}: ${T(({ pickup: 'Pick up in Deira', uae: 'Delivery in the UAE', world: 'Worldwide' } as const)[del])}\n\n*${T('From')}:* ${form.name}\n_${new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Dubai' })} · ${location.host}/cart_`;
   };
-  const waMsg = (o: Order) => `Hi Sam Electronics, I placed order ${o.no} on the website.\n\n${o.lines.map((x) => `${x.qty} × ${x.title} · ${x.grade}`).join('\n')}\n\nTotal ${aed(o.total, false)} incl. VAT\nDelivery: ${o.delivery}\nPlease confirm stock and price.`;
+  const waMsg = (o: Order) => waCard('Order ' + o.no, [['Parts', '\n' + o.lines.map((x) => `• ${x.qty} × ${x.title} · ${x.grade}`).join('\n')], ['Total', aed(o.total, false) + ' incl. VAT'], ['Delivery', o.delivery], ['Please', 'confirm stock and price']], { name: form.name });
 
   if (done) return (
     <>

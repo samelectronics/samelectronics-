@@ -1,7 +1,7 @@
 'use client';
 // Owner (16 Nov): no separate white message. Samsoom HOLDS A PAPER with the logo on it and asks.
 // - once per visit, a few seconds after the welcome and the language are done: a note with both options
-//   (WhatsApp us / WeChat us) and a close; closed = not again until the next visit
+//   (WhatsApp us / WeChat us) and a close; it puts itself away after 12 s; closed = not again until the next visit
 // - later (at most once more, after a few minutes): a small sign with one logo, "WhatsApp us?" or "WeChat us?", for 7 s
 // Every button opens the contact sheet (open on this device, QR, the number to copy). Never over another card.
 import React, { useEffect, useState } from 'react';
@@ -18,7 +18,7 @@ export default function LauncherNudge() {
     let hide = 0, later = 0, tries = 0;
     const set = (v: K) => { setK(v); if (v) document.documentElement.setAttribute('data-sam-hold', v); else document.documentElement.removeAttribute('data-sam-hold'); };
     const done = () => { try { return !!localStorage.getItem('se-tour2'); } catch { return false; } };
-    const note = () => { if (ss('se-note-seen')) return true; if (!done() || busy()) return false; ss('se-note-seen', '1'); set('note'); return true; };
+    const note = () => { if (ss('se-note-seen')) return true; if (!done() || busy()) return false; ss('se-note-seen', '1'); set('note'); clearTimeout(hide); hide = window.setTimeout(() => set(''), 12000); return true; };
     const sign = () => { if (ss('se-nudge-off') || Number(ss('se-sign-n') || 0) >= 1) return; if (busy()) { later = window.setTimeout(sign, 20000); return; } ss('se-sign-n', '1'); set(Math.random() < 0.5 ? 'wa' : 'wc'); clearTimeout(hide); hide = window.setTimeout(() => set(''), 7000); };
     // the note: a few seconds after the welcome is over (checked every 2 s until then, for up to 2 minutes)
     const iv = window.setInterval(() => { if (note() || ++tries > 60) { window.clearInterval(iv); later = window.setTimeout(sign, 240000); } }, 2000);

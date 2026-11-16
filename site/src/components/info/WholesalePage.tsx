@@ -4,7 +4,7 @@
 // the Sam Grid card, bulk quotes and export, and takes the application (#apply → backend.apply, reviewed in the Control Room).
 import React, { useEffect, useState } from 'react';
 import { backend, useMe } from '@/lib/backend';
-import { products, aed, waLink } from '@/lib/catalog';
+import { products, aed, waLink, waCard } from '@/lib/catalog';
 import HowTo from '@/components/site/HowTo';
 import { PageHero, T, useRise, CountUp } from '@/components/site/ui';
 import PalletDrop from '@/components/home/PalletDrop';
@@ -77,7 +77,7 @@ export default function WholesalePage() {
           <p className="sp-p">{T('Our management team reviews every application by hand. We reply by e-mail and WhatsApp.')}</p>
           {!done ? <div style={{ marginBottom: 14 }}><AppTracker /></div> : null}
           {!me ? <div className="sp-note" style={{ background: 'rgba(255,255,255,.55)' }}>{T('Tip: create your account first so the approval is linked to it.')} <a href="/account?next=trade">{T('Create account')}</a></div> : null}
-          <a className="sp-btn wa" style={{ marginTop: 14 }} href={waLink('Hi Sam Electronics, I would like a bulk quote. My list:')} target="_blank" rel="noopener noreferrer">{T('Just need a bulk quote? WhatsApp us')}</a>
+          <a className="sp-btn wa" style={{ marginTop: 14 }} href={waLink(waCard('Bulk quote', [['Request', 'Trade prices for my list'], ['My list', '…']]))} target="_blank" rel="noopener noreferrer">{T('Just need a bulk quote? WhatsApp us')}</a>
         </div>
         {done ? <div style={{ display: 'grid', gap: 14 }}><AppTracker /><div className="sp-card" data-rise><b className="sp-h3">{T('Application received.')}</b><p className="sp-p">{T('Thank you. We will review it and reply within one working day.')}</p></div></div> : (
           <form className="sp-card wh-form wf2-console" onSubmit={submit} data-rise>

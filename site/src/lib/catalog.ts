@@ -191,3 +191,15 @@ export const waLink = (text: string) => 'https://wa.me/' + (data()?.contact.wa |
 export const siteRaw = <T,>(key: string, fallback: T): T => { try { const v = JSON.parse(localStorage.getItem('se-db') || '{}').settings?.[key] ?? JSON.parse(localStorage.getItem('se-set-' + key) || 'null'); return v == null ? fallback : v; } catch { return fallback; } };
 export const siteSetting = <T extends object,>(key: string, fallback: T): T => ({ ...fallback, ...siteRaw<Partial<T>>(key, {}) });
 export const repairFee = (partPrice: number) => { const f = siteSetting('repair-fees', { low: 25, mid: 35, high: 45, lowMax: 100, midMax: 500 }); return partPrice < f.lowMax ? f.low : partPrice <= f.midMax ? f.mid : f.high; };
+
+// Owner (16 Nov): everything we send on WhatsApp is laid out neatly, never one paragraph:
+// a bold title, one line per detail (*Label:* value), then who it is from, the date and the page it came from.
+export const waCard = (title: string, rows: [string, string | number | undefined | null][], from?: { name?: string; phone?: string }) => {
+  const d = new Date().toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Dubai' });
+  const page = typeof location !== 'undefined' ? location.origin + location.pathname : '';
+  const L = ['*' + title.toUpperCase() + '*', '━━━━━━━━━━━━'];
+  rows.forEach(([k, v]) => { if (v != null && String(v).trim()) L.push('*' + k + ':* ' + String(v).trim()); });
+  if (from && (from.name || from.phone)) L.push('', '*From:* ' + [from.name, from.phone].filter(Boolean).join(' · '));
+  L.push('', '_' + d + ' (Dubai)_', '_Sent from ' + page + '_');
+  return L.join('\n');
+};

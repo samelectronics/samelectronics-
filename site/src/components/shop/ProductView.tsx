@@ -7,7 +7,7 @@
 import PriceTag from './PriceTag';
 import { buyable } from '@/lib/catalog';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { type Product, aed, alsoFor, byId, data, grades, similar, waLink, fmt, VAT } from '@/lib/catalog';
+import { type Product, aed, alsoFor, byId, data, grades, similar, waLink, waCard, fmt, VAT } from '@/lib/catalog';
 import { store, useStore } from '@/lib/store';
 import { backend, type Review, type User } from '@/lib/backend';
 import { useScrollLock } from '@/lib/scrollLock';
@@ -75,7 +75,7 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
   const avg = rv.length ? rv.reduce((a, r) => a + r.stars, 0) / rv.length : p.rating, nRev = rv.length || p.reviews;
   const hist = [5, 4, 3, 2, 1].map((s) => (rv.length ? rv.filter((r) => r.stars === s).length / rv.length : [0.62, 0.24, 0.08, 0.04, 0.02][5 - s]));
   const link = typeof location !== 'undefined' ? location.origin + '/shop?p=' + encodeURIComponent(p.id) : '';
-  const wa = waLink(`Hi Sam Electronics, I would like to order:\n${qty} × ${p.title} · ${p.gradeName} (${p.makerName})\nRef: ${p.id}\nPlease confirm stock and price.\n${link}`);
+  const wa = waLink(waCard('Order request', [['Part', p.title], ['Grade', p.gradeName + ' (' + p.makerName + ')'], ['Quantity', qty], ['Ref', p.id], ['Link', link], ['Please', 'confirm stock and price']]));
   const kitIds = [p.id, ...kit], kitSum = kitIds.reduce((a, k) => a + (byId(k)?.price || 0), 0);
   const share = async () => { try { if (navigator.share) await navigator.share({ title: p.title, url: link }); else { await navigator.clipboard.writeText(link); setCopied(true); window.setTimeout(() => setCopied(false), 1800); } } catch { /* cancelled */ } };
   const submit = async (e: React.FormEvent) => { e.preventDefault(); const r = await backend.addReview({ product: p.id, ...form }); if (r.ok) { setRv([r.data, ...rv]); setForm({ stars: 5, title: '', text: '' }); setMsg(T('Thank you! Your review is live.')); } else setMsg(T(r.error)); };
