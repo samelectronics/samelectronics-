@@ -728,3 +728,91 @@ html[dir="rtl"] .clip-pic { animation-name: clipWhipR, clipPush !important; }
 .pv-code { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 12px; }
 .pv-code input { flex: 1; min-width: 140px; height: 40px; padding: 0 12px; border: 0; border-radius: 10px; background: #F4F5F6; box-shadow: inset 0 0 0 1px #E2E4E7; font: 600 14px 'JetBrains Mono', monospace; letter-spacing: .08em; text-transform: uppercase; }
 .pv-code small { flex-basis: 100%; font-size: 12.5px; color: #6E7378; } .pv-code.ok small { color: #1E9E57; } .pv-code.bad small { color: #C0392B; }
+
+/* ── In-list ads v2 (owner, 16 Nov): teardown-style mini commercials, a little taller, three clean columns ── */
+.iad2 { position: relative; grid-column: 1 / -1; display: block; min-height: 196px; border-radius: 22px; overflow: hidden; isolation: isolate; text-decoration: none; color: #fff;
+  background: linear-gradient(115deg, #2E3034, #232528 60%, #1D1F22); box-shadow: inset 0 1px 0 rgba(255,255,255,.07), 0 0 0 1px rgba(255,255,255,.04), 0 24px 48px -28px rgba(0,0,0,.55);
+  transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s; }
+.iad2:hover { transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255,255,255,.07), 0 0 0 1px rgba(247,192,50,.35), 0 30px 56px -26px rgba(0,0,0,.6); }
+.iad2-bg { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+.iad2-bg .g1, .iad2-bg .g2 { position: absolute; border-radius: 50%; filter: blur(40px); }
+.iad2-bg .g1 { width: 420px; height: 260px; right: 18%; top: -40%; background: rgba(247,192,50,.22); animation: iad2Drift 9s ease-in-out infinite alternate; }
+.iad2-bg .g2 { width: 300px; height: 200px; left: -6%; bottom: -60%; background: rgba(247,192,50,.12); animation: iad2Drift 11s ease-in-out infinite alternate-reverse; }
+.iad2-bg .sweep { position: absolute; inset: -20% auto -20% -30%; width: 22%; background: linear-gradient(90deg, transparent, rgba(255,236,180,.10), transparent); transform: skewX(-18deg); animation: iad2Sweep 7s cubic-bezier(.5,0,.3,1) infinite; }
+@keyframes iad2Drift { to { transform: translate(60px, 24px) scale(1.1); } }
+@keyframes iad2Sweep { 0%, 55% { left: -30%; } 100% { left: 130%; } }
+.iad2:not(.live) .iad2-bg i { animation-play-state: paused; }
+
+.iad2-scene { position: absolute; inset: 0; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(200px, 1fr) auto; align-items: center; gap: 28px; padding: 22px 30px 30px; animation: iad2In .5s cubic-bezier(.2,.8,.2,1) both; }
+.iad2-scene.out { animation: iad2Out .5s cubic-bezier(.4,0,.6,1) both; pointer-events: none; }
+@keyframes iad2In { from { opacity: 0; transform: translateX(26px); } }
+@keyframes iad2Out { to { opacity: 0; transform: translateX(-26px); } }
+.iad2-word { position: absolute; inset-inline-end: 22%; bottom: -.18em; z-index: -1; font: 800 clamp(70px, 9vw, 130px)/1 'Space Grotesk', sans-serif; letter-spacing: -.04em; white-space: nowrap; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.07); animation: iad2Word 7s linear both; }
+@keyframes iad2Word { from { transform: translateX(40px); } to { transform: translateX(-30px); } }
+
+.iad2-txt { min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.iad2-k { display: inline-flex; align-items: center; gap: 8px; font: 600 10.5px/1 'JetBrains Mono', monospace; letter-spacing: .16em; color: #F7C032; }
+.iad2-k .rec { width: 7px; height: 7px; border-radius: 50%; background: #F7C032; box-shadow: 0 0 10px #F7C032; animation: iad2Rec 1.2s ease-in-out infinite; }
+@keyframes iad2Rec { 50% { opacity: .3; } }
+.iad2-k em { font-style: normal; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,.1); color: #C9CBCE; letter-spacing: .08em; }
+.iad2-t { font: 800 clamp(20px, 2.1vw, 28px)/1.12 'Space Grotesk', sans-serif; letter-spacing: -.02em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.iad2-t span { display: inline-block; white-space: pre; animation: iad2Slam .5s cubic-bezier(.2,1.3,.4,1) both; animation-delay: calc(.15s + var(--w) * .07s); }
+@keyframes iad2Slam { from { opacity: 0; transform: translateY(60%) scale(1.15); filter: blur(4px); } }
+.iad2-d { font: 400 14px/1.45 Inter, sans-serif; color: #B9BCC0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; animation: iad2Fade .5s .45s both; }
+@keyframes iad2Fade { from { opacity: 0; transform: translateY(6px); } }
+.iad2-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; max-height: 24px; overflow: hidden; }
+.iad2-chips i { font: 600 10px/1 'JetBrains Mono', monospace; font-style: normal; letter-spacing: .1em; padding: 6px 8px; border-radius: 6px; color: #F7C032; background: rgba(247,192,50,.1); box-shadow: inset 0 0 0 1px rgba(247,192,50,.28); white-space: nowrap; animation: iad2Fade .4s both; animation-delay: calc(.6s + var(--c) * .1s); }
+
+.iad2-vis { position: relative; height: 150px; min-width: 0; display: grid; place-items: center; overflow: hidden; border-radius: 14px; }
+.iad2-vis img { max-height: 100%; max-width: 100%; object-fit: contain; filter: drop-shadow(0 16px 18px rgba(0,0,0,.45)); }
+.iad2-film { height: 150px; width: auto; }
+.iad2-pic { animation: iad2Rise .7s cubic-bezier(.2,1.2,.4,1) both; }
+@keyframes iad2Rise { from { opacity: 0; transform: translateY(30px) scale(.9); } }
+.iad2-grades { position: relative; width: 100%; height: 100%; }
+.iad2-grades img { position: absolute; top: 6%; height: 88%; left: calc(6% + var(--i) * 20%); animation: iad2Deal .6s cubic-bezier(.2,1.2,.4,1) both; animation-delay: calc(.3s + var(--i) * .16s); }
+@keyframes iad2Deal { from { opacity: 0; transform: translateY(-40px) rotate(-8deg); } }
+.iad2-fix { position: relative; width: 150px; height: 150px; }
+.iad2-fix img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.iad2-fix .now { clip-path: inset(0 100% 0 0); animation: iad2Wipe 7s cubic-bezier(.6,0,.3,1) both; }
+.iad2-fix .scan { position: absolute; top: 4%; bottom: 4%; left: 0; width: 2px; background: #F7C032; box-shadow: 0 0 14px 3px rgba(247,192,50,.7); animation: iad2Scan 7s cubic-bezier(.6,0,.3,1) both; }
+@keyframes iad2Wipe { 0%, 22% { clip-path: inset(0 100% 0 0); } 52%, 100% { clip-path: inset(0 0 0 0); } }
+@keyframes iad2Scan { 0%, 22% { left: 0; opacity: 1; } 52% { left: 100%; opacity: 1; } 58%, 100% { left: 100%; opacity: 0; } }
+.iad2-ship { position: relative; width: 100%; height: 100%; }
+.iad2-ship .route { position: absolute; inset: 8% 4% 40%; width: 92%; height: 52%; fill: none; stroke: #F7C032; stroke-width: 2; stroke-dasharray: .02 .02; filter: drop-shadow(0 0 6px rgba(247,192,50,.6)); animation: iad2Route 1.6s linear infinite; }
+@keyframes iad2Route { to { stroke-dashoffset: -.08; } }
+.iad2-ship .box { position: absolute; left: 4%; bottom: 6%; height: 52%; animation: iad2Box 7s cubic-bezier(.5,0,.3,1) both; }
+.iad2-ship .pal { position: absolute; right: 4%; bottom: 4%; height: 78%; animation: iad2Rise .8s .5s cubic-bezier(.2,1.2,.4,1) both; }
+@keyframes iad2Box { 0% { opacity: 0; transform: translateX(-30px); } 12%, 70% { opacity: 1; transform: none; } 100% { opacity: 1; transform: translateX(10px); } }
+.iad2-years { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.iad2-years b { font: 800 64px/1 'Space Grotesk', sans-serif; letter-spacing: -.04em; color: #F7C032; text-shadow: 0 0 30px rgba(247,192,50,.45); font-variant-numeric: tabular-nums; }
+.iad2-years small { font: 600 11px/1 'JetBrains Mono', monospace; letter-spacing: .18em; color: #C9CBCE; text-transform: uppercase; }
+
+.iad2-cta { justify-self: end; display: inline-flex; align-items: center; gap: 8px; height: 46px; padding: 0 20px; border-radius: 14px; font: 700 14.5px Inter, sans-serif; white-space: nowrap; background: #F7C032; color: #26282B; box-shadow: 0 10px 24px -10px rgba(247,192,50,.6); animation: iad2Fade .45s .7s both; }
+.iad2:hover .iad2-cta { background: #FFD566; }
+.iad2-dots { position: absolute; z-index: 3; bottom: 12px; inset-inline-start: 30px; display: flex; gap: 6px; }
+.iad2-dots button { width: 26px; height: 4px; padding: 0; border: 0; border-radius: 2px; background: rgba(255,255,255,.18); overflow: hidden; cursor: pointer; }
+.iad2-dots button i { display: block; height: 100%; width: 0; background: #F7C032; }
+.iad2-dots button.on i { animation: iad2Bar 7s linear forwards; }
+@keyframes iad2Bar { to { width: 100%; } }
+
+@media (max-width: 900px) {
+  .iad2 { min-height: 300px; }
+  .iad2-scene { grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: auto 1fr; gap: 14px 16px; padding: 20px 20px 30px; align-items: start; }
+  .iad2-txt { grid-column: 1 / -1; }
+  .iad2-vis { height: 120px; grid-column: 1; }
+  .iad2-film { height: 120px; }
+  .iad2-cta { align-self: end; height: 42px; padding: 0 16px; }
+  .iad2-word { inset-inline-end: 4%; font-size: 84px; }
+}
+@media (prefers-reduced-motion: reduce) { .iad2 *, .iad2-bg i { animation: none !important; } .iad2-fix .now { clip-path: none; } .iad2-fix .scan { display: none; } }
+@media (max-width: 900px) {
+  .iad2 { min-height: 420px; }
+  .iad2-scene { display: flex; flex-direction: column; align-items: stretch; gap: 12px; padding: 20px 20px 34px; }
+  .iad2-t { font-size: 22px; }
+  .iad2-vis { flex: 1 1 auto; height: auto; min-height: 120px; }
+  .iad2-film { height: 100%; max-height: 150px; }
+  .iad2-fix { width: 140px; height: 140px; }
+  .iad2-cta { justify-self: auto; align-self: stretch; justify-content: center; height: 46px; }
+  .iad2-dots { bottom: 14px; inset-inline-start: 50%; transform: translateX(-50%); }
+  html[dir='rtl'] .iad2-dots { transform: translateX(50%); }
+}

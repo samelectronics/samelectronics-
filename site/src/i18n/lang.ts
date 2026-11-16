@@ -245,3 +245,11 @@ function patchCanvasText() {
     };
   }
 }
+
+/** Owner (16 Nov): the small line under each language is written in the language the site is in now
+ *  (Spanish site → "Árabe", Arabic site → "الإسبانية"), not always in English. Falls back to English. */
+export function langLabel(id: Lang, inLang: Lang): string {
+  const en = LANGS.find((x) => x.id === id)?.en || id;
+  try { const n = new Intl.DisplayNames([inLang, 'en'], { type: 'language' }).of(id); if (n && n.toLowerCase() !== id) return n.charAt(0).toLocaleUpperCase(inLang) + n.slice(1); } catch { /* old browser */ }
+  return en;
+}

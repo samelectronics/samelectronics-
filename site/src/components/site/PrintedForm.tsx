@@ -50,7 +50,7 @@ export default function PrintedForm({ eb, title, fields, init, lines = [], doc =
           <div className="vs-prog pf-prog"><span className="bar"><i style={{ transform: 'scaleX(' + (req.length ? filled / req.length : 1) + ')' }} /></span><small><b data-no-i18n="">{filled} / {req.length}</b> <span>{T('fields printed')}</span></small></div>
           {need ? <p className="vs-need" role="alert">{T('Fill in the fields marked * to send.')}</p> : null}
           {note}
-          <div className={'vs-send' + (ok ? ' ready' : '')}><button type="submit" className="vs-btn yel pf-go">{T(cta)} <i aria-hidden="true">→</i></button></div>
+          <div className={'vs-send' + (ok ? ' ready' : '')}><button type="submit" className={'vs-btn yel pf-go' + (/whatsapp/i.test(cta) ? ' wa-ic' : '')}>{/whatsapp/i.test(cta) ? <i className="ct-ic wa" aria-hidden="true" style={{ width: 18, height: 18 }} /> : null}{T(cta)} <i aria-hidden="true">→</i></button></div>
         </div>
         <div className="vs-printer pf-printer" aria-hidden="true">
           <span className="vs-slot" />

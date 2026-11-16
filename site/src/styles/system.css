@@ -576,3 +576,44 @@ html:not([data-theme="dark"]) .se-qs-langs { scrollbar-color: #F7C032 #F2F3F4; }
 
 .se-status-pop .se-status-acts .se-cdd > * { justify-content: flex-start !important; }
 footer .ft-contacts .ft-ci { display: none !important; } footer .ft-contacts > a, footer .ft-contacts > button { padding-inline-start: 0 !important; gap: 0 !important; }
+
+/* Owner (16 Nov): ONE theme for every pop-up. Light (white) by default; Settings → Pop-ups → Dark turns them all dark:
+   language switch, Wi-Fi notice, cookie banner, tour bubble, medal toast, chat choice. */
+html:not([data-theme="dark"]) .lp-card.lp2 { background: #FFFFFF !important; color: #26282B !important; box-shadow: 0 0 0 1px rgba(38,40,43,.08), 0 30px 60px -20px rgba(0,0,0,.35) !important; }
+html:not([data-theme="dark"]) .lp-card.lp2 .lp-eb { color: #B7861A; }
+html:not([data-theme="dark"]) .lp-card.lp2 .lp2-cell { background: #F2F3F4; box-shadow: inset 0 0 0 1.5px #8E939A, inset 0 0 0 2.5px #fff; }
+html:not([data-theme="dark"]) .lp-card.lp2 .lp2-bar { background: #ECEDEF; }
+html:not([data-theme="dark"]) .lp-card.lp2 .lp2-meta em { color: hsl(calc(var(--p, 0) * 140), 70%, 38%); }
+html:not([data-theme="dark"]) .lp { background: rgba(38, 40, 43, .14); }
+html:not([data-theme="dark"]) .se-netp { background: #FFFFFF !important; color: #26282B !important; box-shadow: 0 0 0 1px rgba(38,40,43,.08), 0 14px 30px -12px rgba(0,0,0,.3) !important; }
+html:not([data-theme="dark"]) .se-netp small { color: #6B6F75; }
+html:not([data-theme="dark"]) .se-netp button { background: #F2F3F4; color: #26282B; }
+html:not([data-theme="dark"]) .sc2-banner { background: rgba(255,255,255,.97) !important; color: #26282B !important; box-shadow: 0 30px 60px -20px rgba(0,0,0,.35), inset 0 0 0 1px rgba(38,40,43,.08) !important; }
+html:not([data-theme="dark"]) .sc2-banner .sc2-btxt span { color: #5C6066; }
+html:not([data-theme="dark"]) .sc2-banner .sc2-btxt a { color: #B7861A; }
+html:not([data-theme="dark"]) .sc2-banner .sc2-cookie { background: #FFF6DC; }
+html:not([data-theme="dark"]) .sc2-banner .st-grey { background: #F2F3F4 !important; color: #26282B !important; }
+html[data-theme="dark"] .st-bub { background: linear-gradient(180deg, #2E3034, #26282B) !important; color: #fff !important; }
+html[data-theme="dark"] .st-bub .st-btx, html[data-theme="dark"] .st-bub p { color: #E4E5E7 !important; }
+html[data-theme="dark"] .st-bub .st-tools .st-x, html[data-theme="dark"] .st-bub .st-x, html[data-theme="dark"] .st-bub .st-tools .st-mute { background: rgba(255,255,255,.08) !important; color: #fff !important; box-shadow: none !important; }
+html[data-theme="dark"] .md-toast { background: linear-gradient(180deg, #2E3034, #26282B) !important; color: #fff !important; }
+html[data-theme="dark"] .cc-card { background: linear-gradient(180deg, #2E3034, #26282B) !important; color: #fff !important; }
+html[data-theme="dark"] .cc-card .cc-p { color: #C9CBCE !important; }
+/* Talk to a person: one sheet, every way to reach the shop, same size tiles, centred. */
+.cc-ways { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.cc-w { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; min-height: 96px; padding: 14px 8px; border: 0; border-radius: 16px; background: #fff; color: #26282B; box-shadow: inset 0 0 0 1px rgba(38,40,43,.08); cursor: pointer; text-decoration: none; text-align: center; transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s; }
+.cc-w:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 2px #F7C032, 0 12px 24px -14px rgba(0,0,0,.3); }
+.cc-w b { font: 600 14px Inter, sans-serif; }
+.cc-wi { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: #26282B; color: #F7C032; }
+.cc-w.wa .cc-wi { background: #25D366; color: #fff; } .cc-w.wc .cc-wi { background: #07C160; color: #fff; }
+.cc-w .ct-ic { width: 22px; height: 22px; }
+html[data-theme="dark"] .cc-w { background: rgba(255,255,255,.06); color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); }
+@media (max-width: 420px) { .cc-ways { grid-template-columns: repeat(2, 1fr); } }
+.cr-door-help .cr-person { gap: 7px; cursor: pointer; border: 0; color: inherit; font: inherit; }
+/* Owner (16 Nov): every WhatsApp button shows the WhatsApp icon and every WeChat button the WeChat icon, everywhere.
+   Buttons that were built without one get it here (buttons that already have an icon are left alone). */
+:is(.sp-btn.wa, .fp-btn:is([href*="wa.me"]), .wf-send:is([href*="wa.me"]), .pt-ask.wa, .ln-b.wa, .st-opt-wa):not(:has(svg, .ct-ic, img, .st-brand))::before,
+:is(.sp-btn.wc, .fp-btn.wcb, .wf-send.wcb, .fz2-btn.wcb, .pt-ask.wc):not(:has(svg, .ct-ic, img, .st-brand))::before {
+  content: ''; display: inline-block; flex: none; width: 18px; height: 18px; margin-inline-end: 8px; vertical-align: -3px; background: currentColor;
+  -webkit-mask: url(/icons/whatsapp.svg) center / contain no-repeat; mask: url(/icons/whatsapp.svg) center / contain no-repeat; }
+:is(.sp-btn.wc, .fp-btn.wcb, .wf-send.wcb, .fz2-btn.wcb, .pt-ask.wc):not(:has(svg, .ct-ic, img, .st-brand))::before { -webkit-mask-image: url(/icons/wechat.svg); mask-image: url(/icons/wechat.svg); }

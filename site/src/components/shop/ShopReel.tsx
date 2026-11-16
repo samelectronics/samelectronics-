@@ -38,9 +38,15 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
     // glowing light lines drifting diagonally (same family as the teardown ad)
     const beams = (l: number, rgb: string, a = 0.6) => { x.save(); x.translate(W / 2, H / 2); x.rotate(-0.38); x.globalCompositeOperation = 'screen';
       for (let k = 0; k < 3; k++) { const off = (((l * (0.9 + k * 0.15) + k * 0.33) % 1) - 0.5) * H * 2.2, len = W * (0.9 + (k % 2) * 0.5), x0 = -len / 2; const g = x.createLinearGradient(x0, 0, x0 + len, 0); g.addColorStop(0, 'rgba(' + rgb + ',0)'); g.addColorStop(0.5, 'rgba(' + rgb + ',' + a + ')'); g.addColorStop(1, 'rgba(' + rgb + ',0)');
-        x.shadowColor = 'rgba(' + rgb + ',.9)'; x.shadowBlur = 14; x.fillStyle = g; x.fillRect(x0, off - 1, len, 2); }
+        // owner: the light is a soft glowing band with a bright core, not a thin straight wire
+        x.globalAlpha = 0.16; x.shadowColor = 'rgba(' + rgb + ',1)'; x.shadowBlur = 30; x.fillStyle = g; x.fillRect(x0, off - 9, len, 18); x.globalAlpha = 1;
+        x.shadowColor = 'rgba(' + rgb + ',.9)'; x.shadowBlur = 22; x.fillStyle = g; x.fillRect(x0, off - 1.5, len, 3); }
       x.shadowBlur = 0; x.restore(); };
-    const text = (s: string, X: number, Yy: number, f: string, col: string, al: CanvasTextAlign = 'left', alpha = 1) => { x.globalAlpha = alpha; x.font = f; x.fillStyle = col; x.textAlign = al; x.textBaseline = 'alphabetic'; x.fillText(s, X, Yy); x.globalAlpha = 1; };
+    // owner (16 Nov): every language keeps the same layout as English; a longer translation gets a slightly smaller font
+    // so it stays on its one line inside its own space (never runs into the picture or off the ad).
+    const text = (s: string, X: number, Yy: number, f: string, col: string, al: CanvasTextAlign = 'left', alpha = 1) => { x.globalAlpha = alpha; x.font = f;
+      { const mx = al === 'left' ? (X >= W * 0.4 ? W * 0.96 - X : (W < 640 ? W * 0.88 : W * 0.5)) : al === 'center' ? W * 0.9 : W * 0.5, w0 = x.measureText(s).width;
+        if (w0 > mx) { const m = f.match(/(\d+(?:\.\d+)?)px/); if (m) { x.font = f.replace(m[0], Math.max(8, Math.floor(+m[1] * mx / w0)) + 'px'); } } } x.fillStyle = col; x.textAlign = al; x.textBaseline = 'alphabetic'; x.fillText(s, X, Yy); x.globalAlpha = 1; };
     const pic = (k: string, cx: number, cy: number, h: number, rot = 0, a = 1, shadow = true) => { const i = im[k]; if (!ok(i)) return; const w = (h * i.naturalWidth) / i.naturalHeight; x.save(); x.globalAlpha = a; x.translate(cx, cy); x.rotate(rot);
       if (shadow) { x.shadowColor = 'rgba(0,0,0,.35)'; x.shadowBlur = 30; x.shadowOffsetY = 18; } x.drawImage(i, -w / 2, -h / 2, w, h); x.restore(); };
     const flash = (l: number, col = '#fff') => { if (l < 0.08) { x.globalAlpha = (1 - l / 0.08) * 0.75; x.fillStyle = col; x.fillRect(0, 0, W, H); x.globalAlpha = 1; } };

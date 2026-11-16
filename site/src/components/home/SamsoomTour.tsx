@@ -13,7 +13,7 @@
 // Styles in src/styles/dc-base.css (.st-*).
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
 import LiveSam from '../samsoom/LiveSam';
-import { LANGS, RANK, type Lang } from '@/i18n/lang';
+import { LANGS, RANK, type Lang, langLabel } from '@/i18n/lang';
 import Typed from '@/components/samsoom/Typed';
 import { StoreCards, hasStore, setStore } from '@/components/site/StorePicker';
 // R11g (owner): the store question only comes once, in the first welcome on the home page. Anywhere else (shop, etc.)
@@ -228,9 +228,7 @@ export default function SamsoomTour() {
               <span className="st-menu">
                 <button type="button" className="st-btn st-go st-menu-main" onClick={walk}>{T('Show me this page')}</button>
                 <button type="button" className="st-opt" onClick={() => { setPhase('off'); window.dispatchEvent(new CustomEvent('se:chat', { detail: {} })); }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" /></svg><span>{T('Chat with me')}</span><i aria-hidden="true">›</i></button>
-                <a className="st-opt st-opt-wa" href="https://wa.me/971503420015?text=Hi%20Sam%20Electronics%2C%20I%20have%20a%20question." target="_blank" rel="noopener" onClick={() => setPhase('off')}><span className="st-brand wa" aria-hidden="true" /><span>{T('WhatsApp us')}</span><i aria-hidden="true">›</i></a>
-                <button type="button" className="st-opt st-opt-wc" onClick={() => { setPhase('off'); window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wc' } })); }}><span className="st-brand wc" aria-hidden="true" /><span>{T('WeChat us')}</span><i aria-hidden="true">›</i></button>
-                <button type="button" className="st-opt st-opt-wc" onClick={() => { setPhase('off'); window.dispatchEvent(new CustomEvent('se:wechat')); }}><span className="st-brand wc" aria-hidden="true" /><span>{T('WeChat us')}</span><i aria-hidden="true">›</i></button>
+                <button type="button" className="st-opt st-opt-person" onClick={() => { setPhase('off'); window.dispatchEvent(new CustomEvent('se:person')); }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21c1-4 4-6 8-6s7 2 8 6" /></svg><span>{T('Talk to a person')}</span><i aria-hidden="true">›</i></button>
                 <button type="button" className="st-opt" onClick={() => setPhase('lang')}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c2.6 3 2.6 15 0 18M12 3c-2.6 3-2.6 15 0 18" /></svg><span>{T('Change language')}</span><i aria-hidden="true">›</i></button>
                 <button type="button" className="st-menu-close" onClick={() => bye()}>{T('Close')}</button>
               </span>
@@ -319,7 +317,7 @@ function LangScroll({ list, d, cl, pick }: { list: { id: Lang; name: string; en:
       {list.map((l) => (
         <button key={l.id} data-l={l.id} type="button" lang={l.id} className={'st-l2-i' + (l.id === d ? ' det' : '') + (l.id === cl ? ' hint' : '')} onClick={() => pick(l.id)}>
           <b dir="auto">{l.name}</b>
-          <small>{l.id === d ? (DETECTED[l.id] || DETECTED.en) + ' · ' : ''}{l.en}</small>
+          <small>{l.id === d ? (DETECTED[l.id] || DETECTED.en) + ' · ' : ''}{langLabel(l.id, ((typeof window !== 'undefined' && window.seI18n && window.seI18n.lang()) || d || 'en') as Lang)}</small>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true"><path d="M9 6l6 6-6 6" /></svg>
         </button>
       ))}

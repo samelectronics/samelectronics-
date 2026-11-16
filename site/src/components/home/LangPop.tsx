@@ -72,7 +72,7 @@ export default function LangPop() {
     <div className={'lp' + (phase === 'out' ? ' lp-out' : '')} data-no-i18n="" role="dialog" aria-modal="true" aria-live="polite" aria-label={done ? T.done : T.load}>
       <div className={'lp-card lp2' + (done ? ' lp-done' : '')} dir={to === 'ar' || to === 'fa' || to === 'ur' ? 'rtl' : 'ltr'} lang={to}>
         <span className="lp2-ic" aria-hidden="true">
-          <span className="lp2-bat">
+          <span className="lp2-bat" dir="ltr">
             <span className="lp2-cell">
               <i className="lp2-fill" style={{ ['--p' as string]: pct / 100 } as React.CSSProperties} />
               <svg className="lp2-bolt" viewBox="0 0 24 24" width="16" height="16"><path d="M13 2 4 14h7l-1 8 9-12h-7z" /></svg>

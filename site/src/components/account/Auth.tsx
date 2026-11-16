@@ -103,7 +103,7 @@ export default function Auth({ onDone }: { onDone: () => void }) {
           <a href="/staff">{T('Staff? Control Room log-in')}</a>
         </span>
       </form>
-      <div className="cr-door-help"><span>{T('Talk to a person:')}</span><a href="/contact#chat">{T('Chat on the website')}</a><span>·</span><a href={'https://wa.me/971503420015?text=' + encodeURIComponent('Hi, I need help with my account.')} target="_blank" rel="noopener noreferrer">WhatsApp</a><span>·</span><a href="/samsoom">{T('Ask Samsoom')}</a></div>
+      <div className="cr-door-help"><span>{T('Need help?')}</span><button type="button" className="cr-person" onClick={() => window.dispatchEvent(new CustomEvent('se:person'))}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21c1-4 4-6 8-6s7 2 8 6" /></svg>{T('Talk to a person')}</button></div>
       </div>
     </div>
   );

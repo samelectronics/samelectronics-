@@ -3,7 +3,7 @@
 // five, each in its own script. Picking one goes through the language pop-up like before (window.seI18n.set).
 // Styles in src/styles/dc-base.css (.se-lm).
 import React, { useEffect, useRef, useState } from 'react';
-import { LANGS, RANK, type Lang } from '@/i18n/lang';
+import { LANGS, RANK, langLabel, type Lang } from '@/i18n/lang';
 import { prefs, setPrefs, type Currency } from '@/lib/prefs';
 
 const CODE: Record<Lang, string> = { en: 'EN', ar: 'ع', es: 'ES', fr: 'FR', fa: 'فا', ru: 'RU', hi: 'हि', ur: 'اُر', tl: 'TL', ml: 'മ', ca: 'CA', de: 'DE', it: 'IT', pt: 'PT', ro: 'RO', zh: '中', gl: 'GL', eu: 'EU', sw: 'SW', am: 'አ', ha: 'HA', yo: 'YO', om: 'OM', ig: 'IG' };
@@ -46,7 +46,7 @@ export default function LangMenu({ up = false, dark = false }: { up?: boolean; d
               {ranked.map((l) => (
                 <button key={l.id} type="button" role="option" aria-selected={l.id === cur} className={l.id === cur ? 'on' : ''} lang={l.id} onClick={() => pick(l.id)}>
                   <b dir="auto">{l.name}</b>
-                  <small>{l.en}</small>
+                  <small lang={cur}>{langLabel(l.id, cur)}</small>
                 </button>
               ))}
             </span>
