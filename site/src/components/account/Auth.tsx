@@ -54,6 +54,19 @@ export default function Auth({ onDone }: { onDone: () => void }) {
     // R10 S2: one glass card on the teardown's stage, slow yellow lights, no Samsoom
     <div className="au au-door cr-door">
       <span className="cr-door-l a" aria-hidden="true" /><span className="cr-door-l b" aria-hidden="true" /><span className="cr-door-l c" aria-hidden="true" />
+      {/* owner (17 Nov): a professional two-panel door: what your bench gives you (graphite) and the form (white) */}
+      <div className="au-shell">
+      <aside className="au-side" aria-hidden="true">
+        <span className="au-side-k">{T('MY BENCH')}</span>
+        <b className="au-side-h">{mode === 'up' ? T('Your own bench at Sam Electronics.') : T('Welcome back to your bench.')}</b>
+        <ul className="au-side-l">
+          <li><i />{T('Track every order and repair, step by step')}</li>
+          <li><i />{T('Your devices, saved parts and lists')}</li>
+          <li><i />{T('Trade prices once your account is approved')}</li>
+          <li><i />{T('Points, cards and medals as you go')}</li>
+        </ul>
+        <span className="au-side-f">{T('QUALITY · WARRANTY · PRICE')}</span>
+      </aside>
       <div className="cr-door-card au-card">
       <span className="cr-brand"><img src="/assets/se-logo-128.webp" alt="" /><span><b>SAM ELECTRONICS</b><small>{mode === 'up' ? T('CREATE YOUR ACCOUNT') : T('MY BENCH · SIGN IN')}</small></span></span>
       {!live ? <span className="cr-note">{T('Demo mode: accounts are kept in this browser until the database is connected.')}</span> : null}
@@ -104,6 +117,7 @@ export default function Auth({ onDone }: { onDone: () => void }) {
         </span>
       </form>
       <div className="cr-door-help"><span>{T('Need help?')}</span><button type="button" className="cr-person" onClick={() => window.dispatchEvent(new CustomEvent('se:person'))}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21c1-4 4-6 8-6s7 2 8 6" /></svg>{T('Talk to a person')}</button></div>
+      </div>
       </div>
     </div>
   );
