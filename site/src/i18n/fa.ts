@@ -3007,5 +3007,17 @@ const DICT: Record<string, string> = {
   'Compare the grades': 'مقایسه درجه‌ها',
   'Get trade prices': 'دریافت قیمت عمده',
   'Out of stock': 'ناموجود',
+  '12 boxes · Deira': '۱۲ جعبه · دیره',
+  'All grades': 'همه درجه‌ها',
+  'Before they ship': 'پیش از ارسال',
+  'Ends Friday': 'تا جمعه',
+  'Follow us for daily stock drops.': 'ما را دنبال کنید برای موجودی‌های تازه روزانه.',
+  'Just landed: iPhone 15 Pro OLED screens': 'تازه رسید: صفحه OLED آیفون ۱۵ پرو',
+  'OFFER': 'پیشنهاد',
+  'Our latest posts': 'آخرین پست‌های ما',
+  'RESTOCK': 'موجودی جدید',
+  'STOCK DROP': 'موجودی تازه',
+  'THE FEED': 'فید',
+  'This week: −18% on back glass': 'این هفته: ۱۸٪ تخفیف شیشه پشت',
 };
 export default DICT;

@@ -3085,5 +3085,17 @@ const DICT: Record<string, string> = {
   'Get trade prices': 'Obtener precios mayoristas',
   'Out of stock': 'Agotado',
   'Added to cart': 'Añadido al carrito',
+  '12 boxes · Deira': '12 cajas · Deira',
+  'All grades': 'Todos los grados',
+  'Before they ship': 'Antes del envío',
+  'Ends Friday': 'Termina el viernes',
+  'Follow us for daily stock drops.': 'Síguenos para las novedades de cada día.',
+  'Just landed: iPhone 15 Pro OLED screens': 'Recién llegadas: pantallas OLED iPhone 15 Pro',
+  'OFFER': 'OFERTA',
+  'Our latest posts': 'Nuestras últimas publicaciones',
+  'RESTOCK': 'REPOSICIÓN',
+  'STOCK DROP': 'NOVEDAD',
+  'THE FEED': 'EL FEED',
+  'This week: −18% on back glass': 'Esta semana: −18 % en cristal trasero',
 };
 export default DICT;

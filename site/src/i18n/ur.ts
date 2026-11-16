@@ -3007,5 +3007,17 @@ const DICT: Record<string, string> = {
   'Compare the grades': 'گریڈز کا موازنہ',
   'Get trade prices': 'ہول سیل قیمتیں حاصل کریں',
   'Out of stock': 'اسٹاک ختم',
+  '12 boxes · Deira': '12 ڈبے · دیرہ',
+  'All grades': 'تمام گریڈز',
+  'Before they ship': 'بھیجنے سے پہلے',
+  'Ends Friday': 'جمعہ کو ختم',
+  'Follow us for daily stock drops.': 'روزانہ نئے اسٹاک کے لیے ہمیں فالو کریں۔',
+  'Just landed: iPhone 15 Pro OLED screens': 'ابھی آئی ہیں: iPhone 15 Pro OLED اسکرینز',
+  'OFFER': 'آفر',
+  'Our latest posts': 'ہماری تازہ پوسٹس',
+  'RESTOCK': 'دوبارہ دستیاب',
+  'STOCK DROP': 'نیا اسٹاک',
+  'THE FEED': 'فیڈ',
+  'This week: −18% on back glass': 'اس ہفتے: بیک گلاس پر −18%',
 };
 export default DICT;

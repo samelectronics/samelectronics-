@@ -8,7 +8,7 @@ import SEFinale from './SEFinale';
 import SEHomeDeals from './SEHomeDeals';
 // SEShowcase: kept for the Shop screens page
 import SEMeet from './SEMeet';
-import SEFeed from './SEFeed';
+import FeedWall from '../home/FeedWall';
 import SEReviews from './SEReviews';
 import SEVisit from './SEVisit';
 import SELiveBoard from './SELiveBoard';
@@ -43,7 +43,7 @@ export default function HomeRest({ v }: { v: Vals }) {
       <SETeam />
       <SEMeet />
       {/* owner (15 Nov): Who are you removed from Home (it repeated Membership and Wholesale) */}
-      <SEFeed />
+      <FeedWall />
       <SEVisit />
       <SEReviews />
       <SEFinale />

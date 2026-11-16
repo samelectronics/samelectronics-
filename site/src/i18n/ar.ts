@@ -1776,6 +1776,17 @@ export const R7: Record<string, string> = {
 
 /** Round 8: Sam Circuit's three cards, Samsoom's tour and chat menu. */
 export const R8: Record<string, string> = {
+  '12 boxes · Deira': '12 صندوقًا · ديرة',
+  'Before they ship': 'قبل الشحن',
+  'Ends Friday': 'ينتهي الجمعة',
+  'Follow us for daily stock drops.': 'تابعنا لوصول البضاعة يوميًا.',
+  'Just landed: iPhone 15 Pro OLED screens': 'وصلت للتو: شاشات OLED لآيفون 15 برو',
+  'OFFER': 'عرض',
+  'Our latest posts': 'أحدث منشوراتنا',
+  'RESTOCK': 'إعادة توفير',
+  'STOCK DROP': 'وصول جديد',
+  'THE FEED': 'الخلاصة',
+  'This week: −18% on back glass': 'هذا الأسبوع: −18٪ على الزجاج الخلفي',
   'In Deira.': 'في ديرة.',
   'In stock.': 'متوفر.',
   'Original, OLED, Incell, AAA': 'أصلي، OLED، Incell، AAA',
