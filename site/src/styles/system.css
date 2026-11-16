@@ -657,3 +657,16 @@ html.se-embed body { overflow-x: hidden; }
 .hi-real.on ~ .hs-tap, .hi-real.on ~ .hs-toast { display: none !important; }
 .hi-real.off iframe { display: none; }
 [data-off], [data-off] *, [data-off] *::before, [data-off] *::after { animation-play-state: paused !important; }
+/* iPad v3 (owner, 17 Nov): like a real iPad: the status bar floats over the app's own header (time and date on the left,
+   Wi-Fi and battery on the right, well inside the rounded corners), the shop lays out at iPad width. */
+.hi-real { top: 0 !important; }
+.hi-sb { position: absolute; left: 0; right: 0; top: 0; z-index: 3; display: flex; align-items: center; justify-content: space-between; padding: 0 26px 0 30px; color: #fff; pointer-events: none; }
+.hi-sb b { font: 600 8.5px Inter, sans-serif; letter-spacing: .01em; white-space: pre; }
+.hi-sb span { display: flex; align-items: center; gap: 4px; } .hi-sb svg { fill: #fff; } .hi-sb small { font: 600 8px Inter, sans-serif; }
+.hi-sb i { width: 17px; height: 8px; border-radius: 2.5px; background: #fff; box-shadow: 0 0 0 1px rgba(255,255,255,.5); position: relative; } .hi-sb i::after { content: ''; position: absolute; right: -2.5px; top: 2.5px; width: 1.5px; height: 3px; border-radius: 0 1px 1px 0; background: rgba(255,255,255,.6); }
+.hi-real .hi-rtap { z-index: 4; }
+.hi-real.on ~ .hi-status, .hero-shop.hi:has(.hi-real.on) .hi-status { visibility: hidden; }
+html.se-embed header[style*="position: fixed"] { padding-top: 52px; }
+html.se-embed body { padding-top: 52px; }
+html.se-embed .shop-dock { top: 124px !important; }
+.hi-sb { background: #2E3034; box-shadow: 0 1px 0 rgba(255,255,255,.04); }

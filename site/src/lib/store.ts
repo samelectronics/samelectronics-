@@ -1,4 +1,5 @@
 'use client';
+import { isEmbed } from './embed';
 // P1 · One store for everything a visitor keeps while browsing, shared by every page (home, shop, account…):
 // cart, favourites (stars), saved for later, compare, "My devices", stock alerts, recent searches and recently viewed.
 // Kept on this device (localStorage) for guests; when someone signs in and Supabase is connected, src/lib/backend syncs
@@ -24,7 +25,7 @@ function load() {
 }
 function emit() { subs.forEach((f) => f()); if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('se:store', { detail: state })); }
 // R9: recent searches and recently viewed parts are only kept on the device when the visitor allowed the Memory Chip
-function set(patch: Partial<State>) { load(); state = { ...state, ...patch }; try { const keep = allowed('memory') ? state : { ...state, recent: [], viewed: [] }; localStorage.setItem(KEY, JSON.stringify(keep)); } catch { /* full or blocked */ } emit(); }
+function set(patch: Partial<State>) { load(); state = { ...state, ...patch }; if (isEmbed()) { emit(); return; } /* the hero iPad's browsing never touches the visitor's own lists */ try { const keep = allowed('memory') ? state : { ...state, recent: [], viewed: [] }; localStorage.setItem(KEY, JSON.stringify(keep)); } catch { /* full or blocked */ } emit(); }
 export const get = (): State => { load(); return state; };
 export function useStore(): State {
   return useSyncExternalStore((f) => { subs.add(f); return () => subs.delete(f); }, get, () => EMPTY);

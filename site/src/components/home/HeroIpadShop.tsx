@@ -24,30 +24,54 @@ type Row = { k: number; a: Product; b: Product };
 /** Owner (16 Nov): "the iPad is not running the real shop". It now runs the REAL /shop page in a frame, scaled to the
  *  iPad screen, scrolling slowly by itself (pause, scroll, pause, back to the top). It loads only after the home page
  *  has finished loading and while the hero is on screen; until then the drawn shop below stands in for it. */
-const VW = 820;
+const VW = 834; // an iPad Air in portrait, so the shop lays out exactly as it does on a real iPad
+const SB = 52; // the iPad status bar (virtual px); the shop's own header sits just under it, like a real app
 function RealShop({ live, onReady }: { live: React.MutableRefObject<boolean>; onReady: () => void }) {
   const box = useRef<HTMLDivElement>(null), fr = useRef<HTMLIFrameElement>(null), [go, setGo] = useState(false), [ready, setReady] = useState(false), [sc, setSc] = useState(0.46), [h, setH] = useState(1100);
+  const [tap, setTap] = useState<{ x: number; y: number; n: number } | null>(null), [clock, setClock] = useState('');
   useEffect(() => {
     const start = () => { const w = window as unknown as { requestIdleCallback?: (f: () => void, o?: { timeout: number }) => number }; (w.requestIdleCallback || ((f: () => void) => window.setTimeout(f, 1200)))(() => setGo(true), { timeout: 4000 }); };
     if (document.readyState === 'complete') window.setTimeout(start, 1200); else window.addEventListener('load', () => window.setTimeout(start, 1200), { once: true });
+    const c = () => { const d = new Date(); setClock(d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Dubai' }) + '  ' + d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'Asia/Dubai' })); };
+    c(); const iv = window.setInterval(c, 15000); return () => window.clearInterval(iv);
   }, []);
+  useEffect(() => { const el = box.current; if (!el) return; const fit = () => { const k = el.offsetWidth / VW; setSc(k); setH(Math.ceil(el.offsetHeight / k)); }; fit(); const ro = new ResizeObserver(fit); ro.observe(el); return () => ro.disconnect(); }, []);
   // the frame sleeps (display: none, the browser stops drawing it) whenever the hero is off screen
   const [shown, setShown] = useState(true);
   useEffect(() => { const el = box.current?.closest('section') || box.current; if (!el) return; const io = new IntersectionObserver(([e]) => setShown(e.isIntersecting)); io.observe(el); return () => io.disconnect(); }, []);
-  useEffect(() => { const el = box.current; if (!el) return; const fit = () => { const k = el.offsetWidth / VW; setSc(k); setH(Math.ceil(el.offsetHeight / k)); }; fit(); const ro = new ResizeObserver(fit); ro.observe(el); return () => ro.disconnect(); }, []);
+  // a customer using it: a quick flick, a pause to look, sometimes open a part, read it, close it, carry on;
+  // after a while back to the top
   useEffect(() => {
-    if (!ready) return; let raf = 0, last = performance.now(), hold = 2200, y = 0, phase = 0;
-    const f = (t: number) => { const dt = Math.min(0.05, (t - last) / 1000); last = t; const w = fr.current?.contentWindow;
-      if (w && live.current && !document.hidden) {
-        if (hold > 0) hold -= dt * 1000;
-        else if (phase === 0) { y += 38 * dt; w.scrollTo(0, y); const max = Math.min(3200, (w.document.documentElement.scrollHeight || 0) - w.innerHeight); if (y >= max) { phase = 1; hold = 2600; } else if (Math.random() < dt * 0.25) hold = 1600; }
-        else { w.scrollTo({ top: 0, behavior: 'smooth' }); y = 0; phase = 0; hold = 3200; } }
-      raf = requestAnimationFrame(f); };
-    raf = requestAnimationFrame(f); return () => cancelAnimationFrame(raf);
-  }, [ready, live]);
+    if (!ready) return; let alive = true, n = 0; const tm: number[] = [];
+    const wait = (ms: number) => new Promise<void>((r) => tm.push(window.setTimeout(r, ms)));
+    const W = () => fr.current?.contentWindow || null, D = () => fr.current?.contentDocument || null;
+    const awake = async () => { while (alive && (!live.current || document.hidden)) await wait(800); };
+    const flick = async (dy: number) => { const w = W(); if (!w) return; const y0 = w.scrollY, t0 = performance.now(), dur = 520 + Math.abs(dy) * 0.35;
+      await new Promise<void>((res) => { const f = (t: number) => { const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3); w.scrollTo(0, y0 + dy * e); if (k < 1 && alive) requestAnimationFrame(f); else res(); }; requestAnimationFrame(f); }); };
+    const press = async (el: Element | null) => { if (!el) return false; const r = el.getBoundingClientRect(); setTap({ x: (r.left + r.width / 2) * sc, y: (r.top + r.height / 2) * sc, n: ++n }); await wait(320); (el as HTMLElement).click(); return true; };
+    const run = async () => {
+      await wait(1600);
+      while (alive) {
+        await awake(); const w = W(), d = D(); if (!w || !d) { await wait(1000); continue; }
+        const max = d.documentElement.scrollHeight - w.innerHeight;
+        if (w.scrollY > Math.min(max - 50, 5200)) { await wait(1400); w.scrollTo({ top: 0, behavior: 'smooth' }); await wait(2600); continue; }
+        await flick(260 + Math.random() * 360); await wait(1100 + Math.random() * 1600);
+        if (Math.random() < 0.42) { // open a part that is fully on screen
+          const cards = Array.from(d.querySelectorAll('.pc-img')).filter((c) => { const r = c.getBoundingClientRect(); return r.top > 140 && r.bottom < w.innerHeight - 60; });
+          if (cards.length && (await press(cards[Math.floor(Math.random() * cards.length)]))) {
+            await wait(2400); const pv = d.querySelector('.pv-veil'); if (pv) { for (let i = 0; i < 2; i++) { const t0 = pv.scrollTop; pv.scrollTo({ top: t0 + 280, behavior: 'smooth' }); await wait(1500); } await wait(900); await press(d.querySelector('.pv .sp-x')); await wait(900); }
+          }
+        }
+      }
+    };
+    run(); return () => { alive = false; tm.forEach(clearTimeout); };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ready, sc]);
   return (
     <div ref={box} className={'hi-real' + (ready ? ' on' : '') + (shown ? '' : ' off')} aria-hidden="true">
-      {go ? <iframe ref={fr} src="/shop" title="Sam Electronics shop" tabIndex={-1} loading="lazy" scrolling="no" onLoad={() => window.setTimeout(() => { setReady(true); onReady(); }, 900)} style={{ width: VW + 'px', height: h + 'px', transform: 'scale(' + sc + ')' }} /> : null}
+      {go ? <iframe ref={fr} src="/shop" title="Sam Electronics shop" tabIndex={-1} scrolling="no" onLoad={() => window.setTimeout(() => { setReady(true); onReady(); }, 900)} style={{ width: VW + 'px', height: h + 'px', transform: 'scale(' + sc + ')' }} /> : null}
+      <div className="hi-sb" style={{ height: SB * sc + 'px' }}><b>{clock}</b><span><svg width="13" height="9" viewBox="0 0 13 9"><path d="M6.5 8.6 4.5 6.4a2.8 2.8 0 0 1 4 0zM2.6 4.6a5.5 5.5 0 0 1 7.8 0l-1.2 1.2a3.8 3.8 0 0 0-5.4 0zM.6 2.6a8.3 8.3 0 0 1 11.8 0l-1.2 1.2a6.6 6.6 0 0 0-9.4 0z" /></svg><small>100%</small><i /></span></div>
+      {tap ? <span key={tap.n} className="hs-tap go hi-rtap" style={{ left: tap.x + 'px', top: tap.y + 'px' }} /> : null}
     </div>
   );
 }
