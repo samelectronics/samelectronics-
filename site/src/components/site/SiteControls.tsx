@@ -72,7 +72,7 @@ export default function SiteControls() {
     // R11b: every WhatsApp message a visitor starts from the website is also saved in the Control Room inbox (topic
     // "WhatsApp"), with the page it came from, so the team keeps each customer's requests and history in one place
     const waLog = (e: MouseEvent) => { const a = (e.target as Element | null)?.closest?.('a[href*="wa.me/"]') as HTMLAnchorElement | null; if (!a || location.pathname.startsWith('/staff')) return;
-      try { a.href = formatWaUrl(a.href); /* R12: neat, laid-out message */ const u = new URL(a.href), txt = u.searchParams.get('text') || ''; import('@/lib/backend').then(async ({ backend }) => { const me = await backend.me().catch(() => null); await backend.send({ name: me?.name || 'Website visitor', email: me?.email, topic: 'WhatsApp', text: (txt || '(opened WhatsApp)') + '\n\n— from ' + location.pathname + (me ? '' : ' · not signed in') }); }).catch(() => {}); } catch { /* */ } };
+      try { a.href = formatWaUrl(a.href); /* R12: neat, laid-out message; the contact sheet logs the tap to the inbox once */ } catch { /* */ } };
     document.addEventListener('click', waLog, true);
     // R12: messages opened from code (cart orders, forms) are laid out too, and the signed-in customer is named in them
     const W = window as unknown as { __seWaOpen?: boolean }; if (!W.__seWaOpen) { W.__seWaOpen = true; const op = window.open.bind(window); window.open = ((url?: string | URL, ...rest: unknown[]) => op(typeof url === 'string' && !location.pathname.startsWith('/staff') ? formatWaUrl(url) : url, ...(rest as [string?, string?]))) as typeof window.open; }

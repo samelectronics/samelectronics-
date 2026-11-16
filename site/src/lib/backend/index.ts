@@ -14,7 +14,12 @@ export const live = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_
 let sbP: Promise<Backend> | null = null;
 const sb = () => (sbP = sbP || import('./supabase').then((m) => m.supabase));
 const lazy = new Proxy({ mode: 'supabase' } as Backend, { get: (t, k) => (k === 'mode' ? 'supabase' : k === 'then' ? undefined : (...a: unknown[]) => sb().then((b) => (b as unknown as Record<string, (...x: unknown[]) => unknown>)[k as string](...a))) });
-export const backend: Backend = live ? lazy : local;
+const base: Backend = live ? lazy : local;
+// Owner: every action reaches staff with its full history. Remember what was just sent so the contact sheet doesn't
+// post the same WhatsApp text twice (a form sends its card, then opens WhatsApp with that same card).
+const sentRecently = new Map<string, number>();
+export const wasSent = (text: string) => { const t = sentRecently.get(text.trim()); return !!t && Date.now() - t < 10 * 60e3; };
+export const backend: Backend = new Proxy(base, { get: (t, k) => k === 'send' ? (i: Parameters<Backend['send']>[0]) => { sentRecently.set(i.text.trim(), Date.now()); return t.send(i); } : (t as unknown as Record<string | symbol, unknown>)[k] });
 export const staffToken = async (): Promise<string | null> => (live ? (await import('./supabase')).accessToken() : null);
 
 /** the signed-in customer (null = guest, undefined = still checking); refreshes when anyone signs in or out */

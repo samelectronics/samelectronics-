@@ -7,6 +7,15 @@ import React, { useEffect, useMemo, useState } from 'react';
 import qrcode from 'qrcode-generator';
 import { play } from '@/lib/sound';
 import { T as t } from '@/components/site/ui';
+import { backend, wasSent } from '@/lib/backend';
+
+// every tap on "Open WhatsApp" / "Open WeChat" also lands in the Control Room inbox with the page and the message,
+// unless a form already sent that same card. Visitors stay anonymous unless they signed in.
+const logTap = (mode: Mode, text: string) => {
+  if (wasSent(text)) return;
+  backend.me().then((u) => backend.send({ name: u?.name || 'Website visitor', email: u?.email || undefined, topic: (mode === 'wa' ? 'WhatsApp' : 'WeChat') + ' · ' + location.pathname,
+    text: '*' + (mode === 'wa' ? 'Opened WhatsApp' : 'Opened WeChat') + '*\n*Page:* ' + location.href + '\n\n' + text })).catch(() => { /* offline: WhatsApp still opens */ });
+};
 
 export const WECHAT = { number: '+971 50 342 0015', raw: '971503420015' };
 export const WHATSAPP = { number: '+971 50 342 0015', raw: '971503420015' };
@@ -58,8 +67,8 @@ export default function WeChatSheet() {
         </div>
         <div className="ct-acts">
           {mode === 'wa'
-            ? <a className="wc-btn go wa" href={waUrl} target="_blank" rel="noopener" onClick={() => window.setTimeout(() => setOpen(false), 300)}><i className="ct-ic wa" />{t('Open WhatsApp')}</a>
-            : <a className="wc-btn go" href="weixin://" onClick={copy}><i className="ct-ic wc" />{t('Open WeChat')}</a>}
+            ? <a className="wc-btn go wa" href={waUrl} target="_blank" rel="noopener" onClick={() => { logTap('wa', msg); window.setTimeout(() => setOpen(false), 300); }}><i className="ct-ic wa" />{t('Open WhatsApp')}</a>
+            : <a className="wc-btn go" href="weixin://" onClick={() => { logTap('wc', msg); copy(); }}><i className="ct-ic wc" />{t('Open WeChat')}</a>}
         </div>
       </div>
     </div>

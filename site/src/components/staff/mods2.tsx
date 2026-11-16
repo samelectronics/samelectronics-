@@ -198,6 +198,13 @@ export function Approvals({ me }: P) {
   );
 }
 
+// Owner: every action reaches staff with its full history, cleanly. Form messages arrive as WhatsApp-style cards
+// (*Label:* value lines); show them as a tidy card here: bold labels, one line each, phone numbers as WhatsApp links.
+const fmtMsg = (s: string) => s.split('\n').map((ln, i) => {
+  const parts = ln.split(/(\*[^*]+\*)/g).map((x, j) => x.startsWith('*') && x.endsWith('*') && x.length > 2 ? <b key={j}>{x.slice(1, -1)}</b> : <React.Fragment key={j}>{x}</React.Fragment>);
+  return ln.trim() ? <span key={i} className="cr-ln">{parts}</span> : <span key={i} className="cr-gap" />;
+});
+const phoneIn = (s: string) => { const m = s.match(/\+?\d[\d\s-]{7,}\d/); return m ? m[0].replace(/[^\d]/g, '') : ''; };
 // ── Inbox (live chat) ────────────────────────────────────────────────────────────────────────────────────────
 export function Inbox({ me }: P) {
   const [threads, setThreads] = useState<Thread[]>([]), [cur, setCur] = useState<string | null>(null), [msgs, setMsgs] = useState<Message[]>([]), [text, setText] = useState(''), box = useRef<HTMLDivElement>(null);
@@ -211,12 +218,12 @@ export function Inbox({ me }: P) {
   const sorted = useMemo(() => [...threads].sort((a, b) => (a.status === 'open' ? 0 : 1) - (b.status === 'open' ? 0 : 1) || b.at - a.at), [threads]);
   return (
     <div className="cr-inbox">
-      <div className="cr-threads">{sorted.length ? sorted.map((x) => <button key={x.id} type="button" className={(cur === x.id ? 'on ' : '') + x.status} onClick={() => setCur(x.id)}><span><b>{x.name}</b><small>{when(x.at)}</small></span><small>{x.topic}</small><em>{x.last}</em>{x.status === 'open' ? <i /> : null}</button>) : <small className="cr-muted" style={{ padding: 16 }}>No conversations yet. Messages from the website’s live chat, contact form and My Bench land here.</small>}</div>
+      <div className="cr-threads">{sorted.length ? sorted.map((x) => <button key={x.id} type="button" className={(cur === x.id ? 'on ' : '') + x.status} onClick={() => setCur(x.id)}><span><b>{x.name}</b><small>{when(x.at)}</small></span><small>{x.topic}</small><em>{(x.last || '').replace(/\*/g, '')}</em>{x.status === 'open' ? <i /> : null}</button>) : <small className="cr-muted" style={{ padding: 16 }}>No conversations yet. Messages from the website’s live chat, contact form and My Bench land here.</small>}</div>
       <div className="cr-conv">
         {t ? (
           <>
-            <header><b>{t.name}</b><small>{t.email || 'no e-mail'} · {t.topic}</small><Badge t={t.status === 'open' ? 'Waiting for us' : 'Answered'} tone={t.status === 'open' ? 'y' : 'g'} /></header>
-            <div className="cr-msgs" ref={box}>{msgs.map((m) => <div key={m.id} className={'cr-msg ' + m.from}><p>{m.text}</p><small>{m.name} · {when(m.at)}</small></div>)}</div>
+            <header><b>{t.name}</b><small>{t.email || 'no e-mail'} · {t.topic}</small><Badge t={t.status === 'open' ? 'Waiting for us' : 'Answered'} tone={t.status === 'open' ? 'y' : 'g'} />{(() => { const ph = phoneIn(msgs.map((m) => m.text).join('\n')); return ph ? <a className="cr-btn wa sm" href={'https://wa.me/' + ph} target="_blank" rel="noopener noreferrer">WhatsApp +{ph}</a> : null; })()}</header>
+            <div className="cr-msgs" ref={box}>{msgs.map((m) => <div key={m.id} className={'cr-msg ' + m.from}><p>{fmtMsg(m.text)}</p><small>{m.name} · {when(m.at)}</small></div>)}</div>
             <div className="cr-canned">{canned.map((c) => <button key={c} type="button" onClick={() => send(undefined, c)}>{c.slice(0, 48)}{c.length > 48 ? '…' : ''}</button>)}</div>
             <form className="cr-send" onSubmit={send}><input className="cr-in" value={text} onChange={(e) => setText(e.target.value)} placeholder={'Reply as ' + me.name + '…'} /><button type="submit" className="cr-btn y">Send</button></form>
           </>
