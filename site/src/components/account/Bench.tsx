@@ -12,9 +12,12 @@ import MemberCard, { LEVELS } from './MemberCard';
 import NotesPanel from './NotesPanel';
 import SoundSettings from '@/components/site/SoundSettings';
 import { Repairs, WarrantyCheck, TradeTools } from './BenchTools';
+import Medal from './Medal';
+import { MEDALS, LESSONS, got, unlock, startLesson } from '@/lib/achievements';
 
 const NAV: [string, string, string][] = [
   ['overview', 'Overview', 'M3 12l9-8 9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z'],
+  ['medals', 'Medals & training', 'M12 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12zM8.5 14l-1.5 8 5-3 5 3-1.5-8'],
   ['orders', 'Orders', 'M4 7h16l-1.5 12a2 2 0 0 1-2 1.8H7.5a2 2 0 0 1-2-1.8zM8 7a4 4 0 0 1 8 0'],
   ['saved', 'Cart, saved & stars', 'M12 2l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 16.8 6.1 20.1l1.3-6.6L2.5 8.9l6.6-.8z'],
   ['points', 'Points & card', 'M3 6h18v12H3zM3 10h18'],
@@ -37,6 +40,9 @@ export default function Bench({ me, refresh }: { me: User; refresh: () => void }
   useEffect(() => { const h = () => setSec((location.hash.slice(1) || 'overview')); h(); window.addEventListener('hashchange', h); return () => window.removeEventListener('hashchange', h); }, []);
   const load = () => { backend.myOrders().then(setOrders); backend.companies().then(setCos); backend.threads().then(setThreads); };
   useEffect(load, []);
+  // medals that come from the bench itself
+  useEffect(() => { unlock('first-visit'); if (me.avatar) unlock('avatar'); if (me.card) unlock('card'); }, [me.avatar, me.card]);
+  useEffect(() => { if (cos.length) unlock('company'); if (orders.length) unlock('order'); }, [cos.length, orders.length]);
   const go = (s: string) => { history.replaceState(null, '', '#' + s); setSec(s); window.scrollTo({ top: 0, behavior: 'smooth' }); };
   const first = me.name.split(' ')[0] || me.name;
   const spent = orders.reduce((a, o) => a + o.total, 0), pts = me.points || Math.round(spent);
@@ -44,10 +50,10 @@ export default function Bench({ me, refresh }: { me: User; refresh: () => void }
 
   return (
     <div className="bn-wrap sp-wrap">
-      <aside className="bn-nav">
+      <aside className="bn-nav" data-tour-step="1" data-tour-title="Everything in one column" data-tour-text="Orders, points, companies, devices, messages and settings. Tap any of them.">
         <div className="bn-me"><label className={'bn-av' + (me.avatar ? ' has' : '')} title={T('Change your photo')}>{me.avatar ? <img src={me.avatar} alt="" /> : (me.name || me.email).slice(0, 1).toUpperCase()}<i aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M4 8h3l2-3h6l2 3h3v11H4z" /><circle cx="12" cy="13" r="3.5" /></svg></i><input type="file" accept="image/*" hidden onChange={(e) => { const f = e.target.files?.[0]; if (!f) return; const img = new Image(); img.onload = async () => { const c = document.createElement('canvas'), k = 256, m = Math.min(img.width, img.height); c.width = c.height = k; c.getContext('2d')!.drawImage(img, (img.width - m) / 2, (img.height - m) / 2, m, m, 0, 0, k, k); await backend.updateMe({ avatar: c.toDataURL('image/jpeg', 0.85) }); URL.revokeObjectURL(img.src); refresh(); }; img.src = URL.createObjectURL(f); }} /></label><span><b>{me.name}</b><small>{me.email}</small>{me.tradeApproved ? <span className="sp-tag ok">{T('Trade approved')}</span> : me.kind === 'wholesale' ? <span className="sp-tag y">{T('Trade: pending')}</span> : null}</span></div>
         <nav>{NAV.map(([id, l, d]) => <button key={id} type="button" className={sec === id ? 'on' : ''} onClick={() => go(id)}><Ico d={d} /><span>{T(l)}</span>{id === 'orders' && orders.length ? <small>{orders.length}</small> : id === 'saved' && st.cart.length ? <small>{st.cart.length}</small> : id === 'messages' && threads.some((t) => t.status === 'waiting') ? <small className="dot" /> : null}</button>)}</nav>
-        <button type="button" className="bn-out" onClick={async () => { await backend.signOut(); refresh(); }}>{T('Sign out')}</button>
+        <button type="button" className="bn-out" data-tour-step="6" data-tour-title="Signing out" data-tour-text="Done for today? Sign out here; your bench waits for you." onClick={async () => { await backend.signOut(); refresh(); }}>{T('Sign out')}</button>
       </aside>
 
       <div className="bn-main" key={sec}>
@@ -57,18 +63,21 @@ export default function Bench({ me, refresh }: { me: User; refresh: () => void }
               <div><span className="sp-eb">{T('MY BENCH')}</span><h1 className="sp-h2">{T('Hello')}, {first}.</h1><p className="sp-p">{T('Everything you keep with us, in one place.')}</p></div>
               <span className="bn-hello-av">{me.avatar ? <img src={me.avatar} alt="" /> : (me.name || me.email).slice(0, 1).toUpperCase()}</span>
             </div>
-            <div className="bn-stats">
+            <div className="bn-stats" data-tour-step="2" data-tour-title="Your numbers" data-tour-text="Orders, cart, stars and points. Each one opens its page.">
               {([['Orders', orders.length, 'orders'], ['In your cart', st.cart.reduce((a, l) => a + l.qty, 0), 'saved'], ['Stars', st.favs.length, 'saved'], ['Points', pts, 'points']] as [string, number, string][]).map(([l, n, s]) => <button key={l} type="button" className="bn-stat" onClick={() => go(s)}><b>{n.toLocaleString('en-US')}</b><small>{T(l)}</small></button>)}
             </div>
             <div className="sp-grid sp-g2">
               <div className="sp-card"><div className="bn-ch"><h3 className="sp-h3">{T('Latest order')}</h3><button type="button" className="shop-clear" onClick={() => go('orders')}>{T('All orders')}</button></div>{orders[0] ? <OrderRow o={orders[0]} /> : <Empty t="No orders yet" a="Go to the shop" h="/shop" />}</div>
-              <div className="sp-card bn-cardbox">{me.card ? <MemberCard kind={me.card.kind} name={me.name} no={me.card.no} level={me.card.level} /> : <><h3 className="sp-h3">{T('Your membership card')}</h3><p className="sp-p">{T('Connect your Sam Circuit, Grid or Circle card to collect points and see your level here.')}</p><button type="button" className="sp-btn sm" onClick={() => go('points')}>{T('Connect a card')}</button></>}</div>
+              <div className="sp-card bn-cardbox" data-tour-step="4" data-tour-title="Your membership card" data-tour-text="Points and level live here. Connect a card if you have one.">{me.card ? <MemberCard kind={me.card.kind} name={me.name} no={me.card.no} level={me.card.level} /> : <><h3 className="sp-h3">{T('Your membership card')}</h3><p className="sp-p">{T('Connect your Sam Circuit, Grid or Circle card to collect points and see your level here.')}</p><button type="button" className="sp-btn sm" onClick={() => go('points')}>{T('Connect a card')}</button></>}</div>
             </div>
+            <MedalStrip go={() => go('medals')} />
             <TradeTools me={me} orders={orders} />
-            <div className="bn-quick">
+            <div className="bn-quick" data-tour-step="5" data-tour-title="Shortcuts" data-tour-text="Find a part, book a repair, ask me or message the team.">
               {([['Find My Part', () => window.dispatchEvent(new CustomEvent('se:fmp', { detail: {} }))], ['Book a repair', () => (location.href = '/repair')], ['Ask Samsoom', () => (location.href = '/samsoom')], ['Message the team', () => go('messages')], [me.tradeApproved ? 'Trade prices are on' : 'Apply for trade prices', () => (location.href = '/wholesale#apply')]] as [string, () => void][]).map(([l, f]) => <button key={l} type="button" className="sp-chip" onClick={f}>{T(l)}</button>)}
             </div>
           </>
+        ) : sec === 'medals' ? (
+          <Medals />
         ) : sec === 'orders' ? (
           <Sec t="Orders" d="Every order, with its status. We confirm stock and price on WhatsApp before you pay.">
             {orders.length ? orders.map((o) => <div key={o.id} className="sp-card"><OrderRow o={o} full /></div>) : <Empty t="No orders yet" a="Go to the shop" h="/shop" />}
@@ -108,6 +117,58 @@ export default function Bench({ me, refresh }: { me: User; refresh: () => void }
         )}
       </div>
     </div>
+  );
+}
+
+// Owner: achievements for exploring the site, medals in a cool but professional way, and Samsoom's training: he takes
+// you to the real page and walks you through it, and each lesson earns its medal.
+function useMedals() { const [g, setG] = useState<Record<string, number>>({}); useEffect(() => { setG(got()); const f = () => setG(got()); window.addEventListener('se:medal', f); return () => window.removeEventListener('se:medal', f); }, []); return g; }
+const TIER = (t: string) => (t === 'gold' ? 'Gold' : t === 'silver' ? 'Silver' : 'Bronze');
+function MedalStrip({ go }: { go: () => void }) {
+  const g = useMedals(), mine = MEDALS.filter((m) => g[m.id]).sort((a, b) => g[b.id] - g[a.id]);
+  return (
+    <button type="button" className="bn-mstrip" onClick={go} data-tour-step="3" data-tour-title="Your medals" data-tour-text="Explore and learn to earn them. Gold ones are rare!">
+      <span className="bn-mstrip-m">{mine.slice(0, 5).map((m) => <Medal key={m.id} tier={m.tier} size={34} />)}{!mine.length ? <Medal tier="bronze" on={false} size={34} /> : null}</span>
+      <span><b>{mine.length} / {MEDALS.length} {T('medals')}</b><small>{mine[0] ? T('Latest') + ': ' + T(mine[0].t) : T('Explore the site and finish Samsoom’s lessons to earn them.')}</small></span>
+      <i aria-hidden="true">→</i>
+    </button>
+  );
+}
+function Medals() {
+  const g = useMedals(), n = MEDALS.filter((m) => g[m.id]).length, pc = Math.round((n / MEDALS.length) * 100);
+  const cnt = (t: string) => MEDALS.filter((m) => m.tier === t && g[m.id]).length;
+  const GROUPS: [string, string][] = [['train', 'Samsoom’s training'], ['explore', 'Exploring'], ['shop', 'Shopping'], ['bench', 'Your bench']];
+  const when = (x: number) => new Date(x).toLocaleDateString([], { day: 'numeric', month: 'short' });
+  return (
+    <>
+      <div className="bn-md-top">
+        <span className="bn-md-ring" style={{ ['--p' as string]: pc } as React.CSSProperties}><span style={{ position: 'relative', textAlign: 'center' }}><b>{n}</b><small data-no-i18n="" dir="ltr">/ {MEDALS.length}</small></span></span>
+        <div>
+          <h2>{T('Medals & training')}</h2>
+          <p>{T('Explore the site, try its tools and let Samsoom show you around. Every step earns a medal.')}</p>
+          <div className="bn-md-tiers">{(['gold', 'silver', 'bronze'] as const).map((t) => <span key={t}><Medal tier={t} size={26} /><b>{cnt(t)}</b>{T(TIER(t))}</span>)}</div>
+        </div>
+      </div>
+      <div className="bn-md-g">
+        <h3>{T('Samsoom’s lessons')}</h3>
+        <div className="bn-tr">
+          {LESSONS.map((l) => { const ok = !!g['lesson-' + l.id]; return (
+            <div key={l.id} className={'bn-tr-it' + (ok ? ' done' : '')}>
+              <span className="bn-tr-sam"><LiveSam size={58} mood="idle" /></span>
+              <span><b>{T(l.t)}</b><p>{T(l.d)}</p><small>{l.min} · {ok ? <span className="bn-tr-ok">✓ {T('Medal earned')}</span> : T('Silver medal')}</small></span>
+              <button type="button" className={'sp-btn sm' + (ok ? ' dark' : '')} onClick={() => startLesson(l.id)}>{ok ? T('Show me again') : T('Show me live')} →</button>
+            </div>
+          ); })}
+        </div>
+      </div>
+      {GROUPS.map(([k, l]) => (
+        <div key={k} className="bn-md-g">
+          <h3>{T(l)}</h3>
+          <div className="bn-md-case">{MEDALS.filter((m) => m.group === k).map((m) => { const on = !!g[m.id]; const inner = <><Medal tier={m.tier} on={on} size={60} /><b>{T(m.t)}</b><small>{T(m.d)}</small><em>{on ? when(g[m.id]) : T(TIER(m.tier)) + ' · ' + T('locked')}</em></>;
+            return m.path && !on ? <a key={m.id} className="bn-md-it off" href={m.path}>{inner}</a> : <div key={m.id} className={'bn-md-it' + (on ? '' : ' off')}>{inner}</div>; })}</div>
+        </div>
+      ))}
+    </>
   );
 }
 

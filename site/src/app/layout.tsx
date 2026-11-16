@@ -20,6 +20,7 @@ import '@/styles/circuit.css';
 import '@/styles/meet.css';
 import '@/styles/feed.css';
 import '@/styles/feedwall.css';
+import '@/styles/medals.css';
 import '@/styles/visit.css';
 import '@/styles/finale.css';
 import '@/styles/fmp.css';

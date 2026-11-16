@@ -101,7 +101,7 @@ class Component extends DCLogic {
   gesture(dir) {
     const last = this.FS.length - 1, i = this.idx || 0;
     if (dir < 0 && i === 0) return this.release(-1);
-    if (dir > 0 && i === last) return this.release(1);
+    if (dir > 0 && i === last) { try { window.dispatchEvent(new CustomEvent('se:td-done')); } catch (e) { /* */ } return this.release(1); }
     return this.step(dir);
   }
   release(dir) {

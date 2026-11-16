@@ -89,6 +89,8 @@ export default function SamsoomTour() {
   const closeLang = () => { const m = document.querySelector('.se-lm.open .se-lm-btn') as HTMLElement | null; if (m) m.click(); };
   const bye = useCallback((ms = 2800) => { closeLang(); done(); hush(); tourStop(); setPhase('bye'); window.setTimeout(() => setPhase('off'), ms); }, []);
   const walk = () => { const s = buildSteps(); if (!s.length) return bye(); setSteps(s); setI(0); setPhase('walk'); tourStart(); };
+  // Bench → Medals & training: "Show me live" opens the real page with ?lesson=id; he walks it and the medal is earned
+  const lesson = React.useRef<string | null>(null);
 
   // re-render in the new language as soon as it is applied
   useEffect(() => { const on = () => force(); window.addEventListener('se:lang', on); return () => window.removeEventListener('se:lang', on); }, []);
@@ -96,6 +98,17 @@ export default function SamsoomTour() {
   // calls him back on any page.
   useEffect(() => {
     const help = () => { closeLang(); setPhase('recall'); };
+    const ls = new URLSearchParams(location.search).get('lesson');
+    if (ls) {
+      lesson.current = ls; done(); (window as unknown as { __seTourIdle?: boolean }).__seTourIdle = true;
+      try { history.replaceState(null, '', location.pathname + location.hash); } catch { /* */ }
+      let lt = 0; const li = window.setInterval(() => {
+        const busy = document.documentElement.classList.contains('se-boot') || document.querySelector('.se-bootv, .lp, .se-net-veil') || !document.querySelector('[data-tour="cart"]');
+        if (busy) { lt = 0; return; } if (!lt) lt = Date.now(); if (Date.now() - lt >= 700) { window.clearInterval(li); walk(); }
+      }, 250);
+      window.addEventListener('se:help', help);
+      return () => { window.clearInterval(li); window.removeEventListener('se:help', help); };
+    }
     window.addEventListener('se:help', help);
     (window as unknown as { seTour?: () => void }).seTour = () => setPhase('lang');
     let seen = true, chose = true; try { seen = !!localStorage.getItem('se-tour2'); chose = !!localStorage.getItem('se-lang'); } catch { /* blocked */ }
@@ -144,7 +157,7 @@ export default function SamsoomTour() {
     return () => cancelAnimationFrame(raf);
   }, [phase, i, steps]);
 
-  const next = () => { if (i >= steps.length - 1) { tourEnd(); setJump(true); window.setTimeout(() => bye(3200), 650); } else setI(i + 1); };
+  const next = () => { if (i >= steps.length - 1) { if (lesson.current) { const id = lesson.current; lesson.current = null; import('@/lib/achievements').then((a) => a.unlock('lesson-' + id)).catch(() => {}); } tourEnd(); setJump(true); window.setTimeout(() => bye(3200), 650); } else setI(i + 1); };
   // he talks on every step (and the tour builds a little); the bubble types along
   useEffect(() => { if (phase !== 'walk' || !steps[i]) return; tourStep(i, steps.length); const st = steps[i]; const stop = babble(T(st.t) + '. ' + T(st.d)); return () => stop(); }, [phase, i]);
   useEffect(() => { if (phase === 'hello') { const stop = babble(T('Welcome to Sam Electronics!') + ' ' + (cfg().greeting ? T(cfg().greeting!) : T('I’m Samsoom, your parts assistant. Want a quick walk around? It takes 20 seconds.'))); return () => stop(); } if (phase === 'recall') { const stop = babble(T('You called me?')); return () => stop(); } if (phase === 'store') { const stop = babble(T('Where are you shopping from today?') + ' ' + T('Our Deira store in Dubai is open now. Allo Madrid opens soon, and I can let you know the day it does.')); return () => stop(); } }, [phase]);

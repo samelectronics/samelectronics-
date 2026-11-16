@@ -12,6 +12,7 @@ import { backend, wasSent } from '@/lib/backend';
 // every tap on "Open WhatsApp" / "Open WeChat" also lands in the Control Room inbox with the page and the message,
 // unless a form already sent that same card. Visitors stay anonymous unless they signed in.
 const logTap = (mode: Mode, text: string) => {
+  import('@/lib/achievements').then((a) => a.unlock('contact')).catch(() => {});
   if (wasSent(text)) return;
   backend.me().then((u) => backend.send({ name: u?.name || 'Website visitor', email: u?.email || undefined, topic: (mode === 'wa' ? 'WhatsApp' : 'WeChat') + ' · ' + location.pathname,
     text: '*' + (mode === 'wa' ? 'Opened WhatsApp' : 'Opened WeChat') + '*\n*Page:* ' + location.href + '\n\n' + text })).catch(() => { /* offline: WhatsApp still opens */ });
