@@ -10,6 +10,7 @@ import { BootLog, PhotoWall, SloganDial, WhyDial, JobBoard } from './StoryBits';
 import SEStory from '@/components/dc/SEStory';
 import SETeam from '@/components/dc/SETeam';
 import { site } from '@/content/facts';
+import PrintedForm from '@/components/site/PrintedForm';
 import { WHATSAPP, openContact } from '@/components/site/WeChatSheet';
 
 const JOBS: [string, string, string, string][] = [
@@ -65,20 +66,22 @@ export default function StoryPage() {
       <section id="careers" className="sp-sec w stx-careers"><div className="sp-wrap">
         <div className="sp-head" data-rise><div><span className="sp-eb">{T('CAREERS')}</span><h2 className="sp-h2">{T('Work with us.')}</h2><p className="sp-p">{T('We hire people who like phones, people and getting things exactly right. Openings are samples until the owner publishes real ones.')}</p></div></div>
         <div data-rise><JobBoard jobs={JOBS} on={job} pick={(t) => { setJob(t); document.getElementById('apply-job')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }} /></div>
-        <div id="apply-job" className="rp-book" style={{ marginTop: 40 }}>
+        <div id="apply-job" className="stx-apply" style={{ marginTop: 40 }}>
           <div data-rise><span className="sp-eb">{T('APPLY')}</span><h3 className="sp-h2" style={{ fontSize: 30 }}>{job ? T(job) : T('Open application')}</h3><p className="sp-p">{T('Tell us about you. We read every application and reply to everyone.')}</p></div>
-          {sent ? <div className="sp-card"><b className="sp-h3">{T('Thank you!')}</b><p className="sp-p">{T('We received your application and will be in touch.')}</p></div> : (
-            <form className="sp-card rp-form wf2-console" onSubmit={apply} data-rise>
-              <span className="wf2-con-h" style={{ gridColumn: '1 / -1' }}><b>{T('APPLICATION')}</b><small className="mono">{job ? T(job) : T('Open application')}</small></span>
-              <label className="sp-field">{T('Full name')}<input required value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></label>
-              <label className="sp-field">{T('E-mail')}<input required type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} /></label>
-              <label className="sp-field">{T('Phone')}<input value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} /></label>
-              <label className="sp-field">{T('Link to your CV (Drive, Dropbox, LinkedIn)')}<input value={f.cv} onChange={(e) => setF({ ...f, cv: e.target.value })} /></label>
-              <label className="sp-field" style={{ gridColumn: '1 / -1' }}>{T('Why you?')}<textarea value={f.note} onChange={(e) => setF({ ...f, note: e.target.value })} /></label>
-              <small className="sp-muted" style={{ gridColumn: '1 / -1' }}>{T('CV upload opens when the database is connected; a link works today.')}</small>
-              <button type="submit" className="sp-btn dark" style={{ gridColumn: '1 / -1' }}>{T('Send application')}</button>
-            </form>
-          )}
+          <div data-rise><PrintedForm key={job} eb="APPLICATION" title="Tell us about you." doc="APPLICATION"
+            lines={[[T('ROLE'), job ? T(job) : T('Open application')]]}
+            fields={[
+              { k: 'name', label: 'Full name', req: true, slip: 'Name' },
+              { k: 'email', label: 'E-mail', kind: 'email', req: true, slip: 'E-mail' },
+              { k: 'phone', label: 'Phone', kind: 'tel', slip: 'Phone' },
+              { k: 'cv', label: 'Link to your CV (Drive, Dropbox, LinkedIn)', slip: 'CV' },
+              { k: 'note', label: 'Why you?', kind: 'area', slip: '' },
+            ]}
+            note={<small className="pf-note" style={{ color: '#9DA1A6' }}>{T('CV upload opens when the database is connected; a link works today.')}</small>}
+            cta="Send application"
+            send={(v) => backend.apply({ type: 'job', name: v.name, email: v.email, phone: v.phone, data: { job: job || 'Open application', cv: v.cv, note: v.note } }).then(() => undefined)}
+            done={() => <div className="sp-card"><b className="sp-h3">{T('Thank you!')}</b><p className="sp-p">{T('We received your application and will be in touch.')}</p></div>}
+          /></div>
         </div>
       </div></section>
     </>

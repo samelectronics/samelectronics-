@@ -24,7 +24,7 @@ class Component extends DCLogic {
     const sp = window.seParts, pk = sp && sp.peek && sp.peek(); if (pk) this.setState({ lib: pk });
     this.onLib = (e) => this.setState({ lib: e.detail }); window.addEventListener('se:parts-lib', this.onLib);
     this.t = 0; this.alive = true; let last = performance.now();
-    this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) this.setState({ seen: true, n: 1 }); }, { threshold: 0.3 });
+    this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) this.setState({ seen: true, n: 1 }); }, { threshold: [0, 0.08, 0.16, 0.25] });
     setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
     const loop = (now) => { if (!this.alive) return; const dt = Math.min(0.1, (now - last) / 1000); last = now;
       if (this.vis && this.state.seen && !document.hidden && !this.hov && this.hold == null) { this.t += dt; if (this.t >= DUR) this.go((this.state.i + 1) % LANES.length); }

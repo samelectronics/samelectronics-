@@ -32,7 +32,7 @@ class Component extends DCLogic {
     this.t = 0; this.alive = true; this.hov = false; let last = performance.now();
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 80);
     const sp = window.seParts, pk = sp && sp.peek && sp.peek(); if (pk) this.setState({ lib: pk }); this.onLib = (e) => this.setState({ lib: e.detail }); window.addEventListener('se:parts-lib', this.onLib);
-    this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) this.setState({ seen: true }); }, { threshold: 0.3 });
+    this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) this.setState({ seen: true }); }, { threshold: [0, 0.08, 0.16, 0.25] });
     setTimeout(() => { const S = this.secRef.current; if (S) this.io.observe(S.querySelector('.sc-pin') || S); }, 50); // 14 Oct §10: watch the held stage (the section is now several screens tall)
     const loop = (now) => { if (!this.alive) return; const dt = Math.min(0.1, (now - last) / 1000); last = now;
       if (this.vis && !document.hidden && this.ov == null) { this.t += dt; /* Urgent 4: hover no longer pauses */ if (this.t >= DUR(this.state.i)) { if (this.pinOn()) this.t = DUR(this.state.i) - 0.6; else this.next(1, true); } this.frame(); }

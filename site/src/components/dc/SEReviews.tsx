@@ -33,7 +33,7 @@ class Logic extends DCLogic {
   offRp?: () => void;
   componentDidMount() {
     this.offRp = onReplay(() => this.secRef.current, () => { cancelAnimationFrame(this.raf); this.setState({ seen: false }); }); // 14 Oct · H-G2
-    this.io = new IntersectionObserver(([e]) => { if (e.isIntersecting && !this.state.seen) { this.setState({ seen: true }); this.count(); } }, { threshold: 0.3 });
+    this.io = new IntersectionObserver(([e]) => { if (e.isIntersecting && !this.state.seen) { this.setState({ seen: true }); this.count(); } }, { threshold: [0, 0.08, 0.16, 0.25] });
     setTimeout(() => this.secRef.current && this.io && this.io.observe(this.secRef.current), 50);
   }
   componentWillUnmount() { this.offRp && this.offRp(); this.io && this.io.disconnect(); cancelAnimationFrame(this.raf); }

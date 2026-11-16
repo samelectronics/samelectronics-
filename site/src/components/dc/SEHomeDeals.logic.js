@@ -20,7 +20,7 @@ class Component extends DCLogic {
     this.offRp = onReplay(() => this.secRef.current, () => { this.setState({ seen: false }); }); // 14 Oct · H-G2: replay from the start
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 80);
     const sp = window.seParts, pk = sp && sp.peek && sp.peek(); if (pk) this.setState({ lib: pk }); this.onLib = (e) => this.setState({ lib: e.detail }); window.addEventListener('se:parts-lib', this.onLib);
-    this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) this.setState({ seen: true, seenAt: Date.now() }); }, { threshold: 0.2 });
+    this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) this.setState({ seen: true, seenAt: Date.now() }); }, { threshold: [0, 0.08, 0.16, 0.25] });
     setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
     this.iv = setInterval(() => { if (this.vis && !document.hidden) this.setState({ now: Date.now() }); }, 1000);
     // every 20–30s the spotlight stock drops by one; the pre-order queue ticks up now and then

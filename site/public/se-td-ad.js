@@ -171,13 +171,18 @@
     // owner (16 Nov): sharper, heavier, higher-quality light: each beam is a wide soft halo, a crisp bright core and a
     // thin white-hot line, travelling diagonally at slightly different speeds (like light through glass), blended into the
     // background (screen on dark/yellow, multiply on light) so it never looks like a flat bar
+    // owner (16 Nov, 2nd): the beams must be glowing lines of light, not flat linear bands. Each beam is now a thin bright
+    // line that fades out at both ends, with a real glow (blur) around it, drifting diagonally; same colours as before.
     const streaks = (l, th, ang) => { x.save(); x.translate(W / 2, H / 2); x.rotate(ang); const lightBg = th === 'light'; x.globalCompositeOperation = lightBg ? 'multiply' : 'screen';
       const base = lightBg ? '232,200,120' : th === 'yel' ? '255,250,232' : '255,214,120', hot = lightBg ? '214,150,20' : '255,255,255';
-      for (let k2 = 0; k2 < 3; k2++) { const sp = 1.05 + k2 * 0.12, off = (((l * sp + k2 * 0.27) % 1) - 0.5) * H * 2.4, wide = (26 + (k2 % 2) * 18) * u * 0.6, core = wide * 0.22, aH = (lightBg ? 0.07 : th === 'yel' ? 0.16 : 0.12) * (k2 % 2 ? 0.8 : 1);
-        const g = x.createLinearGradient(0, off - wide, 0, off + wide); g.addColorStop(0, 'rgba(' + base + ',0)'); g.addColorStop(0.5, 'rgba(' + base + ',' + aH + ')'); g.addColorStop(1, 'rgba(' + base + ',0)'); x.fillStyle = g; x.fillRect(-W * 1.3, off - wide, W * 2.6, wide * 2);
-        const c = x.createLinearGradient(0, off - core, 0, off + core); c.addColorStop(0, 'rgba(' + base + ',0)'); c.addColorStop(0.5, 'rgba(' + base + ',' + Math.min(0.45, aH * 2.2) + ')'); c.addColorStop(1, 'rgba(' + base + ',0)'); x.fillStyle = c; x.fillRect(-W * 1.3, off - core, W * 2.6, core * 2);
-        x.fillStyle = 'rgba(' + hot + ',' + (lightBg ? 0.12 : 0.18) + ')'; x.fillRect(-W * 1.3, off - 0.06 * u, W * 2.6, 0.12 * u); }
-      x.restore(); };
+      for (let k2 = 0; k2 < 3; k2++) { const sp = 1.05 + k2 * 0.12, off = (((l * sp + k2 * 0.27) % 1) - 0.5) * H * 2.4, len = W * (1.1 + (k2 % 2) * 0.5), x0 = -len / 2 + Math.sin(l * 2 + k2) * W * 0.15;
+        const a = (lightBg ? 0.35 : th === 'yel' ? 0.6 : 0.7) * (k2 % 2 ? 0.75 : 1);
+        const lg = x.createLinearGradient(x0, 0, x0 + len, 0); lg.addColorStop(0, 'rgba(' + base + ',0)'); lg.addColorStop(0.5, 'rgba(' + base + ',' + a + ')'); lg.addColorStop(1, 'rgba(' + base + ',0)');
+        x.shadowColor = 'rgba(' + base + ',' + Math.min(1, a + 0.2) + ')'; x.shadowBlur = (lightBg ? 6 : 14) * u * 0.5;
+        x.fillStyle = lg; x.fillRect(x0, off - 0.5 * u, len, 1 * u);
+        const hg = x.createLinearGradient(x0 + len * 0.2, 0, x0 + len * 0.8, 0); hg.addColorStop(0, 'rgba(' + hot + ',0)'); hg.addColorStop(0.5, 'rgba(' + hot + ',' + (lightBg ? 0.3 : 0.85) + ')'); hg.addColorStop(1, 'rgba(' + hot + ',0)');
+        x.shadowBlur = (lightBg ? 3 : 8) * u * 0.5; x.fillStyle = hg; x.fillRect(x0 + len * 0.2, off - 0.14 * u, len * 0.6, 0.28 * u); }
+      x.shadowBlur = 0; x.restore(); };
     const big = (str, size, col, X, Yy, al = 'center', stroke = false) => { x.font = '800 ' + size + 'px ' + F.sg; x.textAlign = al; x.textBaseline = 'middle'; if (stroke) { x.lineWidth = 0.45 * u; x.strokeStyle = col; x.strokeText(str, X, Yy); } else { x.fillStyle = col; x.fillText(str, X, Yy); } x.textBaseline = 'alphabetic'; };
     function slam(word, l, th, mode) {
       fill(th); streaks(l, th, mode === 'side' ? 0 : -0.5); const w2 = T(word), ink = inkOf(th), sz = Math.min(30 * u, (W * 1.5) / Math.max(3, w2.length));

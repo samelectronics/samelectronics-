@@ -25,7 +25,8 @@ class Component extends DCLogic {
     this.offRp = onReplay(() => this.secRef.current, () => { this.b.forEach((b) => { b.th = 0; b.w = 0; b.y = -720; b.vy = 0; b.dropAt = Infinity; b.landed = false; b.pth = null; }); this.t0 = null; this._g = null; this.setState({ seen: false, flip: -1 }); }); // 14 Oct · H-G2: replay from the start
     this.b = ROLES.map((_, i) => ({ th: 0, w: 0, y: -720, vy: 0, dropAt: Infinity, ph: i * 1.7 + 0.4, om: 2.3 + i * 0.17, amp: 9 + (i % 3) * 2.5 }));
     this.mx = null; this.alive = true; this.t = 0; let last = performance.now();
-    this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) this.start(); }, { threshold: 0.2 });
+    /* owner (16 Nov): the cards sometimes froze: a tall section never reached 20% visible, so it never woke up. Now any part on screen keeps it moving, and the drop starts once a quarter of the screen is the team. */
+    this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen && e.intersectionRect.height > innerHeight * 0.25) this.start(); }, { threshold: Array.from({ length: 11 }, (_, i) => i / 10) });
     setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
     const loop = (now) => { if (!this.alive) return; const dt = Math.min(0.033, (now - last) / 1000); last = now; if (this.vis && !document.hidden) { this.t += dt; this.step(dt); this.paint(); } this.raf = requestAnimationFrame(loop); };
     this.raf = requestAnimationFrame(loop);

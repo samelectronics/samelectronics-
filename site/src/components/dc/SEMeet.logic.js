@@ -27,7 +27,7 @@ class Component extends DCLogic {
     const sp = window.seParts, pk = sp && sp.peek && sp.peek(); if (pk) this.setState({ lib: pk });
     this.onLib = (e) => this.setState({ lib: e.detail }); window.addEventListener('se:parts-lib', this.onLib);
     this.alive = true; this.t = -1.2; let last = performance.now(); // the chat starts 1.2s after the arrival
-    this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) this.setState({ seen: true }); }, { threshold: 0.3 });
+    this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) this.setState({ seen: true }); }, { threshold: [0, 0.08, 0.16, 0.25] });
     setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
     const loop = (now) => { if (!this.alive) return; const dt = Math.min(0.1, (now - last) / 1000); last = now;
       if (this.vis && this.state.seen && !document.hidden && this.ov == null) { this.t += dt; if (this.t >= DUR) { this.t = 0; this.setState({ ci: (this.state.ci + 1) % CONVOS.length, now: Date.now() }); }

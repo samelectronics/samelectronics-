@@ -22,7 +22,7 @@ const data = () => (typeof window !== 'undefined' ? (window as unknown as { SE_D
 function useClock(ref: React.RefObject<HTMLElement | null>, period: number, draw: (t: number) => void) {
   useEffect(() => {
     const el = ref.current; if (!el) return; let raf = 0, vis = false, t0 = 0;
-    const io = new IntersectionObserver(([e]) => { vis = e.isIntersecting; }, { threshold: 0.2 }); io.observe(el);
+    const io = new IntersectionObserver(([e]) => { vis = e.isIntersecting; }, { threshold: [0, 0.08, 0.16, 0.25] }); io.observe(el);
     const loop = (now: number) => { raf = requestAnimationFrame(loop); if (!vis || document.hidden) { t0 = 0; return; } if (!t0) t0 = now; draw(((now - t0) / 1000) % period); };
     raf = requestAnimationFrame(loop);
     return () => { cancelAnimationFrame(raf); io.disconnect(); };

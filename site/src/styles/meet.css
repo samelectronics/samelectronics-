@@ -209,3 +209,9 @@ html[dir='rtl'] .mt-flyq { right: auto; left: 20px !important; }
 @media (max-width: 1100px) { .mt-right { padding-top: 80px; } .mt-right .mt-bot { width: 120px; inset-inline-end: 24px; } }
 @media (max-width: 700px) { .mt-left .mt-facts span { padding: 0 10px !important; } .mt-cta > * { flex: 1 1 100%; justify-content: center; } }
 .mt-right .mt-bot { inset-inline-end: 130px !important; } .mt-right .mt-glow { inset-inline-end: 70px !important; }
+/* owner (16 Nov): he was floating over the chat. Now he peeks over the top edge of the chat card from behind it,
+   steady, as if leaning on it: the card covers his lower body, nothing hangs in the air. */
+.mt-right { padding-top: 150px !important; }
+.mt-right .mt-bot { top: 14px !important; z-index: 1 !important; animation: none !important; }
+.mt-right .mt-chat { z-index: 2 !important; }
+@media (max-width: 1100px) { .mt-right { padding-top: 120px !important; } .mt-right .mt-bot { top: 10px !important; } }

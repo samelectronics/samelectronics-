@@ -12,7 +12,12 @@ type K = '' | 'note' | 'wa' | 'wc';
 const busy = () => !!document.querySelector('.st-veil, .st-walk, .st-menu, .wc-veil, [aria-modal="true"], .sc2-banner, .sc2-veil, .st-offer2') || document.hidden;
 const ss = (k: string, v?: string) => { try { if (v != null) sessionStorage.setItem(k, v); return sessionStorage.getItem(k); } catch { return null; } };
 
+// owner (16 Nov, again): no white note or sign next to Samsoom at all. WhatsApp / WeChat live in the contact sheet
+// (WhatsApp | WeChat switch), reached from every WhatsApp / WeChat button. This component now renders nothing.
 export default function LauncherNudge() {
+  return null;
+}
+export function LauncherNudgeOld() {
   const [k, setK] = useState<K>('');
   useEffect(() => {
     let hide = 0, later = 0, tries = 0;

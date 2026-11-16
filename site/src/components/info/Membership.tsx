@@ -70,7 +70,7 @@ function CardSection({ c, ci, name }: { c: (typeof CARDS)[number]; ci: number; n
   const n = c.levels.length, [lv, setLv] = React.useState(0), [hold, setHold] = React.useState(false), ref = React.useRef<HTMLDivElement>(null), seen = React.useRef(false);
   React.useEffect(() => {
     if (n < 2 || hold) return; let iv = 0; const el = ref.current; if (!el) return;
-    const io = new IntersectionObserver(([e]) => { window.clearInterval(iv); if (e.isIntersecting) { seen.current = true; iv = window.setInterval(() => setLv((v) => (v + 1) % n), 2600); } }, { threshold: 0.3 });
+    const io = new IntersectionObserver(([e]) => { window.clearInterval(iv); if (e.isIntersecting) { seen.current = true; iv = window.setInterval(() => setLv((v) => (v + 1) % n), 2600); } }, { threshold: [0, 0.08, 0.16, 0.25] });
     io.observe(el); return () => { io.disconnect(); window.clearInterval(iv); };
   }, [n, hold]);
   const tone = ci === 0 ? 'g' : ci === 1 ? 'y' : 'w', [l, r, perks] = c.levels[lv];

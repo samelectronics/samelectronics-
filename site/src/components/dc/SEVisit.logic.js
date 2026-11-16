@@ -34,7 +34,7 @@ class Component extends DCLogic {
   componentDidMount() {
     this.offRp = onReplay(() => this.secRef.current, () => { this.setState({ seen: false }); }); // 14 Oct · H-G2: replay from the start
     if (!this.state.data) this.dIv = setInterval(() => { if (window.SE_DATA) { clearInterval(this.dIv); this.setState({ data: window.SE_DATA }); } }, 80);
-    this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) this.setState({ seen: true }); }, { threshold: 0.2 });
+    this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen) this.setState({ seen: true }); }, { threshold: [0, 0.08, 0.16, 0.25] });
     setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
     this.iv = setInterval(() => { if (this.vis && !document.hidden && this.ovNow == null) this.setState({ now: Date.now() }); }, 1000);
     this.onLang = () => this.forceUpdate(); window.addEventListener('se:lang', this.onLang);
