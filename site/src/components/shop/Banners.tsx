@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { T } from '@/components/site/ui';
 import { siteRaw } from '@/lib/catalog';
 import ShopReel from './ShopReel';
+import TechBg from '@/components/site/TechBg';
 
 type Side = { k: string; t: string; d: string; cta: string; href: string; img: string; c: string; wide?: boolean };
 const SIDE: Side[][] = [
@@ -45,6 +46,7 @@ export default function Banners({ onDeals, onCat }: { onDeals: () => void; onCat
       <div className="ad-side">
         {[0, 1].map((slot) => { const set = SIDE[slot], a = set[(si + slot) % set.length]; return (
           <a key={slot + '-' + ((si + slot) % set.length)} className={'ad-tile ' + a.c} href={a.href} onPointerEnter={() => setPause(true)} onPointerLeave={() => setPause(false)}>
+            <TechBg tone={a.c === 'd' ? 'dark' : a.c === 'y' ? 'yellow' : 'light'} streaks={1} />
             <span className="clip-big" aria-hidden="true">{T(a.k)}</span><span className="clip-sweep" aria-hidden="true" />
             <span className="ad-k">{T(a.k)}</span><b>{T(a.t)}</b><small>{T(a.d)}</small>
             <span className="ad-go">{T(a.cta)}<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>

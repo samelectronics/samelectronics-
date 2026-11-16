@@ -724,3 +724,58 @@ html[dir="rtl"] .clip-pic { animation-name: clipWhipR, clipPush !important; }
 .ss-txt { flex: 1; min-width: 0; display: grid; gap: 1px; } .ss-txt b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .ss-txt small { margin: 0 !important; color: var(--g4); font-size: 12px; }
 .ss-it .ss-k { flex: none; font: 600 10.5px Inter, sans-serif; letter-spacing: .04em; text-transform: uppercase; background: transparent !important; color: #8C9096 !important; padding: 0; }
 @media (max-width: 700px) { .ss-n { display: none; } .ss-logo { width: 54px; height: 26px; } .ss-logo svg, .ss-logo img { max-width: 46px; max-height: 15px; } .ss-it .ss-k { display: none; } }
+/* Owner (16 Nov): techy live layers. TechBg canvases sit under the content of the side ads, the in-grid ads and the
+   page headers. In-grid ads are tall film cards now (text column + a product stage turning on a lit floor + ticker). */
+.tbg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; display: block; }
+.ad-tile > *:not(.tbg) { position: relative; z-index: 1; } .ad-tile > img { position: absolute; z-index: 1; } .ad-tile > .clip-big { position: absolute; z-index: 0; }
+.ad-tile.d { background: radial-gradient(120% 90% at 85% 80%, #44464B, #2A2C30 60%, #232529) !important; }
+.iad { display: grid !important; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr) !important; align-items: stretch !important; gap: 0 !important; min-height: 300px !important; padding: 0 !important; border-radius: 24px !important; }
+.iad-d { background: radial-gradient(120% 120% at 75% 60%, #45474C, #2C2E32 55%, #232529) !important; }
+.iad-y { background: radial-gradient(120% 120% at 75% 55%, #FFD978, #F7C032 55%, #EDB21C) !important; }
+.iad-w { background: radial-gradient(120% 120% at 75% 55%, #FFFFFF, #F3F4F5 60%, #ECEDEF) !important; }
+.iad::after { display: none !important; }
+.iad > .clip-big { z-index: 0; }
+.iad-col { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; padding: 44px 0 52px 40px; }
+html[dir='rtl'] .iad-col { padding: 44px 40px 52px 0; }
+.iad .iad-k { position: static !important; display: inline-flex; align-items: center; gap: 4px; font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .16em; opacity: .85; }
+.iad-type { display: inline-block; overflow: hidden; white-space: nowrap; border-inline-end: 2px solid currentColor; animation: iadType .9s steps(18) both, iadCaret .8s step-end 1s 4; max-width: 100%; }
+@keyframes iadType { from { max-width: 0; } to { max-width: 30ch; } } @keyframes iadCaret { 50% { border-color: transparent; } }
+.iad-h { display: block; font: 800 clamp(24px, 2.6vw, 36px)/1.08 'Space Grotesk', sans-serif; letter-spacing: -.01em; max-width: 18ch; }
+.iad-h span { display: inline-block; margin-inline-end: .26em; animation: iadWord .6s cubic-bezier(.2,.9,.3,1.15) both; }
+@keyframes iadWord { from { opacity: 0; transform: translateY(70%) rotateX(-50deg); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+.iad-d .iad-h span:last-child, .iad-w .iad-h span:last-child { color: #F7C032; }
+.iad-d .iad-h span:last-child { text-shadow: 0 0 24px rgba(247,192,50,.35); }
+.iad-w .iad-h span:last-child { color: #26282B; background: linear-gradient(transparent 62%, rgba(247,192,50,.55) 62%); }
+.iad .iad-sub { font: 400 14.5px/1.45 Inter, sans-serif; opacity: .8; max-width: 44ch; animation: clipRise .55s .35s both; }
+.iad-specs { display: flex; flex-wrap: wrap; gap: 8px; }
+.iad-specs i { font: 600 11.5px 'JetBrains Mono', monospace; font-style: normal; letter-spacing: .04em; padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,.08); box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); animation: clipRise .5s both; }
+.iad-y .iad-specs i { background: rgba(38,40,43,.08); box-shadow: inset 0 0 0 1px rgba(38,40,43,.18); } .iad-w .iad-specs i { background: #fff; box-shadow: inset 0 0 0 1px #E2E4E7; }
+.iad .iad-cta { height: 46px; padding: 0 20px; border-radius: 13px; font-size: 15px; margin-top: 4px; }
+.iad-stage { position: relative; z-index: 1; display: grid; place-items: center; perspective: 900px; min-height: 260px; }
+.iad-floor { position: absolute; left: 12%; right: 12%; bottom: 46px; height: 46px; border-radius: 50%; background: radial-gradient(closest-side, rgba(247,192,50,.45), rgba(247,192,50,0)); filter: blur(4px); }
+.iad-y .iad-floor { background: radial-gradient(closest-side, rgba(255,255,255,.7), rgba(255,255,255,0)); }
+.iad .iad-pic { position: relative; height: 210px !important; width: auto; object-fit: contain; filter: drop-shadow(0 22px 26px rgba(0,0,0,.35)) !important; animation: iadIn .9s cubic-bezier(.16,1,.3,1) both, iadTurn 7s ease-in-out .9s infinite !important; transform-style: preserve-3d; }
+.iad .iad-ref { position: absolute; bottom: -132px; height: 210px !important; width: auto; transform: scaleY(-1); opacity: .16; filter: blur(1px) !important; -webkit-mask: linear-gradient(to top, #000, transparent 45%); mask: linear-gradient(to top, #000, transparent 45%); animation: iadTurnR 7s ease-in-out .9s infinite !important; pointer-events: none; }
+@keyframes iadIn { from { opacity: 0; transform: translateY(30px) scale(.9) rotateY(-40deg); } to { opacity: 1; transform: none; } }
+@keyframes iadTurn { 0%, 100% { transform: translateY(0) rotateY(-14deg) rotateZ(-2deg); } 50% { transform: translateY(-10px) rotateY(14deg) rotateZ(2deg); } }
+@keyframes iadTurnR { 0%, 100% { transform: scaleY(-1) translateY(0) rotateY(-14deg); } 50% { transform: scaleY(-1) translateY(-10px) rotateY(14deg); } }
+.iad-tick { position: absolute; left: 0; right: 0; bottom: 0; height: 32px; z-index: 1; overflow: hidden; display: flex; align-items: center; border-top: 1px solid rgba(127,127,127,.18); background: rgba(0,0,0,.12); -webkit-mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.iad-y .iad-tick { background: rgba(38,40,43,.06); } .iad-w .iad-tick { background: rgba(38,40,43,.03); }
+.iad-tick > span { display: flex; gap: 34px; white-space: nowrap; animation: iadTick 22s linear infinite; padding-inline-start: 20px; }
+.iad-tick i { font: 600 11px 'JetBrains Mono', monospace; font-style: normal; letter-spacing: .12em; text-transform: uppercase; opacity: .7; display: inline-flex; align-items: center; gap: 34px; }
+.iad-tick i::after { content: '◆'; color: #F7C032; font-size: 8px; }
+.iad-y .iad-tick i::after { color: #26282B; }
+@keyframes iadTick { to { transform: translateX(-50%); } }
+.iad .iad-dots { bottom: 44px !important; left: 40px !important; z-index: 2; }
+html[dir='rtl'] .iad .iad-dots { left: auto !important; right: 40px !important; }
+.iad .iad-col { padding-bottom: 64px; }
+@media (max-width: 760px) {
+  .iad { grid-template-columns: 1fr !important; min-height: 0 !important; }
+  .iad-col { padding: 30px 22px 18px !important; order: 2; }
+  .iad-stage { order: 1; min-height: 190px; padding-top: 18px; }
+  .iad .iad-pic { height: 150px !important; display: block !important; } .iad .iad-ref { height: 150px !important; bottom: -100px; display: block !important; }
+  .iad-floor { bottom: 18px; }
+  .iad .iad-col { padding-bottom: 76px !important; }
+  .iad .iad-dots { bottom: 44px !important; left: 22px !important; }
+}
+@media (prefers-reduced-motion: reduce) { .iad-type, .iad-h span, .iad-specs i, .iad .iad-pic, .iad .iad-ref, .iad-tick > span { animation: none !important; } .iad-type { border: 0; } }

@@ -7,6 +7,15 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { T } from '@/components/site/ui';
 import { siteRaw } from '@/lib/catalog';
 import { allowed } from '@/lib/prefs';
+import TechBg from '@/components/site/TechBg';
+
+// Owner (16 Nov): the ads between products were too flat and empty. Each is now a taller film card that plays: the techy
+// live background, the kicker typing in, the headline rising word by word, spec chips, the product turning slowly on a
+// lit floor with its reflection, and a ticker running along the bottom.
+const SPECS: Record<string, string[]> = {
+  a1: ['6-month warranty', 'Bench tested', 'Original · OLED · Incell'], a2: ['Under an hour', 'From AED 25', 'Al Murar, Deira'],
+  a3: ['Both prices shown', 'One application', 'Invoiced to your company'], a4: ['Capacity checked', 'Genuine cells', 'Sample offer'], a5: ['Rear and front', 'Most models', 'Tested before shipping'],
+};
 
 export type Ad = { id: string; k: string; t: string; d: string; cta: string; href: string; img: string; tone: 'y' | 'd' | 'w'; cat?: string };
 export const ADS_DEFAULT: Ad[] = [
@@ -27,14 +36,22 @@ export default function InlineAd({ slot, lastCat }: { slot: number; lastCat?: st
   const [i, setI] = useState(0), [pause, setPause] = useState(false);
   useEffect(() => { if (pause || list.length < 2) return; const t = window.setTimeout(() => setI((n) => (n + 1) % list.length), 5500); return () => window.clearTimeout(t); }, [i, pause, list.length]);
   const a = list[i]; if (!a) return null;
+  const sp = SPECS[a.id] || [];
   return (
     <a className={'iad iad-' + a.tone} href={a.href} onPointerEnter={() => setPause(true)} onPointerLeave={() => setPause(false)} aria-label={T(a.t)}>
+      <TechBg tone={a.tone === 'd' ? 'dark' : a.tone === 'y' ? 'yellow' : 'light'} hud={'SE·AD ' + String(i + 1).padStart(2, '0') + '/' + String(list.length).padStart(2, '0')} />
       <span className="clip-big" key={'b' + a.id} aria-hidden="true">{T(a.k)}</span>
-      <span className="clip-sweep" key={'s' + a.id} aria-hidden="true" />
-      <span className="iad-k">{T(a.k)} <em>{T('Ad')}</em></span>
-      <span className="iad-txt" key={a.id}><b>{T(a.t)}</b><small>{T(a.d)}</small></span>
-      <img key={'i' + a.id} className="clip-pic" src={a.img} alt="" loading="lazy" />
-      <span className="iad-cta">{T(a.cta)} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>
+      <span className="iad-col" key={a.id}>
+        <span className="iad-k"><span className="iad-type">{T(a.k)}</span> <em>{T('Ad')}</em></span>
+        <b className="iad-h">{T(a.t).split(' ').map((w, k) => <span key={k} style={{ animationDelay: 0.15 + k * 0.07 + 's' }}>{w}</span>)}</b>
+        <small className="iad-sub">{T(a.d)}</small>
+        {sp.length ? <span className="iad-specs">{sp.map((x, k) => <i key={x} style={{ animationDelay: 0.5 + k * 0.1 + 's' }}>{T(x)}</i>)}</span> : null}
+        <span className="iad-cta">{T(a.cta)} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>
+      </span>
+      <span className="iad-stage" key={'i' + a.id} aria-hidden="true">
+        <span className="iad-floor" /><img className="iad-pic" src={a.img.replace('-480.', '-960.')} alt="" loading="lazy" /><img className="iad-ref" src={a.img} alt="" loading="lazy" />
+      </span>
+      {sp.length ? <span className="iad-tick" aria-hidden="true"><span>{[...sp, ...sp, ...sp, ...sp].map((x, k) => <i key={k}>{T(x)}</i>)}</span></span> : null}
       {list.length > 1 ? <span className="iad-dots" onClick={(e) => e.preventDefault()}>{list.map((x, k) => <button key={x.id} type="button" className={k === i ? 'on' : ''} onClick={() => setI(k)} aria-label={'Ad ' + (k + 1)}><i style={{ animationPlayState: pause ? 'paused' : 'running' }} /></button>)}</span> : null}
     </a>
   );

@@ -587,3 +587,19 @@ html[dir="rtl"] .ms2-track b { left: auto; right: calc(var(--p) * 100%); margin-
 .br-c { position: relative; overflow: hidden; transition: transform .25s, box-shadow .25s; }
 .br-c::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--bc, #26282B); opacity: .85; }
 .br-c:hover { transform: translateY(-3px); box-shadow: 0 18px 34px -20px var(--bc, rgba(0,0,0,.4)); }
+/* Owner (16 Nov): page headers play like a video: the title decodes into each next line, with a LIVE read-out. */
+.sp-cine .tbg { z-index: 1; opacity: .9; }
+.pt-h { min-height: 2.05em; } .pt-h .pt-a, .pt-h .pt-b { white-space: pre-wrap; }
+.pt-h .pt-b { text-shadow: 0 0 34px rgba(247,192,50,.35); }
+.pt-hud { display: flex; align-items: center; gap: 10px; margin-top: 14px; font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .16em; color: rgba(255,255,255,.62); }
+.pt-hud b { color: #fff; font-weight: 700; }
+.pt-dot { width: 7px; height: 7px; border-radius: 50%; background: #E85C4A; box-shadow: 0 0 10px #E85C4A; animation: ptBlink 1.2s steps(2) infinite; }
+@keyframes ptBlink { 50% { opacity: .25; } }
+.pt-bars { display: flex; gap: 5px; margin-inline-start: 4px; }
+.pt-bars i { width: 26px; height: 3px; border-radius: 2px; background: rgba(255,255,255,.2); overflow: hidden; position: relative; }
+.pt-bars i.done { background: rgba(255,255,255,.65); }
+.pt-bars i.on::after { content: ''; position: absolute; inset: 0; background: #F7C032; transform-origin: left; animation: ptBar var(--d) linear both; }
+html[dir='rtl'] .pt-bars i.on::after { transform-origin: right; }
+@keyframes ptBar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .pt-hud { display: none; } }
+.shop-cine .tbg { z-index: 1; opacity: .9; }

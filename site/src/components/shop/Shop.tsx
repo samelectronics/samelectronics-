@@ -1,4 +1,6 @@
 'use client';
+import PlayTitle, { HERO_MSGS } from '@/components/site/PlayTitle';
+import TechBg from '@/components/site/TechBg';
 // P2 · THE SHOP (owner: "professional, like Amazon, so detailed"). Built from the home's language: graphite header with
 // live circuits, the search like the hero, Find My Part, then categories, adverts, quick filters, a "Customize everything"
 // panel, the results (grid or list), compare, My devices, and the product view inside the shop (?p=ID).
@@ -98,14 +100,14 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
     <div className={'shop' + (mode === 'deals' ? ' is-deals' : '')}>
       {/* header: the hero's language — graphite, live circuits, the search, Samsoom ready to help */}
       <section className="shop-hd shop-cine" data-tone="dark">
-        <div className="cine-bg" aria-hidden="true"><i className="cine-wall" /><i className="cine-beam" /><span className="cine-bokeh">{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</span><i className="cine-floor" /><i className="cine-grain" /></div>
+        <div className="cine-bg" aria-hidden="true"><i className="cine-wall" /><i className="cine-beam" /><span className="cine-bokeh">{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</span><i className="cine-floor" /><i className="cine-grain" /><TechBg tone="dark" streaks={2} hud={mode === 'deals' ? 'SE·DEALS' : 'SE·PARTS'} /></div>
         <span className="cine-word" style={{ ['--n' as string]: (mode === 'deals' ? 'DEALS' : 'PARTS').length }} aria-hidden="true" data-no-i18n="">{mode === 'deals' ? 'DEALS' : 'PARTS'}</span>
         <div className="sp-wrap">
           <nav className="sp-crumb"><a href="/">{T('Home')}</a><i /><span>{mode === 'deals' ? T('Deals & arrivals') : T('Shop')}</span></nav>
           <div className="shop-hd-row">
             <div className="shop-hd-l">
               <span className="sp-eb">{mode === 'deals' ? T('DEALS · ARRIVALS · LIMITED OFFERS') : T('THE PARTS SHOP')}</span>
-              <h1 className="sp-h1">{mode === 'deals' ? <>{T('Deals that')} <em>{T('end soon.')}</em></> : <>{T('Every part.')} <em>{T('Every grade.')}</em></>}</h1>
+              <PlayTitle key={mode} lines={mode === 'deals' ? [['Deals that', 'end soon.'], ...(HERO_MSGS.deals || [])] : [['Every part.', 'Every grade.'], ...(HERO_MSGS.shop || [])]} />
             </div>
             <div className="shop-stats">
               <span><b><CountUp to={products().length} /></b><small>{T('parts')}</small></span>

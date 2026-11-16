@@ -6,7 +6,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { T } from '@/components/site/ui';
 
-const Y = '#F7C032', G = '#26282B', D = '#1C1D20';
+const Y = '#F7C032', G = '#26282B', D = '#222428', GR = '#34363B';
 const IMG: Record<string, string> = {
   scr: '/assets/pose/samsung-sp-960.webp', sp: '/assets/pose/apple-sp-960.webp', gx: '/assets/pose/apple-gx-960.webp', zy: '/assets/pose/apple-zy-960.webp',
   tmp: '/assets/pose/apple-temp-960.webp', bat: '/assets/pose/solo-bat-960.webp', board: '/assets/pose/solo-board-960.webp', cam: '/assets/pose/solo-cam-960.webp', logo: '/assets/se-logo-320.webp',
@@ -35,11 +35,25 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
     const u = () => (W < 640 ? W / 56 : Math.min(W, H * 2.6) / 100); // design unit (bigger on phones so text stays readable)
     const fill = (c1: string, c2?: string) => { if (c2) { const g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, c1); g.addColorStop(1, c2); x.fillStyle = g; } else x.fillStyle = c1; x.fillRect(0, 0, W, H); };
     const spot = (cx: number, cy: number, r: number, col: string) => { const g = x.createRadialGradient(cx, cy, 0, cx, cy, r); g.addColorStop(0, col); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(0, 0, W, H); };
-    // glowing light lines drifting diagonally (same family as the teardown ad)
-    const beams = (l: number, rgb: string, a = 0.6) => { x.save(); x.translate(W / 2, H / 2); x.rotate(-0.38); x.globalCompositeOperation = 'screen';
-      for (let k = 0; k < 3; k++) { const off = (((l * (0.9 + k * 0.15) + k * 0.33) % 1) - 0.5) * H * 2.2, len = W * (0.9 + (k % 2) * 0.5), x0 = -len / 2; const g = x.createLinearGradient(x0, 0, x0 + len, 0); g.addColorStop(0, 'rgba(' + rgb + ',0)'); g.addColorStop(0.5, 'rgba(' + rgb + ',' + a + ')'); g.addColorStop(1, 'rgba(' + rgb + ',0)');
-        x.shadowColor = 'rgba(' + rgb + ',.9)'; x.shadowBlur = 14; x.fillStyle = g; x.fillRect(x0, off - 1, len, 2); }
+    // glowing light streaks (owner: not flat straight lines): each is a soft wide glow, a thin hot core that tapers at
+    // both ends, and a bright head travelling along it; drawn additively so they light what they pass
+    const beams = (l: number, rgb: string, a = 0.6) => { x.save(); x.translate(W / 2, H / 2); x.rotate(-0.38); x.globalCompositeOperation = 'lighter';
+      for (let k = 0; k < 3; k++) { const off = (((l * (0.55 + k * 0.12) + k * 0.37) % 1) - 0.5) * H * 2, len = W * (1 + (k % 2) * 0.4), x0 = -len / 2, bend = H * 0.05 * (k % 2 ? 1 : -1);
+        const path = () => { x.beginPath(); x.moveTo(x0, off); x.quadraticCurveTo(0, off + bend, x0 + len, off); };
+        const grad = (al: number) => { const g = x.createLinearGradient(x0, 0, x0 + len, 0); g.addColorStop(0, 'rgba(' + rgb + ',0)'); g.addColorStop(0.35, 'rgba(' + rgb + ',' + al * 0.5 + ')'); g.addColorStop(0.55, 'rgba(' + rgb + ',' + al + ')'); g.addColorStop(1, 'rgba(' + rgb + ',0)'); return g; };
+        x.lineCap = 'round'; x.strokeStyle = grad(a * 0.12); x.lineWidth = 18; x.shadowColor = 'rgba(' + rgb + ',.6)'; x.shadowBlur = 36; path(); x.stroke();
+        x.strokeStyle = grad(a * 0.35); x.lineWidth = 6; x.shadowColor = 'rgba(' + rgb + ',.9)'; x.shadowBlur = 18; path(); x.stroke();
+        x.strokeStyle = grad(a); x.lineWidth = 1.4; x.shadowBlur = 8; path(); x.stroke();
+        const hp = ((l * 1.3 + k * 0.29) % 1), hx = x0 + len * hp, hy = off + bend * 2 * hp * (1 - hp) * 2; x.save(); x.translate(hx, hy); x.scale(5, 1); const hg = x.createRadialGradient(0, 0, 0, 0, 0, 12); hg.addColorStop(0, 'rgba(255,255,255,' + a * 0.85 + ')'); hg.addColorStop(0.3, 'rgba(' + rgb + ',' + a * 0.4 + ')'); hg.addColorStop(1, 'rgba(' + rgb + ',0)'); x.shadowBlur = 0; x.fillStyle = hg; x.fillRect(-12, -12, 24, 24); x.restore(); }
       x.shadowBlur = 0; x.restore(); };
+    // tech layer over every scene: a faint grid, corner brackets, a scan line and a little HUD read-out
+    const tech = (l: number, i: number, light = false) => { const ink = light ? '38,40,43' : '255,255,255'; x.save();
+      x.strokeStyle = 'rgba(' + ink + ',.045)'; x.lineWidth = 1; const gs = Math.max(28, W / 32); x.beginPath(); for (let gx = (l * gs * 0.6) % gs; gx < W; gx += gs) { x.moveTo(gx, 0); x.lineTo(gx, H); } for (let gy = 0; gy < H; gy += gs) { x.moveTo(0, gy); x.lineTo(W, gy); } x.stroke();
+      const sy = ((l * 1.4) % 1) * H; const sg = x.createLinearGradient(0, sy - 60, 0, sy); sg.addColorStop(0, 'rgba(247,192,50,0)'); sg.addColorStop(1, 'rgba(247,192,50,' + (light ? 0.05 : 0.035) + ')'); x.fillStyle = sg; x.fillRect(0, sy - 60, W, 60); x.fillStyle = 'rgba(247,192,50,' + (light ? 0.18 : 0.12) + ')'; x.fillRect(0, sy, W, 1);
+      x.strokeStyle = 'rgba(' + ink + ',.35)'; x.lineWidth = 1.5; const m = 14, c = 16; [[m, m + 22, 1, 1], [W - m, m + 22, -1, 1], [m, H - m, 1, -1], [W - m, H - m, -1, -1]].forEach(([cx, cy, sx, sy2]) => { x.beginPath(); x.moveTo(cx, cy + c * sy2); x.lineTo(cx, cy); x.lineTo(cx + c * sx, cy); x.stroke(); });
+      if (!narrow()) { x.font = "500 10px 'JetBrains Mono', monospace"; x.fillStyle = 'rgba(' + ink + ',.5)'; x.textAlign = 'right'; const tc = (START[i] + l * DUR[i]); x.fillText('SE·REEL  ' + String(i + 1).padStart(2, '0') + '/06  ' + '00:' + String(Math.floor(tc)).padStart(2, '0') + ':' + String(Math.floor((tc % 1) * 24)).padStart(2, '0'), W - 34, H - 22);
+        x.fillStyle = '#E85C4A'; x.globalAlpha = (Math.sin(l * 20) > 0 ? 1 : 0.25); x.beginPath(); x.arc(W - 34 - x.measureText('SE·REEL  00/06  00:00:00').width - 10, H - 25.5, 3.5, 0, 7); x.fill(); x.globalAlpha = 1; }
+      x.restore(); };
     const text = (s: string, X: number, Yy: number, f: string, col: string, al: CanvasTextAlign = 'left', alpha = 1) => { x.globalAlpha = alpha; x.font = f; x.fillStyle = col; x.textAlign = al; x.textBaseline = 'alphabetic'; x.fillText(s, X, Yy); x.globalAlpha = 1; };
     const pic = (k: string, cx: number, cy: number, h: number, rot = 0, a = 1, shadow = true) => { const i = im[k]; if (!ok(i)) return; const w = (h * i.naturalWidth) / i.naturalHeight; x.save(); x.globalAlpha = a; x.translate(cx, cy); x.rotate(rot);
       if (shadow) { x.shadowColor = 'rgba(0,0,0,.35)'; x.shadowBlur = 30; x.shadowOffsetY = 18; } x.drawImage(i, -w / 2, -h / 2, w, h); x.restore(); };
@@ -48,14 +62,14 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
 
     const scenes: ((l: number, k: number) => void)[] = [
       // 0 · open: the logo lands in a ring of light, the line tracks in
-      (l) => { fill('#2E3034', D); spot(W / 2, H * 0.45, H * 0.9, 'rgba(247,192,50,.18)'); beams(l * 0.4, '255,214,120', 0.35);
+      (l) => { fill('#383A3F', D); spot(W / 2, H * 0.45, H * 0.9, 'rgba(247,192,50,.18)'); beams(l * 0.4, '255,214,120', 0.35);
         const s = u(), cx = narrow() ? W / 2 : W * 0.3, cy = H * 0.5, R = Math.min(H * 0.3, 22 * s); x.save(); x.strokeStyle = Y; x.lineWidth = 3; x.shadowColor = Y; x.shadowBlur = 16; x.beginPath(); x.arc(cx, cy, R, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * eo(l * 1.6)); x.stroke(); x.restore();
         if (ok(im.logo)) { const k2 = back(l * 2 - 0.3), r2 = R * 0.86 * k2; x.save(); x.beginPath(); x.arc(cx, cy, Math.max(0.1, r2), 0, Math.PI * 2); x.clip(); x.fillStyle = '#fff'; x.fillRect(cx - r2, cy - r2, r2 * 2, r2 * 2); x.drawImage(im.logo, cx - r2, cy - r2, r2 * 2, r2 * 2); x.restore(); }
         if (!narrow()) { const a = eo((l - 0.35) * 2.2), xx = W * 0.5 + (1 - a) * 40; text(T('THE PARTS SHOP').toUpperCase(), xx, H * 0.4, '600 ' + Math.round(1.6 * s) + "px 'JetBrains Mono', monospace", Y, 'left', a);
           text(T('Every part.'), xx, H * 0.4 + 7.5 * s, font(800, Math.round(6.6 * s)), '#fff', 'left', a); text(T('Every grade.'), xx, H * 0.4 + 15 * s, font(800, Math.round(6.6 * s)), Y, 'left', eo((l - 0.5) * 2.2)); }
         else { const a = eo((l - 0.35) * 2.2); text(T('Every part. Every grade.'), W / 2, H * 0.88, font(800, Math.round(4.2 * s)), '#fff', 'center', a); } },
       // 1 · SCREENS: the word slams, the screen whips in on a light floor, a price ticker counts
-      (l) => { fill('#151618'); const s = u(); beams(l, '255,214,120', 0.55); spot(W * 0.62, H * 0.62, H * 0.9, 'rgba(247,192,50,.12)');
+      (l) => { fill(GR, D); const s = u(); beams(l, '255,214,120', 0.55); spot(W * 0.62, H * 0.62, H * 0.9, 'rgba(247,192,50,.12)');
         const sh = l < 0.18 ? (1 - l / 0.18) * 6 : 0, dx = (Math.random() * 2 - 1) * sh; x.save(); x.translate(dx, 0);
         x.globalAlpha = 0.09; x.font = font(900, Math.round(H * 0.62)); x.fillStyle = '#fff'; x.textAlign = 'center'; x.fillText(T('SCREENS'), W / 2 - l * W * 0.25, H * 0.78); x.globalAlpha = 1;
         const k = back(l * 2.4), px = narrow() ? W * 0.68 : W * 0.66, py = narrow() ? H * 0.6 : H * 0.52; pic('scr', px + (1 - k) * W * 0.6, py, H * (narrow() ? 0.5 : 0.82) * (0.9 + 0.1 * k), -0.06 * (1 - k));
@@ -67,8 +81,8 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
       // 2 · four grades drop in one after another, each with its own pill
       (l) => { fill('#F7F5F0', '#E9E6DF'); const s = u(); const G4: [string, string, string, string][] = [['sp', 'ORIGINAL', '#26282B', '#F7C032'], ['gx', 'OLED SOFT', '#F7C032', '#26282B'], ['zy', 'INCELL', '#5B6B7A', '#fff'], ['tmp', 'AAA', '#C9CBCE', '#26282B']];
         text(T('One screen. Four grades.'), W / 2, H * 0.17, font(800, Math.round(4.6 * s)), G, 'center', eo(l * 3));
-        const n = narrow() ? 2 : 4; G4.slice(0, n).forEach(([k, lab, bg, ink], i) => { const st = 0.12 + i * 0.13, a = back((l - st) * 3), cx = W * ((i + 0.5) / n), cy = H * 0.48 - (1 - a) * H * 0.5;
-          if (a <= 0) return; pic(k, cx, cy, H * 0.5, 0, Math.min(1, a)); const pw = 15 * s, ph = 3.6 * s; x.fillStyle = bg; x.beginPath(); x.roundRect(cx - pw / 2, H * 0.78 - ph, pw, ph, ph / 2); x.fill(); text(lab, cx, H * 0.78 - ph * 0.32, '700 ' + Math.round(1.6 * s) + "px 'JetBrains Mono', monospace", ink, 'center', Math.min(1, a)); });
+        const n = narrow() ? 2 : 4; G4.slice(0, n).forEach(([k, lab, bg, ink], i) => { const st = 0.12 + i * 0.13, a = back((l - st) * 3), cx = narrow() ? W * ((i + 0.5) / n) : W * (0.3 + i * 0.19), cy = H * 0.48 - (1 - a) * H * 0.5;
+          if (a <= 0) return; pic(k, cx, cy - H * 0.05, H * 0.42, 0, Math.min(1, a)); const pw = 15 * s, ph = 3.6 * s, py = H * 0.71; x.fillStyle = bg; x.beginPath(); x.roundRect(cx - pw / 2, py - ph, pw, ph, ph / 2); x.fill(); text(lab, cx, py - ph * 0.32, '700 ' + Math.round(1.6 * s) + "px 'JetBrains Mono', monospace", ink, 'center', Math.min(1, a)); });
         flash(l, '#fff'); },
       // 3 · battery week: yellow, the battery spins in, a -15% stamp slams with a shake
       (l) => { fill('#F7C032', '#E8A912'); const s = u(); spot(W * 0.6, H * 0.5, H, 'rgba(255,255,255,.35)'); beams(l, '255,250,232', 0.7);
@@ -79,23 +93,23 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
           x.fillStyle = G; x.beginPath(); x.arc(0, 0, r, 0, Math.PI * 2); x.fill(); x.strokeStyle = '#fff'; x.lineWidth = 2; x.setLineDash([4, 3]); x.beginPath(); x.arc(0, 0, r * 0.84, 0, Math.PI * 2); x.stroke(); x.setLineDash([]);
           text('-15%', 0, r * 0.22, font(800, Math.round(4.6 * s)), Y, 'center'); x.restore(); if (st < 0.06) { x.globalAlpha = 0.25; x.fillStyle = '#fff'; x.fillRect(0, 0, W, H); x.globalAlpha = 1; } } },
       // 4 · trade prices: the retail price is struck through, the trade price counts in
-      (l) => { fill('#2E3034', D); const s = u(); beams(l, '255,214,120', 0.4); spot(W * 0.7, H * 0.5, H, 'rgba(247,192,50,.12)');
-        const cx = narrow() ? W * 0.5 : W * 0.7; pic('board', narrow() ? W * 0.72 : cx, (narrow() ? H * 0.72 : H * 0.55) - Math.sin(l * 3) * 6, H * (narrow() ? 0.3 : 0.7), 0.05, eo(l * 2.5));
+      (l) => { fill('#383A3F', D); const s = u(); beams(l, '255,214,120', 0.4); spot(W * 0.7, H * 0.5, H, 'rgba(247,192,50,.12)');
+        const cx = narrow() ? W * 0.5 : W * 0.72; pic('board', narrow() ? W * 0.72 : cx, (narrow() ? H * 0.72 : H * 0.55) - Math.sin(l * 3) * 6, H * (narrow() ? 0.3 : 0.7), 0.05, eo(l * 2.5));
         const tx = narrow() ? W * 0.06 : W * 0.08; text(T('FOR REPAIR SHOPS'), tx, H * 0.2, '600 ' + Math.round(1.6 * s) + "px 'JetBrains Mono', monospace", Y, 'left', eo(l * 3));
         text(T('Trade prices.'), tx, H * 0.2 + 7 * s, font(800, Math.round(6.2 * s)), '#fff', 'left', eo((l - 0.08) * 3));
         const a = eo((l - 0.3) * 3); text(T('Everyone') + '  AED 575', tx, H * 0.5, '500 ' + Math.round(2.4 * s) + 'px Inter, sans-serif', '#9DA1A6', 'left', a);
         if (l > 0.48) { x.font = '500 ' + Math.round(2.4 * s) + 'px Inter, sans-serif'; const w = x.measureText(T('Everyone') + '  AED 575').width * eo((l - 0.48) * 4); x.strokeStyle = '#E85C4A'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(tx, H * 0.5 - 0.8 * s); x.lineTo(tx + w, H * 0.5 - 0.8 * s); x.stroke(); }
         const b = eo((l - 0.55) * 3); text(T('Trade') + '  AED ' + Math.round(449 + (575 - 449) * (1 - b)), tx, H * 0.5 + 6.4 * s, font(800, Math.round(4.6 * s)), Y, 'left', b); },
       // 5 · in stock in Deira: the camera module drifts, the count runs, the button pulses
-      (l) => { fill('#151618'); const s = u(); beams(l, '255,214,120', 0.5); spot(W / 2, H * 0.55, H, 'rgba(247,192,50,.14)');
-        if (!narrow()) { pic('cam', W * 0.18, H * 0.55 + Math.sin(l * 4) * 6, H * 0.5, -0.2, eo(l * 2)); pic('scr', W * 0.82, H * 0.52 - Math.sin(l * 4) * 6, H * 0.62, 0.12, eo(l * 2)); }
+      (l) => { fill(GR, D); const s = u(); beams(l, '255,214,120', 0.5); spot(W / 2, H * 0.55, H, 'rgba(247,192,50,.14)');
+        if (!narrow()) { pic('cam', W * 0.16, H * 0.4 + Math.sin(l * 4) * 6, H * 0.42, -0.2, eo(l * 2)); pic('scr', W * 0.82, H * 0.52 - Math.sin(l * 4) * 6, H * 0.62, 0.12, eo(l * 2)); }
         text(T('In stock.'), W / 2, H * 0.4, font(800, Math.round(7 * s)), '#fff', 'center', eo(l * 3)); text(T('In Deira.'), W / 2, H * 0.4 + 7.4 * s, font(800, Math.round(7 * s)), Y, 'center', eo((l - 0.12) * 3));
         const n = Math.round(9000 * eo((l - 0.25) * 1.6)); text(n.toLocaleString('en-US') + '+ ' + T('parts on the shelf'), W / 2, H * 0.4 + 14 * s, '600 ' + Math.round(2.2 * s) + "px 'JetBrains Mono', monospace", '#C9CBCE', 'center', eo((l - 0.25) * 3)); flash(l); },
     ];
     const draw = (tt: number) => { const t = ((tt % TOTAL) + TOTAL) % TOTAL; let i = 0; while (i < DUR.length - 1 && t >= START[i] + DUR[i]) i++; const l = (t - START[i]) / DUR[i];
       x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, W, H);
       // a quick whip between scenes: the new one slides in over the last frames of the old
-      scenes[i](l, i);
+      scenes[i](l, i); tech(l, i, i === 2 || i === 3);
       if (i !== last) { last = i; setScene(i); } };
     if (reduced) { draw(START[2] + 1.6); return () => { ro.disconnect(); io.disconnect(); }; }
     const loop = (now: number) => { if (vis && !document.hidden && !paused) draw((now - t0) / 1000); else if (paused) t0 += 16; raf = requestAnimationFrame(loop); };
