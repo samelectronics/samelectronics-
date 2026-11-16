@@ -565,3 +565,13 @@ html:not([data-theme="dark"]) .se-qs-langs { scrollbar-color: #F7C032 #F2F3F4; }
 .ft-msg-b { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border: 0; border-radius: 10px; background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); color: #fff; font: 600 13px Inter, sans-serif; cursor: pointer; text-decoration: none; transition: box-shadow .2s, transform .2s; }
 .ft-msg-b:hover { transform: translateY(-1px); box-shadow: inset 0 0 0 1px rgba(255,255,255,.28); }
 .ft-msg-b.wa .ct-ic { color: #25D366; } .ft-msg-b.wc .ct-ic { color: #07C160; } .ft-msg-b .ct-ic { width: 17px; height: 17px; }
+.se-status-acts.two { display: grid !important; grid-template-columns: 1fr 1fr; gap: 8px; }
+.se-contact-dd { position: relative; } .se-status-pop .se-contact-dd summary { list-style: none; display: flex; align-items: center; justify-content: center; height: 34px; border-radius: 9px; background: #26282B; color: #fff; font: 600 13px Inter, sans-serif; cursor: pointer; } .se-contact-dd summary::-webkit-details-marker { display: none; }
+.se-contact-dd[open] summary { background: #F7C032; color: #26282B; }
+.se-cdd { display: grid; gap: 2px; margin-top: 6px; padding: 6px; border-radius: 12px; background: #FFFFFF; box-shadow: 0 0 0 1px #ECEDEF, 0 14px 30px -14px rgba(0,0,0,.3); }
+.se-status-pop .se-status-acts .se-cdd > * { display: flex !important; align-items: center; gap: 10px; height: 36px !important; padding: 0 10px !important; border: 0 !important; border-radius: 8px !important; background: transparent !important; color: #26282B !important; font: 500 13.5px Inter, sans-serif !important; text-decoration: none; cursor: pointer; text-align: start; }
+.se-status-pop .se-status-acts .se-cdd > *:hover { background: #F4F5F6 !important; }
+.se-cdd .ct-ic { width: 17px; height: 17px; } .se-cdd .ct-ic.wa { color: #25D366; } .se-cdd .ct-ic.wc { color: #07C160; }
+.cdd-ic { width: 17px; font-style: normal; text-align: center; color: #6E7378; }
+
+.se-status-pop .se-status-acts .se-cdd > * { justify-content: flex-start !important; }

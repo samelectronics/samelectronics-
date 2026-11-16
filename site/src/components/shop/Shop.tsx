@@ -1,5 +1,5 @@
 'use client';
-import PlayTitle, { HERO_MSGS } from '@/components/site/PlayTitle';
+import ShopHeroFilm from './ShopHeroFilm';
 import TechBg from '@/components/site/TechBg';
 // P2 · THE SHOP (owner: "professional, like Amazon, so detailed"). Built from the home's language: graphite header with
 // live circuits, the search like the hero, Find My Part, then categories, adverts, quick filters, a "Customize everything"
@@ -103,25 +103,15 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
 
   return (
     <div className={'shop' + (mode === 'deals' ? ' is-deals' : '')}>
-      {/* header: the hero's language — graphite, live circuits, the search, Samsoom ready to help */}
-      <section className="shop-hd shop-cine" data-tone="dark">
-        <div className="cine-bg" aria-hidden="true"><i className="cine-wall" /><i className="cine-beam" /><span className="cine-bokeh">{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</span><i className="cine-floor" /><i className="cine-grain" /><TechBg tone="dark" streaks={2} hud={mode === 'deals' ? 'SE·DEALS' : 'SE·PARTS'} /></div>
-        <span className="cine-word" style={{ ['--n' as string]: (mode === 'deals' ? 'DEALS' : 'PARTS').length }} aria-hidden="true" data-no-i18n="">{mode === 'deals' ? 'DEALS' : 'PARTS'}</span>
-        <div className="sp-wrap">
-          <nav className="sp-crumb"><a href="/">{T('Home')}</a><i /><span>{mode === 'deals' ? T('Deals & arrivals') : T('Shop')}</span></nav>
-          <div className="shop-hd-row">
-            <div className="shop-hd-l">
-              <span className="sp-eb">{mode === 'deals' ? T('DEALS · ARRIVALS · LIMITED OFFERS') : T('THE PARTS SHOP')}</span>
-              <PlayTitle key={mode} lines={mode === 'deals' ? [['Deals that', 'end soon.'], ...(HERO_MSGS.deals || [])] : [['Every part.', 'Every grade.'], ...(HERO_MSGS.shop || [])]} />
-            </div>
-            <div className="shop-stats">
-              <span><b><CountUp to={products().length} /></b><small>{T('parts')}</small></span>
-              <span><b><CountUp to={D.models.length} /></b><small>{T('models')}</small></span>
-              <span><b>{D.brands.length}</b><small>{T('brands')}</small></span>
-            </div>
-          </div>
-          <div className="shop-scan" ref={scanRef}><i className="shop-beam" aria-hidden="true" /><ShopSearch q={f.q} onQ={(q) => set({ q })} onFmp={openFmp} /></div>
-          {/* owner (latest): a smaller, professional search that follows smoothly (see .shop-dock) */}
+      {/* owner (16 Nov): landing on the shop is a commercial, like the teardown's final call: a widescreen film of every
+          part group; then a calm white band with the search, with room to breathe */}
+      <section className="shop-hd2" data-tone="dark">
+        <ShopHeroFilm stats={[products().length, D.models.length, D.brands.length]} onCat={(c) => { set({ cats: [c] }); document.querySelector('.shop-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }} onShop={() => document.querySelector('.shop-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
+      </section>
+      <section className="shop-sb" data-tone="light">
+        <div className="sp-wrap shop-sb-in">
+          <nav className="sp-crumb shop-sb-crumb"><a href="/">{T('Home')}</a><i /><span>{mode === 'deals' ? T('Deals & arrivals') : T('Shop')}</span></nav>
+          <div className="shop-scan" ref={scanRef}><ShopSearch q={f.q} onQ={(q) => set({ q })} onFmp={openFmp} count={res.length} /></div>
           <div className="shop-devs" data-tour-step="2" data-tour-title="My devices" data-tour-text="Add the phones you fix most. I will mark every part that fits them.">
             <span>{T('My devices')}:</span>
             {st.devices.map((d) => <button key={d.model_id} type="button" className={'sp-chip' + (f.models.includes(d.model_id) ? ' y' : '')} onClick={() => tog('models', d.model_id)}>{d.nick || d.name}<span className="x" onClick={(e) => { e.stopPropagation(); store.device(d); }}>×</span></button>)}
