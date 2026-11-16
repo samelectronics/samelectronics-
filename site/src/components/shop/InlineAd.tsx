@@ -39,8 +39,8 @@ function Visual({ a, live }: { a: Ad; live: boolean }) {
   switch (a.fx) {
     case 'film': return <Film live={live} />;
     case 'grades': return <span className="iad2-grades">{['apple-sp', 'apple-gx', 'apple-zy', 'apple-temp'].map((g, i) => <img key={g} src={'/assets/pose/' + g + '-480.webp'} alt="" style={{ ['--i' as string]: i } as React.CSSProperties} />)}</span>;
-    case 'fix': return <span className="iad2-fix"><img className="was" src="/assets/pose/rep-crack-480.webp" alt="" /><img className="now" src="/assets/pose/rep-fixed-480.webp" alt="" /><i className="scan" /></span>;
-    case 'ship': return <span className="iad2-ship"><svg className="route" viewBox="0 0 300 80" preserveAspectRatio="none" aria-hidden="true"><path d="M8 66 C 80 6, 200 6, 292 52" pathLength={1} /></svg><img className="box" src="/assets/pallet/single-600.webp" alt="" /><img className="pal" src="/assets/pallet/full-600.webp" alt="" /></span>;
+    case 'fix': return <span className="iad2-fix"><img className="was" src="/assets/ads/rep-crack.webp" alt="" /><img className="now" src="/assets/ads/rep-fixed.webp" alt="" /><i className="scan" /></span>;
+    case 'ship': return <span className="iad2-ship"><svg className="route" viewBox="0 0 300 80" preserveAspectRatio="none" aria-hidden="true"><path d="M8 66 C 80 6, 200 6, 292 52" pathLength={1} /></svg><img className="pal" src="/assets/pallet/full-600.webp" alt="" /></span>;
     case 'years': return <Years />;
     default: return <img className="iad2-pic" src={a.img} alt="" loading="lazy" />;
   }
@@ -48,7 +48,7 @@ function Visual({ a, live }: { a: Ad; live: boolean }) {
 function Years() {
   const end = new Date().getFullYear() - 2003, [y, setY] = useState(0);
   useEffect(() => { let v = 0; const id = window.setInterval(() => { v++; setY(v); if (v >= end) window.clearInterval(id); }, 55); return () => window.clearInterval(id); }, [end]);
-  return <span className="iad2-years" data-no-i18n=""><b>{y}+</b><small>{T('YEARS IN DEIRA')}</small></span>;
+  return <span className="iad2-years" data-no-i18n=""><b><i>’</i>03</b><small>{T('SINCE 2003')} · {y}+ {T('YEARS')}</small></span>;
 }
 
 export default function InlineAd({ slot, lastCat }: { slot: number; lastCat?: string }) {

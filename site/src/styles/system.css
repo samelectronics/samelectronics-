@@ -647,3 +647,12 @@ html[data-theme="dark"] .cc-w { background: rgba(255,255,255,.06); color: #fff; 
 .hi-stk { display: flex; align-items: center; gap: 4px; font: 500 6.5px Inter, sans-serif; color: #5C6066; } .hi-stk i { width: 5px; height: 5px; border-radius: 50%; background: #2BB673; }
 .hi-addb { display: flex; align-items: center; justify-content: center; gap: 4px; height: 20px; margin: auto 8px 0; border-radius: 6px; background: #F7C032; color: #26282B; font: 700 7.5px Inter, sans-serif; }
 .hi-card.press .hi-addb { background: #FFD566; }
+/* The site inside the hero iPad: only the page itself, no overlays (no banner, Samsoom, tour, toasts, pop-ups). */
+html.se-embed :is(.sc2-banner, .st-veil, .st-cine, .st-hello, .st-bub, .st-offer2, .se-netp, .md-toast, .lp, .cc-veil, .wc-veil, .ln-hold, .se-launch, [aria-label="Ask Samsoom"], .ln-wrap, .se-lnudge) { display: none !important; }
+html.se-embed { scrollbar-width: none; } html.se-embed::-webkit-scrollbar { display: none; }
+html.se-embed body { overflow-x: hidden; }
+.hi-real { position: absolute; left: 0; right: 0; top: 22px; bottom: 0; z-index: 7; overflow: hidden; opacity: 0; pointer-events: none; transition: opacity .8s ease; background: #F7F7F5; }
+.hi-real.on { opacity: 1; }
+.hi-real iframe { position: absolute; left: 0; top: 0; border: 0; transform-origin: 0 0; pointer-events: none; }
+.hi-real.on ~ .hs-tap, .hi-real.on ~ .hs-toast { display: none !important; }
+.hi-real.off iframe { display: none; }

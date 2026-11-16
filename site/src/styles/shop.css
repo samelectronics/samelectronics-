@@ -836,3 +836,21 @@ html[dir="rtl"] .clip-pic { animation-name: clipWhipR, clipPush !important; }
 .iad2-scene { padding-bottom: 40px; }
 .iad2-fix { transform: scale(1.35); transform-origin: 50% 60%; }
 .iad2-vis { margin-block: -22px -40px; }
+/* owner (16 Nov): the ads' text is always white and yellow (never graphite), whatever the page's link colours do */
+.iad2, .iad2:hover, .iad2:focus, .iad2:visited { color: #fff !important; }
+.iad2 .iad2-t, .iad2:hover .iad2-t { color: #fff !important; }
+.iad2 .iad2-d { color: #B9BCC0 !important; }
+/* pictures: one big, centred subject per ad */
+.iad2-fix { width: 150px; height: 300px; transform: none; }
+.iad2-fix img { object-fit: contain; }
+.iad2-fix .scan { top: 2%; bottom: 2%; }
+.iad2-ship .pal { position: absolute; left: 50%; right: auto; bottom: 0; height: 92%; transform: translateX(-50%); animation: iad2Rise .8s .3s cubic-bezier(.2,1.2,.4,1) both; }
+.iad2-ship .route { inset: 4% 0 auto; height: 40%; width: 100%; }
+.iad2-years b { position: relative; font: 800 128px/0.9 'Space Grotesk', sans-serif; letter-spacing: -.06em; color: transparent; -webkit-text-stroke: 2px #F7C032; text-shadow: none; filter: drop-shadow(0 0 18px rgba(247,192,50,.45)); }
+.iad2-years b i { font-style: normal; color: #F7C032; -webkit-text-stroke: 0; }
+.iad2-years small { margin-top: 4px; }
+@media (max-width: 900px) { .iad2-fix { height: 200px; width: 100px; } .iad2-years b { font-size: 96px; } }
+@media (min-width: 901px) { .iad2 { min-height: 214px; } .iad2-fix { height: 192px; width: 96px; } }
+.iad2-scene { padding-top: 20px; }
+.iad2-t { font-size: clamp(19px, 1.9vw, 26px); }
+@media (max-width: 900px) { .iad2-fix { height: 150px !important; width: 76px !important; } .iad2-vis { min-height: 150px; } }

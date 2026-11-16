@@ -21,11 +21,42 @@ const QUERIES = ['iPhone 13 screen', 'A54 battery', 'S23 back cover', 'Redmi Not
 const small = (u: string) => u.replace(/-480\.webp$/, '-240.webp');
 type Row = { k: number; a: Product; b: Product };
 
+/** Owner (16 Nov): "the iPad is not running the real shop". It now runs the REAL /shop page in a frame, scaled to the
+ *  iPad screen, scrolling slowly by itself (pause, scroll, pause, back to the top). It loads only after the home page
+ *  has finished loading and while the hero is on screen; until then the drawn shop below stands in for it. */
+const VW = 820;
+function RealShop({ live, onReady }: { live: React.MutableRefObject<boolean>; onReady: () => void }) {
+  const box = useRef<HTMLDivElement>(null), fr = useRef<HTMLIFrameElement>(null), [go, setGo] = useState(false), [ready, setReady] = useState(false), [sc, setSc] = useState(0.46), [h, setH] = useState(1100);
+  useEffect(() => {
+    const start = () => { const w = window as unknown as { requestIdleCallback?: (f: () => void, o?: { timeout: number }) => number }; (w.requestIdleCallback || ((f: () => void) => window.setTimeout(f, 1200)))(() => setGo(true), { timeout: 4000 }); };
+    if (document.readyState === 'complete') window.setTimeout(start, 1200); else window.addEventListener('load', () => window.setTimeout(start, 1200), { once: true });
+  }, []);
+  // the frame sleeps (display: none, the browser stops drawing it) whenever the hero is off screen
+  const [shown, setShown] = useState(true);
+  useEffect(() => { const el = box.current?.closest('section') || box.current; if (!el) return; const io = new IntersectionObserver(([e]) => setShown(e.isIntersecting)); io.observe(el); return () => io.disconnect(); }, []);
+  useEffect(() => { const el = box.current; if (!el) return; const fit = () => { const k = el.offsetWidth / VW; setSc(k); setH(Math.ceil(el.offsetHeight / k)); }; fit(); const ro = new ResizeObserver(fit); ro.observe(el); return () => ro.disconnect(); }, []);
+  useEffect(() => {
+    if (!ready) return; let raf = 0, last = performance.now(), hold = 2200, y = 0, phase = 0;
+    const f = (t: number) => { const dt = Math.min(0.05, (t - last) / 1000); last = t; const w = fr.current?.contentWindow;
+      if (w && live.current && !document.hidden) {
+        if (hold > 0) hold -= dt * 1000;
+        else if (phase === 0) { y += 38 * dt; w.scrollTo(0, y); const max = Math.min(3200, (w.document.documentElement.scrollHeight || 0) - w.innerHeight); if (y >= max) { phase = 1; hold = 2600; } else if (Math.random() < dt * 0.25) hold = 1600; }
+        else { w.scrollTo({ top: 0, behavior: 'smooth' }); y = 0; phase = 0; hold = 3200; } }
+      raf = requestAnimationFrame(f); };
+    raf = requestAnimationFrame(f); return () => cancelAnimationFrame(raf);
+  }, [ready, live]);
+  return (
+    <div ref={box} className={'hi-real' + (ready ? ' on' : '') + (shown ? '' : ' off')} aria-hidden="true">
+      {go ? <iframe ref={fr} src="/shop" title="Sam Electronics shop" tabIndex={-1} loading="lazy" scrolling="no" onLoad={() => window.setTimeout(() => { setReady(true); onReady(); }, 900)} style={{ width: VW + 'px', height: h + 'px', transform: 'scale(' + sc + ')' }} /> : null}
+    </div>
+  );
+}
+
 export default function HeroIpadShop() {
   const [time, setTime] = useState(''), [bat, setBat] = useState(86), [chg, setChg] = useState(false), [cart, setCart] = useState(2);
   const [rows, setRows] = useState<Row[]>([]), [chip, setChip] = useState(0), [q, setQ] = useState(''), [tap, setTap] = useState<{ x: number; y: number; n: number } | null>(null);
   const [head, setHead] = useState(true), headRef = useRef(true), [flash, setFlash] = useState(0), [open, setOpen] = useState<Product | null>(null), [added, setAdded] = useState(0), [press, setPress] = useState<string | null>(null);
-  const root = useRef<HTMLDivElement>(null), track = useRef<HTMLDivElement>(null), off = useRef(0), seq = useRef<Product[]>([]), pos = useRef(0), k = useRef(0), live = useRef(true), paused = useRef(false);
+  const mock = useRef(true), root = useRef<HTMLDivElement>(null), track = useRef<HTMLDivElement>(null), off = useRef(0), seq = useRef<Product[]>([]), pos = useRef(0), k = useRef(0), live = useRef(true), paused = useRef(false);
 
   // the status bar
   useEffect(() => {
@@ -67,6 +98,7 @@ export default function HeroIpadShop() {
     const at = (ms: number, fn: () => void) => tm.push(window.setTimeout(() => { if (alive) fn(); }, ms));
     const cycle = () => {
       if (!alive) return; n++;
+      if (!mock.current) return;
       if (!live.current || document.hidden) { at(2000, cycle); return; }
       if (n % 3 === 0) { // type a search, then clear it
         const s = QUERIES[(n / 3) % QUERIES.length | 0]; for (let i = 1; i <= s.length; i++) at(i * 70, () => setQ(s.slice(0, i))); at(s.length * 70 + 1600, () => setQ('')); at(s.length * 70 + 2600, cycle); return; }
@@ -151,6 +183,7 @@ export default function HeroIpadShop() {
           <span className={'hi-add' + (added ? ' go' : '')} key={'a' + added}>{T('Add to cart')}</span>
         </div>
       ) : null}
+      <RealShop live={live} onReady={() => { paused.current = true; mock.current = false; }} />
       {tap ? <span key={tap.n} className="hs-tap go" style={{ left: tap.x + 'px', top: tap.y + 'px' }} /> : null}
       <span key={'o' + added} className={'hs-toast' + (added ? ' go' : '')}><i>✓</i> {T('Added to cart')}</span>
     </div>

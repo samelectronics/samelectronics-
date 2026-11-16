@@ -1,4 +1,5 @@
 'use client';
+import { isEmbed } from '@/lib/embed';
 // R9 · the site's own sound effects, synthesized live with Web Audio (nothing to download): short, quiet, "tech" blips,
 // each kind of action with its own. Three packs (classic, soft, studio), a volume and an off switch in Settings; always
 // silent in the Control Room and when the visitor asked the system for reduced motion.
@@ -36,7 +37,7 @@ const PACK = { classic: { mul: 1, gain: 1, lp: 5200, echo: 0 }, soft: { mul: 0.7
 let ctx: AudioContext | null = null, last = 0;
 
 export function play(s: Snd, force = false) {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined' || isEmbed()) return;
   const p = prefs().sound;
   if (!force && (!p.on || p.vol <= 0)) return;
   if (location.pathname.startsWith('/staff')) return;

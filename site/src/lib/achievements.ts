@@ -1,4 +1,5 @@
 'use client';
+import { isEmbed } from '@/lib/embed';
 // Owner (orig. message): "inside your bench add achievements for exploring the website, medals in a cool way, and a part
 // of Samsoom that trains you: it takes you there for real and you earn achievements from those". Professional, not toys.
 // Medals are kept on this device (and travel with the account once the database stores them). Unlocking one fires
@@ -46,6 +47,7 @@ export const MEDALS: Medal[] = [
 const KEY = 'se-medals';
 export const got = (): Record<string, number> => { try { return JSON.parse(localStorage.getItem(KEY) || '{}'); } catch { return {}; } };
 export function unlock(id: string) {
+  if (isEmbed()) return;
   if (typeof window === 'undefined' || !MEDALS.some((m) => m.id === id)) return;
   const g = got(); if (g[id]) return;
   g[id] = Date.now();
