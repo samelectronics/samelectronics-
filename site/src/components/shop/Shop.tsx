@@ -18,6 +18,7 @@ import ProductView from './ProductView';
 import Customize, { type View } from './Customize';
 import Banners from './Banners';
 import InlineAd from './InlineAd';
+import ShopIntro from './ShopIntro';
 import DevicePicker from './DevicePicker';
 
 const LIST_KEYS = ['brands', 'models', 'cats', 'parts', 'grades', 'makers', 'qualities', 'warranty', 'device', 'colours'] as const;
@@ -103,6 +104,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
   return (
     <div className={'shop' + (mode === 'deals' ? ' is-deals' : '')}>
       {/* header: the hero's language — graphite, live circuits, the search, Samsoom ready to help */}
+      <ShopIntro />
       <section className="shop-hd shop-cine" data-tone="dark">
         <div className="cine-bg" aria-hidden="true"><i className="cine-wall" /><i className="cine-beam" /><span className="cine-bokeh">{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</span><i className="cine-floor" /><i className="cine-grain" /><HeroBack word={mode === 'deals' ? 'DEALS' : 'PARTS'} /></div>
         <span className="cine-word" style={{ ['--n' as string]: (mode === 'deals' ? 'DEALS' : 'PARTS').length }} aria-hidden="true" data-no-i18n="">{mode === 'deals' ? 'DEALS' : 'PARTS'}</span>

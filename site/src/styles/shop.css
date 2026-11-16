@@ -927,3 +927,19 @@ html[dir='rtl'] .iad2-brand .lg { transform: translateX(50%); }
 .iad2-brand .lg { top: 6px; }
 @media (max-width: 900px) { .iad2-brand { height: 170px; } .iad2-brand img { height: 130px !important; } }
 .iad2-brand .lg { width: max-content !important; display: inline-flex; }
+/* Shop intro (owner, 17 Nov) */
+.shi { position: fixed; inset: 0; z-index: 9500; display: grid; place-items: center; overflow: hidden; cursor: pointer; background: radial-gradient(60% 70% at 50% 55%, #3A3C40, #26282B 70%); animation: iad2Fade .2s both; }
+.shi.out { animation: shiOut .6s cubic-bezier(.7,0,.3,1) forwards; }
+@keyframes shiOut { to { clip-path: inset(0 0 100% 0); } }
+.shi-film { position: absolute; left: 50%; top: 50%; width: min(70vh, 640px); height: auto; transform: translate(-50%, -54%) scale(.92); filter: drop-shadow(0 30px 40px rgba(0,0,0,.5)); animation: shiZoom 2.4s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes shiZoom { 0% { transform: translate(-50%, -50%) scale(.7); opacity: 0; } 15% { opacity: 1; } 70% { transform: translate(-50%, -54%) scale(1); } 100% { transform: translate(-50%, -62%) scale(.86); opacity: .25; } }
+.shi-r { position: absolute; left: -20%; width: 140%; height: 3px; border-radius: 2px; background: linear-gradient(90deg, transparent, #FFE08A 50%, transparent); box-shadow: 0 0 24px 8px rgba(247,192,50,.35), 0 0 90px 30px rgba(247,192,50,.12); transform: rotate(-18deg); animation: shiRay 1.6s cubic-bezier(.4,0,.2,1) both; }
+.shi-r.a { top: 20%; animation-delay: .1s; } .shi-r.b { top: 55%; animation-delay: .45s; } .shi-r.c { top: 80%; animation-delay: .8s; height: 2px; }
+@keyframes shiRay { from { transform: translateX(-60%) rotate(-18deg); opacity: 0; } 30% { opacity: 1; } to { transform: translateX(60%) rotate(-18deg); opacity: 0; } }
+.shi-t { position: relative; z-index: 2; margin-top: 46vh; text-align: center; color: #fff; }
+.shi-k { display: block; font: 600 12px 'JetBrains Mono', monospace; letter-spacing: .3em; color: #F7C032; animation: iad2Fade .4s 1.1s both; }
+.shi-t b { display: block; margin-top: 8px; font: 800 clamp(40px, 6vw, 84px)/1 'Space Grotesk', sans-serif; letter-spacing: -.04em; }
+.shi-t b span { display: inline-block; margin-inline: .14em; animation: iad2Slam .55s cubic-bezier(.2,1.3,.4,1) both; animation-delay: 1.25s; } .shi-t b span.y { color: #F7C032; animation-delay: 1.5s; text-shadow: 0 0 40px rgba(247,192,50,.4); }
+.shi-skip { position: absolute; right: 24px; bottom: 22px; font: 600 12px 'JetBrains Mono', monospace; letter-spacing: .16em; color: rgba(255,255,255,.55); text-transform: uppercase; }
+html.se-intro body { overflow: hidden; }
+@media (max-width: 700px) { .shi-film { width: 92vw; } .shi-t { margin-top: 40vh; } }
