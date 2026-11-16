@@ -46,7 +46,8 @@ function blip(f: number, d: number, v: Voice, up: boolean) {
 let stopCur: (() => void) | null = null;
 // R11c: ONE clock for his voice and his typing, so they always start and finish together
 export const CPS = 30; // owner (15 Nov): typing not slow, not too fast; voice and typing share this clock
-export const charMs = (ch: string) => (/[.,;:!?…،؟。，]/.test(ch) ? 2000 / CPS : 1000 / CPS);
+// owner (16 Nov): a very short stop after a sentence or title ("Welcome!"), a tiny one after a comma; typing and voice share it
+export const charMs = (ch: string) => (/[.!?…؟。]/.test(ch) ? 6500 / CPS : /[,;:،，]/.test(ch) ? 2600 / CPS : 1000 / CPS);
 export const typeMs = (t: string) => Array.from(t || '').reduce((a, c) => a + charMs(c), 0);
 const speaking = (on: boolean) => { try { document.documentElement.toggleAttribute('data-sam-speaking', on); } catch { /* */ } };
 const mouth = (o: boolean) => { const r = document.documentElement; if (o) r.setAttribute('data-sam-mouth', 'o'); else r.removeAttribute('data-sam-mouth'); };

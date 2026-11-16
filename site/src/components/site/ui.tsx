@@ -1,5 +1,6 @@
 'use client';
-import { HeroTitle, HeroBack } from './HeroType';
+import { HeroBack } from './HeroType';
+import PosterHero from './PosterHero';
 // P1 · Small building blocks shared by every page: the page hero (a compact home hero), stars, the "rise in" effect,
 // translation of attribute text, and the add-to-cart flight.
 import React, { useEffect, useRef } from 'react';
@@ -14,7 +15,7 @@ const WORD: Record<string, [string, number]> = { shop: ['PARTS', 0], deals: ['DE
 export function PageHero({ eb, title, accent, sub, crumb, children }: { eb: string; title: string; accent?: string; sub?: string; crumb?: [string, string?][]; children?: React.ReactNode; right?: React.ReactNode; seed?: number }) {
   const key = typeof location !== 'undefined' ? location.pathname.split('/')[1] || 'home' : 'home', [word, v] = WORD[key] || [(eb.split(/[·&]/)[0] || '').trim().split(' ')[0], 0];
   return (
-    <section className="sp-hero sp-cine" data-tone="dark" data-v={v}>
+    <section className="sp-hero sp-cine sp-poster" data-tone="dark" data-v={v}>
       <div className="cine-bg" aria-hidden="true">
         <i className="cine-wall" /><i className="cine-beam" />
         <span className="cine-bokeh">{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} style={{ ['--k' as string]: k } as React.CSSProperties} />)}</span>
@@ -22,19 +23,11 @@ export function PageHero({ eb, title, accent, sub, crumb, children }: { eb: stri
         <HeroBack word={String(word)} />
       </div>
       <span className="cine-word" style={{ ['--n' as string]: String(word).length }} aria-hidden="true" data-no-i18n="">{word}</span>
-      <div className="sp-wrap sp-hero-in">
-        <div className="sp-hero-l">
-          {crumb ? (
-            <nav className="sp-crumb" aria-label="Breadcrumb">
-              <a href="/">Home</a>
-              {crumb.map(([l, h]) => (<React.Fragment key={l}><i />{h ? <a href={h}>{l}</a> : <span>{l}</span>}</React.Fragment>))}
-            </nav>
-          ) : null}
-          <span className="sp-eb">{eb}</span>
-          <HeroTitle a={title} b={accent} />
-          {sub ? <p className="sp-p">{sub}</p> : null}
+      <div className="sp-wrap sp-hero-in ph-wrap">
+        <PosterHero eb={eb} title={title} accent={accent} sub={sub} code={String(word).toUpperCase()}
+          crumb={crumb ? <nav className="sp-crumb" aria-label="Breadcrumb"><a href="/">Home</a>{crumb.map(([l, h]) => (<React.Fragment key={l}><i />{h ? <a href={h}>{l}</a> : <span>{l}</span>}</React.Fragment>))}</nav> : null}>
           {children}
-        </div>
+        </PosterHero>
       </div>
     </section>
   );
