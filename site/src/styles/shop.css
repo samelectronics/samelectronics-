@@ -604,3 +604,26 @@ body:has(.sp-modal, .sp-veil, [aria-modal='true']) .st-offer2 { opacity: 0; poin
 .shop-dock-f { gap: 6px; align-items: center; } .shop-dock-f em { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--y); color: var(--g8); font: 700 11px Inter, sans-serif; font-style: normal; display: inline-grid; place-items: center; }
 @media (max-width: 700px) { .shop-dock-f em { position: absolute; top: -5px; right: -5px; } }
 @media (max-width: 700px) { .deals-tabs .dt b, .deals-tabs .dt small { padding-inline-end: 38px; hyphens: auto; } }
+/* owner (16 Nov): the shop's own bar replaces the site bar while you shop (no double bar) */
+html[data-shop-dock] body header { transform: translateY(-100%); transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+body header { transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+.shop-dock { top: 0 !important; padding: 10px 0 !important; background: rgba(38,40,43,.94) !important; }
+.shop-dock-logo { display: flex; align-items: center; gap: 9px; flex: none; text-decoration: none; color: #fff; }
+.shop-dock-logo img { width: 36px; height: 36px; border-radius: 50%; box-shadow: 0 0 0 2px #F7C032; }
+.shop-dock-logo b { display: block; font: 700 12.5px 'Space Grotesk', sans-serif; letter-spacing: .14em; } .shop-dock-logo small { display: block; font: 500 10px 'JetBrains Mono', monospace; letter-spacing: .12em; color: #F7C032; }
+.shop-dock .ss { max-width: none !important; }
+.shop-dock-ic { display: flex; align-items: center; gap: 4px; flex: none; margin-inline-start: 4px; }
+.shop-dock-ic button { position: relative; display: grid; place-items: center; width: 40px; height: 40px; border: 0; border-radius: 10px; background: transparent; color: #E4E5E7; cursor: pointer; transition: color .2s; }
+.shop-dock-ic button:hover { color: #F7C032; } .shop-dock-ic button.mn { box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); }
+.shop-dock-ic em { position: absolute; top: 2px; right: 1px; min-width: 16px; height: 16px; padding: 0 4px; box-sizing: border-box; border-radius: 8px; background: #F7C032; color: #26282B; font: 700 10px/16px 'Space Grotesk', sans-serif; font-style: normal; }
+html[data-shop-dock] .st-offer2 { translate: 0 0 !important; }
+@media (max-width: 1100px) { .shop-dock-logo span { display: none; } }
+@media (max-width: 700px) { .shop-dock { top: 0 !important; } .shop-dock-ic button:not([aria-label]) { display: none; } .shop-dock-ic button:first-child { display: none; } }
+/* the commercial on a phone inside the shop banner */
+.sf-phone { position: absolute; z-index: 1; inset-inline-end: 7%; top: 50%; width: 170px; aspect-ratio: 540 / 1110; transform: translateY(-50%) rotate(-6deg); border-radius: 30px; padding: 7px; background: linear-gradient(145deg, #5A5D63, #2A2C2F 40%, #18191B); box-shadow: 0 0 0 1.5px #0B0C0D, 0 30px 60px -20px rgba(0,0,0,.7), 0 0 60px -10px rgba(247,192,50,.35); animation: adGlide .9s cubic-bezier(.16,1,.3,1) both; }
+.sf-phone canvas { display: block; width: 100%; height: 100%; border-radius: 24px; background: #1E1F21; }
+.sf-island { position: absolute; left: 50%; top: 13px; width: 52px; height: 14px; margin-left: -26px; border-radius: 8px; background: #050506; }
+.sf-glass { position: absolute; inset: 7px; border-radius: 24px; background: linear-gradient(115deg, rgba(255,255,255,.12), rgba(255,255,255,0) 35%); pointer-events: none; }
+.ad-main:has(.sf-phone) .ad-txt { max-width: 58%; }
+@media (max-width: 700px) { .sf-phone { width: 110px; inset-inline-end: 4%; border-radius: 22px; } .sf-phone canvas, .sf-glass { border-radius: 17px; } }
+.sf-phone { width: auto !important; height: calc(100% - 36px); top: 18px !important; transform: rotate(-5deg) !important; } .ad-main:has(.sf-phone) { min-height: 330px; }

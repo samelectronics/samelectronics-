@@ -199,10 +199,18 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
 
       <div className={'shop-dock' + (dock ? ' on' : '')} aria-hidden={!dock}>
         <div className="sp-wrap shop-dock-in">
+          {/* owner (16 Nov): once you scroll, the shop has its OWN bar (no double bar): logo, search, results and
+              filters, then account, cart and the menu (they use the site bar's own buttons) */}
+          <a className="shop-dock-logo" href="/" aria-label="Sam Electronics"><img src="/assets/se-logo-320.webp" alt="" /><span><b>SAM ELECTRONICS</b><small>{T('Parts shop')}</small></span></a>
           <ShopSearch compact q={f.q} onQ={(q) => { set({ q }); }} onFmp={openFmp} />
           <span className="shop-dock-n"><b>{fmt(res.length)}</b> {T('results')}</span>
           <button type="button" className="sp-chip shop-dock-f" onClick={() => setSide(true)} aria-label={T('Filters')}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4" /></svg><span className="t">{T('Filters')}</span>{chips.length ? <em>{chips.length}</em> : null}</button>
           <button type="button" className="sp-chip y" onClick={() => setCz(true)}>{T('Customize')}</button>
+          <span className="shop-dock-ic">
+            <button type="button" aria-label={T('My Bench')} onClick={() => (document.querySelector('header .se-nav-bench') as HTMLElement | null)?.click()}><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4" /><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" /></svg></button>
+            <button type="button" aria-label={T('Cart')} onClick={() => (document.querySelector('header [data-tour="cart"]') as HTMLElement | null)?.click()}><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 7h14l-1.2 12.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z" /><path d="M9 10V6a3 3 0 0 1 6 0v4" /></svg>{st.cart.length ? <em>{st.cart.reduce((a, l) => a + (l.qty || 1), 0)}</em> : null}</button>
+            <button type="button" aria-label={T('Menu')} className="mn" onClick={() => (document.querySelector('header [data-tour="menu"]') as HTMLElement | null)?.click()}><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M4 7h16M4 12h16M4 17h10" /></svg></button>
+          </span>
         </div>
       </div>
 
