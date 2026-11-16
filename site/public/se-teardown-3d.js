@@ -153,7 +153,7 @@ export async function mount(host, state) {
     aluDark: std({ color: 0x55595e, metalness: 1, roughness: 0.42 }),
     antenna: std({ color: 0x2a2b2e, roughness: 0.6 }),
     hole: std({ color: 0x0a0a0b, roughness: 0.85 }),
-    glass: phy({ color: 0x15191b, roughness: 0.02, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.0, envMapIntensity: 1.9, transparent: true, opacity: 0.2, depthWrite: false, side: THREE.DoubleSide }),
+    glass: phy({ color: 0x9aa3a8, roughness: 0.02, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.0, envMapIntensity: 1.9, transparent: true, opacity: 0.07, /* owner (16 Nov): the screen under it must look crystal clear, not grey */ depthWrite: false, side: THREE.DoubleSide }),
     glassEdge: phy({ color: 0xe4efec, roughness: 0.03, envMapIntensity: 3, transparent: true, opacity: 0.42, depthWrite: false, clearcoat: 1, clearcoatRoughness: 0 }),
     frit: std({ map: fritTex, transparent: true, roughness: 0.15, depthWrite: false }),
     screen: new THREE.MeshBasicMaterial({ map: scrTex, toneMapped: false }),

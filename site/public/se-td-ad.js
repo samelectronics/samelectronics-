@@ -172,11 +172,11 @@
     // thin white-hot line, travelling diagonally at slightly different speeds (like light through glass), blended into the
     // background (screen on dark/yellow, multiply on light) so it never looks like a flat bar
     const streaks = (l, th, ang) => { x.save(); x.translate(W / 2, H / 2); x.rotate(ang); const lightBg = th === 'light'; x.globalCompositeOperation = lightBg ? 'multiply' : 'screen';
-      const base = lightBg ? '247,192,50' : th === 'yel' ? '255,250,232' : '255,214,120', hot = lightBg ? '214,150,20' : '255,255,255';
-      for (let k2 = 0; k2 < 4; k2++) { const sp = 1.05 + k2 * 0.12, off = (((l * sp + k2 * 0.27) % 1) - 0.5) * H * 2.4, wide = (26 + (k2 % 2) * 18) * u * 0.6, core = wide * 0.22, aH = (lightBg ? 0.18 : th === 'yel' ? 0.22 : 0.12) * (k2 % 2 ? 0.8 : 1);
+      const base = lightBg ? '232,200,120' : th === 'yel' ? '255,250,232' : '255,214,120', hot = lightBg ? '214,150,20' : '255,255,255';
+      for (let k2 = 0; k2 < 3; k2++) { const sp = 1.05 + k2 * 0.12, off = (((l * sp + k2 * 0.27) % 1) - 0.5) * H * 2.4, wide = (26 + (k2 % 2) * 18) * u * 0.6, core = wide * 0.22, aH = (lightBg ? 0.07 : th === 'yel' ? 0.16 : 0.12) * (k2 % 2 ? 0.8 : 1);
         const g = x.createLinearGradient(0, off - wide, 0, off + wide); g.addColorStop(0, 'rgba(' + base + ',0)'); g.addColorStop(0.5, 'rgba(' + base + ',' + aH + ')'); g.addColorStop(1, 'rgba(' + base + ',0)'); x.fillStyle = g; x.fillRect(-W * 1.3, off - wide, W * 2.6, wide * 2);
-        const c = x.createLinearGradient(0, off - core, 0, off + core); c.addColorStop(0, 'rgba(' + base + ',0)'); c.addColorStop(0.5, 'rgba(' + base + ',' + Math.min(0.75, aH * 3.2) + ')'); c.addColorStop(1, 'rgba(' + base + ',0)'); x.fillStyle = c; x.fillRect(-W * 1.3, off - core, W * 2.6, core * 2);
-        x.fillStyle = 'rgba(' + hot + ',' + (lightBg ? 0.35 : 0.55) + ')'; x.fillRect(-W * 1.3, off - 0.12 * u, W * 2.6, 0.24 * u); }
+        const c = x.createLinearGradient(0, off - core, 0, off + core); c.addColorStop(0, 'rgba(' + base + ',0)'); c.addColorStop(0.5, 'rgba(' + base + ',' + Math.min(0.45, aH * 2.2) + ')'); c.addColorStop(1, 'rgba(' + base + ',0)'); x.fillStyle = c; x.fillRect(-W * 1.3, off - core, W * 2.6, core * 2);
+        x.fillStyle = 'rgba(' + hot + ',' + (lightBg ? 0.12 : 0.18) + ')'; x.fillRect(-W * 1.3, off - 0.06 * u, W * 2.6, 0.12 * u); }
       x.restore(); };
     const big = (str, size, col, X, Yy, al = 'center', stroke = false) => { x.font = '800 ' + size + 'px ' + F.sg; x.textAlign = al; x.textBaseline = 'middle'; if (stroke) { x.lineWidth = 0.45 * u; x.strokeStyle = col; x.strokeText(str, X, Yy); } else { x.fillStyle = col; x.fillText(str, X, Yy); } x.textBaseline = 'alphabetic'; };
     function slam(word, l, th, mode) {
@@ -243,7 +243,12 @@
       let dark = true;
       if (t < BT) { let acc2 = 0, bi = 0; while (bi < BEATS.length - 1 && t >= acc2 + BEATS[bi].d) { acc2 += BEATS[bi].d; bi++; } BEATS[bi].f(t - acc2); const th = [0, 3, 5, 8, 11].includes(bi) ? 'dark' : 'x'; dark = th === 'dark' || (bi === 9 && Math.floor((t - acc2) / 0.09) % 3 === 1); }
       else close(t - BT);
-      x.setTransform(1, 0, 0, 1, 0, 0); status(dark);
+      x.setTransform(1, 0, 0, 1, 0, 0);
+      // owner (16 Nov): crystal clear and shiny: a punchier colour pass, then a soft glass reflection drifting across
+      if ('filter' in x) { x.save(); x.filter = 'saturate(1.22) contrast(1.07) brightness(1.03)'; x.globalCompositeOperation = 'copy'; x.drawImage(cv, 0, 0); x.restore(); }
+      { const p = ((t * 0.12) % 1.6) - 0.3, gx = x.createLinearGradient(W * (p - 0.35), 0, W * (p + 0.35), H); gx.addColorStop(0, 'rgba(255,255,255,0)'); gx.addColorStop(0.47, 'rgba(255,255,255,0)'); gx.addColorStop(0.5, 'rgba(255,255,255,.07)'); gx.addColorStop(0.53, 'rgba(255,255,255,0)'); gx.addColorStop(1, 'rgba(255,255,255,0)');
+        x.save(); x.globalCompositeOperation = 'screen'; x.fillStyle = gx; x.fillRect(0, 0, W, H); x.restore(); }
+      status(dark);
     }
     return { draw, dur: BT + CLOSE, logoT: BT + 0.9, setLib: () => {} };
   }
