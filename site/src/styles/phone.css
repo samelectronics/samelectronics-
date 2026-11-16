@@ -335,3 +335,12 @@
 @media (max-width: 720px) { #top [data-hero-text] > div:last-child > a, #top [data-hero-text] > div:last-child > button { white-space: normal !important; line-height: 1.15 !important; min-height: 44px; height: auto !important; padding-block: 6px !important; } }
 /* owner (16 Nov): safe side spacing for the hero text on phone and tablet (never close to the edge) */
 @media (max-width: 720px) { html[dir] #top [data-hero-text] { left: 20px !important; width: calc(100vw - 40px) !important; } }
+/* Home round 2 · phone: Sam Circuit shows the picked card only (the other two would spill off the screen), after the text */
+@media (max-width: 700px) {
+  section.cx .cx-r { order: 0 !important; padding-top: 250px !important; }
+  section.cx .cx-r > .cx-card.back-l, section.cx .cx-r > .cx-card.back-r { display: none !important; }
+  section.cx .cx-r > .cx-card { width: min(92%, 330px) !important; margin-left: calc(min(92%, 330px) / -2); top: 12px; }
+  section.cx .cx-dock { top: 200px; width: 300px; margin-left: -150px; }
+  section.cx .cx-ladder li small { display: none; } section.cx .cx-ladder li b { font-size: 10.5px; }
+  .mt-right { padding-top: 64px !important; } .mt-right .mt-bot { width: 84px !important; inset-inline-end: 14px !important; } .mt-chat-h .ct { display: none; }
+}
