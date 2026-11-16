@@ -482,3 +482,35 @@ html[dir=rtl] .ck-sw[aria-checked=true] i { transform: translateX(-22px); }
 .ms-r { position: relative; }
 [class*="ms-ring"], [class*="ms-plat"], .ms-fan .ring, .ms-orbit { display: none !important; }
 @media (prefers-reduced-motion: reduce) { .mc-hologram, .mc-meter i.on { animation: none; } }
+
+/* ── Sam Circuit showroom (owner, 17 Nov) ── */
+.ms-show { position: relative; overflow: hidden; padding: clamp(70px, 8vw, 110px) 0; background: radial-gradient(60% 60% at 50% 75%, rgba(247,192,50,.16), rgba(247,192,50,0) 70%), linear-gradient(180deg, #2E3034, #26282B); color: #fff; }
+.ms-show .sp-eb { color: #F7C032; } .ms-show .sp-h2 { color: #fff; }
+.ms-show-h { text-align: center; margin-bottom: 44px; }
+.ms-show-g { --rx: 0deg; --ry: 0deg; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(20px, 3vw, 44px); perspective: 1400px; }
+.ms-show-c { position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; text-decoration: none; color: inherit; text-align: center; }
+.ms-show-card { position: relative; display: block; width: 100%; max-width: 360px; transform: rotateX(var(--rx)) rotateY(var(--ry)) translateY(0); transform-style: preserve-3d; transition: transform .35s cubic-bezier(.2,.8,.2,1); animation: msFloat 6s ease-in-out infinite; animation-delay: calc(var(--i) * -2s); border-radius: 18px; }
+@keyframes msFloat { 50% { translate: 0 -10px; } }
+.ms-show-c:hover .ms-show-card { transform: rotateX(var(--rx)) rotateY(var(--ry)) translateY(-10px) scale(1.03); }
+.ms-show-glare { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: radial-gradient(40% 60% at var(--mx, 50%) 20%, rgba(255,255,255,.28), rgba(255,255,255,0) 60%); mix-blend-mode: soft-light; }
+.ms-show-floor { width: 70%; height: 26px; margin-top: 10px; border-radius: 50%; background: radial-gradient(closest-side, rgba(247,192,50,.45), rgba(247,192,50,0)); filter: blur(2px); animation: msFloor 6s ease-in-out infinite; animation-delay: calc(var(--i) * -2s); }
+@keyframes msFloor { 50% { transform: scale(.85); opacity: .7; } }
+.ms-show-c b { margin-top: 10px; font: 700 22px 'Space Grotesk', sans-serif; }
+.ms-show-c small { font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .14em; color: #F7C032; text-transform: uppercase; }
+.ms-show-c em { font: 400 14px/1.5 Inter, sans-serif; font-style: normal; color: #B9BCC0; max-width: 300px; }
+.ms-show-go { margin-top: 8px; font: 600 13.5px Inter, sans-serif; color: #fff; padding: 9px 16px; border-radius: 10px; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.25); transition: box-shadow .2s, color .2s; }
+.ms-show-c:hover .ms-show-go { box-shadow: inset 0 0 0 1.5px #F7C032; color: #F7C032; }
+.ms-show-ray { position: absolute; left: -20%; width: 140%; height: 2px; background: linear-gradient(90deg, transparent, #FFE08A 50%, transparent); box-shadow: 0 0 22px 7px rgba(247,192,50,.25); transform: rotate(-12deg); opacity: 0; animation: fz3Ray 8s linear infinite; pointer-events: none; }
+.ms-show-ray.a { top: 30%; } .ms-show-ray.b { top: 70%; animation-delay: -4s; }
+@keyframes fz3Ray { 0% { transform: translateX(-40%) rotate(-12deg); opacity: 0; } 20%, 80% { opacity: .8; } 100% { transform: translateX(40%) rotate(-12deg); opacity: 0; } }
+@media (max-width: 900px) { .ms-show-g { grid-template-columns: 1fr; gap: 40px; } }
+/* Sam Circle: an invitation, not a coin */
+.ms2-invite { position: relative; max-width: 640px; padding: 26px 28px; border-radius: 18px; background: #fff; color: #26282B; box-shadow: inset 0 0 0 1px rgba(38,40,43,.08), 0 0 0 6px #fff, 0 0 0 7px rgba(247,192,50,.6), 0 30px 60px -30px rgba(0,0,0,.35); }
+.ms2-inv-k { display: block; font: 600 10.5px 'JetBrains Mono', monospace; letter-spacing: .18em; color: #8C9096; }
+.ms2-invite b { display: block; margin-top: 8px; font: 700 22px 'Space Grotesk', sans-serif; } .ms2-invite small { display: block; color: #6B6F75; }
+.ms2-invite ul { margin: 12px 0 0; padding-inline-start: 18px; } .ms2-invite li { margin: 4px 0; font: 500 14px Inter, sans-serif; }
+.ms2-invite li::marker { color: #F7C032; }
+.ms2-inv-sig { display: block; margin-top: 14px; padding-top: 12px; border-top: 1px dashed rgba(38,40,43,.18); font: italic 500 13px Inter, sans-serif; color: #6B6F75; }
+/* readable text on the yellow section */
+.ms2.y .sp-p, .ms2.y .ms-how small, .ms2.y .ms2-perks small, .ms2.y .ms2-nodes small { color: #3D3100 !important; }
+.ms2.y .sp-eb { color: #26282B !important; }

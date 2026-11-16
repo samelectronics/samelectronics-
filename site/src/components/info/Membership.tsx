@@ -36,6 +36,8 @@ export default function Membership() {
         <div className="sp-acts">{me ? <a className="sp-btn" href="/account#points">{me.card ? T('See my card') : T('Connect my card')}</a> : <a className="sp-btn" href="/account">{T('Register online')}</a>}<a className="sp-btn ghost" href="#cards">{T('Compare the cards')}</a></div>
       </PageHero>
 
+      <Showroom name={me?.name || 'Your name here'} />
+
       {/* R11 (owner): a real walk-through of joining, instead of the home page's cards again */}
       <section className="sp-sec w"><div className="sp-wrap">
         <HowTo eb="HOW TO JOIN" title="Your card in three screens." steps={[
@@ -102,9 +104,44 @@ function CardSection({ c, ci, name }: { c: (typeof CARDS)[number]; ci: number; n
             <div className="ms2-perks" key={lv}><span className="ms2-lv mono">{T('LEVEL')} {lv + 1} · {T(l)}</span><small>{T(r)}</small><ul>{perks.map((p) => <li key={p}>{T(p)}</li>)}</ul></div>
           </div>
         ) : (
-          <div className="ms2-seal" data-rise><span className="ms2-wax" aria-hidden="true">SC</span><div><b>{T(l)}</b><small>{T(r)}</small><ul>{perks.map((p) => <li key={p}>{T(p)}</li>)}</ul></div></div>
+          <div className="ms2-invite" data-rise>
+            <span className="ms2-inv-k">{T('BY INVITATION · SAM ELECTRONICS')}</span>
+            <b>{T(l)}</b><small>{T(r)}</small>
+            <ul>{perks.map((p) => <li key={p}>{T(p)}</li>)}</ul>
+            <span className="ms2-inv-sig">{T('Chosen by the management, for our most loyal customers.')}</span>
+          </div>
         )}
         {c.k !== 'circle' ? <span className="sp-sample">{T('Levels, thresholds and perks are samples until the owner confirms them.')}</span> : null}
+      </div>
+    </section>
+  );
+}
+
+/** Owner (17 Nov): "the Sam Circuit page is boring and cheap". A card showroom: the three cards stand on a glowing
+ *  graphite stage and tilt in 3D with the pointer; each says who it is for and how you get it. */
+function Showroom({ name }: { name: string }) {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const move = (e: React.PointerEvent) => { const el = ref.current; if (!el) return; const r = el.getBoundingClientRect(); el.style.setProperty('--rx', (((e.clientY - r.top) / r.height - 0.5) * -10).toFixed(2) + 'deg'); el.style.setProperty('--ry', (((e.clientX - r.left) / r.width - 0.5) * 14).toFixed(2) + 'deg'); el.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100).toFixed(1) + '%'); };
+  const leave = () => { const el = ref.current; if (!el) return; el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg'); };
+  const C: [CardKind, string, string, string, string][] = [
+    ['circuit', 'Sam Circuit', 'For customers', 'Register online, your first purchase activates it.', 'SC 214 508 2731'],
+    ['grid', 'Sam Grid', 'For shops and traders', 'Apply with your trade licence; we activate it by hand.', 'SG 771 093 2840'],
+    ['circle', 'Sam Circle', 'For our most loyal customers', 'By invitation only.', 'SO 300 112 2903'],
+  ];
+  return (
+    <section className="ms-show" onPointerMove={move} onPointerLeave={leave}>
+      <i className="ms-show-ray a" aria-hidden="true" /><i className="ms-show-ray b" aria-hidden="true" />
+      <div className="sp-wrap">
+        <div className="ms-show-h" data-rise><span className="sp-eb">{T('THE CARDS')}</span><h2 className="sp-h2">{T('Pick up your card.')}</h2></div>
+        <div className="ms-show-g" ref={ref}>
+          {C.map(([k, n, f, how, no], i) => (
+            <a key={k} href={'#' + k} className={'ms-show-c c' + i} style={{ ['--i' as string]: i } as React.CSSProperties}>
+              <span className="ms-show-card"><MemberCard kind={k} name={name} no={no} level={0} /><i className="ms-show-glare" aria-hidden="true" /></span>
+              <span className="ms-show-floor" aria-hidden="true" />
+              <b>{n}</b><small>{T(f)}</small><em>{T(how)}</em><span className="ms-show-go">{T('See the card')} →</span>
+            </a>
+          ))}
+        </div>
       </div>
     </section>
   );
