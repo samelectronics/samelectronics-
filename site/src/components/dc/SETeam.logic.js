@@ -15,7 +15,7 @@ export const ROLES = [
   { code: 'T04', role: 'Finance & Checkout', mono: 'FC', bio: 'Handles invoices, payments and trade accounts.', help: ['Invoices and receipts', 'Payment options', 'Trade account questions'] },
   { code: 'T05', role: 'Founder', mono: 'TA', founder: true, bio: '', help: ['Partnerships and distribution', 'Large trade agreements', 'Feedback on our service'] },
 ];
-const K = 6, C = .32, /* owner (15 Nov): they keep swinging and settle slowly, like real lanyards */ G = 2600, KY = 900, CY = 26; // pendulum (1/s²), damping, gravity and lanyard stretch (px)
+const K = 6, C = .9, /* owner (15 Nov): they keep swinging and settle slowly, like real lanyards */ G = 2600, KY = 900, CY = 26; // pendulum (1/s²), damping, gravity and lanyard stretch (px)
 const CYCLE = 12, STOP = 0.42, MOVE = 0.26; // the order ticket: every 12s, a short stop at each badge
 
 class Component extends DCLogic {
@@ -44,8 +44,10 @@ class Component extends DCLogic {
       if (!b.landed && b.y > 0) { b.landed = true; b.w += (i % 2 ? -1 : 1) * 26; } // lands with a swing
       // pendulum: idle forcing (each its own rhythm) + the mouse nudging it away
       // idle: a soft breeze, each its own rhythm, plus rare random gusts
-      let F = b.amp * 0.45 * Math.sin(b.om * t + b.ph) + b.amp * 0.25 * Math.sin(b.om * 0.37 * t + b.ph * 2.1);
-      if (Math.random() < dt * 0.08) b.w += (Math.random() - 0.5) * 18;
+      // owner (16 Nov): ONE gentle wind for all of them: a slow breeze that travels across the rail (each badge a little
+      // later than its neighbour), about 3 degrees, breathing stronger and softer over ~20 s; no random kicks
+      const gust = 0.75 + 0.25 * Math.sin(t * 0.31) + 0.15 * Math.sin(t * 0.083 + 1.3);
+      let F = 15 * gust * Math.sin(0.95 * t - i * 0.55);
       // owner (15 Nov): the mouse BRUSHES them: a passing pointer gives a push in its direction (by its speed), then they
       // swing freely and settle by themselves. A resting pointer does nothing (they never get stuck pushed aside).
       if (this.mvx && this.mx != null && this.cx) { const dx = this.cx[i] - this.mx, ady = Math.abs(this.my - 300); if (Math.abs(dx) < 90 && ady < 300) b.w += this.mvx * (1 - Math.abs(dx) / 90) * 0.55; }

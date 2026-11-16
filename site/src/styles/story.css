@@ -150,3 +150,11 @@
 .st-node.on { background: #F7C032 !important; box-shadow: 0 0 0 4px rgba(247,192,50,.25), 0 0 10px rgba(247,192,50,.7) !important; transform: none !important; }
 .st-map { overflow: hidden !important; }
 .st-map .st-gmap { inset: -64px 0 0 0 !important; height: calc(100% + 64px) !important; }
+/* owner (16 Nov): branch buttons: four equal, compact, icon + label centred, same height and spacing */
+.st-acts4 { display: grid !important; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px !important; }
+.st-acts4 .st-btn { justify-content: center; gap: 7px; height: 44px; padding: 0 8px; font-size: 13.5px; white-space: nowrap; min-width: 0; background-color: #fff; }
+.st-acts4 .st-btn.yel { background: #F7C032; box-shadow: none; }
+.st-acts4 .st-btn.line { box-shadow: inset 0 0 0 1.5px rgba(26,27,29,.16); }
+.st-acts4 .st-btn.line:hover { box-shadow: inset 0 0 0 1.5px #F7C032; background: #FFF8E1; }
+.st-acts4 .ct-ic { width: 16px; height: 16px; }
+@media (max-width: 700px) { .st-acts4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }

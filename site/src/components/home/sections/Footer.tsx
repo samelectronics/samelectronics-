@@ -191,18 +191,13 @@ export default function Footer({ v }: { v: Vals }) {
               <span style={{ color: '#C9CBCE' }}>{String(v.$facts?.madrid?.opening ?? '')}</span>
             </span>
             {'\n        '}
-            <span style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '14px', color: '#C9CBCE' }}>
-              <a href={`tel:${s(v.$facts?.contact?.storeTel)}`} style={{ color: '#C9CBCE' }} className={cx(undefined, 'scp-f2a4cf2e')}>
-                {'Store '}
-                {String(v.$facts?.contact?.storePhone ?? '')}
-              </a>
-              <a href={v.visit?.wa} target="_blank" rel="noopener" style={{ color: '#C9CBCE' }} className={cx(undefined, 'scp-f2a4cf2e')}>
-                {'WhatsApp '}
-                {String(v.$facts?.contact?.mobile ?? '')}
-              </a>
-              <a href={`mailto:${s(v.$facts?.contact?.email)}`} style={{ color: '#C9CBCE' }} className={cx(undefined, 'scp-f2a4cf2e')}>
-                {String(v.$facts?.contact?.email ?? '')}
-              </a>
+            {/* owner (16 Nov): every way to reach us, each with its icon: call, WhatsApp, WeChat, email, and the website chat */}
+            <span className="ft-contacts">
+              <a href={`tel:${s(v.$facts?.contact?.storeTel)}`}><i className="ft-ci call" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg></i><span data-no-i18n="">{String(v.$facts?.contact?.storePhone ?? '')}</span></a>
+              <a href={v.visit?.wa} target="_blank" rel="noopener"><i className="ft-ci wa" aria-hidden="true"><i className="ct-ic wa" /></i><span data-no-i18n="">{String(v.$facts?.contact?.mobile ?? '')}</span></a>
+              <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('se:wechat'))}><i className="ft-ci wc" aria-hidden="true"><i className="ct-ic wc" /></i><span>WeChat</span></button>
+              <a href={`mailto:${s(v.$facts?.contact?.email)}`}><i className="ft-ci mail" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg></i><span data-no-i18n="">{String(v.$facts?.contact?.email ?? '')}</span></a>
+              <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('se:chat', { detail: {} }))}><i className="ft-ci chat" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v11H9l-5 4z" /></svg></i><span>{t('Chat with Samsoom')}</span></button>
             </span>
             {'\n      '}
           </div>
@@ -255,7 +250,7 @@ export default function Footer({ v }: { v: Vals }) {
           {'\n      '}
           <div style={{ display: 'flex', alignItems: 'center', gap: '18px', flexWrap: 'wrap' }}>
             {'\n        '}
-            <span style={{ display: 'flex', gap: '8px 14px', flexWrap: 'wrap' }}>
+            <span className="ft-legal" style={{ display: 'flex', gap: '8px 14px', flexWrap: 'wrap' }}>
               <a href="/legal#warranty" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')}>
                 Warranty
               </a>
@@ -277,9 +272,6 @@ export default function Footer({ v }: { v: Vals }) {
               <a href="/cookies" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')} onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('se:settings', { detail: 'privacy' })); }}>
                 Cookie settings
               </a>
-              <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('se:settings'))} style={{ color: '#9DA1A6', background: 'none', border: 0, padding: 0, font: 'inherit', cursor: 'pointer' }} className={cx(undefined, 'scp-f2a4cf2e')}>
-                Settings
-              </button>
             </span>
             {'\n        '}
             {/* R7-G: the same quick language menu as the nav, opening upwards */}
@@ -306,7 +298,7 @@ export default function Footer({ v }: { v: Vals }) {
                 <rect x="4" y="11" width="16" height="10" rx="2"></rect>
                 <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
               </svg>
-              Staff · Control Room
+              Staff
             </button>
             {'\n      '}
           </div>

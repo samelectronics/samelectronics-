@@ -195,14 +195,20 @@ function render(v: Vals) {
               <span className="st-today">
                 <span>Today</span> <span data-no-i18n="">{v.todayHours}</span>
               </span>
-              <div className="st-acts">
+              {/* owner (16 Nov): four equal buttons, each with its icon: directions, WhatsApp, WeChat, call */}
+              <div className="st-acts st-acts4">
                 <a href={v.dirLink} target="_blank" rel="noopener noreferrer" className="st-btn yel">
-                  Get directions {ARROW}
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></svg>
+                  Directions
                 </a>
                 <a href={v.wa} target="_blank" rel="noopener noreferrer" className="st-btn line">
-                  WhatsApp
+                  <i className="ct-ic wa" style={{ color: '#25D366' }} />WhatsApp
                 </a>
+                <button type="button" className="st-btn line" onClick={() => window.dispatchEvent(new CustomEvent('se:wechat'))}>
+                  <i className="ct-ic wc" style={{ color: '#07C160' }} />WeChat
+                </button>
                 <a href={'tel:' + String(F.contact?.storeTel ?? '')} className="st-btn line">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg>
                   Call
                 </a>
               </div>
