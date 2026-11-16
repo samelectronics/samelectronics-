@@ -469,3 +469,13 @@ html[data-sam-speaking] .sam-zap-run, [data-tour='samsoom']:hover .sam-zap-run, 
 .cc-back { border: 0; background: none; color: #5D6166; font: 600 13px Inter, sans-serif; cursor: pointer; margin-bottom: 10px; }
 .cc-card .lc { max-height: min(70vh, 560px); }
 .ft-wawc { white-space: nowrap; } .ft-wawc .ft-ci + .ft-ci { margin-inline-start: 0; box-shadow: none; }
+/* owner (16 Nov): the footer wordmark is quiet and premium: dark metal letters that fade into the darkness, no outline,
+   with one slow soft sheen gliding across now and then */
+.ft-mark { -webkit-text-stroke: 0 !important; color: transparent !important;
+  background: linear-gradient(100deg, rgba(255,255,255,0) 40%, rgba(255,255,255,.10) 50%, rgba(255,255,255,0) 60%) 0 0 / 300% 100% no-repeat,
+              linear-gradient(180deg, #3A3C40 0%, #2C2E31 45%, rgba(38,40,43,0) 92%) !important;
+  -webkit-background-clip: text !important; background-clip: text !important; opacity: .9 !important; text-shadow: none !important; filter: none !important;
+  animation: ftSheen 9s ease-in-out infinite !important; }
+@keyframes ftSheen { 0%, 55% { background-position: 120% 0, 0 0; } 100% { background-position: -120% 0, 0 0; } }
+@media (prefers-reduced-motion: reduce) { .ft-mark { animation: none !important; } }
+.ft-mark { opacity: .45 !important; }

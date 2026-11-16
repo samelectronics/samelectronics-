@@ -18,60 +18,36 @@ const HEAD = ['A', 'phone', 'on', 'your', 'bench?', 'We', 'have', 'the', 'part.'
 const R = 118, C = 2 * Math.PI * R;
 const start = (d: string) => { const m = d.match(/^M(\d+) (\d+)/)!; return [Number(m[1]), Number(m[2])]; };
 
+// owner (16 Nov): "cheap: logo circuits, random buttons, too yellow". Rebuilt as a bright product studio: the real 3D
+// pallet from Home on a turntable under a soft spotlight, a carton and a single boxed part floating either side, one
+// clear headline, three buttons of one family, the stats. Colour order: reviews (graphite) → finale (white) → footer.
 function render(v: Vals) {
+  const head = (v.head || HEAD) as string[], cut = Math.max(1, head.findIndex((w) => /[?؟？]$/.test(w)) + 1);
   return (
-    <section ref={v.secRef} id="finale" data-tone="dark" data-screen-label="Finale" className={'fz' + (v.on ? ' fz-on' : '')}>
-      <FinaleRoom cy={272} horizon={392} />
-      <div className="fz-stage">
-        <svg className="fz-circ" viewBox="0 0 1440 400" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-          <defs>
-            <radialGradient id="fzHalo"><stop offset="0" stopColor="#F7C032" stopOpacity=".28" /><stop offset="1" stopColor="#F7C032" stopOpacity="0" /></radialGradient>
-          </defs>
-          <circle cx="720" cy="200" r="196" fill="url(#fzHalo)" className="fz-halo" />
-          {[...LEFT, ...RIGHT].map((d, i) => (
-            <g key={i} style={{ ['--i' as string]: i % 3 } as React.CSSProperties}>
-              <path d={d} className="base" />
-              <path d={d} className="cur" pathLength={1} />
-              <circle r="3.2" className="pad" cx={start(d)[0]} cy={start(d)[1]} />
-            </g>
-          ))}
-          <circle cx="720" cy="200" r={R} className="fz-track" />
-          <circle cx="720" cy="200" r={R} className="fz-ring" strokeDasharray={C} strokeDashoffset={C} transform="rotate(-90 720 200)" />
-        </svg>
-        <div className="fz-logo">
-          <span className="fz-glow" aria-hidden="true" />
-          <img src="/assets/se-logo-320.webp" alt="Sam Electronics" width={196} height={196} draggable={false} />
-          <span className="fz-shine" aria-hidden="true" />
+    <section ref={v.secRef} id="finale" data-tone="light" data-screen-label="Finale" className={'fz2' + (v.on ? ' fz-on' : '')}>
+      <div className="fz2-light" aria-hidden="true" />
+      <div className="fz2-in">
+        <span className="fz2-eb">{WORDS.join(' · ')}</span>
+        <h2 className="fz2-h" data-no-i18n="">
+          <span className="a">{head.slice(0, cut).map((w, i) => <span key={i} style={{ ['--i' as string]: i } as React.CSSProperties}>{w} </span>)}</span>
+          <span className="b">{head.slice(cut).map((w, i) => <span key={i} style={{ ['--i' as string]: i + cut } as React.CSSProperties}>{w} </span>)}</span>
+        </h2>
+        <div className="fz2-stage" aria-hidden="true">
+          <span className="fz2-floor" />
+          <img className="fz2-p main" src="/assets/pallet/full-1200.webp" alt="" loading="lazy" decoding="async" />
+          <img className="fz2-p l" src="/assets/pallet/carton-600.webp" alt="" loading="lazy" decoding="async" />
+          <img className="fz2-p r" src="/assets/pallet/single-600.webp" alt="" loading="lazy" decoding="async" />
         </div>
-      </div>
-      <div className="fz-words">
-        {WORDS.map((w, i) => (
-          <React.Fragment key={w}>
-            {i ? <i aria-hidden="true" /> : null}
-            <span style={{ ['--i' as string]: i } as React.CSSProperties}>{w}</span>
-          </React.Fragment>
-        ))}
-      </div>
-      <h2 className="fz-h" data-no-i18n="">
-        {(v.head || HEAD).map((w: string, i: number) => (
-          <React.Fragment key={i}>
-            {i ? ' ' : null}
-            <span style={{ ['--i' as string]: i } as React.CSSProperties}>{w}</span>
-          </React.Fragment>
-        ))}
-      </h2>
-      <div className="fz-acts">
-        <a href="#offer" onClick={v.browse} className="fz-btn yel">
-          Browse all parts
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
-        </a>
-        <a href={v.wa} target="_blank" rel="noopener noreferrer" className="fz-btn line">WhatsApp us</a>
-        <a href={v.dir} target="_blank" rel="noopener noreferrer" className="fz-btn line">Visit Deira</a>
-      </div>
-      <div className="fz-stats">
-        <span><b><em data-fn="20">20</em>+</b><small>years in Deira</small></span>
-        <span><b><em data-fn="14">14</em></b><small>brands</small></span>
-        <span><b><em data-fn="9000">9,000</em>+</b><small>parts in stock</small></span>
+        <div className="fz2-acts">
+          <a href="#offer" onClick={v.browse} className="fz2-btn dark">Browse all parts<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a>
+          <a href={v.wa} target="_blank" rel="noopener noreferrer" className="fz2-btn"><i className="ct-ic wa" aria-hidden="true" />WhatsApp us</a>
+          <a href={v.dir} target="_blank" rel="noopener noreferrer" className="fz2-btn">Visit Deira</a>
+        </div>
+        <div className="fz2-stats">
+          <span><b><em data-fn="20">20</em>+</b><small>years in Deira</small></span>
+          <span><b><em data-fn="14">14</em></b><small>brands</small></span>
+          <span><b><em data-fn="9000">9,000</em>+</b><small>parts in stock</small></span>
+        </div>
       </div>
     </section>
   );
