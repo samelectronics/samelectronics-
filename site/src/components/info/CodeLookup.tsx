@@ -21,8 +21,10 @@ const HOW: [string, string, string][] = [
   ['Any phone', 'Dial *#06#', 'Shows the IMEI. We can look the model up from it in the shop.'],
 ];
 
-export default function CodeLookup({ onModel }: { onModel: (id: string, brand: string) => void }) {
-  const [q, setQ] = useState(''), D = data();
+const BK: Record<string, number> = { apple: 0, samsung: 1, xiaomi: 2, redmi: 2, poco: 2, huawei: 3, honor: 3, oppo: 4, realme: 4, oneplus: 4 };
+export default function CodeLookup({ onModel, brand }: { onModel: (id: string, brand: string) => void; brand?: string }) {
+  const [q, setQ] = useState(''), D = data(), [hw, setHw] = useState(0);
+  useEffect(() => { setHw(brand && brand in BK ? BK[brand] : 5); }, [brand]);
   // R11b: the example codes type themselves into the empty field, like the shop's search
   const [ph, setPh] = useState('');
   useEffect(() => { const EX = ['SM-A546B', 'A2846', 'RMX3771', 'SM-S911B', '23021RAAEG', 'CPH2591']; let k = 0, n = 0, del = false, tm = 0;
@@ -48,7 +50,7 @@ export default function CodeLookup({ onModel }: { onModel: (id: string, brand: s
         {q.trim().length >= 3 ? (hits.length ? <div className="cl-hits">{hits.map(({ m, why }) => <button key={m.id} type="button" onClick={() => onModel(m.id, m.brand_id)}><b>{m.name}</b><small>{D.brands.find((b) => b.id === m.brand_id)?.name}{why ? ' · ' + why : ''}</small><i>→</i></button>)}<small className="cl-chk">{T('Please check the model with us before ordering a part.')}</small></div>
           : <p className="cl-none">{T('We could not match that code. Send it to us on WhatsApp and we will tell you.')}</p>) : null}
       </div>
-      <ol className="cl-how">{HOW.map(([b, w, d]) => <li key={b}><b>{b}</b><code>{T(w)}</code><span>{T(d)}</span></li>)}</ol>
+      <div className="cl-how2"><div className="cl-tabs" role="tablist">{HOW.map(([b], i) => <button key={b} type="button" role="tab" aria-selected={hw === i} className={hw === i ? 'on' : ''} onClick={() => setHw(i)}>{T(b)}</button>)}</div><div className="cl-step" key={hw}><code>{T(HOW[hw][1])}</code><span>{T(HOW[hw][2])}</span></div></div>
     </div>
   );
 }

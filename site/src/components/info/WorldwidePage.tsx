@@ -8,6 +8,7 @@ import { backend } from '@/lib/backend';
 import { PageHero, T, useRise, CountUp } from '@/components/site/ui';
 import { HomeMap, ShipRuler, RegionCards } from './WorldBits';
 import { openContact } from '@/components/site/WeChatSheet';
+import PrintedForm from '@/components/site/PrintedForm';
 
 const ISO: Record<string, string> = { UAE: 'AE', UK: 'GB', Spain: 'ES', Romania: 'RO', 'Türkiye': 'TR', Azerbaijan: 'AZ', Syria: 'SY', Lebanon: 'LB', Iraq: 'IQ', Iran: 'IR', Tunisia: 'TN', Algeria: 'DZ', Morocco: 'MA', Libya: 'LY', Egypt: 'EG', 'Saudi Arabia': 'SA', Oman: 'OM', Yemen: 'YE', Sudan: 'SD', Eritrea: 'ER', Ethiopia: 'ET', Nigeria: 'NG', Uganda: 'UG', Russia: 'RU', Ukraine: 'UA', India: 'IN', Pakistan: 'PK', 'Burkina Faso': 'BF', Senegal: 'SN' };
 const flag = (n: string) => (ISO[n] ? String.fromCodePoint(...[...ISO[n]].map((c) => 0x1f1a5 + c.charCodeAt(0))) : '🌍');
@@ -20,9 +21,9 @@ export default function WorldwidePage() {
   useRise(ready);
   const C = ((data() as unknown as { countries?: { name: string; region: string }[] })?.countries) || [];
   const shown = C.filter((c) => reg === 'all' || c.region === reg);
-  const quote = async (e: React.FormEvent) => { e.preventDefault();
-    const text = waCard('Shipping quote', [['To', [f.city, f.country].filter(Boolean).join(', ')], ['Parts', f.what], ['Shipping', f.own ? 'My own shipper' : 'Door to door, by Sam Electronics']], { name: f.name, phone: f.phone });
-    await backend.send({ name: f.name, topic: 'Shipping quote', text }); setSent(true); window.open(waLink(text), '_blank', 'noopener'); };
+  const quote = (v: Record<string, string>) => {
+    const text = waCard('Shipping quote', [['To', [v.city, v.country].filter(Boolean).join(', ')], ['Parts', v.what], ['Shipping', v.how === 'own' ? 'My own shipper' : 'Door to door, by Sam Electronics']], { name: v.name, phone: v.phone });
+    window.open(waLink(text), '_blank', 'noopener'); return backend.send({ name: v.name, topic: 'Shipping quote', text }).then(() => undefined); };
   return (
     <>
       <PageHero eb={T('WORLDWIDE SHIPPING')} title={T('From Deira')} accent={T('to your door.')} crumb={[[T('Worldwide')]]} seed={83}
@@ -80,18 +81,20 @@ export default function WorldwidePage() {
         <div data-rise><span className="sp-eb">{T('SHIPPING QUOTE')}</span><h2 className="sp-h2">{T('Where should it go?')}</h2><p className="sp-p">{T('Tell us where and what, and we quote the route and the price, usually the same day.')}</p>
           <div className="ww2-ticket" aria-hidden="true"><span className="mono">DXB</span><i><b /></i><span className="mono">{f.country ? f.country.slice(0, 3).toUpperCase() : '???'}</span></div>
           <ol className="ww2-next">{[['1', 'You send the form', 'It opens WhatsApp with your request, neatly laid out.'], ['2', 'We pick the route', 'Courier, air, road or sea: the best for your parts.'], ['3', 'You get one price', 'Shipping, time and paperwork, before you pay.']].map(([n, a, b]) => <li key={n}><em>{n}</em><span><b>{T(a)}</b><small>{T(b)}</small></span></li>)}</ol></div>
-        {sent ? <div className="sp-card" data-rise><b className="sp-h3">{T('Thank you!')}</b><p className="sp-p">{T('We opened WhatsApp with your request; the team replies there.')}</p></div> : (
-          <form className="sp-card rp-form wf2-console" onSubmit={quote} data-rise>
-            <span className="wf2-con-h" style={{ gridColumn: '1 / -1' }}><b>{T('SHIPPING QUOTE')}</b><small className="mono">{f.country ? T(f.country) : 'DXB → ?'}</small></span>
-            <label className="sp-field">{T('Your name')}<input required value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></label>
-            <label className="sp-field">{T('Phone (WhatsApp)')}<input required value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} /></label>
-            <label className="sp-field">{T('Country')}<input required list="ww-c" value={f.country} onChange={(e) => setF({ ...f, country: e.target.value })} /><datalist id="ww-c">{C.map((c) => <option key={c.name} value={c.name} />)}</datalist></label>
-            <label className="sp-field">{T('City')}<input value={f.city} onChange={(e) => setF({ ...f, city: e.target.value })} /></label>
-            <label className="sp-field" style={{ gridColumn: '1 / -1' }}>{T('What are you sending for?')}<textarea value={f.what} onChange={(e) => setF({ ...f, what: e.target.value })} placeholder={T('e.g. 50 × iPhone 13 screens, 100 × A54 batteries')} /></label>
-            <label className="au-agree" style={{ gridColumn: '1 / -1' }}><input type="checkbox" checked={f.own} onChange={(e) => setF({ ...f, own: e.target.checked })} /><span>{T('I will use my own shipper')}</span></label>
-            <button type="submit" className="sp-btn dark" style={{ gridColumn: '1 / -1' }}>{T('Ask for a quote')}</button>
-          </form>
-        )}
+        <div data-rise><PrintedForm eb="SHIPPING QUOTE" title="Where should it go?" doc="SHIPPING ORDER"
+          lines={[['FROM', 'DXB · Deira']]}
+          fields={[
+            { k: 'name', label: 'Your name', req: true, slip: 'Name' },
+            { k: 'phone', label: 'Phone (WhatsApp)', kind: 'tel', req: true, slip: 'Phone' },
+            { k: 'country', label: 'Country', req: true, slip: 'To' },
+            { k: 'city', label: 'City', slip: 'City' },
+            { k: 'how', label: 'Shipping', kind: 'chips', opts: [['us', 'Door to door, by us'], ['own', 'I will use my own shipper']], slip: 'Shipping' },
+            { k: 'what', label: 'What are you sending for?', kind: 'area', req: true, ph: 'e.g. 50 × iPhone 13 screens, 100 × A54 batteries', slip: 'Parts' },
+          ]}
+          cta="Ask for a quote"
+          send={(v) => quote(v)}
+          done={() => <div className="sp-card"><b className="sp-h3">{T('Thank you!')}</b><p className="sp-p">{T('We opened WhatsApp with your request; the team replies there.')}</p></div>}
+        /></div>
       </div></section>
     </>
   );
