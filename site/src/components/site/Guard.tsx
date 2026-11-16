@@ -50,7 +50,7 @@ export default function Guard() {
       const now = Date.now(); if (now - last < 60000) return; last = now;
       import('@/lib/backend').then(({ backend }) => backend.send({ name: 'Website', topic: 'Screenshot taken', text: '*Screenshot taken*\n*Page:* ' + location.href + '\n*Time:* ' + new Date().toLocaleString('en-GB', { timeZone: 'Asia/Dubai' }) + ' (Dubai)' })).catch(() => { /* */ });
     };
-    const down = (e: KeyboardEvent) => { const k = e.key.toLowerCase(); if ((e.metaKey && e.shiftKey && ['3', '4', '5', 's'].includes(k)) || (e.ctrlKey && e.shiftKey && k === 's' && navigator.platform.startsWith('Win'))) seen(); };
+    const down = (e: KeyboardEvent) => { if (e.key === 'Escape') { setShot(false); setVpn(false); return; } const k = e.key.toLowerCase(); if ((e.metaKey && e.shiftKey && ['3', '4', '5', 's'].includes(k)) || (e.ctrlKey && e.shiftKey && k === 's' && navigator.platform.startsWith('Win'))) seen(); };
     const up = (e: KeyboardEvent) => { if (e.key === 'PrintScreen' || e.code === 'PrintScreen') seen(); };
     window.addEventListener('keydown', down, true); window.addEventListener('keyup', up, true);
     return () => { window.removeEventListener('keydown', down, true); window.removeEventListener('keyup', up, true); };
