@@ -685,3 +685,8 @@ html[dir='rtl'] .ht3-ri + .ht3-ri { box-shadow: inset -1px 0 0 rgba(255,255,255,
 }
 @media (min-width: 1100px) { section.sp-hero.sp-cine .sp-hero-l:not(:has(.sp-acts, .sp-btn)) .ht3-ro { position: static; margin-top: 14px; } }
 @media (max-width: 640px) { .ht3-ro { flex-wrap: nowrap; } .ht3-ro .ht3-ri:nth-child(n+3) { display: none; } .ht3-ri.sst { min-width: 0; flex: 1; } .ht3-ri.sst b { overflow: hidden; text-overflow: ellipsis; } }
+/* Owner (16 Nov): nothing may ever touch the header text. The outlined page word keeps its own lane on the right
+   (the text never runs under it), it hides on phones, and the readout sits beside the buttons only on wide screens. */
+@media (min-width: 761px) { section.sp-hero.sp-cine .sp-hero-in { padding-inline-end: 150px; box-sizing: border-box; } }
+@media (max-width: 760px) { .sp-cine .cine-word, .shop-cine .cine-word { display: none !important; } }
+@media (min-width: 1100px) and (max-width: 1299px) { section.sp-hero.sp-cine .ht3-ro { position: static !important; margin-top: 12px !important; } }

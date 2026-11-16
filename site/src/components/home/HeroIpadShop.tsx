@@ -11,7 +11,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { data, products, shots, type Product } from '@/lib/catalog';
 import { T } from '@/components/site/ui';
 
-const RH = 156; // one row of two cards, px
+const RH = 196; // one row of two cards, px (owner, 16 Nov: the cards look like the real shop's)
+const HH = 318; // the shop's own header (graphite hero, tabs, category tiles) before the grid
 const SPEED = 15; // px per second
 const CHIPS = ['All', 'Screens', 'Batteries', 'Flex cables', 'Back covers', 'Cameras'];
 const CAT = ['', 'SCR', 'BAT', 'FLX', 'BCV', 'CAM'];
@@ -23,7 +24,7 @@ type Row = { k: number; a: Product; b: Product };
 export default function HeroIpadShop() {
   const [time, setTime] = useState(''), [bat, setBat] = useState(86), [chg, setChg] = useState(false), [cart, setCart] = useState(2);
   const [rows, setRows] = useState<Row[]>([]), [chip, setChip] = useState(0), [q, setQ] = useState(''), [tap, setTap] = useState<{ x: number; y: number; n: number } | null>(null);
-  const [flash, setFlash] = useState(0), [open, setOpen] = useState<Product | null>(null), [added, setAdded] = useState(0), [press, setPress] = useState<string | null>(null);
+  const [head, setHead] = useState(true), headRef = useRef(true), [flash, setFlash] = useState(0), [open, setOpen] = useState<Product | null>(null), [added, setAdded] = useState(0), [press, setPress] = useState<string | null>(null);
   const root = useRef<HTMLDivElement>(null), track = useRef<HTMLDivElement>(null), off = useRef(0), seq = useRef<Product[]>([]), pos = useRef(0), k = useRef(0), live = useRef(true), paused = useRef(false);
 
   // the status bar
@@ -54,7 +55,7 @@ export default function HeroIpadShop() {
   useEffect(() => {
     if (!rows.length) return; let raf = 0, last = performance.now();
     const f = (t: number) => { const dt = Math.min(0.05, (t - last) / 1000); last = t;
-      if (live.current && !document.hidden && !paused.current) { off.current += SPEED * dt; if (off.current >= RH) { off.current -= RH; setRows((r) => [...r.slice(1), row()]); } if (track.current) track.current.style.transform = 'translate3d(0,' + (-off.current).toFixed(2) + 'px,0)'; }
+      if (live.current && !document.hidden && !paused.current) { off.current += SPEED * dt; if (headRef.current && off.current >= HH) { off.current -= HH; headRef.current = false; setHead(false); } else if (!headRef.current && off.current >= RH) { off.current -= RH; setRows((r) => [...r.slice(1), row()]); } if (track.current) track.current.style.transform = 'translate3d(0,' + (-off.current).toFixed(2) + 'px,0)'; }
       raf = requestAnimationFrame(f); };
     raf = requestAnimationFrame(f); return () => cancelAnimationFrame(raf);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -70,8 +71,8 @@ export default function HeroIpadShop() {
       if (n % 3 === 0) { // type a search, then clear it
         const s = QUERIES[(n / 3) % QUERIES.length | 0]; for (let i = 1; i <= s.length; i++) at(i * 70, () => setQ(s.slice(0, i))); at(s.length * 70 + 1600, () => setQ('')); at(s.length * 70 + 2600, cycle); return; }
       if (n % 4 === 0) { // pick the next category chip: the list refreshes with that category, from the top
-        const c = (chipRef.current + 1) % CHIPS.length; chipRef.current = c; setChip(c); setTap({ x: 30 + c * 52, y: 80, n: n + 2000 }); setFlash((f) => f + 1);
-        at(260, () => { off.current = 0; if (track.current) track.current.style.transform = 'translate3d(0,0,0)'; setRows([row(), row(), row(), row(), row()]); }); at(2600, cycle); return; }
+        const c = (chipRef.current + 1) % CHIPS.length; chipRef.current = c; setChip(c); setTap({ x: 40 + (c % 4) * 78, y: 110, n: n + 2000 }); setFlash((f) => f + 1);
+        at(260, () => { off.current = HH - 40; headRef.current = true; setHead(true); if (track.current) track.current.style.transform = 'translate3d(0,' + (-(HH - 40)) + 'px,0)'; setRows([row(), row(), row(), row(), row()]); }); at(2600, cycle); return; }
       // tap a card in the second visible row (left or right), open it, add to cart, close
       const sc = root.current, tr = track.current; if (!sc || !tr) { at(2000, cycle); return; }
       const cards = Array.from(tr.querySelectorAll<HTMLElement>('.hi-card')), sr = sc.getBoundingClientRect(), z = sr.width / sc.offsetWidth || 1;
@@ -94,11 +95,27 @@ export default function HeroIpadShop() {
   const D = data();
   const card = (p: Product) => (
     <span className={'hi-card' + (press === p.id ? ' press' : '')} data-id={p.id} key={p.id}>
-      <span className="hi-img"><img src={small(p.img)} alt="" loading="lazy" decoding="async" /></span>
-      <span className={'hi-gr g-' + p.grade}>{p.gradeName}</span>
+      <span className="hi-img"><span className={'hi-gr g-' + p.grade}>{p.gradeName}</span><img src={small(p.img)} alt="" loading="lazy" decoding="async" /></span>
       <b>{p.title}</b>
-      <span className="hi-pr"><em>AED {p.price}</em><i>+</i></span>
+      <span className="hi-pr"><em>AED {p.price}</em><small>· {T('SAMPLE')}</small></span>
+      <span className="hi-stk"><i />{T('In stock')}</span>
+      <span className="hi-addb"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 7h14l-1.2 12.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z" /><path d="M9 10V6a3 3 0 0 1 6 0v4" /></svg>{T('Add to cart')}</span>
     </span>
+  );
+  const TILES: [string, string, string][] = [['Screens', 'SCR', 'solo-scr'], ['Batteries', 'BAT', 'solo-bat'], ['Flex cables', 'FLX', 'solo-flx'], ['Back covers', 'BCV', 'solo-bcv'], ['Cameras', 'CAM', 'solo-cam']];
+  const all = products(), cnt = (c: string) => all.filter((p) => p.category === c).length;
+  const shopHead = (
+    <div className="hi-head">
+      <div className="hi-hero">
+        <span className="hi-crumb">{T('Home')} · {T('Shop')}</span>
+        <span className="hi-eb">{T('THE PARTS SHOP')}</span>
+        <b className="hi-h1">{T('Every part.')}<br /><em>{T('Every grade.')}</em></b>
+        <span className="hi-stats"><span><b>{all.length}</b><small>{T('parts')}</small></span><span><b>{D?.models.length || 0}</b><small>{T('models')}</small></span><span><b>{D?.brands.length || 0}</b><small>{T('brands')}</small></span></span>
+        <span className="hi-sbar"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg><span>{T('Search')} “iPhone 13 screen”</span><i>{T('Search')}</i></span>
+      </div>
+      <div className="hi-tabs"><span className="on"><b>{T('Everything')}</b><i>{all.length}</i></span><span><b>{T('Offers')}</b></span><span><b>{T('New arrivals')}</b></span></div>
+      <div className="hi-tiles">{TILES.map(([n, c, img], i) => <span key={c} className={chip === i + 1 ? 'on' : ''}><img src={'/assets/pose/' + img + '-480.webp'} alt="" /><b>{T(n)}</b><small>{cnt(c)} {T('parts')}</small></span>)}</div>
+    </div>
   );
   return (
     <div className="hero-shop hi" ref={root} aria-hidden="true">
@@ -117,9 +134,9 @@ export default function HeroIpadShop() {
         <span className="hi-search"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>{q ? <span className="hi-q">{q}<i /></span> : <span className="hi-ph">{T('Search any part, model or brand')}</span>}</span>
         <span className="hi-cart"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M5 7h14l-1.2 12.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z" /><path d="M9 10V6a3 3 0 0 1 6 0v4" /></svg><b key={cart}>{cart}</b></span>
       </div>
-      <div className="hi-chips">{CHIPS.map((c, i) => <span key={c} className={i === chip ? 'on' : ''}>{T(c)}</span>)}</div>
       <div className="hi-feed">
         <div className={'hi-track' + (flash ? ' f' + (flash % 2) : '')} ref={track}>
+          {head ? shopHead : null}
           {rows.map((r) => <div className="hi-row" key={r.k}>{card(r.a)}{card(r.b)}</div>)}
         </div>
       </div>

@@ -46,9 +46,9 @@ function Visual({ a, live }: { a: Ad; live: boolean }) {
   }
 }
 function Years() {
-  const [y, setY] = useState(2003), end = new Date().getFullYear();
-  useEffect(() => { let v = 2003; const id = window.setInterval(() => { v++; setY(v); if (v >= end) window.clearInterval(id); }, 60); return () => window.clearInterval(id); }, [end]);
-  return <span className="iad2-years" data-no-i18n=""><b>{y}</b><small>{end - 2003}+ {T('years')}</small></span>;
+  const end = new Date().getFullYear() - 2003, [y, setY] = useState(0);
+  useEffect(() => { let v = 0; const id = window.setInterval(() => { v++; setY(v); if (v >= end) window.clearInterval(id); }, 55); return () => window.clearInterval(id); }, [end]);
+  return <span className="iad2-years" data-no-i18n=""><b>{y}+</b><small>{T('YEARS IN DEIRA')}</small></span>;
 }
 
 export default function InlineAd({ slot, lastCat }: { slot: number; lastCat?: string }) {
@@ -64,7 +64,6 @@ export default function InlineAd({ slot, lastCat }: { slot: number; lastCat?: st
   const a = list[i]; if (!a) return null;
   const scene = (x: Ad, out: boolean) => (
     <span className={'iad2-scene' + (out ? ' out' : '')} key={(out ? 'o' : 'n') + x.id} aria-hidden={out}>
-      <span className="iad2-word" aria-hidden="true">{T(x.k)}</span>
       <span className="iad2-txt">
         <span className="iad2-k"><i className="rec" />{T(x.k)}<em>{T('Ad')}</em></span>
         <b className="iad2-t" data-no-i18n="">{T(x.t).split(' ').map((w, k) => <span key={k} style={{ ['--w' as string]: k } as React.CSSProperties}>{w} </span>)}</b>

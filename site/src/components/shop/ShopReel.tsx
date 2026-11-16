@@ -39,8 +39,9 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
     const beams = (l: number, rgb: string, a = 0.6) => { x.save(); x.translate(W / 2, H / 2); x.rotate(-0.38); x.globalCompositeOperation = 'screen';
       for (let k = 0; k < 3; k++) { const off = (((l * (0.9 + k * 0.15) + k * 0.33) % 1) - 0.5) * H * 2.2, len = W * (0.9 + (k % 2) * 0.5), x0 = -len / 2; const g = x.createLinearGradient(x0, 0, x0 + len, 0); g.addColorStop(0, 'rgba(' + rgb + ',0)'); g.addColorStop(0.5, 'rgba(' + rgb + ',' + a + ')'); g.addColorStop(1, 'rgba(' + rgb + ',0)');
         // owner: the light is a soft glowing band with a bright core, not a thin straight wire
-        x.globalAlpha = 0.16; x.shadowColor = 'rgba(' + rgb + ',1)'; x.shadowBlur = 30; x.fillStyle = g; x.fillRect(x0, off - 9, len, 18); x.globalAlpha = 1;
-        x.shadowColor = 'rgba(' + rgb + ',.9)'; x.shadowBlur = 22; x.fillStyle = g; x.fillRect(x0, off - 1.5, len, 3); }
+        { const r = Math.max(28, H * 0.09); x.save(); x.translate(0, off); x.scale(len / 2 / r, 1); const rg = x.createRadialGradient(0, 0, 0, 0, 0, r);
+          rg.addColorStop(0, 'rgba(' + rgb + ',' + a * 0.6 + ')'); rg.addColorStop(0.3, 'rgba(' + rgb + ',' + a * 0.22 + ')'); rg.addColorStop(1, 'rgba(' + rgb + ',0)'); x.fillStyle = rg; x.fillRect(-r, -r, r * 2, r * 2); x.restore(); }
+        x.shadowColor = 'rgba(' + rgb + ',1)'; x.shadowBlur = 26; x.fillStyle = g; x.fillRect(x0, off - 2, len, 4); }
       x.shadowBlur = 0; x.restore(); };
     // owner (16 Nov): every language keeps the same layout as English; a longer translation gets a slightly smaller font
     // so it stays on its one line inside its own space (never runs into the picture or off the ad).

@@ -816,3 +816,23 @@ html[dir="rtl"] .clip-pic { animation-name: clipWhipR, clipPush !important; }
   .iad2-dots { bottom: 14px; inset-inline-start: 50%; transform: translateX(-50%); }
   html[dir='rtl'] .iad2-dots { transform: translateX(50%); }
 }
+/* Owner (16 Nov): "tiny components in big ads": the pictures fill the ad from top to bottom */
+.iad2-vis { align-self: stretch; height: auto; margin-block: -22px -30px; overflow: visible; }
+.iad2-vis img { max-width: none; }
+.iad2-film { height: 260px !important; margin-block: -30px; }
+.iad2-pic { height: 230px; }
+.iad2-grades img { top: -4%; height: 112%; }
+.iad2-fix { width: 250px; height: 250px; }
+.iad2-ship .box { height: 64%; } .iad2-ship .pal { height: 100%; bottom: -4%; }
+.iad2-years b { font-size: 92px; }
+@media (max-width: 900px) {
+  .iad2-vis { margin-block: 0; min-height: 170px; overflow: hidden; }
+  .iad2-film { height: 220px !important; margin-block: -24px; }
+  .iad2-fix { width: 200px; height: 200px; }
+  .iad2-years b { font-size: 72px; }
+}
+.ad-tile img { width: 46%; max-height: 92%; inset-inline-end: 0; bottom: 0; }
+.ad-tile img.wide { width: 52%; }
+.iad2-scene { padding-bottom: 40px; }
+.iad2-fix { transform: scale(1.35); transform-origin: 50% 60%; }
+.iad2-vis { margin-block: -22px -40px; }
