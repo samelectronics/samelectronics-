@@ -8,7 +8,8 @@
 import React, { useEffect, useState } from 'react';
 import { isEmbed } from '@/lib/embed';
 import { prefs } from '@/lib/prefs';
-import SESamsoom from '@/components/dc/SESamsoom';
+import LiveSam from '@/components/samsoom/LiveSam';
+import { logWarning } from '@/lib/warnings';
 
 const tr = (s: string) => (typeof window !== 'undefined' && (window as unknown as { seI18n?: { t: (x: string) => string } }).seI18n?.t(s)) || s;
 const offsetOf = (tz: string) => { try { const d = new Date(), s = d.toLocaleString('en-US', { timeZone: tz, hour12: false }); return Math.round((new Date(s).getTime() - new Date(d.toLocaleString('en-US', { hour12: false })).getTime()) / 36e5) + -d.getTimezoneOffset() / 60; } catch { return null; } };
@@ -22,6 +23,28 @@ function whistle() {
     g.gain.exponentialRampToValueAtTime(0.12 * Math.max(0.3, p.vol), t + 0.03); g.gain.setValueAtTime(0.12 * Math.max(0.3, p.vol), t + 0.3); g.gain.exponentialRampToValueAtTime(0.02, t + 0.36); g.gain.exponentialRampToValueAtTime(0.14 * Math.max(0.3, p.vol), t + 0.42); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.0);
     o.connect(g); o.start(t); lfo.start(t); o.stop(t + 1.05); lfo.stop(t + 1.05); window.setTimeout(() => c.close(), 1400);
   } catch { /* no audio */ }
+}
+
+/** a short, soft system "error" double beep (screenshot notice) */
+function errBeep() {
+  try { const p = prefs().sound; if (!p.on) return; const c = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)(), t = c.currentTime;
+    [0, 0.16].forEach((d, i) => { const o = c.createOscillator(), g = c.createGain(), f = c.createBiquadFilter(); o.type = 'square'; o.frequency.value = i ? 392 : 523; f.type = 'lowpass'; f.frequency.value = 1800; g.gain.setValueAtTime(0.0001, t + d); g.gain.exponentialRampToValueAtTime(0.05 * Math.max(0.3, p.vol), t + d + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + d + 0.14); o.connect(f); f.connect(g); g.connect(c.destination); o.start(t + d); o.stop(t + d + 0.16); });
+    window.setTimeout(() => c.close(), 600); } catch { /* */ } }
+
+/** Samsoom in a notice: blows his little red whistle (or raises the alarm), looks surprised, then keeps emoting */
+function SamAlarm({ kind }: { kind: 'vpn' | 'copy' }) {
+  const [ph, setPh] = useState(0);
+  useEffect(() => { const a = window.setTimeout(() => setPh(1), 1100), b = window.setTimeout(() => setPh(2), 2600); return () => { window.clearTimeout(a); window.clearTimeout(b); }; }, []);
+  return (
+    <span className={'gd-sam ph' + ph + ' ' + kind} aria-hidden="true">
+      <LiveSam size={86} mood={ph === 2 ? 'think' : 'idle'} play={ph === 0 ? 'blush' : ph === 1 ? 'wow' : 'happy'} />
+      {kind === 'vpn'
+        ? <i className="gd-whistle"><svg viewBox="0 0 40 24" width="34" height="20"><path d="M2 10h16a9 9 0 1 1 0 6H2z" fill="#E5484D" stroke="#9E1F23" strokeWidth="1.2" /><circle cx="25" cy="13" r="3.4" fill="#9E1F23" /><rect x="6" y="6" width="5" height="4" rx="1" fill="#E5484D" stroke="#9E1F23" strokeWidth="1" /></svg></i>
+        : <i className="gd-alert">!</i>}
+      <i className="gd-wv a" /><i className="gd-wv b" />
+      {ph >= 1 ? <i className="gd-surprise">!?</i> : null}
+    </span>
+  );
 }
 
 export default function Guard() {
@@ -38,17 +61,15 @@ export default function Guard() {
             if (!g || !g.tz) return; const here = Intl.DateTimeFormat().resolvedOptions().timeZone; if (!here || here === g.tz) return;
             const a = offsetOf(g.tz), b = -new Date().getTimezoneOffset() / 60; if (a == null) return;
             const ipOff = (() => { try { const d = new Date(); const s = new Intl.DateTimeFormat('en-US', { timeZone: g.tz!, timeZoneName: 'shortOffset' }).formatToParts(d).find((x) => x.type === 'timeZoneName')?.value || ''; const m = s.match(/GMT([+-]\d+)(?::(\d+))?/); return m ? +m[1] + (m[2] ? Math.sign(+m[1]) * +m[2] / 60 : 0) : s === 'GMT' ? 0 : null; } catch { return null; } })();
-            if (ipOff == null) return; if (Math.abs(ipOff - b) >= 2) { setVpn(true); whistle(); }
+            if (ipOff == null) return; if (Math.abs(ipOff - b) >= 2) { setVpn(true); whistle(); logWarning('vpn', 'connection ' + g.tz + ' · device ' + here); }
           }).catch(() => { /* offline or not on Vercel */ });
         }, 4000);
       }
     }
     // 2. screenshot keys
-    let last = 0;
     const seen = () => {
       setShot(true);
-      const now = Date.now(); if (now - last < 60000) return; last = now;
-      import('@/lib/backend').then(({ backend }) => backend.send({ name: 'Website', topic: 'Screenshot taken', text: '*Screenshot taken*\n*Page:* ' + location.href + '\n*Time:* ' + new Date().toLocaleString('en-GB', { timeZone: 'Asia/Dubai' }) + ' (Dubai)' })).catch(() => { /* */ });
+      logWarning('screenshot', 'keys pressed on ' + (navigator.platform || 'computer')); errBeep();
     };
     const down = (e: KeyboardEvent) => { if (e.key === 'Escape') { setShot(false); setVpn(false); return; } const k = e.key.toLowerCase(); if ((e.metaKey && e.shiftKey && ['3', '4', '5', 's'].includes(k)) || (e.ctrlKey && e.shiftKey && k === 's' && navigator.platform.startsWith('Win'))) seen(); };
     const up = (e: KeyboardEvent) => { if (e.key === 'PrintScreen' || e.code === 'PrintScreen') seen(); };
@@ -60,10 +81,11 @@ export default function Guard() {
       {vpn ? (
         <div className="gd-veil" role="dialog" aria-modal="true" aria-label={tr('VPN detected')}>
           <div className="gd-card">
-            <span className="gd-sam" aria-hidden="true"><SESamsoom mood="wow" size={72} /><i className="gd-wh"><svg width="26" height="18" viewBox="0 0 26 18" fill="none" stroke="#26282B" strokeWidth="1.8"><path d="M2 9h9a6 6 0 1 0 6-6H7" /><circle cx="17" cy="9" r="2" fill="#26282B" /></svg></i><i className="gd-wv a" /><i className="gd-wv b" /></span>
+            <SamAlarm kind="vpn" />
             <span className="gd-k">{tr('SAMSOOM · HOLD ON')}</span>
             <b className="gd-h">{tr('Hey! Is that a VPN?')}</b>
-            <p className="gd-p">{tr('Your connection says you are somewhere else than your device does. Prices, stock and delivery here depend on where you really are, and hiding your location goes against our terms of use. Please switch the VPN off for real prices and delivery times.')}</p>
+            <p className="gd-p">{tr('Prices and delivery depend on where you really are. Please switch the VPN off.')}</p>
+            <a className="gd-more" href="/notices#vpn">{tr('Why am I seeing this?')} →</a>
             <div className="gd-acts">
               <button type="button" className="gd-b y" onClick={() => setVpn(false)}>{tr('OK, I will switch it off')}</button>
               <button type="button" className="gd-b" onClick={() => setVpn(false)}>{tr('I am travelling, carry on')}</button>
@@ -74,10 +96,12 @@ export default function Guard() {
       {shot ? (
         <div className="gd-veil" role="alertdialog" aria-modal="true" aria-label={tr('Copyright notice')} onClick={(e) => { if (e.target === e.currentTarget) setShot(false); }}>
           <div className="gd-card">
+            <SamAlarm kind="copy" />
             <span className="gd-k">{tr('COPYRIGHT NOTICE')}</span>
             <b className="gd-h">{tr('This content is protected.')}</b>
-            <p className="gd-p">{tr('Everything on this website and in its systems (photos, designs, texts, prices and data) belongs to Sam Electronics and is protected by the copyright laws of the United Arab Emirates, including Federal Decree-Law No. 38 of 2021. A screenshot for your own reference is fine; copying, sharing or publishing it without our written permission is not.')}</p>
+            <p className="gd-p">{tr('Keeping it for yourself is fine; sharing or publishing it needs our permission.')}</p>
             <p className="gd-s">{tr('If you took it for another reason, you can safely ignore this message.')}</p>
+            <a className="gd-more" href="/notices#copyright">{tr('Read the full notice')} →</a>
             <div className="gd-acts"><button type="button" className="gd-b y" onClick={() => setShot(false)}>{tr('I understand')}</button></div>
           </div>
         </div>

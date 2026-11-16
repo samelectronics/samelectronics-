@@ -218,11 +218,22 @@ export function Inbox({ me }: P) {
   const send = async (e?: React.FormEvent, s?: string) => { e?.preventDefault(); const body = (s || text).trim(); if (!cur || !body) return; await backend.send({ thread: cur, name: me.name, text: body, from: 'staff' }); setText(''); backend.messages(cur).then(setMsgs); load(); };
   const [find, setFind] = useState('');
   // owner (16 Nov): every customer and every message has an ID; find a thread by name, customer ID or message ID
-  const sorted = useMemo(() => [...threads].filter((x) => !find.trim() || (x.name + ' ' + (x.email || '') + ' ' + x.topic + ' ' + x.last).toUpperCase().includes(find.trim().toUpperCase())).sort((a, b) => (a.status === 'open' ? 0 : 1) - (b.status === 'open' ? 0 : 1) || b.at - a.at), [threads, find]);
+  // owner (17 Nov): system warnings (VPN, screenshots) are kept apart from real conversations
+  const [kind, setKind] = useState<'all' | 'people' | 'system'>('people');
+  const isSys = (x: { topic: string }) => /^System warning/.test(x.topic || '');
+  const nSys = threads.filter(isSys).length;
+  // owner (17 Nov): never miss a customer: the tab shows how many chats are waiting and a soft chime plays when a new one comes in
+  const waiting = threads.filter((x) => x.status === 'open' && !isSys(x)).length, prevW = useRef(-1);
+  useEffect(() => {
+    const base = document.title.replace(/^\(\d+\) /, ''); document.title = (waiting ? '(' + waiting + ') ' : '') + base;
+    if (prevW.current >= 0 && waiting > prevW.current) { try { const c = new AudioContext(), t = c.currentTime; [880, 1319].forEach((f, i) => { const o = c.createOscillator(), g = c.createGain(); o.frequency.value = f; g.gain.setValueAtTime(0.0001, t + i * 0.12); g.gain.exponentialRampToValueAtTime(0.08, t + i * 0.12 + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.12 + 0.5); o.connect(g); g.connect(c.destination); o.start(t + i * 0.12); o.stop(t + i * 0.12 + 0.55); }); window.setTimeout(() => c.close(), 900); } catch { /* */ } }
+    prevW.current = waiting;
+  }, [waiting]);
+  const sorted = useMemo(() => [...threads].filter((x) => kind === 'all' || (kind === 'system' ? isSys(x) : !isSys(x))).filter((x) => !find.trim() || (x.name + ' ' + (x.email || '') + ' ' + x.topic + ' ' + x.last).toUpperCase().includes(find.trim().toUpperCase())).sort((a, b) => (a.status === 'open' ? 0 : 1) - (b.status === 'open' ? 0 : 1) || b.at - a.at), [threads, find, kind]);
   const cur_ids = idsIn(msgs.map((m) => m.text).join('\n'));
   return (
     <div className="cr-inbox">
-      <div className="cr-threads"><input className="cr-in cr-find-id" value={find} onChange={(e) => setFind(e.target.value)} placeholder="Find: name, SE-C-…, SE-M-…" />{sorted.length ? sorted.map((x) => <button key={x.id} type="button" className={(cur === x.id ? 'on ' : '') + x.status} onClick={() => setCur(x.id)}><span><b>{x.name}</b><small>{when(x.at)}</small></span><small>{x.topic}{idsIn(x.last || '').c ? ' · ' + idsIn(x.last || '').c : ''}</small><em>{(x.last || '').replace(/\*/g, '')}</em>{x.status === 'open' ? <i /> : null}</button>) : <small className="cr-muted" style={{ padding: 16 }}>No conversations yet. Messages from the website’s live chat, contact form and My Bench land here.</small>}</div>
+      <div className="cr-threads"><span className="cr-kinds">{([['people', 'Customers'], ['system', 'System warnings' + (nSys ? ' · ' + nSys : '')], ['all', 'All']] as const).map(([k, l]) => <button key={k} type="button" className={kind === k ? 'on' : ''} onClick={() => setKind(k)}>{l}</button>)}</span><input className="cr-in cr-find-id" value={find} onChange={(e) => setFind(e.target.value)} placeholder="Find: name, SE-C-…, SE-M-…" />{sorted.length ? sorted.map((x) => <button key={x.id} type="button" className={(cur === x.id ? 'on ' : '') + x.status} onClick={() => setCur(x.id)}><span><b>{x.name}</b><small>{when(x.at)}</small></span><small>{x.topic}{idsIn(x.last || '').c ? ' · ' + idsIn(x.last || '').c : ''}</small><em>{(x.last || '').replace(/\*/g, '')}</em>{x.status === 'open' ? <i /> : null}</button>) : <small className="cr-muted" style={{ padding: 16 }}>No conversations yet. Messages from the website’s live chat, contact form and My Bench land here.</small>}</div>
       <div className="cr-conv">
         {t ? (
           <>

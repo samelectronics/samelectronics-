@@ -731,3 +731,25 @@ main, body > div > main { animation: sePageIn .5s cubic-bezier(.2,.8,.2,1) both;
 .wc-veil, .cc-veil, .pv-veil, .sc2-veil { animation: seVeilIn .25s ease-out both; }
 @keyframes seVeilIn { from { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { ::view-transition-old(root), ::view-transition-new(root), main { animation: none !important; } }
+/* notices page + animated Samsoom in the notices */
+.nt { display: grid; gap: 18px; max-width: 860px; }
+.nt-c { padding: 24px 26px; border-radius: 18px; background: #fff; box-shadow: inset 0 0 0 1px rgba(38,40,43,.08); scroll-margin-top: 100px; }
+.nt-c:target { box-shadow: inset 0 0 0 2px #F7C032; }
+.nt-c .sp-p { margin-top: 10px; }
+.nt-log { list-style: none; margin: 10px 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.nt-log li { display: grid; grid-template-columns: 1fr auto auto; gap: 14px; padding: 10px 12px; border-radius: 10px; background: #F6F7F8; font: 500 13px Inter, sans-serif; }
+.nt-log span, .nt-log time { color: #6B6F75; font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+.gd-more { display: inline-block; margin-top: 10px; font: 600 13px Inter, sans-serif; color: #26282B; text-decoration: underline; text-decoration-color: #F7C032; text-decoration-thickness: 2px; text-underline-offset: 3px; }
+html[data-theme="dark"] .gd-more { color: #fff; }
+.gd-sam { overflow: visible !important; }
+.gd-sam.copy { background: #26282B; }
+.gd-whistle { position: absolute; left: 50%; top: 58%; z-index: 3; margin-left: -6px; transform-origin: 0 50%; animation: gdBlow .35s ease-in-out 3 alternate; }
+.gd-sam.ph2 .gd-whistle { animation: gdDrop .5s ease-in forwards; }
+@keyframes gdBlow { from { transform: rotate(-4deg) scale(1); } to { transform: rotate(4deg) scale(1.12); } }
+@keyframes gdDrop { to { transform: translate(30px, 26px) rotate(40deg); opacity: 0; } }
+.gd-alert { position: absolute; right: -6px; top: -4px; z-index: 3; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #E5484D; color: #fff; font: 800 16px 'Space Grotesk', sans-serif; font-style: normal; box-shadow: 0 0 0 3px #fff; animation: gdPulse .6s ease-in-out 3; }
+@keyframes gdPulse { 50% { transform: scale(1.25); } }
+.gd-surprise { position: absolute; left: -18px; top: -14px; z-index: 3; font: 800 22px 'Space Grotesk', sans-serif; font-style: normal; color: #26282B; text-shadow: 0 0 0 #fff, 0 2px 0 #fff; animation: gdPop .45s cubic-bezier(.2,1.6,.4,1) both; }
+.gd-sam.copy .gd-surprise { color: #F7C032; }
+@keyframes gdPop { from { transform: scale(0) rotate(-20deg); opacity: 0; } }
+.gd-sam.ph2 .gd-wv { display: none; }

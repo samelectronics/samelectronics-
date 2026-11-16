@@ -1776,6 +1776,21 @@ export const R7: Record<string, string> = {
 
 /** Round 8: Sam Circuit's three cards, Samsoom's tour and chat menu. */
 export const R8: Record<string, string> = {
+  'Prices and delivery depend on where you really are. Please switch the VPN off.': 'الأسعار والتوصيل تعتمد على مكانك الحقيقي. يرجى إيقاف VPN.',
+  'Why am I seeing this?': 'لماذا أرى هذا؟',
+  'Keeping it for yourself is fine; sharing or publishing it needs our permission.': 'الاحتفاظ بها لنفسك لا بأس به؛ أما مشاركتها أو نشرها فيحتاج إذننا.',
+  'Read the full notice': 'اقرأ الإشعار كاملًا',
+  'SITE NOTICES': 'تنبيهات الموقع',
+  'Site notices': 'تنبيهات الموقع',
+  'Short pop-ups.': 'نوافذ قصيرة.',
+  'The full story.': 'القصة كاملة.',
+  'What each notice on this website means, and every notice this device has been shown.': 'ما يعنيه كل تنبيه في هذا الموقع، وكل تنبيه ظهر على هذا الجهاز.',
+  'Location notice (VPN)': 'تنبيه الموقع (VPN)',
+  'Notices shown on this device': 'التنبيهات التي ظهرت على هذا الجهاز',
+  'None so far.': 'لا شيء حتى الآن.',
+  'This list stays on this device. The team keeps the same record with your customer ID.': 'تبقى هذه القائمة على هذا الجهاز. ويحتفظ الفريق بالسجل نفسه برقم العميل الخاص بك.',
+  'Location mismatch (VPN)': 'عدم تطابق الموقع (VPN)',
+  'Screenshot · copyright notice': 'لقطة شاشة · إشعار حقوق النشر',
   'Everything on this website and in its systems (photos, designs, texts, prices and data) belongs to Sam Electronics and is protected by the copyright laws of the United Arab Emirates, including Federal Decree-Law No. 38 of 2021. A screenshot for your own reference is fine; copying, sharing or publishing it without our written permission is not.': 'كل ما على هذا الموقع وفي أنظمته (الصور والتصاميم والنصوص والأسعار والبيانات) ملك لسام إلكترونيكس ومحمي بقوانين حقوق المؤلف في الإمارات، ومنها المرسوم بقانون اتحادي رقم 38 لسنة 2021. لا بأس بلقطة شاشة لاستخدامك الخاص؛ أما نسخها أو مشاركتها أو نشرها دون إذن كتابي منا فغير مسموح.',
   'Your connection says you are somewhere else than your device does. Prices, stock and delivery here depend on where you really are, and hiding your location goes against our terms of use. Please switch the VPN off for real prices and delivery times.': 'اتصالك يقول إنك في مكان غير الذي يقوله جهازك. الأسعار والمخزون والتوصيل تعتمد على مكانك الحقيقي، وإخفاء موقعك يخالف شروط الاستخدام لدينا. يرجى إيقاف VPN لرؤية الأسعار ومواعيد التوصيل الحقيقية.',
   '6-MONTH WARRANTY': 'ضمان 6 أشهر',

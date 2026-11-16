@@ -275,6 +275,9 @@ export default function Footer({ v }: { v: Vals }) {
               <a href="/cookies" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')} onClick={(e) => { e.preventDefault(); window.dispatchEvent(new CustomEvent('se:settings', { detail: 'privacy' })); }}>
                 Cookie settings
               </a>
+              <a href="/notices" style={{ color: '#9DA1A6' }} className={cx(undefined, 'scp-f2a4cf2e')}>
+                Site notices
+              </a>
             </span>
             {'\n        '}
             {/* R7-G: the same quick language menu as the nav, opening upwards */}
