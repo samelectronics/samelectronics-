@@ -570,3 +570,16 @@ html[dir="rtl"] .ms2-track b { left: auto; right: calc(var(--p) * 100%); margin-
 .sx-acts { flex-wrap: wrap; }
 .sx-more .sx-h2 { color: #fff; } .sx-more .sx-card { background: #fff; }
 @media (prefers-reduced-motion: reduce) { .sx-pimg img, .sx-sweep { animation: none; } }
+/* contact: WhatsApp line in its colour; the branded Deira map; colour order */
+.sb-l.k-wa .sb-jack { background: #25D366 !important; color: #fff !important; } .sb-l.k-wa .sb-jack svg { fill: #fff; }
+.ct-map2 { position: relative; display: block; border-radius: 22px; overflow: hidden; min-height: 320px; background: #2A2C2F; box-shadow: 0 30px 60px -30px rgba(0,0,0,.6); }
+.ct-map2 svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.ct-pin { position: absolute; left: 50%; top: 46%; width: 22px; height: 22px; margin: -22px 0 0 -11px; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); background: #F7C032; box-shadow: 0 0 0 6px rgba(247,192,50,.25), 0 8px 18px rgba(0,0,0,.5); }
+.ct-pin i { position: absolute; left: 50%; top: 50%; width: 60px; height: 60px; margin: -30px 0 0 -30px; border-radius: 50%; border: 2px solid rgba(247,192,50,.6); animation: ctPing 2s ease-out infinite; }
+@keyframes ctPing { from { transform: scale(.2); opacity: 1; } to { transform: scale(1.4); opacity: 0; } }
+.ct-mapgo { position: absolute; right: 14px; bottom: 14px; padding: 8px 14px; border-radius: 10px; background: #fff; color: #26282B; font: 700 13px Inter, sans-serif; }
+#chat.sp-sec.y .sp-p { color: #3A3C40; }
+#help.sp-sec.w .sp-card { background: #fff; box-shadow: 0 1px 2px rgba(0,0,0,.05), 0 10px 26px -18px rgba(38,40,43,.35); }
+.ct-priv .sp-h2 { color: #fff; } .ct-priv .sp-p { color: #C9CBCE; }
+.ct-hours .sp-h2, .ct-hours b { color: #26282B !important; } .ct-hours .sp-p { color: #5D6166 !important; }
+.ct-two .pf-body { grid-template-columns: 1fr; } .ct-two .pf-printer { order: -1; position: relative; top: 0; } .ct-two .pf-printer .vs-slip-wrap { padding-bottom: 6px; }

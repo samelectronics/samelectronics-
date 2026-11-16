@@ -1,9 +1,11 @@
 'use client';
+import PrintedForm from '@/components/site/PrintedForm';
+import { MapDubai } from '@/components/dc/SEStory';
 // P4 · CONTACT & HELP (/contact): every way to reach us on one page — call, WhatsApp, e-mail, socials, visit (live hours,
 // map, directions), a live chat with the team (answered from the Control Room inbox; when nobody is in, it waits and we
 // e-mail the reply), a contact form by topic, the help centre (#help), privacy requests (#privacy) and the legal texts.
 import React, { useEffect, useRef, useState } from 'react';
-import { data } from '@/lib/catalog';
+import { data, waCard } from '@/lib/catalog';
 import { backend, useMe, type Message } from '@/lib/backend';
 import { PageHero, T, useRise } from '@/components/site/ui';
 import HoursLive from '@/components/home/HoursLive';
@@ -65,27 +67,29 @@ export default function ContactPage() {
           <div className="ct-live"><HoursLive /></div>
           <span className="sp-acts"><a className="sp-btn" href={'https://maps.app.goo.gl/EsZiUQy8HmzfJg6QA'} target="_blank" rel="noopener noreferrer">{T('Get directions')}</a><a className="sp-btn ghost" href="/repair#book">{T('Book a repair')}</a></span>
         </div>
-        <div className="ct-map" data-rise><iframe title={T('Map')} src={map} loading="lazy" referrerPolicy="no-referrer-when-downgrade" /></div>
+        <a className="ct-map ct-map2" data-rise href="https://maps.app.goo.gl/EsZiUQy8HmzfJg6QA" target="_blank" rel="noopener noreferrer" aria-label={T('Open in Maps')}><MapDubai /><span className="ct-mapgo">{T('Open in Maps')} ↗</span></a>
       </div></section>
 
-      <section id="chat" className="sp-sec w"><div className="sp-wrap ct-two">
+      <section id="chat" className="sp-sec y"><div className="sp-wrap ct-two">
         <div data-rise><span className="sp-eb">{T('LIVE CHAT')}</span><h2 className="sp-h2">{T('A real person, right here.')}</h2><p className="sp-p">{T('Messages go straight to the team’s inbox in the Control Room. For quick answers any time, Samsoom is in the corner.')}</p><LiveChat /></div>
         <div data-rise>
           <span className="sp-eb">{T('WRITE TO US')}</span><h2 className="sp-h2">{T('Send a message')}</h2>
-          {sent ? <div className="sp-card"><b className="sp-h3">{T('Message sent.')}</b><p className="sp-p">{T('Thank you. We reply by e-mail, usually the same day.')}</p></div> : (
-            <form className="sp-card rp-form" onSubmit={submit} style={{ marginTop: 18 }}>
-              <label className="sp-field">{T('Your name')}<input required value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></label>
-              <label className="sp-field">{T('E-mail')}<input required type="email" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} /></label>
-              <label className="sp-field">{T('Phone (optional)')}<input value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} /></label>
-              <label className="sp-field">{T('Topic')}<select value={f.topic} onChange={(e) => setF({ ...f, topic: e.target.value })}>{['General', 'Order parts', 'Bulk quote', 'Book a repair', 'Trade account', 'Shipping quote', 'Warranty or return', 'Complaint', 'Partnership'].map((t) => <option key={t} value={t}>{T(t)}</option>)}</select></label>
-              <label className="sp-field" style={{ gridColumn: '1 / -1' }}>{T('Message')}<textarea required value={f.text} onChange={(e) => setF({ ...f, text: e.target.value })} /></label>
-              <button type="submit" className="sp-btn dark" style={{ gridColumn: '1 / -1' }}>{T('Send message')}</button>
-            </form>
-          )}
+          <div style={{ marginTop: 18 }}><PrintedForm eb="MESSAGE" title="We reply by e-mail, usually the same day." doc="MESSAGE"
+            fields={[
+              { k: 'name', label: 'Your name', req: true, slip: 'Name' },
+              { k: 'email', label: 'E-mail', kind: 'email', req: true, slip: 'E-mail' },
+              { k: 'phone', label: 'Phone (optional)', kind: 'tel', slip: 'Phone' },
+              { k: 'topic', label: 'Topic', kind: 'select', opts: ['General', 'Order parts', 'Bulk quote', 'Book a repair', 'Trade account', 'Shipping quote', 'Warranty or return', 'Complaint', 'Partnership'].map((t) => [t, t] as [string, string]), slip: 'Topic' },
+              { k: 'text', label: 'Message', kind: 'area', req: true, slip: '' },
+            ]}
+            cta="Send message"
+            send={(v) => backend.send({ name: v.name, email: v.email, topic: v.topic, text: waCard(v.topic, [['Message', v.text], ['E-mail', v.email], ['Phone', v.phone]], { name: v.name }) }).then(() => undefined)}
+            done={() => <div className="sp-card"><b className="sp-h3">{T('Message sent.')}</b><p className="sp-p">{T('Thank you. We reply by e-mail, usually the same day.')}</p></div>}
+          /></div>
         </div>
       </div></section>
 
-      <section id="help" className="sp-sec g"><div className="sp-wrap">
+      <section id="help" className="sp-sec w"><div className="sp-wrap">
         <div className="sp-head" data-rise><div><span className="sp-eb">{T('HELP CENTRE')}</span><h2 className="sp-h2">{T('Answers to common questions')}</h2></div><button type="button" className="sp-btn sm dark" onClick={() => window.dispatchEvent(new CustomEvent('se:help'))}>{T('Ask Samsoom to show you around')}</button></div>
         <div className="ct-help" data-rise>{HELP.map(([g, qs]) => (
           <div key={g} className="sp-card"><b className="sp-h3">{T(g)}</b>
@@ -94,17 +98,19 @@ export default function ContactPage() {
         ))}</div>
       </div></section>
 
-      <section id="privacy" className="sp-sec w"><div className="sp-wrap rp-book">
+      <section id="privacy" className="sp-sec g"><div className="sp-wrap rp-book ct-priv">
         <div data-rise><span className="sp-eb">{T('YOUR DATA')}</span><h2 className="sp-h2">{T('Privacy requests')}</h2><p className="sp-p">{T('Ask for a copy of the data we hold about you, a correction, or the deletion of your account. We answer within 30 days.')}</p>
           <div className="ct-legal">{[['Terms of sale', 'terms'], ['Warranty policy', 'warranty'], ['Returns & refunds', 'returns'], ['Shipping policy', 'shipping'], ['Privacy policy', 'privacy'], ['Cookies', 'cookies'], ['Accounts & reviews', 'accounts']].map(([l, h]) => <a key={h} className="sp-chip" href={'/legal#' + h}>{T(l)}</a>)}</div>
         </div>
-        {pvSent ? <div className="sp-card"><b className="sp-h3">{T('Request received.')}</b><p className="sp-p">{T('We will confirm it is you by e-mail, then act on it.')}</p></div> : (
-          <form className="sp-card rp-form" onSubmit={async (e) => { e.preventDefault(); await backend.send({ name: pv.email, email: pv.email, topic: 'Privacy request', text: 'Privacy request: ' + pv.kind }); setPvSent(true); }} data-rise>
-            <label className="sp-field" style={{ gridColumn: '1 / -1' }}>{T('Account e-mail')}<input required type="email" value={pv.email} onChange={(e) => setPv({ ...pv, email: e.target.value })} /></label>
-            <label className="sp-field" style={{ gridColumn: '1 / -1' }}>{T('Request')}<select value={pv.kind} onChange={(e) => setPv({ ...pv, kind: e.target.value })}><option value="copy">{T('A copy of my data')}</option><option value="correct">{T('Correct my data')}</option><option value="delete">{T('Delete my account and data')}</option></select></label>
-            <button type="submit" className="sp-btn dark" style={{ gridColumn: '1 / -1' }}>{T('Send request')}</button>
-          </form>
-        )}
+        <div data-rise><PrintedForm eb="YOUR DATA" title="Privacy request" doc="PRIVACY REQUEST"
+          fields={[
+            { k: 'email', label: 'Account e-mail', kind: 'email', req: true, slip: 'Account', wide: true },
+            { k: 'kind', label: 'Request', kind: 'chips', opts: [['copy', 'A copy of my data'], ['correct', 'Correct my data'], ['delete', 'Delete my account and data']], slip: 'Request' },
+          ]}
+          cta="Send request"
+          send={(v) => backend.send({ name: v.email, email: v.email, topic: 'Privacy request', text: waCard('Privacy request', [['Request', v.kind], ['Account', v.email]]) }).then(() => undefined)}
+          done={() => <div className="sp-card"><b className="sp-h3">{T('Request received.')}</b><p className="sp-p">{T('We will confirm it is you by e-mail, then act on it.')}</p></div>}
+        /></div>
       </div></section>
     </>
   );

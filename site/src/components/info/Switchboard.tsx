@@ -19,7 +19,7 @@ export default function Switchboard({ c }: { c: Cn }) {
   useEffect(() => { const W = window as unknown as { SE_DATA?: { hours: Record<string, number[][]> } }; const tick = () => { setNow(Date.now()); if (W.SE_DATA) setHours(W.SE_DATA.hours); }; tick(); const iv = window.setInterval(tick, 15000); return () => window.clearInterval(iv); }, []);
   const s = hours ? shopStatus(hours, now) : null, open = !!s?.open, d = dubai(now), clock = String(Math.floor(d.m / 60)).padStart(2, '0') + ':' + String(d.m % 60).padStart(2, '0');
   const lines: { k: string; n: string; v: string; href: string; ext?: boolean; on: boolean; st: string; hint: string }[] = [
-    { k: 'wa', n: 'WhatsApp', v: c.mobile || '+971 50 342 0015', href: 'https://wa.me/' + (c.wa || '971503420015'), ext: true, on: true, st: open ? 'Answering now' : 'Leave a message', hint: 'Fastest: stock, prices, orders' },
+    { k: 'wa', n: 'WhatsApp · WeChat', v: c.mobile || '+971 50 342 0015', href: 'https://wa.me/' + (c.wa || '971503420015'), ext: true, on: true, st: open ? 'Answering now' : 'Leave a message', hint: 'Fastest: stock, prices, orders' },
     { k: 'call', n: 'Call the shop', v: c.phone || '+971 4 273 3031', href: 'tel:' + (c.tel || '+97142733031'), on: open, st: open ? 'Line open' : 'Line closed', hint: 'During opening hours' },
     { k: 'visit', n: 'Visit the counter', v: 'Al Murar, Deira', href: '#visit', on: open, st: s ? s.short : '…', hint: 'Walk in, no appointment' },
     { k: 'chat', n: 'Live chat with the team', v: 'Right on this page', href: '#chat', on: open, st: open ? 'Team online' : 'Replies when we open', hint: 'Goes to the team inbox' },
