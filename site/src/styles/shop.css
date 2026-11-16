@@ -892,3 +892,38 @@ html[dir='rtl'] .ss-pal .ss-it.hi { box-shadow: inset -3px 0 0 #F7C032; }
 .ss-prev-go:hover { background: #F7C032; color: #26282B; }
 @media (max-width: 900px) { .ss-pal { grid-template-columns: 1fr; } .ss-prev { display: none; } }
 .ss.sm .ss-pal { grid-template-columns: minmax(0, 1fr) 260px; }
+/* in-list ads v3 (owner, 17 Nov): three looks that rotate in order (graphite, brand yellow, white), never black;
+   glowing diagonal light beams like the teardown ad; brand ads with their real logo */
+.iad2.t-d { background: radial-gradient(70% 120% at 85% 0%, rgba(247,192,50,.14), transparent 60%), linear-gradient(115deg, #34363A, #2A2C2F 60%, #26282B) !important; }
+.iad2.t-y { background: radial-gradient(70% 120% at 85% 0%, rgba(255,255,255,.45), transparent 60%), linear-gradient(115deg, #FFD566, #F7C032 55%, #EDB21E) !important; color: #26282B !important; }
+.iad2.t-w { background: radial-gradient(70% 120% at 85% 0%, rgba(247,192,50,.16), transparent 60%), #FFFFFF !important; color: #26282B !important; box-shadow: inset 0 0 0 1px rgba(38,40,43,.08), 0 24px 48px -30px rgba(0,0,0,.35) !important; }
+.iad2.t-y .iad2-t, .iad2.t-w .iad2-t, .iad2.t-y:hover .iad2-t, .iad2.t-w:hover .iad2-t { color: #26282B !important; }
+.iad2.t-y .iad2-d { color: #4A3A00 !important; } .iad2.t-w .iad2-d { color: #5C6066 !important; }
+.iad2.t-y .iad2-k { color: #26282B; } .iad2.t-y .iad2-k .rec { background: #26282B; box-shadow: none; } .iad2.t-y .iad2-k em, .iad2.t-w .iad2-k em { background: rgba(38,40,43,.1); color: #26282B; }
+.iad2.t-w .iad2-k { color: #B07C00; }
+.iad2.t-y .iad2-chips i { color: #26282B; background: rgba(255,255,255,.35); box-shadow: inset 0 0 0 1px rgba(38,40,43,.25); }
+.iad2.t-w .iad2-chips i { color: #26282B; background: #FFF6DC; box-shadow: inset 0 0 0 1px rgba(247,192,50,.6); }
+.iad2.t-y .iad2-cta { background: #26282B; color: #F7C032; box-shadow: 0 10px 24px -12px rgba(0,0,0,.6); }
+.iad2.t-w .iad2-cta { background: #26282B; color: #fff; }
+.iad2.t-y .iad2-dots button, .iad2.t-w .iad2-dots button { background: rgba(38,40,43,.15); } .iad2.t-y .iad2-dots button i, .iad2.t-w .iad2-dots button i { background: #26282B; }
+.iad2.t-y .g1, .iad2.t-y .g2 { background: rgba(255,255,255,.35) !important; } .iad2.t-w .g1 { background: rgba(247,192,50,.18) !important; } .iad2.t-w .g2 { background: rgba(247,192,50,.08) !important; }
+.iad2.t-y .iad2-years b { -webkit-text-stroke-color: #26282B; filter: none; } .iad2.t-y .iad2-years b i { color: #26282B; } .iad2.t-y .iad2-years small, .iad2.t-w .iad2-years small { color: #4A4D52; }
+.iad2.t-w .iad2-years b { -webkit-text-stroke-color: #26282B; filter: none; } .iad2.t-w .iad2-years b i { color: #F7C032; }
+.iad2.t-y .iad2-ship .route { stroke: #26282B; filter: none; }
+/* glowing light beams: a soft wide glow with a bright core, drifting diagonally */
+.iad2-bg .ray { position: absolute; left: -20%; width: 140%; height: 2px; top: 50%; border-radius: 2px; transform: rotate(-16deg); background: linear-gradient(90deg, transparent, rgba(255,226,150,.95) 50%, transparent); box-shadow: 0 0 18px 6px rgba(247,192,50,.35), 0 0 60px 18px rgba(247,192,50,.12); opacity: .0; animation: iad2Ray 6.5s linear infinite; }
+.iad2-bg .ray.r2 { animation-delay: -2.2s; animation-duration: 7.4s; }
+.iad2-bg .ray.r3 { animation-delay: -4.6s; animation-duration: 8.2s; height: 1.5px; }
+@keyframes iad2Ray { 0% { transform: translateY(-160px) rotate(-16deg); opacity: 0; } 15% { opacity: .9; } 85% { opacity: .9; } 100% { transform: translateY(200px) rotate(-16deg); opacity: 0; } }
+.iad2.t-y .ray { background: linear-gradient(90deg, transparent, rgba(255,255,255,.95) 50%, transparent); box-shadow: 0 0 18px 6px rgba(255,255,255,.45), 0 0 60px 18px rgba(255,255,255,.18); }
+.iad2.t-w .ray { background: linear-gradient(90deg, transparent, rgba(247,192,50,.9) 50%, transparent); box-shadow: 0 0 16px 5px rgba(247,192,50,.25); }
+.iad2:not(.live) .iad2-bg .ray { animation-play-state: paused; }
+.iad2-brand { position: relative; display: grid; place-items: center; width: 100%; height: 100%; }
+.iad2-brand .lg { position: absolute; top: 8px; inset-inline-start: 50%; transform: translateX(-50%); padding: 6px 12px; border-radius: 10px; background: #fff; box-shadow: 0 6px 16px -8px rgba(0,0,0,.35); z-index: 2; animation: iad2Fade .5s .25s both; }
+html[dir='rtl'] .iad2-brand .lg { transform: translateX(50%); }
+.iad2-brand img { height: 92% !important; margin-top: 18px; animation: iad2Rise .7s .35s cubic-bezier(.2,1.2,.4,1) both; }
+.iad2-brand { height: 210px; overflow: hidden; }
+.iad2-brand img { height: 170px !important; width: auto !important; max-width: 100% !important; margin-top: 34px; }
+.iad2-brand .lg { top: 6px; }
+@media (max-width: 900px) { .iad2-brand { height: 170px; } .iad2-brand img { height: 130px !important; } }
+.iad2-brand .lg { width: max-content !important; display: inline-flex; }

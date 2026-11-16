@@ -9,14 +9,19 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { T } from '@/components/site/ui';
 import { siteRaw } from '@/lib/catalog';
 import { allowed } from '@/lib/prefs';
+import SEBrandLogo from '@/components/dc/SEBrandLogo';
+import { brandInk } from '@/lib/brandInk';
 
-export type AdFx = 'film' | 'grades' | 'fix' | 'ship' | 'years';
+export type AdFx = 'film' | 'grades' | 'fix' | 'ship' | 'years' | 'brand';
 export type Ad = { id: string; k: string; t: string; d: string; cta: string; href: string; img: string; tone: 'y' | 'd' | 'w'; cat?: string; fx?: AdFx; chips?: string[] };
 export const ADS_DEFAULT: Ad[] = [
   { id: 'a1', fx: 'film', k: 'INSIDE YOUR PHONE', t: 'Every part inside your phone.', d: 'Screens, batteries, cameras and flex cables, tested on our bench.', chips: ['TESTED', 'WARRANTY', 'IN STOCK'], cta: 'Shop all parts', href: '/shop', img: '/assets/pose/film-24-480.webp', tone: 'd' },
   { id: 'a2', fx: 'grades', k: 'QUALITY GRADES', t: 'One screen. Four grades.', d: 'Original, OLED, Incell or AAA: you choose the quality and the price.', chips: ['ORIGINAL', 'OLED', 'INCELL', 'AAA'], cta: 'Compare grades', href: '/shop?cat=SCR', img: '/assets/pose/apple-sp-480.webp', tone: 'd', cat: 'SCR' },
   { id: 'a3', fx: 'fix', k: 'REPAIR LAB', t: 'Cracked in the morning. Fixed by lunch.', d: 'Bring your phone to Deira. Most fits take under an hour.', chips: ['WHILE YOU WAIT', 'TESTED TWICE'], cta: 'Book a repair', href: '/repair', img: '/assets/pose/rep-fixed-480.webp', tone: 'd' },
   { id: 'a4', fx: 'ship', k: 'WORLDWIDE DELIVERY', t: 'Packed in Deira. Tracked to your door.', d: 'Every week to the Middle East, Africa, Europe and Asia.', chips: ['PACKED', 'SHIPPED', 'TRACKED'], cta: 'Get a shipping quote', href: '/worldwide', img: '/assets/pallet/full-600.webp', tone: 'd' },
+  { id: 'b1', fx: 'brand', cat: 'SCR', k: 'SAMSUNG · SERVICE PACK', t: 'Straight from Samsung’s own box.', d: 'Service Pack screens for Galaxy S, A and Note, tested before they ship.', chips: ['SERVICE PACK', '6-MONTH WARRANTY'], cta: 'Shop Samsung', href: '/shop?q=Samsung', img: '/assets/pose/samsung-sp-480.webp', tone: 'w' },
+  { id: 'b2', fx: 'brand', k: 'APPLE · EVERY IPHONE', t: 'Every iPhone, every grade.', d: 'From the iPhone 8 to the newest Pro Max: screens, batteries and cameras.', chips: ['ORIGINAL', 'OLED', 'INCELL'], cta: 'Shop iPhone parts', href: '/shop?q=iPhone', img: '/assets/pose/apple-sp-480.webp', tone: 'y' },
+  { id: 'b3', fx: 'brand', k: 'XIAOMI · REDMI · POCO', t: 'Redmi and POCO, in stock.', d: 'The phones repair shops see most, with the parts on our shelf in Deira.', chips: ['IN STOCK', 'TRADE PRICES'], cta: 'Shop Xiaomi', href: '/shop?q=Xiaomi', img: '/assets/pose/xiaomi-sp-480.webp', tone: 'd' },
   { id: 'a5', fx: 'years', k: 'OUR EXPERIENCE', t: 'Since 2003. Same family, same street.', d: 'Twenty years of parts, repairs and honest prices in Deira.', chips: ['QUALITY', 'WARRANTY', 'PRICE'], cta: 'Our story', href: '/story', img: '/assets/se-logo-320.webp', tone: 'd' },
 ];
 export const shopAds = (): Ad[] => { const s = siteRaw<Ad[] | null>('shop-ads', null); return s && s.length ? s : ADS_DEFAULT; };
@@ -42,6 +47,7 @@ function Visual({ a, live }: { a: Ad; live: boolean }) {
     case 'fix': return <span className="iad2-fix"><img className="was" src="/assets/ads/rep-crack.webp" alt="" /><img className="now" src="/assets/ads/rep-fixed.webp" alt="" /><i className="scan" /></span>;
     case 'ship': return <span className="iad2-ship"><svg className="route" viewBox="0 0 300 80" preserveAspectRatio="none" aria-hidden="true"><path d="M8 66 C 80 6, 200 6, 292 52" pathLength={1} /></svg><img className="pal" src="/assets/pallet/full-600.webp" alt="" /></span>;
     case 'years': return <Years />;
+    case 'brand': { const b = a.id === 'b1' ? 'samsung' : a.id === 'b2' ? 'apple' : 'xiaomi'; return <span className="iad2-brand"><span className="lg"><SEBrandLogo brand={b} h={22} fit="120x26" color={brandInk(b)} /></span><img src={a.img} alt="" /></span>; }
     default: return <img className="iad2-pic" src={a.img} alt="" loading="lazy" />;
   }
 }
@@ -53,7 +59,7 @@ function Years() {
 
 export default function InlineAd({ slot, lastCat }: { slot: number; lastCat?: string }) {
   const list = useMemo(() => {
-    const all = shopAds(); const n = all.length; const rot = all.map((_, i) => all[(i + slot * 2) % n]);
+    const all = shopAds(); const n = all.length; const rot = all.map((_, i) => all[(i + slot * 3) % n]);
     if (lastCat && allowed('booster')) { const m = rot.findIndex((a) => a.cat === lastCat); if (m > 0) rot.unshift(...rot.splice(m, 1)); }
     return rot.slice(0, 3);
   }, [slot, lastCat]);
@@ -75,8 +81,8 @@ export default function InlineAd({ slot, lastCat }: { slot: number; lastCat?: st
     </span>
   );
   return (
-    <a ref={box} className={'iad2' + (live ? ' live' : '')} href={a.href} onPointerEnter={() => setPause(true)} onPointerLeave={() => setPause(false)} aria-label={T(a.t)}>
-      <span className="iad2-bg" aria-hidden="true"><i className="g1" /><i className="g2" /><i className="sweep" /></span>
+    <a ref={box} className={'iad2 t-' + (['d', 'y', 'w'][slot % 3]) + (live ? ' live' : '')} href={a.href} onPointerEnter={() => setPause(true)} onPointerLeave={() => setPause(false)} aria-label={T(a.t)}>
+      <span className="iad2-bg" aria-hidden="true"><i className="g1" /><i className="g2" /><i className="sweep" /><i className="ray r1" /><i className="ray r2" /><i className="ray r3" /></span>
       {prev !== null && list[prev] ? scene(list[prev], true) : null}
       {scene(a, false)}
       {list.length > 1 ? <span className="iad2-dots" onClick={(e) => e.preventDefault()}>{list.map((x, k) => <button key={x.id} type="button" className={k === i ? 'on' : ''} onClick={() => k !== i && go(k)} aria-label={'Ad ' + (k + 1)}><i style={{ animationPlayState: pause || !live ? 'paused' : 'running' }} /></button>)}</span> : null}
