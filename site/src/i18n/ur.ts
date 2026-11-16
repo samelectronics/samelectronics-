@@ -2994,5 +2994,18 @@ const DICT: Record<string, string> = {
   'NOT SURE WHICH MODEL?': 'ماڈل معلوم نہیں؟',
   'Type on the left': 'خانوں میں لکھیں',
   'To': 'بنام',
+  'In Deira.': 'دیرہ میں۔',
+  'In stock.': 'دستیاب۔',
+  'Original, OLED, Incell, AAA': 'اوریجنل، OLED، Incell، AAA',
+  'Trade prices.': 'ہول سیل قیمتیں۔',
+  'Open in the shop': 'شاپ میں کھولیں',
+  'Shop commercial: screens, the four grades, battery week, trade prices, in stock in Deira.': 'شاپ کا اشتہار: اسکرینز، چار گریڈز، بیٹری ویک، ہول سیل قیمتیں، دیرہ میں دستیاب۔',
+  'parts on the shelf': 'پارٹس شیلف پر',
+  'Ask for price on WhatsApp': 'واٹس ایپ پر قیمت پوچھیں',
+  'One screen. Four grades.': 'ایک اسکرین۔ چار گریڈ۔',
+  'Every part. Every grade.': 'ہر پارٹ۔ ہر گریڈ۔',
+  'Compare the grades': 'گریڈز کا موازنہ',
+  'Get trade prices': 'ہول سیل قیمتیں حاصل کریں',
+  'Out of stock': 'اسٹاک ختم',
 };
 export default DICT;

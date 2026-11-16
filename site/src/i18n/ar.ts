@@ -1776,6 +1776,19 @@ export const R7: Record<string, string> = {
 
 /** Round 8: Sam Circuit's three cards, Samsoom's tour and chat menu. */
 export const R8: Record<string, string> = {
+  'In Deira.': 'في ديرة.',
+  'In stock.': 'متوفر.',
+  'Original, OLED, Incell, AAA': 'أصلي، OLED، Incell، AAA',
+  'Trade prices.': 'أسعار الجملة.',
+  'Open in the shop': 'افتح في المتجر',
+  'Shop commercial: screens, the four grades, battery week, trade prices, in stock in Deira.': 'إعلان المتجر: الشاشات، الدرجات الأربع، أسبوع البطاريات، أسعار الجملة، متوفر في ديرة.',
+  'parts on the shelf': 'قطعة على الرف',
+  'Ask for price on WhatsApp': 'اسأل عن السعر على واتساب',
+  'One screen. Four grades.': 'شاشة واحدة. أربع درجات.',
+  'Every part. Every grade.': 'كل قطعة. كل درجة.',
+  'Compare the grades': 'قارن الدرجات',
+  'Get trade prices': 'احصل على أسعار الجملة',
+  'SCREENS': 'الشاشات',
   'We could not match that code. Send it to us on WhatsApp and we will tell you.': 'لم نجد هذا الرمز. أرسله لنا على واتساب وسنخبرك.',
   'Please check the model with us before ordering a part.': 'يرجى التأكد من الموديل معنا قبل طلب أي قطعة.',
   'REPAIR': 'الإصلاح',

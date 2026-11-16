@@ -26,7 +26,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
       <SitePage>
         <section className="sx-hero sx-hero-p">
           <div className="sp-wrap sx-pgrid">
-            <div className="sx-pimg">{p.imgBig ? <img src={p.imgBig} alt={p.title + ' ' + p.gradeName} width={960} height={960} /> : null}</div>
+            <div className="sx-pimg"><span className="sx-sweep" aria-hidden="true" />{p.imgBig ? <img src={p.imgBig} alt={p.title + ' ' + p.gradeName} width={960} height={960} /> : null}</div>
             <div className="sx-pinfo">
               <nav className="sx-crumb" aria-label="Breadcrumb"><a href="/">Home</a><i>/</i><a href={'/m/' + p.modelSlug}>{p.modelName}</a><i>/</i><span>{p.catName}</span></nav>
               <span className={'pc-gr g-' + p.grade}>{p.gradeName}</span>
@@ -44,7 +44,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
           </div></section>
         ) : null}
         {more.length ? (
-          <section className="sp-sec"><div className="sp-wrap"><h2 className="sx-h2">More {p.modelName} parts</h2>
+          <section className="sp-sec g sx-more"><div className="sp-wrap"><h2 className="sx-h2">More {p.modelName} parts</h2>
             <div className="sx-grid">{more.map((x) => <a key={x.id} className="sx-card" href={'/p/' + x.slug}><span className="sx-img">{x.img ? <img src={x.img} alt="" loading="lazy" width={240} height={240} /> : null}</span><span className={'pc-gr g-' + x.grade}>{x.gradeName}</span><b>{x.title}</b><small>{x.catName}</small><span className="sx-row"><em>{x.price > 0 ? 'AED ' + x.price : 'Ask for price'}</em></span></a>)}</div>
             <p><a className="sp-btn ghost" href={'/m/' + p.modelSlug}>Every {p.modelName} part →</a></p>
           </div></section>

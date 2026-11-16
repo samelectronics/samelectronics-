@@ -561,3 +561,12 @@ html[dir="rtl"] .ms2-track b { left: auto; right: calc(var(--p) * 100%); margin-
 .sp-btn.wa:hover, .pt-ask.wa:hover { box-shadow: 0 0 0 3px rgba(37,211,102,.25), 0 14px 28px -14px rgba(37,211,102,.8) !important; }
 .sp-btn.wc { background: #07C160 !important; color: #fff !important; box-shadow: 0 12px 26px -14px rgba(7,193,96,.7) !important; }
 .sp-btn.wc .ct-ic { color: #fff; width: 18px; height: 18px; }
+/* product page: a living shot (slow float, light sweep), contact buttons in their colours, graphite "more parts" */
+.sx-pimg { position: relative; overflow: hidden; }
+.sx-pimg img { animation: sxFloat 7s ease-in-out infinite; }
+@keyframes sxFloat { 50% { transform: translateY(-10px) rotate(-1deg) scale(1.02); } }
+.sx-sweep { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: linear-gradient(105deg, transparent 42%, rgba(255,255,255,.18) 50%, transparent 58%) no-repeat; background-size: 260% 100%; animation: sxSweep 6s ease-in-out 1s infinite; }
+@keyframes sxSweep { 0%, 60% { background-position: 140% 0; } 100% { background-position: -140% 0; } }
+.sx-acts { flex-wrap: wrap; }
+.sx-more .sx-h2 { color: #fff; } .sx-more .sx-card { background: #fff; }
+@media (prefers-reduced-motion: reduce) { .sx-pimg img, .sx-sweep { animation: none; } }

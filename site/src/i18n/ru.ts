@@ -2994,5 +2994,18 @@ const DICT: Record<string, string> = {
   'NOT SURE WHICH MODEL?': 'НЕ ЗНАЕТЕ МОДЕЛЬ?',
   'Type on the left': 'Введите слева',
   'To': 'Куда',
+  'In Deira.': 'В Дейре.',
+  'In stock.': 'В наличии.',
+  'Original, OLED, Incell, AAA': 'Оригинал, OLED, Incell, AAA',
+  'Trade prices.': 'Оптовые цены.',
+  'Open in the shop': 'Открыть в магазине',
+  'Shop commercial: screens, the four grades, battery week, trade prices, in stock in Deira.': 'Реклама магазина: экраны, четыре класса, неделя батарей, оптовые цены, в наличии в Дейре.',
+  'parts on the shelf': 'запчастей на полке',
+  'Ask for price on WhatsApp': 'Узнать цену в WhatsApp',
+  'One screen. Four grades.': 'Один экран. Четыре класса.',
+  'Every part. Every grade.': 'Любая деталь. Любой класс.',
+  'Compare the grades': 'Сравнить классы',
+  'Get trade prices': 'Получить оптовые цены',
+  'Out of stock': 'Нет в наличии',
 };
 export default DICT;
