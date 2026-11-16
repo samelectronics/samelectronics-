@@ -316,3 +316,40 @@ html[dir='rtl'] .cx-lvl-bat .charge { left: auto; right: 6px; }
 .cx-steps li > span { padding-top: 14px; }
 html[dir='rtl'] .cx-steps li > i { left: auto; right: 0; }
 .cx-pick button.on small, .cx-pick button.on b { color: #26282B !important; }
+/* owner (16 Nov): Sam Circuit, exciting: three cards on a charging dock. The picked card floats in front (and tilts with
+   the pointer), the other two stand behind at an angle (tap to swap, they glide), the dock pulses and a charge beam runs
+   into the card whenever the level changes; a circuit ladder lights up to your level */
+.cx-r { padding-top: 372px !important; gap: 22px !important; }
+.cx-floor { display: none !important; }
+.cx-r > .cx-card { position: absolute !important; top: 36px; left: 50%; width: min(92%, 440px) !important; margin-left: calc(min(92%, 440px) / -2); transition: transform .6s cubic-bezier(.2,.9,.25,1), filter .4s, opacity .4s, box-shadow .4s !important; }
+.cx-r > .cx-card.front { z-index: 3; animation: cxFloat 5.5s ease-in-out infinite; }
+.cx-r > .cx-card.back-l, .cx-r > .cx-card.back-r { z-index: 1; cursor: pointer; filter: brightness(.72) saturate(.85); transform-origin: 50% 100%; }
+.cx-r > .cx-card.back-l { transform: translate(-30%, -22px) rotate(-10deg) scale(.82) !important; }
+.cx-r > .cx-card.back-r { transform: translate(30%, -22px) rotate(10deg) scale(.82) !important; }
+.cx-r > .cx-card.back-l:hover { transform: translate(-34%, -34px) rotate(-12deg) scale(.84) !important; filter: brightness(.9); }
+.cx-r > .cx-card.back-r:hover { transform: translate(34%, -34px) rotate(12deg) scale(.84) !important; filter: brightness(.9); }
+@keyframes cxFloat { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+.cx-dock { position: absolute; z-index: 0; left: 50%; top: 300px; width: 420px; height: 84px; margin-left: -210px; pointer-events: none; }
+.cx-dock::before { content: ''; position: absolute; inset: 10px 30px; border-radius: 50%; background: radial-gradient(closest-side, #3A3D42, #26282B 70%, #1C1D20); box-shadow: 0 18px 30px -10px rgba(0,0,0,.6), inset 0 2px 0 rgba(255,255,255,.08); }
+.cx-dock i.r1, .cx-dock i.r2, .cx-dock i.r3 { position: absolute; left: 50%; top: 50%; border-radius: 50%; border: 2px solid #F7C032; transform: translate(-50%, -50%) scaleY(.22); opacity: 0; animation: cxRing 2.4s ease-out infinite; box-shadow: 0 0 12px rgba(247,192,50,.8); }
+.cx-dock i.r1 { width: 140px; height: 140px; } .cx-dock i.r2 { width: 220px; height: 220px; animation-delay: .5s; } .cx-dock i.r3 { width: 300px; height: 300px; animation-delay: 1s; }
+@keyframes cxRing { 0% { opacity: 0; transform: translate(-50%, -50%) scaleY(.22) scale(.7); } 30% { opacity: .9; } 100% { opacity: 0; transform: translate(-50%, -50%) scaleY(.22) scale(1.15); } }
+.cx-dock i.beam { position: absolute; left: 50%; bottom: 40px; width: 120px; height: 0; margin-left: -60px; background: linear-gradient(0deg, rgba(247,192,50,.65), rgba(255,244,209,.25) 60%, rgba(255,244,209,0)); filter: blur(6px); animation: cxBeam 1.2s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes cxBeam { 0% { height: 0; opacity: 1; } 55% { height: 260px; opacity: .9; } 100% { height: 280px; opacity: 0; } }
+.cx-ladder { position: relative; display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); width: min(100%, 520px); margin: 0; padding: 0; list-style: none; }
+.cx-ladder .run { position: absolute; left: calc(50% / var(--n)); right: calc(50% / var(--n)); top: 9px; height: 3px; border-radius: 2px; background: rgba(38,40,43,.18); }
+.cx-ladder .run i { display: block; height: 100%; border-radius: 2px; background: #26282B; box-shadow: 0 0 8px rgba(38,40,43,.35); transition: width .7s cubic-bezier(.2,.8,.2,1); }
+.cx-ladder li { position: relative; display: flex; flex-direction: column; align-items: center; gap: 3px; text-align: center; cursor: pointer; }
+.cx-ladder li > i { width: 20px; height: 20px; border-radius: 50%; background: #F7C032; box-shadow: inset 0 0 0 2px rgba(38,40,43,.35); transition: background .3s, box-shadow .3s, transform .3s; z-index: 1; }
+.cx-ladder li.on > i { background: #26282B; box-shadow: inset 0 0 0 3px #F7C032, 0 0 0 2px #26282B; }
+.cx-ladder li.cur > i { transform: scale(1.25); box-shadow: inset 0 0 0 3px #F7C032, 0 0 0 2px #26282B, 0 0 16px rgba(38,40,43,.5); }
+.cx-ladder li b { margin-top: 4px; font: 700 12px 'Space Grotesk', sans-serif; color: #26282B; } .cx-ladder li small { font: 500 10px Inter, sans-serif; color: rgba(38,40,43,.65); }
+.cx-ladder li:not(.on) b { opacity: .6; }
+@media (prefers-reduced-motion: reduce) { .cx-r > .cx-card.front, .cx-dock i { animation: none !important; } }
+@media (max-width: 1100px) { .cx-r { padding-top: 330px !important; } .cx-dock { top: 262px; } }
+section.cx .cx-ladder .run { background: rgba(255,255,255,.14); } section.cx .cx-ladder .run i { background: #F7C032; box-shadow: 0 0 10px rgba(247,192,50,.7); }
+section.cx .cx-ladder li > i { background: #2A2C2F; box-shadow: inset 0 0 0 2px rgba(255,255,255,.25); }
+section.cx .cx-ladder li.on > i { background: #F7C032; box-shadow: 0 0 0 3px rgba(247,192,50,.25); }
+section.cx .cx-ladder li.cur > i { box-shadow: 0 0 0 4px rgba(247,192,50,.3), 0 0 18px rgba(247,192,50,.8); }
+section.cx .cx-ladder li b { color: #FFFFFF; } section.cx .cx-ladder li small { color: #A7ABB1; }
+section.cx .cx-lvl { display: none !important; } /* the ladder under the cards is the level picker now */

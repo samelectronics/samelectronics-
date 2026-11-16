@@ -115,7 +115,12 @@ export default function SECircuit() {
 
         <div className="cx-r" onPointerMove={tilt} onPointerLeave={untilt}>
           <span className="cx-floor" aria-hidden="true" />
-          <div ref={card} className={'cx-card k-' + kind} key={kind}>
+          {/* owner (16 Nov, "make it exciting"): the three cards stand together on a charging dock; the one you pick
+              floats to the front and charges, the other two wait behind (tap one to bring it forward) */}
+          <span className="cx-dock" aria-hidden="true" key={'d' + kind + lvl}><i className="r1" /><i className="r2" /><i className="r3" /><i className="beam" /></span>
+          {ORDER.map((k) => { const CC = CARDS[k], hl = CC.levels.length > 0, front = k === kind, others = ORDER.filter((x) => x !== kind), pos = front ? 'front' : others[0] === k ? 'back-l' : 'back-r';
+            return (
+          <div key={k} ref={front ? card : undefined} className={'cx-card k-' + k + ' ' + pos} onClick={front ? undefined : () => pick(k)} role={front ? undefined : 'button'} aria-label={front ? undefined : CC.name} tabIndex={front ? undefined : 0}>
             <span className="cx-holo" aria-hidden="true" />
             {/* printed traces: fixed on the card, like a real PCB print */}
             <svg className="cx-trace" viewBox="0 0 400 252" aria-hidden="true">
@@ -125,18 +130,24 @@ export default function SECircuit() {
             <span className="cx-mat" aria-hidden="true" />
             <div className="cx-card-in">
               <span className="top">
-                <span className="brand"><img className="cx-badge" src="/assets/se-logo-320.webp" alt="" aria-hidden="true" /><span><b data-no-i18n="">{C.name}</b><small>{T(C.kind)}</small></span></span>
-                {hasLv ? <Battery n={lvl} of={5} k={kind} /> : <span className="cx-seal" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 2l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 15.3 6.8 18l1-5.8L3.6 8.1l5.8-.8z" /></svg></span>}
+                <span className="brand"><img className="cx-badge" src="/assets/se-logo-320.webp" alt="" aria-hidden="true" /><span><b data-no-i18n="">{CC.name}</b><small>{T(CC.kind)}</small></span></span>
+                {hl ? <Battery n={front ? lvl : 0} of={5} k={k} /> : <span className="cx-seal" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 2l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 15.3 6.8 18l1-5.8L3.6 8.1l5.8-.8z" /></svg></span>}
               </span>
               <span className="cx-chiprow" aria-hidden="true"><span className="chip"><i /><i /><i /></span><svg className="cx-nfc" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M8.5 7.5a6 6 0 0 1 0 9M12 5a9.5 9.5 0 0 1 0 14M5 10a2.5 2.5 0 0 1 0 4" /></svg></span>
-              <span className="nm" data-no-i18n={name ? '' : undefined}>{name || T('Your name here')}</span>
-              <span className="sh" data-no-i18n="">{C.shop ? shop || T('Your shop') : ' '}</span>
+              <span className="nm" data-no-i18n={name ? '' : undefined}>{front ? name || T('Your name here') : T('Your name here')}</span>
+              <span className="sh" data-no-i18n="">{CC.shop ? (front && shop) || T('Your shop') : ' '}</span>
               <span className="bot">
-                <span><small>{hasLv ? T(kind === 'grid' ? 'TRADE LEVEL' : 'LEVEL') : T('INVITATION')}</small><b>{hasLv ? T(C.levels[lvl]) : T('Sam Circle member')}</b></span>
-                <span className="no" data-no-i18n="">{no}</span>
+                <span><small>{hl ? T(k === 'grid' ? 'TRADE LEVEL' : 'LEVEL') : T('INVITATION')}</small><b>{hl ? T(CC.levels[front ? lvl : 0]) : T('Sam Circle member')}</b></span>
+                <span className="no" data-no-i18n="">{front ? no : 'SC •••• ••••'}</span>
               </span>
             </div>
-          </div>
+          </div>); })}
+          {hasLv ? (
+            <ol className="cx-ladder" aria-label={T('Levels')} style={{ ['--n' as string]: String(C.levels.length), ['--lv' as string]: String(lvl) }} key={'l' + kind}>
+              <span className="run" aria-hidden="true"><i style={{ width: ((lvl / (C.levels.length - 1)) * 100).toFixed(1) + '%' }} /></span>
+              {C.levels.map((l, i) => <li key={l} className={(i <= lvl ? 'on' : '') + (i === lvl ? ' cur' : '')} onClick={() => setLvl(i)}><i /><b>{T(l)}</b><small>{T(C.req[i])}</small></li>)}
+            </ol>
+          ) : null}
           <div className="cx-perks" key={kind + lvl}>
             <small>{hasLv ? T(C.levels[lvl]) + ' · ' + T(C.req[lvl]) : T('What the Circle brings')}</small>
             {(hasLv ? C.perks[lvl] : C.perks.flat()).map((p) => <span key={p}><i />{T(p)}</span>)}
