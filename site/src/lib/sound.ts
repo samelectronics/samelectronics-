@@ -62,6 +62,25 @@ export function play(s: Snd, force = false) {
       const n = c.createBufferSource(), nf = c.createBiquadFilter(), ng = c.createGain(); n.buffer = felt; nf.type = 'bandpass'; nf.frequency.value = f * 2; nf.Q.value = 1.2; ng.gain.value = amp * 0.25; n.connect(nf); nf.connect(ng); ng.connect(master);
       body.start(t); body.stop(t + len + 0.02); ov.start(t); ov.stop(t + len); n.start(t);
     };
+    // owner (16 Nov): everyday clicks must feel physical, not like a toy note: a crisp tactile "tuck" (a tiny noise
+    // transient through a narrow band + a short wooden body that drops in pitch). Each function has its own colour of it;
+    // closing is a softer, lower "thock" going down. The musical phrases stay for next, success, add, send…
+    const TACT: Partial<Record<Snd, [number, number, number, number]>> = { // [click band Hz, body Hz, body drop, length]
+      click: [2600, 210, 0.55, 0.05], link: [3000, 240, 0.6, 0.045], tab: [2300, 260, 0.7, 0.05], menu: [2000, 180, 0.6, 0.06],
+      cart: [2800, 230, 0.6, 0.05], bell: [3400, 300, 0.75, 0.05], toggle: [2400, 220, 0.6, 0.05], close: [1500, 150, 0.45, 0.08],
+    };
+    const tk = TACT[s];
+    if (tk) {
+      const [band, bodyF, drop, L] = tk, t = t0;
+      const n = c.createBufferSource(), nb = c.createBuffer(1, Math.ceil(c.sampleRate * 0.012), c.sampleRate), nd = nb.getChannelData(0);
+      for (let i = 0; i < nd.length; i++) nd[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / nd.length, 4);
+      n.buffer = nb; const bp = c.createBiquadFilter(), ng = c.createGain(); bp.type = 'bandpass'; bp.frequency.value = band * pk.mul; bp.Q.value = 3.2; ng.gain.value = 1.5; n.connect(bp); bp.connect(ng); ng.connect(master); n.start(t);
+      const o = c.createOscillator(), og = c.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(bodyF * pk.mul, t); o.frequency.exponentialRampToValueAtTime(bodyF * pk.mul * drop, t + L);
+      og.gain.setValueAtTime(0.0001, t); og.gain.exponentialRampToValueAtTime(1.05, t + 0.002); og.gain.exponentialRampToValueAtTime(0.0001, t + L); o.connect(og); og.connect(master); o.start(t); o.stop(t + L + 0.01);
+      const h = c.createOscillator(), hg = c.createGain(); h.type = 'triangle'; h.frequency.value = bodyF * 4.1 * pk.mul; hg.gain.setValueAtTime(0.0001, t); hg.gain.exponentialRampToValueAtTime(0.22, t + 0.001); hg.gain.exponentialRampToValueAtTime(0.0001, t + 0.018); h.connect(hg); hg.connect(master); h.start(t); h.stop(t + 0.02);
+      if (s === 'bell') mallet(1568 * pk.mul, 0.02, 0.35, 0.35);
+      return;
+    }
     for (const [f, at, len, amp = 0.8] of SHAPES[s]) mallet(f * pk.mul, at, len, amp);
   } catch { /* audio not available */ }
 }

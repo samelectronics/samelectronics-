@@ -575,3 +575,4 @@ html:not([data-theme="dark"]) .se-qs-langs { scrollbar-color: #F7C032 #F2F3F4; }
 .cdd-ic { width: 17px; font-style: normal; text-align: center; color: #6E7378; }
 
 .se-status-pop .se-status-acts .se-cdd > * { justify-content: flex-start !important; }
+footer .ft-contacts .ft-ci { display: none !important; } footer .ft-contacts > a, footer .ft-contacts > button { padding-inline-start: 0 !important; gap: 0 !important; }
