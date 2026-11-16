@@ -110,16 +110,17 @@ function render(v: Vals) {
           <p className="mt-p">
             Samsoom knows our catalogue, grades, hours and shipping. It finds the part, explains the grade, and hands you to a person on WhatsApp the second you need one.
           </p>
-          {/* owner (27 Oct): the same Samsoom as the launcher on the right, big; under it what you can ask (fills the space) */}
-          <div className="mt-stage2">
-            <span className="mt-glow" aria-hidden="true" />
-            <div className="mt-bot"><SESamsoom mood={v.mood} size={220} still={v.still} /></div>
-            <div className="mt-asks">
+          {/* owner (16 Nov, "make it professional, not pieces put together"): the questions as neat pills, one clear
+              button, then the facts in one line; Samsoom himself sits on the chat window on the right */}
+          <div className="mt-asks">
               <span className="mt-k">TRY ASKING</span>
               {(v.tries || []).map((t: any) => (
                 <button key={t.q} type="button" className={t.on ? 'on' : ''} onClick={t.go}>{t.q}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button>
               ))}
             </div>
+          <div className="mt-cta">
+            <button type="button" className="mt-go" onClick={v.ask}>Ask Samsoom<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button>
+            <button type="button" className="mt-go2" onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wa' } }))}><i className="ct-ic wa" aria-hidden="true" />Talk to a person</button>
           </div>
           <div className="mt-facts">
             <span><b>24/7</b><small>Answers any time</small></span>
@@ -128,6 +129,9 @@ function render(v: Vals) {
           </div>
         </div>
 
+        <div className="mt-right">
+        <span className="mt-glow" aria-hidden="true" />
+        <div className="mt-bot"><SESamsoom mood={v.mood} size={150} still={v.still} /></div>
         <div className="mt-chat">
           <div className="mt-chat-h">
             <span className="av"><SESamsoom mood="idle" size={30} still={true} /></span>
@@ -170,6 +174,7 @@ function render(v: Vals) {
             <span className="mt-field">{v.compose ? <>{v.compose}<i className="mt-caret" /></> : <span className="mt-ph">Ask Samsoom your own question…</span>}</span>
             <span className={'mt-send' + (v.ready ? ' on' : '') + (v.sent ? ' go' : '')} aria-hidden="true"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>
           </div>
+        </div>
         </div>
       </div>
     </section>
