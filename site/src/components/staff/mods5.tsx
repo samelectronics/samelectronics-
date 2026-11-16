@@ -17,7 +17,7 @@ const brandOf = () => { const D = data(); const M = new Map((D?.models || []).ma
 
 // ── 4.9 Pricing ───────────────────────────────────────────────────────────────────────────────────────────────
 type Hist = { id: string; title: string; f: string; old: number; now: number; at: number; by: string };
-type Coupon = { code: string; kind: 'pct' | 'aed'; value: number; min?: number; until?: number; trade?: boolean; active?: boolean; note?: string };
+type Coupon = { code: string; kind: 'pct' | 'aed'; value: number; min?: number; until?: number; trade?: boolean; active?: boolean; note?: string; cats?: string[]; ids?: string[] };
 const round = (v: number, r: string) => r === '0' ? Math.round(v) : r === '9' ? Math.max(0, Math.ceil(v) - 0.01) : r === '5' ? Math.round(v * 2) / 2 : Math.round(v * 100) / 100;
 export function Pricing({ me }: P) {
   const list = useCatalog(), D = data(), bOf = useMemo(brandOf, [D]);
@@ -66,6 +66,8 @@ export function Pricing({ me }: P) {
           <input className="cr-in" type="number" placeholder="Min. order" style={{ maxWidth: 120 }} value={c.min || ''} onChange={(e) => setC({ ...c, min: +e.target.value || undefined })} />
           <input className="cr-in" type="date" style={{ maxWidth: 160 }} onChange={(e) => setC({ ...c, until: e.target.value ? new Date(e.target.value + 'T23:59:59').getTime() : undefined })} />
           <label className="cr-chk"><input type="checkbox" checked={!!c.trade} onChange={(e) => setC({ ...c, trade: e.target.checked })} /> Trade only</label>
+          <label>Only for<select className="cr-in" value={(c.cats || [])[0] || ''} onChange={(e) => setC({ ...c, cats: e.target.value ? [e.target.value] : [] })}><option value="">All parts</option>{[['SCR', 'Screens'], ['BAT', 'Batteries'], ['FLX', 'Flex cables'], ['BCV', 'Back covers'], ['FRM', 'Frames & housings'], ['CAM', 'Cameras'], ['SML', 'Small parts']].map(([k, l]) => <option key={k} value={k}>{l}</option>)}</select></label>
+          <label>Only these part IDs<input className="cr-in" placeholder="optional, comma separated" value={(c.ids || []).join(', ')} onChange={(e) => setC({ ...c, ids: e.target.value.split(',').map((x) => x.trim()).filter(Boolean) })} /></label>
           <button type="button" className="cr-btn" disabled={!canEdit || !c.code || c.value <= 0 || (c.kind === 'pct' && c.value > 50 && me.role !== 'owner')} onClick={() => { setCps([c, ...cps.filter((x) => x.code !== c.code)], 'Coupon ' + c.code); setC({ code: '', kind: 'pct', value: 10, active: true }); }}>Save</button>
         </div>
         {c.kind === 'pct' && c.value > 50 && me.role !== 'owner' ? <small className="cr-muted">Discounts above 50% need the owner.</small> : null}

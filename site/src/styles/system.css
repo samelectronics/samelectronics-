@@ -373,31 +373,31 @@ header .se-nav-right .se-lm-btn:hover svg, header .se-nav-right .nb > button:hov
 header .se-nav-right .se-lm-btn, header .se-nav-right .nb > button, header .se-nav-right .se-ico { transition: color .2s !important; }
 /* owner (16 Nov): one rule for every panel the bar opens: light and clean like the notifications and Samsoom
    (serious things are clean, the colour lives on the page). Hours popup and Find My Part menu are white now. */
-.se-status-pop { background: #FFFFFF !important; color: #26282B !important; box-shadow: 0 0 0 1px rgba(38,40,43,.08), 0 24px 48px -12px rgba(0,0,0,.35) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
-.se-status-pop > span:first-child { color: #26282B !important; }
-.se-status-pop > span:nth-child(2) { color: #26282B !important; }
-.se-status-pop .se-hl-t { color: #6B6F75; } .se-status-pop .se-hl-t b { color: #26282B; } .se-status-pop .se-hl-bar { background: #ECEDEF; }
-.se-status-acts a, .se-status-acts button { border-color: #E0E2E5 !important; background: #F4F5F6 !important; color: #26282B !important; }
-.se-status-acts a:first-child { background: #F7C032 !important; border-color: #F7C032 !important; }
-.se-status-acts a:hover, .se-status-acts button:hover { border-color: #F7C032 !important; background: #FFF6DC !important; }
-.fmq { background: #FFFFFF !important; color: #26282B !important; box-shadow: 0 0 0 1px rgba(38,40,43,.08), 0 30px 60px -16px rgba(0,0,0,.4) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
-.fmq-brands { background: #F6F7F8 !important; border-inline-end: 1px solid #ECEDEF !important; }
-.fmq-k { color: #26282B !important; }
-.fmq-b { color: #26282B !important; box-shadow: inset 0 -1px 0 #ECEDEF !important; } .fmq-b small { color: #8C9096 !important; }
-.fmq-b.on { background: #F7C032 !important; box-shadow: none !important; } .fmq-b.on small { color: #26282B !important; }
-.fmq-b:hover:not(.on) { background: #ECEDEF !important; }
-.fmq-h b { color: #26282B; } .fmq-h small { color: #8C9096 !important; }
-.fmq-q { background: #F2F3F4 !important; color: #6B6F75 !important; } .fmq-q input { color: #26282B !important; } .fmq-q:focus-within { box-shadow: inset 0 0 0 1.5px #F7C032 !important; color: #26282B !important; }
-.fmq-devs button { background: #F2F3F4 !important; color: #5C6066 !important; } .fmq-devs button.on { background: #26282B !important; color: #fff !important; box-shadow: none !important; }
-.fmq-m { background: #F6F7F8 !important; color: #26282B !important; } .fmq-m:hover { background: #fff !important; box-shadow: inset 0 0 0 1.5px #F7C032, 0 6px 14px -8px rgba(0,0,0,.25) !important; }
-.fmq-m small { color: #8C9096 !important; } .fmq-m small.in, .fmq-ptn small.in { color: #1E9E5A !important; } .fmq-m i { color: #26282B !important; }
-.fmq-mi { background: #ECEDEF !important; color: #3A3D42 !important; }
-.fmq-none { color: #6B6F75 !important; }
-.fmq-pt { background: #F6F7F8 !important; } .fmq-ptn { color: #26282B !important; } .fmq-ptn small { color: #8C9096 !important; } .fmq-ptn:hover b { color: #26282B !important; }
-.fmq-back { background: #ECEDEF !important; color: #26282B !important; }
-.fmq-ph small { color: #26282B !important; }
-.fmq-g { background: #FFF6DC !important; color: #26282B !important; } .fmq-g em { color: #26282B !important; } .fmq-g:hover { box-shadow: inset 0 0 0 1.5px #F7C032 !important; }
-.fmq-all { color: #26282B !important; }
+html:not([data-theme="dark"]) .se-status-pop { background: #FFFFFF !important; color: #26282B !important; box-shadow: 0 0 0 1px rgba(38,40,43,.08), 0 24px 48px -12px rgba(0,0,0,.35) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+html:not([data-theme="dark"]) .se-status-pop > span:first-child { color: #26282B !important; }
+html:not([data-theme="dark"]) .se-status-pop > span:nth-child(2) { color: #26282B !important; }
+html:not([data-theme="dark"]) .se-status-pop .se-hl-t { color: #6B6F75; } html:not([data-theme="dark"]) .se-status-pop .se-hl-t b { color: #26282B; } html:not([data-theme="dark"]) .se-status-pop .se-hl-bar { background: #ECEDEF; }
+html:not([data-theme="dark"]) .se-status-acts a, html:not([data-theme="dark"]) .se-status-acts button { border-color: #E0E2E5 !important; background: #F4F5F6 !important; color: #26282B !important; }
+html:not([data-theme="dark"]) .se-status-acts a:first-child { background: #F7C032 !important; border-color: #F7C032 !important; }
+html:not([data-theme="dark"]) .se-status-acts a:hover, html:not([data-theme="dark"]) .se-status-acts button:hover { border-color: #F7C032 !important; background: #FFF6DC !important; }
+html:not([data-theme="dark"]) .fmq { background: #FFFFFF !important; color: #26282B !important; box-shadow: 0 0 0 1px rgba(38,40,43,.08), 0 30px 60px -16px rgba(0,0,0,.4) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+html:not([data-theme="dark"]) .fmq-brands { background: #F6F7F8 !important; border-inline-end: 1px solid #ECEDEF !important; }
+html:not([data-theme="dark"]) .fmq-k { color: #26282B !important; }
+html:not([data-theme="dark"]) .fmq-b { color: #26282B !important; box-shadow: inset 0 -1px 0 #ECEDEF !important; } html:not([data-theme="dark"]) .fmq-b small { color: #8C9096 !important; }
+html:not([data-theme="dark"]) .fmq-b.on { background: #F7C032 !important; box-shadow: none !important; } html:not([data-theme="dark"]) .fmq-b.on small { color: #26282B !important; }
+html:not([data-theme="dark"]) .fmq-b:hover:not(.on) { background: #ECEDEF !important; }
+html:not([data-theme="dark"]) .fmq-h b { color: #26282B; } html:not([data-theme="dark"]) .fmq-h small { color: #8C9096 !important; }
+html:not([data-theme="dark"]) .fmq-q { background: #F2F3F4 !important; color: #6B6F75 !important; } html:not([data-theme="dark"]) .fmq-q input { color: #26282B !important; } html:not([data-theme="dark"]) .fmq-q:focus-within { box-shadow: inset 0 0 0 1.5px #F7C032 !important; color: #26282B !important; }
+html:not([data-theme="dark"]) .fmq-devs button { background: #F2F3F4 !important; color: #5C6066 !important; } html:not([data-theme="dark"]) .fmq-devs button.on { background: #26282B !important; color: #fff !important; box-shadow: none !important; }
+html:not([data-theme="dark"]) .fmq-m { background: #F6F7F8 !important; color: #26282B !important; } html:not([data-theme="dark"]) .fmq-m:hover { background: #fff !important; box-shadow: inset 0 0 0 1.5px #F7C032, 0 6px 14px -8px rgba(0,0,0,.25) !important; }
+html:not([data-theme="dark"]) .fmq-m small { color: #8C9096 !important; } html:not([data-theme="dark"]) .fmq-m small.in, html:not([data-theme="dark"]) .fmq-ptn small.in { color: #1E9E5A !important; } html:not([data-theme="dark"]) .fmq-m i { color: #26282B !important; }
+html:not([data-theme="dark"]) .fmq-mi { background: #ECEDEF !important; color: #3A3D42 !important; }
+html:not([data-theme="dark"]) .fmq-none { color: #6B6F75 !important; }
+html:not([data-theme="dark"]) .fmq-pt { background: #F6F7F8 !important; } html:not([data-theme="dark"]) .fmq-ptn { color: #26282B !important; } html:not([data-theme="dark"]) .fmq-ptn small { color: #8C9096 !important; } html:not([data-theme="dark"]) .fmq-ptn:hover b { color: #26282B !important; }
+html:not([data-theme="dark"]) .fmq-back { background: #ECEDEF !important; color: #26282B !important; }
+html:not([data-theme="dark"]) .fmq-ph small { color: #26282B !important; }
+html:not([data-theme="dark"]) .fmq-g { background: #FFF6DC !important; color: #26282B !important; } html:not([data-theme="dark"]) .fmq-g em { color: #26282B !important; } html:not([data-theme="dark"]) .fmq-g:hover { box-shadow: inset 0 0 0 1.5px #F7C032 !important; }
+html:not([data-theme="dark"]) .fmq-all { color: #26282B !important; }
 .td-sweep { display: none !important; }
 /* owner (16 Nov): the progress dot was stuck at the left (its breathing animation overrode the transform that moves it);
    it breathes with `scale` now, so it travels with the page */
@@ -544,3 +544,20 @@ footer .ft-contacts > a, footer .ft-contacts > button { padding-inline-start: 0 
 .pt-ask.wc { border: 0; cursor: pointer; font: inherit; display: inline-flex; align-items: center; gap: 6px; margin-inline-start: 6px; }
 .pt-ask.wc .ct-ic { color: #07C160; }
 .nv-wc { border: 0; background: none; color: inherit; font: inherit; cursor: pointer; padding: 0; }
+/* owner (16 Nov): every day in the hours pop-up is readable on the white panel (today stands out in yellow) */
+html:not([data-theme="dark"]) .se-status-pop > span:nth-last-of-type(2) > span { color: #3A3D42 !important; }
+html:not([data-theme="dark"]) .se-status-pop > span:nth-last-of-type(2) > span[style*="font-weight: 700"] { color: #26282B !important; background: #FFF1C7 !important; box-shadow: inset 0 0 0 1px rgba(247,192,50,.6); }
+html:not([data-theme="dark"]) .se-status-pop .se-status-acts .nv-wc { padding: 0 12px; height: 32px; border-radius: 9px; border: 1px solid #E0E2E5; }
+/* owner (16 Nov): every pop-up is white by default (dark only if the visitor turns dark mode on): the language and
+   quick-settings menu too */
+html:not([data-theme="dark"]) .se-lm-list { background: #FFFFFF !important; color: #26282B !important; box-shadow: 0 0 0 1px rgba(38,40,43,.08), 0 24px 48px -12px rgba(0,0,0,.35) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; border: 0 !important; }
+html:not([data-theme="dark"]) .se-lm-list button { color: #26282B !important; }
+html:not([data-theme="dark"]) .se-lm-list button:hover { background: #F2F3F4 !important; }
+html:not([data-theme="dark"]) .se-lm-list button.on { background: #F7C032 !important; color: #26282B !important; }
+html:not([data-theme="dark"]) .se-qs-tabs { border-bottom-color: #ECEDEF !important; }
+html:not([data-theme="dark"]) .se-qs-tabs button { color: #6B6F75 !important; } html:not([data-theme="dark"]) .se-qs-tabs button.on { background: #FFF1C7 !important; color: #26282B !important; }
+html:not([data-theme="dark"]) .se-qs-row { color: #26282B !important; }
+html:not([data-theme="dark"]) .se-qs-sw { background: #DADCDF !important; } html:not([data-theme="dark"]) .se-qs-sw.on { background: #F7C032 !important; }
+html:not([data-theme="dark"]) .se-qs-seg { background: #F2F3F4 !important; } html:not([data-theme="dark"]) .se-qs-seg button { color: #5C6066 !important; } html:not([data-theme="dark"]) .se-qs-seg button.on { color: #26282B !important; }
+html:not([data-theme="dark"]) .se-qs-link { color: #8A6300 !important; border-top-color: #ECEDEF !important; }
+html:not([data-theme="dark"]) .se-qs-langs { scrollbar-color: #F7C032 #F2F3F4; }

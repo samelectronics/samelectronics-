@@ -4,7 +4,7 @@
 // silent in the Control Room and when the visitor asked the system for reduced motion.
 import { prefs } from './prefs';
 
-export type Snd = 'click' | 'add' | 'next' | 'back' | 'skip' | 'toggle' | 'open' | 'close' | 'error' | 'success' | 'send' | 'notify';
+export type Snd = 'click' | 'add' | 'next' | 'back' | 'skip' | 'toggle' | 'open' | 'close' | 'error' | 'success' | 'send' | 'notify' | 'bell' | 'tab' | 'link' | 'menu' | 'cart';
 // owner (16 Nov): every sound is one family. One instrument for all of them: a soft wooden mallet (a warm sine with a
 // quick bright overtone and a tiny felt attack), like a small marimba. Each action is a short phrase on it; the click is
 // one clear note (loud enough to feel), the others are 2–3 notes. Same body, same decay, similar loudness.
@@ -22,6 +22,12 @@ const SHAPES: Record<Snd, Note[]> = {
   send: [[587, 0, 0.12, 0.7], [880, 0.05, 0.12, 0.75], [1175, 0.1, 0.3, 0.8]],
   error: [[392, 0, 0.2, 0.85], [370, 0.12, 0.3, 0.85]],
   notify: [[880, 0, 0.3, 0.8], [1319, 0.12, 0.45, 0.75]],
+  // owner (16 Nov): same family, a little different per function
+  bell: [[1047, 0, 0.22, 0.75], [1568, 0.05, 0.4, 0.55]],
+  tab: [[698, 0, 0.14, 0.85], [784, 0.035, 0.16, 0.6]],
+  link: [[880, 0, 0.14, 0.8]],
+  menu: [[587, 0, 0.16, 0.8], [880, 0.05, 0.22, 0.7]],
+  cart: [[659, 0, 0.14, 0.8], [988, 0.05, 0.22, 0.75]],
 };
 // Classic: as written. Soft: an octave-ish lower and quieter. Studio: brighter with a short room echo.
 const PACK = { classic: { mul: 1, gain: 1, lp: 5200, echo: 0 }, soft: { mul: 0.75, gain: 0.7, lp: 3000, echo: 0 }, studio: { mul: 1.12, gain: 0.9, lp: 6500, echo: 0.2 } };
@@ -49,6 +55,10 @@ export function play(s: Snd, force = false) {
       bg.gain.setValueAtTime(0.0001, t); bg.gain.exponentialRampToValueAtTime(amp, t + 0.004); bg.gain.exponentialRampToValueAtTime(0.0001, t + len);
       og.gain.setValueAtTime(0.0001, t); og.gain.exponentialRampToValueAtTime(amp * 0.35, t + 0.002); og.gain.exponentialRampToValueAtTime(0.0001, t + Math.min(0.05, len * 0.4));
       body.connect(bg); bg.connect(master); ov.connect(og); og.connect(master);
+      // owner (16 Nov): richer, a fuller "tuck": a short wooden thump an octave below and a warm second partial
+      const th = c.createOscillator(), tg = c.createGain(); th.type = 'sine'; th.frequency.setValueAtTime(f / 2, t); th.frequency.exponentialRampToValueAtTime(f / 2.6, t + 0.06);
+      tg.gain.setValueAtTime(0.0001, t); tg.gain.exponentialRampToValueAtTime(amp * 0.55, t + 0.003); tg.gain.exponentialRampToValueAtTime(0.0001, t + 0.07); th.connect(tg); tg.connect(master); th.start(t); th.stop(t + 0.08);
+      const p2 = c.createOscillator(), pg = c.createGain(); p2.type = 'sine'; p2.frequency.value = f * 2.01; pg.gain.setValueAtTime(0.0001, t); pg.gain.exponentialRampToValueAtTime(amp * 0.18, t + 0.004); pg.gain.exponentialRampToValueAtTime(0.0001, t + len * 0.6); p2.connect(pg); pg.connect(master); p2.start(t); p2.stop(t + len);
       const n = c.createBufferSource(), nf = c.createBiquadFilter(), ng = c.createGain(); n.buffer = felt; nf.type = 'bandpass'; nf.frequency.value = f * 2; nf.Q.value = 1.2; ng.gain.value = amp * 0.25; n.connect(nf); nf.connect(ng); ng.connect(master);
       body.start(t); body.stop(t + len + 0.02); ov.start(t); ov.stop(t + len); n.start(t);
     };

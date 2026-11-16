@@ -96,6 +96,11 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
   const openFmp = () => window.dispatchEvent(new CustomEvent('se:fmp', { detail: {} }));
   const counts = { deals: products().filter((p) => p.deal > 0).length, new: products().filter((p) => p.isNew).length, limited: products().filter((p) => p.stock_qty > 0 && p.stock_qty < 6).length };
 
+  const dockIc = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const sync = () => dockIc.current?.querySelectorAll<HTMLElement>('[data-mirror]').forEach((b) => { const src = document.querySelector(b.dataset.mirror!) as HTMLElement | null; if (src && b.innerHTML !== src.innerHTML) { b.innerHTML = src.innerHTML; b.className = src.className + (b.classList.contains('mn') ? ' mn' : ''); } });
+    sync(); const iv = window.setInterval(sync, 800); window.addEventListener('se:store', sync); return () => { window.clearInterval(iv); window.removeEventListener('se:store', sync); };
+  }, []);
   return (
     <div className={'shop' + (mode === 'deals' ? ' is-deals' : '')}>
       {/* header: the hero's language — graphite, live circuits, the search, Samsoom ready to help */}
@@ -208,10 +213,11 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
           
           <button type="button" className="sp-chip shop-dock-f" onClick={() => setSide(true)} aria-label={T('Filters')}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4" /></svg><span className="t">{T('Filters')}</span>{chips.length ? <em>{chips.length}</em> : null}</button>
           <button type="button" className="sp-chip y" onClick={() => setCz(true)}>{T('Customize')}</button>
-          <span className="shop-dock-ic">
-            <button type="button" aria-label={T('My Bench')} onClick={() => (document.querySelector('header .se-nav-bench') as HTMLElement | null)?.click()}><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="8" r="4" /><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6" /></svg></button>
-            <button type="button" aria-label={T('Cart')} onClick={() => (document.querySelector('header [data-tour="cart"]') as HTMLElement | null)?.click()}><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 7h14l-1.2 12.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z" /><path d="M9 10V6a3 3 0 0 1 6 0v4" /></svg>{st.cart.length ? <em>{st.cart.reduce((a, l) => a + (l.qty || 1), 0)}</em> : null}</button>
-            <button type="button" aria-label={T('Menu')} className="mn" onClick={() => (document.querySelector('header [data-tour="menu"]') as HTMLElement | null)?.click()}><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M4 7h16M4 12h16M4 17h10" /></svg></button>
+          <span className="shop-dock-ic" ref={dockIc}>
+            {/* owner (16 Nov): the same buttons as the site bar, exactly (copied from it, so icons and the cart count match) */}
+            <button type="button" data-mirror='header .se-nav-bench' aria-label={T('My Bench')} onClick={() => (document.querySelector('header .se-nav-bench') as HTMLElement | null)?.click()} />
+            <button type="button" data-mirror='header [data-tour="cart"]' aria-label={T('Cart')} onClick={() => (document.querySelector('header [data-tour="cart"]') as HTMLElement | null)?.click()} />
+            <button type="button" data-mirror='header [data-tour="menu"]' aria-label={T('Menu')} className="mn" onClick={() => (document.querySelector('header [data-tour="menu"]') as HTMLElement | null)?.click()} />
           </span>
         </div>
       </div>

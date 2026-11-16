@@ -168,7 +168,7 @@ export function babble(text: string, opts: { onEnd?: () => void } = {}) {
   // with a bouncy melody that changes per word; questions climb, excited lines bounce higher. The mouth opens on every
   // syllable whether the sound is on or off. The audio is unlocked on the first tap and scheduled only once it runs.
   const t = (text || '').trim(), chars = Array.from(t), voice = prefs().sound.voice || 'cute';
-  const ask = /\?\s*$/.test(t), happy = HAPPY.test(t), base = voice === 'deep' ? 300 : voice === 'robot' ? 420 : 560;
+  const ask = /\?\s*$/.test(t), happy = HAPPY.test(t), base = voice === 'deep' ? 300 : voice === 'robot' ? 420 : 600; /* owner (16 Nov): a touch cuter */
   const at: number[] = []; let acc = 0; for (const ch of chars) { at.push(acc); acc += charMs(ch) / 1000; } const total = acc;
   // syllables: a vowel run starts one; a word without vowels still gets one; CJK: every character
   const syl: { k: number; w: number; first: boolean; last: boolean }[] = []; let wi = -1, inW = false;
@@ -191,7 +191,9 @@ export function babble(text: string, opts: { onEnd?: () => void } = {}) {
       const [, f2] = formOf(chars[x.k]);
       const o = c.createOscillator(), o2 = c.createOscillator(), bp = c.createBiquadFilter(), dry = c.createGain(), wet = c.createGain(), env = c.createGain();
       o.type = voice === 'robot' ? 'square' : 'triangle'; o2.type = 'sine';
-      bp.type = 'bandpass'; bp.frequency.value = Math.min(3600, f2 * 1.15); bp.Q.value = 2.5; dry.gain.value = voice === 'robot' ? 0.18 : 0.55; wet.gain.value = 0.9;
+      bp.type = 'bandpass'; bp.Q.value = 2.5;
+      // owner (16 Nov): "more like wawawa": every syllable opens like a mouth, from a rounded w to the open vowel
+      const ft = Math.min(3600, f2 * 1.15); if (voice === 'robot') bp.frequency.value = ft; else { bp.frequency.setValueAtTime(Math.min(ft, 520), st); bp.frequency.exponentialRampToValueAtTime(ft, st + dur * 0.42); } dry.gain.value = voice === 'robot' ? 0.18 : 0.55; wet.gain.value = 0.9;
       o.connect(dry); o.connect(bp); bp.connect(wet); o2.connect(dry); dry.connect(env); wet.connect(env); env.connect(line!);
       const fa = f * (up ? 0.9 : 1.1), fb = f * (up ? 1.08 : 0.94);
       o.frequency.setValueAtTime(fa, st); o.frequency.exponentialRampToValueAtTime(fb, st + dur * 0.8);

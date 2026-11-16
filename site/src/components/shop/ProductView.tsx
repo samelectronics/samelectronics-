@@ -6,6 +6,7 @@
 // manufacturer, warranty & quality, reviews by account holders), the repair kit for this model, similar parts and recently viewed.
 import PriceTag from './PriceTag';
 import { buyable } from '@/lib/catalog';
+import { siteRaw as _sr } from '@/lib/catalog';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { openContact } from '@/components/site/WeChatSheet';
 import { type Product, aed, alsoFor, byId, data, grades, similar, waLink, waCard, fmt, VAT } from '@/lib/catalog';
@@ -129,6 +130,7 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
               </button>
               <a className="sp-btn wa" href={wa} target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9 0-1.4.7-2 1-2.3.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z" /></svg>{T('Order on WhatsApp')}</a><button type="button" className="sp-btn wc" onClick={() => openContact('wc', decodeURIComponent(wa.split('text=')[1] || ''))}><i className="ct-ic wc" aria-hidden="true" />WeChat</button>
             </div>
+            <PvCode id={p.id} cat={p.category} />
             {/* R10 P2: one clean icon set; parts go into the visitor's own named lists */}
             <div className="pv-tools">
               <button type="button" className={st.favs.includes(p.id) ? 'on' : ''} onClick={() => store.fav(p.id)}><PvIc k="star" />{st.favs.includes(p.id) ? T('Starred') : T('Star')}</button>
@@ -207,5 +209,25 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
         <p className="pv-foot sp-sample">{fmt(p.stock_qty)} {T('units (estimate)')} · {T('Prices and stock shown are test data while the shop is set up')}</p>
       </div>
     </div>
+  );
+}
+
+// owner (16 Nov): a discount code can be entered on the part itself; it is checked against the Control Room's coupons
+// (some only for certain parts or categories) and carried to checkout.
+function PvCode({ id, cat }: { id: string; cat: string }) {
+  const [open, setOpen] = useState(false), [v, setV] = useState(''), [msg, setMsg] = useState<'' | 'ok' | 'bad'>('');
+  useEffect(() => { try { const c = localStorage.getItem('se-coupon'); if (c) { setV(c); setMsg('ok'); } } catch { /* */ } }, []);
+  const apply = (e: React.FormEvent) => { e.preventDefault(); const code = v.trim().toUpperCase(); if (!code) return;
+    const cps = _sr<{ code: string; active?: boolean; until?: number; ids?: string[]; cats?: string[] }[]>('coupons', []) || [];
+    const c = cps.find((x) => x.active !== false && x.code.toUpperCase() === code && (!x.until || x.until > Date.now()));
+    const fits = !!c && (!c.ids || !c.ids.length || c.ids.includes(id)) && (!c.cats || !c.cats.length || c.cats.includes(cat));
+    if (fits) { try { localStorage.setItem('se-coupon', code); } catch { /* */ } setMsg('ok'); } else setMsg('bad'); };
+  if (!open && msg !== 'ok') return <button type="button" className="pv-code-open" onClick={() => setOpen(true)}>{T('Have a discount code?')}</button>;
+  return (
+    <form className={'pv-code' + (msg ? ' ' + msg : '')} onSubmit={apply}>
+      <input value={v} onChange={(e) => { setV(e.target.value); setMsg(''); }} placeholder={T('Discount code')} aria-label={T('Discount code')} autoCapitalize="characters" />
+      <button type="submit" className="sp-btn sm dark">{T('Apply')}</button>
+      {msg === 'ok' ? <small>✓ {T('Saved. It is applied at checkout.')}</small> : msg === 'bad' ? <small>{T('This code does not apply to this part.')}</small> : null}
+    </form>
   );
 }

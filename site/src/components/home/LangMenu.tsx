@@ -53,6 +53,8 @@ export default function LangMenu({ up = false, dark = false }: { up?: boolean; d
           ) : (
             <span className="se-qs-set">
               <span className="se-qs-row"><span>{tr('Sounds')}</span><button type="button" className={'se-qs-sw' + (P.sound.on ? ' on' : '')} aria-pressed={P.sound.on} onClick={() => { setPrefs({ sound: { ...P.sound, on: !P.sound.on } }); bump((n) => n + 1); }}><i /></button></span>
+              {/* owner (16 Nov): pop-ups are white; anyone who prefers them dark can switch here */}
+              <span className="se-qs-row"><span>{tr('Pop-ups')}</span><span className="se-qs-seg">{(['light', 'dark'] as const).map((m) => <button key={m} type="button" className={(typeof document !== 'undefined' && (document.documentElement.dataset.theme || 'light') === m) ? 'on' : ''} onClick={() => { document.documentElement.dataset.theme = m; try { localStorage.setItem('se-theme', m); } catch { /* */ } bump((n) => n + 1); }}>{tr(m === 'light' ? 'Light' : 'Dark')}</button>)}</span></span>
               <span className="se-qs-row"><span>{tr('Currency')}</span><span className="se-qs-seg">{(['AED', 'USD', 'EUR'] as Currency[]).map((c) => <button key={c} type="button" className={P.currency === c ? 'on' : ''} onClick={() => { setPrefs({ currency: c }); bump((n) => n + 1); }}>{c}</button>)}</span></span>
               <button type="button" className="se-qs-link" onClick={() => { setOpen(false); window.dispatchEvent(new CustomEvent('se:settings')); }}>{tr('More settings')} <em>→</em></button>
             </span>

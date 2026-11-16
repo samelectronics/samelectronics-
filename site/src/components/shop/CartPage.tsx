@@ -11,7 +11,7 @@ import { store, useStore } from '@/lib/store';
 import { backend, useMe, type Company, type Order } from '@/lib/backend';
 import { T, PageHero, useRise } from '@/components/site/ui';
 import LiveSam from '@/components/samsoom/LiveSam';
-type Coupon = { code: string; kind: 'pct' | 'aed'; value: number; min?: number; until?: number; trade?: boolean; active?: boolean };
+type Coupon = { code: string; kind: 'pct' | 'aed'; value: number; min?: number; until?: number; trade?: boolean; active?: boolean; ids?: string[]; cats?: string[] };
 
 const DL = () => siteSetting('delivery', { uae: 25, freeOver: 500, pickupReady: '20 minutes' }); // set in the Control Room → Settings
 
@@ -19,6 +19,9 @@ export default function CartPage() {
   const st = useStore(), [me] = useMe(), [ready, setReady] = useState(false), [cos, setCos] = useState<Company[]>([]);
   const [del, setDel] = useState<'pickup' | 'uae' | 'world'>('pickup'), [pay, setPay] = useState<Order['pay']>('whatsapp');
   const [cpCode, setCpCode] = useState(''), [cpIn, setCpIn] = useState('');
+  // owner (16 Nov): a code entered on a product page is carried to checkout
+  useEffect(() => { try { const c = localStorage.getItem('se-coupon'); if (c) { setCpIn(c); setCpCode(c); } } catch { /* */ } }, []);
+  useEffect(() => { try { if (cpCode) localStorage.setItem('se-coupon', cpCode); } catch { /* */ } }, [cpCode]);
   const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', country: 'United Arab Emirates', note: '', company: '' });
   const [busy, setBusy] = useState(false), [err, setErr] = useState(''), [done, setDone] = useState<Order | null>(null), [code, setCode] = useState(''), [codeMsg, setCodeMsg] = useState('');
   useEffect(() => { const iv = window.setInterval(() => { if (data()) { window.clearInterval(iv); setReady(true); } }, 60); return () => window.clearInterval(iv); }, []);
@@ -37,7 +40,9 @@ export default function CartPage() {
   // R10 4.9: coupons made in the Control Room (Pricing). The team still confirms every order, so the code also goes in the note.
   const cps = siteRaw<Coupon[]>('coupons', []) || [];
   const cp = cpCode ? cps.find((c) => c.active !== false && c.code.toUpperCase() === cpCode.toUpperCase() && (!c.until || c.until > Date.now()) && (!c.min || sub >= c.min) && (!c.trade || trade)) : undefined;
-  const disc = cp ? Math.min(sub, Math.round((cp.kind === 'pct' ? (sub * cp.value) / 100 : cp.value) * 100) / 100) : 0;
+  // a code can be limited to some parts or categories: then only those lines count
+  const base = cp ? lines.reduce((a, { l, p }) => a + ((!cp.ids || !cp.ids.length || cp.ids.includes(p.id)) && (!cp.cats || !cp.cats.length || cp.cats.includes(p.category)) ? unit(p) * l.qty : 0), 0) : 0;
+  const disc = cp ? Math.min(base, Math.round((cp.kind === 'pct' ? (base * cp.value) / 100 : cp.value) * 100) / 100) : 0;
   const ship = del === 'uae' ? (sub >= FREE ? 0 : SHIP.uae) : 0, vat = Math.round((sub - disc + ship) * VAT * 100) / 100, total = sub - disc + ship + vat;
   const saved = st.saved.map(byId).filter(Boolean) as Product[], favs = st.favs.map(byId).filter(Boolean) as Product[];
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setForm({ ...form, [k]: e.target.value });

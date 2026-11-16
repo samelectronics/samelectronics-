@@ -65,11 +65,15 @@ export default function SiteControls() {
     const onP = (e: Event) => setP({ ...(e as CustomEvent).detail });
     const onOpen = (e: Event) => { const d = (e as CustomEvent).detail; setPanel(d === 'privacy' ? 'privacy' : 'all'); const c = prefs().consent; setDraft(c ? { memory: c.memory, signal: c.signal, booster: c.booster } : { memory: true, signal: false, booster: false }); play('open'); };
     const onLang = () => force((n) => n + 1);
+    try { const th = localStorage.getItem('se-theme'); if (th === 'dark') document.documentElement.dataset.theme = 'dark'; } catch { /* */ }
     // PWA: the service worker (production only) and the install offer shown in Settings
     if ('serviceWorker' in navigator && location.hostname !== 'localhost') navigator.serviceWorker.register('/sw.js').catch(() => {});
     const bip = (e: Event) => { e.preventDefault(); setInst(e as unknown as { prompt: () => void }); }; window.addEventListener('beforeinstallprompt', bip);
     // every click gives its own quiet sound (buttons and links; the element can name one with data-sound)
-    const click = (e: MouseEvent) => { const el = (e.target as Element | null)?.closest?.('button, a, [role="button"], [role="tab"], [role="option"]') as HTMLElement | null; if (!el || el.closest('[data-no-sound]')) return; const s = (el.closest('[data-sound]') as HTMLElement | null)?.dataset.sound as Snd | undefined; play(s || 'click'); };
+    const click = (e: MouseEvent) => { const el = (e.target as Element | null)?.closest?.('button, a, [role="button"], [role="tab"], [role="option"]') as HTMLElement | null; if (!el || el.closest('[data-no-sound]')) return; const s = (el.closest('[data-sound]') as HTMLElement | null)?.dataset.sound as Snd | undefined;
+      // owner (16 Nov): one family, each function its own touch
+      const auto: Snd = el.closest('.nb, [aria-label*="otification"]') ? 'bell' : el.closest('[data-tour="cart"]') ? 'cart' : el.closest('[data-tour="menu"], .se-lm-btn') ? 'menu' : el.getAttribute('role') === 'tab' ? 'tab' : el.tagName === 'A' ? 'link' : 'click';
+      play(s || auto); };
     // R11b: every WhatsApp message a visitor starts from the website is also saved in the Control Room inbox (topic
     // "WhatsApp"), with the page it came from, so the team keeps each customer's requests and history in one place
     const waLog = (e: MouseEvent) => { const a = (e.target as Element | null)?.closest?.('a[href*="wa.me/"]') as HTMLAnchorElement | null; if (!a || location.pathname.startsWith('/staff')) return;
