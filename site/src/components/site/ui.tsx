@@ -1,6 +1,5 @@
 'use client';
-import PlayTitle, { HERO_MSGS } from './PlayTitle';
-import TechBg from './TechBg';
+import { HeroTitle, HeroBack } from './HeroType';
 // P1 · Small building blocks shared by every page: the page hero (a compact home hero), stars, the "rise in" effect,
 // translation of attribute text, and the add-to-cart flight.
 import React, { useEffect, useRef } from 'react';
@@ -20,7 +19,7 @@ export function PageHero({ eb, title, accent, sub, crumb, children }: { eb: stri
         <i className="cine-wall" /><i className="cine-beam" />
         <span className="cine-bokeh">{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} style={{ ['--k' as string]: k } as React.CSSProperties} />)}</span>
         <i className="cine-floor" /><i className="cine-grain" />
-        <TechBg tone="dark" streaks={2} hud={'SE·' + String(word).toUpperCase()} />
+        <HeroBack word={String(word)} />
       </div>
       <span className="cine-word" style={{ ['--n' as string]: String(word).length }} aria-hidden="true" data-no-i18n="">{word}</span>
       <div className="sp-wrap sp-hero-in">
@@ -32,7 +31,7 @@ export function PageHero({ eb, title, accent, sub, crumb, children }: { eb: stri
             </nav>
           ) : null}
           <span className="sp-eb">{eb}</span>
-          <PlayTitle lines={[[title, accent], ...((HERO_MSGS[key] || []) as [string, string?][])]} />
+          <HeroTitle a={title} b={accent} />
           {sub ? <p className="sp-p">{sub}</p> : null}
           {children}
         </div>
