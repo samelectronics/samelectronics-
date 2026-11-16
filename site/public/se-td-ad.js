@@ -177,9 +177,11 @@
       const base = lightBg ? '232,200,120' : th === 'yel' ? '255,250,232' : '255,214,120', hot = lightBg ? '214,150,20' : '255,255,255';
       for (let k2 = 0; k2 < 3; k2++) { const sp = 1.05 + k2 * 0.12, off = (((l * sp + k2 * 0.27) % 1) - 0.5) * H * 2.4, len = W * (1.1 + (k2 % 2) * 0.5), x0 = -len / 2 + Math.sin(l * 2 + k2) * W * 0.15;
         const a = (lightBg ? 0.35 : th === 'yel' ? 0.6 : 0.7) * (k2 % 2 ? 0.75 : 1);
+        // owner (17 Nov): "the rays were reduced, they don't show much": a wide soft glow band behind every line again
+        { const r = 9 * u; x.save(); x.translate(x0 + len / 2, off); x.scale(len / 2 / r, 1); const rg = x.createRadialGradient(0, 0, 0, 0, 0, r); rg.addColorStop(0, 'rgba(' + base + ',' + a * 0.55 + ')'); rg.addColorStop(0.35, 'rgba(' + base + ',' + a * 0.2 + ')'); rg.addColorStop(1, 'rgba(' + base + ',0)'); x.fillStyle = rg; x.fillRect(-r, -r, r * 2, r * 2); x.restore(); }
         const lg = x.createLinearGradient(x0, 0, x0 + len, 0); lg.addColorStop(0, 'rgba(' + base + ',0)'); lg.addColorStop(0.5, 'rgba(' + base + ',' + a + ')'); lg.addColorStop(1, 'rgba(' + base + ',0)');
         x.shadowColor = 'rgba(' + base + ',' + Math.min(1, a + 0.2) + ')'; x.shadowBlur = (lightBg ? 6 : 14) * u * 0.5;
-        x.fillStyle = lg; x.fillRect(x0, off - 0.5 * u, len, 1 * u);
+        x.fillStyle = lg; x.fillRect(x0, off - 0.8 * u, len, 1.6 * u);
         const hg = x.createLinearGradient(x0 + len * 0.2, 0, x0 + len * 0.8, 0); hg.addColorStop(0, 'rgba(' + hot + ',0)'); hg.addColorStop(0.5, 'rgba(' + hot + ',' + (lightBg ? 0.3 : 0.85) + ')'); hg.addColorStop(1, 'rgba(' + hot + ',0)');
         x.shadowBlur = (lightBg ? 3 : 8) * u * 0.5; x.fillStyle = hg; x.fillRect(x0 + len * 0.2, off - 0.14 * u, len * 0.6, 0.28 * u); }
       x.shadowBlur = 0; x.restore(); };

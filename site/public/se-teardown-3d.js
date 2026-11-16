@@ -153,7 +153,7 @@ export async function mount(host, state) {
     aluDark: std({ color: 0x55595e, metalness: 1, roughness: 0.42 }),
     antenna: std({ color: 0x2a2b2e, roughness: 0.6 }),
     hole: std({ color: 0x0a0a0b, roughness: 0.85 }),
-    glass: phy({ color: 0x9aa3a8, roughness: 0.02, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.0, envMapIntensity: 1.9, transparent: true, opacity: 0.07, /* owner (16 Nov): the screen under it must look crystal clear, not grey */ depthWrite: false, side: THREE.DoubleSide }),
+    glass: phy({ color: 0xffffff, roughness: 0.0, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.0, envMapIntensity: 1.2, transparent: true, opacity: 0.035, /* owner (17 Nov): crystal clear, no grey film */ /* owner (16 Nov): the screen under it must look crystal clear, not grey */ depthWrite: false, side: THREE.DoubleSide }),
     glassEdge: phy({ color: 0xe4efec, roughness: 0.03, envMapIntensity: 3, transparent: true, opacity: 0.42, depthWrite: false, clearcoat: 1, clearcoatRoughness: 0 }),
     frit: std({ map: fritTex, transparent: true, roughness: 0.15, depthWrite: false }),
     screen: new THREE.MeshBasicMaterial({ map: scrTex, toneMapped: false }),
@@ -202,7 +202,7 @@ export async function mount(host, state) {
     g.add(mesh(extr(Sh(W - 0.012, H - 0.012, R - 0.006), 0.016, 0.006), [M.glass, M.glassEdge]));
     const f = mesh(flat(Sh(W - 0.01, H - 0.01, R - 0.005)), M.frit, 0, 0, -0.0095); f.castShadow = false; f.renderOrder = 2; g.add(f);
     g.add(rb(0.3, 0.02, 0.004, 0.009, M.black, 0, H / 2 - 0.04, 0.0105));
-    const st = mesh(flat(Sh(W - 0.03, H - 0.03, R - 0.015)), phy({ color: 0x000000, roughness: 0.0, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.0, envMapIntensity: 3.4, /* R12 (owner: screen not glass): a real reflective cover glass over the screen */ transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }), 0, 0, 0.0092); st.castShadow = false; st.renderOrder = 3; g.add(st); }
+    const st = mesh(flat(Sh(W - 0.03, H - 0.03, R - 0.015)), phy({ color: 0x000000, roughness: 0.0, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.0, envMapIntensity: 1.15, /* R12 (owner: screen not glass): a real reflective cover glass over the screen; owner (17 Nov): lighter, the additive reflection made the screen look matte */ transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }), 0, 0, 0.0092); st.castShadow = false; st.renderOrder = 3; g.add(st); }
   // 0 · Screen assembly (b) OLED panel with live screen, punch-hole, flex tail folded behind
   { const g = SG[1];
     g.add(mesh(extr(Sh(W - 0.02, H - 0.02, R - 0.01), 0.018), [M.screen, M.black]));
@@ -614,7 +614,7 @@ export async function mount(host, state) {
       visible = inView; const r = { width: nearV ? 1 : 0, top: 0, bottom: 0 }, vh = 1;
       // owner (27 Oct): warm-up. Until it has drawn once, the stage draws one frame (off-screen, invisible) as soon as it is
       // within ~3 screens, so textures upload and shaders link BEFORE the visitor arrives, not on the first scroll into it
-      if (!visible) { if (!warmed && nearV && (window.__seBooted || performance.now() > 12000) && performance.now() - warmAt > 700) { warmAt = performance.now(); try { frame(); warmed = true; } catch (e) {} } return; } }
+      if (!visible) { if (!warmed && nearV && (window.__seBooted || performance.now() > 2500) /* owner (17 Nov): warm the 3D up early so the first scroll into it never stutters */ && performance.now() - warmAt > 700) { warmAt = performance.now(); try { frame(); warmed = true; } catch (e) {} } return; } }
     // R12 speed (owner: fans at full power): full 60 fps only while the scroll is moving the stack; when it is just
     // turning slowly in the studio, 30 fps looks the same and halves the work
     { const now = performance.now(), moving = Math.abs(state.p - p) > 0.0004 || state.snap; if (!moving && now - lastDraw < 31) return; lastDraw = now; }
