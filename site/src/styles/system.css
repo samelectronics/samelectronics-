@@ -656,3 +656,4 @@ html.se-embed body { overflow-x: hidden; }
 .hi-real iframe { position: absolute; left: 0; top: 0; border: 0; transform-origin: 0 0; pointer-events: none; }
 .hi-real.on ~ .hs-tap, .hi-real.on ~ .hs-toast { display: none !important; }
 .hi-real.off iframe { display: none; }
+[data-off], [data-off] *, [data-off] *::before, [data-off] *::after { animation-play-state: paused !important; }

@@ -8,7 +8,7 @@ async function T() {
   return (_T = { THREE, RoomEnvironment, RoundedBoxGeometry });
 }
 function stage(canvas, { THREE, RoomEnvironment }, opts = {}) {
-  const r = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true });
+  const r = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, preserveDrawingBuffer: true }); r.debug.checkShaderErrors = false; /* perf: no blocking shader check */
   r.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5)); r.outputColorSpace = THREE.SRGBColorSpace; r.toneMapping = THREE.ACESFilmicToneMapping; r.toneMappingExposure = opts.exposure || 1.05;
   r.shadowMap.enabled = false; r.shadowMap.type = THREE.PCFSoftShadowMap;
   const scene = new THREE.Scene(), pm = new THREE.PMREMGenerator(r); scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture;

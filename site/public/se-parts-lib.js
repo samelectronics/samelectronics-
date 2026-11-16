@@ -40,7 +40,7 @@ async function screenPart(OS) {
   const THREE = await import('/vendor/three/three.module.min.js' /* owner (27 Oct): self-hosted, it used to come from esm.sh (slow, and the teardown skipped itself when that site failed) */);
   const { RoundedBoxGeometry } = await import('/vendor/three/RoundedBoxGeometry.js');
   const R = 1024, cv = document.createElement('canvas'); cv.width = cv.height = R;
-  const rd = new THREE.WebGLRenderer({ canvas: cv, antialias: true, alpha: true, preserveDrawingBuffer: true });
+  const rd = new THREE.WebGLRenderer({ canvas: cv, antialias: true, alpha: true, preserveDrawingBuffer: true }); rd.debug.checkShaderErrors = false; /* perf: no blocking shader check */
   rd.setPixelRatio(1); rd.setSize(R, R, false); rd.outputColorSpace = THREE.SRGBColorSpace; rd.toneMapping = THREE.ACESFilmicToneMapping; rd.toneMappingExposure = 1.0; rd.setClearColor(0x000000, 0);
   const es = new THREE.Scene(); es.background = new THREE.Color(0x17181a);
   const panelL = (w, h, k, x, y, z, warm) => { const c = warm ? new THREE.Color(1, 0.86, 0.66) : new THREE.Color(1, 1, 1); c.multiplyScalar(k); const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: c, side: THREE.DoubleSide })); m.position.set(x, y, z); m.lookAt(0, 0, 0); es.add(m); };

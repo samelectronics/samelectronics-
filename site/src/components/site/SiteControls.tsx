@@ -7,6 +7,7 @@
 //    ("add", "next", "back", "skip", "send"…); adding to the cart plays "add"
 // Styles in src/styles/dc-base.css (.sc2-*).
 import ChatChoice from './ChatChoice';
+import OffscreenPause from './OffscreenPause';
 import MedalWatch from '@/components/account/MedalWatch';
 import WeChatSheet from './WeChatSheet';
 import React, { useEffect, useState } from 'react';
@@ -95,6 +96,7 @@ export default function SiteControls() {
       <SitePromo />
       <WeChatSheet />
       <ChatChoice />
+      <OffscreenPause />
       <MedalWatch />
       {banner && !panel ? (
         <div className="sc2-banner" role="dialog" aria-label={T('Your privacy, your choice')}>
