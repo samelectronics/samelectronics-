@@ -77,6 +77,11 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
   const res = useMemo(() => (ready ? apply(f, base) : []), [f, base, ready]);
   const fc = useMemo(() => (ready ? facets(f) : null), [f, ready, cv]);
   const D = data();
+  const dockIc = useRef<HTMLSpanElement>(null);
+  useEffect(() => {
+    const sync = () => dockIc.current?.querySelectorAll<HTMLElement>('[data-mirror]').forEach((b) => { const src = document.querySelector(b.dataset.mirror!) as HTMLElement | null; if (src && b.innerHTML !== src.innerHTML) { b.innerHTML = src.innerHTML; b.className = src.className + (b.classList.contains('mn') ? ' mn' : ''); } });
+    sync(); const iv = window.setInterval(sync, 800); window.addEventListener('se:store', sync); return () => { window.clearInterval(iv); window.removeEventListener('se:store', sync); };
+  }, []);
   if (!ready || !D || !fc) return <div className="shop-wait"><span /><span /><span /></div>;
 
   const shown = res.slice(0, page * view.per), myModels = new Map(st.devices.map((d) => [d.model_id, d.nick || d.name]));
@@ -96,11 +101,6 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
   const openFmp = () => window.dispatchEvent(new CustomEvent('se:fmp', { detail: {} }));
   const counts = { deals: products().filter((p) => p.deal > 0).length, new: products().filter((p) => p.isNew).length, limited: products().filter((p) => p.stock_qty > 0 && p.stock_qty < 6).length };
 
-  const dockIc = useRef<HTMLSpanElement>(null);
-  useEffect(() => {
-    const sync = () => dockIc.current?.querySelectorAll<HTMLElement>('[data-mirror]').forEach((b) => { const src = document.querySelector(b.dataset.mirror!) as HTMLElement | null; if (src && b.innerHTML !== src.innerHTML) { b.innerHTML = src.innerHTML; b.className = src.className + (b.classList.contains('mn') ? ' mn' : ''); } });
-    sync(); const iv = window.setInterval(sync, 800); window.addEventListener('se:store', sync); return () => { window.clearInterval(iv); window.removeEventListener('se:store', sync); };
-  }, []);
   return (
     <div className={'shop' + (mode === 'deals' ? ' is-deals' : '')}>
       {/* header: the hero's language — graphite, live circuits, the search, Samsoom ready to help */}
