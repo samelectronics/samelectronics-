@@ -1,5 +1,5 @@
 'use client';
-import { HeroTitle, HeroBack } from './HeroType';
+import { HeroTitle, HeroBack, HeroReadout } from './HeroType';
 // P1 · Small building blocks shared by every page: the page hero (a compact home hero), stars, the "rise in" effect,
 // translation of attribute text, and the add-to-cart flight.
 import React, { useEffect, useRef } from 'react';
@@ -34,6 +34,7 @@ export function PageHero({ eb, title, accent, sub, crumb, children }: { eb: stri
           <HeroTitle a={title} b={accent} />
           {sub ? <p className="sp-p">{sub}</p> : null}
           {children}
+          <HeroReadout />
         </div>
       </div>
     </section>

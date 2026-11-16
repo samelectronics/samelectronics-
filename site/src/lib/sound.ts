@@ -10,7 +10,9 @@ export type Snd = 'click' | 'add' | 'next' | 'back' | 'skip' | 'toggle' | 'open'
 // one clear note (loud enough to feel), the others are 2–3 notes. Same body, same decay, similar loudness.
 type Note = [freq: number, at: number, len: number, amp?: number];
 const SHAPES: Record<Snd, Note[]> = {
-  click: [[784, 0, 0.16, 1]],
+  // owner (16 Nov): "I like the notification sound": every click is now a tiny version of it, two quick notes a fifth
+  // apart (the notification's own interval), short and bright; each function starts on its own note.
+  click: [[880, 0, 0.12, 0.85], [1319, 0.032, 0.2, 0.7]],
   toggle: [[659, 0, 0.14, 0.8], [880, 0.06, 0.18, 0.8]],
   next: [[659, 0, 0.14, 0.75], [988, 0.06, 0.2, 0.8]],
   back: [[988, 0, 0.14, 0.75], [659, 0.06, 0.2, 0.8]],
@@ -22,13 +24,12 @@ const SHAPES: Record<Snd, Note[]> = {
   send: [[587, 0, 0.12, 0.7], [880, 0.05, 0.12, 0.75], [1175, 0.1, 0.3, 0.8]],
   error: [[392, 0, 0.2, 0.85], [370, 0.12, 0.3, 0.85]],
   notify: [[880, 0, 0.3, 0.8], [1319, 0.12, 0.45, 0.75]],
-  // owner (16 Nov): same family, a little different per function
-  // owner (16 Nov): the same click, only a slightly different note per function (one family, never a different sound)
-  bell: [[880, 0, 0.18, 1]],
-  tab: [[740, 0, 0.16, 1]],
-  link: [[831, 0, 0.16, 1]],
-  menu: [[698, 0, 0.17, 1]],
-  cart: [[932, 0, 0.17, 1]],
+  // the same click, starting on a slightly different note per function (one family, never a different sound)
+  bell: [[988, 0, 0.12, 0.85], [1480, 0.032, 0.22, 0.7]],
+  tab: [[784, 0, 0.12, 0.85], [1175, 0.032, 0.2, 0.7]],
+  link: [[831, 0, 0.12, 0.85], [1245, 0.032, 0.2, 0.7]],
+  menu: [[698, 0, 0.12, 0.85], [1047, 0.032, 0.2, 0.7]],
+  cart: [[932, 0, 0.12, 0.85], [1397, 0.032, 0.22, 0.7]],
 };
 // Classic: as written. Soft: an octave-ish lower and quieter. Studio: brighter with a short room echo.
 const PACK = { classic: { mul: 1, gain: 1, lp: 5200, echo: 0 }, soft: { mul: 0.75, gain: 0.7, lp: 3000, echo: 0 }, studio: { mul: 1.12, gain: 0.9, lp: 6500, echo: 0.2 } };
