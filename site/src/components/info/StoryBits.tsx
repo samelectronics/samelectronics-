@@ -68,3 +68,98 @@ export function BrandShift() {
     </div>
   );
 }
+
+// ===== Owner (16 Nov): the story page is told like Home: pictures, movement, things to touch. No document, no boxes. =====
+
+/** WHO WE ARE: a pinned photo wall (frames ready for the owner's pictures) with short handwritten captions. */
+const SHOTS: [string, string, string][] = [
+  ['2003', 'The first Syria Tell counter, Deira', 'r1'],
+  ['2011', 'Moving to Al Murar', 'r2'],
+  ['Today', 'The bench, every day', 'r3'],
+  ['Next', 'Plaza Mayor, Madrid', 'r4'],
+];
+export function PhotoWall() {
+  return (
+    <div className="pw" aria-label={T('Photos of our shops over the years')}>
+      {SHOTS.map(([y, c, k], i) => (
+        <figure key={k} className={'pw-f ' + k} style={{ ['--i' as string]: i }}>
+          <span className="pw-tape" aria-hidden="true" />
+          <span className="pw-img">
+            {i === 2 ? <img src="/assets/se-logo-320.webp" alt="" className="pw-logo" /> : <svg viewBox="0 0 64 48" aria-hidden="true"><rect x="2" y="6" width="60" height="40" rx="5" fill="none" stroke="currentColor" strokeWidth="2" /><circle cx="22" cy="20" r="5" fill="currentColor" /><path d="M4 42 22 28l10 8 10-12 20 18" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinejoin="round" /></svg>}
+            <em className="mono">{T('Photo arrives with the owner’s pictures')}</em>
+          </span>
+          <figcaption><b className="mono">{T(y)}</b>{T(c)}</figcaption>
+        </figure>
+      ))}
+    </div>
+  );
+}
+
+/** THE SLOGAN: three words that light up one after another; hover or tap one to read what it means for you. */
+const SL: [string, string, string][] = [
+  ['Quality', 'Every part is labelled by grade and maker, and tested before it leaves the shop.', 'Tested'],
+  ['Warranty', 'If a part fails, we stand behind it. The warranty is written on the label, not hidden.', 'Covered'],
+  ['Price', 'Fair prices for repair shops and traders, with trade prices for bulk.', 'Fair'],
+];
+export function SloganDial() {
+  const [on, setOn] = useState(0), [hold, setHold] = useState(false);
+  useEffect(() => { if (hold) return; const iv = window.setInterval(() => setOn((v) => (v + 1) % 3), 3200); return () => window.clearInterval(iv); }, [hold]);
+  return (
+    <div className="sd" onMouseLeave={() => setHold(false)}>
+      <div className="sd-words">
+        {SL.map(([w], i) => (
+          <React.Fragment key={w}>
+            {i ? <i className="sd-dot" aria-hidden="true" /> : null}
+            <button type="button" className={'sd-w' + (on === i ? ' on' : '')} onMouseEnter={() => { setHold(true); setOn(i); }} onFocus={() => { setHold(true); setOn(i); }} onClick={() => { setHold(true); setOn(i); }}><span className="mono">0{i + 1}</span>{T(w)}</button>
+          </React.Fragment>
+        ))}
+      </div>
+      <div className="sd-say" key={on}><b className="sd-stamp">{T(SL[on][2])}</b><p>{T(SL[on][1])}</p></div>
+      <div className="sd-bar" aria-hidden="true"><i key={on + (hold ? 'h' : '')} className={hold ? 'hold' : ''} style={{ ['--x' as string]: on }} /></div>
+    </div>
+  );
+}
+
+/** WHY WE DO IT: motive, mission and vision on one dial; the objectives tick themselves off as you read. */
+const MV: [string, string][] = [
+  ['OUR MOTIVE', 'Every repaired phone is one less in a drawer. We exist so that repair shops can fix phones properly, quickly and at a fair price, everywhere we can reach.'],
+  ['MISSION', 'Give every repair shop the right part, in the right grade, with an honest label and a real warranty, the same day.'],
+  ['VISION', 'To be the parts counter repair shops trust most, from Dubai to Madrid and beyond.'],
+];
+const OBJ = ['Label every part by quality and manufacturer, never by guesswork.', 'Test every part before it leaves the shop.', 'Answer every customer the same day, in their language.', 'Ship anywhere, door to door, with a price agreed upfront.', 'Open in Madrid and serve Europe from there.'];
+export function WhyDial() {
+  const [t, setT] = useState(1), [n, setN] = useState(0), ref = useRef<HTMLDivElement>(null);
+  useEffect(() => { const el = ref.current; if (!el) return; let iv = 0; const io = new IntersectionObserver(([e]) => { if (!e.isIntersecting) return; io.disconnect(); iv = window.setInterval(() => setN((k) => { if (k >= OBJ.length) { window.clearInterval(iv); return k; } return k + 1; }), 520); }, { threshold: 0.35 }); io.observe(el); return () => { io.disconnect(); window.clearInterval(iv); }; }, []);
+  return (
+    <div className="wd" ref={ref}>
+      <div className="wd-dial">
+        <div className="wd-tabs" role="tablist">{MV.map(([k], i) => <button key={k} type="button" role="tab" aria-selected={t === i} className={t === i ? 'on' : ''} onClick={() => setT(i)}>{T(k)}</button>)}</div>
+        <blockquote className="wd-q" key={t}><span aria-hidden="true">“</span>{T(MV[t][1])}</blockquote>
+        <div className="wd-pips" aria-hidden="true">{MV.map((_, i) => <i key={i} className={t === i ? 'on' : ''} />)}</div>
+      </div>
+      <div className="wd-obj">
+        <span className="sp-eb">{T('OBJECTIVES')}</span>
+        <ul>{OBJ.map((o, i) => { const done = i < n, pend = i === OBJ.length - 1; return (
+          <li key={o} className={(done ? 'done' : '') + (pend ? ' pend' : '')}><i aria-hidden="true">{done ? (pend ? '…' : '✓') : ''}</i><span>{T(o)}</span>{pend && done ? <em className="mono">{T('In progress')}</em> : null}</li>); })}</ul>
+      </div>
+    </div>
+  );
+}
+
+/** CAREERS: an arrivals board, not boxes. Rows flip in; pick one to open its details and apply. */
+export function JobBoard({ jobs, pick, on }: { jobs: [string, string, string, string][]; pick: (t: string) => void; on: string }) {
+  const [open, setOpen] = useState<string | null>(null);
+  return (
+    <div className="jb" role="table" aria-label={T('Open positions')}>
+      <div className="jb-hd mono" role="row"><span>{T('ROLE')}</span><span>{T('TEAM')}</span><span>{T('WHERE')}</span><span>{T('STATUS')}</span></div>
+      {jobs.map(([t, w, d, tag], i) => { const op = open === t; return (
+        <div key={t} className={'jb-row' + (op ? ' op' : '') + (on === t ? ' sel' : '')} role="row" style={{ ['--i' as string]: i }}>
+          <button type="button" className="jb-main" onClick={() => setOpen(op ? null : t)} aria-expanded={op}>
+            <b className="jb-flip">{T(t)}</b><span className="jb-tag">{T(tag)}</span><span className="mono">{T(w)}</span><span className="jb-st"><i />{T('Hiring')}</span>
+          </button>
+          {op ? <div className="jb-more"><p>{T(d)}</p><button type="button" className="sp-btn sm jb-go" onClick={() => pick(t)}>{T('Apply for this role')} <i>→</i></button></div> : null}
+        </div>); })}
+      <button type="button" className="jb-row jb-open" onClick={() => pick('')}><span className="jb-main"><b>{T('Open application')}</b><span className="jb-tag">{T('Any team')}</span><span className="mono">Deira</span><span className="jb-st"><i />{T('Always open')}</span></span></button>
+    </div>
+  );
+}
