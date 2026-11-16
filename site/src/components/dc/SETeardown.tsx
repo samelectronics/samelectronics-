@@ -6,17 +6,20 @@ import { type Vals, createDC, cssToObj, cx, s, t } from '@/dc/runtime';
 import Logic from './SETeardown.logic.js';
 import SEPart from './SEPart';
 import SEBrandLogo from './SEBrandLogo';
+import TdAmbience from './TdAmbience';
 
 function render(v: Vals) {
   return (
     <>
       <section
         id="teardown"
+        data-loading={v.loading ? '1' : undefined}
         data-tone="dark"
         data-screen-label="02 Teardown"
         ref={v.secRef}
         style={{ position: 'relative', background: '#2A2C2F', color: '#FFFFFF', fontFamily: 'Inter,sans-serif' }}
       >
+        <TdAmbience />
         {v.desk ? (
           <>
             {'\n  '}
@@ -171,7 +174,7 @@ function render(v: Vals) {
                                 >
                                   <span
                                     style={cssToObj(
-                                      `display:inline-block;color:transparent;background-image:linear-gradient(100deg,#FFFFFF 0%,#FFFFFF 40%,#FFF1C8 44%,#F7C032 47.5%,#FFFDF4 50%,#F7C032 52.5%,#FFF1C8 56%,#FFFFFF 60%,#FFFFFF 100%) /* R6 §05 B: a real yellow scanner light, leaving the letters white */;background-size:${v.w?.bs ? v.w.bs + 'px' : '300%'} 100%;background-position:${v.w?.bs ? v.w.bx + 'px' : s(v.w?.bp) + '%'} 0;background-repeat:no-repeat;background-color:#FFFFFF;-webkit-background-clip:text;background-clip:text;opacity:${s(v.w?.o)};filter:${s(v.w?.f)};transform-origin:50% 100%;transform:translateY(${s(v.w?.y)}px) scale(${s(v.w?.sc)});will-change:transform,filter`,
+                                      `display:inline-block;color:transparent;background-image:linear-gradient(105deg,#FFFFFF 0%,#FFFFFF 46.5%,#FFE9A8 48%,#F7C032 49.2%,#FFFFFF 50%,#F7C032 50.8%,#FFE9A8 52%,#FFFFFF 53.5%,#FFFFFF 100%) /* R6 §05 B: a real yellow scanner light, leaving the letters white */;background-size:${v.w?.bs ? v.w.bs + 'px' : '300%'} 100%;background-position:${v.w?.bs ? v.w.bx + 'px' : s(v.w?.bp) + '%'} 0;background-repeat:no-repeat;background-color:#FFFFFF;-webkit-background-clip:text;background-clip:text;opacity:${s(v.w?.o)};filter:${s(v.w?.f)};transform-origin:50% 100%;transform:translateY(${s(v.w?.y)}px) scale(${s(v.w?.sc)});will-change:transform,filter`,
                                     )}
                                   >
                                     {t(v.w?.w)}

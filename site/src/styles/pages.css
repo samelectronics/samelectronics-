@@ -550,3 +550,8 @@ html[dir="rtl"] .ms2-track b { left: auto; right: calc(var(--p) * 100%); margin-
   .sc2-bacts { gap: 6px; } .sc2-bacts .st-btn { height: 34px; font-size: 12.5px; padding: 0 8px; border-radius: 10px; }
 }
 @media (max-width: 760px) { .bt-today { padding-top: 56px; } }
+/* Owner (16 Nov): nothing of the phone shows before the 3D is really ready: the canvas (and on phones the layer card
+   below it) wait in the empty studio, then fade in together. */
+#teardown canvas { transition: opacity .7s ease; }
+#teardown[data-loading] canvas { opacity: 0; }
+@media (max-width: 1024px) { #teardown > * { transition: opacity .6s ease; } #teardown[data-loading] [data-td-dot], #teardown[data-loading] [data-td-fmp] { visibility: hidden; } }
