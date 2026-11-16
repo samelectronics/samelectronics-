@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { data, products } from '@/lib/catalog';
 import { PageHero, T, useRise } from '@/components/site/ui';
 import SEBrandLogo from '@/components/dc/SEBrandLogo';
+import { brandInk } from '@/lib/brandInk';
 import { MakerBoard, GradeCompare } from './BrandsBits';
 
 const MAKER: Record<string, [string, string, string]> = {
@@ -39,8 +40,8 @@ export default function BrandsPage() {
         <div className="br-grid">{D.brands.map((b, i) => {
           const ms = D.models.filter((m) => m.brand_id === b.id), ps = P.filter((p) => p.brand === b.id), series = [...new Set(ms.map((m) => m.series).filter(Boolean))].slice(0, 6);
           return (
-            <article key={b.id} id={b.id} className="br-c" data-rise style={{ ['--i' as string]: i % 4 }}>
-              <span className="br-logo"><SEBrandLogo brand={b.id} h={26} fit="140x30" color="#26282B" /></span>
+            <article key={b.id} id={b.id} className="br-c" data-rise style={{ ['--i' as string]: i % 4, ['--bc' as string]: brandInk(b.id) } as React.CSSProperties}>
+              <span className="br-logo"><SEBrandLogo brand={b.id} h={26} fit="140x30" color={brandInk(b.id)} /></span>
               <span className="br-n"><b>{ms.length}</b> {T('models')} · <b>{ps.length}</b> {T('parts in the shop')}</span>
               <span className="br-ser">{series.map((s) => <span key={s} className="sp-tag">{s}</span>)}</span>
               <span className="sp-acts"><a className="sp-btn sm" href={'/shop?brand=' + b.id}>{T('Shop')} {b.name}</a><a className="sp-btn sm ghost" href={'/repair?model=' + (ms[0]?.id || '')}>{T('Repairs')}</a></span>

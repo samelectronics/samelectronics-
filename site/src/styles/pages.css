@@ -583,3 +583,7 @@ html[dir="rtl"] .ms2-track b { left: auto; right: calc(var(--p) * 100%); margin-
 .ct-priv .sp-h2 { color: #fff; } .ct-priv .sp-p { color: #C9CBCE; }
 .ct-hours .sp-h2, .ct-hours b { color: #26282B !important; } .ct-hours .sp-p { color: #5D6166 !important; }
 .ct-two .pf-body { grid-template-columns: 1fr; } .ct-two .pf-printer { order: -1; position: relative; top: 0; } .ct-two .pf-printer .vs-slip-wrap { padding-bottom: 6px; }
+/* brands: each card carries its brand colour (a thin top accent and a soft glow on hover) */
+.br-c { position: relative; overflow: hidden; transition: transform .25s, box-shadow .25s; }
+.br-c::before { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px; background: var(--bc, #26282B); opacity: .85; }
+.br-c:hover { transform: translateY(-3px); box-shadow: 0 18px 34px -20px var(--bc, rgba(0,0,0,.4)); }
