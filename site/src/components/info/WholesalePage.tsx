@@ -8,7 +8,9 @@ import { products, aed, waLink } from '@/lib/catalog';
 import HowTo from '@/components/site/HowTo';
 import { PageHero, T, useRise, CountUp } from '@/components/site/ui';
 import PalletDrop from '@/components/home/PalletDrop';
-import { TradeFloor, TradeCalc, AppTracker, markSent } from './WholesaleBits';
+import { TradeCalc, AppTracker, markSent, WhoFor, TwoPrices, TradeShelf } from './WholesaleBits';
+import RepairFlip from '@/components/home/RepairFlip';
+import DotGlobe from '@/components/home/DotGlobe';
 
 export default function WholesalePage() {
   const [me] = useMe(), [done, setDone] = useState(false), [err, setErr] = useState('');
@@ -29,36 +31,30 @@ export default function WholesalePage() {
 
       <section className="sp-sec w"><div className="sp-wrap">
         <div className="sp-head" data-rise><div><span className="sp-eb">{T('WHO IT IS FOR')}</span><h2 className="sp-h2">{T('Built for the trade.')}</h2></div></div>
-        <div className="sp-grid sp-g4" data-rise>
-          {[['Repair shops', 'Every grade for every model, fitted the same day you buy.'], ['Traders', 'Bulk lists quoted the same day, stock reserved for you.'], ['Exporters', 'Packed for export, paperwork handled, shipped worldwide.'], ['Corporate & fleets', 'Parts for your own devices, invoiced to your company.']].map(([t, d], i) => <div key={t} className="sp-card wh-who" style={{ ['--i' as string]: i }}><span className="wh-n">0{i + 1}</span><b className="sp-h3">{T(t)}</b><p className="sp-p">{T(d)}</p></div>)}
-        </div>
+        <WhoFor film={<RepairFlip w={480} zoom={1.1} fit="contain" />} globe={<DotGlobe size={210} />} />
       </div></section>
 
-      <section className="sp-sec d"><div className="sp-wrap wh-two">
-        <div data-rise><span className="sp-eb">{T('TWO PRICES, ONE SHOP')}</span><h2 className="sp-h2" style={{ color: '#fff' }}>{T('Approved? Every part shows your price.')}</h2><p className="sp-p">{T('No separate catalogue, no price lists to ask for. Sign in and the shop shows the trade price next to the retail price on every part, in every grade.')}</p></div>
-        <div className="wh-cmp" data-rise>
-          <div className="wh-cmph"><span>{T('Part')}</span><span>{T('Everyone')}</span><span>{T('Trade')}</span></div>
-          {ex.map((x) => <div key={x.title} className="wh-row"><span><b>{x.title}</b><small>{x.grade}</small></span><span>{aed(x.r, false)}</span><span className="t">{aed(x.w, false)}<small>−{Math.round((1 - x.w / x.r) * 100)}%</small></span></div>)}
-          <span className="sp-sample" style={{ color: '#9DA1A6' }}>{T('Sample prices')}</span>
-        </div>
+      <section className="sp-sec g"><div className="sp-wrap">
+        <div className="sp-head" data-rise><div><span className="sp-eb">{T('TWO PRICES, ONE SHOP')}</span><h2 className="sp-h2">{T('Approved? Every part shows your price.')}</h2><p className="sp-p">{T('No separate catalogue, no price lists to ask for. Sign in and the shop shows the trade price next to the retail price on every part, in every grade.')}</p></div></div>
+        <TwoPrices />
       </div></section>
 
-      <section className="sp-sec w"><div className="sp-wrap">
+      <section className="sp-sec y"><div className="sp-wrap">
         <div className="sp-head" data-rise><div><span className="sp-eb">{T('TRADE CALCULATOR')}</span><h2 className="sp-h2">{T('What would you save?')}</h2></div></div>
         <TradeCalc />
       </div></section>
 
-      <section className="sp-sec g"><div className="sp-wrap">
+      <section className="sp-sec w"><div className="sp-wrap">
         <div className="sp-head" data-rise><div><span className="sp-eb">{T('THE TRADE FLOOR')}</span><h2 className="sp-h2">{T('Stock on the floor, by family.')}</h2></div><a className="sp-btn sm ghost" href="/shop">{T('Browse the shop')}</a></div>
-        <TradeFloor />
+        <TradeShelf />
       </div></section>
 
-      <section className="sp-sec w"><div className="sp-wrap">
+      <section className="sp-sec g"><div className="sp-wrap">
         <div className="sp-head" data-rise><div><span className="sp-eb">{T('WHAT YOU GET')}</span><h2 className="sp-h2">{T('More than a price list.')}</h2></div></div>
-        <div className="sp-grid sp-g3" data-rise>
-          {[['Trade prices on every grade', 'Original, OLED, Incell and AAA, side by side.'], ['Same-day bulk quotes', 'Send a list on WhatsApp or upload it; we price it the same day.'], ['Credit on approved orders', 'For established accounts (Hub level and above).'], ['A dedicated account manager', 'One person who knows your shop.'], ['First pick of shipments', 'See what lands before it hits the shop.'], ['Export ready', 'Packed, labelled and shipped door to door.']].map(([t, d]) => <div key={t} className="sp-card wh-get"><i /><b>{T(t)}</b><span className="sp-p">{T(d)}</span></div>)}
+        <div className="wf2-get" data-rise>
+          {[['Trade prices on every grade', 'Original, OLED, Incell and AAA, side by side.'], ['Same-day bulk quotes', 'Send a list on WhatsApp or upload it; we price it the same day.'], ['Credit on approved orders', 'For established accounts (Hub level and above).'], ['A dedicated account manager', 'One person who knows your shop.'], ['First pick of shipments', 'See what lands before it hits the shop.'], ['Export ready', 'Packed, labelled and shipped door to door.']].map(([t, d], i) => <div key={t} className="wf2-g"><em className="mono">{String(i + 1).padStart(2, '0')}</em><b>{T(t)}</b><span>{T(d)}</span></div>)}
         </div>
-        <div className="wh-stats" data-rise>
+        <div className="wh-stats wf2-stats" data-rise>
           <span><b><CountUp to={28} /></b><small>{T('countries we ship to')}</small></span>
           <span><b>{T('Same day')}</b><small>{T('bulk quotes')}</small></span>
           <span><b><CountUp to={20} />+</b><small>{T('years in the trade')}</small></span>
@@ -66,7 +62,7 @@ export default function WholesalePage() {
         </div>
       </div></section>
 
-      <section className="sp-sec g"><div className="sp-wrap">
+      <section className="sp-sec y"><div className="sp-wrap">
         <HowTo eb="HOW IT WORKS" title="Four screens to trade prices." steps={[
           { t: 'Create your account', d: 'In My Bench, with your company profile.', url: '/account?signup=1', screen: { h: 'Create your account', rows: ['Company name', 'E-mail', 'Password'], btn: 'Create account' } },
           { t: 'Apply here', d: 'Trade licence and a few details.', url: '/wholesale#apply', screen: { h: 'Apply for a trade account', rows: ['Trade licence number', 'Monthly volume'], btn: 'Send application' } },
@@ -75,16 +71,17 @@ export default function WholesalePage() {
         ]} />
       </div></section>
 
-      <section id="apply" className="sp-sec y"><div className="sp-wrap wh-apply">
+      <section id="apply" className="sp-sec w"><div className="sp-wrap wh-apply">
         <div data-rise>
           <span className="sp-eb">{T('APPLY')}</span><h2 className="sp-h2">{T('Apply for a trade account')}</h2>
-          <p className="sp-p" style={{ color: '#5A4200' }}>{T('Our management team reviews every application by hand. We reply by e-mail and WhatsApp.')}</p>
+          <p className="sp-p">{T('Our management team reviews every application by hand. We reply by e-mail and WhatsApp.')}</p>
           {!done ? <div style={{ marginBottom: 14 }}><AppTracker /></div> : null}
           {!me ? <div className="sp-note" style={{ background: 'rgba(255,255,255,.55)' }}>{T('Tip: create your account first so the approval is linked to it.')} <a href="/account?next=trade">{T('Create account')}</a></div> : null}
           <a className="sp-btn wa" style={{ marginTop: 14 }} href={waLink('Hi Sam Electronics, I would like a bulk quote. My list:')} target="_blank" rel="noopener noreferrer">{T('Just need a bulk quote? WhatsApp us')}</a>
         </div>
         {done ? <div style={{ display: 'grid', gap: 14 }}><AppTracker /><div className="sp-card" data-rise><b className="sp-h3">{T('Application received.')}</b><p className="sp-p">{T('Thank you. We will review it and reply within one working day.')}</p></div></div> : (
-          <form className="sp-card wh-form" onSubmit={submit} data-rise>
+          <form className="sp-card wh-form wf2-console" onSubmit={submit} data-rise>
+            <span className="wf2-con-h" style={{ gridColumn: '1 / -1' }}><b>{T('TRADE APPLICATION')}</b><small className="mono">SG-{String(f.company.length * 37 + 1000).slice(-4)}</small></span>
             <label className="sp-field">{T('Company name')}<input required value={f.company} onChange={set('company')} /></label>
             <label className="sp-field">{T('Your name')}<input required value={f.name} onChange={set('name')} /></label>
             <label className="sp-field">{T('E-mail')}<input required type="email" value={f.email} onChange={set('email')} /></label>

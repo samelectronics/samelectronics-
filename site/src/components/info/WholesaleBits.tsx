@@ -70,3 +70,69 @@ export function AppTracker() {
     </div>
   );
 }
+
+// ───────── owner (16 Nov): the wholesale page rebuilt with the home's real elements, nothing cartoonish ─────────
+const SHOT = (p: Product) => p.img;
+/** WHO IT IS FOR: four studio stages, each with a real 3D render (repair film, carton with its trade tag, the globe, a full pallet) */
+export function WhoFor({ film, globe }: { film: React.ReactNode; globe: React.ReactNode }) {
+  const C: [string, string, React.ReactNode][] = [
+    ['Repair shops', 'Every grade for every model, fitted the same day you buy.', film],
+    ['Traders', 'Bulk lists quoted the same day, stock reserved for you.', <span key="c" className="wf2-carton"><img src="/assets/pallet/carton-600.webp" alt="" /><em>AED 84</em></span>],
+    ['Exporters', 'Packed for export, paperwork handled, shipped worldwide.', globe],
+    ['Corporate & fleets', 'Parts for your own devices, invoiced to your company.', <img key="p" src="/assets/pallet/full-600.webp" alt="" />],
+  ];
+  return (
+    <div className="wf2-who" data-rise>
+      {C.map(([t, d, vis], i) => (
+        <article key={t} className="wf2-card" style={{ ['--i' as string]: i }}>
+          <span className="wf2-stage" aria-hidden="true">{vis}</span>
+          <span className="wf2-tx"><small className="mono">{String(i + 1).padStart(2, '0')}</small><b>{T(t)}</b><span>{T(d)}</span></span>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+/** TWO PRICES: real parts with both prices; one switch flips the whole shelf from "Everyone" to "Trade" */
+export function TwoPrices() {
+  const l = useProducts(), [trade, setTrade] = useState(true);
+  const ex = useMemo(() => { const out: Product[] = []; const seen = new Set<string>(); for (const p of l) { if (p.wholesale_price > 0 && p.wholesale_price < p.retail_price && !seen.has(p.category)) { seen.add(p.category); out.push(p); } if (out.length >= 4) break; } return out; }, [l]);
+  useEffect(() => { const iv = window.setInterval(() => setTrade((v) => !v), 3600); return () => window.clearInterval(iv); }, []);
+  return (
+    <div className="wf2-tp" data-rise>
+      <div className="wf2-sw" role="tablist">
+        <button type="button" role="tab" aria-selected={!trade} className={!trade ? 'on' : ''} onClick={() => setTrade(false)}>{T('Everyone')}</button>
+        <button type="button" role="tab" aria-selected={trade} className={trade ? 'on' : ''} onClick={() => setTrade(true)}>{T('Trade account')}</button>
+        <i style={{ transform: trade ? 'translateX(100%)' : 'none' }} />
+      </div>
+      <div className="wf2-tp-row">
+        {ex.map((p) => { const off = Math.round((1 - p.wholesale_price / p.retail_price) * 100); return (
+          <a key={p.id} className={'wf2-pc' + (trade ? ' tr' : '')} href={'/shop?q=' + encodeURIComponent(p.title)}>
+            <span className="im"><img src={SHOT(p)} alt="" loading="lazy" /></span>
+            <small>{p.catName} · {p.gradeName}</small>
+            <b>{p.title}</b>
+            <span className="pr"><s className={trade ? 'show' : ''}>{aed(p.retail_price, false)}</s><strong key={trade ? 't' : 'r'}>{aed(trade ? p.wholesale_price : p.retail_price, false)}</strong>{trade ? <em>−{off}%</em> : null}</span>
+          </a>); })}
+      </div>
+      <small className="sp-sample">{T('Sample prices')}</small>
+    </div>
+  );
+}
+
+/** THE TRADE FLOOR: every family on a lit shelf with its real part render, live part count and stock */
+export function TradeShelf() {
+  const l = useProducts();
+  const fam = useMemo(() => { const m = new Map<string, { name: string; n: number; q: number; img: string }>(); l.forEach((p) => { const f = m.get(p.category) || { name: p.catName, n: 0, q: 0, img: p.img }; f.n++; f.q += Math.max(0, p.stock_qty || 0); m.set(p.category, f); }); return [...m.entries()].sort((a, b) => b[1].q - a[1].q); }, [l]);
+  return (
+    <div className="wf2-shelf" data-rise>
+      {fam.map(([id, f], i) => (
+        <a key={id} className="wf2-bay" href={'/shop?cat=' + id} style={{ ['--i' as string]: i }}>
+          <span className="lamp" aria-hidden="true" />
+          <span className="im"><img src={f.img} alt="" loading="lazy" /></span>
+          <span className="tag"><b>{T(f.name)}</b><small className="mono">{f.n} {T('parts')} · {f.q.toLocaleString('en-US')} {T('in stock')}</small></span>
+          <span className="go">{T('Open in the shop')} →</span>
+        </a>
+      ))}
+    </div>
+  );
+}
