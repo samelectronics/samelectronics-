@@ -14,6 +14,7 @@ const S: [string, string, [string, string[]][]][] = [
     ['Collection and delivery', ['Collection orders are kept for 7 days after we tell you they are ready. Delivery terms are in the shipping policy.']],
     ['Parts and fitting', ['Parts are sold for professional fitting. We are not responsible for damage caused while a part is fitted by someone other than Sam Electronics.', 'Repairs at our bench are covered by the warranty policy.']],
     ['Liability', ['Nothing in these terms limits your rights under UAE consumer protection law. Apart from those rights, our liability for a part is limited to repairing, replacing or refunding that part.']],
+    ['Using this website', ['Prices, stock, delivery times and offers depend on where you are. Please do not hide your location (for example with a VPN) when you browse or order; if you do, what you see may not apply to you and we may ask you to confirm your location before we confirm an order.', 'Everything on this website and in our systems (photos, designs, texts, prices and data) belongs to Sam Electronics and is protected by UAE copyright law (Federal Decree-Law No. 38 of 2021). You may keep a copy for your own reference; copying, sharing or publishing it needs our written permission.']],
     ['Law', ['These terms are governed by the laws of the Emirate of Dubai and the federal laws of the UAE. The courts of Dubai have jurisdiction.']],
   ]],
   ['warranty', 'Warranty policy', [

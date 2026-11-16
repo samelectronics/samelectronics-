@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import Guard from '@/components/site/Guard';
 import Script from 'next/script';
 import { DC_FONT_CSS, DC_SCRIPTS } from '@/dc/head';
 import { windowFacts } from '@/content/facts';
@@ -89,6 +90,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Script key={src} src={'/' + src} strategy={src === 'image-slot.js' ? 'lazyOnload' : 'beforeInteractive'} /* R6 Part A: only Find My Part uses it */ />
         ))}
         {children}
+        <Guard />
       </body>
     </html>
   );

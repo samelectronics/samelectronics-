@@ -698,3 +698,21 @@ html[data-theme="dark"] .cc-more a { color: #fff; } html[data-theme="dark"] .cc-
 }
 .sp-btn.wc .ct-ic, .pv-order .sp-btn .ct-ic { color: #fff !important; } /* owner (17 Nov): the WeChat icon was green on green */
 .se-toasts { top: auto !important; bottom: 28px; } /* tick messages at the bottom, never on top of the medal toast */
+/* Guard (owner, 17 Nov): the VPN whistle and the copyright notice */
+.gd-veil { position: fixed; inset: 0; z-index: 2147483100; display: grid; place-items: center; padding: 16px; background: rgba(20,21,23,.45); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); animation: iad2Fade .25s both; }
+.gd-card { position: relative; width: min(460px, 100%); padding: 28px 26px 22px; border-radius: 22px; background: #fff; color: #26282B; box-shadow: 0 40px 80px -30px rgba(0,0,0,.55); text-align: center; animation: gdIn .45s cubic-bezier(.2,1.3,.4,1) both; }
+@keyframes gdIn { from { opacity: 0; transform: translateY(20px) scale(.94); } }
+.gd-sam { position: relative; display: inline-grid; place-items: center; width: 96px; height: 96px; margin: -70px auto 8px; border-radius: 50%; background: #F7C032; box-shadow: 0 0 0 6px #fff, 0 16px 30px -14px rgba(0,0,0,.5); animation: gdShake .5s .2s both; }
+@keyframes gdShake { 20% { transform: rotate(-8deg); } 40% { transform: rotate(7deg); } 60% { transform: rotate(-5deg); } 80% { transform: rotate(3deg); } }
+.gd-wh { position: absolute; right: -14px; top: 30px; display: grid; place-items: center; width: 34px; height: 26px; border-radius: 8px; background: #fff; box-shadow: 0 6px 14px -6px rgba(0,0,0,.4); }
+.gd-wv { position: absolute; right: -30px; top: 20px; width: 14px; height: 14px; border: 2px solid #F7C032; border-left-color: transparent; border-bottom-color: transparent; border-radius: 50%; animation: gdWave 1s ease-out infinite; }
+.gd-wv.b { animation-delay: .3s; right: -40px; top: 14px; width: 22px; height: 22px; }
+@keyframes gdWave { from { opacity: 1; transform: scale(.6); } to { opacity: 0; transform: scale(1.4); } }
+.gd-k { display: block; font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .18em; color: #8C9096; }
+.gd-h { display: block; margin-top: 6px; font: 700 24px/1.15 'Space Grotesk', sans-serif; }
+.gd-p { margin: 10px 0 0; font: 400 14px/1.55 Inter, sans-serif; color: #4A4D52; }
+.gd-s { margin: 8px 0 0; font: 500 12px/1.45 Inter, sans-serif; color: #8C9096; }
+.gd-acts { display: flex; flex-direction: column; gap: 8px; margin-top: 18px; }
+.gd-b { height: 46px; border: 0; border-radius: 12px; background: #F2F3F4; color: #26282B; font: 600 14px Inter, sans-serif; cursor: pointer; }
+.gd-b.y { background: #F7C032; }
+html[data-theme="dark"] .gd-card { background: #2E3034; color: #fff; } html[data-theme="dark"] .gd-p { color: #C9CBCE; } html[data-theme="dark"] .gd-b:not(.y) { background: rgba(255,255,255,.08); color: #fff; }
