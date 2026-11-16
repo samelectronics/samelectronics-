@@ -7,7 +7,7 @@ import { useMe } from '@/lib/backend';
 import HowTo from '@/components/site/HowTo';
 import { PageHero, T, useRise } from '@/components/site/ui';
 import MemberCard, { type CardKind } from '@/components/account/MemberCard';
-import { waLink } from '@/lib/catalog';
+import { waLink, waCard } from '@/lib/catalog';
 import PointsSim from './PointsSim';
 
 const CARDS: { k: CardKind; name: string; for: string; tone: string; intro: string; how: [string, string][]; levels: [string, string, string[]][]; cta: [string, string] }[] = [
@@ -47,46 +47,65 @@ export default function Membership() {
       </div></section>
 
       <div id="cards">
-        {CARDS.map((c, ci) => (
-          <section key={c.k} id={c.k} className={'sp-sec ms-card ' + (ci === 1 ? 'd' : ci === 2 ? 'g' : 'w')}>
-            <div className="sp-wrap ms-in">
-              <div className="ms-l" data-rise>
-                <span className="sp-eb">{T(c.for)}</span>
-                <h2 className="sp-h2">{c.name}</h2>
-                <p className="sp-p">{T(c.intro)}</p>
-                <ol className="ms-how">{c.how.map(([t, d], i) => <li key={t}><i>{i + 1}</i><span><b>{T(t)}</b><small>{T(d)}</small></span></li>)}</ol>
-                <div className="sp-acts">{c.k === 'circle' ? <a className="sp-btn wa" href={waLink('Hi Sam Electronics, I would like to be considered for the Sam Circle loyalty card.')} target="_blank" rel="noopener noreferrer">{T(c.cta[0])}</a> : <a className={'sp-btn' + (ci === 1 ? '' : ' dark')} href={c.cta[1]}>{T(c.cta[0])}</a>}</div>
-              </div>
-              <div className="ms-r" data-rise>
-                <MemberCard kind={c.k} name={me?.name || 'Your name here'} no={c.k === 'circuit' ? 'SC 214 508 2731' : c.k === 'grid' ? 'SG 771 093 2840' : 'SO 300 112 2903'} level={c.levels.length - 1 > 3 ? 4 : 0} />
-              </div>
-            </div>
-            <div className="sp-wrap">
-              <div className="ms-ladder" data-rise>
-                {c.levels.map(([l, r, perks], i) => (
-                  <div key={l} className="ms-lv" style={{ ['--i' as string]: i }}>
-                    <span className="ms-bat">{c.levels.length > 1 ? Array.from({ length: 5 }, (_, j) => <i key={j} className={j <= i ? 'on' : ''} style={{ ['--j' as string]: j }} />) : <svg width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 15.3 6.8 18l1-5.8L3.6 8.1l5.8-.8z" /></svg>}</span>
-                    <b>{T(l)}</b><small>{T(r)}</small>
-                    <ul>{perks.map((p) => <li key={p}>{T(p)}</li>)}</ul>
-                  </div>
-                ))}
-              </div>
-              {c.k !== 'circle' ? <span className="sp-sample">{T('Levels, thresholds and perks are samples until the owner confirms them.')}</span> : null}
-            </div>
-          </section>
-        ))}
+        {CARDS.map((c, ci) => <CardSection key={c.k} c={c} ci={ci} name={me?.name || 'Your name here'} />)}
       </div>
 
-      <section className="sp-sec y">
+      <section className="sp-sec g">
         <div className="sp-wrap ms-pts">
           <div data-rise><span className="sp-eb">{T('HOW POINTS WORK')}</span><h2 className="sp-h2">{T('AED 1 = 1 point.')}<br />{T('On everything.')}</h2></div>
-          <div className="sp-grid sp-g3" data-rise>
-            {[['Parts', 'Every part, in the shop or online.'], ['Repairs', 'The part and the fitting fee both count.'], ['In your account', 'Points, level and history live in My Bench.']].map(([t, d]) => <div key={t} className="sp-card"><b className="sp-h3">{T(t)}</b><p className="sp-p">{T(d)}</p></div>)}
+          <div className="ms2-pts" data-rise>
+            {[['Parts', 'Every part, in the shop or online.', 'M4 7h16v10H4zM8 7V5h8v2'], ['Repairs', 'The part and the fitting fee both count.', 'M14 7l3-3 3 3-3 3M4 20l9-9'], ['In your account', 'Points, level and history live in My Bench.', 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8M4 21c1-4 4-6 8-6s7 2 8 6']].map(([t, d, ic]) => <span key={t}><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={ic} /></svg><b>{T(t)}</b><small>{T(d)}</small></span>)}
           </div>
           <PointsSim />
         </div>
       </section>
 
     </>
+  );
+}
+
+/** One card's section. Owner (16 Nov): no boxes. The levels are a charging rail: tap a level (or let it run) and the
+ *  card next to it charges to that level, with that level's perks underneath. Sections rotate graphite / yellow / white. */
+function CardSection({ c, ci, name }: { c: (typeof CARDS)[number]; ci: number; name: string }) {
+  const n = c.levels.length, [lv, setLv] = React.useState(0), [hold, setHold] = React.useState(false), ref = React.useRef<HTMLDivElement>(null), seen = React.useRef(false);
+  React.useEffect(() => {
+    if (n < 2 || hold) return; let iv = 0; const el = ref.current; if (!el) return;
+    const io = new IntersectionObserver(([e]) => { window.clearInterval(iv); if (e.isIntersecting) { seen.current = true; iv = window.setInterval(() => setLv((v) => (v + 1) % n), 2600); } }, { threshold: 0.3 });
+    io.observe(el); return () => { io.disconnect(); window.clearInterval(iv); };
+  }, [n, hold]);
+  const tone = ci === 0 ? 'g' : ci === 1 ? 'y' : 'w', [l, r, perks] = c.levels[lv];
+  return (
+    <section id={c.k} className={'sp-sec ms-card ms2 ' + tone}>
+      <div className="sp-wrap ms-in">
+        <div className="ms-l" data-rise>
+          <span className="sp-eb">{T(c.for)}</span>
+          <h2 className="sp-h2">{c.name}</h2>
+          <p className="sp-p">{T(c.intro)}</p>
+          <ol className="ms-how">{c.how.map(([t, d], i) => <li key={t}><i>{i + 1}</i><span><b>{T(t)}</b><small>{T(d)}</small></span></li>)}</ol>
+          <div className="sp-acts">{c.k === 'circle' ? <a className="sp-btn wa" href={waLink(waCard('Sam Circle', [['Request', 'Please consider me for the Sam Circle loyalty card']]))} target="_blank" rel="noopener noreferrer">{T(c.cta[0])}</a> : <a className={'sp-btn ms2-cta' + (tone === 'y' ? ' dark' : '')} href={c.cta[1]}>{T(c.cta[0])} <i>→</i></a>}</div>
+        </div>
+        <div className="ms-r" data-rise>
+          <MemberCard kind={c.k} name={name} no={c.k === 'circuit' ? 'SC 214 508 2731' : c.k === 'grid' ? 'SG 771 093 2840' : 'SO 300 112 2903'} level={n > 1 ? lv : 0} />
+        </div>
+      </div>
+      <div className="sp-wrap" ref={ref}>
+        {n > 1 ? (
+          <div className="ms2-rail" data-rise onMouseEnter={() => setHold(true)} onMouseLeave={() => setHold(false)} style={{ ['--p' as string]: lv / (n - 1), ['--n' as string]: n } as React.CSSProperties}>
+            <div className="ms2-track" aria-hidden="true"><i /><b /></div>
+            <div className="ms2-nodes" role="tablist">
+              {c.levels.map(([ln, lr], i) => (
+                <button key={ln} type="button" role="tab" aria-selected={lv === i} className={(i <= lv ? 'on' : '') + (i === lv ? ' cur' : '')} onClick={() => { setHold(true); setLv(i); }}>
+                  <span className="ms2-dot" aria-hidden="true">{i + 1}</span><b>{T(ln)}</b><small className="mono">{T(lr)}</small>
+                </button>
+              ))}
+            </div>
+            <div className="ms2-perks" key={lv}><span className="ms2-lv mono">{T('LEVEL')} {lv + 1} · {T(l)}</span><small>{T(r)}</small><ul>{perks.map((p) => <li key={p}>{T(p)}</li>)}</ul></div>
+          </div>
+        ) : (
+          <div className="ms2-seal" data-rise><span className="ms2-wax" aria-hidden="true">SC</span><div><b>{T(l)}</b><small>{T(r)}</small><ul>{perks.map((p) => <li key={p}>{T(p)}</li>)}</ul></div></div>
+        )}
+        {c.k !== 'circle' ? <span className="sp-sample">{T('Levels, thresholds and perks are samples until the owner confirms them.')}</span> : null}
+      </div>
+    </section>
   );
 }

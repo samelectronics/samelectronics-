@@ -2968,5 +2968,13 @@ const DICT: Record<string, string> = {
   'Versions of the shop': 'दुकान के संस्करण',
   'WHY WE DO IT': 'हम यह क्यों करते हैं',
   'Why the counter opens every morning.': 'काउंटर हर सुबह क्यों खुलता है।',
+  'Your card in three screens.': 'तीन स्क्रीन में आपका कार्ड।',
+  'My Bench › Create account: your name, e-mail and a password.': 'My Bench › अकाउंट बनाएँ: नाम, ई-मेल और पासवर्ड।',
+  'Shop and charge it': 'खरीदें और चार्ज करें',
+  'Your first purchase activates it. AED 1 = 1 point, on parts and repairs.': 'पहली खरीद इसे चालू करती है। AED 1 = 1 पॉइंट, पार्ट्स और रिपेयर पर।',
+  'Trade? Get the Grid card': 'व्यापारी हैं? Grid कार्ड लें',
+  'Apply with your trade licence; management activates it by hand.': 'ट्रेड लाइसेंस के साथ आवेदन करें; प्रबंधन इसे हाथ से चालू करता है।',
+  'Card ready': 'कार्ड तैयार',
+  'Type the 6-digit code we e-mail you. Your Sam Circuit card is ready.': 'ई-मेल में भेजा गया 6 अंकों का कोड डालें। आपका Sam Circuit कार्ड तैयार है।',
 };
 export default DICT;
