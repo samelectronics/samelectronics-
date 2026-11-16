@@ -637,8 +637,12 @@ html[dir='rtl'] .pt-bars i.on::after { transform-origin: right; }
 .ht2-tape-t i { font-style: normal; font-size: 9px; color: rgba(38,40,43,.55); } .ht2-tape.g .ht2-tape-t i { color: rgba(247,192,50,.6); }
 @keyframes ht2Roll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 .ht2-glint { position: absolute; top: 0; bottom: 0; left: 0; width: 180px; transform: translateX(-200px); background: linear-gradient(100deg, rgba(255,255,255,0), rgba(255,255,255,.4) 50%, rgba(255,255,255,0)); animation: wfGlint 10s 1.6s linear infinite; }
-.sp-cine { padding-bottom: 120px !important; }
-@media (max-width: 760px) { .ht2-big { bottom: 70px; } .ht2-tape { height: 38px; } .ht2-tape-t b { font-size: 12.5px; } .sp-cine { padding-bottom: 100px !important; } }
 @media (prefers-reduced-motion: reduce) { .ht2-tape-in { clip-path: none; animation: none; } .ht2-tape-t, .ht2-glint, .ht2-big { animation: none; } }
-.ht2-big { display: none; } .shop-cine { padding-bottom: 110px !important; }
-@media (max-width: 640px) { section.sp-hero.sp-cine { min-height: 0 !important; padding-top: 92px !important; padding-bottom: 130px !important; } }
+.ht2-big { display: none; }
+/* Owner (16 Nov): every page header the same size as the Shop header (compact band, 60px title). */
+section.sp-hero.sp-cine { min-height: 0 !important; height: auto !important; padding: 34px 0 40px !important; align-items: flex-start !important; }
+section.sp-hero.sp-cine .sp-h1 { font-size: clamp(38px, 4.2vw, 60px) !important; line-height: 1.02 !important; }
+section.sp-hero.sp-cine .sp-hero-l { gap: 14px !important; }
+section.sp-hero.sp-cine .sp-p { font-size: 15.5px !important; max-width: 640px; }
+@media (max-width: 640px) { section.sp-hero.sp-cine { padding: 26px 0 34px !important; } }
+@media (min-width: 761px) { section.sp-hero.sp-cine { min-height: 376px !important; box-sizing: border-box; } }
