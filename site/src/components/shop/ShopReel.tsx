@@ -6,7 +6,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { T } from '@/components/site/ui';
 
-const Y = '#F7C032', G = '#26282B', D = '#1C1D20';
+const Y = '#F7C032', G = '#26282B', D = '#26282B'; // owner (17 Nov): graphite, never black
 const IMG: Record<string, string> = {
   scr: '/assets/pose/samsung-sp-960.webp', sp: '/assets/pose/apple-sp-960.webp', gx: '/assets/pose/apple-gx-960.webp', zy: '/assets/pose/apple-zy-960.webp',
   tmp: '/assets/pose/apple-temp-960.webp', bat: '/assets/pose/solo-bat-960.webp', board: '/assets/pose/solo-board-960.webp', cam: '/assets/pose/solo-cam-960.webp', logo: '/assets/se-logo-320.webp',
@@ -62,7 +62,7 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
           text(T('Every part.'), xx, H * 0.4 + 7.5 * s, font(800, Math.round(6.6 * s)), '#fff', 'left', a); text(T('Every grade.'), xx, H * 0.4 + 15 * s, font(800, Math.round(6.6 * s)), Y, 'left', eo((l - 0.5) * 2.2)); }
         else { const a = eo((l - 0.35) * 2.2); text(T('Every part. Every grade.'), W / 2, H * 0.88, font(800, Math.round(4.2 * s)), '#fff', 'center', a); } },
       // 1 · SCREENS: the word slams, the screen whips in on a light floor, a price ticker counts
-      (l) => { fill('#151618'); const s = u(); beams(l, '255,214,120', 0.55); spot(W * 0.62, H * 0.62, H * 0.9, 'rgba(247,192,50,.12)');
+      (l) => { fill('#2A2C2F'); const s = u(); beams(l, '255,214,120', 0.55); spot(W * 0.62, H * 0.62, H * 0.9, 'rgba(247,192,50,.12)');
         const sh = l < 0.18 ? (1 - l / 0.18) * 6 : 0, dx = (Math.random() * 2 - 1) * sh; x.save(); x.translate(dx, 0);
         x.globalAlpha = 0.09; x.font = font(900, Math.round(H * 0.62)); x.fillStyle = '#fff'; x.textAlign = 'center'; x.fillText(T('SCREENS'), W / 2 - l * W * 0.25, H * 0.78); x.globalAlpha = 1;
         const k = back(l * 2.4), px = narrow() ? W * 0.68 : W * 0.66, py = narrow() ? H * 0.6 : H * 0.52; pic('scr', px + (1 - k) * W * 0.6, py, H * (narrow() ? 0.5 : 0.82) * (0.9 + 0.1 * k), -0.06 * (1 - k));
@@ -94,7 +94,7 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
         if (l > 0.48) { x.font = '500 ' + Math.round(2.4 * s) + 'px Inter, sans-serif'; const w = x.measureText(T('Everyone') + '  AED 575').width * eo((l - 0.48) * 4); x.strokeStyle = '#E85C4A'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(tx, H * 0.5 - 0.8 * s); x.lineTo(tx + w, H * 0.5 - 0.8 * s); x.stroke(); }
         const b = eo((l - 0.55) * 3); text(T('Trade') + '  AED ' + Math.round(449 + (575 - 449) * (1 - b)), tx, H * 0.5 + 6.4 * s, font(800, Math.round(4.6 * s)), Y, 'left', b); },
       // 5 · in stock in Deira: the camera module drifts, the count runs, the button pulses
-      (l) => { fill('#151618'); const s = u(); beams(l, '255,214,120', 0.5); spot(W / 2, H * 0.55, H, 'rgba(247,192,50,.14)');
+      (l) => { fill('#2A2C2F'); const s = u(); beams(l, '255,214,120', 0.5); spot(W / 2, H * 0.55, H, 'rgba(247,192,50,.14)');
         if (!narrow()) { pic('cam', W * 0.18, H * 0.55 + Math.sin(l * 4) * 6, H * 0.5, -0.2, eo(l * 2)); pic('scr', W * 0.82, H * 0.52 - Math.sin(l * 4) * 6, H * 0.62, 0.12, eo(l * 2)); }
         text(T('In stock.'), W / 2, H * 0.4, font(800, Math.round(7 * s)), '#fff', 'center', eo(l * 3)); text(T('In Deira.'), W / 2, H * 0.4 + 7.4 * s, font(800, Math.round(7 * s)), Y, 'center', eo((l - 0.12) * 3));
         const n = Math.round(9000 * eo((l - 0.25) * 1.6)); text(n.toLocaleString('en-US') + '+ ' + T('parts on the shelf'), W / 2, H * 0.4 + 14 * s, '600 ' + Math.round(2.2 * s) + "px 'JetBrains Mono', monospace", '#C9CBCE', 'center', eo((l - 0.25) * 3)); flash(l); },
