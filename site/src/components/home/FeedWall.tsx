@@ -44,6 +44,39 @@ function Story({ net, k, live }: { net: (typeof NET)[number]; k: number; live: b
   );
 }
 
+const GRID = [...POSTS, ...POSTS.map((p, i) => ({ ...p, img: ['/assets/pose/solo-scr-480.webp', '/assets/pose/solo-flx-480.webp', '/assets/pose/solo-frm-480.webp', '/assets/pose/solo-board-480.webp'][i], bg: ['#26282B', '#FFFFFF', '#F7C032', '#F2F3F4'][i], likes: p.likes - 40 }))];
+/** a realistic profile page of the chosen network, inside the phone; a new post drops in every few seconds */
+function Profile({ net, k }: { net: (typeof NET)[number]; k: number }) {
+  const posts = Array.from({ length: 9 }, (_, i) => GRID[(i + GRID.length * 9 - (k % GRID.length)) % GRID.length]);
+  const tile = (p: (typeof GRID)[number], i: number, extra?: React.ReactNode) => <span key={i + '-' + k} className={'pf-t' + (i === 0 ? ' new' : '')} style={{ background: p.bg }}><img src={p.img} alt="" loading="lazy" decoding="async" />{extra}</span>;
+  const ava = <span className="pf-ava"><img src="/assets/se-logo-128.webp" alt="" /></span>;
+  return (
+    <div className={'fw-phone pf n-' + net.id} aria-hidden="true">
+      <span className="fw-island" />
+      <div className="pf-scr">
+        <span className="pf-sb"><b>9:41</b><i /></span>
+        {net.id === 'ig' ? (<>
+          <span className="pf-top"><b>samelectronics.uae</b><i className="pf-dots" /></span>
+          <span className="pf-row">{ava}<span className="pf-n"><span><b>{GRID.length * 51}</b><small>posts</small></span><span><b>{net.n}</b><small>followers</small></span><span><b>214</b><small>following</small></span></span></span>
+          <span className="pf-bio"><b>Sam Electronics</b><small>Phone parts · repairs · trade prices</small><small>Al Murar, Deira · since 2003</small></span>
+          <span className="pf-btns"><i className="ig">Follow</i><i>Message</i></span>
+          <span className="pf-hl">{['Stock', 'Repairs', 'Offers', 'Deira'].map((h) => <span key={h}><i /><small>{h}</small></span>)}</span>
+          <span className="pf-grid ig">{posts.map((p, i) => tile(p, i))}</span>
+        </>) : net.id === 'tt' ? (<>
+          <span className="pf-top c"><b>Sam Electronics</b></span>
+          <span className="pf-col">{ava}<b>@samelectronics.uae</b><span className="pf-n c"><span><b>214</b><small>Following</small></span><span><b>{net.n}</b><small>Followers</small></span><span><b>96K</b><small>Likes</small></span></span><span className="pf-btns c"><i className="tt">Follow</i><i>▾</i></span><small className="pf-tt-bio">Daily stock drops from Deira</small></span>
+          <span className="pf-grid tt">{posts.map((p, i) => tile(p, i, <em>▶ {(p.likes * 7).toLocaleString('en-US')}</em>))}</span>
+        </>) : (<>
+          <span className="pf-cover"><img src="/assets/se-logo-320.webp" alt="" /></span>
+          <span className="pf-fbh">{ava}<b>Sam Electronics</b><small>{net.n} followers · Phone parts shop</small></span>
+          <span className="pf-btns"><i className="fb">Like</i><i>Message</i></span>
+          <span className="pf-post"><span className="pf-ph">{ava}<b>Sam Electronics</b><small>Just now</small></span><small className="pf-pt">{T(GRID[k % GRID.length].t)}</small>{tile(GRID[k % GRID.length], 0)}</span>
+        </>)}
+      </div>
+    </div>
+  );
+}
+
 export default function FeedWall() {
   const ref = useRef<HTMLElement>(null), [k, setK] = useState(0), [net, setNet] = useState(0), [live, setLive] = useState(false), [hold, setHold] = useState(false);
   useEffect(() => {
@@ -76,11 +109,8 @@ export default function FeedWall() {
         </div>
         <div className="fw-stage" aria-label={T('Our latest posts')}>
           <span className="fw-glow" aria-hidden="true" />
-          <div className="fw-fan">
-            <Story net={NET[(net + 1) % 3]} k={k + 2} live={live} />
-            <Story net={NET[(net + 2) % 3]} k={k + 1} live={live} />
-            <Story net={N} k={k} live={live} />
-          </div>
+          {/* owner (17 Nov): the account you pick opens in the phone, like the real app */}
+          <div className="fw-one" key={N.id}><Profile net={N} k={k} /></div>
         </div>
       </div>
       <div className="fw-strip" aria-hidden="true"><div className="fw-strip-in">{[...strip, ...strip].map((s, i) => <span key={i}><i />{s}</span>)}</div></div>
