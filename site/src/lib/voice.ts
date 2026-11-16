@@ -12,7 +12,7 @@ import { prefs, type Voice } from './prefs';
 
 let ctx: AudioContext | null = null, gest = false, muted = false;
 if (typeof window !== 'undefined') {
-  const g = () => { gest = true; }; ['pointerdown', 'keydown', 'touchstart'].forEach((e) => window.addEventListener(e, g, { once: true, capture: true, passive: true }));
+  const g = () => { gest = true; try { const C = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext; ctx = ctx || new C(); if (ctx.state !== 'running') ctx.resume(); const b = ctx.createBuffer(1, 1, 22050), src = ctx.createBufferSource(); src.buffer = b; src.connect(ctx.destination); src.start(0); } catch { /* */ } }; ['pointerdown', 'keydown', 'touchstart'].forEach((e) => window.addEventListener(e, g, { once: true, capture: true, passive: true }));
   try { muted = localStorage.getItem('se-sam-mute') === '1'; } catch { /* */ }
 }
 export const isMuted = () => muted;
@@ -163,48 +163,56 @@ let noiseBuf: AudioBuffer | null = null;
 export function babble(text: string, opts: { onEnd?: () => void } = {}) {
   stopCur && stopCur();
   spoken.pending = false; spoken.active = false; spoken.done = false; spoken.text = '';
+  // owner (16 Nov, 3rd pass): "slow, deep, ugly, not cute, not expressive, not aligned, sometimes silent".
+  // Now: one quick, bright little syllable for every syllable as it is typed (same clock as the text), high and round,
+  // with a bouncy melody that changes per word; questions climb, excited lines bounce higher. The mouth opens on every
+  // syllable whether the sound is on or off. The audio is unlocked on the first tap and scheduled only once it runs.
   const t = (text || '').trim(), chars = Array.from(t), voice = prefs().sound.voice || 'cute';
-  const ask = /\?\s*$/.test(t), happy = HAPPY.test(t), base = voice === 'deep' ? 230 : 330;
+  const ask = /\?\s*$/.test(t), happy = HAPPY.test(t), base = voice === 'deep' ? 300 : voice === 'robot' ? 420 : 560;
   const at: number[] = []; let acc = 0; for (const ch of chars) { at.push(acc); acc += charMs(ch) / 1000; } const total = acc;
-  // words: runs of letters; each gets its syllables (vowel starts; CJK: every character)
-  const words: { s: number; e: number; syl: number[] }[] = []; { let s = -1; chars.forEach((c, k) => { const L = /[\p{L}\p{N}]/u.test(c); if (L && s < 0) s = k; if ((!L || k === chars.length - 1) && s >= 0) { const e = L ? k : k - 1, syl: number[] = []; for (let q = s; q <= e; q++) if (/[一-鿿]/.test(chars[q]) || (isV(chars[q]) && (q === s || !isV(chars[q - 1])))) syl.push(q); if (!syl.length) syl.push(s); words.push({ s, e, syl }); s = -1; } }); }
-  const opens: number[] = []; let line: GainNode | null = null;
-  if (can() && words.length) { try { const c = ac(), now = c.currentTime + 0.03; line = c.createGain(); line.gain.value = 1; line.connect(out());
-    if (!noiseBuf) { noiseBuf = c.createBuffer(1, c.sampleRate, c.sampleRate); const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
-    words.forEach((w, wi) => { const h = hash(chars.slice(w.s, w.e + 1).join('')), st = now + at[w.s], en = now + (at[w.e + 1] ?? total) - 0.015, dur = Math.max(0.09, en - st), lastW = wi === words.length - 1;
-      // this word's melody: 2–3 gentle steps chosen from its letters (never the same tune twice in a row)
-      const steps = [0, 2, 4, 5, 7, 4, 2, -1], s0 = steps[h % 8] - 2, s1 = steps[(h >> 3) % 8] - 2;
-      const fBase = base * Math.pow(2, ((wi % 2 ? 1 : 0) + (happy ? 1.5 : 0)) / 12);
-      const src = c.createOscillator(), src2 = c.createOscillator(), mix = c.createGain(), f1 = c.createBiquadFilter(), f2 = c.createBiquadFilter(), body = c.createBiquadFilter(), g1 = c.createGain(), g2 = c.createGain(), gb = c.createGain(), env = c.createGain();
-      src.type = 'triangle'; src2.type = 'sine'; src2.detune.value = 6; mix.gain.value = 0.5;
-      f1.type = 'bandpass'; f1.Q.value = 5; f2.type = 'bandpass'; f2.Q.value = 7; body.type = 'lowpass'; body.frequency.value = 650;
-      g1.gain.value = 1.3; g2.gain.value = 0.55; gb.gain.value = 0.35;
-      src.connect(mix); src2.connect(mix); mix.connect(f1); mix.connect(f2); mix.connect(body); f1.connect(g1); f2.connect(g2); body.connect(gb); g1.connect(env); g2.connect(env); gb.connect(env); env.connect(line!);
-      // pitch: smooth glide through the syllables; a question lifts the last word, a statement settles it
-      const pts = w.syl.map((q, j) => [now + at[q], fBase * Math.pow(2, ((j === 0 ? s0 : j === w.syl.length - 1 ? s1 : (s0 + s1) / 2 + 1)) / 12)] as [number, number]);
-      const endF = lastW ? (ask ? pts[pts.length - 1][1] * 1.26 : pts[pts.length - 1][1] * (happy ? 1.06 : 0.9)) : pts[pts.length - 1][1];
-      [src, src2].forEach((o) => { o.frequency.setValueAtTime(pts[0][1] * 0.97, st); pts.forEach(([tt, f]) => o.frequency.linearRampToValueAtTime(f, Math.max(st + 0.01, tt + 0.03))); o.frequency.linearRampToValueAtTime(endF, en); });
-      // vowels: the resonances slide from vowel to vowel (scaled up for a small voice)
-      w.syl.forEach((q, j) => { const [a1, a2] = formOf(chars[q]), tt = Math.max(st, now + at[q]); if (j === 0) { f1.frequency.setValueAtTime(a1 * 1.12, st); f2.frequency.setValueAtTime(a2 * 1.12, st); } f1.frequency.linearRampToValueAtTime(a1 * 1.12, tt + 0.04); f2.frequency.linearRampToValueAtTime(a2 * 1.12, tt + 0.04); opens.push(at[q]); });
-      // loudness: soft "m"-like start, each syllable swells a little, gentle dip between them, soft end
-      env.gain.setValueAtTime(0.0001, st); env.gain.linearRampToValueAtTime(0.22, st + Math.min(0.05, dur * 0.3));
-      w.syl.forEach((q, j) => { if (!j) return; const tt = now + at[q]; if (tt > st + 0.04 && tt < en - 0.03) { env.gain.linearRampToValueAtTime(0.13, tt - 0.015); env.gain.linearRampToValueAtTime(0.22, tt + 0.03); } });
-      env.gain.setValueAtTime(0.2, Math.max(st + 0.05, en - 0.05)); env.gain.exponentialRampToValueAtTime(0.0001, en + 0.04);
-      // a breath of air on the word (very quiet), so it sounds alive and soft, not electronic
-      const n = c.createBufferSource(), nf = c.createBiquadFilter(), ng = c.createGain(); n.buffer = noiseBuf; nf.type = 'bandpass'; nf.frequency.value = 1800; nf.Q.value = 0.8; ng.gain.setValueAtTime(0.0001, st); ng.gain.linearRampToValueAtTime(0.012, st + 0.03); ng.gain.exponentialRampToValueAtTime(0.0001, en + 0.03); n.connect(nf); nf.connect(ng); ng.connect(line!);
-      // a slow, small vibrato only on longer words
-      const vib = c.createOscillator(), vg = c.createGain(); vib.frequency.value = 5.2; vg.gain.value = dur > 0.25 ? fBase * 0.012 : 0; vib.connect(vg); vg.connect(src.frequency); vg.connect(src2.frequency);
-      [src, src2, vib].forEach((o) => { o.start(st); o.stop(en + 0.08); }); n.start(st, (h % 900) / 1000); n.stop(en + 0.06);
+  // syllables: a vowel run starts one; a word without vowels still gets one; CJK: every character
+  const syl: { k: number; w: number; first: boolean; last: boolean }[] = []; let wi = -1, inW = false;
+  chars.forEach((c, k) => { const L = /[\p{L}\p{N}]/u.test(c); if (L && !inW) { wi++; inW = true; syl.push({ k, w: wi, first: true, last: false }); }
+    else if (L && (/[\u4e00-\u9fff]/.test(c) || (isV(c) && !isV(chars[k - 1] || '') && k - (syl[syl.length - 1]?.k ?? -9) > 1))) syl.push({ k, w: wi, first: false, last: false });
+    if (!L) inW = false; });
+  const lastW = wi; syl.forEach((x, j) => { x.last = x.w === lastW && (j === syl.length - 1); });
+  const opens = syl.map((x) => at[x.k]);
+  let line: GainNode | null = null;
+  const words = Array.from(t.matchAll(/[\p{L}\p{N}]+/gu)).map((m) => m[0]);
+  const schedule = () => { if (!can() || !syl.length) return; try { const c = ac(), now = c.currentTime + 0.02; line = c.createGain(); line.gain.value = 1;
+    const hp = c.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 220; line.connect(hp); hp.connect(out());
+    syl.forEach((x, j) => {
+      const h = hash(words[x.w] || 'a') + j * 7, nextT = j + 1 < syl.length ? at[syl[j + 1].k] : total;
+      const st = now + at[x.k], dur = Math.max(0.055, Math.min(0.13, (nextT - at[x.k]) * 0.85));
+      const STEP = [0, 3, 5, 7, 5, 2, 8, 4], pos = syl.length > 1 ? j / (syl.length - 1) : 0;
+      let semi = STEP[h % 8] - 3 + (x.first ? 1 : 0) - pos * 2 + (happy ? 2 + (j % 2) * 2 : 0);
+      if (x.last) semi += ask ? 7 : happy ? 4 : -3;
+      const f = base * Math.pow(2, semi / 12), up = ask && x.last ? true : (h >> 4) % 3 !== 0;
+      const [, f2] = formOf(chars[x.k]);
+      const o = c.createOscillator(), o2 = c.createOscillator(), bp = c.createBiquadFilter(), dry = c.createGain(), wet = c.createGain(), env = c.createGain();
+      o.type = voice === 'robot' ? 'square' : 'triangle'; o2.type = 'sine';
+      bp.type = 'bandpass'; bp.frequency.value = Math.min(3600, f2 * 1.15); bp.Q.value = 2.5; dry.gain.value = voice === 'robot' ? 0.18 : 0.55; wet.gain.value = 0.9;
+      o.connect(dry); o.connect(bp); bp.connect(wet); o2.connect(dry); dry.connect(env); wet.connect(env); env.connect(line!);
+      const fa = f * (up ? 0.9 : 1.1), fb = f * (up ? 1.08 : 0.94);
+      o.frequency.setValueAtTime(fa, st); o.frequency.exponentialRampToValueAtTime(fb, st + dur * 0.8);
+      o2.frequency.setValueAtTime(fa * 2, st); o2.frequency.exponentialRampToValueAtTime(fb * 2, st + dur * 0.8);
+      const pk = x.first ? 0.26 : 0.21;
+      env.gain.setValueAtTime(0.0001, st); env.gain.exponentialRampToValueAtTime(pk, st + 0.012); env.gain.setValueAtTime(pk, st + dur * 0.55); env.gain.exponentialRampToValueAtTime(0.0001, st + dur);
+      o.start(st); o2.start(st); o.stop(st + dur + 0.02); o2.stop(st + dur + 0.02);
     });
-  } catch { /* silent */ } } else words.forEach((w) => w.syl.forEach((q) => opens.push(at[q])));
-  // the mouth opens on each syllable and closes between them, on the same clock
+    if (happy) { // a tiny "hehe" at the end
+      [0, 0.11].forEach((d, i) => { const o = c.createOscillator(), g = c.createGain(), s0 = now + total + 0.04 + d, ff = base * (1.6 + i * 0.2); o.type = 'triangle'; o.frequency.setValueAtTime(ff, s0); o.frequency.exponentialRampToValueAtTime(ff * 1.15, s0 + 0.07);
+        g.gain.setValueAtTime(0.0001, s0); g.gain.exponentialRampToValueAtTime(0.16, s0 + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, s0 + 0.08); o.connect(g); g.connect(line!); o.start(s0); o.stop(s0 + 0.1); }); }
+  } catch { /* silent */ } };
+  // run only once the audio clock is really running (phones pause it)
+  if (can()) { const c = ac(); if (c.state === 'running') schedule(); else c.resume().then(schedule).catch(() => { /* */ }); }
+  // the mouth opens on each syllable and closes between them, on the same clock as the text
   let alive = true, raf = 0; const t0 = performance.now();
-  const flap = () => { if (!alive) return; const el = (performance.now() - t0) / 1000; const open = opens.some((o) => el >= o && el < o + 0.08); mouth(open); if (el < total) raf = requestAnimationFrame(flap); else mouth(false); };
+  const flap = () => { if (!alive) return; const el = (performance.now() - t0) / 1000; const open = opens.some((o) => el >= o && el < o + 0.075); mouth(open); if (el < total) raf = requestAnimationFrame(flap); else mouth(false); };
   document.documentElement.removeAttribute('data-sam-done'); speaking(true); raf = requestAnimationFrame(flap);
-  const endTm = window.setTimeout(() => { if (!alive) return; alive = false; speaking(false); mouth(false); document.documentElement.setAttribute('data-sam-done', ''); window.setTimeout(() => document.documentElement.removeAttribute('data-sam-done'), 1400); opts.onEnd && opts.onEnd(); }, total * 1000);
-  const ln = line as GainNode | null;
+  const endTm = window.setTimeout(() => { if (!alive) return; alive = false; speaking(false); mouth(false); document.documentElement.setAttribute('data-sam-done', ''); window.setTimeout(() => document.documentElement.removeAttribute('data-sam-done'), 1400); opts.onEnd && opts.onEnd(); }, total * 1000 + 120);
   stopCur = () => { alive = false; speaking(false); cancelAnimationFrame(raf); window.clearTimeout(endTm); mouth(false);
-    // owner: Skip / Next stop him at once: fade this line out in 40 ms and cut it off
+    const ln = line as GainNode | null;
     if (ln) { try { const c = ac(), n0 = c.currentTime; ln.gain.cancelScheduledValues(n0); ln.gain.setValueAtTime(ln.gain.value, n0); ln.gain.linearRampToValueAtTime(0, n0 + 0.04); window.setTimeout(() => { try { ln.disconnect(); } catch { /* */ } }, 80); } catch { /* */ } }
     stopCur = null; };
   return stopCur;

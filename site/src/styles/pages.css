@@ -538,3 +538,15 @@ html[dir="rtl"] .ms2-track b { left: auto; right: calc(var(--p) * 100%); margin-
 .rp2-b.on { background: #26282B; }
 .cl .cl-tabs button { background: rgba(255,255,255,.07); color: #C9CBCE; } .cl .cl-tabs button.on { background: #F7C032; color: #26282B; }
 .cl .cl-step { background: rgba(255,255,255,.06); box-shadow: none; } .cl .cl-step code { color: #F7C032; } .cl .cl-step span { color: #E4E5E7; }
+
+/* Owner (16 Nov, phone): the privacy banner was a third of the screen. On phones it is a slim bar: one line of text
+   and the three choices in a row, sitting above the browser bar. */
+@media (max-width: 760px) {
+  .sc2-banner { left: 10px; right: 10px; bottom: calc(10px + env(safe-area-inset-bottom)); gap: 8px 10px; padding: 10px 12px; border-radius: 16px; }
+  .sc2-banner .sc2-cookie { display: none; }
+  .sc2-btxt { flex-direction: row; flex-wrap: wrap; align-items: baseline; gap: 2px 6px; }
+  .sc2-btxt b { font-size: 13.5px; }
+  .sc2-btxt span { font-size: 0; line-height: 1; } .sc2-btxt span a { font-size: 12.5px; }
+  .sc2-bacts { gap: 6px; } .sc2-bacts .st-btn { height: 34px; font-size: 12.5px; padding: 0 8px; border-radius: 10px; }
+}
+@media (max-width: 760px) { .bt-today { padding-top: 56px; } }
