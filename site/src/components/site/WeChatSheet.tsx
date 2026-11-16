@@ -8,6 +8,7 @@ import qrcode from 'qrcode-generator';
 import { play } from '@/lib/sound';
 import { T as t } from '@/components/site/ui';
 import { backend, wasSent } from '@/lib/backend';
+import { customerId, messageId } from '@/lib/ids';
 
 // every tap on "Open WhatsApp" / "Open WeChat" also lands in the Control Room inbox with the page and the message,
 // unless a form already sent that same card. Visitors stay anonymous unless they signed in.
@@ -31,9 +32,9 @@ function Qr({ text }: { text: string }) {
 }
 
 export default function WeChatSheet() {
-  const [open, setOpen] = useState(false), [mode, setMode] = useState<Mode>('wa'), [msg, setMsg] = useState(DEF_MSG), [copied, setCopied] = useState(false), [note, setNote] = useState(''), [mcopied, setMcopied] = useState(false);
+  const [open, setOpen] = useState(false), [mode, setMode] = useState<Mode>('wa'), [msg, setMsg] = useState(DEF_MSG), [copied, setCopied] = useState(false), [note, setNote] = useState(''), [mcopied, setMcopied] = useState(false), [mid, setMid] = useState('');
   useEffect(() => {
-    const show = (m: Mode, text?: string) => { setCopied(false); setNote(''); setMcopied(false); setMode(m); setMsg(text || DEF_MSG); setOpen(true); play('open'); };
+    const show = (m: Mode, text?: string) => { setCopied(false); setNote(''); setMcopied(false); setMid(messageId()); setMode(m); setMsg(text || DEF_MSG); setOpen(true); play('open'); };
     const onC = (e: Event) => { const d = (e as CustomEvent).detail || {}; show(d.mode === 'wc' ? 'wc' : 'wa', d.text); };
     const onWc = () => show('wc');
     // any WhatsApp link on the site opens the sheet first (the sheet's own "Open WhatsApp" goes straight through)
@@ -50,7 +51,8 @@ export default function WeChatSheet() {
   useEffect(() => { document.documentElement.toggleAttribute('data-contact-open', open); }, [open]);
   if (!open) return null;
   // owner (16 Nov): preview before sending: the system's details (read-only) + your own note, then one tap
-  const sys = msg !== DEF_MSG, full = sys ? msg + (note.trim() ? '\n\n*' + t('Note') + ':* ' + note.trim() : '') : (note.trim() || DEF_MSG);
+  const sys = msg !== DEF_MSG, full0 = sys ? msg + (note.trim() ? '\n\n*' + t('Note') + ':* ' + note.trim() : '') : (note.trim() || DEF_MSG);
+  const full = /\*Message ID:\*/.test(full0) ? full0 : full0.replace(/\s+$/, '') + '\n\n*Customer ID:* ' + customerId() + '\n*Message ID:* ' + mid;
   const C = mode === 'wa' ? WHATSAPP : WECHAT, waUrl = 'https://wa.me/' + WHATSAPP.raw + '?text=' + encodeURIComponent(full);
   const copyMsg = async () => { try { await navigator.clipboard.writeText(full); } catch { /* */ } setMcopied(true); };
   const fmt = (x: string) => x.split('\n').map((ln, i) => ln.trim() ? <span key={i} className="ct-pl">{ln.split(/(\*[^*]+\*)/g).map((p2, j) => p2.length > 2 && p2.startsWith('*') && p2.endsWith('*') ? <b key={j}>{p2.slice(1, -1)}</b> : p2)}</span> : <span key={i} className="ct-pg" />);

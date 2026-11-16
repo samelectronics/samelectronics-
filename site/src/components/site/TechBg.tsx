@@ -18,9 +18,7 @@ export default function TechBg({ tone = 'dark', hud, streaks = 2, className }: {
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     const draw = (s: number) => {
       x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, W, H);
-      // grid
-      const gs = Math.max(26, Math.min(44, W / 18)); x.strokeStyle = 'rgba(' + ink + ',' + (tone === 'dark' ? 0.05 : tone === 'yellow' ? 0.06 : 0.035) + ')'; x.lineWidth = 1; x.beginPath();
-      for (let gx = (s * 6) % gs; gx < W; gx += gs) { x.moveTo(gx + 0.5, 0); x.lineTo(gx + 0.5, H); } for (let gy = 0.5; gy < H; gy += gs) { x.moveTo(0, gy); x.lineTo(W, gy); } x.stroke();
+      // owner (16 Nov): no grid (it looked like notebook paper)
       // glowing streaks
       x.save(); x.translate(W / 2, H / 2); x.rotate(-0.36); x.globalCompositeOperation = tone === 'light' ? 'source-over' : 'lighter';
       const a = tone === 'light' ? 0.35 : tone === 'yellow' ? 0.55 : 0.5, col = tone === 'light' ? '247,192,50' : glow;
@@ -39,9 +37,6 @@ export default function TechBg({ tone = 'dark', hud, streaks = 2, className }: {
       // scan line
       const sy = ((s * 0.09) % 1) * (H + 60) - 30; const sg = x.createLinearGradient(0, sy - 50, 0, sy); sg.addColorStop(0, 'rgba(247,192,50,0)'); sg.addColorStop(1, 'rgba(247,192,50,' + (tone === 'dark' ? 0.04 : tone === 'yellow' ? 0.05 : 0.025) + ')'); x.fillStyle = sg; x.fillRect(0, sy - 50, W, 50);
       x.fillStyle = 'rgba(' + (tone === 'yellow' ? '38,40,43' : '247,192,50') + ',' + (tone === 'dark' ? 0.14 : 0.12) + ')'; x.fillRect(0, sy, W, 1);
-      // brackets
-      x.strokeStyle = 'rgba(' + ink + ',' + (tone === 'dark' ? 0.32 : 0.3) + ')'; x.lineWidth = 1.5; const m = 12, cc = 14;
-      [[m, m, 1, 1], [W - m, m, -1, 1], [m, H - m, 1, -1], [W - m, H - m, -1, -1]].forEach(([cx, cy, sx, sy2]) => { x.beginPath(); x.moveTo(cx, cy + cc * sy2); x.lineTo(cx, cy); x.lineTo(cx + cc * sx, cy); x.stroke(); });
       // HUD
       if (hud && W > 260) { x.font = "500 10px 'JetBrains Mono', monospace"; x.textAlign = 'right'; x.fillStyle = 'rgba(' + ink + ',.5)'; const tc = Math.floor(s) % 60, fr = Math.floor((s % 1) * 24);
         const str = hud + '  00:' + String(tc).padStart(2, '0') + ':' + String(fr).padStart(2, '0'); x.fillText(str, W - 30, H - 20);

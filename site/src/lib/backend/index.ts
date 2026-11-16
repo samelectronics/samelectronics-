@@ -2,6 +2,7 @@
 // P1 · `backend` = Supabase when its keys are set, otherwise the demo kept in this browser. Pages import only this.
 import { useEffect, useState } from 'react';
 import { local } from './local';
+import { stamp as stampText, setCustomer } from '../ids';
 import type { Backend, Staff, User } from './types';
 export * from './types';
 
@@ -19,15 +20,15 @@ const base: Backend = live ? lazy : local;
 // post the same WhatsApp text twice (a form sends its card, then opens WhatsApp with that same card).
 const sentRecently = new Map<string, number>();
 export const wasSent = (text: string) => { const t = sentRecently.get(text.trim()); return !!t && Date.now() - t < 10 * 60e3; };
-export const backend: Backend = new Proxy(base, { get: (t, k) => k === 'send' ? (i: Parameters<Backend['send']>[0]) => { sentRecently.set(i.text.trim(), Date.now()); return t.send(i); } : (t as unknown as Record<string | symbol, unknown>)[k] });
+export const backend: Backend = new Proxy(base, { get: (t, k) => k === 'send' ? (i: Parameters<Backend['send']>[0]) => { sentRecently.set(i.text.trim(), Date.now()); const text = i.from === 'staff' ? i.text : stampText(i.text); sentRecently.set(text.trim(), Date.now()); return t.send({ ...i, text }); } : (t as unknown as Record<string | symbol, unknown>)[k] });
 export const staffToken = async (): Promise<string | null> => (live ? (await import('./supabase')).accessToken() : null);
 
 /** the signed-in customer (null = guest, undefined = still checking); refreshes when anyone signs in or out */
 export function useMe(): [User | null | undefined, () => void] {
   const [me, setMe] = useState<User | null | undefined>(undefined), [n, setN] = useState(0);
   useEffect(() => {
-    let live_ = true; backend.me().then((u) => live_ && setMe(u));
-    const on = () => backend.me().then((u) => live_ && setMe(u)); window.addEventListener('se:db', on); window.addEventListener('se:auth', on);
+    let live_ = true; backend.me().then((u) => { setCustomer(u?.id); if (live_) setMe(u); });
+    const on = () => backend.me().then((u) => { setCustomer(u?.id); if (live_) setMe(u); }); window.addEventListener('se:db', on); window.addEventListener('se:auth', on);
     return () => { live_ = false; window.removeEventListener('se:db', on); window.removeEventListener('se:auth', on); };
   }, [n]);
   return [me, () => { setN((x) => x + 1); window.dispatchEvent(new CustomEvent('se:auth')); }];

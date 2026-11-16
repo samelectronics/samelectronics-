@@ -2,7 +2,6 @@
 // Home v3 section "Footer". Renders against the home page's values (`v`, from HomeV3's logic class).
 'use client';
 import LangMenu from '../LangMenu';
-import FooterCine from '../FooterCine';
 import React from 'react';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 
@@ -22,7 +21,6 @@ export default function Footer({ v }: { v: Vals }) {
       {/* owner (15 Nov): depth and detail: fine brushed grain, a faint engraved wordmark sitting on the floor */}
       <span className="ft-grain" aria-hidden="true" />
       <span className="ft-mark" aria-hidden="true">SAM ELECTRONICS</span>
-      <FooterCine />
       {'\n  '}
       <div style={{ position: 'absolute', left: '0', right: '0', top: '0', height: '2px', overflow: 'hidden' }}>
         <div
@@ -97,9 +95,6 @@ export default function Footer({ v }: { v: Vals }) {
                   </React.Fragment>
                 ))(v2);
               })}
-              <button type="button" className="ft-soc-x wa" title="WhatsApp" aria-label="WhatsApp" onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wa' } }))}><i className="ct-ic wa" /></button>
-              <button type="button" className="ft-soc-x wc" title="WeChat" aria-label="WeChat" onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wc' } }))}><i className="ct-ic wc" /></button>
-              <a className="ft-soc-x mail" title="E-mail" aria-label="E-mail" href={`mailto:${s(v.$facts?.contact?.email)}`}><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg></a>
               <a
                 href={v.googleReview}
                 target="_blank"
@@ -139,6 +134,12 @@ export default function Footer({ v }: { v: Vals }) {
                 </svg>
                 Review us on Google
               </a>
+            </div>
+            {/* owner (16 Nov): message us, on its own row under the social links: WhatsApp, WeChat and e-mail, labelled */}
+            <div className="ft-msg">
+              <button type="button" className="ft-msg-b wa" onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wa' } }))}><i className="ct-ic wa" aria-hidden="true" />WhatsApp</button>
+              <button type="button" className="ft-msg-b wc" onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wc' } }))}><i className="ct-ic wc" aria-hidden="true" />WeChat</button>
+              <a className="ft-msg-b mail" href={`mailto:${s(v.$facts?.contact?.email)}`}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg>{t('E-mail')}</a>
             </div>
             {'\n      '}
           </div>
@@ -199,9 +200,6 @@ export default function Footer({ v }: { v: Vals }) {
             {/* owner (16 Nov): every way to reach us, each with its icon: call, WhatsApp, WeChat, email, and the website chat */}
             <span className="ft-contacts">
               <a href={`tel:${s(v.$facts?.contact?.storeTel)}`}><i className="ft-ci call" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg></i><span data-no-i18n="">{String(v.$facts?.contact?.storePhone ?? '')}</span></a>
-              {/* owner (16 Nov): WhatsApp and WeChat share one number: one line, both logos; it opens the sheet with the WhatsApp | WeChat switch */}
-              <button type="button" className="ft-wawc" onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wa' } }))}><i className="ft-ci wa" aria-hidden="true"><i className="ct-ic wa" /></i><i className="ft-ci wc" aria-hidden="true"><i className="ct-ic wc" /></i><span data-no-i18n="">{String(v.$facts?.contact?.mobile ?? '')}</span></button>
-              <a href={`mailto:${s(v.$facts?.contact?.email)}`}><i className="ft-ci mail" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg></i><span data-no-i18n="">{String(v.$facts?.contact?.email ?? '')}</span></a>
               <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('se:chatwith'))}><i className="ft-ci chat" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v11H9l-5 4z" /></svg></i><span>{t('Chat with us')}</span></button>
             </span>
             {'\n      '}

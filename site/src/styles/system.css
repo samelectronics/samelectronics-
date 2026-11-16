@@ -524,12 +524,10 @@ html[data-sam-speaking] .sam-zap-run, [data-tour='samsoom']:hover .sam-zap-run, 
 .fc.play .fc-since { animation: clipRise .6s 3s both; }
 .fc-hud { position: absolute; z-index: 4; right: 22px; bottom: 7px; display: flex; align-items: center; gap: 7px; font: 500 9.5px 'JetBrains Mono', monospace; letter-spacing: .2em; color: rgba(255,255,255,.4); }
 .fc-hud i { width: 6px; height: 6px; border-radius: 50%; background: #E85C4A; animation: ptBlink 1.2s steps(2) infinite; }
-footer .ft-mark { display: none !important; }
+
 @media (max-width: 700px) { .fc { height: 240px; margin-bottom: 40px; } .fc-in { flex-direction: column; gap: 16px; } .fc-logo { width: 78px; height: 78px; } .fc-name { font-size: 24px; letter-spacing: .12em; } .fc-tag { font-size: 10px; letter-spacing: .26em; } .fc-since { display: none; } }
 @media (prefers-reduced-motion: reduce) { .fc *, .fc { animation: none !important; } }
 /* contacts: text lines without the icon tiles; WhatsApp, WeChat and e-mail sit with the social icons, in their own colours */
-footer .ft-contacts .ft-ci { display: none !important; }
-footer .ft-contacts > a, footer .ft-contacts > button { padding-inline-start: 0 !important; }
 .ft-soc-x { display: grid; place-items: center; width: 42px; height: 36px; border: 0; border-radius: 10px; background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); cursor: pointer; transition: box-shadow .2s, transform .2s; }
 .ft-soc-x:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(255,255,255,.25); }
 .ft-soc-x .ct-ic { width: 18px; height: 18px; }
@@ -561,3 +559,9 @@ html:not([data-theme="dark"]) .se-qs-sw { background: #DADCDF !important; } html
 html:not([data-theme="dark"]) .se-qs-seg { background: #F2F3F4 !important; } html:not([data-theme="dark"]) .se-qs-seg button { color: #5C6066 !important; } html:not([data-theme="dark"]) .se-qs-seg button.on { color: #26282B !important; }
 html:not([data-theme="dark"]) .se-qs-link { color: #8A6300 !important; border-top-color: #ECEDEF !important; }
 html:not([data-theme="dark"]) .se-qs-langs { scrollbar-color: #F7C032 #F2F3F4; }
+
+/* footer: the message row under the social links */
+.ft-msg { display: flex; flex-wrap: wrap; gap: 8px; }
+.ft-msg-b { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border: 0; border-radius: 10px; background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); color: #fff; font: 600 13px Inter, sans-serif; cursor: pointer; text-decoration: none; transition: box-shadow .2s, transform .2s; }
+.ft-msg-b:hover { transform: translateY(-1px); box-shadow: inset 0 0 0 1px rgba(255,255,255,.28); }
+.ft-msg-b.wa .ct-ic { color: #25D366; } .ft-msg-b.wc .ct-ic { color: #07C160; } .ft-msg-b .ct-ic { width: 17px; height: 17px; }

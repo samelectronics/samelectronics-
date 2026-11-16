@@ -48,7 +48,7 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
       x.shadowBlur = 0; x.restore(); };
     // tech layer over every scene: a faint grid, corner brackets, a scan line and a little HUD read-out
     const tech = (l: number, i: number, light = false) => { const ink = light ? '38,40,43' : '255,255,255'; x.save();
-      x.strokeStyle = 'rgba(' + ink + ',.045)'; x.lineWidth = 1; const gs = Math.max(28, W / 32); x.beginPath(); for (let gx = (l * gs * 0.6) % gs; gx < W; gx += gs) { x.moveTo(gx, 0); x.lineTo(gx, H); } for (let gy = 0; gy < H; gy += gs) { x.moveTo(0, gy); x.lineTo(W, gy); } x.stroke();
+      
       const sy = ((l * 1.4) % 1) * H; const sg = x.createLinearGradient(0, sy - 60, 0, sy); sg.addColorStop(0, 'rgba(247,192,50,0)'); sg.addColorStop(1, 'rgba(247,192,50,' + (light ? 0.05 : 0.035) + ')'); x.fillStyle = sg; x.fillRect(0, sy - 60, W, 60); x.fillStyle = 'rgba(247,192,50,' + (light ? 0.18 : 0.12) + ')'; x.fillRect(0, sy, W, 1);
       x.strokeStyle = 'rgba(' + ink + ',.35)'; x.lineWidth = 1.5; const m = 14, c = 16; [[m, m + 22, 1, 1], [W - m, m + 22, -1, 1], [m, H - m, 1, -1], [W - m, H - m, -1, -1]].forEach(([cx, cy, sx, sy2]) => { x.beginPath(); x.moveTo(cx, cy + c * sy2); x.lineTo(cx, cy); x.lineTo(cx + c * sx, cy); x.stroke(); });
       if (!narrow()) { x.font = "500 10px 'JetBrains Mono', monospace"; x.fillStyle = 'rgba(' + ink + ',.5)'; x.textAlign = 'right'; const tc = (START[i] + l * DUR[i]); x.fillText('SE·REEL  ' + String(i + 1).padStart(2, '0') + '/06  ' + '00:' + String(Math.floor(tc)).padStart(2, '0') + ':' + String(Math.floor((tc % 1) * 24)).padStart(2, '0'), W - 34, H - 22);

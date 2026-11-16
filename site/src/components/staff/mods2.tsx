@@ -204,6 +204,7 @@ const fmtMsg = (s: string) => s.split('\n').map((ln, i) => {
   const parts = ln.split(/(\*[^*]+\*)/g).map((x, j) => x.startsWith('*') && x.endsWith('*') && x.length > 2 ? <b key={j}>{x.slice(1, -1)}</b> : <React.Fragment key={j}>{x}</React.Fragment>);
   return ln.trim() ? <span key={i} className="cr-ln">{parts}</span> : <span key={i} className="cr-gap" />;
 });
+const idsIn = (s: string) => ({ c: (s.match(/SE-[CG]-[A-Z0-9]{6}/) || [])[0] || '', m: Array.from(s.matchAll(/SE-M-\d{6}-[A-Z0-9]{4}/g)).map((x) => x[0]) });
 const phoneIn = (s: string) => { const m = s.match(/\+?\d[\d\s-]{7,}\d/); return m ? m[0].replace(/[^\d]/g, '') : ''; };
 // ── Inbox (live chat) ────────────────────────────────────────────────────────────────────────────────────────
 export function Inbox({ me }: P) {
@@ -215,14 +216,17 @@ export function Inbox({ me }: P) {
   useEffect(() => { box.current?.scrollTo({ top: box.current.scrollHeight }); }, [msgs.length]);
   const t = threads.find((x) => x.id === cur);
   const send = async (e?: React.FormEvent, s?: string) => { e?.preventDefault(); const body = (s || text).trim(); if (!cur || !body) return; await backend.send({ thread: cur, name: me.name, text: body, from: 'staff' }); setText(''); backend.messages(cur).then(setMsgs); load(); };
-  const sorted = useMemo(() => [...threads].sort((a, b) => (a.status === 'open' ? 0 : 1) - (b.status === 'open' ? 0 : 1) || b.at - a.at), [threads]);
+  const [find, setFind] = useState('');
+  // owner (16 Nov): every customer and every message has an ID; find a thread by name, customer ID or message ID
+  const sorted = useMemo(() => [...threads].filter((x) => !find.trim() || (x.name + ' ' + (x.email || '') + ' ' + x.topic + ' ' + x.last).toUpperCase().includes(find.trim().toUpperCase())).sort((a, b) => (a.status === 'open' ? 0 : 1) - (b.status === 'open' ? 0 : 1) || b.at - a.at), [threads, find]);
+  const cur_ids = idsIn(msgs.map((m) => m.text).join('\n'));
   return (
     <div className="cr-inbox">
-      <div className="cr-threads">{sorted.length ? sorted.map((x) => <button key={x.id} type="button" className={(cur === x.id ? 'on ' : '') + x.status} onClick={() => setCur(x.id)}><span><b>{x.name}</b><small>{when(x.at)}</small></span><small>{x.topic}</small><em>{(x.last || '').replace(/\*/g, '')}</em>{x.status === 'open' ? <i /> : null}</button>) : <small className="cr-muted" style={{ padding: 16 }}>No conversations yet. Messages from the website’s live chat, contact form and My Bench land here.</small>}</div>
+      <div className="cr-threads"><input className="cr-in cr-find-id" value={find} onChange={(e) => setFind(e.target.value)} placeholder="Find: name, SE-C-…, SE-M-…" />{sorted.length ? sorted.map((x) => <button key={x.id} type="button" className={(cur === x.id ? 'on ' : '') + x.status} onClick={() => setCur(x.id)}><span><b>{x.name}</b><small>{when(x.at)}</small></span><small>{x.topic}{idsIn(x.last || '').c ? ' · ' + idsIn(x.last || '').c : ''}</small><em>{(x.last || '').replace(/\*/g, '')}</em>{x.status === 'open' ? <i /> : null}</button>) : <small className="cr-muted" style={{ padding: 16 }}>No conversations yet. Messages from the website’s live chat, contact form and My Bench land here.</small>}</div>
       <div className="cr-conv">
         {t ? (
           <>
-            <header><b>{t.name}</b><small>{t.email || 'no e-mail'} · {t.topic}</small><Badge t={t.status === 'open' ? 'Waiting for us' : 'Answered'} tone={t.status === 'open' ? 'y' : 'g'} />{(() => { const ph = phoneIn(msgs.map((m) => m.text).join('\n')); return ph ? <a className="cr-btn wa sm" href={'https://wa.me/' + ph} target="_blank" rel="noopener noreferrer">WhatsApp +{ph}</a> : null; })()}</header>
+            <header><b>{t.name}</b><small>{t.email || 'no e-mail'} · {t.topic}</small><Badge t={t.status === 'open' ? 'Waiting for us' : 'Answered'} tone={t.status === 'open' ? 'y' : 'g'} />{cur_ids.c ? <span className="cr-id">{cur_ids.c}</span> : null}{cur_ids.m.length ? <span className="cr-id m">{cur_ids.m.length} message ID{cur_ids.m.length > 1 ? 's' : ''}</span> : null}{(() => { const ph = phoneIn(msgs.map((m) => m.text).join('\n')); return ph ? <a className="cr-btn wa sm" href={'https://wa.me/' + ph} target="_blank" rel="noopener noreferrer">WhatsApp +{ph}</a> : null; })()}</header>
             <div className="cr-msgs" ref={box}>{msgs.map((m) => <div key={m.id} className={'cr-msg ' + m.from}><p>{fmtMsg(m.text)}</p><small>{m.name} · {when(m.at)}</small></div>)}</div>
             <div className="cr-canned">{canned.map((c) => <button key={c} type="button" onClick={() => send(undefined, c)}>{c.slice(0, 48)}{c.length > 48 ? '…' : ''}</button>)}</div>
             <form className="cr-send" onSubmit={send}><input className="cr-in" value={text} onChange={(e) => setText(e.target.value)} placeholder={'Reply as ' + me.name + '…'} /><button type="submit" className="cr-btn y">Send</button></form>

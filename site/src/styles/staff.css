@@ -272,3 +272,5 @@ html[dir=rtl] .cr { background: linear-gradient(270deg, #1F2023 250px, transpare
 
 .cr-msg p { display: flex; flex-direction: column; gap: 2px; line-height: 1.45; } .cr-msg .cr-ln { display: block; overflow-wrap: anywhere; } .cr-msg .cr-gap { display: block; height: 6px; } .cr-msg b { font-weight: 700; }
 .cr-conv header .cr-btn.wa { margin-inline-start: auto; }
+.cr-find-id { margin: 10px; width: calc(100% - 20px); box-sizing: border-box; }
+.cr-id { display: inline-flex; align-items: center; height: 24px; padding: 0 8px; border-radius: 6px; background: #26282B; color: #F7C032; font: 600 11.5px 'JetBrains Mono', monospace; letter-spacing: .04em; } .cr-id.m { background: #F2F3F4; color: #26282B; }
