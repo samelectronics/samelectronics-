@@ -6,11 +6,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { T } from '@/components/site/ui';
 
+// owner (16 Nov): parts never float on their own; they stand in a lit display cabinet, each on its shelf with a label
 const PARTS = [
-  { src: '/assets/pose/samsung-sp-960.webp', k: 'scr' },
-  { src: '/assets/pose/part-bat-960.webp', k: 'bat' },
-  { src: '/assets/pose/part-cam-960.webp', k: 'cam' },
-  { src: '/assets/pose/part-bcv-960.webp', k: 'bcv' },
+  { src: '/assets/pose/samsung-sp-960.webp', k: 'SCREENS', n: 91 },
+  { src: '/assets/pose/part-bat-960.webp', k: 'BATTERIES', n: 74 },
+  { src: '/assets/pose/part-cam-960.webp', k: 'CAMERAS', n: 23 },
+  { src: '/assets/pose/part-bcv-960.webp', k: 'BACK COVERS', n: 74 },
 ];
 
 function Count({ to, on }: { to: number; on: boolean }) {
@@ -32,10 +33,23 @@ export default function ShopHead({ eb, a, b, crumb, stats }: { eb: string; a: st
         <div className="shh-stats">{stats.map(([n, l], i) => <span key={l} style={{ ['--d' as string]: 0.9 + i * 0.1 + 's' } as React.CSSProperties}><b><Count to={n} on={on} /></b><small>{T(l)}</small></span>)}</div>
       </div>
       <div className="shh-r" aria-hidden="true">
-        <span className="shh-glow" />
-        <span className="shh-floor" />
-        {PARTS.map((p, i) => <span key={p.k} className={'shh-p p' + i}><img src={p.src} alt="" decoding="async" /></span>)}
-        <span className="shh-flash" />
+        <div className="cab">
+          <span className="cab-plate"><img src="/assets/se-logo-128.webp" alt="" /><b>SAM ELECTRONICS</b><small>DEIRA · IN STOCK</small></span>
+          {[0, 1].map((row) => (
+            <div key={row} className={'cab-row r' + row}>
+              <i className="cab-led" />
+              {PARTS.slice(row * 2, row * 2 + 2).map((p, i) => (
+                <span key={p.k} className="cab-slot" style={{ ['--d' as string]: 0.9 + row * 0.35 + i * 0.18 + 's' } as React.CSSProperties}>
+                  <img src={p.src} alt="" decoding="async" />
+                  <span className="cab-tag"><b>{T(p.k)}</b><small>{p.n} {T('in stock')}</small></span>
+                </span>
+              ))}
+              <i className="cab-glass" />
+            </div>
+          ))}
+          <i className="cab-front" />
+        </div>
+        <span className="cab-floor" />
       </div>
     </div>
   );

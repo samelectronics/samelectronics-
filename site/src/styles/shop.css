@@ -727,20 +727,20 @@ html[dir="rtl"] .clip-pic { animation-name: clipWhipR, clipPush !important; }
 /* Owner (16 Nov): techy live layers. TechBg canvases sit under the content of the side ads, the in-grid ads and the
    page headers. In-grid ads are tall film cards now (text column + a product stage turning on a lit floor + ticker). */
 .tbg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; display: block; }
-.ad-tile > *:not(.tbg) { position: relative; z-index: 1; } .ad-tile > img { position: absolute; z-index: 1; } .ad-tile > .clip-big { position: absolute; z-index: 0; }
+.ad-tile > span:not(.clip-big):not(.clip-sweep):not(.ad-pips), .ad-tile > b, .ad-tile > small { position: relative; z-index: 1; }
 .ad-tile.d { background: radial-gradient(120% 90% at 85% 80%, #44464B, #2A2C30 60%, #232529) !important; }
-.iad { display: grid !important; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr) !important; align-items: stretch !important; gap: 0 !important; min-height: 300px !important; padding: 0 !important; border-radius: 24px !important; }
+.iad { display: grid !important; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr) !important; align-items: stretch !important; gap: 0 !important; min-height: 230px !important; padding: 0 !important; border-radius: 24px !important; }
 .iad-d { background: radial-gradient(120% 120% at 75% 60%, #45474C, #2C2E32 55%, #232529) !important; }
 .iad-y { background: radial-gradient(120% 120% at 75% 55%, #FFD978, #F7C032 55%, #EDB21C) !important; }
 .iad-w { background: radial-gradient(120% 120% at 75% 55%, #FFFFFF, #F3F4F5 60%, #ECEDEF) !important; }
 .iad::after { display: none !important; }
 .iad > .clip-big { z-index: 0; }
-.iad-col { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 12px; padding: 44px 0 52px 40px; }
+.iad-col { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: 10px; padding: 30px 0 44px 36px; }
 html[dir='rtl'] .iad-col { padding: 44px 40px 52px 0; }
 .iad .iad-k { position: static !important; display: inline-flex; align-items: center; gap: 4px; font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .16em; opacity: .85; }
 .iad-type { display: inline-block; overflow: hidden; white-space: nowrap; border-inline-end: 2px solid currentColor; animation: iadType .9s steps(18) both, iadCaret .8s step-end 1s 4; max-width: 100%; }
 @keyframes iadType { from { max-width: 0; } to { max-width: 30ch; } } @keyframes iadCaret { 50% { border-color: transparent; } }
-.iad-h { display: block; font: 800 clamp(24px, 2.6vw, 36px)/1.08 'Space Grotesk', sans-serif; letter-spacing: -.01em; max-width: 18ch; }
+.iad-h { display: block; font: 800 clamp(22px, 2.2vw, 30px)/1.08 'Space Grotesk', sans-serif; letter-spacing: -.01em; max-width: 18ch; }
 .iad-h span { display: inline-block; margin-inline-end: .26em; animation: iadWord .6s cubic-bezier(.2,.9,.3,1.15) both; }
 @keyframes iadWord { from { opacity: 0; transform: translateY(70%) rotateX(-50deg); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
 .iad-d .iad-h span:last-child, .iad-w .iad-h span:last-child { color: #F7C032; }
@@ -751,11 +751,11 @@ html[dir='rtl'] .iad-col { padding: 44px 40px 52px 0; }
 .iad-specs i { font: 600 11.5px 'JetBrains Mono', monospace; font-style: normal; letter-spacing: .04em; padding: 6px 10px; border-radius: 8px; background: rgba(255,255,255,.08); box-shadow: inset 0 0 0 1px rgba(255,255,255,.16); animation: clipRise .5s both; }
 .iad-y .iad-specs i { background: rgba(38,40,43,.08); box-shadow: inset 0 0 0 1px rgba(38,40,43,.18); } .iad-w .iad-specs i { background: #fff; box-shadow: inset 0 0 0 1px #E2E4E7; }
 .iad .iad-cta { height: 46px; padding: 0 20px; border-radius: 13px; font-size: 15px; margin-top: 4px; }
-.iad-stage { position: relative; z-index: 1; display: grid; place-items: center; perspective: 900px; min-height: 260px; }
+.iad-stage { position: relative; z-index: 1; display: grid; place-items: center; perspective: 900px; min-height: 200px; }
 .iad-floor { position: absolute; left: 12%; right: 12%; bottom: 46px; height: 46px; border-radius: 50%; background: radial-gradient(closest-side, rgba(247,192,50,.45), rgba(247,192,50,0)); filter: blur(4px); }
 .iad-y .iad-floor { background: radial-gradient(closest-side, rgba(255,255,255,.7), rgba(255,255,255,0)); }
-.iad .iad-pic { position: relative; height: 210px !important; width: auto; object-fit: contain; filter: drop-shadow(0 22px 26px rgba(0,0,0,.35)) !important; animation: iadIn .9s cubic-bezier(.16,1,.3,1) both, iadTurn 7s ease-in-out .9s infinite !important; transform-style: preserve-3d; }
-.iad .iad-ref { position: absolute; bottom: -132px; height: 210px !important; width: auto; transform: scaleY(-1); opacity: .16; filter: blur(1px) !important; -webkit-mask: linear-gradient(to top, #000, transparent 45%); mask: linear-gradient(to top, #000, transparent 45%); animation: iadTurnR 7s ease-in-out .9s infinite !important; pointer-events: none; }
+.iad .iad-pic { position: relative; height: 170px !important; width: auto; object-fit: contain; filter: drop-shadow(0 22px 26px rgba(0,0,0,.35)) !important; animation: iadIn .9s cubic-bezier(.16,1,.3,1) both, iadTurn 7s ease-in-out .9s infinite !important; transform-style: preserve-3d; }
+.iad .iad-ref { position: absolute; bottom: -108px; height: 170px !important; width: auto; transform: scaleY(-1); opacity: .16; filter: blur(1px) !important; -webkit-mask: linear-gradient(to top, #000, transparent 45%); mask: linear-gradient(to top, #000, transparent 45%); animation: iadTurnR 7s ease-in-out .9s infinite !important; pointer-events: none; }
 @keyframes iadIn { from { opacity: 0; transform: translateY(30px) scale(.9) rotateY(-40deg); } to { opacity: 1; transform: none; } }
 @keyframes iadTurn { 0%, 100% { transform: translateY(0) rotateY(-14deg) rotateZ(-2deg); } 50% { transform: translateY(-10px) rotateY(14deg) rotateZ(2deg); } }
 @keyframes iadTurnR { 0%, 100% { transform: scaleY(-1) translateY(0) rotateY(-14deg); } 50% { transform: scaleY(-1) translateY(-10px) rotateY(14deg); } }
@@ -768,7 +768,7 @@ html[dir='rtl'] .iad-col { padding: 44px 40px 52px 0; }
 @keyframes iadTick { to { transform: translateX(-50%); } }
 .iad .iad-dots { bottom: 44px !important; left: 40px !important; z-index: 2; }
 html[dir='rtl'] .iad .iad-dots { left: auto !important; right: 40px !important; }
-.iad .iad-col { padding-bottom: 64px; }
+.iad .iad-col { padding-bottom: 54px; }
 @media (max-width: 760px) {
   .iad { grid-template-columns: 1fr !important; min-height: 0 !important; }
   .iad-col { padding: 30px 22px 18px !important; order: 2; }
@@ -850,3 +850,36 @@ html[dir='rtl'] .iad .iad-dots { left: auto !important; right: 40px !important; 
 @keyframes shhRing { 0% { opacity: 1; transform: scale(1); } 100% { opacity: 0; transform: scale(36); } }
 @media (max-width: 900px) { .shh { grid-template-columns: 1fr; min-height: 0; } .shh-r { height: 240px; order: -1; } .shh-p { width: 140px; height: 140px; } .shh-p.p0 { width: 170px; height: 170px; left: 34%; top: 2%; } .shh-glow { width: 300px; height: 300px; margin: -150px 0 0 -150px; } .shop-hd3 { padding-bottom: 30px; } }
 @media (prefers-reduced-motion: reduce) { .shh * { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; max-width: none !important; } }
+/* the header's display cabinet */
+.shh-r { display: grid; place-items: center; height: 380px; }
+.shh-r > .shh-glow, .shh-r > .shh-floor, .shh-r > .shh-p, .shh-r > .shh-flash { display: none; }
+.cab { position: relative; width: min(520px, 100%); padding: 46px 18px 18px; border-radius: 20px; opacity: 0; transform: translateY(18px) scale(.97);
+  background: linear-gradient(180deg, #2A2C30, #1B1C1F); box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.08), inset 0 1px 0 rgba(255,255,255,.18), 0 40px 70px -30px rgba(0,0,0,.8), 0 0 0 6px #2F3135, 0 0 0 7px rgba(255,255,255,.1); }
+.shh.on .cab { animation: cabIn .9s .35s cubic-bezier(.16,1,.3,1) both; }
+@keyframes cabIn { to { opacity: 1; transform: none; } }
+.cab-plate { position: absolute; top: 12px; left: 18px; right: 18px; display: flex; align-items: center; gap: 8px; }
+.cab-plate img { width: 20px; height: 20px; border-radius: 50%; box-shadow: 0 0 0 1.5px #F7C032; }
+.cab-plate b { font: 600 10.5px 'Space Grotesk', sans-serif; letter-spacing: .22em; color: #E4E5E7; } .cab-plate small { margin-inline-start: auto; font: 600 9.5px 'JetBrains Mono', monospace; letter-spacing: .18em; color: #F7C032; }
+.cab-row { position: relative; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; height: 176px; padding: 10px 14px 0; border-radius: 12px; overflow: hidden;
+  background: radial-gradient(80% 90% at 50% 0%, rgba(255,236,190,.16), rgba(255,236,190,0) 70%), linear-gradient(180deg, #303236, #222427); box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), inset 0 -26px 30px -20px rgba(0,0,0,.6); }
+.cab-row + .cab-row { margin-top: 12px; }
+.cab-led { position: absolute; top: 0; left: 8%; right: 8%; height: 3px; border-radius: 3px; background: #FFF4D6; box-shadow: 0 0 12px 3px rgba(255,226,150,.75), 0 10px 50px 10px rgba(255,226,150,.18); opacity: 0; }
+.shh.on .cab-row.r0 .cab-led { animation: cabLed 1s .7s steps(1) both, cabHum 4s 1.8s ease-in-out infinite; }
+.shh.on .cab-row.r1 .cab-led { animation: cabLed 1s 1s steps(1) both, cabHum 4s 2.1s ease-in-out infinite; }
+@keyframes cabLed { 0% { opacity: 0; } 15% { opacity: 1; } 25% { opacity: .2; } 40% { opacity: 1; } 50% { opacity: .5; } 60%, 100% { opacity: 1; } }
+@keyframes cabHum { 50% { opacity: .85; } }
+.cab-glass { position: absolute; left: 0; right: 0; bottom: 0; height: 10px; background: linear-gradient(180deg, rgba(255,255,255,.35), rgba(255,255,255,.06)); box-shadow: 0 -1px 0 rgba(255,255,255,.55), 0 -10px 18px -8px rgba(255,226,150,.25); }
+.cab-slot { position: relative; display: grid; justify-items: center; align-content: end; padding-bottom: 12px; opacity: 0; transform: translateY(26px) scale(.9); }
+.shh.on .cab-slot { animation: cabSlot .8s cubic-bezier(.2,1.25,.4,1) both; animation-delay: var(--d); }
+@keyframes cabSlot { to { opacity: 1; transform: none; } }
+.cab-slot img { height: 142px; margin-bottom: -10px; width: auto; max-width: 100%; object-fit: contain; filter: drop-shadow(0 10px 10px rgba(0,0,0,.55)); transition: transform .35s; }
+.cab-slot:hover img { transform: translateY(-4px) scale(1.04); }
+.cab-tag { display: grid; justify-items: center; gap: 1px; margin-top: 6px; padding: 3px 8px; border-radius: 5px; background: rgba(0,0,0,.35); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+.cab-tag b { font: 600 9.5px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #F2F3F4; } .cab-tag small { font: 500 9px 'JetBrains Mono', monospace; color: #2BB673; letter-spacing: .06em; }
+.cab-front { position: absolute; inset: 40px 14px 14px; border-radius: 12px; pointer-events: none; background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.10) 42%, rgba(255,255,255,.02) 50%, transparent 60%); background-size: 260% 100%; background-position: 130% 0; }
+.shh.on .cab-front { animation: cabRefl 2.4s 1.8s ease-in-out both, cabRefl 2.4s 9s ease-in-out infinite; }
+@keyframes cabRefl { to { background-position: -60% 0; } }
+.cab-floor { position: absolute; bottom: 6px; width: 70%; height: 30px; border-radius: 50%; background: radial-gradient(closest-side, rgba(0,0,0,.6), transparent); filter: blur(6px); }
+.shh-r { position: relative; }
+@media (max-width: 900px) { .shh-r { height: auto; padding: 8px 0 18px; } .cab { width: 100%; max-width: 440px; } .cab-row { height: 140px; } .cab-slot img { height: 104px; } }
+@media (prefers-reduced-motion: reduce) { .cab, .cab-slot, .cab-led { opacity: 1 !important; transform: none !important; animation: none !important; } }

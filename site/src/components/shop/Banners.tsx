@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { T } from '@/components/site/ui';
 import { siteRaw } from '@/lib/catalog';
-import ShopHeroFilm from './ShopHeroFilm';
+import ShopReel from './ShopReel';
 import TechBg from '@/components/site/TechBg';
 
 type Side = { k: string; t: string; d: string; cta: string; href: string; img: string; c: string; wide?: boolean };
@@ -40,7 +40,7 @@ export default function Banners({ onDeals, onCat }: { onDeals: () => void; onCat
   return (
     <section className="ad" aria-label={T('Offers')}>
       {/* owner (16 Nov): the main advert is a real commercial that plays (ShopReel), not a phone and not a static slide */}
-      <div className="ad-main ad-reel"><ShopHeroFilm stats={[0, 0, 0]} onCat={onCat} onShop={() => document.querySelector('.shop-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} /></div>
+      <div className="ad-main ad-reel"><ShopReel onCat={onCat} onDeals={onDeals} onShop={() => document.querySelector('.shop-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} /></div>
       {/* owner: the ads always change and come in moving, never a squeezed line of cartons: two slots, each turning
           through its own set, one clean picture per ad, a few seconds apart so the page always has something new */}
       <div className="ad-side">
