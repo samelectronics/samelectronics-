@@ -618,17 +618,27 @@ html[dir='rtl'] .pt-bars i.on::after { transform-origin: right; }
 @keyframes ht2Run { from { background-position: 120% 0; } to { background-position: -20% 0; } }
 .ht2-w.y > span { color: #F7C032 !important; text-shadow: 0 0 40px rgba(247,192,50,.3); }
 .sp-cine .ht2 em, .ht2 em { font-style: normal; }
-/* behind: slow colour glows and two rows of giant outlined words drifting */
+/* behind: one giant outlined page word + two crossing rolling tapes (yellow and graphite), like the home ads */
 .ht2-bg { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
-.ht2-glow { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .55; }
-.ht2-glow.g1 { width: 46vw; height: 46vw; left: -12vw; top: -20vw; background: radial-gradient(closest-side, rgba(247,192,50,.35), transparent); animation: ht2Drift 18s ease-in-out infinite alternate; }
-.ht2-glow.g2 { width: 40vw; height: 40vw; right: -10vw; bottom: -24vw; background: radial-gradient(closest-side, rgba(255,140,60,.22), transparent); animation: ht2Drift 22s ease-in-out -6s infinite alternate-reverse; }
-.ht2-glow.g3 { width: 30vw; height: 30vw; left: 40%; top: 10%; background: radial-gradient(closest-side, rgba(255,236,190,.14), transparent); animation: ht2Drift 26s ease-in-out -12s infinite alternate; }
-@keyframes ht2Drift { from { transform: translate(0, 0) scale(1); } to { transform: translate(6vw, 4vw) scale(1.15); } }
-.ht2-mq { position: absolute; left: 0; white-space: nowrap; font: 800 clamp(90px, 12vw, 190px)/1 'Space Grotesk', sans-serif; letter-spacing: -.03em; color: transparent; -webkit-text-stroke: 1.2px rgba(255,255,255,.07); }
-.ht2-mq > span { display: inline-block; }
-.ht2-mq.r1 { top: 8%; } .ht2-mq.r1 > span { animation: ht2Mq 90s linear infinite; }
-.ht2-mq.r2 { bottom: -4%; -webkit-text-stroke-color: rgba(247,192,50,.09); } .ht2-mq.r2 > span { animation: ht2Mq 110s linear infinite reverse; }
-@keyframes ht2Mq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-@media (prefers-reduced-motion: reduce) { .ht2-w > span, .ht2.on, .ht2-mq > span, .ht2-glow { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; } }
-html[dir='rtl'] .ht2-mq.r1 > span { animation-direction: reverse; } html[dir='rtl'] .ht2-mq.r2 > span { animation-direction: normal; }
+.ht2-big { position: absolute; right: -2vw; bottom: 64px; font: 800 clamp(120px, 19vw, 300px)/.8 'Space Grotesk', sans-serif; letter-spacing: -.05em; color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,.1); white-space: nowrap; animation: ht2Big 1.4s cubic-bezier(.16,1,.3,1) .2s both; }
+@keyframes ht2Big { from { opacity: 0; transform: translateX(12vw); } to { opacity: 1; transform: none; } }
+.ht2-tape { position: absolute; left: -4%; right: -4%; height: 46px; }
+.ht2-tape.y { bottom: 30px; transform: rotate(-2.2deg); z-index: 2; filter: drop-shadow(0 10px 16px rgba(0,0,0,.45)); }
+.ht2-tape.g { bottom: 34px; transform: rotate(1.6deg); z-index: 1; filter: drop-shadow(0 8px 12px rgba(0,0,0,.4)); }
+.ht2-tape-in { position: absolute; inset: 0; overflow: hidden; clip-path: inset(0 100% 0 0); animation: wfUnroll .9s cubic-bezier(.65,0,.35,1) both, wfPress .4s ease-out both; }
+.ht2-tape.y .ht2-tape-in { animation-delay: .55s, 1.35s; background: linear-gradient(180deg, rgba(255,255,255,.32), rgba(255,255,255,0) 38%, rgba(0,0,0,.05) 62%, rgba(255,255,255,.14) 82%, rgba(0,0,0,.1)), linear-gradient(90deg, #F2B520, #FFCB3D 30%, #F7C032 60%, #EDB21E); box-shadow: 0 1px 0 rgba(120,80,0,.35), 0 -1px 0 rgba(120,80,0,.25); }
+.ht2-tape.g .ht2-tape-in { animation-delay: .35s, 1.15s; background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,0) 40%, rgba(0,0,0,.25)), #26282B; box-shadow: inset 0 0 0 1px rgba(255,255,255,.06); }
+.ht2-tape-in::before { content: ''; position: absolute; inset: 0; opacity: .5; background: repeating-linear-gradient(90deg, rgba(255,255,255,0) 0 90px, rgba(255,255,255,.18) 90px 92px, rgba(255,255,255,0) 92px 210px); }
+.ht2-tape-t { position: absolute; left: 0; top: 0; bottom: 0; display: flex; white-space: nowrap; animation: ht2Roll 40s linear infinite; }
+.ht2-tape.g .ht2-tape-t { animation-duration: 52s; animation-direction: reverse; }
+.ht2-tape-t > span { display: flex; align-items: center; gap: 22px; padding-inline-end: 22px; }
+.ht2-tape-t b { font: 700 15px 'Space Grotesk', sans-serif; letter-spacing: .2em; color: #26282B; }
+.ht2-tape.g .ht2-tape-t b { color: #F7C032; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+.ht2-tape-t i { font-style: normal; font-size: 9px; color: rgba(38,40,43,.55); } .ht2-tape.g .ht2-tape-t i { color: rgba(247,192,50,.6); }
+@keyframes ht2Roll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.ht2-glint { position: absolute; top: 0; bottom: 0; left: 0; width: 180px; transform: translateX(-200px); background: linear-gradient(100deg, rgba(255,255,255,0), rgba(255,255,255,.4) 50%, rgba(255,255,255,0)); animation: wfGlint 10s 1.6s linear infinite; }
+.sp-cine { padding-bottom: 120px !important; }
+@media (max-width: 760px) { .ht2-big { bottom: 70px; } .ht2-tape { height: 38px; } .ht2-tape-t b { font-size: 12.5px; } .sp-cine { padding-bottom: 100px !important; } }
+@media (prefers-reduced-motion: reduce) { .ht2-tape-in { clip-path: none; animation: none; } .ht2-tape-t, .ht2-glint, .ht2-big { animation: none; } }
+.ht2-big { display: none; } .shop-cine { padding-bottom: 110px !important; }
+@media (max-width: 640px) { section.sp-hero.sp-cine { min-height: 0 !important; padding-top: 92px !important; padding-bottom: 130px !important; } }
