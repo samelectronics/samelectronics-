@@ -1,4 +1,5 @@
 'use client';
+import { toast } from '@/components/site/Toaster';
 // P2 · A product, opened inside the shop (owner: "the product page belongs in the shop"): a full sheet over the results,
 // with its own link (?p=ID) so it can be shared. Gallery with zoom, every grade of the same part, price ("· sample") and the
 // trade price (locked until approved), quantity, add to cart / buy on WhatsApp, star, compare, stock alert, share,
@@ -48,8 +49,8 @@ function ListMenu({ id, kits }: { id: string; kits: { name: string; ids: string[
       <button type="button" className={inAny ? 'on' : ''} aria-expanded={open} onClick={() => setOpen(!open)}><PvIc k="list" />{T('List')}</button>
       {open ? (
         <span className="pv-lists-pop" role="dialog" aria-label={T('My lists')}>
-          {kits.length ? kits.map((k) => <label key={k.name}><input type="checkbox" checked={k.ids.includes(id)} onChange={() => store.toList(k.name, id)} /><span>{k.name}</span><small>{k.ids.length}</small></label>) : <small className="pv-lists-none">{T('No lists yet. Name one, e.g. “Shop order June”.')}</small>}
-          <form onSubmit={(e) => { e.preventDefault(); if (nm.trim()) { store.toList(nm, id); setNm(''); } }}><input value={nm} onChange={(e) => setNm(e.target.value)} placeholder={T('New list name')} maxLength={40} /><button type="submit">{T('Add')}</button></form>
+          {kits.length ? kits.map((k) => <label key={k.name}><input type="checkbox" checked={k.ids.includes(id)} onChange={() => { const had = k.ids.includes(id); store.toList(k.name, id); toast(had ? 'Removed from ' + k.name : 'Added to ' + k.name); }} /><span>{k.name}</span><small>{k.ids.length}</small></label>) : <small className="pv-lists-none">{T('No lists yet. Name one, e.g. “Shop order June”.')}</small>}
+          <form onSubmit={(e) => { e.preventDefault(); if (nm.trim()) { store.toList(nm, id); toast('Added to ' + nm.trim()); setNm(''); } }}><input value={nm} onChange={(e) => setNm(e.target.value)} placeholder={T('New list name')} maxLength={40} /><button type="submit">{T('Add')}</button></form>
           <a href="/account#saved">{T('See my lists')} →</a>
         </span>
       ) : null}
@@ -60,7 +61,7 @@ function ListMenu({ id, kits }: { id: string; kits: { name: string; ids: string[
 export default function ProductView({ id, me, onClose, onOpen }: { id: string | null; me: User | null | undefined; onClose: () => void; onOpen: (p: Product) => void }) {
   const p = id ? byId(id) : null, st = useStore(), trade = !!me?.tradeApproved;
   const [qty, setQty] = useState(1), [tab, setTab] = useState<(typeof TABS)[number]>('Description'), [zoom, setZoom] = useState<{ x: number; y: number } | null>(null), [shot, setShot] = useState(0);
-  const [canRate, setCanRate] = useState(false);
+  const [canRate, setCanRate] = useState(false), [shareOpen, setShareOpen] = useState(false);
   const [rv, setRv] = useState<Review[]>([]), [form, setForm] = useState({ stars: 5, title: '', text: '' }), [msg, setMsg] = useState(''), [kit, setKit] = useState<string[]>([]), [copied, setCopied] = useState(false);
   const img = useRef<HTMLImageElement>(null), sheet = useRef<HTMLDivElement>(null);
   useScrollLock(!!p);
@@ -128,18 +129,34 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
               <button type="button" className="sp-btn pv-add" disabled={!buyable(p, trade)} onClick={(e) => { flyToCart(img.current, p.id, e); if (qty > 1) store.add(p.id, qty - 1); }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6" /><circle cx="10" cy="20" r="1.4" /><circle cx="17" cy="20" r="1.4" /></svg>{p.stock_qty <= 0 ? T('Request it') : T('Add to cart')}
               </button>
-              <a className="sp-btn wa" href={wa} target="_blank" rel="noopener noreferrer"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9 0-1.4.7-2 1-2.3.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z" /></svg>{T('Order on WhatsApp')}</a><button type="button" className="sp-btn wc" onClick={() => openContact('wc', decodeURIComponent(wa.split('text=')[1] || ''))}><i className="ct-ic wc" aria-hidden="true" />WeChat</button>
+            </div>
+            {/* owner (17 Nov): WhatsApp and WeChat side by side, same size, both open the message with the order ready */}
+            <div className="pv-order">
+              {(['wa', 'wc'] as const).map((m) => <button key={m} type="button" className={'sp-btn ' + m} onClick={() => openContact(m, decodeURIComponent(wa.split('text=')[1] || ''))}><i className={'ct-ic ' + m} aria-hidden="true" />{m === 'wa' ? T('Order on WhatsApp') : T('Order on WeChat')}</button>)}
             </div>
             <PvCode id={p.id} cat={p.category} />
             {/* R10 P2: one clean icon set; parts go into the visitor's own named lists */}
             <div className="pv-tools">
-              <button type="button" className={st.favs.includes(p.id) ? 'on' : ''} onClick={() => store.fav(p.id)}><PvIc k="star" />{st.favs.includes(p.id) ? T('Starred') : T('Star')}</button>
+              <button type="button" className={st.favs.includes(p.id) ? 'on' : ''} onClick={() => { const on = st.favs.includes(p.id); store.fav(p.id); toast(on ? 'Removed from your stars' : 'Starred'); }}><PvIc k="star" />{st.favs.includes(p.id) ? T('Starred') : T('Star')}</button>
               <button type="button" className={st.compare.includes(p.id) ? 'on' : ''} onClick={() => { const had = st.compare.includes(p.id); store.cmp(p.id); if (had) return; const n = Math.min(3, st.compare.length + 1); onClose(); if (n >= 2) window.setTimeout(() => window.dispatchEvent(new CustomEvent('se:cmp-open')), 120); }}><PvIc k="cmp" />{T('Compare')}</button>
-              <button type="button" onClick={() => { store.later(p.id); }}><PvIc k="save" />{T('Save')}</button>
-              <button type="button" className={st.alerts.includes(p.id) ? 'on' : ''} onClick={() => store.alert(p.id)}><PvIc k="bell" />{st.alerts.includes(p.id) ? T('Alert on') : T('Alert')}</button>
-              <button type="button" onClick={share}><PvIc k="share" />{copied ? T('Copied') : T('Share')}</button>
+              <button type="button" onClick={() => { store.later(p.id); toast('Saved for later'); }}><PvIc k="save" />{T('Save')}</button>
+              <button type="button" className={st.alerts.includes(p.id) ? 'on' : ''} onClick={() => { const on = st.alerts.includes(p.id); store.alert(p.id); toast(on ? 'Alert removed' : 'We will tell you when it changes'); }}><PvIc k="bell" />{st.alerts.includes(p.id) ? T('Alert on') : T('Alert')}</button>
+              <button type="button" onClick={() => setShareOpen(true)}><PvIc k="share" />{T('Share')}</button>
               <ListMenu id={p.id} kits={st.kits} />
             </div>
+            {shareOpen ? (
+              <div className="pv-share" role="dialog" aria-label={T('Share')}>
+                <div className="pv-share-h"><b>{T('Share this part')}</b><button type="button" className="sp-x" style={{ position: 'static' }} onClick={() => setShareOpen(false)} aria-label={T('Close')}>×</button></div>
+                <div className="pv-share-card"><img src={p.img} alt="" /><span><b>{p.title}</b><small>{p.gradeName} · {aed(p.price, false)}</small><code dir="ltr">{link}</code></span></div>
+                <div className="pv-share-g">
+                  <button type="button" onClick={async () => { try { await navigator.clipboard.writeText(link); } catch { /* */ } toast('Link copied'); setShareOpen(false); }}><PvIc k="list" />{T('Copy link')}</button>
+                  <a className="wa" href={'https://wa.me/?text=' + encodeURIComponent(p.title + ' · ' + link)} target="_blank" rel="noopener noreferrer" onClick={() => setShareOpen(false)}><i className="ct-ic wa" />WhatsApp</a>
+                  <button type="button" className="wc" onClick={async () => { try { await navigator.clipboard.writeText(p.title + ' · ' + link); } catch { /* */ } toast('Copied for WeChat'); setShareOpen(false); }}><i className="ct-ic wc" />WeChat</button>
+                  <a href={'mailto:?subject=' + encodeURIComponent(p.title) + '&body=' + encodeURIComponent(link)} onClick={() => setShareOpen(false)}><PvIc k="share" />{T('E-mail')}</a>
+                  {typeof navigator !== 'undefined' && 'share' in navigator ? <button type="button" onClick={() => { share(); setShareOpen(false); }}><PvIc k="share" />{T('More…')}</button> : null}
+                </div>
+              </div>
+            ) : null}
             <ul className="pv-promise">
               <li><b>{T('Pick up today')}</b><span>{T('Al Murar, Deira · ready in 20 minutes')}</span></li>
               <li><b>{T('UAE delivery')}</b><span>{T('Next working day · free over AED 500 (sample)')}</span></li>

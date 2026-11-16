@@ -854,3 +854,12 @@ html[dir="rtl"] .clip-pic { animation-name: clipWhipR, clipPush !important; }
 .iad2-scene { padding-top: 20px; }
 .iad2-t { font-size: clamp(19px, 1.9vw, 26px); }
 @media (max-width: 900px) { .iad2-fix { height: 150px !important; width: 76px !important; } .iad2-vis { min-height: 150px; } }
+/* owner (17 Nov): the sticky search bar is not a wall: 44px tall, a maximum width, centred with breathing room,
+   and every button in the bar is exactly as tall as the search */
+.shop-dock .ss { flex: 1 1 auto !important; max-width: 680px !important; margin-inline: auto !important; height: 44px !important; min-height: 0 !important; }
+.shop-dock .ss > *:first-child, .shop-dock .ss form, .shop-dock .ss .ss-bar { height: 44px !important; min-height: 0 !important; }
+.shop-dock .ss input { height: 42px !important; }
+.shop-dock .ss button[type="submit"], .shop-dock .ss .ss-go { height: 34px !important; }
+.shop-dock .sp-chip, .shop-dock .shop-dock-f { height: 44px !important; min-height: 0 !important; border-radius: 12px !important; padding: 0 16px !important; display: inline-flex !important; align-items: center !important; }
+.shop-dock .shop-dock-f { padding: 0 14px !important; justify-content: center !important; gap: 6px; }
+.shop-dock .shop-dock-ic > * { width: 44px !important; height: 44px !important; }

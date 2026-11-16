@@ -696,3 +696,5 @@ html[data-theme="dark"] .cc-more a { color: #fff; } html[data-theme="dark"] .cc-
   .ct-r .ct-prev { flex: 1; max-height: 320px; overflow: auto; }
   .ct-r .ct-acts { margin-top: auto; }
 }
+.sp-btn.wc .ct-ic, .pv-order .sp-btn .ct-ic { color: #fff !important; } /* owner (17 Nov): the WeChat icon was green on green */
+.se-toasts { top: auto !important; bottom: 28px; } /* tick messages at the bottom, never on top of the medal toast */
