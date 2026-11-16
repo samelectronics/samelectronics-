@@ -4,8 +4,8 @@
 :root { --sq-white: #F2F3F4; --sq-grey: #2A2C2F; --sq-yellow: #F7C032; --sq-ink: #3A3D42;
   /* the three standard materials, copied from the reference sections (What we offer / Live board / Bench test) */
   --mat-white: #F2F3F4;
-  --mat-grey: radial-gradient(60% 50% at 50% 0, rgba(214,222,230,.07), rgba(214,222,230,0) 70%), url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), linear-gradient(180deg, #2A2C2F, #34363A);
-  --mat-yellow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"), #F7C032; }
+  --mat-grey: radial-gradient(60% 50% at 50% 0, rgba(214,222,230,.07), rgba(214,222,230,0) 70%), url(/assets/noise/n-d6cb514b42.png), linear-gradient(180deg, #2A2C2F, #34363A);
+  --mat-yellow: url(/assets/noise/n-d6cb514b42.png), #F7C032; }
 
 /* Deals → WHITE */
 #deals.dl { background: var(--mat-white) !important; color: #26282B !important; }

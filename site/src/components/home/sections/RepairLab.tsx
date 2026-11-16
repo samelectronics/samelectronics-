@@ -8,7 +8,7 @@ import RepairScene from '../RepairScene';
 import InfoTip from '../InfoTip';
 
 /** Issue 4: fine film grain instead of grids, stripes and tiles. */
-const GRAIN = 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'160\' height=\'160\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'.9\' numOctaves=\'2\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")';
+const GRAIN = 'url(/assets/noise/n-012165920b.png)';
 
 export default function RepairLab({ v, full = false }: { v: Vals; full?: boolean }) {
   return (

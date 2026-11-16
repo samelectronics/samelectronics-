@@ -63,12 +63,9 @@ export default function SectionFX() {
             sec.setAttribute('data-se-in', '');
             if (GENERIC.has(sec.id)) enter(sec);
           } else if (!e.isIntersecting && !st.out) {
-            // fully out of view: reset silently so it replays from the start next time
-            st.in = false;
+            // owner (16 Nov): no more replays ("they lag, replay, reload, you wait"): a section plays its entrance once per
+            // visit and then stays as it is when you come back
             st.out = true;
-            sec.removeAttribute('data-se-in');
-            if (!SKIP.has(sec.id)) sec.setAttribute('data-se-rp', '');
-            window.dispatchEvent(new CustomEvent('se:replay', { detail: sec }));
           }
           state.set(sec, st);
         }

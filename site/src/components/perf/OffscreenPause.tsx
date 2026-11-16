@@ -18,7 +18,7 @@ export default function OffscreenPause() {
           else e.target.setAttribute('data-se-off', '');
         }
       },
-      { rootMargin: '100% 0px 100% 0px' },
+      { rootMargin: '15% 0px 15% 0px' }, // owner (16 Nov: the laptop gets loud): only what is on or right next to the screen animates
     );
     const scan = () => {
       document.querySelectorAll('#dc-root section, #dc-root footer').forEach((el) => {

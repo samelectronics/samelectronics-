@@ -1,6 +1,6 @@
 /* Issue 6 · The Showcase: screen adverts on a graphite | yellow stage in a warm fog studio */
 .sc { position: relative; overflow: hidden; color: #26282B; background: radial-gradient(60% 60% at 18% 0%, rgba(255, 226, 150, .35), rgba(255, 226, 150, 0) 60%), linear-gradient(180deg, #F2F3F4, #FAFAF8 50%, #F2F3F4); }
-.sc::before { content: ''; position: absolute; inset: 0; opacity: .035; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.sc::before { content: ''; position: absolute; inset: 0; opacity: .035; pointer-events: none; background-image: url(/assets/noise/n-012165920b.png); }
 .sc-in { position: relative; width: 1272px; max-width: calc(100% - 48px); margin: 0 auto; padding: 104px 0 112px; }
 .sc-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 48px; margin-bottom: 36px; }
 .sc-eb { font: 600 13px/1 'JetBrains Mono', monospace; letter-spacing: .15em; color: #F7C032; }

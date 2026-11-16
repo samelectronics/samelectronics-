@@ -1,6 +1,6 @@
 /* Issue 8 · Wholesale, "The Trade Floor": Signal Yellow field, packing tape, a pallet builder on warm concrete */
 .wf { position: relative; overflow: hidden; background: #F7C032; color: #26282B; padding: 0 0 72px; }
-.wf-grain { position: absolute; inset: 0; opacity: .02; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.wf-grain { position: absolute; inset: 0; opacity: .02; pointer-events: none; background-image: url(/assets/noise/n-012165920b.png); }
 .wf-vig { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(70% 45% at 30% 12%, rgba(255, 236, 170, .55), rgba(255, 236, 170, 0) 70%), radial-gradient(120% 90% at 50% 40%, rgba(160, 100, 0, 0) 55%, rgba(160, 100, 0, .2)); }
 .wf-circ { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .wf-circ path { stroke: rgba(26, 27, 29, .16); stroke-width: 1.5; }
@@ -32,7 +32,7 @@
 .wf-seen .wf-h > span > span { animation: lbRise .8s .4s cubic-bezier(.16, 1, .3, 1) both; }
 .wf-seen .wf-h > span:nth-child(2) > span { animation-delay: .5s; }
 .wf-stamp { position: relative; align-self: flex-start; margin-top: 18px; padding: 10px 16px 8px; border: 4px solid #26282B; border-radius: 10px; font: 700 26px/1 'Space Grotesk', sans-serif; letter-spacing: .12em; color: #26282B; white-space: nowrap; opacity: 0; transform: scale(1.8) rotate(-14deg); box-shadow: inset 0 0 0 2px #F7C032, inset 0 0 0 4px rgba(26, 27, 29, .9); }
-.wf-stamp::after { content: ''; position: absolute; inset: -6px; pointer-events: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='i'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.55' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .97  0 0 0 0 .75  0 0 0 0 .2  0 0 0 -3.2 1.55'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23i)'/%3E%3C/svg%3E"); }
+.wf-stamp::after { content: ''; position: absolute; inset: -6px; pointer-events: none; background-image: url(/assets/noise/n-3152f13352.png); }
 .wf-seen .wf-stamp { animation: wfStamp .5s 1s cubic-bezier(.2, .8, .2, 1) both; }
 @keyframes wfStamp { 0% { opacity: 0; transform: scale(1.8) rotate(-14deg); } 55% { opacity: 1; transform: scale(.95) rotate(-8deg); } 65% { transform: translate(2px, 1px) scale(1) rotate(-8deg); } 75% { transform: translate(-2px, -1px) rotate(-8deg); } 85% { transform: translate(1px, 0) rotate(-8deg); } 100% { opacity: 1; transform: rotate(-8deg); } }
 .wf-tr p { margin: 0 0 22px; font: 400 18px/1.55 Inter, sans-serif; color: #26282B; text-wrap: pretty; }
@@ -103,7 +103,7 @@
 
 /* concrete floor with a soft light pool */
 .wf-floor { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; min-height: 600px; padding: 24px 24px 22px; overflow: hidden; background: linear-gradient(180deg, #A79F93 0%, #B5AEA3 42%, #9D968B 100%); }
-.wf-floor::before { content: ''; position: absolute; inset: 0; opacity: .22; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 .3  0 0 0 0 .28  0 0 0 0 .25  0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23c)'/%3E%3C/svg%3E"); }
+.wf-floor::before { content: ''; position: absolute; inset: 0; opacity: .22; background-image: url(/assets/noise/n-8e98e72d50.png); }
 .wf-floor::after { content: ''; position: absolute; left: 0; right: 0; top: 0; height: 46%; background: linear-gradient(180deg, rgba(70, 64, 56, .12), rgba(70, 64, 56, 0)); }
 .wf-pool { position: absolute; left: 50%; top: 8%; width: 760px; height: 620px; margin-left: -380px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 246, 220, .7), rgba(255, 240, 210, .25) 55%, rgba(255, 240, 210, 0)); pointer-events: none; }
 .wf-stage { position: relative; z-index: 1; width: 406px; height: 352px; margin: 0 auto 34px; opacity: 0; transform: scale(1.22); transform-origin: 50% 100%; }

@@ -645,7 +645,7 @@ export async function mount(host, state) {
     for (let s = 0; s < 8; s++) { hovT[s] = s === hvS ? Math.min(1, hovT[s] + dt / 0.5) : Math.max(0, hovT[s] - dt / 0.4); hovK[s] = hovT[s]; ghK[s] = 1; }
     let hvM = 0, hvI = -1; hovT.forEach((k, s2) => { if (k > hvM) { hvM = k; hvI = s2; } }); const hvSep = hvI >= 1 ? eio(cl(hvM / 0.8)) : 0; yawH = 0; // the phone never tilts or turns on hover (owner, 13 Oct)
     const offs = sepUp.map((k, s) => (7 - s) * GAP * k + (7 - s) * 18 * upp * hvSep + (s < 7 ? k * 0.022 * Math.sin(t * 1.05 + s * 0.9) : 0)); /* R12: each layer floats a hair up and down on its own rhythm */
-    L[6].visible = sepUp[6] > 0.004;
+    L[6].visible = sepUp[6] > 0.004 || hovT[6] > 0.001; /* owner (16 Nov): in the final call the small parts slide out too when their button is hovered */
     if (!mob) { mx += (tmx - mx) * 0.06; my += (tmy - my) * 0.06; }
     const lifting = p >= T.l0 && p < T.re0;
     if (act !== act0) { act0 = act; tAct = t; drawT = t; }

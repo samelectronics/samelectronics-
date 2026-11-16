@@ -46,7 +46,7 @@ function render(v: Vals) {
               {'\n        '}
               <span
                 style={cssToObj(
-                  `position:absolute;left:94px;top:2px;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFF4D1,#F7C032 55%,#F7C032);animation:${s(v.antAnim)}`,
+                  `position:absolute;left:94px;top:2px;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFF4D1,#F7C032 55%,#F7C032);box-shadow:0 0 10px 3px rgba(247,192,50,.85);animation:${s(v.antAnim)}`,
                 )}
               ></span>
               {'\n        '}

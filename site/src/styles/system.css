@@ -398,3 +398,20 @@ header .se-nav-right .se-lm-btn, header .se-nav-right .nb > button, header .se-n
 .fmq-ph small { color: #9A6B00 !important; }
 .fmq-g { background: #FFF6DC !important; color: #26282B !important; } .fmq-g em { color: #9A6B00 !important; } .fmq-g:hover { box-shadow: inset 0 0 0 1.5px #F7C032 !important; }
 .fmq-all { color: #26282B !important; }
+.td-sweep { display: none !important; }
+/* owner (16 Nov): the progress dot was stuck at the left (its breathing animation overrode the transform that moves it);
+   it breathes with `scale` now, so it travels with the page */
+[data-prog='dot'] { animation: seBreathS 2.8s ease-in-out infinite !important; will-change: transform; }
+@keyframes seBreathS { 0%, 100% { opacity: .75; scale: .94; } 50% { opacity: 1; scale: 1.08; } }
+/* owner (16 Nov: "my laptop gets noisy"): the always-running glows now move only opacity / scale (the GPU does them,
+   nothing is repainted): the pulsing dots, the progress bar's shine, Samsoom's antenna; his arm currents run while he
+   talks or is hovered, and rest otherwise */
+@keyframes sePing { 0%, 100% { transform: scale(1.5); opacity: .12; } 50% { transform: scale(2.1); opacity: .55; } }
+[data-prog='bar'] { animation: none !important; background-image: none !important; background: #F7C032 !important; overflow: hidden; }
+[data-prog='bar']::after { content: ''; position: absolute; top: 0; bottom: 0; left: 0; width: 160px; background: linear-gradient(90deg, rgba(255,240,190,0), #FFF1C2, rgba(255,240,190,0)); animation: seProgShine 1.8s linear infinite; will-change: transform; }
+html[dir='rtl'] [data-prog='bar']::after { animation-direction: reverse; }
+@keyframes seProgShine { from { transform: translateX(-160px); } to { transform: translateX(100vw); } }
+@keyframes smAnt { 0%, 82%, 100% { opacity: .75; } 86% { opacity: 1; } 90% { opacity: .6; } 93% { opacity: 1; } }
+.sam-zap-run { animation-play-state: paused; }
+html[data-sam-speaking] .sam-zap-run, [data-tour='samsoom']:hover .sam-zap-run, .st-bsam .sam-zap-run { animation-play-state: running; }
+@media (prefers-reduced-motion: reduce) { [data-prog='bar']::after { animation: none; } }

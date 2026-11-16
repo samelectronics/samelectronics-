@@ -129,7 +129,7 @@ export default function SectionLife() {
       io = io || new IntersectionObserver((es) => es.forEach((e) => { const el = e.target as HTMLElement; if (e.isIntersecting && e.intersectionRatio > 0.08) el.setAttribute('data-se-vis', ''); else if (!e.isIntersecting) el.removeAttribute('data-se-vis'); }), { threshold: [0, 0.08, 0.2] });
       // owner (28 Oct): each marked element plays its entrance when IT comes into view (not when the section's top edge does),
       // so long sections never finish their entrance off-screen; fully out of view resets it so it plays again next time
-      eio = eio || new IntersectionObserver((es) => es.forEach((e) => { const el = e.target as HTMLElement; if (e.isIntersecting && e.intersectionRatio > 0.12) el.setAttribute('data-se-on', ''); else if (!e.isIntersecting) el.removeAttribute('data-se-on'); }), { threshold: [0, 0.12, 0.3] });
+      eio = eio || new IntersectionObserver((es) => es.forEach((e) => { const el = e.target as HTMLElement; if (e.isIntersecting && e.intersectionRatio > 0.05) { el.setAttribute('data-se-on', ''); eio!.unobserve(el); } }), { threshold: [0, 0.05, 0.3] }); // owner (16 Nov): each entrance plays ONCE per visit, as soon as it shows (no replays, no waiting)
       // speed: a section is prepared (entrances, texture, gutter circuits) only when it comes within ~1 screen of view,
       // not all of them at load; the hero area stays instant because the first sections are already near
       pio = pio || new IntersectionObserver((es) => es.forEach((e) => { if (!e.isIntersecting) return; const sec = e.target as HTMLElement; pio!.unobserve(sec); prep(sec, Number(sec.dataset.seK || 0)); }), { rootMargin: '900px 0px 900px 0px' });
