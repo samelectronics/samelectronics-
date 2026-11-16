@@ -99,3 +99,12 @@
   .tm-ticket { display: none; }
   .tm-stage { padding-bottom: 24px; }
 }
+/* owner (16 Nov): a real order slip riding the rail, a different order each pass */
+.tm-ticket .paper { left: -66px !important; width: 132px !important; align-items: stretch !important; gap: 3px !important; padding: 8px 9px 10px !important; background: linear-gradient(#FFFFFF, #F6F4EE) !important; border-radius: 2px 2px 0 0 !important;
+  -webkit-mask: linear-gradient(#000 calc(100% - 5px), transparent 0), radial-gradient(4px at 4px 100%, transparent 98%, #000) 0 100% / 8px 5px repeat-x; }
+.tm-ticket .paper b { display: flex; justify-content: space-between; font: 700 9px 'JetBrains Mono', monospace !important; letter-spacing: .12em; color: #26282B !important; }
+.tm-ticket .paper b span { font: 700 9px 'JetBrains Mono', monospace !important; color: #C48A00; }
+.tm-ticket .paper em { font: 600 8px 'JetBrains Mono', monospace; font-style: normal; letter-spacing: .14em; color: #8C9096; border-bottom: 1px dashed #D5D7DA; padding-bottom: 3px; }
+.tm-ticket .paper .ln { display: flex; justify-content: space-between; gap: 6px; font: 600 8.5px 'JetBrains Mono', monospace; font-style: normal; color: #26282B; }
+.tm-ticket .paper .ln span { font: inherit !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tm-ticket .paper .bar { height: 12px; margin-top: 3px; background: repeating-linear-gradient(90deg, #26282B 0 1px, transparent 1px 3px, #26282B 3px 5px, transparent 5px 6px); opacity: .85; }

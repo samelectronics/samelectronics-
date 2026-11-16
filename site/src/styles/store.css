@@ -221,3 +221,12 @@ html[dir='rtl'] .ln-paper { transform-origin: 30% 100%; }
 .ct-acts .wc-btn.wa { background: #25D366; } .ct-acts .ct-ic { width: 20px; height: 20px; }
 @media (max-width: 520px) { .ct-qrw { display: none; } }
 .ln-acts { grid-template-columns: minmax(0,1fr) minmax(0,1fr) !important; } .ln-b { min-width: 0; font-size: 12px !important; padding: 0 6px !important; } .ln-paper.note { width: 250px; }
+/* contact sheet: preview of what will be sent + a personal note */
+.ct-compose { display: grid; gap: 8px; margin: 14px 0 4px; text-align: start; }
+.ct-prev { border-radius: 14px; background: #E7F8EE; box-shadow: inset 0 0 0 1px rgba(37,211,102,.25); padding: 10px 12px; max-height: 180px; overflow: auto; }
+.ct-card.wc .ct-prev { background: #ECF9F1; box-shadow: inset 0 0 0 1px rgba(7,193,96,.25); }
+.ct-prev small { display: block; font: 600 10px 'JetBrains Mono', monospace; letter-spacing: .14em; color: #1E7D45; margin-bottom: 6px; }
+.ct-pv { display: grid; gap: 2px; font: 400 13px/1.45 Inter, sans-serif; color: #26282B; } .ct-pv b { font-weight: 700; } .ct-pl { display: block; overflow-wrap: anywhere; } .ct-pg { display: block; height: 5px; }
+.ct-note { width: 100%; box-sizing: border-box; resize: vertical; min-height: 54px; padding: 10px 12px; border: 0; border-radius: 12px; background: #F4F5F6; box-shadow: inset 0 0 0 1px #E2E4E7; font: 400 14px Inter, sans-serif; color: #26282B; }
+.ct-note:focus { outline: 0; box-shadow: inset 0 0 0 2px #F7C032; }
+.ct-acts .wc-btn:not(.go) { background: #F4F5F6; color: #26282B; border: 0; cursor: pointer; }

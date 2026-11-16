@@ -78,6 +78,7 @@ export default function WholesalePage() {
           {!done ? <div style={{ marginBottom: 14 }}><AppTracker /></div> : null}
           {!me ? <div className="sp-note" style={{ background: 'rgba(255,255,255,.55)' }}>{T('Tip: create your account first so the approval is linked to it.')} <a href="/account?next=trade">{T('Create account')}</a></div> : null}
           <a className="sp-btn wa" style={{ marginTop: 14 }} href={waLink(waCard('Bulk quote', [['Request', 'Trade prices for my list'], ['My list', '…']]))} target="_blank" rel="noopener noreferrer">{T('Just need a bulk quote? WhatsApp us')}</a>
+          <button type="button" className="sp-btn wc" style={{ marginTop: 14, marginInlineStart: 8 }} onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wc', text: waCard('Bulk quote', [['Request', 'Trade prices for my list'], ['My list', '…']]) } }))}><i className="ct-ic wc" aria-hidden="true" />{T('WeChat us')}</button>
         </div>
         {done ? <div style={{ display: 'grid', gap: 14 }}><AppTracker /><div className="sp-card" data-rise><b className="sp-h3">{T('Application received.')}</b><p className="sp-p">{T('Thank you. We will review it and reply within one working day.')}</p></div></div> : (
           <form className="sp-card wh-form wf2-console" onSubmit={submit} data-rise>

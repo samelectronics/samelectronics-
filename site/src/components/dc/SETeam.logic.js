@@ -15,7 +15,12 @@ export const ROLES = [
   { code: 'T04', role: 'Finance & Checkout', mono: 'FC', bio: 'Handles invoices, payments and trade accounts.', help: ['Invoices and receipts', 'Payment options', 'Trade account questions'] },
   { code: 'T05', role: 'Founder', mono: 'TA', founder: true, bio: '', help: ['Partnerships and distribution', 'Large trade agreements', 'Feedback on our service'] },
 ];
-const K = 6, C = .9, /* owner (15 Nov): they keep swinging and settle slowly, like real lanyards */ G = 2600, KY = 900, CY = 26; // pendulum (1/s²), damping, gravity and lanyard stretch (px)
+const K = 5, C = .55, /* owner (15 Nov): they keep swinging and settle slowly, like real lanyards */ G = 2600, KY = 900, CY = 26; // pendulum (1/s²), damping, gravity and lanyard stretch (px)
+// owner (16 Nov): every pass is a different order (number, customer, parts, destination), not the same short slip
+const ORDERS = [
+  ['#1294', 'REPAIR SHOP', 'A54 OLED SCREEN', 'x3', 'DEIRA'], ['#1301', 'TRADER', 'IP13 BATTERY', 'x20', 'BAGHDAD'], ['#1307', 'WALK-IN', 'S23 BACK GLASS', 'x1', 'COUNTER'],
+  ['#1315', 'EXPORTER', 'MIXED PALLET', '1 PLT', 'LAGOS'], ['#1322', 'REPAIR SHOP', 'PIXEL 7 CAMERA', 'x2', 'SHARJAH'], ['#1330', 'ONLINE', 'NOTE 12 FLEX', 'x5', 'MADRID'],
+];
 const CYCLE = 12, STOP = 0.42, MOVE = 0.26; // the order ticket: every 12s, a short stop at each badge
 
 class Component extends DCLogic {
@@ -48,10 +53,10 @@ class Component extends DCLogic {
       // owner (16 Nov): ONE gentle wind for all of them: a slow breeze that travels across the rail (each badge a little
       // later than its neighbour), about 3 degrees, breathing stronger and softer over ~20 s; no random kicks
       const gust = 0.75 + 0.25 * Math.sin(t * 0.31) + 0.15 * Math.sin(t * 0.083 + 1.3);
-      let F = 15 * gust * Math.sin(0.95 * t - i * 0.55);
+      let F = 38 * gust * Math.sin(0.95 * t - i * 0.55); /* owner (16 Nov): they barely moved, as if screwed in: a real swing now */
       // owner (15 Nov): the mouse BRUSHES them: a passing pointer gives a push in its direction (by its speed), then they
       // swing freely and settle by themselves. A resting pointer does nothing (they never get stuck pushed aside).
-      if (this.mvx && this.mx != null && this.cx) { const dx = this.cx[i] - this.mx, ady = Math.abs(this.my - 300); if (Math.abs(dx) < 90 && ady < 300) b.w += this.mvx * (1 - Math.abs(dx) / 90) * 0.55; }
+      if (this.mvx && this.mx != null && this.cx) { const dx = this.cx[i] - this.mx, ady = Math.abs(this.my - 300); if (Math.abs(dx) < 90 && ady < 300) b.w += this.mvx * (1 - Math.abs(dx) / 90) * 1.1; }
       b.w += (-K * b.th - C * b.w + F) * dt; b.th += b.w * dt;
     });
     this.mvx = (this.mvx || 0) * Math.pow(0.0005, dt); // the brush fades within a fraction of a second
@@ -63,7 +68,7 @@ class Component extends DCLogic {
     this.b.forEach((b, i) => { const g = this._g[i], h = this._h[i]; if (!g) return; const y = this.t < b.dropAt ? -720 : b.y;
       if (b.pth != null && Math.abs(b.th - b.pth) < 0.06 && Math.abs(y - b.py) < 0.3) return; b.pth = b.th; b.py = y; // sub-pixel changes are skipped (fewer repaints at idle)
       // R10: never swing into a neighbour (laptops have less room between badges): the drawn angle is limited by the free gap
-      const room = this._room || (this._room = (() => { const sl = R.querySelector('.tm-slot'), cd = R.querySelector('.tm-card'); if (!sl || !cd) return 6; const gap = Math.max(4, sl.getBoundingClientRect().width - cd.getBoundingClientRect().width); return Math.max(4, Math.min(12, Math.atan(gap / 2 / 300) * 180 / Math.PI)); /* R11 (owner): they swing visibly */ })());
+      const room = this._room || (this._room = (() => { const sl = R.querySelector('.tm-slot'), cd = R.querySelector('.tm-card'); if (!sl || !cd) return 6; const gap = Math.max(4, sl.getBoundingClientRect().width - cd.getBoundingClientRect().width); return Math.max(9, Math.min(16, Math.atan(gap / 2 / 300) * 180 / Math.PI * 1.6)); /* R11 (owner): they swing visibly */ })());
       const th = room * Math.tanh(b.th / room); /* soft limit: never a hard stop that looks stuck */
       g.style.transform = 'translateY(' + y.toFixed(1) + 'px) rotate(' + th.toFixed(2) + 'deg)';
       if (h) h.style.transform = 'translateX(' + (b.th * 9 + Math.sin(this.t * 0.7 + i) * 8).toFixed(1) + '%)'; });
@@ -74,6 +79,7 @@ class Component extends DCLogic {
     if (tc >= 0 && tc < dur) { op = 1; const k = Math.floor(tc / (MOVE + STOP)), f = tc - k * (MOVE + STOP);
       if (k >= legs) { x = this.cx[legs - 1] + ((tc - legs * (MOVE + STOP)) / (MOVE + 0.2)) * 260; op = 1 - (tc - legs * (MOVE + STOP)) / (MOVE + 0.2); }
       else { const from = k === 0 ? this.cx[0] - 200 : this.cx[k - 1], to = this.cx[k], m = Math.min(1, f / MOVE), e = m < 0.5 ? 2 * m * m : 1 - Math.pow(-2 * m + 2, 2) / 2; x = from + (to - from) * e; if (f >= MOVE) lit = k; } }
+    const oi = this.t0 == null ? 0 : Math.floor(Math.max(0, this.t - this.t0 - 1.8) / CYCLE) % ORDERS.length; if (oi !== this._oi) { this._oi = oi; const o = ORDERS[oi]; ['no', 'who', 'item', 'qty', 'to'].forEach((k, j) => { const el = tk.querySelector('[data-o="' + k + '"]'); if (el) el.textContent = o[j]; }); }
     tk.style.transform = 'translateX(' + x.toFixed(1) + 'px)'; tk.style.opacity = op.toFixed(2);
     this._c.forEach((c, i) => { const on = i === lit; if (c.classList.contains('lit') !== on) c.classList.toggle('lit', on); });
   }

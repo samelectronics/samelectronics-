@@ -28,9 +28,12 @@ function render(v: Vals) {
           </div>
           <div className="tm-ticket" data-s="ticket" aria-hidden="true">
             <span className="hook" />
-            <span className="paper">
-              <b>ORDER</b>
-              <span data-no-i18n="">#1294</span>
+            <span className="paper" data-no-i18n="">
+              <b>ORDER <span data-o="no">#1294</span></b>
+              <em data-o="who">REPAIR SHOP</em>
+              <i className="ln"><span data-o="item">A54 OLED SCREEN</span><span data-o="qty">x3</span></i>
+              <i className="ln"><span>TO</span><span data-o="to">DEIRA</span></i>
+              <i className="bar" />
             </span>
           </div>
           <div className="tm-row">

@@ -41,6 +41,7 @@ function render(v: Vals) {
         <div className="fz2-acts">
           <a href="#offer" onClick={v.browse} className="fz2-btn dark">Browse all parts<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a>
           <a href={v.wa} target="_blank" rel="noopener noreferrer" className="fz2-btn"><i className="ct-ic wa" aria-hidden="true" />WhatsApp us</a>
+          <button type="button" className="fz2-btn wcb" onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wc' } }))}><i className="ct-ic wc" aria-hidden="true" />WeChat us</button>
           <a href={v.dir} target="_blank" rel="noopener noreferrer" className="fz2-btn">Visit Deira</a>
         </div>
         <div className="fz2-stats">

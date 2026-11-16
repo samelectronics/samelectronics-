@@ -134,7 +134,7 @@ function render(v: Vals) {
         <div className="mt-bot"><SESamsoom mood={v.mood} size={150} still={v.still} /></div>
         <div className="mt-chat">
           <div className="mt-chat-h">
-            <span className="av"><SESamsoom mood="idle" size={30} still={true} /></span>
+            <span className="av"><SESamsoom mood={v.mood} size={46} still={v.still} /></span>
             <span className="nm">
               <b>Samsoom</b>
               <small>

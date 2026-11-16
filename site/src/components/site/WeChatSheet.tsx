@@ -31,9 +31,9 @@ function Qr({ text }: { text: string }) {
 }
 
 export default function WeChatSheet() {
-  const [open, setOpen] = useState(false), [mode, setMode] = useState<Mode>('wa'), [msg, setMsg] = useState(DEF_MSG), [copied, setCopied] = useState(false);
+  const [open, setOpen] = useState(false), [mode, setMode] = useState<Mode>('wa'), [msg, setMsg] = useState(DEF_MSG), [copied, setCopied] = useState(false), [note, setNote] = useState(''), [mcopied, setMcopied] = useState(false);
   useEffect(() => {
-    const show = (m: Mode, text?: string) => { setCopied(false); setMode(m); setMsg(text || DEF_MSG); setOpen(true); play('open'); };
+    const show = (m: Mode, text?: string) => { setCopied(false); setNote(''); setMcopied(false); setMode(m); setMsg(text || DEF_MSG); setOpen(true); play('open'); };
     const onC = (e: Event) => { const d = (e as CustomEvent).detail || {}; show(d.mode === 'wc' ? 'wc' : 'wa', d.text); };
     const onWc = () => show('wc');
     // any WhatsApp link on the site opens the sheet first (the sheet's own "Open WhatsApp" goes straight through)
@@ -49,7 +49,11 @@ export default function WeChatSheet() {
   }, []);
   useEffect(() => { document.documentElement.toggleAttribute('data-contact-open', open); }, [open]);
   if (!open) return null;
-  const C = mode === 'wa' ? WHATSAPP : WECHAT, waUrl = 'https://wa.me/' + WHATSAPP.raw + '?text=' + encodeURIComponent(msg);
+  // owner (16 Nov): preview before sending: the system's details (read-only) + your own note, then one tap
+  const sys = msg !== DEF_MSG, full = sys ? msg + (note.trim() ? '\n\n*' + t('Note') + ':* ' + note.trim() : '') : (note.trim() || DEF_MSG);
+  const C = mode === 'wa' ? WHATSAPP : WECHAT, waUrl = 'https://wa.me/' + WHATSAPP.raw + '?text=' + encodeURIComponent(full);
+  const copyMsg = async () => { try { await navigator.clipboard.writeText(full); } catch { /* */ } setMcopied(true); };
+  const fmt = (x: string) => x.split('\n').map((ln, i) => ln.trim() ? <span key={i} className="ct-pl">{ln.split(/(\*[^*]+\*)/g).map((p2, j) => p2.length > 2 && p2.startsWith('*') && p2.endsWith('*') ? <b key={j}>{p2.slice(1, -1)}</b> : p2)}</span> : <span key={i} className="ct-pg" />);
   const copy = async () => { try { await navigator.clipboard.writeText(C.number); } catch { /* */ } setCopied(true); play('success'); };
   return (
     <div className="wc-veil ct-veil" onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}>
@@ -66,10 +70,14 @@ export default function WeChatSheet() {
           <span className="ct-numw"><small>{t(mode === 'wa' ? 'WhatsApp number' : 'WeChat number')}</small><span className="wc-num" dir="ltr">{C.number}</span>
             <button type="button" className="ct-copy" onClick={copy}>{copied ? t('Copied') + ' ✓' : t('Copy number')}</button></span>
         </div>
+        <div className="ct-compose">
+          {sys ? <div className="ct-prev" aria-label={t('Your message')}><small>{t('YOUR MESSAGE')}</small><div className="ct-pv">{fmt(msg)}</div></div> : null}
+          <textarea className="ct-note" rows={2} value={note} onChange={(e) => setNote(e.target.value)} placeholder={t(sys ? 'Add a personal note (optional)' : 'Write your message')} />
+        </div>
         <div className="ct-acts">
           {mode === 'wa'
-            ? <a className="wc-btn go wa" href={waUrl} target="_blank" rel="noopener" onClick={() => { logTap('wa', msg); window.setTimeout(() => setOpen(false), 300); }}><i className="ct-ic wa" />{t('Open WhatsApp')}</a>
-            : <a className="wc-btn go" href="weixin://" onClick={() => { logTap('wc', msg); copy(); }}><i className="ct-ic wc" />{t('Open WeChat')}</a>}
+            ? <a className="wc-btn go wa" href={waUrl} target="_blank" rel="noopener" onClick={() => { logTap('wa', full); window.setTimeout(() => setOpen(false), 300); }}><i className="ct-ic wa" />{t('Open WhatsApp')}</a>
+            : <><button type="button" className="wc-btn" onClick={copyMsg}>{mcopied ? t('Message copied') + ' ✓' : t('Copy message')}</button><a className="wc-btn go" href="weixin://" onClick={() => { logTap('wc', full); copyMsg(); }}><i className="ct-ic wc" />{t('Open WeChat')}</a></>}
         </div>
       </div>
     </div>

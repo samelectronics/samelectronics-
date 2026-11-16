@@ -2,6 +2,7 @@
 // Home v3 section "Footer". Renders against the home page's values (`v`, from HomeV3's logic class).
 'use client';
 import LangMenu from '../LangMenu';
+import FooterCine from '../FooterCine';
 import React from 'react';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 
@@ -21,6 +22,7 @@ export default function Footer({ v }: { v: Vals }) {
       {/* owner (15 Nov): depth and detail: fine brushed grain, a faint engraved wordmark sitting on the floor */}
       <span className="ft-grain" aria-hidden="true" />
       <span className="ft-mark" aria-hidden="true">SAM ELECTRONICS</span>
+      <FooterCine />
       {'\n  '}
       <div style={{ position: 'absolute', left: '0', right: '0', top: '0', height: '2px', overflow: 'hidden' }}>
         <div
@@ -95,6 +97,9 @@ export default function Footer({ v }: { v: Vals }) {
                   </React.Fragment>
                 ))(v2);
               })}
+              <button type="button" className="ft-soc-x wa" title="WhatsApp" aria-label="WhatsApp" onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wa' } }))}><i className="ct-ic wa" /></button>
+              <button type="button" className="ft-soc-x wc" title="WeChat" aria-label="WeChat" onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wc' } }))}><i className="ct-ic wc" /></button>
+              <a className="ft-soc-x mail" title="E-mail" aria-label="E-mail" href={`mailto:${s(v.$facts?.contact?.email)}`}><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg></a>
               <a
                 href={v.googleReview}
                 target="_blank"

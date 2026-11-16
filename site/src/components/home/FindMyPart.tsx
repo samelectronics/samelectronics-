@@ -163,6 +163,7 @@ export default function FindMyPart({ open, init, onClose, onShop }: { open: bool
               <b>{ar ? c0.ar : c0.name}</b>
               <p>{T('This part of the catalogue is being prepared. Ask us on WhatsApp and we will check it for you today.')}</p>
               <a className="fp-btn" href="https://wa.me/971503420015" target="_blank" rel="noreferrer">{T('Ask on WhatsApp')}</a>
+              <button type="button" className="fp-btn wcb" onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wc' } }))}>{T('Ask on WeChat')}</button>
             </div>
           ) : step === 0 ? (
             <div className="fp-brands">

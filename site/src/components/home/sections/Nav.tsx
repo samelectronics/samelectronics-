@@ -147,6 +147,7 @@ export default function Nav({ v }: { v: Vals }) {
               <span className="se-status-acts">
                 <a href={site.contact.mapsLink} target="_blank" rel="noopener noreferrer">Get directions</a>
                 <a href={'https://wa.me/' + site.contact.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                <button type="button" className="nv-wc" onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wc' } }))}>WeChat</button>
                 <a href={'tel:' + site.contact.storeTel}>Call</a>
                 <button type="button" onClick={v.st?.go}>All hours</button>
               </span>

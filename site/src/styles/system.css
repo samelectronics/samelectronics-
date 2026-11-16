@@ -479,3 +479,68 @@ html[data-sam-speaking] .sam-zap-run, [data-tour='samsoom']:hover .sam-zap-run, 
 @keyframes ftSheen { 0%, 55% { background-position: 120% 0, 0 0; } 100% { background-position: -120% 0, 0 0; } }
 @media (prefers-reduced-motion: reduce) { .ft-mark { animation: none !important; } }
 .ft-mark { opacity: .45 !important; }
+/* owner (16 Nov): the side circuits "don't work": the current running through them is now clearly visible */
+.se-gut .fl { stroke-width: 3 !important; stroke-dasharray: 110 890 !important; animation-duration: 2.6s !important; }
+.se-gut-light .fl { stroke: #F7C032 !important; filter: drop-shadow(0 0 4px rgba(247,192,50,.95)) drop-shadow(0 0 10px rgba(247,192,50,.6)) !important; }
+.se-gut-dark .fl { stroke: #FFD65C !important; filter: drop-shadow(0 0 5px rgba(247,192,50,1)) drop-shadow(0 0 12px rgba(247,192,50,.6)) !important; }
+.se-gut-yel .fl { stroke: #26282B !important; filter: drop-shadow(0 0 3px rgba(255,255,255,.7)) !important; }
+.se-gut .tr { stroke-width: 2.2 !important; }
+/* Owner (16 Nov): the footer opens with the logo film (FooterCine) */
+.fc { position: relative; height: 300px; margin: -72px calc(-1 * clamp(20px,4vw,64px)) 56px; overflow: hidden; background: radial-gradient(60% 90% at 50% 50%, #2A2C30 0%, #141517 70%, #0C0D0E 100%); isolation: isolate; }
+.fc::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 100% at 50% 50%, transparent 55%, rgba(0,0,0,.7)); }
+.fc-bars i { position: absolute; left: 0; right: 0; height: 28px; background: #050506; z-index: 3; transform: scaleY(1); }
+.fc-bars i:first-child { top: 0; transform-origin: top; } .fc-bars i:last-child { bottom: 0; transform-origin: bottom; }
+.fc.play .fc-bars i { animation: fcBars 1.1s cubic-bezier(.7,0,.2,1) both; }
+@keyframes fcBars { from { transform: scaleY(5.4); } to { transform: scaleY(1); } }
+.fc-dust i { position: absolute; z-index: 1; left: calc(var(--k) * 5.6% + 2%); top: calc(20% + (var(--k) * 37 % 60) * 1%); width: 2px; height: 2px; border-radius: 50%; background: rgba(255,230,170,.8); box-shadow: 0 0 6px rgba(247,192,50,.8); opacity: 0; animation: fcDust 7s linear infinite; animation-delay: calc(var(--k) * -.43s); }
+@keyframes fcDust { 0% { opacity: 0; transform: translate(0, 10px); } 20% { opacity: .7; } 80% { opacity: .4; } 100% { opacity: 0; transform: translate(30px, -30px); } }
+.fc-beam { position: absolute; z-index: 1; top: -40%; bottom: -40%; width: 38%; left: -45%; background: linear-gradient(90deg, transparent, rgba(255,226,150,.16), rgba(255,240,200,.28), rgba(255,226,150,.16), transparent); transform: skewX(-18deg); filter: blur(4px); }
+.fc.play .fc-beam { animation: fcBeam 2.2s .5s cubic-bezier(.4,0,.2,1) both; }
+@keyframes fcBeam { from { left: -45%; } to { left: 120%; } }
+.fc-flare { position: absolute; z-index: 2; left: 50%; top: 50%; width: 120%; height: 3px; margin: -1.5px 0 0 -60%; background: linear-gradient(90deg, transparent, rgba(120,170,255,.0) 10%, rgba(255,214,110,.75) 45%, #fff 50%, rgba(255,214,110,.75) 55%, transparent 90%); filter: blur(1px) drop-shadow(0 0 8px rgba(255,214,110,.9)); opacity: 0; transform: scaleX(.2); }
+.fc.play .fc-flare { animation: fcFlare 1.4s 1.25s ease-out both; }
+@keyframes fcFlare { 0% { opacity: 0; transform: scaleX(.2); } 25% { opacity: 1; transform: scaleX(1); } 100% { opacity: 0; transform: scaleX(1.15); } }
+.fc-in { position: relative; z-index: 2; height: 100%; display: flex; align-items: center; justify-content: center; gap: 28px; }
+.fc-logo { position: relative; width: 112px; height: 112px; flex: none; }
+.fc-ring { position: absolute; inset: -8px; width: calc(100% + 16px); height: calc(100% + 16px); transform: rotate(-90deg); }
+.fc-ring circle { fill: none; stroke: #F7C032; stroke-width: 2.2; stroke-dasharray: 100; stroke-dashoffset: 0; filter: drop-shadow(0 0 6px rgba(247,192,50,.9)); }
+.fc.play .fc-ring circle { animation: fcRing 1.1s .6s cubic-bezier(.6,0,.2,1) both; }
+@keyframes fcRing { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+.fc-logo img { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px #F7C032, 0 0 40px rgba(247,192,50,.45), 0 20px 40px rgba(0,0,0,.6); }
+.fc.play .fc-logo img { animation: fcLogo .9s 1.2s cubic-bezier(.2,1.3,.4,1) both; }
+@keyframes fcLogo { from { opacity: 0; transform: scale(.6); filter: brightness(3) blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+.fc-gl { position: absolute; inset: 0; border-radius: 50%; background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.7) 48%, transparent 60%); background-size: 260% 100%; background-position: 130% 0; mix-blend-mode: soft-light; animation: fcGl 5s 2.6s ease-in-out infinite; }
+@keyframes fcGl { 0%, 60% { background-position: 130% 0; } 100% { background-position: -60% 0; } }
+.fc-txt { display: grid; gap: 10px; }
+.fc-name { font: 700 clamp(26px, 4vw, 54px)/1 'Space Grotesk', sans-serif; letter-spacing: .14em; color: #fff; white-space: nowrap; text-shadow: 0 0 30px rgba(247,192,50,.25); }
+.fc-name span { display: inline-block; }
+.fc.play .fc-name span { animation: fcChar .7s cubic-bezier(.2,.9,.3,1) both; animation-delay: calc(1.5s + var(--i) * 45ms); }
+@keyframes fcChar { from { opacity: 0; filter: blur(10px); transform: translateY(14px) scale(1.2); color: #F7C032; } 60% { color: #FFE7A0; } to { opacity: 1; filter: none; transform: none; color: #fff; } }
+.fc-tag { font: 600 12px 'JetBrains Mono', monospace; letter-spacing: .34em; color: #F7C032; }
+.fc-tag span { display: inline-block; overflow: hidden; white-space: nowrap; vertical-align: bottom; }
+.fc.play .fc-tag span { animation: fcType 1s 2.3s steps(26) both; }
+@keyframes fcType { from { max-width: 0; } to { max-width: 40ch; } }
+.fc-since { font: 500 10.5px 'JetBrains Mono', monospace; font-style: normal; letter-spacing: .26em; color: #8C9096; }
+.fc.play .fc-since { animation: clipRise .6s 3s both; }
+.fc-hud { position: absolute; z-index: 4; right: 22px; bottom: 7px; display: flex; align-items: center; gap: 7px; font: 500 9.5px 'JetBrains Mono', monospace; letter-spacing: .2em; color: rgba(255,255,255,.4); }
+.fc-hud i { width: 6px; height: 6px; border-radius: 50%; background: #E85C4A; animation: ptBlink 1.2s steps(2) infinite; }
+footer .ft-mark { display: none !important; }
+@media (max-width: 700px) { .fc { height: 240px; margin-bottom: 40px; } .fc-in { flex-direction: column; gap: 16px; } .fc-logo { width: 78px; height: 78px; } .fc-name { font-size: 24px; letter-spacing: .12em; } .fc-tag { font-size: 10px; letter-spacing: .26em; } .fc-since { display: none; } }
+@media (prefers-reduced-motion: reduce) { .fc *, .fc { animation: none !important; } }
+/* contacts: text lines without the icon tiles; WhatsApp, WeChat and e-mail sit with the social icons, in their own colours */
+footer .ft-contacts .ft-ci { display: none !important; }
+footer .ft-contacts > a, footer .ft-contacts > button { padding-inline-start: 0 !important; }
+.ft-soc-x { display: grid; place-items: center; width: 42px; height: 36px; border: 0; border-radius: 10px; background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); cursor: pointer; transition: box-shadow .2s, transform .2s; }
+.ft-soc-x:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(255,255,255,.25); }
+.ft-soc-x .ct-ic { width: 18px; height: 18px; }
+.ft-soc-x.mail svg { color: #fff; }
+.ft-soc-x.wa { color: #25D366; } .ft-soc-x.wc { color: #07C160; }
+/* universal rule (owner 16 Nov): wherever WhatsApp is offered, WeChat sits beside it, same look, same words */
+.fz2-btn.wcb .ct-ic, .sp-btn.wc .ct-ic { color: #07C160; }
+.fz2-btn.wcb { border: 0; cursor: pointer; font: inherit; }
+.fp-btn.wcb, .wf-send.wcb { border: 0; cursor: pointer; font: inherit; margin-inline-start: 8px; }
+.st-opt.st-opt-wc { border: 0; width: 100%; cursor: pointer; font: inherit; text-align: start; }
+.st-brand.wc, .st-menu .st-opt > .st-brand.wc { background: #07C160 !important; } .st-brand.wc::after { -webkit-mask-image: url(/icons/wechat.svg); mask-image: url(/icons/wechat.svg); }
+.pt-ask.wc { border: 0; cursor: pointer; font: inherit; display: inline-flex; align-items: center; gap: 6px; margin-inline-start: 6px; }
+.pt-ask.wc .ct-ic { color: #07C160; }
+.nv-wc { border: 0; background: none; color: inherit; font: inherit; cursor: pointer; padding: 0; }

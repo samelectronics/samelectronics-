@@ -330,6 +330,7 @@ function render(v: Vals) {
               <div className="wf-li-acts">
                 <button type="button" className="wf-add" onClick={v.addLine}>+ Add to request</button>
                 <a className="wf-send" href={v.send} target="_blank" rel="noopener">Send request on WhatsApp</a>
+                <button type="button" className="wf-send wcb" onClick={() => { let x = ''; try { x = new URL(v.send).searchParams.get('text') || ''; } catch { /* */ } window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wc', text: x } })); }}>Send request on WeChat</button>
               </div>
               <a className="wf-real" href="#wholesale" onClick={v.apply}>
                 <span className="i" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6z" /><path d="M9 12l2 2 4-4" /></svg></span>

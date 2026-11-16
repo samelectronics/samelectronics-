@@ -162,3 +162,18 @@ section.rv#reviews { background: radial-gradient(50% 40% at 50% 8%, rgba(247,192
 section.rv#reviews::before, section.rv#reviews::after { background-image: none !important; }
 #reviews .rv-fade { display: none !important; }
 #reviews :has(> .rv-track) { -webkit-mask: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); mask: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
+/* owner (16 Nov, again): the story yellow looked dead and the title "grey and black". Rich lit yellow with depth
+   (warm key light, amber edges, a faint circuit etched in, a light running the timeline) and a title in one graphite,
+   the second line set apart by a white marker band, not by greying it out. */
+section.st .st-pin { background: radial-gradient(70% 90% at 78% 8%, #FFE08A 0%, rgba(255,224,138,0) 60%), radial-gradient(90% 80% at 10% 100%, #E7A40C 0%, rgba(231,164,12,0) 60%), linear-gradient(160deg, #F9C83C, #F2B526 55%, #EBA916) !important; }
+section.st .st-pin::before { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .5;
+  background-image: linear-gradient(rgba(140,92,0,.09) 1px, transparent 1px), linear-gradient(90deg, rgba(140,92,0,.09) 1px, transparent 1px); background-size: 46px 46px;
+  -webkit-mask: radial-gradient(80% 70% at 50% 40%, #000, transparent 85%); mask: radial-gradient(80% 70% at 50% 40%, #000, transparent 85%); }
+section.st .st-pin::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 100% at 50% 50%, transparent 60%, rgba(120,72,0,.22)); }
+section.st .st-h > *:nth-child(2), section.st .st-h > *:nth-child(2) * { opacity: 1 !important; font-weight: 600 !important; }
+section.st .st-h > *:nth-child(2) { background: linear-gradient(transparent 58%, rgba(255,255,255,.55) 58%, rgba(255,255,255,.55) 92%, transparent 92%); padding-inline-end: .1em; width: fit-content; }
+section.st .st-eb { color: #26282B !important; opacity: .8; }
+section.st .st-rail::after { content: ''; position: absolute; top: 50%; left: 0; width: 140px; height: 3px; margin-top: -1.5px; border-radius: 2px; background: linear-gradient(90deg, transparent, #fff, transparent); filter: drop-shadow(0 0 6px #fff); animation: stRun 3.6s linear infinite; pointer-events: none; }
+@keyframes stRun { from { transform: translateX(-140px); } to { transform: translateX(calc(100vw - 280px)); } }
+@media (prefers-reduced-motion: reduce) { section.st .st-rail::after { display: none; } }
+section.st .st-yr-k .b { color: #26282B !important; }

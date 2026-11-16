@@ -449,3 +449,36 @@ html[dir=rtl] .ck-sw[aria-checked=true] i { transform: translateX(-22px); }
 .ck-dl dt { font: 700 11px 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: .06em; color: #8E9196; padding-top: 3px; } .ck-dl dd { margin: 0; color: #3A3C40; }
 .ck-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); padding: 10px 18px; border-radius: 999px; background: #26282B; color: #fff; font: 600 14px Inter, sans-serif; z-index: 50; animation: blIn .25s both; }
 @media (max-width: 760px) { .ck-grid { grid-template-columns: minmax(0, 1fr); } .ck-dl { grid-template-columns: minmax(0, 1fr); } }
+/* Owner (16 Nov): premium, techy membership cards: brushed metal with a pointer-following sheen, a real chip, a
+   hologram strip, embossed name and a fine level meter; no battery icon, no blob logo, no rings under it. */
+.cx-card { overflow: hidden; isolation: isolate; box-shadow: 0 1px 0 rgba(255,255,255,.55) inset, 0 -1px 0 rgba(0,0,0,.18) inset, 0 30px 60px -24px rgba(0,0,0,.55), 0 12px 24px -12px rgba(0,0,0,.35) !important; }
+.cx-card.k-circuit { background: linear-gradient(135deg, #FFE7A0 0%, #F4C340 30%, #E3AA22 62%, #F7CF5E 100%) !important; }
+.cx-card.k-grid { background: linear-gradient(135deg, #4A4D53 0%, #2B2D31 45%, #1E2023 100%) !important; color: #fff; }
+.cx-card.k-circle { background: linear-gradient(135deg, #FFFFFF 0%, #F1EEE7 45%, #E3DED3 100%) !important; }
+.mc-brush { position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: .22; mix-blend-mode: overlay;
+  background: repeating-linear-gradient(90deg, rgba(255,255,255,.5) 0 1px, rgba(0,0,0,.25) 1px 2px, rgba(255,255,255,.15) 2px 3px); }
+.k-grid .mc-brush { opacity: .5; background: repeating-linear-gradient(45deg, rgba(255,255,255,.05) 0 2px, rgba(0,0,0,.25) 2px 4px), repeating-linear-gradient(-45deg, rgba(255,255,255,.04) 0 2px, rgba(0,0,0,.2) 2px 4px); mix-blend-mode: normal; }
+.mc-sheen { position: absolute; inset: -40%; z-index: 0; pointer-events: none; background: radial-gradient(40% 30% at var(--lx, 30%) var(--ly, 20%), rgba(255,255,255,.55), transparent 70%); mix-blend-mode: soft-light; transition: background .1s; }
+.mc-hologram { position: absolute; z-index: 1; right: 0; top: 0; bottom: 0; width: 18px; pointer-events: none; opacity: .75;
+  background: linear-gradient(180deg, #FF8BD8, #8BD4FF 22%, #A5FFB7 44%, #FFE58B 66%, #FF9E8B 88%, #FF8BD8); background-size: 100% 220%; mix-blend-mode: soft-light; animation: mcHolo 6s linear infinite;
+  -webkit-mask: repeating-linear-gradient(0deg, #000 0 2px, rgba(0,0,0,.4) 2px 4px); mask: repeating-linear-gradient(0deg, #000 0 2px, rgba(0,0,0,.4) 2px 4px); }
+@keyframes mcHolo { to { background-position: 0 -220%; } }
+.cx-card .cx-logo, .cx-card .cx-bat, .cx-card .cx-emb, .cx-card .cx-seal { display: none !important; }
+.cx-card-in { position: relative; z-index: 2; }
+.mc-meter { display: inline-flex; gap: 3px; align-items: flex-end; }
+.mc-meter i { width: 5px; height: 14px; border-radius: 1.5px; background: rgba(38,40,43,.18); box-shadow: inset 0 1px 1px rgba(0,0,0,.15); }
+.mc-meter i:nth-child(1) { height: 7px; } .mc-meter i:nth-child(2) { height: 9px; } .mc-meter i:nth-child(3) { height: 11px; } .mc-meter i:nth-child(4) { height: 13px; } .mc-meter i:nth-child(5) { height: 15px; }
+.mc-meter i.on { background: #26282B; box-shadow: 0 0 6px rgba(38,40,43,.25); animation: mcCell .4s both; }
+.k-grid .mc-meter i { background: rgba(255,255,255,.14); } .k-grid .mc-meter i.on { background: #F7C032; box-shadow: 0 0 8px rgba(247,192,50,.6); }
+.mc-meter.star svg { fill: #C9A23B; filter: drop-shadow(0 1px 0 rgba(255,255,255,.6)); }
+@keyframes mcCell { from { opacity: 0; transform: scaleY(.3); } to { opacity: 1; transform: none; } }
+.mc-row { display: flex !important; align-items: center; gap: 10px; }
+.mc-chip { width: 46px; height: 35px; filter: drop-shadow(0 1px 1px rgba(0,0,0,.25)); }
+.cx-card .nm { text-shadow: 0 1px 0 rgba(255,255,255,.45), 0 -1px 0 rgba(0,0,0,.25); letter-spacing: .14em; }
+.k-grid .nm { text-shadow: 0 1px 0 rgba(0,0,0,.6), 0 -1px 0 rgba(255,255,255,.12); }
+.cx-card .cx-trace path { stroke-opacity: .35; } .cx-card .cx-trace circle { opacity: .5; }
+/* the stage under the cards: a soft contact shadow and a faint reflection, no rings */
+.ms-fan::after, .ms-r::after { content: ''; position: absolute; left: 12%; right: 12%; bottom: -6px; height: 26px; border-radius: 50%; background: radial-gradient(closest-side, rgba(0,0,0,.45), transparent); filter: blur(6px); pointer-events: none; z-index: -1; }
+.ms-r { position: relative; }
+[class*="ms-ring"], [class*="ms-plat"], .ms-fan .ring, .ms-orbit { display: none !important; }
+@media (prefers-reduced-motion: reduce) { .mc-hologram, .mc-meter i.on { animation: none; } }
