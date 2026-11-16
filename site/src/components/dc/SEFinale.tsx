@@ -8,6 +8,14 @@ import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SEFinale.logic.js';
 import FinaleRoom from './FinaleRoom';
 
+const FR = Array.from({ length: 24 }, (_, i) => '/assets/pose/film-' + String(i * 2).padStart(2, '0') + '-480.webp');
+/** the teardown film, slowly opening and closing while the finale is on screen */
+function FinaleFilm({ on }: { on: boolean }) {
+  const [f, setF] = React.useState(0);
+  React.useEffect(() => { if (!on) return; FR.forEach((x) => { const i = new Image(); i.src = x; }); let t = 0; const id = window.setInterval(() => { t++; const n = FR.length, cyc = n * 2 + 24, p = t % cyc; setF(p < n ? p : p < n + 12 ? n - 1 : p < n * 2 + 12 ? n * 2 + 11 - p : 0); }, 90); return () => window.clearInterval(id); }, [on]);
+  return <img className="fz3-film" src={FR[f]} alt="" />;
+}
+
 // R11 (owner): the traces run closer together into the ring
 // owner (15 Nov): never three lines starting/ending together: each trace starts at its own pad, at its own distance
 const LEFT = ['M96 158 H250 L282 136 H468 L522 170 H608', 'M18 214 H190 L214 200 H602', 'M164 266 H240 L272 290 H468 L522 230 H608'];
@@ -24,7 +32,7 @@ const start = (d: string) => { const m = d.match(/^M(\d+) (\d+)/)!; return [Numb
 function render(v: Vals) {
   const head = (v.head || HEAD) as string[], cut = Math.max(1, head.findIndex((w) => /[?؟？]$/.test(w)) + 1);
   return (
-    <section ref={v.secRef} id="finale" data-tone="light" data-screen-label="Finale" className={'fz2' + (v.on ? ' fz-on' : '')}>
+    <section ref={v.secRef} id="finale" data-tone="dark" data-screen-label="Finale" className={'fz2 fz3s' + (v.on ? ' fz-on' : '')}>
       <div className="fz2-light" aria-hidden="true" />
       <div className="fz2-in">
         <span className="fz2-eb">{WORDS.join(' · ')}</span>
@@ -32,16 +40,16 @@ function render(v: Vals) {
           <span className="a">{head.slice(0, cut).map((w, i) => <span key={i} style={{ ['--i' as string]: i } as React.CSSProperties}>{w} </span>)}</span>
           <span className="b">{head.slice(cut).map((w, i) => <span key={i} style={{ ['--i' as string]: i + cut } as React.CSSProperties}>{w} </span>)}</span>
         </h2>
-        <div className="fz2-stage" aria-hidden="true">
+        {/* owner (17 Nov): "what the hell is this footer": the ending is a graphite film stage now: the teardown film plays
+            on a glowing floor with light beams crossing, like the teardown ad */}
+        <div className="fz2-stage fz3" aria-hidden="true">
+          <i className="fz3-ray a" /><i className="fz3-ray b" /><i className="fz3-ray c" />
           <span className="fz2-floor" />
-          <img className="fz2-p main" src="/assets/pallet/full-1200.webp" alt="" loading="lazy" decoding="async" />
-          <img className="fz2-p l" src="/assets/pallet/carton-600.webp" alt="" loading="lazy" decoding="async" />
-          <img className="fz2-p r" src="/assets/pallet/single-600.webp" alt="" loading="lazy" decoding="async" />
+          <FinaleFilm on={!!v.on} />
         </div>
         <div className="fz2-acts">
-          <a href="#offer" onClick={v.browse} className="fz2-btn dark">Browse all parts<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a>
-          <a href={v.wa} target="_blank" rel="noopener noreferrer" className="fz2-btn"><i className="ct-ic wa" aria-hidden="true" />WhatsApp us</a>
-          <button type="button" className="fz2-btn wcb" onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wc' } }))}><i className="ct-ic wc" aria-hidden="true" />WeChat us</button>
+          <a href="#offer" onClick={v.browse} className="fz2-btn y">Browse all parts<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a>
+          <button type="button" className="fz2-btn duo" onClick={() => window.dispatchEvent(new CustomEvent('se:chatwith'))}><span className="duo-ic" aria-hidden="true"><i className="ct-ic wa" /><i className="ct-ic wc" /></span>Talk to us</button>
           <a href={v.dir} target="_blank" rel="noopener noreferrer" className="fz2-btn">Visit Deira</a>
         </div>
         <div className="fz2-stats">

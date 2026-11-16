@@ -236,3 +236,27 @@ html[dir="rtl"] .fz2-h .b::after { transform-origin: right; left: .25em; right: 
 @media (prefers-reduced-motion: reduce) { .fz2-p, .fz2-h span span { transition: none; opacity: 1; } }
 .fz2-btn { box-sizing: border-box; }
 .fz2-btn .ct-ic.wa { background-color: #25D366; border-radius: 6px; }
+
+/* ── Finale v3 (owner, 17 Nov): a graphite film stage ── */
+section.fz2.fz3s { background: radial-gradient(60% 55% at 50% 58%, rgba(247,192,50,.14), rgba(247,192,50,0) 70%), linear-gradient(180deg, #2E3034, #26282B) !important; color: #fff !important; }
+section.fz2.fz3s .fz2-light { display: none !important; }
+section.fz2.fz3s .fz2-eb { color: #F7C032 !important; }
+section.fz2.fz3s .fz2-h .a, section.fz2.fz3s .fz2-h .a * { color: #FFFFFF !important; }
+section.fz2.fz3s .fz2-h .b, section.fz2.fz3s .fz2-h .b * { color: #F7C032 !important; text-shadow: 0 0 40px rgba(247,192,50,.35); }
+section.fz2.fz3s .fz2-h .b::after { display: none !important; }
+section.fz2.fz3s .fz2-h span span { transform: translateY(40%) scale(1.15); filter: blur(4px); transition: opacity .5s ease, transform .6s cubic-bezier(.2,1.3,.4,1), filter .5s ease; }
+section.fz2.fz3s.fz-on .fz2-h span span { transform: none; filter: none; }
+.fz3 { position: relative; height: 380px; overflow: hidden; }
+.fz3 .fz2-floor { position: absolute; left: 50%; bottom: 36px; width: 520px; height: 90px; margin-left: -260px; border-radius: 50%; background: radial-gradient(closest-side, rgba(247,192,50,.35), rgba(247,192,50,0)); box-shadow: none !important; border: 0 !important; }
+.fz3-film { position: absolute; left: 50%; bottom: 20px; height: 360px; width: auto; transform: translateX(-50%); filter: drop-shadow(0 30px 34px rgba(0,0,0,.55)); }
+.fz3-ray { position: absolute; left: -20%; width: 140%; height: 2px; border-radius: 2px; background: linear-gradient(90deg, transparent, #FFE08A 50%, transparent); box-shadow: 0 0 22px 7px rgba(247,192,50,.3), 0 0 80px 26px rgba(247,192,50,.1); transform: rotate(-14deg); opacity: 0; animation: fz3Ray 7s linear infinite; }
+.fz3-ray.a { top: 18%; } .fz3-ray.b { top: 52%; animation-delay: -2.4s; animation-duration: 8s; } .fz3-ray.c { top: 82%; animation-delay: -4.8s; animation-duration: 9s; height: 1.5px; }
+@keyframes fz3Ray { 0% { transform: translateX(-40%) rotate(-14deg); opacity: 0; } 20%, 80% { opacity: .85; } 100% { transform: translateX(40%) rotate(-14deg); opacity: 0; } }
+section.fz2.fz3s .fz2-btn { height: 50px !important; padding: 0 22px !important; border-radius: 14px !important; display: inline-flex !important; align-items: center !important; gap: 10px !important; font: 600 15px Inter, sans-serif !important; color: #fff !important; background: rgba(255,255,255,.06) !important; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.28) !important; border: 0 !important; cursor: pointer; transition: transform .2s, box-shadow .2s !important; }
+section.fz2.fz3s .fz2-btn:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1.5px #F7C032 !important; }
+section.fz2.fz3s .fz2-btn.y { background: #F7C032 !important; color: #26282B !important; box-shadow: 0 14px 30px -14px rgba(247,192,50,.8) !important; }
+section.fz2.fz3s .fz2-stats b, section.fz2.fz3s .fz2-stats b * { color: #FFFFFF !important; }
+section.fz2.fz3s .fz2-stats small { color: #A7ABB1 !important; }
+section.fz2.fz3s .fz2-stats > * + * { border-color: rgba(255,255,255,.14) !important; }
+@media (max-width: 700px) { .fz3 { height: 300px; } .fz3-film { height: 280px; } .fz3 .fz2-floor { width: 320px; margin-left: -160px; } }
+section.fz2.fz3s .fz2-stage.fz3 { background: none !important; box-shadow: none !important; border: 0 !important; -webkit-mask: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent); mask: linear-gradient(90deg, transparent, #000 15%, #000 85%, transparent); width: 100% !important; max-width: none !important; }
