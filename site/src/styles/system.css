@@ -716,3 +716,18 @@ html[data-theme="dark"] .cc-more a { color: #fff; } html[data-theme="dark"] .cc-
 .gd-b { height: 46px; border: 0; border-radius: 12px; background: #F2F3F4; color: #26282B; font: 600 14px Inter, sans-serif; cursor: pointer; }
 .gd-b.y { background: #F7C032; }
 html[data-theme="dark"] .gd-card { background: #2E3034; color: #fff; } html[data-theme="dark"] .gd-p { color: #C9CBCE; } html[data-theme="dark"] .gd-b:not(.y) { background: rgba(255,255,255,.08); color: #fff; }
+
+/* Owner (17 Nov): "animations and transitions everywhere". Moving between pages cross-fades and slides (browsers
+   that support view transitions); every page also eases in on arrival, and every pop-up has its own entrance. */
+@view-transition { navigation: auto; }
+::view-transition-old(root) { animation: seVtOut .28s cubic-bezier(.4,0,1,1) both; }
+::view-transition-new(root) { animation: seVtIn .42s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes seVtOut { to { opacity: 0; transform: translateY(-10px); } }
+@keyframes seVtIn { from { opacity: 0; transform: translateY(14px); } }
+main, body > div > main { animation: sePageIn .5s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes sePageIn { from { opacity: 0; transform: translateY(10px); } }
+.cc-card, .wc-card, .sc2-panel { animation-name: seCardIn !important; animation-duration: .38s !important; animation-timing-function: cubic-bezier(.2,1.1,.4,1) !important; animation-fill-mode: both !important; }
+@keyframes seCardIn { from { opacity: 0; transform: translateY(16px) scale(.97); } }
+.wc-veil, .cc-veil, .pv-veil, .sc2-veil { animation: seVeilIn .25s ease-out both; }
+@keyframes seVeilIn { from { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { ::view-transition-old(root), ::view-transition-new(root), main { animation: none !important; } }
