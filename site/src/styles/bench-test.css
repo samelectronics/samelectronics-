@@ -416,3 +416,24 @@ html[dir='rtl'] .bt-try > svg:last-child { transform: scaleX(-1); }
     linear-gradient(125deg, rgba(255,255,255,0) 0 10%, rgba(255,255,255,.06) 10.5% 28%, rgba(255,255,255,.015) 29% 31%, rgba(255,255,255,0) 32%),
     radial-gradient(120% 50% at 50% -8%, rgba(255,255,255,.05), rgba(255,255,255,0) 60%) !important;
 }
+
+/* ── Rig v4 (owner, 17 Nov: "too cartoonish"): a real instrument. Graphite anodised body with a fine machined edge,
+   a calibrated test pattern (grey ramp, a thin colour bar, crosshair) instead of a rainbow, and readouts that look
+   like an oscilloscope: thin lines, small type, no big rounded blocks. */
+html body .bt-rig { background: radial-gradient(120% 70% at 12% 0%, rgba(255,255,255,.08), rgba(255,255,255,0) 45%), repeating-linear-gradient(90deg, rgba(255,255,255,.018) 0 1px, transparent 1px 3px), linear-gradient(180deg, #3A3D42, #2A2C30 55%, #232528) !important; border-radius: 18px !important; box-shadow: inset 0 1px 0 rgba(255,255,255,.18), inset 0 0 0 1px rgba(255,255,255,.06), 0 1px 0 #4A4D52, 0 3px 0 #1C1D20, 0 30px 50px -16px rgba(0,0,0,.55) !important; }
+html body .bt-rig::before, html body .bt-rig::after { opacity: .25 !important; }
+html body .bt-bay { border-radius: 10px !important; background: #17181A !important; box-shadow: inset 0 0 0 1px rgba(255,255,255,.06), inset 0 4px 14px rgba(0,0,0,.6) !important; }
+html body .bt-pix { background:
+  linear-gradient(90deg, transparent calc(50% - .5px), rgba(255,255,255,.35) calc(50% - .5px) calc(50% + .5px), transparent calc(50% + .5px)),
+  linear-gradient(0deg, transparent calc(50% - .5px), rgba(255,255,255,.35) calc(50% - .5px) calc(50% + .5px), transparent calc(50% + .5px)),
+  repeating-linear-gradient(0deg, rgba(255,255,255,.06) 0 1px, transparent 1px 12px), repeating-linear-gradient(90deg, rgba(255,255,255,.06) 0 1px, transparent 1px 12px),
+  linear-gradient(180deg, transparent 0 78%, #F7C032 78% 80%, transparent 80%),
+  linear-gradient(90deg, #0B0C0D, #3A3C40 25%, #7C8086 50%, #C4C7CB 75%, #F4F5F6) !important; }
+html body .bt-clamp { border-radius: 4px !important; background: linear-gradient(90deg, #1E1F22, #4A4D52 30%, #2E3034 70%, #1A1B1D) !important; box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 6px 12px -4px rgba(0,0,0,.6) !important; }
+html body .bt-clamp * { filter: grayscale(1) brightness(.7); }
+html body .bt-tile { border-radius: 8px !important; background: #1A1B1D !important; box-shadow: inset 0 0 0 1px rgba(255,255,255,.07) !important; background-image: repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 8px) !important; }
+html body .bt-tile b, html body .bt-tile-h b { font: 600 13px 'JetBrains Mono', monospace !important; letter-spacing: .06em; text-transform: uppercase; }
+html body .bt-ok, html body .bt-stamp { border-radius: 4px !important; font: 600 11px 'JetBrains Mono', monospace !important; letter-spacing: .12em; background: transparent !important; color: #5FD49A !important; box-shadow: inset 0 0 0 1px #5FD49A !important; }
+html body .bt-leds i { width: 7px !important; height: 7px !important; box-shadow: 0 0 6px currentColor !important; }
+html body .bt-cnt, html body .bt-cnts { border-radius: 4px !important; }
+html body .bt-cable { filter: grayscale(.4) brightness(.8); }
