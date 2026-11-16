@@ -104,7 +104,7 @@ export default function ShopHeroFilm({ onCat, onShop, stats }: { onCat: (c: stri
       const ring = eo(K(lt, 0.05, 0.5)); x.save(); x.strokeStyle = Y; x.lineWidth = 3; x.lineCap = 'round'; x.shadowColor = Y; x.shadowBlur = 18; x.beginPath(); x.arc(cx, cy, r + 10, -Math.PI / 2, -Math.PI / 2 + ring * Math.PI * 2); x.stroke(); x.restore();
       const lk = back(K(lt, 0.25, 0.45)); if (ok(logo) && lk > 0) { const s = r * lk; x.save(); x.beginPath(); x.arc(cx, cy, s, 0, 7); x.clip(); x.fillStyle = '#fff'; x.fillRect(cx - s, cy - s, s * 2, s * 2); x.drawImage(logo, cx - s, cy - s, s * 2, s * 2); x.restore(); }
       const wk = eo(K(lt, 0.45, 0.5)); x.globalAlpha = wk; x.textAlign = 'center'; x.fillStyle = '#FFFFFF'; x.font = '600 ' + Math.max(18, 4.6 * u) + 'px ' + F.sg; (x as unknown as { letterSpacing: string }).letterSpacing = lerp(18, 6, wk) + 'px'; x.fillText(T('THE PARTS SHOP'), cx, cy + r + 9 * u); (x as unknown as { letterSpacing: string }).letterSpacing = '0px';
-      x.fillStyle = Y; x.font = '500 ' + Math.max(12, 2.4 * u) + 'px ' + F.jb; x.fillText(stats[0] + ' ' + T('parts') + ' · ' + stats[1] + ' ' + T('models') + ' · ' + stats[2] + ' ' + T('brands'), cx, cy + r + 15 * u); x.globalAlpha = 1;
+      x.fillStyle = Y; x.font = '500 ' + Math.max(12, 2.4 * u) + 'px ' + F.jb; x.fillText(stats[0] ? stats[0] + ' ' + T('parts') + ' · ' + stats[1] + ' ' + T('models') + ' · ' + stats[2] + ' ' + T('brands') : T('IN STOCK IN DEIRA'), cx, cy + r + 15 * u); x.globalAlpha = 1;
       const z = K(lt, OPEN - 0.3, 0.3); if (z > 0) { x.globalAlpha = eio(z); x.fillStyle = Y; x.beginPath(); x.arc(cx, cy, Math.hypot(W, H) * eio(z), 0, 7); x.fill(); x.globalAlpha = 1; }
     }
     function montage(lt: number) {
@@ -153,7 +153,7 @@ export default function ShopHeroFilm({ onCat, onShop, stats }: { onCat: (c: stri
   return (
     <div ref={host} className={'shf' + (sc ? ' th-' + sc.th : ' th-dark')} aria-hidden="false">
       <canvas ref={cv} aria-hidden="true" />
-      <h1 className="sr-only">{T('Every part.')} {T('Every grade.')}</h1>
+      
       {sc ? <button type="button" key={ph} className={'shf-cta ' + sc.th} onClick={() => onCat(sc.cat)}>{T(sc.cta)}<i aria-hidden="true">→</i></button>
         : ph >= 6 ? <button type="button" key={'all' + ph} className={'shf-cta ' + (ph === 7 && dark ? 'dark' : 'dark')} onClick={onShop}>{T('Shop all parts')}<i aria-hidden="true">→</i></button> : null}
     </div>

@@ -1,5 +1,5 @@
 'use client';
-import ShopHeroFilm from './ShopHeroFilm';
+import ShopHead from './ShopHead';
 import TechBg from '@/components/site/TechBg';
 // P2 · THE SHOP (owner: "professional, like Amazon, so detailed"). Built from the home's language: graphite header with
 // live circuits, the search like the hero, Find My Part, then categories, adverts, quick filters, a "Customize everything"
@@ -105,12 +105,16 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
     <div className={'shop' + (mode === 'deals' ? ' is-deals' : '')}>
       {/* owner (16 Nov): landing on the shop is a commercial, like the teardown's final call: a widescreen film of every
           part group; then a calm white band with the search, with room to breathe */}
-      <section className="shop-hd2" data-tone="dark">
-        <ShopHeroFilm stats={[products().length, D.models.length, D.brands.length]} onCat={(c) => { set({ cats: [c] }); document.querySelector('.shop-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }} onShop={() => document.querySelector('.shop-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />
+      <section className="shop-hd3" data-tone="dark">
+        <div className="sp-wrap">
+          <ShopHead crumb={<nav className="sp-crumb"><a href="/">{T('Home')}</a><i /><span>{mode === 'deals' ? T('Deals & arrivals') : T('Shop')}</span></nav>}
+            eb={mode === 'deals' ? T('DEALS · ARRIVALS · LIMITED OFFERS') : T('THE PARTS SHOP')}
+            a={mode === 'deals' ? T('Deals that') : T('Every part.')} b={mode === 'deals' ? T('end soon.') : T('Every grade.')}
+            stats={[[products().length, 'parts'], [D.models.length, 'models'], [D.brands.length, 'brands']]} />
+        </div>
       </section>
       <section className="shop-sb" data-tone="light">
         <div className="sp-wrap shop-sb-in">
-          <nav className="sp-crumb shop-sb-crumb"><a href="/">{T('Home')}</a><i /><span>{mode === 'deals' ? T('Deals & arrivals') : T('Shop')}</span></nav>
           <div className="shop-scan" ref={scanRef}><ShopSearch q={f.q} onQ={(q) => set({ q })} onFmp={openFmp} count={res.length} /></div>
           <div className="shop-devs" data-tour-step="2" data-tour-title="My devices" data-tour-text="Add the phones you fix most. I will mark every part that fits them.">
             <span>{T('My devices')}:</span>
