@@ -12,7 +12,7 @@ import MemberCard, { LEVELS } from './MemberCard';
 import NotesPanel from './NotesPanel';
 import SoundSettings from '@/components/site/SoundSettings';
 import { Repairs, WarrantyCheck, TradeTools } from './BenchTools';
-import Medal from './Medal';
+import Medal, { Rank } from './Medal';
 import { MEDALS, LESSONS, got, unlock, startLesson } from '@/lib/achievements';
 
 const NAV: [string, string, string][] = [
@@ -128,7 +128,7 @@ function MedalStrip({ go }: { go: () => void }) {
   const g = useMedals(), mine = MEDALS.filter((m) => g[m.id]).sort((a, b) => g[b.id] - g[a.id]);
   return (
     <button type="button" className="bn-mstrip" onClick={go} data-tour-step="3" data-tour-title="Your medals" data-tour-text="Explore and learn to earn them. Gold ones are rare!">
-      <span className="bn-mstrip-m">{mine.slice(0, 5).map((m) => <Medal key={m.id} tier={m.tier} size={34} />)}{!mine.length ? <Medal tier="bronze" on={false} size={34} /> : null}</span>
+      <span className="bn-mstrip-m">{mine.slice(0, 5).map((m) => <Medal key={m.id} tier={m.tier} size={34} group={m.id === 'teardown' ? 'teardown' : m.group} />)}{!mine.length ? <Medal tier="bronze" on={false} size={34} /> : null}</span>
       <span><b>{mine.length} / {MEDALS.length} {T('medals')}</b><small>{mine[0] ? T('Latest') + ': ' + T(mine[0].t) : T('Explore the site and finish Samsoom’s lessons to earn them.')}</small></span>
       <i aria-hidden="true">→</i>
     </button>
@@ -138,6 +138,10 @@ function Medals() {
   const g = useMedals(), n = MEDALS.filter((m) => g[m.id]).length, pc = Math.round((n / MEDALS.length) * 100);
   const cnt = (t: string) => MEDALS.filter((m) => m.tier === t && g[m.id]).length;
   const GROUPS: [string, string][] = [['train', 'Samsoom’s training'], ['explore', 'Exploring'], ['shop', 'Shopping'], ['bench', 'Your bench']];
+  // owner (17 Nov): each track ends in a promotion; all four make you a Master Technician
+  const PROMO: Record<string, string> = { train: 'Certified by Samsoom', explore: 'Field Scout', shop: 'Trusted Buyer', bench: 'Bench Owner' };
+  const doneIn = (k: string) => MEDALS.filter((m) => m.group === k), got = (k: string) => doneIn(k).filter((m) => g[m.id]).length;
+  const master = GROUPS.every(([k]) => got(k) === doneIn(k).length);
   const when = (x: number) => new Date(x).toLocaleDateString([], { day: 'numeric', month: 'short' });
   return (
     <>
@@ -147,6 +151,7 @@ function Medals() {
           <h2>{T('Medals & training')}</h2>
           <p>{T('Explore the site, try its tools and let Samsoom show you around. Every step earns a medal.')}</p>
           <div className="bn-md-tiers">{(['gold', 'silver', 'bronze'] as const).map((t) => <span key={t}><Medal tier={t} size={26} /><b>{cnt(t)}</b>{T(TIER(t))}</span>)}</div>
+          <div className={'bn-md-rank' + (master ? ' on' : '')}><Rank on={master} size={40} /><span><small>{T('FINAL PROMOTION')}</small><b>{T('Master Technician')}</b><em>{master ? T('Earned') : GROUPS.filter(([k]) => got(k) === doneIn(k).length).length + ' / ' + GROUPS.length + ' ' + T('tracks complete')}</em></span></div>
         </div>
       </div>
       <div className="bn-md-g">
@@ -163,9 +168,11 @@ function Medals() {
       </div>
       {GROUPS.map(([k, l]) => (
         <div key={k} className="bn-md-g">
-          <h3>{T(l)}</h3>
-          <div className="bn-md-case">{MEDALS.filter((m) => m.group === k).map((m) => { const on = !!g[m.id]; const inner = <><Medal tier={m.tier} on={on} size={60} /><b>{T(m.t)}</b><small>{T(m.d)}</small><em>{on ? when(g[m.id]) : T(TIER(m.tier)) + ' · ' + T('locked')}</em></>;
-            return m.path && !on ? <a key={m.id} className="bn-md-it off" href={m.path}>{inner}</a> : <div key={m.id} className={'bn-md-it' + (on ? '' : ' off')}>{inner}</div>; })}</div>
+          <div className="bn-md-h"><h3>{T(l)}</h3><span className="bn-md-prog"><i style={{ width: Math.round((got(k) / Math.max(1, doneIn(k).length)) * 100) + '%' }} /></span><small dir="ltr">{got(k)} / {doneIn(k).length}</small></div>
+          <div className="bn-md-case">{MEDALS.filter((m) => m.group === k).map((m) => { const on = !!g[m.id]; const inner = <><Medal tier={m.tier} on={on} size={64} group={m.id === 'teardown' ? 'teardown' : m.group} /><b>{T(m.t)}</b><small>{T(m.d)}</small><em>{on ? when(g[m.id]) : T(TIER(m.tier)) + ' · ' + T('locked')}</em></>;
+            return m.path && !on ? <a key={m.id} className="bn-md-it off" href={m.path}>{inner}</a> : <div key={m.id} className={'bn-md-it' + (on ? '' : ' off')}>{inner}</div>; })}
+            <div className={'bn-md-it promo' + (got(k) === doneIn(k).length ? '' : ' off')}><Rank on={got(k) === doneIn(k).length} size={64} /><b>{T(PROMO[k])}</b><small>{T('Promotion: earn every medal in this track.')}</small><em>{got(k) === doneIn(k).length ? T('Promoted') : (doneIn(k).length - got(k)) + ' ' + T('to go')}</em></div>
+          </div>
         </div>
       ))}
     </>

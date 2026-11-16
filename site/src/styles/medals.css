@@ -47,3 +47,23 @@
 .bn-mstrip-m { display: flex; } .bn-mstrip-m .md + .md { margin-inline-start: -12px; }
 .bn-mstrip > span:nth-child(2) { display: grid; gap: 3px; flex: 1; min-width: 0; } .bn-mstrip b { font: 700 16px/1.2 'Space Grotesk', system-ui, sans-serif; } .bn-mstrip small { color: #C9CCD0; font-size: 13px; }
 .bn-mstrip > i { font-style: normal; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: #F7C032; color: #26282B; flex: none; }
+
+/* ── Insignia medals (owner, 17 Nov) ── */
+.md2 { position: relative; display: inline-block; flex: none; filter: drop-shadow(0 6px 10px rgba(0,0,0,.28)); }
+.md2.off { filter: none; opacity: .9; }
+.md2 svg { display: block; overflow: visible; }
+.md2.on .md2-sheen { animation: md2Sheen 5s ease-in-out infinite; }
+@keyframes md2Sheen { 0%, 60% { transform: translateX(-30px) rotate(25deg); } 100% { transform: translateX(130px) rotate(25deg); } }
+.md2-gold.on { filter: drop-shadow(0 6px 10px rgba(0,0,0,.28)) drop-shadow(0 0 10px rgba(247,192,50,.35)); }
+.bn-md-h { display: flex; align-items: center; gap: 14px; margin-bottom: 12px; }
+.bn-md-h h3 { margin: 0 !important; }
+.bn-md-prog { flex: 1; height: 6px; border-radius: 3px; background: rgba(38,40,43,.1); overflow: hidden; }
+.bn-md-prog i { display: block; height: 100%; border-radius: 3px; background: linear-gradient(90deg, #F7C032, #FFD566); box-shadow: 0 0 8px rgba(247,192,50,.6); transition: width .8s cubic-bezier(.2,.8,.2,1); }
+.bn-md-h small { font: 600 12px 'JetBrains Mono', monospace; color: #6B6F75; }
+.bn-md-it.promo { background: linear-gradient(160deg, #34363A, #26282B) !important; color: #fff !important; box-shadow: inset 0 0 0 1.5px rgba(247,192,50,.45) !important; }
+.bn-md-it.promo b { color: #F7C032 !important; } .bn-md-it.promo small, .bn-md-it.promo em { color: #C9CBCE !important; }
+.bn-md-it.promo.off { box-shadow: inset 0 0 0 1px rgba(255,255,255,.1) !important; } .bn-md-it.promo.off b { color: #fff !important; }
+.bn-md-rank { display: inline-flex; align-items: center; gap: 12px; margin-top: 14px; padding: 10px 16px 10px 10px; border-radius: 14px; background: #26282B; color: #fff; }
+.bn-md-rank small { display: block; font: 600 10px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #F7C032; }
+.bn-md-rank b { display: block; font: 700 16px 'Space Grotesk', sans-serif; } .bn-md-rank em { display: block; font: 500 12px Inter, sans-serif; font-style: normal; color: #A7ABB1; }
+.bn-md-rank.on { box-shadow: 0 0 0 1.5px #F7C032, 0 12px 28px -12px rgba(247,192,50,.6); }

@@ -27,7 +27,7 @@ export default function MedalWatch() {
   if (!m || path?.startsWith('/staff')) return null;
   return (
     <div className="md-toast" role="status" aria-live="polite" key={m.id}>
-      <Medal tier={m.tier} size={52} />
+      <Medal tier={m.tier} size={52} group={m.id === 'teardown' ? 'teardown' : m.group} />
       <span><small>{T('Medal earned')} · {T(m.tier === 'gold' ? 'Gold' : m.tier === 'silver' ? 'Silver' : 'Bronze')}</small><b>{T(m.t)}</b></span>
       <a href="/account#medals" onClick={() => setShow(null)}>{T('See all')}</a>
     </div>
