@@ -210,7 +210,7 @@ export default function SamsoomTour() {
     return (
       <div className="st-veil" role="dialog" aria-modal="true" aria-label={T('Welcome')} onClick={(e) => { if (e.target === e.currentTarget && phase !== 'bye') bye(1); }}>
         <div className={'st-hello' + (phase === 'bye' ? ' bye' : '')}>
-          <span className="st-sam" data-sam-talk=""><LiveSam size={120} mood="idle" play={phase === 'bye' ? 'kiss' : phase === 'recall' ? 'happy' : cfg().welcome || 'wave'} /></span>
+          <span className="st-sam" data-sam-talk=""><LiveSam size={120} mood="idle" play={phase === 'bye' ? 'kiss' : phase === 'recall' ? 'happy' : cfg().welcome || 'kiss' /* owner (17 Nov): the welcome blows kisses with both hands */} /></span>
           {phase === 'hello' ? (
             <>
               <b><Typed text={T('Welcome to Sam Electronics!')} /></b>

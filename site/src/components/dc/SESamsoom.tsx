@@ -77,25 +77,25 @@ function render(v: Vals) {
                 >
                   {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
                   <defs>
-                    <linearGradient id="samHandF" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#2A2C30" /><stop offset=".4" stopColor="#5A5E64" /><stop offset="1" stopColor="#26282B" /></linearGradient>
+                    <linearGradient id="samHandF" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#FFFFFF" /><stop offset=".55" stopColor="#F1F2F4" /><stop offset="1" stopColor="#C9CDD2" /></linearGradient>
                     <linearGradient id="samHandL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
                   <g>
                     {/* owner (15 Nov): the cable ends in a machined connector that gives off electricity: three smooth current arcs with light travelling along them */}
-                    <rect x="8.6" y="0" width="6.8" height="6" rx="1.8" fill="url(#samHandF)" />
+                    <rect x="8.6" y="0" width="6.8" height="6" rx="1.8" fill="url(#samHandF)" stroke="#26282B" strokeWidth=".9" />
                     <rect x="9.3" y=".7" width="5.4" height="1.1" rx=".55" fill="rgba(255,255,255,.3)" />
-                    <rect x="8.6" y="5.6" width="6.8" height="1.4" rx=".5" fill="#F7C032" />
+                    <rect x="8.6" y="5.6" width="6.8" height="1.4" rx=".5" fill="#26282B" />
                     <circle cx="12" cy="8.6" r="3.4" fill="#F7C032" opacity=".28" className="sam-zap-core" />
                     <circle cx="12" cy="8.4" r="1.3" fill="#FFF4D1" />
                     <g className="sam-zap" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 8.6c-1.4 2.2-3.6 3-4.4 6.2" stroke="#F7C032" strokeWidth="1" />
-                      <path d="M12 8.6c.2 2.6-.6 4.6.4 8" stroke="#F7C032" strokeWidth="1" />
-                      <path d="M12 8.6c1.4 2.2 3.6 3 4.4 6.2" stroke="#F7C032" strokeWidth="1" />
+                      <path d="M12 8.6c-1.4 2.2-3.6 3-4.4 6.2" stroke="#26282B" strokeWidth="1.15" />
+                      <path d="M12 8.6c.2 2.6-.6 4.6.4 8" stroke="#26282B" strokeWidth="1.15" />
+                      <path d="M12 8.6c1.4 2.2 3.6 3 4.4 6.2" stroke="#26282B" strokeWidth="1.15" />
                       <path d="M12 8.6c-1.4 2.2-3.6 3-4.4 6.2" stroke="#FFF4D1" strokeWidth=".9" pathLength="10" strokeDasharray="2.2 7.8" className="sam-zap-run" />
                       <path d="M12 8.6c.2 2.6-.6 4.6.4 8" stroke="#FFF4D1" strokeWidth=".9" pathLength="10" strokeDasharray="2.2 7.8" className="sam-zap-run b" />
                       <path d="M12 8.6c1.4 2.2 3.6 3 4.4 6.2" stroke="#FFF4D1" strokeWidth=".9" pathLength="10" strokeDasharray="2.2 7.8" className="sam-zap-run c" />
                     </g>
-                    <circle cx="7.6" cy="14.8" r=".9" fill="#F7C032" /><circle cx="12.4" cy="16.6" r=".9" fill="#F7C032" /><circle cx="16.4" cy="14.8" r=".9" fill="#F7C032" />
+                    <circle cx="7.6" cy="14.8" r="1.05" fill="#fff" stroke="#26282B" strokeWidth=".7" /><circle cx="12.4" cy="16.6" r="1.05" fill="#fff" stroke="#26282B" strokeWidth=".7" /><circle cx="16.4" cy="14.8" r="1.05" fill="#fff" stroke="#26282B" strokeWidth=".7" />
                   </g>
                 </svg>
                 {'\n          '}
@@ -158,25 +158,25 @@ function render(v: Vals) {
                 >
                   {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
                   <defs>
-                    <linearGradient id="samHandF" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#2A2C30" /><stop offset=".4" stopColor="#5A5E64" /><stop offset="1" stopColor="#26282B" /></linearGradient>
+                    <linearGradient id="samHandF" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#FFFFFF" /><stop offset=".55" stopColor="#F1F2F4" /><stop offset="1" stopColor="#C9CDD2" /></linearGradient>
                     <linearGradient id="samHandR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
                   <g transform="translate(24 0) scale(-1 1)">
                     {/* owner (15 Nov): the cable ends in a machined connector that gives off electricity: three smooth current arcs with light travelling along them */}
-                    <rect x="8.6" y="0" width="6.8" height="6" rx="1.8" fill="url(#samHandF)" />
+                    <rect x="8.6" y="0" width="6.8" height="6" rx="1.8" fill="url(#samHandF)" stroke="#26282B" strokeWidth=".9" />
                     <rect x="9.3" y=".7" width="5.4" height="1.1" rx=".55" fill="rgba(255,255,255,.3)" />
-                    <rect x="8.6" y="5.6" width="6.8" height="1.4" rx=".5" fill="#F7C032" />
+                    <rect x="8.6" y="5.6" width="6.8" height="1.4" rx=".5" fill="#26282B" />
                     <circle cx="12" cy="8.6" r="3.4" fill="#F7C032" opacity=".28" className="sam-zap-core" />
                     <circle cx="12" cy="8.4" r="1.3" fill="#FFF4D1" />
                     <g className="sam-zap" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 8.6c-1.4 2.2-3.6 3-4.4 6.2" stroke="#F7C032" strokeWidth="1" />
-                      <path d="M12 8.6c.2 2.6-.6 4.6.4 8" stroke="#F7C032" strokeWidth="1" />
-                      <path d="M12 8.6c1.4 2.2 3.6 3 4.4 6.2" stroke="#F7C032" strokeWidth="1" />
+                      <path d="M12 8.6c-1.4 2.2-3.6 3-4.4 6.2" stroke="#26282B" strokeWidth="1.15" />
+                      <path d="M12 8.6c.2 2.6-.6 4.6.4 8" stroke="#26282B" strokeWidth="1.15" />
+                      <path d="M12 8.6c1.4 2.2 3.6 3 4.4 6.2" stroke="#26282B" strokeWidth="1.15" />
                       <path d="M12 8.6c-1.4 2.2-3.6 3-4.4 6.2" stroke="#FFF4D1" strokeWidth=".9" pathLength="10" strokeDasharray="2.2 7.8" className="sam-zap-run" />
                       <path d="M12 8.6c.2 2.6-.6 4.6.4 8" stroke="#FFF4D1" strokeWidth=".9" pathLength="10" strokeDasharray="2.2 7.8" className="sam-zap-run b" />
                       <path d="M12 8.6c1.4 2.2 3.6 3 4.4 6.2" stroke="#FFF4D1" strokeWidth=".9" pathLength="10" strokeDasharray="2.2 7.8" className="sam-zap-run c" />
                     </g>
-                    <circle cx="7.6" cy="14.8" r=".9" fill="#F7C032" /><circle cx="12.4" cy="16.6" r=".9" fill="#F7C032" /><circle cx="16.4" cy="14.8" r=".9" fill="#F7C032" />
+                    <circle cx="7.6" cy="14.8" r="1.05" fill="#fff" stroke="#26282B" strokeWidth=".7" /><circle cx="12.4" cy="16.6" r="1.05" fill="#fff" stroke="#26282B" strokeWidth=".7" /><circle cx="16.4" cy="14.8" r="1.05" fill="#fff" stroke="#26282B" strokeWidth=".7" />
                   </g>
                 </svg>
                 {'\n          '}
@@ -758,9 +758,9 @@ function render(v: Vals) {
                   >
                     <path
                       d="M12 21s-7-4.4-9.5-8.6C.7 9.3 2.4 5 6.3 5c2.2 0 3.6 1.3 4.2 2.4h3C14.1 6.3 15.5 5 17.7 5c3.9 0 5.6 4.3 3.8 7.4C19 16.6 12 21 12 21z"
-                      fill="#F7C032"
-                      stroke="#F7C032"
-                      strokeWidth="1"
+                      fill="#E5484D"
+                      stroke="#FFFFFF"
+                      strokeWidth="1.6"
                     ></path>
                   </svg>
                   <svg
@@ -777,9 +777,9 @@ function render(v: Vals) {
                   >
                     <path
                       d="M12 21s-7-4.4-9.5-8.6C.7 9.3 2.4 5 6.3 5c2.2 0 3.6 1.3 4.2 2.4h3C14.1 6.3 15.5 5 17.7 5c3.9 0 5.6 4.3 3.8 7.4C19 16.6 12 21 12 21z"
-                      fill="#F7C032"
-                      stroke="#F7C032"
-                      strokeWidth="1"
+                      fill="#E5484D"
+                      stroke="#FFFFFF"
+                      strokeWidth="1.6"
                     ></path>
                   </svg>
                   <svg
@@ -796,7 +796,62 @@ function render(v: Vals) {
                   >
                     <path
                       d="M12 21s-7-4.4-9.5-8.6C.7 9.3 2.4 5 6.3 5c2.2 0 3.6 1.3 4.2 2.4h3C14.1 6.3 15.5 5 17.7 5c3.9 0 5.6 4.3 3.8 7.4C19 16.6 12 21 12 21z"
-                      fill="#F7C032"
+                      fill="#E5484D"
+                    ></path>
+                  </svg>
+                <svg
+                    width="22"
+                    height="22"
+                    viewBox="0 0 24 24"
+                    style={{
+                      position: 'absolute',
+                      left: '4px',
+                      top: '70px',
+                      opacity: '0',
+                      animation: 'smHeartL 1.8s .5s ease-out infinite',
+                    }}
+                  >
+                    <path
+                      d="M12 21s-7-4.4-9.5-8.6C.7 9.3 2.4 5 6.3 5c2.2 0 3.6 1.3 4.2 2.4h3C14.1 6.3 15.5 5 17.7 5c3.9 0 5.6 4.3 3.8 7.4C19 16.6 12 21 12 21z"
+                      fill="#E5484D"
+                      stroke="#FFFFFF"
+                      strokeWidth="1.6"
+                    ></path>
+                  </svg>
+<svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 24 24"
+                    style={{
+                      position: 'absolute',
+                      left: '-6px',
+                      top: '92px',
+                      opacity: '0',
+                      animation: 'smHeartL 1.8s 1.1s ease-out infinite',
+                    }}
+                  >
+                    <path
+                      d="M12 21s-7-4.4-9.5-8.6C.7 9.3 2.4 5 6.3 5c2.2 0 3.6 1.3 4.2 2.4h3C14.1 6.3 15.5 5 17.7 5c3.9 0 5.6 4.3 3.8 7.4C19 16.6 12 21 12 21z"
+                      fill="#E5484D"
+                      stroke="#FFFFFF"
+                      strokeWidth="1.6"
+                    ></path>
+                  </svg>
+<svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    style={{
+                      position: 'absolute',
+                      left: '8px',
+                      top: '80px',
+                      opacity: '0',
+                      animation: 'smHeartL 1.8s .8s ease-out infinite',
+                    }}
+                  >
+                    <path
+                      d="M12 21s-7-4.4-9.5-8.6C.7 9.3 2.4 5 6.3 5c2.2 0 3.6 1.3 4.2 2.4h3C14.1 6.3 15.5 5 17.7 5c3.9 0 5.6 4.3 3.8 7.4C19 16.6 12 21 12 21z"
+                      fill="#E5484D"
                     ></path>
                   </svg>
                 </>

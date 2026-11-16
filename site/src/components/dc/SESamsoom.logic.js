@@ -21,7 +21,7 @@ class Component extends DCLogic {
     const lx = Math.max(-1, Math.min(1, Number(p.lookX) || 0)), ly = Math.max(-1, Math.min(1, Number(p.lookY) || 0));
     const A = (s) => (still ? 'none' : s);
     const arc = m === 'happy' || m === 'wave' || m === 'celebrate' || m === 'kiss' || m === 'dabke';
-    const L = { idle: [24, -10], think: [-120, -10], happy: [24, -150], found: [24, -96], low: [36, 14], wave: [24, -150], kiss: [24, -118], celebrate: [150, -150], sleep: [44, -36], blink: [24, -10], dabke: [-38, -160] }[m] || [24, -10];
+    const L = { idle: [24, -10], think: [-120, -10], happy: [24, -150], found: [24, -96], low: [36, 14], wave: [24, -150], kiss: [116, -116] /* owner (17 Nov): both hands blow the kisses */, celebrate: [150, -150], sleep: [44, -36], blink: [24, -10], dabke: [-38, -160] }[m] || [24, -10];
     if (item) { L[0] = 24; L[1] = -150; }
     if (m0 === 'blush' || m0 === 'thanks' || m0 === 'wink' || m0 === 'spin') { L[0] = 24; L[1] = -10; }
     if (m0 === 'yawn') { L[0] = 150; L[1] = -36; } // stretches one arm up while yawning

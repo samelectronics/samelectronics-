@@ -522,3 +522,4 @@ a{color:inherit;text-decoration:none}a:hover{color:inherit}
 @keyframes smPoint{0%,100%{transform:rotate(var(--a))}45%{transform:rotate(calc(var(--a) - 9deg))}60%{transform:rotate(calc(var(--a) + 3deg))}}
 @keyframes smChin{0%,100%{transform:rotate(var(--a))}50%{transform:rotate(calc(var(--a) + 6deg))}}
 @keyframes smChinTap{0%,100%{transform:rotate(0)}50%{transform:rotate(-4deg)}}
+@keyframes smHeartL{0%{opacity:0;transform:translate(0,0) scale(.4)}25%{opacity:1;transform:translate(-4px,-8px) scale(1)}100%{opacity:0;transform:translate(-20px,-44px) scale(1.15)}}

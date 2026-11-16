@@ -26,12 +26,18 @@ class Component extends DCLogic {
   componentWillUnmount() { this.dead = true; this.sch && this.sch.stop(); this.tm.forEach(clearTimeout); window.removeEventListener('mousemove', this.mm); }
   componentDidUpdate() { this.measure(); }
   later(d, f) { this.tm.push(setTimeout(f, d)); }
-  msgs() { const p = this.props; return [p.m0 || 'Ask Samsoom', p.m1 || 'Open till 22:00', p.m2 || 'Need a screen?', p.m3 || 'Trade prices? Ask me', p.m4 || 'Track my order']; }
+  msgs() { const p = this.props; return [p.m0 || 'Ask Samsoom', p.m1 || 'Open till 22:00', p.m2 || 'Need a screen?', p.m3 || 'Trade prices? Ask me', p.m4 || 'Track my order', 'DA-DAAAAA!', 'HEY YOU! 👋']; }
   // G8 cycle, 16s: wave + smile (circle, 3s) → "Ask Samsoom" → collapse + blink → a page message while he
   // plays the next emote from the bag (3s) → collapse → repeat. Each emote is followed by a 5s rest.
   // After 3 ignored cycles he yawns once and rests (still blinking and following the cursor).
   cycle() {
     if (this.ign >= 3) { this.setState({ open: false }); this.ign = 0; this.later(16000, () => this.cycle()); return; } // keeps living: the scheduler goes on emoting
+    // owner (17 Nov): now and then (at most twice a visit) Samsoom yells "DA-DAAAAA!" with a fanfare, then "HEY YOU!"
+    if (this.alt > 2 && this.alt % 5 === 4 && (this.yells || 0) < 2) { this.yells = (this.yells || 0) + 1; this.alt++;
+      this.setState({ open: false }); this.sch.play('celebrate'); this.hint(5, true);
+      import('@/lib/sound').then((m) => m.play('tada')).catch(() => {}); import('@/lib/voice').then((v) => v.babble && v.babble('Da daaaaa!')).catch(() => {});
+      this.later(2200, () => { this.sch.play('wave'); this.hint(6, true); import('@/lib/voice').then((v) => v.babble && v.babble('Hey you!')).catch(() => {}); });
+      this.later(5200, () => this.setState({ open: false })); this.later(9000, () => this.cycle()); return; }
     const sub = 1 + (this.alt++ % 4);
     this.setState({ open: false });
     this.sch.play('wave');
@@ -44,8 +50,9 @@ class Component extends DCLogic {
   }
   // R6 Part C6: a hint only opens where its pill would cover nothing (no button, link, field, text, image or card under
   // it); otherwise Samsoom just plays his emote and the hint waits for the next cycle.
-  hint(mi) {
+  hint(mi, force) {
     const r = this.rootRef.current && this.rootRef.current.getBoundingClientRect(); if (!r) return;
+    if (force) { this.setState({ mi, open: true }); return; }
     const msg = this.msgs()[mi], w = Math.min(280, 60 + msg.length * 8.2 + 18), rtl = document.documentElement.dir === 'rtl';
     const x0 = rtl ? r.left : r.right - w, x1 = x0 + w, y0 = r.top + 4, y1 = r.bottom - 4, root = this.rootRef.current;
     const BAD = 'a,button,input,select,textarea,[role="button"],img,canvas,video,iframe,h1,h2,h3,h4,p,li,blockquote,figure,[class*="card"],[class*="btn"]';
