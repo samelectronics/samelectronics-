@@ -115,3 +115,14 @@
 .rp-full-bar b { font: 700 16px 'Space Grotesk', sans-serif; color: #26282B; }
 .rp-full-bar button { height: 40px; padding: 0 16px; border: none; border-radius: 10px; background: #26282B; color: #fff; font: 600 14px Inter, sans-serif; cursor: pointer; }
 .rp-search { position: sticky; top: -6px; z-index: 1; background: #fff; }
+/* owner (16 Nov): the repair stage is a real bench set: one spotlight from above, a bench top the phone and tools stand
+   on, the light falling off into darkness at the back and the sides; the whole film shows (phone, tools, nothing cut) */
+.rs-stage { background:
+    radial-gradient(42% 55% at 50% 6%, rgba(255,244,214,.20), rgba(255,244,214,0) 70%),
+    radial-gradient(60% 18% at 50% 80%, rgba(255,236,190,.10), rgba(255,236,190,0) 70%),
+    linear-gradient(180deg, #17181A 0%, #222428 46%, #2E3034 66%, #1E1F22 84%, #111213 100%) !important; }
+.rs-stage::before { content: ''; position: absolute; left: 0; right: 0; top: 66%; height: 1px; z-index: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,.08) 30%, rgba(255,255,255,.08) 70%, transparent); pointer-events: none; }
+.rs-stage::after { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: radial-gradient(120% 90% at 50% 40%, rgba(0,0,0,0) 55%, rgba(0,0,0,.55) 100%); }
+.rs-stage .rs-floor { display: none !important; }
+.rs-stage .se-rflip { z-index: 1; }
+.rs-stage .rs-tag { z-index: 3; }

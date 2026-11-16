@@ -48,6 +48,8 @@ export function stepScroller(o) {
   let lastW = 0, gSum = 0, acc = 0, used = false, rel = false, busyUntil = 0, passUntil = 0, sraf = 0; const fresh = [];
   const go = (i) => { const y0 = window.scrollY, y1 = o.yFor(i), t0 = performance.now(), dur = o.ms || 700; busyUntil = t0 + dur; cancelAnimationFrame(sraf); window.__seOwnScroll = true;
     const f = (t) => { const k = Math.min(1, (t - t0) / dur); window.scrollTo(0, y0 + (y1 - y0) * EASE(k)); if (k < 1) sraf = requestAnimationFrame(f); else window.__seOwnScroll = false; }; sraf = requestAnimationFrame(f); o.onStep && o.onStep(i); };
+  const goY = (y1) => { const y0 = window.scrollY, t0 = performance.now(), dur = o.ms || 700; busyUntil = t0 + dur; passUntil = t0 + dur + 900; cancelAnimationFrame(sraf); window.__seOwnScroll = true;
+    const f = (t) => { const k = Math.min(1, (t - t0) / dur); window.scrollTo(0, y0 + (y1 - y0) * EASE(k)); if (k < 1) sraf = requestAnimationFrame(f); else window.__seOwnScroll = false; }; sraf = requestAnimationFrame(f); };
   const onWheel = (e) => {
     const r = o.region(); if (!r || !e.deltaY) return; const y = window.scrollY; if (y < r.top - 2 || y > r.bottom + 2) return;
     const now = performance.now(); if (jumping() || now < passUntil) return; // jump / pass-through: never hold
@@ -57,6 +59,8 @@ export function stepScroller(o) {
     // fast: three gestures within 1.4s, one gesture travelling > 3500px (a long flick or a fast wheel spin), or one huge event
     if (fresh.length >= 3 || gSum > 3500 || Math.abs(dy) > 600) { passUntil = now + 1200; return; }
     if (rel) return; const i = o.index(), last = o.steps - 1;
+    // owner (16 Nov): past the last step the page glides to the section's end in one move (no frozen stretch, no fling)
+    if (!used && dir > 0 && i >= last && now >= busyUntil && o.exitDown) { e.preventDefault(); used = true; rel = true; goY(o.exitDown()); return; }
     if (!used && ((dir > 0 && i >= last) || (dir < 0 && i <= 0)) && now >= busyUntil) { rel = true; return; } // the ends release the page
     e.preventDefault(); if (used || now < busyUntil) return;
     if (Math.sign(acc) !== dir) acc = 0; acc += dy; if (Math.abs(acc) < 40) return;

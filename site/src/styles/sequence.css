@@ -11,7 +11,7 @@
 #deals.dl { background: var(--mat-white) !important; color: #26282B !important; }
 #deals .dl-h > span:first-child > span { color: var(--sq-ink) !important; }
 #deals .dl-h > span:nth-child(2) > span { color: #F7C032 !important; }
-#deals .dl-eb, #deals .dl-k { color: #B8860B; }
+#deals .dl-eb, #deals .dl-k { color: #F7C032; }
 #deals .dl-top p, #deals .dl-sub, #deals .dl-side p { color: #5C6066 !important; }
 #deals .dl-tabs button { background: rgba(38,40,43,.06) !important; color: #3A3D42 !important; }
 #deals .dl-tabs button.on { background: #26282B !important; color: #F7C032 !important; }
@@ -84,7 +84,7 @@ section.st { background: var(--mat-yellow) !important; color: #26282B !important
 
 /* Team → WHITE (the PVC badges keep their own look) */
 section.tm { background: var(--mat-white) !important; color: #26282B !important; }
-.tm .tm-eb { color: #B8860B !important; }
+.tm .tm-eb { color: #F7C032 !important; }
 .tm .tm-h > span:first-child > span { color: var(--sq-ink) !important; }
 .tm .tm-h > span:nth-child(2) > span, .tm .tm-h > span:last-child:not(:first-child) > span { color: #F7C032 !important; }
 .tm .tm-p, .tm p { color: #5C6066; }
@@ -132,3 +132,16 @@ section.rv#reviews { background: var(--mat-grey) !important; color: #FFFFFF !imp
 #reviews .rv-fade.r { background: linear-gradient(270deg, #2A2C2F, rgba(42,44,47,0)) !important; }
 #reviews .rv-card, #reviews .rv-card *:not(.rv-stars):not(.rv-av) { color: #26282B; }
 #reviews .rv-g, #reviews .rv-g .rv-g-n, #reviews .rv-g .rv-g-t, #reviews .rv-g b { color: #26282B !important; }
+/* owner (16 Nov): on the yellow sections the titles are graphite only (white on yellow looked weak and cheap) */
+#repair h2 > span:nth-child(2), #repair h2 > span:last-child:not(:first-child) { color: #3A3D42 !important; text-shadow: none !important; }
+.st .st-h > *:nth-child(2), .st .st-h > *:nth-child(2) * { color: #3A3D42 !important; -webkit-text-fill-color: #3A3D42 !important; text-shadow: none !important; }
+section.fd h2 > *:nth-child(2), section.fd h2 > *:nth-child(2) * { color: #3A3D42 !important; -webkit-text-fill-color: #3A3D42 !important; text-shadow: none !important; }
+section.fd .fd-h > span:nth-child(2), section.fd .fd-h > span:nth-child(2) * { color: #3A3D42 !important; -webkit-text-fill-color: #3A3D42 !important; text-shadow: none !important; }
+section.st .st-h > *:nth-child(2), section.st .st-h > *:nth-child(2) * { color: #3A3D42 !important; -webkit-text-fill-color: #3A3D42 !important; text-shadow: none !important; }
+/* owner (16 Nov): Worldwide's empty top-right gets a small circuit cluster, with two nodes glowing softly */
+section#network { position: relative; }
+section#network::after { content: ''; position: absolute; top: 72px; right: max(24px, calc((100vw - 1272px) / 2 - 40px)); width: 420px; height: 220px; background: url(/assets/circuit-corner.svg) no-repeat right top / contain; pointer-events: none; z-index: 0; opacity: .9; }
+section#network::before { content: ''; position: absolute; top: 130px; right: max(200px, calc((100vw - 1272px) / 2 + 136px)); width: 16px; height: 16px; border-radius: 50%; background: #F7C032; filter: blur(5px); opacity: .5; animation: sePing 2.6s ease-out infinite; pointer-events: none; z-index: 0; }
+@media (max-width: 1100px) { section#network::after, section#network::before { display: none; } }
+section#network::after { top: 28px !important; width: 300px !important; height: 158px !important; }
+section#network::before { top: 64px !important; right: max(150px, calc((100vw - 1272px) / 2 + 90px)) !important; }

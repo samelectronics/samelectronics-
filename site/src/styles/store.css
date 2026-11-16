@@ -220,3 +220,4 @@ html[dir='rtl'] .ln-paper { transform-origin: 30% 100%; }
 .ct-acts { margin-top: 16px; } .ct-acts .wc-btn { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; height: 50px; font-size: 15.5px; text-decoration: none; }
 .ct-acts .wc-btn.wa { background: #25D366; } .ct-acts .ct-ic { width: 20px; height: 20px; }
 @media (max-width: 520px) { .ct-qrw { display: none; } }
+.ln-acts { grid-template-columns: minmax(0,1fr) minmax(0,1fr) !important; } .ln-b { min-width: 0; font-size: 12px !important; padding: 0 6px !important; } .ln-paper.note { width: 250px; }

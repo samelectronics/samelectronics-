@@ -59,10 +59,10 @@
 .tm-holo i { position: absolute; top: 0; bottom: 0; left: -60%; width: 220%; background: repeating-linear-gradient(115deg, rgba(247, 192, 50, .9) 0 8px, rgba(190, 230, 255, .8) 8px 16px, rgba(255, 190, 230, .75) 16px 24px, rgba(200, 255, 220, .8) 24px 32px, rgba(255, 255, 255, .95) 32px 40px); opacity: .8; }
 .tm-gloss { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(125deg, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, 0) 32%, rgba(255, 255, 255, 0) 70%, rgba(255, 255, 255, .18) 100%); mix-blend-mode: normal; opacity: .6; }
 .tm-face.back .tm-gloss { opacity: .12; }
-.tm-slot.f .tm-face.front { background: linear-gradient(170deg, #FFFFFF, #F4F0E4); box-shadow: inset 0 0 0 3px #D4A63A, inset 0 0 0 4px rgba(255, 240, 200, .9); }
-.tm-slot.f .tm-band { background: linear-gradient(90deg, #26282B, #3D3E3F); color: #F2D27A; }
-.tm-slot.f .tm-photo { width: 120px; height: 120px; box-shadow: inset 0 0 0 2px #D4A63A, 0 6px 12px -4px rgba(0, 0, 0, .35); }
-.tm-slot.f .tm-photo span { color: #F2D27A; }
+.tm-slot.f .tm-face.front { background: linear-gradient(170deg, #FFFFFF, #F4F0E4); box-shadow: inset 0 0 0 3px #F7C032, inset 0 0 0 4px rgba(255, 240, 200, .9); }
+.tm-slot.f .tm-band { background: linear-gradient(90deg, #26282B, #3D3E3F); color: #F7C032; }
+.tm-slot.f .tm-photo { width: 120px; height: 120px; box-shadow: inset 0 0 0 2px #F7C032, 0 6px 12px -4px rgba(0, 0, 0, .35); }
+.tm-slot.f .tm-photo span { color: #F7C032; }
 .tm-k { font: 700 11px 'JetBrains Mono', monospace; letter-spacing: .1em; color: #F7C032; }
 .tm-k2 { margin-top: 6px; font: 600 10px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #9DA1A6; }
 .tm-face.back ul { display: flex; flex-direction: column; gap: 7px; margin: 2px 0 0; padding: 0; list-style: none; }

@@ -611,7 +611,7 @@ function render(v: Vals) {
             <div data-w="Rscene" style={{ position: 'relative', height: '560px' }}>
               {/* owner (27 Oct): the repair: the SAME cracked phone as the hero ad, a yellow repair light sweeps across, it boots */}
               <span className="wo-rep wo-rflip" aria-hidden="true">{/* owner (28 Oct): the real 3D repair film, not a still */}
-                <RepairFlip w={960} zoom={1.5} />
+                <RepairFlip w={960} zoom={1.12} fit="contain" />
               </span>
             </div>
             {'\n    '}

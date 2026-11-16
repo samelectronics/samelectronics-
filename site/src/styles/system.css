@@ -375,14 +375,14 @@ header .se-nav-right .se-lm-btn, header .se-nav-right .nb > button, header .se-n
    (serious things are clean, the colour lives on the page). Hours popup and Find My Part menu are white now. */
 .se-status-pop { background: #FFFFFF !important; color: #26282B !important; box-shadow: 0 0 0 1px rgba(38,40,43,.08), 0 24px 48px -12px rgba(0,0,0,.35) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
 .se-status-pop > span:first-child { color: #26282B !important; }
-.se-status-pop > span:nth-child(2) { color: #9A6B00 !important; }
+.se-status-pop > span:nth-child(2) { color: #26282B !important; }
 .se-status-pop .se-hl-t { color: #6B6F75; } .se-status-pop .se-hl-t b { color: #26282B; } .se-status-pop .se-hl-bar { background: #ECEDEF; }
 .se-status-acts a, .se-status-acts button { border-color: #E0E2E5 !important; background: #F4F5F6 !important; color: #26282B !important; }
 .se-status-acts a:first-child { background: #F7C032 !important; border-color: #F7C032 !important; }
 .se-status-acts a:hover, .se-status-acts button:hover { border-color: #F7C032 !important; background: #FFF6DC !important; }
 .fmq { background: #FFFFFF !important; color: #26282B !important; box-shadow: 0 0 0 1px rgba(38,40,43,.08), 0 30px 60px -16px rgba(0,0,0,.4) !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
 .fmq-brands { background: #F6F7F8 !important; border-inline-end: 1px solid #ECEDEF !important; }
-.fmq-k { color: #9A6B00 !important; }
+.fmq-k { color: #26282B !important; }
 .fmq-b { color: #26282B !important; box-shadow: inset 0 -1px 0 #ECEDEF !important; } .fmq-b small { color: #8C9096 !important; }
 .fmq-b.on { background: #F7C032 !important; box-shadow: none !important; } .fmq-b.on small { color: #26282B !important; }
 .fmq-b:hover:not(.on) { background: #ECEDEF !important; }
@@ -390,13 +390,13 @@ header .se-nav-right .se-lm-btn, header .se-nav-right .nb > button, header .se-n
 .fmq-q { background: #F2F3F4 !important; color: #6B6F75 !important; } .fmq-q input { color: #26282B !important; } .fmq-q:focus-within { box-shadow: inset 0 0 0 1.5px #F7C032 !important; color: #26282B !important; }
 .fmq-devs button { background: #F2F3F4 !important; color: #5C6066 !important; } .fmq-devs button.on { background: #26282B !important; color: #fff !important; box-shadow: none !important; }
 .fmq-m { background: #F6F7F8 !important; color: #26282B !important; } .fmq-m:hover { background: #fff !important; box-shadow: inset 0 0 0 1.5px #F7C032, 0 6px 14px -8px rgba(0,0,0,.25) !important; }
-.fmq-m small { color: #8C9096 !important; } .fmq-m small.in, .fmq-ptn small.in { color: #1E9E5A !important; } .fmq-m i { color: #9A6B00 !important; }
+.fmq-m small { color: #8C9096 !important; } .fmq-m small.in, .fmq-ptn small.in { color: #1E9E5A !important; } .fmq-m i { color: #26282B !important; }
 .fmq-mi { background: #ECEDEF !important; color: #3A3D42 !important; }
 .fmq-none { color: #6B6F75 !important; }
-.fmq-pt { background: #F6F7F8 !important; } .fmq-ptn { color: #26282B !important; } .fmq-ptn small { color: #8C9096 !important; } .fmq-ptn:hover b { color: #9A6B00 !important; }
+.fmq-pt { background: #F6F7F8 !important; } .fmq-ptn { color: #26282B !important; } .fmq-ptn small { color: #8C9096 !important; } .fmq-ptn:hover b { color: #26282B !important; }
 .fmq-back { background: #ECEDEF !important; color: #26282B !important; }
-.fmq-ph small { color: #9A6B00 !important; }
-.fmq-g { background: #FFF6DC !important; color: #26282B !important; } .fmq-g em { color: #9A6B00 !important; } .fmq-g:hover { box-shadow: inset 0 0 0 1.5px #F7C032 !important; }
+.fmq-ph small { color: #26282B !important; }
+.fmq-g { background: #FFF6DC !important; color: #26282B !important; } .fmq-g em { color: #26282B !important; } .fmq-g:hover { box-shadow: inset 0 0 0 1.5px #F7C032 !important; }
 .fmq-all { color: #26282B !important; }
 .td-sweep { display: none !important; }
 /* owner (16 Nov): the progress dot was stuck at the left (its breathing animation overrode the transform that moves it);
@@ -415,3 +415,26 @@ html[dir='rtl'] [data-prog='bar']::after { animation-direction: reverse; }
 .sam-zap-run { animation-play-state: paused; }
 html[data-sam-speaking] .sam-zap-run, [data-tour='samsoom']:hover .sam-zap-run, .st-bsam .sam-zap-run { animation-play-state: running; }
 @media (prefers-reduced-motion: reduce) { [data-prog='bar']::after { animation: none; } }
+/* owner (16 Nov): the repair box shows the whole repair: the phone straight on its bench, the screen coming off and the
+   new one going in, and the tools beside it (screwdriver, spudger, suction cup), nothing cut, no odd tilt */
+.wwo-boxes .wo-rflip { transform: translate(-50%, -50%) scale(1) rotate(0deg) !important; }
+/* owner (16 Nov): the pointer light works in every section like in the hero: it is no longer masked out of the top of
+   each section, and it is a clear warm glow on every material (white, graphite, yellow) */
+.se-tex { -webkit-mask-image: none !important; mask-image: none !important; }
+.se-tex .pl, .se-tex .st, .se-tex .gr, .se-tex .lt { -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 320px); mask-image: linear-gradient(180deg, transparent 0, #000 320px); }
+.se-tex .sh { width: 720px !important; height: 720px !important; margin: -360px 0 0 -360px !important; filter: none !important; will-change: left, top; transition: opacity .45s ease !important; }
+.se-tex-light .sh { background: radial-gradient(closest-side, rgba(247,192,50,.22), rgba(247,192,50,.09) 45%, rgba(247,192,50,0)) !important; }
+.se-tex-dark .sh { background: radial-gradient(closest-side, rgba(247,192,50,.2), rgba(247,192,50,.07) 50%, rgba(247,192,50,0)) !important; }
+.se-tex-yel .sh { background: radial-gradient(closest-side, rgba(255,250,232,.5), rgba(255,250,232,.16) 50%, rgba(255,250,232,0)) !important; }
+/* owner (16 Nov): the packing tape runs right across the section, edge to edge (it looked cut) */
+.wf .wf-tape { margin-left: -3% !important; margin-right: -3% !important; clip-path: none !important; }
+/* owner (16 Nov): the pallet stands on the YELLOW studio (the grey was boring and did not match the section): yellow
+   material with grain, a warm light from above, a soft floor line and shadow under the pallet */
+.wf .wf-floor { background:
+    radial-gradient(60% 45% at 55% 12%, rgba(255,250,228,.55), rgba(255,250,228,0) 70%),
+    radial-gradient(70% 22% at 50% 88%, rgba(120,80,0,.32), rgba(120,80,0,0) 70%),
+    url(/assets/noise/n-c39f7bf612.png),
+    linear-gradient(180deg, #FAD15C 0%, #F7C032 55%, #E9B227 100%) !important; }
+.wf .wf-floor::before { background: linear-gradient(90deg, transparent, rgba(120,80,0,.18) 30%, rgba(120,80,0,.18) 70%, transparent) !important; }
+.wf .wf-pool { background: radial-gradient(closest-side, rgba(255,252,236,.55), rgba(255,252,236,.12) 55%, rgba(255,252,236,0)) !important; }
+.wf .wf-floor-cap, .wf .wf-floor-cap * { color: #3A3D42 !important; } .wf .wf-floor-cap b { color: #26282B !important; }

@@ -28,7 +28,7 @@ export default function RepairScene({ ticket, full = false }: { ticket: { model:
     <div className={'rs' + (full ? ' full' : '')}>
       <div className="rs-stage" aria-hidden="true">
         <span className="rs-floor" />
-        <RepairFlip w={960} zoom={1.55} onPhase={setK} />
+        <RepairFlip w={960} zoom={1.08} fit="contain" onPhase={setK} />
         <span className="rs-tag" key={'t' + k}>{['Cracked screen', 'Opened on the bench', 'New screen fitted', 'Tested · ready'][k]}</span>
       </div>
       <ol className="rs-steps">

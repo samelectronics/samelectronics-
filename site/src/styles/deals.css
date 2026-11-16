@@ -193,3 +193,12 @@ html[dir='rtl'] .dl-new, html[dir='rtl'] .dl-flaps, html[dir='rtl'] .dl-ship-clo
 .dl-below { align-items: stretch; }
 /* the deal belt: a wider soft fade at both edges, so a card entering or leaving never looks cut */
 .dl-track { -webkit-mask-image: linear-gradient(90deg, transparent, #000 120px, #000 calc(100% - 120px), transparent) !important; mask-image: linear-gradient(90deg, transparent, #000 120px, #000 calc(100% - 120px), transparent) !important; }
+/* owner (16 Nov): the moving deals sit in one graphite panel (no white "cloud" fades over the cards), a shorter row,
+   the site yellow only, and the live dot is the same pulsing dot as the opening hours */
+#deals .dl-carwrap { padding: 14px; border-radius: 22px; background: linear-gradient(180deg, #2A2C2F, #222326); box-shadow: inset 0 0 0 1px rgba(255,255,255,.05), 0 24px 40px -26px rgba(0,0,0,.5); }
+#deals .dl-track { -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 36px, #000 calc(100% - 36px), transparent 100%) !important; mask-image: linear-gradient(90deg, transparent 0, #000 36px, #000 calc(100% - 36px), transparent 100%) !important; }
+#deals .dl-card-art { min-height: 0 !important; flex: none !important; height: 170px; }
+#deals .dl-card-art img { width: 140px !important; height: 140px !important; }
+#deals .dl-eb, #deals .dl-k, #deals .dl-eb .dl-live, #deals .dl-eb .dl-live b { color: #F7C032 !important; }
+#deals .dl-live i, .lb-eb i { position: relative; background: #3ECF8E !important; box-shadow: none !important; animation: none !important; }
+#deals .dl-live i::after, .lb-eb i::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: #3ECF8E; animation: sePing 2.2s ease-out infinite; }

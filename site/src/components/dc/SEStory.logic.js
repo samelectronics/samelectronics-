@@ -34,7 +34,7 @@ class Component extends DCLogic {
     // the scrollbar and jumps pass straight through
     const PS = [0, 0.15, 0.2625, 0.375, 0.4875, 0.6, 0.72];
     const geo = () => { const R = this.secRef.current; if (!R) return null; const top = window.scrollY + R.getBoundingClientRect().top, range = Math.max(1, R.offsetHeight - window.innerHeight); return { top, range }; };
-    this.offStep = stepScroller({ steps: PS.length, ms: 750,
+    this.offStep = stepScroller({ steps: PS.length, ms: 750, exitDown: () => { const g = geo(); return g ? Math.round(g.top + g.range + 2) : window.scrollY; },
       region: () => { const g = geo(); return g ? { top: g.top, bottom: g.top + g.range * PS[PS.length - 1] } : null; },
       yFor: (i) => { const g = geo(); return g ? Math.round(g.top + g.range * PS[i]) : window.scrollY; },
       index: () => { const g = geo(); if (!g) return 0; const p = (window.scrollY - g.top) / g.range; let bi = 0; PS.forEach((q, i) => { if (Math.abs(q - p) < Math.abs(PS[bi] - p)) bi = i; }); return bi; } });
