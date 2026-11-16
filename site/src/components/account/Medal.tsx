@@ -1,21 +1,16 @@
 'use client';
-// A real medal, not a sticker: a struck metal disc (bronze, silver or gold) with a milled rim, a raised inner field and
-// our mark engraved in the middle, hanging from a woven graphite-and-yellow ribbon. Locked medals are an unstruck dark
-// blank with the outline only. Styles: .md-* in src/styles/medals.css.
+// Owner (16 Nov): medals must look like the site's real components, not cartoons. Each one is a rendered struck coin
+// (three.js studio render, baked to images in public/assets/medals): gold, silver and bronze with a brushed face, a
+// milled edge and our two-phones mark stamped in relief; a locked one is an unstruck graphite blank. A light sheen
+// passes over it when earned (masked to the coin's own shape).
 import React from 'react';
 import type { Tier } from '@/lib/achievements';
 
-export default function Medal({ tier, on = true, size = 72, glyph }: { tier: Tier; on?: boolean; size?: number; glyph?: string }) {
+export default function Medal({ tier, on = true, size = 72 }: { tier: Tier; on?: boolean; size?: number; glyph?: string }) {
+  const k = on ? tier : 'off', src = '/assets/medals/' + k + '-' + (size > 56 ? 256 : 128) + '.webp';
   return (
-    <span className={'md md-' + tier + (on ? ' on' : ' off')} style={{ ['--s' as string]: size + 'px' } as React.CSSProperties} aria-hidden="true">
-      <span className="md-rib"><i /><i /></span>
-      <span className="md-disc">
-        <span className="md-mill" />
-        <span className="md-field">
-          {glyph ? <b className="md-gl">{glyph}</b> : <svg viewBox="0 0 40 40" className="md-mark"><path d="M20 5l4.2 9.2 10 1.1-7.5 6.8 2.1 9.9L20 27l-8.8 5 2.1-9.9-7.5-6.8 10-1.1z" /></svg>}
-        </span>
-        <span className="md-shine" />
-      </span>
+    <span className={'md md-' + k + (on ? ' on' : ' off')} style={{ ['--s' as string]: size + 'px', ['--src' as string]: 'url(' + src + ')' } as React.CSSProperties} aria-hidden="true">
+      <img src={src} alt="" width={size} height={size} loading="lazy" decoding="async" draggable={false} />
     </span>
   );
 }
