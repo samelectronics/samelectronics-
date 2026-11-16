@@ -190,7 +190,7 @@ function render(v: Vals) {
               <i className="ct-ic wc" style={{ color: '#07C160', width: 17, height: 17 }} aria-hidden="true" />
               WeChat
             </button>
-            <button type="button" className="vs-btn line dk" onClick={() => window.dispatchEvent(new CustomEvent('se:chat', { detail: {} }))}>
+            <button type="button" className="vs-btn line dk" onClick={() => window.dispatchEvent(new CustomEvent('se:chatwith'))}>
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z" /></svg>
               Chat with us
             </button>

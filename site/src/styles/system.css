@@ -452,3 +452,20 @@ html[data-sam-speaking] .sam-zap-run, [data-tour='samsoom']:hover .sam-zap-run, 
 .ft-mark { color: transparent !important; background: linear-gradient(180deg, #4A4D52 0%, #2E3034 38%, #232427 60%, #1C1D20 100%) !important; -webkit-background-clip: text !important; background-clip: text !important; -webkit-text-stroke: 1.2px rgba(247,192,50,.28) !important; filter: drop-shadow(0 -1px 0 rgba(255,255,255,.08)) drop-shadow(0 18px 30px rgba(0,0,0,.45)); }
 /* owner (16 Nov): the dot must stay put on the end of the light: flat, no breathing, no 3D shading, no lag */
 [data-prog='dot'] { animation: none !important; scale: 1 !important; transition: none !important; background: #F7C032 !important; box-shadow: 0 0 0 2px rgba(38,40,43,.9), 0 0 10px 2px rgba(247,192,50,.65) !important; width: 8px !important; height: 8px !important; top: -3px !important; margin-inline-start: -4px !important; }
+/* footer: one line for WhatsApp + WeChat (same number) */
+.ft-wawc { display: flex; align-items: center; gap: 6px; border: 0; background: none; padding: 0; color: inherit; font: inherit; cursor: pointer; text-align: start; }
+.ft-wawc .ft-ci + .ft-ci { margin-inline-start: -10px; box-shadow: 0 0 0 2px #26282B; }
+.ft-wawc span { margin-inline-start: 4px; } .ft-wawc small { color: #8A8E93; font-size: 11px; margin-inline-start: 4px; }
+/* "Chat with us": Samsoom or a person */
+.cc-card { position: relative; width: min(440px, calc(100vw - 32px)); padding: 26px 22px 22px; border-radius: 22px; background: #FAFAFA; color: #26282B; box-shadow: 0 40px 80px -30px rgba(0,0,0,.6); animation: sdIn .35s cubic-bezier(.2,.9,.3,1.2) both; }
+.cc-card.wide { width: min(520px, calc(100vw - 32px)); padding-top: 18px; }
+.cc-h { display: block; font: 700 24px 'Space Grotesk', sans-serif; } .cc-p { margin: 4px 0 16px; color: #5D6166; font-size: 14px; }
+.cc-opts { display: flex; flex-direction: column; gap: 10px; }
+.cc-o { display: flex; align-items: center; gap: 14px; padding: 14px; border: 0; border-radius: 16px; background: #fff; box-shadow: inset 0 0 0 1px rgba(38,40,43,.08); cursor: pointer; text-align: start; font: inherit; color: inherit; transition: transform .2s, box-shadow .2s; }
+.cc-o:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 2px #F7C032, 0 12px 24px -14px rgba(0,0,0,.3); }
+.cc-o > span:nth-child(2) { flex: 1; display: flex; flex-direction: column; gap: 2px; } .cc-o b { font: 700 16px 'Space Grotesk', sans-serif; } .cc-o small { color: #5D6166; font-size: 13px; }
+.cc-o > i { font-style: normal; font-weight: 700; color: #8A8E93; }
+.cc-ic { flex: none; width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: #F7C032; overflow: hidden; } .cc-ic.p { background: #26282B; color: #F7C032; }
+.cc-back { border: 0; background: none; color: #5D6166; font: 600 13px Inter, sans-serif; cursor: pointer; margin-bottom: 10px; }
+.cc-card .lc { max-height: min(70vh, 560px); }
+.ft-wawc { white-space: nowrap; } .ft-wawc .ft-ci + .ft-ci { margin-inline-start: 0; box-shadow: none; }
