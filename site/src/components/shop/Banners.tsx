@@ -45,9 +45,10 @@ export default function Banners({ onDeals, onCat }: { onDeals: () => void; onCat
       <div className="ad-side">
         {[0, 1].map((slot) => { const set = SIDE[slot], a = set[(si + slot) % set.length]; return (
           <a key={slot + '-' + ((si + slot) % set.length)} className={'ad-tile ' + a.c} href={a.href} onPointerEnter={() => setPause(true)} onPointerLeave={() => setPause(false)}>
+            <span className="clip-big" aria-hidden="true">{T(a.k)}</span><span className="clip-sweep" aria-hidden="true" />
             <span className="ad-k">{T(a.k)}</span><b>{T(a.t)}</b><small>{T(a.d)}</small>
             <span className="ad-go">{T(a.cta)}<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>
-            <img src={a.img} alt="" className={a.wide ? 'wide' : ''} />
+            <img src={a.img} alt="" className={'clip-pic' + (a.wide ? ' wide' : '')} />
             <span className="ad-pips" aria-hidden="true">{set.map((_, k) => <i key={k} className={k === (si + slot) % set.length ? 'on' : ''} />)}</span>
           </a>); })}
       </div>

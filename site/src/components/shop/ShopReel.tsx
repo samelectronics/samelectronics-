@@ -32,7 +32,7 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
     const io = new IntersectionObserver(([e]) => { vis = e.isIntersecting; }, { threshold: [0, 0.1] }); io.observe(host);
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     const font = (w: number, s: number) => w + ' ' + s + "px 'Space Grotesk', sans-serif";
-    const u = () => Math.min(W, H * 2.6) / 100; // design unit
+    const u = () => (W < 640 ? W / 56 : Math.min(W, H * 2.6) / 100); // design unit (bigger on phones so text stays readable)
     const fill = (c1: string, c2?: string) => { if (c2) { const g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, c1); g.addColorStop(1, c2); x.fillStyle = g; } else x.fillStyle = c1; x.fillRect(0, 0, W, H); };
     const spot = (cx: number, cy: number, r: number, col: string) => { const g = x.createRadialGradient(cx, cy, 0, cx, cy, r); g.addColorStop(0, col); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(0, 0, W, H); };
     // glowing light lines drifting diagonally (same family as the teardown ad)
@@ -58,7 +58,7 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
       (l) => { fill('#151618'); const s = u(); beams(l, '255,214,120', 0.55); spot(W * 0.62, H * 0.62, H * 0.9, 'rgba(247,192,50,.12)');
         const sh = l < 0.18 ? (1 - l / 0.18) * 6 : 0, dx = (Math.random() * 2 - 1) * sh; x.save(); x.translate(dx, 0);
         x.globalAlpha = 0.09; x.font = font(900, Math.round(H * 0.62)); x.fillStyle = '#fff'; x.textAlign = 'center'; x.fillText(T('SCREENS'), W / 2 - l * W * 0.25, H * 0.78); x.globalAlpha = 1;
-        const k = back(l * 2.4), px = narrow() ? W / 2 : W * 0.66, py = H * 0.52; pic('scr', px + (1 - k) * W * 0.6, py, H * 0.82 * (0.9 + 0.1 * k), -0.06 * (1 - k));
+        const k = back(l * 2.4), px = narrow() ? W * 0.68 : W * 0.66, py = narrow() ? H * 0.6 : H * 0.52; pic('scr', px + (1 - k) * W * 0.6, py, H * (narrow() ? 0.5 : 0.82) * (0.9 + 0.1 * k), -0.06 * (1 - k));
         x.restore(); flash(l);
         const a = eo((l - 0.25) * 2.5), tx = narrow() ? W * 0.06 : W * 0.08; text(T('Screens').toUpperCase(), tx, H * 0.3, font(800, Math.round(7 * s)), '#fff', 'left', a);
         text(T('Original, OLED, Incell, AAA'), tx, H * 0.3 + 4.6 * s, '500 ' + Math.round(1.9 * s) + 'px Inter, sans-serif', '#C9CBCE', 'left', a);
@@ -72,7 +72,7 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
         flash(l, '#fff'); },
       // 3 · battery week: yellow, the battery spins in, a -15% stamp slams with a shake
       (l) => { fill('#F7C032', '#E8A912'); const s = u(); spot(W * 0.6, H * 0.5, H, 'rgba(255,255,255,.35)'); beams(l, '255,250,232', 0.7);
-        const k = eo(l * 2), cx = narrow() ? W * 0.5 : W * 0.62; pic('bat', cx, H * 0.55, H * 0.78, (1 - k) * 1.2, k);
+        const k = eo(l * 2), cx = narrow() ? W * 0.5 : W * 0.62; pic('bat', cx, narrow() ? H * 0.62 : H * 0.55, H * (narrow() ? 0.42 : 0.78), (1 - k) * 1.2, k);
         const tx = narrow() ? W * 0.06 : W * 0.08; text(T('Battery week.'), tx, H * 0.36, font(800, Math.round(6.4 * s)), G, 'left', eo((l - 0.1) * 3));
         text(T('Genuine cells, tested before they ship.'), tx, H * 0.36 + 4.6 * s, '500 ' + Math.round(1.9 * s) + 'px Inter, sans-serif', '#4A3A00', 'left', eo((l - 0.2) * 3));
         const st = l - 0.42; if (st > 0) { const sc = st < 0.12 ? 2.2 - (st / 0.12) * 1.2 : 1, sx = (narrow() ? W * 0.78 : W * 0.86), sy = H * 0.3; x.save(); x.translate(sx, sy); x.rotate(-0.18); x.scale(sc, sc); const r = 9 * s;
@@ -80,7 +80,7 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
           text('-15%', 0, r * 0.22, font(800, Math.round(4.6 * s)), Y, 'center'); x.restore(); if (st < 0.06) { x.globalAlpha = 0.25; x.fillStyle = '#fff'; x.fillRect(0, 0, W, H); x.globalAlpha = 1; } } },
       // 4 · trade prices: the retail price is struck through, the trade price counts in
       (l) => { fill('#2E3034', D); const s = u(); beams(l, '255,214,120', 0.4); spot(W * 0.7, H * 0.5, H, 'rgba(247,192,50,.12)');
-        const cx = narrow() ? W * 0.5 : W * 0.7; pic('board', cx, H * 0.55 - Math.sin(l * 3) * 6, H * 0.7, 0.05, eo(l * 2.5));
+        const cx = narrow() ? W * 0.5 : W * 0.7; pic('board', narrow() ? W * 0.72 : cx, (narrow() ? H * 0.72 : H * 0.55) - Math.sin(l * 3) * 6, H * (narrow() ? 0.3 : 0.7), 0.05, eo(l * 2.5));
         const tx = narrow() ? W * 0.06 : W * 0.08; text(T('FOR REPAIR SHOPS'), tx, H * 0.2, '600 ' + Math.round(1.6 * s) + "px 'JetBrains Mono', monospace", Y, 'left', eo(l * 3));
         text(T('Trade prices.'), tx, H * 0.2 + 7 * s, font(800, Math.round(6.2 * s)), '#fff', 'left', eo((l - 0.08) * 3));
         const a = eo((l - 0.3) * 3); text(T('Everyone') + '  AED 575', tx, H * 0.5, '500 ' + Math.round(2.4 * s) + 'px Inter, sans-serif', '#9DA1A6', 'left', a);

@@ -29,9 +29,11 @@ export default function InlineAd({ slot, lastCat }: { slot: number; lastCat?: st
   const a = list[i]; if (!a) return null;
   return (
     <a className={'iad iad-' + a.tone} href={a.href} onPointerEnter={() => setPause(true)} onPointerLeave={() => setPause(false)} aria-label={T(a.t)}>
+      <span className="clip-big" key={'b' + a.id} aria-hidden="true">{T(a.k)}</span>
+      <span className="clip-sweep" key={'s' + a.id} aria-hidden="true" />
       <span className="iad-k">{T(a.k)} <em>{T('Ad')}</em></span>
       <span className="iad-txt" key={a.id}><b>{T(a.t)}</b><small>{T(a.d)}</small></span>
-      <img key={'i' + a.id} src={a.img} alt="" loading="lazy" />
+      <img key={'i' + a.id} className="clip-pic" src={a.img} alt="" loading="lazy" />
       <span className="iad-cta">{T(a.cta)} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>
       {list.length > 1 ? <span className="iad-dots" onClick={(e) => e.preventDefault()}>{list.map((x, k) => <button key={x.id} type="button" className={k === i ? 'on' : ''} onClick={() => setI(k)} aria-label={'Ad ' + (k + 1)}><i style={{ animationPlayState: pause ? 'paused' : 'running' }} /></button>)}</span> : null}
     </a>

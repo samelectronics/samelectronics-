@@ -674,3 +674,27 @@ html[data-shop-dock] .st-offer2 { translate: 0 0 !important; }
 html[dir="rtl"] .reel-bar i.on::after { transform-origin: right; }
 @keyframes reelBar { from { transform: scaleX(0); } }
 @media (max-width: 640px) { .reel { aspect-ratio: 4 / 4.2; min-height: 0; } .reel-cta { inset-inline: 4%; justify-content: center; bottom: 5%; } }
+/* ===== owner (16 Nov): every shop ad plays like a short clip ===== */
+.iad, .ad-tile { isolation: isolate; overflow: hidden; }
+.clip-big { position: absolute; z-index: -1; inset-inline-start: -2%; bottom: -12%; font: 800 clamp(60px, 7vw, 110px)/1 'Space Grotesk', sans-serif; letter-spacing: -.04em; white-space: nowrap; opacity: .07; pointer-events: none; animation: clipBig 7s linear both; }
+@keyframes clipBig { from { transform: translateX(8%); } to { transform: translateX(-14%); } }
+.clip-sweep { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,.35) 50%, transparent 60%) no-repeat; background-size: 250% 100%; animation: clipSweep 1.4s .35s ease-out both; mix-blend-mode: soft-light; }
+@keyframes clipSweep { from { background-position: 130% 0; } to { background-position: -130% 0; } }
+.clip-pic { animation: clipWhip .7s cubic-bezier(.2,.9,.25,1.15) both, clipPush 6s .7s ease-out forwards !important; }
+@keyframes clipWhip { from { opacity: 0; transform: translateX(60%) rotate(8deg) scale(.9); filter: blur(6px) drop-shadow(0 14px 18px rgba(0,0,0,.25)); } to { opacity: 1; transform: none; } }
+@keyframes clipPush { from { scale: 1; } to { scale: 1.08; translate: -4% -2%; } }
+html[dir="rtl"] .clip-pic { animation-name: clipWhipR, clipPush !important; }
+@keyframes clipWhipR { from { opacity: 0; transform: translateX(-60%) rotate(-8deg) scale(.9); filter: blur(6px); } to { opacity: 1; transform: none; } }
+.iad-txt b, .iad-txt small, .ad-tile b, .ad-tile small { animation: clipRise .55s cubic-bezier(.2,.9,.3,1.1) both; }
+.iad-txt small, .ad-tile small { animation-delay: .12s; }
+@keyframes clipRise { from { opacity: 0; transform: translateY(14px); } }
+@media (prefers-reduced-motion: reduce) { .clip-big, .clip-sweep, .clip-pic, .iad-txt b, .iad-txt small { animation: none !important; } }
+.shop-dock { display: block !important; } .shop-dock > .sp-wrap { width: auto; }
+.shop-dock-in { height: 75px; }
+@media (max-width: 700px) { .shop-dock-in { height: 64px; } }
+.shop-tradenote { background: #FFF8E3 !important; color: #3A3C40 !important; box-shadow: inset 0 0 0 1px rgba(247,192,50,.45) !important; } .shop-tradenote svg { color: #C99A1E !important; } .shop-tradenote a { color: #8A6400 !important; font-weight: 600; }
+.shop-dock > .sp-wrap { width: auto !important; max-width: none !important; margin: 0 !important; padding-inline: clamp(16px, 3.1vw, 45px) !important; }
+@media (max-width: 700px) {
+  .shop-dock .ss-go { width: 40px; min-width: 40px; padding: 0 !important; font-size: 0 !important; display: grid; place-items: center; }
+  .shop-dock .ss-go::after { content: ''; width: 16px; height: 16px; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.6' stroke-linecap='round'%3E%3Cpath d='M5 12h14M13 6l6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat; }
+}
