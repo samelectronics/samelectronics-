@@ -627,3 +627,50 @@ html[data-shop-dock] .st-offer2 { translate: 0 0 !important; }
 .ad-main:has(.sf-phone) .ad-txt { max-width: 58%; }
 @media (max-width: 700px) { .sf-phone { width: 110px; inset-inline-end: 4%; border-radius: 22px; } .sf-phone canvas, .sf-glass { border-radius: 17px; } }
 .sf-phone { width: auto !important; height: calc(100% - 36px); top: 18px !important; transform: rotate(-5deg) !important; } .ad-main:has(.sf-phone) { min-height: 330px; }
+/* owner (16 Nov): the shop bar is the real header: same glass, same 75px height, same logo (44px, yellow ring and
+   glow) and the same wordmark and slogan sizes; only the middle changes to the search */
+.shop-dock { padding: 0 !important; height: 75px; display: flex; align-items: center; background: linear-gradient(rgba(61,62,63,.9), rgba(48,50,53,.86)) !important; -webkit-backdrop-filter: blur(10px) saturate(1.2) !important; backdrop-filter: blur(10px) saturate(1.2) !important; }
+.shop-dock > .sp-wrap { width: 100%; }
+.shop-dock-logo { gap: 12px; }
+.shop-dock-logo img { width: 44px; height: 44px; box-shadow: 0 0 0 2px #F7C032, 0 0 18px rgba(247,192,50,.4); background: #fff; }
+.shop-dock-logo b { font: 600 16px 'Space Grotesk', sans-serif !important; letter-spacing: 2.56px !important; color: #fff; }
+.shop-dock-logo small { font: 400 10px Inter, sans-serif !important; letter-spacing: 2.6px !important; color: #C9CBCE !important; margin-top: 2px; }
+.shop-dock .ss input { height: 44px; }
+@media (max-width: 700px) { .shop-dock { height: 64px; } .shop-dock-logo img { width: 40px; height: 40px; } }
+
+/* ===== owner (16 Nov): panels are white by default (universal rule). Customize everything, light. ===== */
+.shop-cz { background: #fff !important; color: #26282B !important; box-shadow: inset 0 0 0 1.5px rgba(247,192,50,.8), 0 12px 26px -16px rgba(38,40,43,.35) !important; }
+.shop-cz small { color: #5D6166 !important; } .shop-cz svg { color: #C99A1E !important; }
+.cz { background: #FAFAFA !important; color: #26282B !important; box-shadow: 0 40px 90px -30px rgba(0,0,0,.55) !important; }
+.cz-top { border-bottom-color: rgba(38,40,43,.08) !important; }
+.cz-top b, .cz b, .cz h3, .cz h4 { color: #26282B; } .cz small { color: #5D6166; }
+.cz-live { background: rgba(247,192,50,.18) !important; color: #6B4E00 !important; }
+.cz-nav button { color: #5D6166 !important; } .cz-nav button:hover { color: #26282B !important; background: rgba(38,40,43,.05) !important; }
+.cz-nav button.on { color: #26282B !important; background: #F7C032 !important; }
+.cz-track { background: rgba(38,40,43,.12) !important; }
+.cz-mm input, .cz-q { background: #fff !important; color: #26282B !important; border-color: rgba(38,40,43,.14) !important; }
+.cz-quick .sp-chip { background: #fff !important; color: #26282B !important; box-shadow: inset 0 0 0 1px rgba(38,40,43,.12); }
+.cz-opt, .cz-brand, .cz-grade, .cz-preset { background: #fff !important; color: #26282B !important; box-shadow: inset 0 0 0 1px rgba(38,40,43,.1); }
+.cz-opt:hover, .cz-brand:hover { background: #FFF8E3 !important; }
+.cz-opt.on, .cz-grade.on { background: #FFF4D2 !important; box-shadow: inset 0 0 0 2px #F7C032 !important; }
+.cz-preset > button:first-child { color: #26282B !important; }
+.cz-box, .cz-rad { border-color: rgba(38,40,43,.3) !important; }
+.cz-sw2 i { background: rgba(38,40,43,.16) !important; }
+.cz-seg { background: rgba(38,40,43,.06) !important; } .cz-seg button { color: #5D6166 !important; } .cz-seg button.on { color: #26282B !important; }
+.cz-foot { background: #F2F3F4 !important; border-top-color: rgba(38,40,43,.08) !important; }
+.cz-body { color: #26282B; }
+/* ===== ShopReel: the shop's commercial ===== */
+.ad-reel { padding: 0 !important; background: #151618 !important; overflow: hidden; }
+.reel { position: relative; width: 100%; height: 100%; min-height: 340px; aspect-ratio: 16 / 7; }
+.reel canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.reel-cta { position: absolute; inset-inline-start: 4%; bottom: 9%; display: inline-flex; align-items: center; gap: 10px; height: 46px; padding: 0 20px; border: 0; border-radius: 13px; background: #F7C032; color: #26282B; font: 700 15px Inter, sans-serif; cursor: pointer; box-shadow: 0 14px 30px -12px rgba(247,192,50,.6); animation: reelCta .5s cubic-bezier(.2,.9,.3,1.3) both; }
+.reel-cta.dark { background: #26282B; color: #fff; box-shadow: 0 14px 30px -12px rgba(0,0,0,.6); }
+.reel-cta:hover { transform: translateY(-2px); }
+@keyframes reelCta { from { opacity: 0; transform: translateY(14px) scale(.96); } }
+.reel-bar { position: absolute; inset-inline: 4%; top: 18px; display: flex; gap: 6px; pointer-events: none; }
+.reel-bar i { flex: 1; height: 3px; border-radius: 2px; background: rgba(255,255,255,.22); overflow: hidden; position: relative; }
+.reel-bar i.done { background: rgba(255,255,255,.7); }
+.reel-bar i.on::after { content: ''; position: absolute; inset: 0; background: #F7C032; transform-origin: left; animation: reelBar var(--d) linear both; }
+html[dir="rtl"] .reel-bar i.on::after { transform-origin: right; }
+@keyframes reelBar { from { transform: scaleX(0); } }
+@media (max-width: 640px) { .reel { aspect-ratio: 4 / 4.2; min-height: 0; } .reel-cta { inset-inline: 4%; justify-content: center; bottom: 5%; } }

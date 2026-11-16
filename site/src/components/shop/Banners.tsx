@@ -4,7 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { T } from '@/components/site/ui';
 import { siteRaw } from '@/lib/catalog';
-import ShopFilm from './ShopFilm';
+import ShopReel from './ShopReel';
 
 type Side = { k: string; t: string; d: string; cta: string; href: string; img: string; c: string; wide?: boolean };
 const SIDE: Side[][] = [
@@ -38,16 +38,8 @@ export default function Banners({ onDeals, onCat }: { onDeals: () => void; onCat
   const s = S[i];
   return (
     <section className="ad" aria-label={T('Offers')}>
-      <div className="ad-main" style={{ background: s.bg, color: s.ink }} onPointerEnter={() => setPause(true)} onPointerLeave={() => setPause(false)}>
-        <div className="ad-txt" key={'t' + i}>
-          <span className="ad-k">{T(s.k)}</span>
-          <b className="ad-t">{T(s.t)}<br /><em>{T(s.a)}</em></b>
-          <span className="ad-d">{T(s.d)}</span>
-          <button type="button" className={'sp-btn' + (s.ink === '#FFFFFF' ? '' : ' dark')} onClick={s.go}>{T(s.cta)}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button>
-        </div>
-        {s.film ? <ShopFilm key={'f' + i} /> : <img key={'i' + i} className="ad-img" src={s.img} alt="" />}
-        <span className="ad-dots">{S.map((_, k) => <button key={k} type="button" className={k === i ? 'on' : ''} onClick={() => setI(k)} aria-label={'Slide ' + (k + 1)}><i style={{ animationPlayState: pause ? 'paused' : 'running', animationDuration: S[k] && S[k].film ? '15s' : undefined }} /></button>)}</span>
-      </div>
+      {/* owner (16 Nov): the main advert is a real commercial that plays (ShopReel), not a phone and not a static slide */}
+      <div className="ad-main ad-reel"><ShopReel onCat={onCat} onDeals={onDeals} onShop={() => document.querySelector('.shop-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} /></div>
       {/* owner: the ads always change and come in moving, never a squeezed line of cartons: two slots, each turning
           through its own set, one clean picture per ad, a few seconds apart so the page always has something new */}
       <div className="ad-side">

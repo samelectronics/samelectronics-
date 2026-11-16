@@ -201,7 +201,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
         <div className="sp-wrap shop-dock-in">
           {/* owner (16 Nov): once you scroll, the shop has its OWN bar (no double bar): logo, search, results and
               filters, then account, cart and the menu (they use the site bar's own buttons) */}
-          <a className="shop-dock-logo" href="/" aria-label="Sam Electronics"><img src="/assets/se-logo-320.webp" alt="" /><span><b>SAM ELECTRONICS</b><small>{T('Parts shop')}</small></span></a>
+          <a className="shop-dock-logo" href="/" aria-label="Sam Electronics"><img src="/assets/se-logo-128.webp" alt="" /><span><b>SAM ELECTRONICS</b><small>QUALITY · WARRANTY · PRICE</small></span></a>
           <ShopSearch compact q={f.q} onQ={(q) => { set({ q }); }} onFmp={openFmp} />
           <span className="shop-dock-n"><b>{fmt(res.length)}</b> {T('results')}</span>
           <button type="button" className="sp-chip shop-dock-f" onClick={() => setSide(true)} aria-label={T('Filters')}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4" /></svg><span className="t">{T('Filters')}</span>{chips.length ? <em>{chips.length}</em> : null}</button>
