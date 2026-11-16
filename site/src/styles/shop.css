@@ -863,3 +863,32 @@ html[dir="rtl"] .clip-pic { animation-name: clipWhipR, clipPush !important; }
 .shop-dock .sp-chip, .shop-dock .shop-dock-f { height: 44px !important; min-height: 0 !important; border-radius: 12px !important; padding: 0 16px !important; display: inline-flex !important; align-items: center !important; }
 .shop-dock .shop-dock-f { padding: 0 14px !important; justify-content: center !important; gap: 6px; }
 .shop-dock .shop-dock-ic > * { width: 44px !important; height: 44px !important; }
+/* ── Search palette (owner, 17 Nov): premium, two columns ── */
+.ss-pal { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 0; }
+.ss-list { padding: 6px 8px 10px; max-height: 440px; overflow: auto; }
+.ss-grp + .ss-grp { margin-top: 6px; border-top: 1px solid rgba(38,40,43,.06); padding-top: 6px; }
+.ss-gh { display: flex; align-items: center; gap: 8px; padding: 8px 10px 6px; font: 600 10.5px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #8C9096; }
+.ss-gh i { font-style: normal; padding: 1px 6px; border-radius: 6px; background: #F2F3F4; color: #5C6066; letter-spacing: 0; }
+.ss-pal .ss-it { display: grid !important; grid-template-columns: 52px minmax(0, 1fr) auto; align-items: center; gap: 12px; width: 100%; min-height: 58px; padding: 6px 10px !important; border: 0; border-radius: 12px; background: transparent; text-align: start; cursor: pointer; transition: background .15s; }
+.ss-pal .ss-it.hi { background: #FFF6DC; box-shadow: inset 3px 0 0 #F7C032; }
+html[dir='rtl'] .ss-pal .ss-it.hi { box-shadow: inset -3px 0 0 #F7C032; }
+.ss-thumb { display: grid; place-items: center; width: 52px; height: 46px; border-radius: 10px; background: linear-gradient(180deg, #F6F6F4, #ECECE8); overflow: hidden; }
+.ss-thumb img { width: 46px; height: 46px; object-fit: contain; }
+.ss-pal .ss-txt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.ss-pal .ss-txt b { font: 600 14.5px Inter, sans-serif; color: #26282B; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ss-pal .ss-txt b mark { background: linear-gradient(transparent 55%, rgba(247,192,50,.55) 55%); color: inherit; padding: 0 1px; }
+.ss-pal .ss-txt small { display: inline-flex; align-items: center; gap: 8px; font: 500 12px Inter, sans-serif; color: #8C9096; }
+.ss-pr { font: 700 13.5px 'Space Grotesk', sans-serif; color: #26282B; white-space: nowrap; }
+.ss-prev { display: flex; flex-direction: column; gap: 8px; padding: 18px; border-inline-start: 1px solid rgba(38,40,43,.07); background: linear-gradient(180deg, #FAFAF8, #F3F3F0); animation: iad2Fade .25s both; }
+.ss-prev-img { display: grid; place-items: center; height: 170px; border-radius: 14px; background: radial-gradient(70% 60% at 50% 60%, #fff, #ECECE8); overflow: hidden; }
+.ss-prev-img img { max-height: 158px; max-width: 90%; object-fit: contain; filter: drop-shadow(0 12px 14px rgba(0,0,0,.18)); animation: iad2Rise .4s cubic-bezier(.2,1.2,.4,1) both; }
+.ss-prev-k { display: flex; align-items: center; justify-content: space-between; } .ss-prev-k i { font-style: normal; font: 600 10px 'JetBrains Mono', monospace; letter-spacing: .14em; color: #8C9096; text-transform: uppercase; }
+.ss-prev-t { font: 700 16px/1.25 'Space Grotesk', sans-serif; color: #26282B; }
+.ss-prev-g { display: flex; flex-direction: column; gap: 4px; }
+.ss-prev-g > span { display: flex; justify-content: space-between; padding: 6px 10px; border-radius: 8px; background: #fff; box-shadow: inset 0 0 0 1px rgba(38,40,43,.07); font: 500 12.5px Inter, sans-serif; }
+.ss-prev-g i { font-style: normal; color: #4A4D52; } .ss-prev-g em { font-style: normal; font-weight: 700; color: #26282B; }
+.ss-prev-n { font: 500 12px Inter, sans-serif; color: #8C9096; }
+.ss-prev-go { margin-top: auto; height: 42px; border: 0; border-radius: 11px; background: #26282B; color: #fff; font: 600 13.5px Inter, sans-serif; cursor: pointer; }
+.ss-prev-go:hover { background: #F7C032; color: #26282B; }
+@media (max-width: 900px) { .ss-pal { grid-template-columns: 1fr; } .ss-prev { display: none; } }
+.ss.sm .ss-pal { grid-template-columns: minmax(0, 1fr) 260px; }
