@@ -580,7 +580,7 @@ footer .ft-contacts .ft-ci { display: none !important; } footer .ft-contacts > a
 /* Owner (16 Nov): ONE theme for every pop-up. Light (white) by default; Settings → Pop-ups → Dark turns them all dark:
    language switch, Wi-Fi notice, cookie banner, tour bubble, medal toast, chat choice. */
 html:not([data-theme="dark"]) .lp-card.lp2 { background: #FFFFFF !important; color: #26282B !important; box-shadow: 0 0 0 1px rgba(38,40,43,.08), 0 30px 60px -20px rgba(0,0,0,.35) !important; }
-html:not([data-theme="dark"]) .lp-card.lp2 .lp-eb { color: #B7861A; }
+html:not([data-theme="dark"]) .lp-card.lp2 .lp-eb { color: #26282B; }
 html:not([data-theme="dark"]) .lp-card.lp2 .lp2-cell { background: #F2F3F4; box-shadow: inset 0 0 0 1.5px #8E939A, inset 0 0 0 2.5px #fff; }
 html:not([data-theme="dark"]) .lp-card.lp2 .lp2-bar { background: #ECEDEF; }
 html:not([data-theme="dark"]) .lp-card.lp2 .lp2-meta em { color: hsl(calc(var(--p, 0) * 140), 70%, 38%); }
@@ -590,7 +590,7 @@ html:not([data-theme="dark"]) .se-netp small { color: #6B6F75; }
 html:not([data-theme="dark"]) .se-netp button { background: #F2F3F4; color: #26282B; }
 html:not([data-theme="dark"]) .sc2-banner { background: rgba(255,255,255,.97) !important; color: #26282B !important; box-shadow: 0 30px 60px -20px rgba(0,0,0,.35), inset 0 0 0 1px rgba(38,40,43,.08) !important; }
 html:not([data-theme="dark"]) .sc2-banner .sc2-btxt span { color: #5C6066; }
-html:not([data-theme="dark"]) .sc2-banner .sc2-btxt a { color: #B7861A; }
+html:not([data-theme="dark"]) .sc2-banner .sc2-btxt a { color: #26282B; font-weight: 600; text-decoration: underline; text-decoration-color: #F7C032; text-decoration-thickness: 2px; text-underline-offset: 3px; }
 html:not([data-theme="dark"]) .sc2-banner .sc2-cookie { background: #FFF6DC; }
 html:not([data-theme="dark"]) .sc2-banner .st-grey { background: #F2F3F4 !important; color: #26282B !important; }
 html[data-theme="dark"] .st-bub { background: linear-gradient(180deg, #2E3034, #26282B) !important; color: #fff !important; }
@@ -670,3 +670,29 @@ html.se-embed header[style*="position: fixed"] { padding-top: 52px; }
 html.se-embed body { padding-top: 52px; }
 html.se-embed .shop-dock { top: 124px !important; }
 .hi-sb { background: #2E3034; box-shadow: 0 1px 0 rgba(255,255,255,.04); }
+
+/* owner (17 Nov): no golden or rainbow tones anywhere: the language battery charges in the brand yellow only */
+.lp2-cell .lp2-fill { background: linear-gradient(90deg, #F7C032, #FFD566) !important; box-shadow: 0 0 10px rgba(247,192,50,.5) !important; }
+.lp2-bar i { background: #F7C032 !important; }
+.lp2-meta em { color: #F7C032 !important; }
+html:not([data-theme="dark"]) .lp2-meta em { color: #26282B !important; }
+.cc-ways.four { grid-template-columns: repeat(2, 1fr); }
+.cc-ways.four .cc-w { min-height: 112px; }
+.cc-w small { font: 400 11.5px Inter, sans-serif; color: #6B6F75; }
+.cc-wi.sam { background: #F7C032; overflow: hidden; }
+.cc-more { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 14px; font: 600 13px Inter, sans-serif; }
+.cc-more a { color: #26282B; text-decoration: none; } .cc-more a:hover { text-decoration: underline; text-decoration-color: #F7C032; text-decoration-thickness: 2px; }
+.cc-more i { width: 4px; height: 4px; border-radius: 50%; background: #C9CBCE; }
+html[data-theme="dark"] .cc-more a { color: #fff; } html[data-theme="dark"] .cc-w small { color: #B9BBBF; }
+/* Owner (17 Nov): the WhatsApp / WeChat sheet is landscape: number and QR on the left, the message on the right */
+@media (min-width: 900px) {
+  .wc-card.ct-card { width: min(940px, calc(100vw - 48px)) !important; max-width: none !important; }
+  .ct-cols { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); gap: 28px; align-items: stretch; }
+  .ct-l { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+  .ct-l .ct-body { flex-direction: row; }
+  .ct-r { display: flex; flex-direction: column; gap: 12px; min-width: 0; padding-inline-start: 28px; box-shadow: inset 1px 0 0 rgba(38,40,43,.08); }
+  html[dir='rtl'] .ct-r { box-shadow: inset -1px 0 0 rgba(38,40,43,.08); }
+  .ct-r .ct-compose { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+  .ct-r .ct-prev { flex: 1; max-height: 320px; overflow: auto; }
+  .ct-r .ct-acts { margin-top: auto; }
+}

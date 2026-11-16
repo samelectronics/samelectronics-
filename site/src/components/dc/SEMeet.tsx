@@ -108,7 +108,7 @@ function render(v: Vals) {
             </span>
           </h2>
           <p className="mt-p">
-            Samsoom knows our catalogue, grades, hours and shipping. It finds the part, explains the grade, and hands you to a person on WhatsApp the second you need one.
+            Samsoom knows our catalogue, grades, hours and shipping. It finds the part, explains the grade, and hands you to a person on WhatsApp or WeChat the second you need one.
           </p>
           {/* owner (16 Nov, "make it professional, not pieces put together"): the questions as neat pills, one clear
               button, then the facts in one line; Samsoom himself sits on the chat window on the right */}
@@ -120,12 +120,12 @@ function render(v: Vals) {
             </div>
           <div className="mt-cta">
             <button type="button" className="mt-go" onClick={v.ask}>Ask Samsoom<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button>
-            <button type="button" className="mt-go2" onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wa' } }))}><i className="ct-ic wa" aria-hidden="true" />Talk to a person</button>
+            <button type="button" className="mt-go2 duo" onClick={() => window.dispatchEvent(new CustomEvent('se:chatwith'))}><span className="duo-ic" aria-hidden="true"><i className="ct-ic wa" /><i className="ct-ic wc" /></span>Talk to a person</button>
           </div>
           <div className="mt-facts">
             <span><b>24/7</b><small>Answers any time</small></span>
             <span><b>9,000+</b><small>Parts it knows</small></span>
-            <span><b>1 tap</b><small>To a person on WhatsApp</small></span>
+            <span><b>1 tap</b><small>To a person on WhatsApp or WeChat</small></span>
           </div>
         </div>
 

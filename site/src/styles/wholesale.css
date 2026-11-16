@@ -395,3 +395,15 @@ html[dir='rtl'] .wf-real > svg:last-child { transform: scaleX(-1); }
 .wf-sc3-fly .dst { fill: none; stroke: #FFFFFF; stroke-width: 1.5; transform-box: fill-box; transform-origin: center; animation: wfDst 1.8s ease-out infinite; }
 @keyframes wfDst { 0% { opacity: 1; transform: scale(.6); } 100% { opacity: 0; transform: scale(2.2); } }
 .wf-sc3-film { inset: 6px 0 0 !important; }
+/* owner (17 Nov): the pallet list is sent on WhatsApp or WeChat: two equal buttons, real colours, real icons */
+.wf-li-acts { display: grid !important; grid-template-columns: 1fr; gap: 8px; }
+.wf-li-acts .wf-add { justify-content: center; }
+.wf-sends { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.wf-send2 { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 42px; padding: 0 12px; border: 0; border-radius: 10px; color: #fff; font: 600 13.5px Inter, sans-serif; cursor: pointer; transition: transform .2s, filter .2s; }
+.wf-send2.wa { background: #25D366; } .wf-send2.wc { background: #07C160; }
+.wf-send2:hover { transform: translateY(-1px); filter: brightness(1.05); }
+.wf-send2 .ct-ic { width: 18px; height: 18px; color: #fff; }
+.duo-ic { display: inline-flex; align-items: center; gap: 4px; margin-inline-end: 10px; }
+.duo-ic .ct-ic.wa { color: #25D366; width: 18px; height: 18px; } .duo-ic .ct-ic.wc { color: #07C160; width: 18px; height: 18px; }
+.wf-btn.duo { display: inline-flex; align-items: center; }
+.mt-go2.duo { display: inline-flex; align-items: center; }

@@ -15,11 +15,11 @@ export const openChatChoice = () => window.dispatchEvent(new CustomEvent('se:cha
 export const openPerson = () => window.dispatchEvent(new CustomEvent('se:person'));
 
 export default function ChatChoice() {
-  const [open, setOpen] = useState(false), [mode, setMode] = useState<'' | 'ways' | 'person'>('');
+  const [open, setOpen] = useState(false), [mode, setMode] = useState<'' | 'person'>('');
   useEffect(() => {
     const on = () => { setMode(''); setOpen(true); play('open'); };
     const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
-    const onP = () => { setMode('ways'); setOpen(true); play('open'); };
+    const onP = () => { setMode(''); setOpen(true); play('open'); };
     window.addEventListener('se:chatwith', on); window.addEventListener('se:person', onP); document.addEventListener('keydown', esc);
     return () => { window.removeEventListener('se:chatwith', on); window.removeEventListener('se:person', onP); document.removeEventListener('keydown', esc); };
   }, []);
@@ -29,31 +29,23 @@ export default function ChatChoice() {
       <div className={'cc-card' + (mode === 'person' ? ' wide' : '')} role="dialog" aria-modal="true" aria-label={T('Chat with us')}>
         <button type="button" className="wc-x" aria-label={T('Close')} onClick={() => setOpen(false)}>✕</button>
         {mode === 'person' ? (<>
-          <button type="button" className="cc-back" onClick={() => setMode('ways')}>← {T('Back')}</button>
+          <button type="button" className="cc-back" onClick={() => setMode('')}>← {T('Back')}</button>
           <LiveChat />
-        </>) : mode === 'ways' ? (<>
-          <b className="cc-h">{T('Talk to a person')}</b>
-          <p className="cc-p">{T('Pick the way that suits you. A real person from the shop answers.')}</p>
-          <div className="cc-ways">
-            <button type="button" className="cc-w wa" onClick={() => { setOpen(false); window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wa' } })); }}><span className="cc-wi"><i className="ct-ic wa" /></span><b>WhatsApp</b></button>
-            <button type="button" className="cc-w wc" onClick={() => { setOpen(false); window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wc' } })); }}><span className="cc-wi"><i className="ct-ic wc" /></span><b>WeChat</b></button>
-            <button type="button" className="cc-w" onClick={() => setMode('person')}><span className="cc-wi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v11H9l-5 4z" /></svg></span><b>{T('Chat here')}</b></button>
-            <a className="cc-w" href={'tel:' + site.contact.storeTel}><span className="cc-wi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg></span><b>{T('Call')}</b></a>
-            <a className="cc-w" href={'mailto:' + site.contact.email}><span className="cc-wi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18v12H3zM3 7l9 6 9-6" /></svg></span><b>{T('E-mail')}</b></a>
-            <a className="cc-w" href={site.contact.mapsLink} target="_blank" rel="noopener noreferrer"><span className="cc-wi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></svg></span><b>{T('Visit')}</b></a>
-          </div>
         </>) : (<>
+          {/* owner (17 Nov): every chat starts here: Samsoom, a person on the website, WhatsApp or WeChat; the next step
+              shows what will be sent (system details + a personal note) */}
           <b className="cc-h">{T('Chat with us')}</b>
           <p className="cc-p">{T('Who would you like to talk to?')}</p>
-          <div className="cc-opts">
-            <button type="button" className="cc-o sam" onClick={() => { setOpen(false); window.dispatchEvent(new CustomEvent('se:chat', { detail: {} })); }}>
-              <span className="cc-ic"><SESamsoom mood="idle" size={40} still={true} /></span>
-              <span><b>{T('Samsoom')}</b><small>{T('Instant answers, any time: parts, grades, prices, hours.')}</small></span><i>→</i>
-            </button>
-            <button type="button" className="cc-o person" onClick={() => setMode('ways')}>
-              <span className="cc-ic p"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="8" r="4" /><path d="M4 21c1-4 4-6 8-6s7 2 8 6" /></svg></span>
-              <span><b>{T('A person from the shop')}</b><small>{T('WhatsApp, WeChat, chat here, call, e-mail or visit.')}</small></span><i>→</i>
-            </button>
+          <div className="cc-ways four">
+            <button type="button" className="cc-w" onClick={() => { setOpen(false); window.dispatchEvent(new CustomEvent('se:chat', { detail: {} })); }}><span className="cc-wi sam"><SESamsoom mood="idle" size={34} still={true} /></span><b>{T('Samsoom')}</b><small>{T('Instant answers')}</small></button>
+            <button type="button" className="cc-w" onClick={() => setMode('person')}><span className="cc-wi"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="8" r="4" /><path d="M4 21c1-4 4-6 8-6s7 2 8 6" /></svg></span><b>{T('A person, here')}</b><small>{T('Chat on the website')}</small></button>
+            <button type="button" className="cc-w wa" onClick={() => { setOpen(false); window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wa' } })); }}><span className="cc-wi"><i className="ct-ic wa" /></span><b>WhatsApp</b><small>{T('A person replies')}</small></button>
+            <button type="button" className="cc-w wc" onClick={() => { setOpen(false); window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wc' } })); }}><span className="cc-wi"><i className="ct-ic wc" /></span><b>WeChat</b><small>{T('A person replies')}</small></button>
+          </div>
+          <div className="cc-more">
+            <a href={'tel:' + site.contact.storeTel}>{T('Call')}</a><i />
+            <a href={'mailto:' + site.contact.email}>{T('E-mail')}</a><i />
+            <a href={site.contact.mapsLink} target="_blank" rel="noopener noreferrer">{T('Visit')}</a>
           </div>
         </>)}
       </div>

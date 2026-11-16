@@ -63,17 +63,20 @@ export default function TdAmbience() {
       if (want) { window.clearTimeout(offTm); if (!bus) build(); fade(true); }
       else if (bus) { fade(false); window.clearTimeout(offTm); offTm = window.setTimeout(() => { if (!(inView && allowed() && !document.hidden)) teardown(); }, 1700); }
     };
-    // each step: a deep boom and a short string hit, both inside the hall
+    // owner (17 Nov): each step is the same soft swoosh as Samsoom's tutorial (no boom, no string hit), with a light
+    // bell note that climbs as the phone comes apart
     const hit = (e: Event) => {
-      if (!allowed() || !inView) return; if (!bus) { build(); fade(true); } if (!c || !bus || !wet) return;
-      const d = (e as CustomEvent).detail || {}, k = Math.min(1, (d.idx || 0) / 11), t = c.currentTime + 0.02, vol = Math.min(1, prefs().sound.vol * 1.4);
-      const out = c.createGain(); out.gain.value = 0.5 * vol; out.connect(c.destination); out.connect(wet);
-      const sb = c.createOscillator(), sg = c.createGain(); sb.type = 'sine'; sb.frequency.setValueAtTime(64, t); sb.frequency.exponentialRampToValueAtTime(34, t + 1.1);
-      sg.gain.setValueAtTime(0.0001, t); sg.gain.exponentialRampToValueAtTime(0.8, t + 0.015); sg.gain.exponentialRampToValueAtTime(0.0001, t + 1.6); sb.connect(sg); sg.connect(out); sb.start(t); sb.stop(t + 1.7);
-      const lp = c.createBiquadFilter(), hg = c.createGain(); lp.type = 'lowpass'; lp.frequency.setValueAtTime(1800 + k * 1400, t); lp.frequency.exponentialRampToValueAtTime(300, t + 1.4);
-      hg.gain.setValueAtTime(0.0001, t); hg.gain.exponentialRampToValueAtTime(0.16 + k * 0.08, t + 0.03); hg.gain.exponentialRampToValueAtTime(0.0001, t + 1.5); lp.connect(hg); hg.connect(out);
-      CHORDS[ci].slice(1).forEach((f, i) => [-6, 6].forEach((dt) => { const o = c!.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f * (i === 3 ? 1 : 2); o.detune.value = dt; o.connect(lp); o.start(t); o.stop(t + 1.6); }));
-      window.setTimeout(() => { try { out.disconnect(); } catch { /* */ } }, 4500);
+      if (!allowed() || !inView) return; if (!bus) { build(); fade(true); } if (!c || !wet) return;
+      const d = (e as CustomEvent).detail || {}, k = Math.min(1, (d.idx || 0) / 11), t = c.currentTime + 0.01, vol = Math.min(1, prefs().sound.vol * 1.4), up = (d.dir || 1) > 0;
+      const out = c.createGain(); out.gain.value = 0.55 * vol; out.connect(c.destination); const wg = c.createGain(); wg.gain.value = 0.35; out.connect(wg); wg.connect(wet);
+      const len = 0.42, buf = c.createBuffer(1, Math.round(c.sampleRate * len), c.sampleRate), dd = buf.getChannelData(0);
+      for (let j = 0; j < dd.length; j++) dd[j] = (Math.random() * 2 - 1) * Math.sin((Math.PI * j) / dd.length);
+      const n = c.createBufferSource(), bp = c.createBiquadFilter(), ng = c.createGain(); n.buffer = buf; bp.type = 'bandpass'; bp.Q.value = 1.4;
+      bp.frequency.setValueAtTime(up ? 500 : 2400, t); bp.frequency.exponentialRampToValueAtTime(up ? 2400 : 500, t + len); ng.gain.value = 0.22;
+      n.connect(bp); bp.connect(ng); ng.connect(out); n.start(t);
+      const f = 523.25 * Math.pow(2, Math.round(k * 12) / 12), o = c.createOscillator(), og = c.createGain(); o.type = 'sine'; o.frequency.value = f;
+      og.gain.setValueAtTime(0.0001, t + 0.18); og.gain.exponentialRampToValueAtTime(0.07, t + 0.2); og.gain.exponentialRampToValueAtTime(0.0001, t + 0.9); o.connect(og); og.connect(out); o.start(t + 0.18); o.stop(t + 1);
+      window.setTimeout(() => { try { out.disconnect(); } catch { /* */ } }, 2500);
     };
     window.addEventListener('se:td-step', hit);
     const progF = () => { raf = 0; const r = host.getBoundingClientRect(); prog = Math.max(0, Math.min(1, -r.top / Math.max(1, r.height - innerHeight))); };

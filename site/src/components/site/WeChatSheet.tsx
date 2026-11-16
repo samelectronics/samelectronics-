@@ -61,6 +61,7 @@ export default function WeChatSheet() {
     <div className="wc-veil ct-veil" onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}>
       <div className={'wc-card ct-card ' + mode} role="dialog" aria-modal="true" aria-label={t(mode === 'wa' ? 'WhatsApp us' : 'WeChat us')}>
         <button type="button" className="wc-x" aria-label={t('Close')} onClick={() => setOpen(false)}>✕</button>
+        <div className="ct-cols"><div className="ct-l">
         <div className="ct-tabs" role="tablist">
           <button type="button" role="tab" aria-selected={mode === 'wa'} className={mode === 'wa' ? 'on wa' : 'wa'} onClick={() => { setMode('wa'); setCopied(false); }}><i className="ct-ic wa" />WhatsApp</button>
           <button type="button" role="tab" aria-selected={mode === 'wc'} className={mode === 'wc' ? 'on wc' : 'wc'} onClick={() => { setMode('wc'); setCopied(false); }}><i className="ct-ic wc" />WeChat</button>
@@ -72,6 +73,7 @@ export default function WeChatSheet() {
           <span className="ct-numw"><small>{t(mode === 'wa' ? 'WhatsApp number' : 'WeChat number')}</small><span className="wc-num" dir="ltr">{C.number}</span>
             <button type="button" className="ct-copy" onClick={copy}>{copied ? t('Copied') + ' ✓' : t('Copy number')}</button></span>
         </div>
+        </div><div className="ct-r">
         <div className="ct-compose">
           {sys ? <div className="ct-prev" aria-label={t('Your message')}><small>{t('YOUR MESSAGE')}</small><div className="ct-pv">{fmt(msg)}</div></div> : null}
           <textarea className="ct-note" rows={2} value={note} onChange={(e) => setNote(e.target.value)} placeholder={t(sys ? 'Add a personal note (optional)' : 'Write your message')} />
@@ -81,6 +83,7 @@ export default function WeChatSheet() {
             ? <a className="wc-btn go wa" href={waUrl} target="_blank" rel="noopener" onClick={() => { logTap('wa', full); window.setTimeout(() => setOpen(false), 300); }}><i className="ct-ic wa" />{t('Open WhatsApp')}</a>
             : <><button type="button" className="wc-btn" onClick={copyMsg}>{mcopied ? t('Message copied') + ' ✓' : t('Copy message')}</button><a className="wc-btn go" href="weixin://" onClick={() => { logTap('wc', full); copyMsg(); }}><i className="ct-ic wc" />{t('Open WeChat')}</a></>}
         </div>
+        </div></div>
       </div>
     </div>
   );

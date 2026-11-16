@@ -5,32 +5,33 @@ import { isEmbed } from '@/lib/embed';
 // silent in the Control Room and when the visitor asked the system for reduced motion.
 import { prefs } from './prefs';
 
-export type Snd = 'click' | 'add' | 'next' | 'back' | 'skip' | 'toggle' | 'open' | 'close' | 'error' | 'success' | 'send' | 'notify' | 'bell' | 'tab' | 'link' | 'menu' | 'cart';
+export type Snd = 'tada' | 'click' | 'add' | 'next' | 'back' | 'skip' | 'toggle' | 'open' | 'close' | 'error' | 'success' | 'send' | 'notify' | 'bell' | 'tab' | 'link' | 'menu' | 'cart';
 // owner (16 Nov): every sound is one family. One instrument for all of them: a soft wooden mallet (a warm sine with a
 // quick bright overtone and a tiny felt attack), like a small marimba. Each action is a short phrase on it; the click is
 // one clear note (loud enough to feel), the others are 2–3 notes. Same body, same decay, similar loudness.
 type Note = [freq: number, at: number, len: number, amp?: number];
 const SHAPES: Record<Snd, Note[]> = {
-  // owner (16 Nov): "I like the notification sound": every click is now a tiny version of it, two quick notes a fifth
-  // apart (the notification's own interval), short and bright; each function starts on its own note.
-  click: [[880, 0, 0.12, 0.85], [1319, 0.032, 0.2, 0.7]],
+  // owner (17 Nov): "the two-note click sounds like a game; I like the bell". Every click is ONE soft bell note with the
+  // notification's ring; each action has its own note (open goes up, close comes down, menus lower, cart brighter).
+  click: [[988, 0, 0.32, 0.75]],
   toggle: [[659, 0, 0.14, 0.8], [880, 0.06, 0.18, 0.8]],
   next: [[659, 0, 0.14, 0.75], [988, 0.06, 0.2, 0.8]],
   back: [[988, 0, 0.14, 0.75], [659, 0.06, 0.2, 0.8]],
   skip: [[784, 0, 0.12, 0.7], [659, 0.05, 0.12, 0.7], [523, 0.1, 0.2, 0.75]],
-  open: [[523, 0, 0.18, 0.75], [784, 0.07, 0.26, 0.85]],
-  close: [[784, 0, 0.18, 0.75], [523, 0.07, 0.26, 0.8]],
+  open: [[880, 0, 0.3, 0.72], [1175, 0.05, 0.34, 0.38]],
+  close: [[880, 0, 0.26, 0.7], [659, 0.05, 0.3, 0.38]],
   add: [[659, 0, 0.14, 0.75], [784, 0.07, 0.14, 0.75], [1047, 0.14, 0.3, 0.9]],
   success: [[523, 0, 0.16, 0.7], [659, 0.08, 0.16, 0.75], [784, 0.16, 0.16, 0.8], [1047, 0.24, 0.36, 0.9]],
   send: [[587, 0, 0.12, 0.7], [880, 0.05, 0.12, 0.75], [1175, 0.1, 0.3, 0.8]],
   error: [[392, 0, 0.2, 0.85], [370, 0.12, 0.3, 0.85]],
   notify: [[880, 0, 0.3, 0.8], [1319, 0.12, 0.45, 0.75]],
-  // the same click, starting on a slightly different note per function (one family, never a different sound)
-  bell: [[988, 0, 0.12, 0.85], [1480, 0.032, 0.22, 0.7]],
-  tab: [[784, 0, 0.12, 0.85], [1175, 0.032, 0.2, 0.7]],
-  link: [[831, 0, 0.12, 0.85], [1245, 0.032, 0.2, 0.7]],
-  menu: [[698, 0, 0.12, 0.85], [1047, 0.032, 0.2, 0.7]],
-  cart: [[932, 0, 0.12, 0.85], [1397, 0.032, 0.22, 0.7]],
+  bell: [[1175, 0, 0.42, 0.8]],
+  tab: [[880, 0, 0.28, 0.72]],
+  link: [[932, 0, 0.3, 0.72]],
+  menu: [[784, 0, 0.32, 0.75]],
+  cart: [[1047, 0, 0.3, 0.75], [1568, 0.045, 0.34, 0.35]],
+  // "ta TA!": a short pickup, then a bright bell chord that rings out (medals, finished tutorials)
+  tada: [[784, 0, 0.16, 0.7], [1047, 0.15, 0.9, 0.8], [1319, 0.15, 0.9, 0.55], [1568, 0.15, 0.95, 0.5], [2093, 0.2, 0.8, 0.28]],
 };
 // Classic: as written. Soft: an octave-ish lower and quieter. Studio: brighter with a short room echo.
 const PACK = { classic: { mul: 1, gain: 1, lp: 5200, echo: 0 }, soft: { mul: 0.75, gain: 0.7, lp: 3000, echo: 0 }, studio: { mul: 1.12, gain: 0.9, lp: 6500, echo: 0.2 } };
@@ -67,4 +68,16 @@ export function play(s: Snd, force = false) {
     };
     for (const [f, at, len, amp = 0.8] of SHAPES[s]) mallet(f * pk.mul, at, len, amp);
   } catch { /* audio not available */ }
+}
+
+/** Owner (17 Nov): tutorial steps "level up": each Next is one bell note higher (a major scale) and a little fuller,
+ *  so the presses build up until the last one bursts into the "ta TA!". */
+const SCALE = [0, 2, 4, 5, 7, 9, 11, 12, 14, 16, 17, 19, 21, 23, 24];
+export function playStep(i: number, total: number) {
+  if (i >= total - 1) { play('tada'); return; }
+  const f = 523.25 * Math.pow(2, SCALE[Math.min(SCALE.length - 1, Math.max(0, i))] / 12);
+  const k = total > 1 ? i / (total - 1) : 0;
+  SHAPES.click = [[f, 0, 0.3 + k * 0.2, 0.62 + k * 0.25], [f * 1.5, 0.03, 0.26 + k * 0.2, 0.18 + k * 0.3]];
+  play('click');
+  SHAPES.click = [[988, 0, 0.32, 0.75]];
 }

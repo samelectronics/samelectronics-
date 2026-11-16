@@ -278,7 +278,7 @@ export default function SamsoomTour() {
         </span>
         <span className="st-bacts">
           <button type="button" className="st-btn st-grey" data-sound="back" disabled={i === 0} onClick={() => setI(Math.max(0, i - 1))}>{T('Back')}</button>
-          <button type="button" className="st-btn st-dark" data-sound="next" onClick={next}>{i === steps.length - 1 ? T('Done') : T('Next')}</button>
+          <button type="button" className="st-btn st-dark" data-no-sound="" onClick={next}>{i === steps.length - 1 ? T('Done') : T('Next')}</button>
         </span>
       </div>
     </div>

@@ -1,4 +1,5 @@
 'use client';
+import { play, playStep } from './sound';
 // R11 · Samsoom's voice and the page-tour sounds, generated live with Web Audio (no audio files, no licensed sounds).
 //  - babble(text): while his bubble types, every syllable is a short soft blip with a little random pitch; questions rise at
 //    the end, excited lines (!) are faster and higher, spaces and punctuation are short pauses. The mouth (data-sm-mouth in
@@ -227,7 +228,8 @@ export function preview(v: Voice) { if (!gest) gest = true; const p = prefs().so
 // ── tour sounds ── (R11: no continuous tone at all; short soft chimes that climb a little each step)
 const chime = (f: number, at: number, d: number, g = 0.08) => { const c = ac(), t = c.currentTime + at, o = c.createOscillator(), a = c.createGain(); o.type = 'sine'; o.frequency.value = f; a.gain.setValueAtTime(0.0001, t); a.gain.exponentialRampToValueAtTime(g, t + 0.015); a.gain.exponentialRampToValueAtTime(0.0001, t + d); o.connect(a); a.connect(out()); o.start(t); o.stop(t + d + 0.05); };
 export function tourStart() { if (!can()) return; chime(392, 0, 0.5, 0.06); chime(523, 0.12, 0.6, 0.06); }
-export function tourStep(i: number, n: number) { if (!can()) return; const k = n > 1 ? i / (n - 1) : 1, f = 440 * Math.pow(2, (k * 7) / 12); chime(f, 0, 0.35, 0.05); chime(f * 1.5, 0.08, 0.4, 0.035); whoosh(); }
+// owner (17 Nov): each step levels up (one bell note higher and fuller) with the soft swoosh; the last one is the "ta TA!"
+export function tourStep(i: number, n: number) { if (!can()) return; playStep(i, n + 1); whoosh(); }
 export function whoosh() {
   if (!can()) return; const c = ac(), t = c.currentTime, len = 0.32, buf = c.createBuffer(1, Math.round(c.sampleRate * len), c.sampleRate), d = buf.getChannelData(0);
   for (let j = 0; j < d.length; j++) d[j] = (Math.random() * 2 - 1) * Math.sin((Math.PI * j) / d.length);
@@ -235,5 +237,5 @@ export function whoosh() {
   bp.frequency.setValueAtTime(500, t); bp.frequency.exponentialRampToValueAtTime(2400, t + len); g.gain.value = 0.06;
   s2.connect(bp); bp.connect(g); g.connect(out()); s2.start(t);
 }
-export function tourEnd() { if (!can()) return; [1047, 1319, 1568, 2093].forEach((f, j) => chime(f, j * 0.07, 0.45, 0.06)); }
+export function tourEnd() { if (!can()) return; play('tada', true); }
 export function tourStop() { /* nothing keeps playing between sounds any more */ }

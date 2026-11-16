@@ -177,3 +177,34 @@ section.st .st-rail::after { content: ''; position: absolute; top: 50%; left: 0;
 @keyframes stRun { from { transform: translateX(-140px); } to { transform: translateX(calc(100vw - 280px)); } }
 @media (prefers-reduced-motion: reduce) { section.st .st-rail::after { display: none; } }
 section.st .st-yr-k .b { color: #26282B !important; }
+.wf .wf-nums b span, .wf .wf-nums b * { color: inherit !important; font: inherit !important; }
+
+/* Owner (17 Nov): "why is there a white highlighter under the title? it is so yellow I can't see the progress line."
+   The story is graphite like the other dark sections: white first line, yellow second line (no marker band), a clear
+   glowing yellow timeline with its runner, white year, white cards. */
+section.st .st-pin { background: radial-gradient(55% 70% at 80% 10%, rgba(247,192,50,.16), rgba(247,192,50,0) 65%), radial-gradient(60% 60% at 10% 100%, rgba(247,192,50,.08), rgba(247,192,50,0) 70%), linear-gradient(180deg, #2E3034, #26282B) !important; }
+section.st .st-pin::before, section.st .st-pin::after { display: none !important; }
+section.st .st-h > *:first-child, section.st .st-h > *:first-child * { color: #FFFFFF !important; -webkit-text-fill-color: #FFFFFF !important; }
+section.st .st-h > *:nth-child(2), section.st .st-h > *:nth-child(2) * { color: #F7C032 !important; -webkit-text-fill-color: #F7C032 !important; background: none !important; opacity: 1 !important; font-weight: 700 !important; }
+section.st .st-eb { color: #F7C032 !important; opacity: 1 !important; }
+section.st .st-today, section.st .st-today * { color: #FFFFFF !important; }
+section.st .st-rail { background: rgba(255,255,255,.14) !important; height: 3px !important; }
+section.st .st-rail::after { background: linear-gradient(90deg, transparent, #F7C032, #FFE08A, transparent) !important; filter: drop-shadow(0 0 8px #F7C032) !important; height: 3px; }
+section.st .st-bar, section.st .st-line { background: #F7C032 !important; box-shadow: 0 0 12px rgba(247,192,50,.6) !important; }
+section.st .st-node { background: #26282B !important; box-shadow: 0 0 0 2px #F7C032, 0 0 10px rgba(247,192,50,.5) !important; }
+section.st .st-btn:not(.y) { color: #fff !important; border-color: rgba(255,255,255,.5) !important; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.5) !important; background: transparent !important; }
+section.st .st-yr-k .b { color: #F7C032 !important; }
+section.st .st-yr b { color: #FFFFFF !important; text-shadow: 0 0 40px rgba(247,192,50,.25) !important; }
+section.st .st-yr-k .a { color: #A7ABB1 !important; }
+section.st .st-more { color: #fff !important; border-color: rgba(255,255,255,.45) !important; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.45) !important; background: transparent !important; }
+section.st .st-more:hover { box-shadow: inset 0 0 0 1.5px #F7C032 !important; color: #F7C032 !important; }
+section.st { background: linear-gradient(180deg, #26282B, #2A2C2F) !important; color: #fff !important; }
+section.st .st-stats { border-color: rgba(255,255,255,.16) !important; }
+section.st .st-stats > div + div { border-color: rgba(255,255,255,.12) !important; }
+section.st .st-stats b, section.st .st-stats b * { color: #FFFFFF !important; }
+section.st .st-stats small { color: #F7C032 !important; }
+section.st .st-stats > div > span, section.st .st-note { color: #A7ABB1 !important; }
+section.st .stc .b { stroke: rgba(255,255,255,.12) !important; } section.st .stc .n { fill: #2A2C2F !important; stroke: rgba(255,255,255,.35) !important; }
+section.st .st-cards, section.st .st-cards *:not(.st-st):not(.st-st *):not(.st-k), section.st .st-bc, section.st .st-bc-in { color: #26282B; }
+section.st .st-card-h, section.st .st-bc h3, section.st .st-bc b { color: #26282B !important; -webkit-text-fill-color: #26282B !important; }
+section#network::after { display: none !important; content: none !important; } /* owner (17 Nov): not our circuit style; the standard side circuits only */

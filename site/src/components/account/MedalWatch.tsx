@@ -19,7 +19,7 @@ export default function MedalWatch() {
     ];
     on.forEach(([k, f]) => window.addEventListener(k, f));
     let t = 0;
-    const got = (e: Event) => { const id = (e as CustomEvent).detail as string; window.clearTimeout(t); setShow(id); play('success'); t = window.setTimeout(() => setShow(null), 4200); };
+    const got = (e: Event) => { const id = (e as CustomEvent).detail as string; window.clearTimeout(t); setShow(id); play('tada'); t = window.setTimeout(() => setShow(null), 4200); };
     window.addEventListener('se:medal', got);
     return () => { on.forEach(([k, f]) => window.removeEventListener(k, f)); window.removeEventListener('se:medal', got); window.clearTimeout(t); };
   }, []);

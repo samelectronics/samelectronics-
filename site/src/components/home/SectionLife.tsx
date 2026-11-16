@@ -142,7 +142,7 @@ export default function SectionLife() {
         // hero-style circuits keep theirs: story, finale)
         const host = sec.id === 'quality' ? (sec.querySelector('.bt-pin') as HTMLElement | null) || undefined : undefined;
         if (window.innerWidth >= 1100 && !OWN.has(sec.id) && !(host || sec).querySelector(':scope > .se-gut')) { const t = tone(sec), e = contentEdges(host || sec);
-          const hs = Array.from(sec.id).reduce((a, c) => (a * 31 + c.charCodeAt(0)) % 100000, 7); gutter(sec, e.l, 1, t, hs + 101, host); gutter(sec, e.r, -1, t, hs * 3 + 977, host); }
+          const hs = Array.from(sec.id).reduce((a, c) => (a * 31 + c.charCodeAt(0)) % 100000, 7); const g = Math.max(e.l, e.r); /* owner (17 Nov): both sides always get their circuits (one stray wide element no longer kills the left one) */ gutter(sec, g, 1, t, hs + 101, host); gutter(sec, g, -1, t, hs * 3 + 977, host); }
       }
     } catch (err) { console.warn('[SectionLife]', err); } };
     (window as unknown as { __seLife?: () => void }).__seLife = run;

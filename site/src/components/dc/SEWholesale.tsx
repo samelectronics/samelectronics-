@@ -175,8 +175,9 @@ function render(v: Vals) {
                   <path d="M5 12h14M13 6l6 6-6 6" />
                 </svg>
               </a>
-              <a href={v.wa} target="_blank" rel="noopener noreferrer" className="wf-btn line">
-                Send a bulk list
+              {/* owner (17 Nov): WhatsApp and WeChat are both offered: the sheet opens with the bulk-list message ready */}
+              <a href={v.wa} target="_blank" rel="noopener noreferrer" className="wf-btn line duo" onClick={(e) => { e.preventDefault(); let x = ''; try { x = new URL(v.wa).searchParams.get('text') || ''; } catch { /* */ } window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wa', text: x } })); }}>
+                <span className="duo-ic" aria-hidden="true"><i className="ct-ic wa" /><i className="ct-ic wc" /></span>Send a bulk list
               </a>
             </div>
           </div>
@@ -329,8 +330,9 @@ function render(v: Vals) {
               ))}
               <div className="wf-li-acts">
                 <button type="button" className="wf-add" onClick={v.addLine}>+ Add to request</button>
-                <a className="wf-send" href={v.send} target="_blank" rel="noopener">Send request on WhatsApp</a>
-                <button type="button" className="wf-send wcb" onClick={() => { let x = ''; try { x = new URL(v.send).searchParams.get('text') || ''; } catch { /* */ } window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wc', text: x } })); }}>Send request on WeChat</button>
+<span className="wf-sends">
+                  {(['wa', 'wc'] as const).map((m) => <button key={m} type="button" className={'wf-send2 ' + m} onClick={() => { let x = ''; try { x = new URL(v.send).searchParams.get('text') || ''; } catch { /* */ } window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: m, text: x } })); }}><i className={'ct-ic ' + m} aria-hidden="true" />{m === 'wa' ? 'Send on WhatsApp' : 'Send on WeChat'}</button>)}
+                </span>
               </div>
               <a className="wf-real" href="#wholesale" onClick={v.apply}>
                 <span className="i" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3l7 3v6c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6z" /><path d="M9 12l2 2 4-4" /></svg></span>

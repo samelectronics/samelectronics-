@@ -31,7 +31,7 @@ class Component extends DCLogic {
     this.b = ROLES.map((_, i) => ({ th: 0, w: 0, y: -720, vy: 0, dropAt: Infinity, ph: i * 1.7 + 0.4, om: 2.3 + i * 0.17, amp: 9 + (i % 3) * 2.5 }));
     this.mx = null; this.alive = true; this.t = 0; let last = performance.now();
     /* owner (16 Nov): the cards sometimes froze: a tall section never reached 20% visible, so it never woke up. Now any part on screen keeps it moving, and the drop starts once a quarter of the screen is the team. */
-    this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen && e.intersectionRect.height > innerHeight * 0.25) this.start(); }, { threshold: Array.from({ length: 11 }, (_, i) => i / 10) });
+    this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; if (e.isIntersecting && !this.state.seen && e.intersectionRect.height > innerHeight * 0.08) this.start(); /* owner (17 Nov): they come in as soon as the team shows */ }, { threshold: Array.from({ length: 11 }, (_, i) => i / 10) });
     setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
     const loop = (now) => { if (!this.alive) return; const dt = Math.min(0.033, (now - last) / 1000); last = now; if (this.vis && !document.hidden) { this.t += dt; this.step(dt); this.paint(); } this.raf = requestAnimationFrame(loop); };
     this.raf = requestAnimationFrame(loop);
@@ -40,7 +40,7 @@ class Component extends DCLogic {
     window.seTeam = (t, flip) => { if (!this.state.seen) this.start(); this.b.forEach((b) => { b.y = 0; b.vy = 0; b.th = 0; b.w = 0; b.dropAt = -1; }); this.t0 = this.t - t; if (flip != null) this.setState({ flip }); this.paint(); };
   }
   componentWillUnmount() { this.offRp && this.offRp(); this.alive = false; cancelAnimationFrame(this.raf); this.io && this.io.disconnect(); window.removeEventListener('se:lang', this.onLang); window.removeEventListener('resize', this.onResize); }
-  start() { this.setState({ seen: true }); this.b.forEach((b, i) => { b.dropAt = this.t + 0.3 + i * 0.12; }); this.t0 = this.t; }
+  start() { this.setState({ seen: true }); this.b.forEach((b, i) => { b.dropAt = this.t + 0.05 + i * 0.09; }); this.t0 = this.t; }
   step(dt) {
     const t = this.t, R = this.secRef.current;
     this.b.forEach((b, i) => {
@@ -53,10 +53,10 @@ class Component extends DCLogic {
       // owner (16 Nov): ONE gentle wind for all of them: a slow breeze that travels across the rail (each badge a little
       // later than its neighbour), about 3 degrees, breathing stronger and softer over ~20 s; no random kicks
       const gust = 0.75 + 0.25 * Math.sin(t * 0.31) + 0.15 * Math.sin(t * 0.083 + 1.3);
-      let F = 38 * gust * Math.sin(0.95 * t - i * 0.55); /* owner (16 Nov): they barely moved, as if screwed in: a real swing now */
+      let F = 46 * gust * (Math.sin(1.25 * t - i * 0.6) + 0.35 * Math.sin(2.1 * t + i * 1.3)); /* owner (17 Nov): always moving, like wind, a little livelier */ /* owner (16 Nov): they barely moved, as if screwed in: a real swing now */
       // owner (15 Nov): the mouse BRUSHES them: a passing pointer gives a push in its direction (by its speed), then they
       // swing freely and settle by themselves. A resting pointer does nothing (they never get stuck pushed aside).
-      if (this.mvx && this.mx != null && this.cx) { const dx = this.cx[i] - this.mx, ady = Math.abs(this.my - 300); if (Math.abs(dx) < 90 && ady < 300) b.w += this.mvx * (1 - Math.abs(dx) / 90) * 1.1; }
+      if (this.mvx && this.mx != null && this.cx) { const dx = this.cx[i] - this.mx, ady = Math.abs(this.my - 300); if (Math.abs(dx) < 110 && ady < 320) b.w += this.mvx * (1 - Math.abs(dx) / 110) * 1.6; }
       b.w += (-K * b.th - C * b.w + F) * dt; b.th += b.w * dt;
     });
     this.mvx = (this.mvx || 0) * Math.pow(0.0005, dt); // the brush fades within a fraction of a second
@@ -66,7 +66,7 @@ class Component extends DCLogic {
     if (!this._g) { this._g = [...R.querySelectorAll('[data-g]')]; this._h = [...R.querySelectorAll('[data-holo]')]; this._c = [...R.querySelectorAll('.tm-card')]; }
     if (!this._g[0] || !this._g[0].isConnected) { this._g = null; return; }
     this.b.forEach((b, i) => { const g = this._g[i], h = this._h[i]; if (!g) return; const y = this.t < b.dropAt ? -720 : b.y;
-      if (b.pth != null && Math.abs(b.th - b.pth) < 0.06 && Math.abs(y - b.py) < 0.3) return; b.pth = b.th; b.py = y; // sub-pixel changes are skipped (fewer repaints at idle)
+      if (b.pth != null && Math.abs(b.th - b.pth) < 0.004 && Math.abs(y - b.py) < 0.05) return; /* owner (17 Nov): repaint every real change, so the swing never looks frozen at its slow ends */ b.pth = b.th; b.py = y; // sub-pixel changes are skipped (fewer repaints at idle)
       // R10: never swing into a neighbour (laptops have less room between badges): the drawn angle is limited by the free gap
       const room = this._room || (this._room = (() => { const sl = R.querySelector('.tm-slot'), cd = R.querySelector('.tm-card'); if (!sl || !cd) return 6; const gap = Math.max(4, sl.getBoundingClientRect().width - cd.getBoundingClientRect().width); return Math.max(9, Math.min(16, Math.atan(gap / 2 / 300) * 180 / Math.PI * 1.6)); /* R11 (owner): they swing visibly */ })());
       const th = room * Math.tanh(b.th / room); /* soft limit: never a hard stop that looks stuck */
