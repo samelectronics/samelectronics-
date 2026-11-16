@@ -144,12 +144,12 @@ export function search(q: string, list = products()): Product[] {
 export function suggest(q: string, n = 8) {
   const d = data(); if (!d || !norm(q)) return [];
   const { terms } = fix(q), t = terms.join(' ');
-  const out: { kind: 'model' | 'brand' | 'part'; label: string; sub: string; q: string }[] = [];
-  d.brands.forEach((b) => { if (norm(b.name).startsWith(terms[0] || '')) out.push({ kind: 'brand', label: b.name, sub: d.models.filter((m) => m.brand_id === b.id).length + ' models', q: b.name }); });
+  const out: { kind: 'model' | 'brand' | 'part'; label: string; sub: string; q: string; brand?: string }[] = [];
+  d.brands.forEach((b) => { if (norm(b.name).startsWith(terms[0] || '')) out.push({ kind: 'brand', label: b.name, sub: d.models.filter((m) => m.brand_id === b.id).length + ' models', q: b.name, brand: b.id }); });
   const ms = d.models.filter((m) => terms.every((x) => norm(m.name + ' ' + m.series).includes(x) || norm(d.brands.find((b) => b.id === m.brand_id)?.name || '').includes(x)));
   const has = new Set(products().map((p) => p.model_id));
-  ms.sort((a, b) => +has.has(b.id) - +has.has(a.id)).slice(0, 5).forEach((m) => out.push({ kind: 'model', label: m.name, sub: has.has(m.id) ? 'in stock' : 'ask us', q: m.name }));
-  search(t).slice(0, 4).forEach((p) => out.push({ kind: 'part', label: p.title + ' · ' + p.gradeName, sub: p.makerName, q: p.title }));
+  ms.sort((a, b) => +has.has(b.id) - +has.has(a.id)).slice(0, 5).forEach((m) => out.push({ kind: 'model', label: m.name, sub: has.has(m.id) ? 'in stock' : 'ask us', q: m.name, brand: m.brand_id }));
+  search(t).slice(0, 4).forEach((p) => out.push({ kind: 'part', label: p.title + ' · ' + p.gradeName, sub: p.makerName, q: p.title, brand: p.brand }));
   const seen = new Set<string>(); return out.filter((x) => (seen.has(x.label) ? false : (seen.add(x.label), true))).slice(0, n);
 }
 

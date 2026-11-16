@@ -5,10 +5,12 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { suggest, fix } from '@/lib/catalog';
 import { store, useStore } from '@/lib/store';
 import { T } from '@/components/site/ui';
+import SEBrandLogo from '@/components/dc/SEBrandLogo';
+import { brandInk } from '@/lib/brandInk';
 
 const TRY = ['iPhone 13 screen', 'A54 battery', 'Redmi Note 12 charging flex', 'S23 back cover', 'Pixel 7 camera'];
 
-export default function ShopSearch({ q, onQ, onFmp, compact }: { q: string; onQ: (q: string) => void; onFmp: () => void; compact?: boolean }) {
+export default function ShopSearch({ q, onQ, onFmp, compact, count }: { q: string; onQ: (q: string) => void; onFmp: () => void; compact?: boolean; count?: number }) {
   const [v, setV] = useState(q), [open, setOpen] = useState(false), [hi, setHi] = useState(-1), [ph, setPh] = useState(0);
   const st = useStore(), box = useRef<HTMLDivElement>(null), inp = useRef<HTMLInputElement>(null);
   useEffect(() => setV(q), [q]);
@@ -34,6 +36,7 @@ export default function ShopSearch({ q, onQ, onFmp, compact }: { q: string; onQ:
         <input ref={inp} value={v} onChange={(e) => { setV(e.target.value); setOpen(true); setHi(-1); }} onFocus={() => setOpen(true)} onKeyDown={key}
           placeholder={T('Search') + ' “' + T(TRY[ph]) + '”'} aria-label={T('Search the shop')} autoComplete="off" spellCheck={false} />
         {v ? <button type="button" className="ss-clr" onClick={() => { setV(''); onQ(''); inp.current?.focus(); }} aria-label={T('Clear')}>×</button> : <kbd className="ss-kbd">/</kbd>}
+        {count != null ? <span className="ss-n" aria-live="polite"><b>{count.toLocaleString('en-US')}</b> {T('results')}</span> : null}
         <button type="button" className="ss-go" onClick={() => go(v)}>{T('Search')}</button>
       </div>
       {open ? (
@@ -43,8 +46,9 @@ export default function ShopSearch({ q, onQ, onFmp, compact }: { q: string; onQ:
           {v.trim()
             ? sug.map((s, i) => (
                 <button key={s.kind + s.label} type="button" role="option" aria-selected={hi === i} className={'ss-it' + (hi === i ? ' hi' : '')} onMouseEnter={() => setHi(i)} onClick={() => go(s.q)}>
-                  <span className={'ss-k k-' + s.kind}>{s.kind === 'model' ? 'MODEL' : s.kind === 'brand' ? 'BRAND' : 'PART'}</span>
-                  <b>{s.label}</b><small>{s.sub}</small>
+                  <span className="ss-logo">{s.brand ? <SEBrandLogo brand={s.brand} h={16} fit="64x18" color={brandInk(s.brand)} /> : null}</span>
+                  <span className="ss-txt"><b>{s.label}</b><small>{T(s.sub)}</small></span>
+                  <span className={'ss-k k-' + s.kind}>{s.kind === 'model' ? T('Model') : s.kind === 'brand' ? T('Brand') : T('Part')}</span>
                 </button>
               ))
             : <>

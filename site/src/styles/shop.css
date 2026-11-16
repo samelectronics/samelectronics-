@@ -714,3 +714,13 @@ html[dir="rtl"] .clip-pic { animation-name: clipWhipR, clipPush !important; }
   .shop-dock-ic button.mn { width: 42px; height: 36px; }
   .shop-dock .sp-chip.y { height: 40px; padding: 0 18px; font-size: 15px; }
 }
+/* Owner (16 Nov): the result count sits inside the search bar on the right, and every suggestion starts with the brand's
+   own logo, then the name and detail, with the kind (Brand · Model · Part) quietly at the end. */
+.ss-n { flex: none; color: #6E7378; font: 500 13px Inter, sans-serif; white-space: nowrap; padding-inline: 4px 6px; }
+.ss-n b { color: var(--g8); font: 700 14px 'Space Grotesk', sans-serif; }
+.ss-it { gap: 14px; padding: 10px 14px; }
+.ss-logo { flex: none; width: 72px; height: 30px; display: grid; place-items: center; border-radius: 8px; background: #F6F6F7; box-shadow: inset 0 0 0 1px #ECEDEF; }
+.ss-logo svg, .ss-logo img { max-width: 64px; max-height: 18px; }
+.ss-txt { flex: 1; min-width: 0; display: grid; gap: 1px; } .ss-txt b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .ss-txt small { margin: 0 !important; color: var(--g4); font-size: 12px; }
+.ss-it .ss-k { flex: none; font: 600 10.5px Inter, sans-serif; letter-spacing: .04em; text-transform: uppercase; background: transparent !important; color: #8C9096 !important; padding: 0; }
+@media (max-width: 700px) { .ss-n { display: none; } .ss-logo { width: 54px; height: 26px; } .ss-logo svg, .ss-logo img { max-width: 46px; max-height: 15px; } .ss-it .ss-k { display: none; } }
