@@ -4,6 +4,7 @@
 // and quick topics. Owner (17 Nov): "the chat looks unprofessional and boring and doesn't have many options".
 // Answers come from Samsoom's own brain (brain2: free, no AI service). Photos are read in the browser (free).
 // Every answer can be copied, rated and followed up with one tap; a person is always one tap away (WhatsApp, WeChat).
+import '@/styles/ask.css';
 import React, { useEffect, useRef, useState } from 'react';
 import { search, data, byId, type Product, priceText } from '@/lib/catalog';
 import { emoteFor } from './brain';

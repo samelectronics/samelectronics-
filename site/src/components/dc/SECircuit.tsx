@@ -130,7 +130,7 @@ export default function SECircuit() {
             <span className="cx-mat" aria-hidden="true" />
             <div className="cx-card-in">
               <span className="top">
-                <span className="brand"><img className="cx-badge" src="/assets/se-logo-320.webp" alt="" aria-hidden="true" /><span><b data-no-i18n="">{CC.name}</b><small>{T(CC.kind)}</small></span></span>
+                <span className="brand"><img loading="lazy" decoding="async" className="cx-badge" src="/assets/se-logo-320.webp" alt="" aria-hidden="true" /><span><b data-no-i18n="">{CC.name}</b><small>{T(CC.kind)}</small></span></span>
                 {hl ? <Battery n={front ? lvl : 0} of={5} k={k} /> : <span className="cx-seal" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 2l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 15.3 6.8 18l1-5.8L3.6 8.1l5.8-.8z" /></svg></span>}
               </span>
               <span className="cx-chiprow" aria-hidden="true"><span className="chip"><i /><i /><i /></span><svg className="cx-nfc" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M8.5 7.5a6 6 0 0 1 0 9M12 5a9.5 9.5 0 0 1 0 14M5 10a2.5 2.5 0 0 1 0 4" /></svg></span>

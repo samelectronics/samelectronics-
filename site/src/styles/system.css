@@ -433,7 +433,7 @@ html[data-sam-speaking] .sam-zap-run, [data-tour='samsoom']:hover .sam-zap-run, 
 .wf .wf-floor { background:
     radial-gradient(60% 45% at 55% 12%, rgba(255,250,228,.55), rgba(255,250,228,0) 70%),
     radial-gradient(70% 22% at 50% 88%, rgba(120,80,0,.32), rgba(120,80,0,0) 70%),
-    url(/assets/noise/n-c39f7bf612.png),
+    url(/assets/noise/n-c39f7bf612.webp),
     linear-gradient(180deg, #FAD15C 0%, #F7C032 55%, #E9B227 100%) !important; }
 .wf .wf-floor::before { background: linear-gradient(90deg, transparent, rgba(120,80,0,.18) 30%, rgba(120,80,0,.18) 70%, transparent) !important; }
 .wf .wf-pool { background: radial-gradient(closest-side, rgba(255,252,236,.55), rgba(255,252,236,.12) 55%, rgba(255,252,236,0)) !important; }

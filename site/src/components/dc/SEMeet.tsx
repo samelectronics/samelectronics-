@@ -9,7 +9,7 @@ function Card({ c }: { c: any }) {
   if (c.k === 'product')
     return (
       <div className="mt-card prod">
-        <span className="th">{c.img ? <img src={c.img} alt="" /> : null}</span>
+        <span className="th">{c.img ? <img loading="lazy" decoding="async" src={c.img} alt="" /> : null}</span>
         <span className="tx">
           <b data-no-i18n="">{c.title}</b>
           <small>
@@ -27,7 +27,7 @@ function Card({ c }: { c: any }) {
       <div className="mt-card grades">
         {c.rows.map((r: any) => (
           <span key={r.g} className="row">
-            <span className="th sm">{r.img ? <img src={r.img} alt="" /> : null}</span>
+            <span className="th sm">{r.img ? <img loading="lazy" decoding="async" src={r.img} alt="" /> : null}</span>
             <b>{r.g}</b>
             <em data-no-i18n="">{r.p}</em>
           </span>

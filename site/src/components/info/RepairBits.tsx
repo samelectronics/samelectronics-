@@ -78,7 +78,7 @@ export function JobTicket({ job, model, repair, total, when, mode, name }: { job
   useEffect(() => { const q = qrcode(0, 'M'); q.addData(location.origin + '/repair?job=' + job); q.make(); setSvg(q.createSvgTag({ cellSize: 3, margin: 0, scalable: true })); }, [job]);
   return (
     <div className="rp-ticket" role="region" aria-label={T('Your job ticket')}>
-      <div className="rp-tk-h"><img src="/assets/se-logo-128.webp" alt="" width={34} height={34} /><span><b>SAM ELECTRONICS · REPAIR LAB</b><small>Al Murar, Deira · Dubai</small></span><em>{T('JOB TICKET')}</em></div>
+      <div className="rp-tk-h"><img loading="lazy" decoding="async" src="/assets/se-logo-128.webp" alt="" width={34} height={34} /><span><b>SAM ELECTRONICS · REPAIR LAB</b><small>Al Murar, Deira · Dubai</small></span><em>{T('JOB TICKET')}</em></div>
       <div className="rp-tk-b">
         <dl>
           <dt>{T('Job no.')}</dt><dd className="mono">{job}</dd>

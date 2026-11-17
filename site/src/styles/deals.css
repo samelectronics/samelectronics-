@@ -1,6 +1,6 @@
 /* Issue 7 · Deals & arrivals: graphite with a warm display light over the spotlight deal */
 .dl { position: relative; overflow: hidden; color: #fff; background: radial-gradient(42% 55% at 14% 26%, rgba(255, 196, 92, .16), rgba(255, 196, 92, 0) 70%), #2A2C2F; }
-.dl::before { content: ''; position: absolute; inset: 0; opacity: .035; pointer-events: none; background-image: url(/assets/noise/n-012165920b.png); }
+.dl::before { content: ''; position: absolute; inset: 0; opacity: .035; pointer-events: none; background-image: url(/assets/noise/n-012165920b.webp); }
 .dl-in { position: relative; width: 1272px; max-width: calc(100% - 48px); margin: 0 auto; padding: 72px 0 96px; }
 .dl-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; margin-bottom: 32px; }
 .dl-eb { font: 600 13px/1 'JetBrains Mono', monospace; letter-spacing: .15em; color: #F7C032; }

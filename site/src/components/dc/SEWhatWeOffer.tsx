@@ -46,7 +46,7 @@ function render(v: Vals) {
               inset: '0',
               display: 'none', /* owner (28 Oct, R8): no grain at all: the showroom is clean fog, no grey band */
               backgroundImage:
-                "url(/assets/noise/n-b34fa71b89.png)",
+                "url(/assets/noise/n-b34fa71b89.webp)",
             }}
           ></div>
           {'\n    '}
@@ -269,7 +269,7 @@ function render(v: Vals) {
                         {/* Urgent 3: the part stands still in THE pose (carton behind, product in front), perfectly lit; no
                             turntable, no glowing ovals */}
                         <div className="wo-stage" />
-                        <img data-w={`fb${s(v.f?.i)}`} alt="" className="wo-pose" />
+                        <img loading="lazy" decoding="async" data-w={`fb${s(v.f?.i)}`} alt="" className="wo-pose" />
                       </div>
                       {'\n          '}
                     </React.Fragment>
@@ -634,7 +634,7 @@ function render(v: Vals) {
                 inset: '0',
                 opacity: '.035',
                 backgroundImage:
-                  "url(/assets/noise/n-b34fa71b89.png)",
+                  "url(/assets/noise/n-b34fa71b89.webp)",
               }}
             ></div>
             {'\n      '}
@@ -865,7 +865,7 @@ function render(v: Vals) {
                 inset: '0',
                 opacity: '.03',
                 backgroundImage:
-                  "url(/assets/noise/n-b34fa71b89.png)",
+                  "url(/assets/noise/n-b34fa71b89.webp)",
               }}
             ></div>
             {'\n      '}

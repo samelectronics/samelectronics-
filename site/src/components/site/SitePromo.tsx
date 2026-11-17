@@ -25,7 +25,7 @@ export default function SitePromo() {
         <div className="sc2-veil" onClick={(e) => { if (e.target === e.currentTarget) setShow(false); }}>
           <div className="spm-pop" role="dialog" aria-label={T(pop.title)}>
             <button type="button" className="st-x spm-x" data-sound="close" onClick={() => setShow(false)}>✕</button>
-            {pop.img ? <span className="spm-img"><img src={pop.img} alt="" /></span> : null}
+            {pop.img ? <span className="spm-img"><img loading="lazy" decoding="async" src={pop.img} alt="" /></span> : null}
             <div className="spm-txt"><span className="sp-eb">{T('OFFER')}</span><b>{T(pop.title)}</b><p>{T(pop.text)}</p>
               <span className="spm-acts"><a className="st-btn st-go" href={pop.href} onClick={() => setShow(false)}>{T(pop.cta)}</a><button type="button" className="st-btn st-grey" onClick={() => setShow(false)}>{T('Not now')}</button></span></div>
           </div>

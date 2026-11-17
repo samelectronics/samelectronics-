@@ -1,6 +1,6 @@
 /* Issue 14 · Meet Samsoom, "Ask at 3 a.m.": a warm yellow studio, Samsoom floating on the teardown phone, a graphite chat */
 .mt { position: relative; overflow: hidden; background: radial-gradient(70% 80% at 30% 40%, #F7C032, #F7C032 55%, #E9B124); color: #26282B; }
-.mt::before { content: ''; position: absolute; inset: 0; opacity: .035; pointer-events: none; background-image: url(/assets/noise/n-012165920b.png); }
+.mt::before { content: ''; position: absolute; inset: 0; opacity: .035; pointer-events: none; background-image: url(/assets/noise/n-012165920b.webp); }
 .mt-vig { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 100% at 50% 40%, rgba(150, 95, 0, 0) 55%, rgba(150, 95, 0, .22)); }
 .mt-in { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 520px; gap: 48px; width: 1272px; max-width: calc(100% - 48px); margin: 0 auto; padding: 96px 0 80px; align-items: start; }
 .mt-left { position: relative; display: flex; flex-direction: column; }

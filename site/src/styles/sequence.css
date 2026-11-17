@@ -4,8 +4,8 @@
 :root { --sq-white: #F2F3F4; --sq-grey: #2A2C2F; --sq-yellow: #F7C032; --sq-ink: #3A3D42;
   /* the three standard materials, copied from the reference sections (What we offer / Live board / Bench test) */
   --mat-white: #F2F3F4;
-  --mat-grey: radial-gradient(60% 50% at 50% 0, rgba(214,222,230,.07), rgba(214,222,230,0) 70%), url(/assets/noise/n-d6cb514b42.png), linear-gradient(180deg, #2A2C2F, #34363A);
-  --mat-yellow: url(/assets/noise/n-d6cb514b42.png), #F7C032; }
+  --mat-grey: radial-gradient(60% 50% at 50% 0, rgba(214,222,230,.07), rgba(214,222,230,0) 70%), url(/assets/noise/n-d6cb514b42.webp), linear-gradient(180deg, #2A2C2F, #34363A);
+  --mat-yellow: url(/assets/noise/n-d6cb514b42.webp), #F7C032; }
 
 /* Deals → WHITE */
 #deals.dl { background: var(--mat-white) !important; color: #26282B !important; }
@@ -151,7 +151,7 @@ section.rv#reviews { background:
     radial-gradient(45% 38% at 50% 12%, rgba(247,192,50,.10), rgba(247,192,50,0) 70%),
     radial-gradient(circle, rgba(255,255,255,.06) 1px, transparent 1.6px) 0 0 / 22px 22px,
     radial-gradient(60% 50% at 50% 0, rgba(214,222,230,.07), rgba(214,222,230,0) 70%),
-    url(/assets/noise/n-c39f7bf612.png),
+    url(/assets/noise/n-c39f7bf612.webp),
     linear-gradient(180deg, #2A2C2F, #34363A) !important; }
 /* owner (16 Nov): the story title is graphite on the yellow, both lines; the second line is lighter in weight, not grey */
 section.st .st-h > *:first-child, section.st .st-h > *:nth-child(2), section.st .st-h > *:nth-child(2) * { color: #26282B !important; -webkit-text-fill-color: #26282B !important; text-shadow: none !important; }

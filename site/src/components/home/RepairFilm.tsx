@@ -19,7 +19,7 @@ const eio = (x: number) => { x = cl(x); return x < 0.5 ? 4 * x * x * x : 1 - Mat
 const eo = (x: number) => 1 - Math.pow(1 - cl(x), 3);
 
 function Layer({ l, k }: { l: string; k?: string }) {
-  return <img className="rf-l" data-rf={k || l} src={SRC(l)} srcSet={`${SRC(l)} 640w, ${SRC2(l)} 1280w`} sizes="(max-width: 900px) 100vw, 640px" alt="" draggable={false} />;
+  return <img loading="lazy" decoding="async" className="rf-l" data-rf={k || l} src={SRC(l)} srcSet={`${SRC(l)} 640w, ${SRC2(l)} 1280w`} sizes="(max-width: 900px) 100vw, 640px" alt="" draggable={false} />;
 }
 
 export default function RepairFilm({ kind, ticket }: { kind: RepairKind; ticket: { model: string; problems: string } }) {

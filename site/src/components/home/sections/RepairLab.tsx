@@ -8,7 +8,7 @@ import RepairScene from '../RepairScene';
 import InfoTip from '../InfoTip';
 
 /** Issue 4: fine film grain instead of grids, stripes and tiles. */
-const GRAIN = 'url(/assets/noise/n-012165920b.png)';
+const GRAIN = 'url(/assets/noise/n-012165920b.webp)';
 
 export default function RepairLab({ v, full = false }: { v: Vals; full?: boolean }) {
   return (

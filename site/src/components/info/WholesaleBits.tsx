@@ -77,9 +77,9 @@ const SHOT = (p: Product) => p.img;
 export function WhoFor({ film, globe }: { film: React.ReactNode; globe: React.ReactNode }) {
   const C: [string, string, React.ReactNode][] = [
     ['Repair shops', 'Every grade for every model, fitted the same day you buy.', film],
-    ['Traders', 'Bulk lists quoted the same day, stock reserved for you.', <span key="c" className="wf2-carton"><img src="/assets/pallet/carton-600.webp" alt="" /><em>AED 84</em></span>],
+    ['Traders', 'Bulk lists quoted the same day, stock reserved for you.', <span key="c" className="wf2-carton"><img loading="lazy" decoding="async" src="/assets/pallet/carton-600.webp" alt="" /><em>AED 84</em></span>],
     ['Exporters', 'Packed for export, paperwork handled, shipped worldwide.', globe],
-    ['Corporate & fleets', 'Parts for your own devices, invoiced to your company.', <img key="p" src="/assets/pallet/full-600.webp" alt="" />],
+    ['Corporate & fleets', 'Parts for your own devices, invoiced to your company.', <img loading="lazy" decoding="async" key="p" src="/assets/pallet/full-600.webp" alt="" />],
   ];
   return (
     <div className="wf2-who" data-rise>

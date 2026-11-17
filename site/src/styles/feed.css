@@ -1,6 +1,6 @@
 /* Issue 15 · A: The Feed (graphite studio, three live phones) · B: What customers say (white, soft yellow light) */
 .fd { position: relative; overflow: hidden; background: radial-gradient(50% 60% at 50% 72%, #3A3C40, rgba(58, 60, 64, 0) 70%), #2A2C2F; color: #fff; }
-.fd::before { content: ''; position: absolute; inset: 0; opacity: .03; pointer-events: none; background-image: url(/assets/noise/n-012165920b.png); }
+.fd::before { content: ''; position: absolute; inset: 0; opacity: .03; pointer-events: none; background-image: url(/assets/noise/n-012165920b.webp); }
 .fd::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 190px; background: linear-gradient(180deg, rgba(20, 21, 23, 0), rgba(20, 21, 23, .6)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05); pointer-events: none; }
 .fd-in { position: relative; z-index: 1; width: 1272px; max-width: calc(100% - 48px); margin: 0 auto; padding: 96px 0 40px; }
 .fd-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }

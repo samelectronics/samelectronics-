@@ -4,7 +4,7 @@
 .st-pin { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 .st-sun { position: absolute; right: -14%; top: -30%; width: 1100px; height: 1000px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 228, 176, .7), rgba(255, 236, 200, .3) 50%, rgba(255, 236, 200, 0)); animation: stSun 46s ease-in-out infinite alternate; pointer-events: none; }
 @keyframes stSun { from { transform: translate(0, 0); } to { transform: translate(-220px, 70px); } }
-.st-grain { position: absolute; inset: 0; opacity: .035; pointer-events: none; background-image: url(/assets/noise/n-012165920b.png); }
+.st-grain { position: absolute; inset: 0; opacity: .035; pointer-events: none; background-image: url(/assets/noise/n-012165920b.webp); }
 .st-box { position: absolute; left: 50%; top: 72px; width: 1440px; height: 800px; padding: 40px 84px 0; box-sizing: border-box; transform: translateX(-50%) scale(var(--sc, 1)); transform-origin: top center; }
 .st-top { display: flex; justify-content: space-between; align-items: flex-end; gap: 40px; }
 .st-eb { font: 600 12px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #F7C032; }

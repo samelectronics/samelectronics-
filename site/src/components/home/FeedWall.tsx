@@ -32,7 +32,7 @@ function Story({ net, k, live }: { net: (typeof NET)[number]; k: number; live: b
       <span className="fw-island" aria-hidden="true" />
       <div className="fw-screen">
         <span className="fw-bars" aria-hidden="true">{POSTS.map((_, i) => <i key={i} className={i < k % POSTS.length ? 'done' : i === k % POSTS.length && live ? 'on' : ''} />)}</span>
-        <span className="fw-head"><img src="/assets/se-logo-128.webp" alt="" /><b>samelectronics.uae</b><img className="fw-net" src={net.icon} alt="" /></span>
+        <span className="fw-head"><img loading="lazy" decoding="async" src="/assets/se-logo-128.webp" alt="" /><b>samelectronics.uae</b><img loading="lazy" decoding="async" className="fw-net" src={net.icon} alt="" /></span>
         <div className="fw-post" key={k} style={{ background: p.bg }}>
           <span className={'fw-tag' + (dark ? ' d' : '')}>{T(p.tag)}</span>
           <img className="fw-img" src={p.img} alt="" loading="lazy" decoding="async" />
@@ -49,7 +49,7 @@ const GRID = [...POSTS, ...POSTS.map((p, i) => ({ ...p, img: ['/assets/pose/solo
 function Profile({ net, k }: { net: (typeof NET)[number]; k: number }) {
   const posts = Array.from({ length: 9 }, (_, i) => GRID[(i + GRID.length * 9 - (k % GRID.length)) % GRID.length]);
   const tile = (p: (typeof GRID)[number], i: number, extra?: React.ReactNode) => <span key={i + '-' + k} className={'pf-t' + (i === 0 ? ' new' : '')} style={{ background: p.bg }}><img src={p.img} alt="" loading="lazy" decoding="async" />{extra}</span>;
-  const ava = <span className="pf-ava"><img src="/assets/se-logo-128.webp" alt="" /></span>;
+  const ava = <span className="pf-ava"><img loading="lazy" decoding="async" src="/assets/se-logo-128.webp" alt="" /></span>;
   return (
     <div className={'fw-phone pf n-' + net.id} aria-hidden="true">
       <span className="fw-island" />
@@ -67,7 +67,7 @@ function Profile({ net, k }: { net: (typeof NET)[number]; k: number }) {
           <span className="pf-col">{ava}<b>@samelectronics.uae</b><span className="pf-n c"><span><b>214</b><small>Following</small></span><span><b>{net.n}</b><small>Followers</small></span><span><b>96K</b><small>Likes</small></span></span><span className="pf-btns c"><i className="tt">Follow</i><i>▾</i></span><small className="pf-tt-bio">Daily stock drops from Deira</small></span>
           <span className="pf-grid tt">{posts.map((p, i) => tile(p, i, <em>▶ {(p.likes * 7).toLocaleString('en-US')}</em>))}</span>
         </>) : (<>
-          <span className="pf-cover"><img src="/assets/se-logo-320.webp" alt="" /></span>
+          <span className="pf-cover"><img loading="lazy" decoding="async" src="/assets/se-logo-320.webp" alt="" /></span>
           <span className="pf-fbh">{ava}<b>Sam Electronics</b><small>{net.n} followers · Phone parts shop</small></span>
           <span className="pf-btns"><i className="fb">Like</i><i>Message</i></span>
           <span className="pf-post"><span className="pf-ph">{ava}<b>Sam Electronics</b><small>Just now</small></span><small className="pf-pt">{T(GRID[k % GRID.length].t)}</small>{tile(GRID[k % GRID.length], 0)}</span>
@@ -98,7 +98,7 @@ export default function FeedWall() {
           <div className="fw-nets" role="tablist" onMouseEnter={() => setHold(true)} onMouseLeave={() => setHold(false)}>
             {NET.map((n, i) => (
               <button key={n.id} type="button" role="tab" aria-selected={i === net} className={'fw-net-b' + (i === net ? ' on' : '')} onClick={() => setNet(i)} style={{ ['--c' as string]: n.c } as React.CSSProperties}>
-                <span className="fw-ico"><img src={n.icon} alt="" /></span><span><b>{n.name}</b><small>{n.n} {T('followers')}</small></span>
+                <span className="fw-ico"><img loading="lazy" decoding="async" src={n.icon} alt="" /></span><span><b>{n.name}</b><small>{n.n} {T('followers')}</small></span>
               </button>
             ))}
           </div>

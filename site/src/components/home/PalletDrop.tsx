@@ -26,7 +26,7 @@ export default function PalletDrop({ n = 18, className, style }: { n?: number; c
   return (
     <div className={'se-pd' + (className ? ' ' + className : '')} style={style} aria-hidden="true">
       <style>{frames(cells.length)}</style>
-      <img src={PL('pallet')} srcSet={PL('pallet') + ' 1x, ' + PL('pallet', 1200) + ' 2x'} alt="" draggable={false} />
+      <img loading="lazy" decoding="async" src={PL('pallet')} srcSet={PL('pallet') + ' 1x, ' + PL('pallet', 1200) + ' 2x'} alt="" draggable={false} />
       {cells.map((c, i) => (
         <img
           key={i}

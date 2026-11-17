@@ -13,7 +13,7 @@ const FR = Array.from({ length: 24 }, (_, i) => '/assets/pose/film-' + String(i 
 function FinaleFilm({ on }: { on: boolean }) {
   const [f, setF] = React.useState(0);
   React.useEffect(() => { if (!on) return; FR.forEach((x) => { const i = new Image(); i.src = x; }); let t = 0; const id = window.setInterval(() => { t++; const n = FR.length, cyc = n * 2 + 24, p = t % cyc; setF(p < n ? p : p < n + 12 ? n - 1 : p < n * 2 + 12 ? n * 2 + 11 - p : 0); }, 90); return () => window.clearInterval(id); }, [on]);
-  return <img className="fz3-film" src={FR[f]} alt="" />;
+  return <img loading="lazy" decoding="async" className="fz3-film" src={FR[f]} alt="" />;
 }
 
 // R11 (owner): the traces run closer together into the ring

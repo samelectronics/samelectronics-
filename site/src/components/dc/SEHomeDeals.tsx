@@ -75,7 +75,7 @@ function render(v: Vals) {
               <div className="dl-spot-art">
                 <span className="dl-spot-light" aria-hidden="true" />
                 <span className="dl-spot-shadow" aria-hidden="true" />
-                {spot.img ? <img src={spot.img} alt="" /> : null}
+                {spot.img ? <img loading="lazy" decoding="async" src={spot.img} alt="" /> : null}
                 <span className="dl-pct dl-stamp">{spot.pct}</span>
               </div>
               <div className="dl-spot-t">
@@ -155,7 +155,7 @@ function render(v: Vals) {
                       </span>
                       <div className="dl-card-art">
                         <span className="dl-card-shadow" aria-hidden="true" />
-                        {c.img ? <img src={c.img} alt="" draggable={false} /> : null}
+                        {c.img ? <img loading="lazy" decoding="async" src={c.img} alt="" draggable={false} /> : null}
                         <span className="dl-card-sheen" aria-hidden="true" />
                       </div>
                       <span className="dl-grade">{c.grade}</span>

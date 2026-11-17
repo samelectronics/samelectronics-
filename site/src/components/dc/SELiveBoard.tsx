@@ -145,7 +145,7 @@ function render(v: Vals) {
           <div className="lb-board" data-board="1">
             <div className="lb-bh">
               <span className="lb-path">
-                <img src="/assets/se-logo-128.webp" alt="" width="22" height="22" />
+                <img loading="lazy" decoding="async" src="/assets/se-logo-128.webp" alt="" width="22" height="22" />
                 se://deira/board
               </span>
               <span className="lb-clock">
@@ -166,7 +166,7 @@ function render(v: Vals) {
                   <span className="lb-tag" style={{ background: r.tagBg, color: r.tagInk }}>
                     {r.tag}
                   </span>
-                  <span className="lb-th">{r.hasTh ? <img src={r.th} alt="" /> : r.hasCc ? <span className="lb-cc" data-no-i18n="">{r.cc}</span> : null}</span>
+                  <span className="lb-th">{r.hasTh ? <img loading="lazy" decoding="async" src={r.th} alt="" /> : r.hasCc ? <span className="lb-cc" data-no-i18n="">{r.cc}</span> : null}</span>
                   <span className="lb-item" data-no-i18n={r.hasCc ? undefined : ''}>
                     <span className="lb-type">{r.text}</span>
                   </span>

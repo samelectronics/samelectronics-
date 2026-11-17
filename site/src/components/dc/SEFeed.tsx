@@ -42,7 +42,7 @@ function Screen({ id, v }: { id: string; v: Vals }) {
                     <i />
                     <b data-no-i18n="">samelectronics.uae</b>
                   </span>
-                  <span className={'ig-img ' + p.bg}>{p.img ? <img src={p.img} alt="" /> : null}</span>
+                  <span className={'ig-img ' + p.bg}>{p.img ? <img loading="lazy" decoding="async" src={p.img} alt="" /> : null}</span>
                   <span className="ig-act">
                     <Heart />
                     <b data-no-i18n="">{p.likes}</b>
@@ -62,7 +62,7 @@ function Screen({ id, v }: { id: string; v: Vals }) {
           <i />
         </span>
         <span className="tt-bg" />
-        {v.img(5) ? <img className="tt-hero" src={v.img(5)} alt="" /> : null}
+        {v.img(5) ? <img loading="lazy" decoding="async" className="tt-hero" src={v.img(5)} alt="" /> : null}
         <span className="tt-mute" aria-hidden="true">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
             <path d="M11 5 6 9H2v6h4l5 4zM22 9l-6 6M16 9l6 6" />
@@ -116,7 +116,7 @@ function Screen({ id, v }: { id: string; v: Vals }) {
               .map((p: any) => (
                 <div key={r + '-' + p.k} className="fb-post" aria-hidden={r === 1 ? true : undefined}>
                   <span className="fb-t">{p.t}</span>
-                  <span className={'ig-img ' + p.bg}>{p.img ? <img src={p.img} alt="" /> : null}</span>
+                  <span className={'ig-img ' + p.bg}>{p.img ? <img loading="lazy" decoding="async" src={p.img} alt="" /> : null}</span>
                   <span className="fb-m">
                     <Heart /> <b data-no-i18n="">{p.likes}</b> · <span>{p.m}</span>
                   </span>
@@ -148,7 +148,7 @@ function render(v: Vals) {
             </header>
             {/* owner (2 Nov): the account name and the line fill the space under the title, beside the phone */}
             <a className="fd-user" href={(v.ch || []).find((c: any) => c.on)?.href} target="_blank" rel="noopener noreferrer">
-              <img src="/assets/se-logo-128.webp" alt="" width={44} height={44} />
+              <img loading="lazy" decoding="async" src="/assets/se-logo-128.webp" alt="" width={44} height={44} />
               <span><b data-no-i18n="" dir="ltr">@samelectronics.uae</b><small>Instagram · TikTok · Facebook</small></span>
             </a>
             <p className="fd-p">New stock, offers and bench tests go up first on our channels. Scan a code or tap Follow.</p>
@@ -170,8 +170,8 @@ function render(v: Vals) {
             <span className="fd-chan" key={v.cur}>{(v.ch || []).find((c: any) => c.on)?.name}</span>
             <a href={(v.ch || []).find((c: any) => c.on)?.href} target="_blank" rel="noopener noreferrer" className="fd-ph one">
               <span className="fd-ph-in">
-                <span className="fd-refl" aria-hidden="true">{v.phone ? <img src={v.phone} alt="" /> : null}</span>
-                {v.phone ? <img className="fd-body" src={v.phone} alt="" draggable={false} /> : null}
+                <span className="fd-refl" aria-hidden="true">{v.phone ? <img loading="lazy" decoding="async" src={v.phone} alt="" /> : null}</span>
+                {v.phone ? <img loading="lazy" decoding="async" className="fd-body" src={v.phone} alt="" draggable={false} /> : null}
                 <span className="fd-scr" style={scr}>
                   <span className="fd-on" key={v.cur}>{v.seen ? <Screen id={v.cur} v={v} /> : null}</span>
                   {/* R9 (owner): the bottom of the screen is the app's own bar: the channel and a Follow button (no chip above) */}

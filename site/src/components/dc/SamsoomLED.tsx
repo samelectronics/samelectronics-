@@ -76,7 +76,7 @@ export default function SamsoomLED({ mood, img, front }: { mood: string; img: st
               <circle cx="67" cy="-34" r="9" className="hand" />
             </g>
           </svg>
-          {img ? <img className="sl-phone" src={img} alt="" draggable={false} /> : <span className="sl-phone ph" />}
+          {img ? <img loading="lazy" decoding="async" className="sl-phone" src={img} alt="" draggable={false} /> : <span className="sl-phone ph" />}
           <div className="sl-screen" style={scr}>
             <span className="sl-oled" />
             <svg className="sl-face" viewBox="0 0 100 200" aria-hidden="true">

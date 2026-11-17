@@ -176,7 +176,7 @@ html:has(#finale), html:has(#finale) body { background-color: #34363A; }
    current runs white-hot, the logo in a graphite ring, graphite text, buttons that read on yellow */
 .fz { background:
     radial-gradient(55% 50% at 50% 24%, rgba(255,250,230,.55), rgba(255,250,230,0) 70%),
-    url(/assets/noise/n-c39f7bf612.png),
+    url(/assets/noise/n-c39f7bf612.webp),
     linear-gradient(180deg, #F9CB4C 0%, #F7C032 50%, #EDB62B 100%) !important; color: #26282B !important; }
 .fz::after { background: linear-gradient(90deg, rgba(38,40,43,0), rgba(38,40,43,.35), rgba(38,40,43,0)) !important; }
 .fz-circ .base { stroke: rgba(38,40,43,.22) !important; }

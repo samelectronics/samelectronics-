@@ -8,7 +8,7 @@
 .bt { height: calc(72px + 828px * var(--sc, 1) + 240vh); } /* owner (27 Oct): a longer scroll for the same show, so it plays smoothly instead of rushing */
 .bt-pin { position: sticky; top: 0; }
 .bt-bg { position: absolute; inset: 0; background: radial-gradient(70% 70% at 45% 40%, #F7C032 0%, #F7C032 55%, #F7C032 100%); }
-.bt-bg::before { content: ''; position: absolute; inset: 0; opacity: .04; background-image: url(/assets/noise/n-012165920b.png); }
+.bt-bg::before { content: ''; position: absolute; inset: 0; opacity: .04; background-image: url(/assets/noise/n-012165920b.webp); }
 /* R6 §08: the bench band (and its line across the yellow) is gone: one continuous yellow */
 .bt-box { position: absolute; left: 50%; top: 72px; width: 1440px; height: 828px; transform: translateX(-50%) scale(var(--sc, 1)); transform-origin: top center; color: #26282B; }
 
@@ -212,7 +212,7 @@ html[dir='rtl'] .bt-try > svg:last-child { transform: scaleX(-1); }
 /* object in space: slight 3/4 view, real slab thickness, light from top-left */
 .bt-rig {
   background:
-    url(/assets/noise/n-7d86486eab.png),
+    url(/assets/noise/n-7d86486eab.webp),
     radial-gradient(90% 60% at 8% -5%, rgba(255,255,255,.75), rgba(255,255,255,0) 55%),
     radial-gradient(70% 50% at 100% 105%, rgba(40,44,50,.28), rgba(40,44,50,0) 60%),
     linear-gradient(158deg, #F1F2F4 0%, #D6D9DD 30%, #C3C7CC 62%, #A9AEB4 100%) !important;
@@ -258,7 +258,7 @@ html[dir='rtl'] .bt-try > svg:last-child { transform: scaleX(-1); }
     radial-gradient(70% 45% at 50% 8%, rgba(255,255,255,.07), rgba(255,255,255,0) 70%),
     linear-gradient(rgba(255,255,255,.028) 1px, transparent 1px) 0 0 / 22px 22px,
     linear-gradient(90deg, rgba(255,255,255,.028) 1px, transparent 1px) 0 0 / 22px 22px,
-    url(/assets/noise/n-af0cd76b2c.png),
+    url(/assets/noise/n-af0cd76b2c.webp),
     linear-gradient(180deg, #2B2D31, #202226 55%, #1A1B1E) !important;
   box-shadow:
     inset 0 10px 18px -4px rgba(0,0,0,.75),
@@ -331,7 +331,7 @@ html[dir='rtl'] .bt-try > svg:last-child { transform: scaleX(-1); }
 .bt-phone {
   border-radius: 36px !important;
   background:
-    url(/assets/noise/n-42c7de8012.png),
+    url(/assets/noise/n-42c7de8012.webp),
     linear-gradient(180deg, transparent 12.5%, rgba(40,42,46,.6) 12.5% 13.1%, transparent 13.1% 86.9%, rgba(40,42,46,.6) 86.9% 87.5%, transparent 87.5%),
     linear-gradient(135deg, #F4F5F6 0%, #B9BDC2 18%, #8E9298 42%, #A7ABB0 60%, #6C7076 82%, #4A4E54 100%) !important;
   box-shadow:
@@ -358,7 +358,7 @@ html[dir='rtl'] .bt-try > svg:last-child { transform: scaleX(-1); }
   background:
     linear-gradient(125deg, rgba(255,255,255,0) 0 8%, rgba(255,255,255,.13) 8.5% 30%, rgba(255,255,255,.04) 31% 33%, rgba(255,255,255,0) 34%),
     radial-gradient(40% 18% at 70% 78%, rgba(255,255,255,.035), rgba(255,255,255,0) 70%),
-    url(/assets/noise/n-ff57a3c98f.png) !important;
+    url(/assets/noise/n-ff57a3c98f.webp) !important;
   box-shadow: inset 0 0 0 1px rgba(255,255,255,.12), inset 1px 1px 0 1px rgba(255,255,255,.08), inset 0 0 6px rgba(255,255,255,.05) !important;
 }
 
@@ -377,7 +377,7 @@ html[dir='rtl'] .bt-try > svg:last-child { transform: scaleX(-1); }
    contact shadows where the clamps and rail sit on the mat */
 .bt-rig {
   background:
-    url(/assets/noise/n-8a9166f221.png),
+    url(/assets/noise/n-8a9166f221.webp),
     linear-gradient(100deg, rgba(255,255,255,0) 52%, rgba(255,255,255,.38) 60%, rgba(255,255,255,.12) 66%, rgba(255,255,255,0) 74%),
     radial-gradient(90% 60% at 8% -5%, rgba(255,255,255,.7), rgba(255,255,255,0) 55%),
     radial-gradient(70% 50% at 100% 105%, rgba(40,44,50,.3), rgba(40,44,50,0) 60%),

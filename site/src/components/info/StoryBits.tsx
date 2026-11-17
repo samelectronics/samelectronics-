@@ -61,7 +61,7 @@ export function BrandShift() {
     <div className="bs" ref={ref} style={{ ['--k' as string]: k } as React.CSSProperties}>
       <div className={'bs-sign' + (turned ? ' new' : '')}>
         <div className="bs-face old"><span className="bs-bulbs" aria-hidden="true">{Array.from({ length: 14 }, (_, i) => <i key={i} />)}</span><b data-no-i18n="">SYRIA TELL</b><small data-no-i18n="">سوريا تل · MOBILE</small></div>
-        <div className="bs-face new"><img src="/assets/se-logo-320.webp" alt="Sam Electronics" /><b data-no-i18n="">SAM ELECTRONICS</b><small>QUALITY · WARRANTY · PRICE</small></div>
+        <div className="bs-face new"><img loading="lazy" decoding="async" src="/assets/se-logo-320.webp" alt="Sam Electronics" /><b data-no-i18n="">SAM ELECTRONICS</b><small>QUALITY · WARRANTY · PRICE</small></div>
       </div>
       <div className="bs-year"><b data-no-i18n="">{yr > 2026 ? 2026 : yr}</b><span>{turned ? T('Sam Electronics: same management, new name.') : T('Syria Tell opens in Deira.')}</span></div>
       <div className="bs-rail" aria-hidden="true"><i style={{ width: k * 100 + '%' }} />{[2003, 2011, 2015, 2020, 2026].map((y) => <span key={y} style={{ left: ((y - 2003) / 23) * 100 + '%' }} className={2003 + k * 23 >= y ? 'on' : ''}><em>{y}</em></span>)}</div>
@@ -85,7 +85,7 @@ export function PhotoWall() {
         <figure key={k} className={'pw-f ' + k} style={{ ['--i' as string]: i }}>
           <span className="pw-tape" aria-hidden="true" />
           <span className="pw-img">
-            {i === 2 ? <img src="/assets/se-logo-320.webp" alt="" className="pw-logo" /> : <svg viewBox="0 0 64 48" aria-hidden="true"><rect x="2" y="6" width="60" height="40" rx="5" fill="none" stroke="currentColor" strokeWidth="2" /><circle cx="22" cy="20" r="5" fill="currentColor" /><path d="M4 42 22 28l10 8 10-12 20 18" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinejoin="round" /></svg>}
+            {i === 2 ? <img loading="lazy" decoding="async" src="/assets/se-logo-320.webp" alt="" className="pw-logo" /> : <svg viewBox="0 0 64 48" aria-hidden="true"><rect x="2" y="6" width="60" height="40" rx="5" fill="none" stroke="currentColor" strokeWidth="2" /><circle cx="22" cy="20" r="5" fill="currentColor" /><path d="M4 42 22 28l10 8 10-12 20 18" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinejoin="round" /></svg>}
             <em className="mono">{T('Photo arrives with the owner’s pictures')}</em>
           </span>
           <figcaption><b className="mono">{T(y)}</b>{T(c)}</figcaption>

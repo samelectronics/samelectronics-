@@ -19,7 +19,7 @@ export default function IpadFilm({ from }: { from: string }) {
         <b>{T('Straight from the maker’s box.')}</b>
         <span className="ipf-stage">
           <span className="ipf-glow" />
-          {shot ? <img src={shot} alt="" /> : null}
+          {shot ? <img loading="lazy" decoding="async" src={shot} alt="" /> : null}
         </span>
         <span className="ipf-line">
           <i />

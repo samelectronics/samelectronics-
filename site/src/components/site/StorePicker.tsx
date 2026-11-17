@@ -18,7 +18,7 @@ export function StoreCards({ onPick }: { onPick: (s: StoreId) => void }) {
     <div className="stp-cards">
       <button type="button" className={'stp-c dxb' + (cur === 'dxb' ? ' on' : '')} onClick={() => { setStore('dxb'); onPick('dxb'); }}>
         <span className="stp-map" aria-hidden="true"><iframe tabIndex={-1} title="" src={'https://www.google.com/maps?q=' + encodeURIComponent('78G4+3H2 Dubai') + '&z=16&output=embed'} loading="lazy" referrerPolicy="no-referrer-when-downgrade" /></span>
-        <span className="stp-id"><img src="/assets/se-logo-128.webp" alt="" width="44" height="44" /><span><b>Sam Electronics</b><small>{T('Dubai · Deira · UAE')}</small></span></span>
+        <span className="stp-id"><img loading="lazy" decoding="async" src="/assets/se-logo-128.webp" alt="" width="44" height="44" /><span><b>Sam Electronics</b><small>{T('Dubai · Deira · UAE')}</small></span></span>
         <span className="stp-live"><i />{T('Open now · since 2003')}</span>
         <span className="stp-row"><small className="stp-addr">{T('Al Murar, Deira, Dubai')}</small><small className="stp-addr">{T('Pick up today · ready in 20 minutes')}</small></span>
         <span className="stp-go">{cur === 'dxb' ? '✓ ' + T('Shopping here') : T('Shop here') + ' →'}</span>
@@ -62,7 +62,7 @@ export function StoreChip() {
       <span className="stp-sw-pop" role="menu">
         <span className="stp-sw-h mono">{T('Our stores')}</span>
         <button type="button" role="menuitem" className="stp-sw-i cur" onClick={() => { setStore('dxb'); setOpen(false); }}>
-          <img src="/assets/se-logo-128.webp" alt="" width="26" height="26" />
+          <img loading="lazy" decoding="async" src="/assets/se-logo-128.webp" alt="" width="26" height="26" />
           <span><b>Sam Electronics · Deira</b><small><i className="stp-sw-dot" />{T('Open now · since 2003')}</small></span>
           {s === 'dxb' && <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F7C032" strokeWidth="3"><path d="M5 12l5 5 9-10" /></svg>}
         </button>

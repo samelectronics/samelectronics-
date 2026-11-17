@@ -74,7 +74,7 @@ function Scene({ k }: { k: string }) {
   if (k === 'trd')
     return (
       <div className="wf-sc wf-sc3 wf-sc3-trd" aria-hidden="true">
-        <img className="wf-sc3-img" src="/assets/pallet/single-600.webp" alt="" />
+        <img loading="lazy" decoding="async" className="wf-sc3-img" src="/assets/pallet/single-600.webp" alt="" />
         <span className="tag"><i className="hole" /><b className="p1">AED 96</b><b className="p2">AED 84</b></span>
         <span className="str" />
       </div>
@@ -230,7 +230,7 @@ function render(v: Vals) {
                     v.search.hits.map((h: any) => (
                       <li key={h.id}>
                         <button type="button" onMouseDown={h.pick}>
-                          <span className="th">{h.img ? <img src={h.img} alt="" /> : null}</span>
+                          <span className="th">{h.img ? <img loading="lazy" decoding="async" src={h.img} alt="" /> : null}</span>
                           <b data-no-i18n="">{h.name}</b>
                           <small>{h.grade}</small>
                           <em>{h.price}</em>
@@ -247,7 +247,7 @@ function render(v: Vals) {
             <div className="wf-chips" role="radiogroup" aria-label="Part">
               {(v.parts || []).map((p: any) => (
                 <button key={p.id} type="button" role="radio" aria-checked={p.on} className={p.on ? 'on' : ''} onClick={p.pick}>
-                  <span className="th">{p.img ? <img src={p.img} alt="" /> : null}</span>
+                  <span className="th">{p.img ? <img loading="lazy" decoding="async" src={p.img} alt="" /> : null}</span>
                   <span className="nm">
                     <b data-no-i18n="">{p.name}</b>
                     <small>{p.grade}</small>
@@ -348,21 +348,21 @@ function render(v: Vals) {
             {/* the warehouse row: every full pallet glides back here */}
             <div className="wf-row" aria-hidden="true">
               {(v.row || []).map((i: number) => (
-                <img key={(v.rowN || 0) - i} src={PL('full')} alt="" style={{ ['--i' as string]: i } as React.CSSProperties} />
+                <img loading="lazy" decoding="async" key={(v.rowN || 0) - i} src={PL('full')} alt="" style={{ ['--i' as string]: i } as React.CSSProperties} />
               ))}
             </div>
             <div className="wf-stage3" key={'p' + v.rowN} data-roll={v.roll ? '1' : undefined} aria-label={v.n + ' cartons on the pallet'}>
-              <img className="wf-pal3" src={PL('pallet')} srcSet={PL('pallet') + ' 1x, ' + PL2('pallet') + ' 2x'} alt="" draggable={false} />
+              <img loading="lazy" decoding="async" className="wf-pal3" src={PL('pallet')} srcSet={PL('pallet') + ' 1x, ' + PL2('pallet') + ' 2x'} alt="" draggable={false} />
               {v.seen && !v.full ? (v.cartons || []).map((c: any) => <Carton key={c.key} c={c} />) : null}
               {v.full ? (
                 <>
-                  <img className="wf-full3" src={PL('full')} srcSet={PL('full') + ' 1x, ' + PL2('full') + ' 2x'} alt="" draggable={false} />
+                  <img loading="lazy" decoding="async" className="wf-full3" src={PL('full')} srcSet={PL('full') + ' 1x, ' + PL2('full') + ' 2x'} alt="" draggable={false} />
                   <span className="wf-filmshine" aria-hidden="true" />
                 </>
               ) : null}
             </div>
             {v.roll ? <span className="wf-fork" key={'f' + v.roll} aria-hidden="true" /> : null}
-            {v.roll ? <img className="wf-going" key={'g' + v.roll} src={PL('full')} alt="" aria-hidden="true" /> : null}
+            {v.roll ? <img loading="lazy" decoding="async" className="wf-going" key={'g' + v.roll} src={PL('full')} alt="" aria-hidden="true" /> : null}
             <div className="wf-floor-cap">
               <span>
                 <b>{v.n}</b> cartons on the pallet · <b>{v.pallets}</b> pallets

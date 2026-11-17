@@ -14,7 +14,7 @@ function MakerCycle() {
   const u = (id: string) => (typeof window !== 'undefined' && (window as unknown as { SE_SHOTS?: { url: (a: string, w: number) => string } }).SE_SHOTS ? (window as unknown as { SE_SHOTS: { url: (a: string, w: number) => string } }).SE_SHOTS.url(id, 960) : '');
   return (
     <>
-      {MAKERS.map(([id], j) => <img key={id} className={'sc-pose sc-mk' + (j === i ? ' on' : '')} src={u(id)} alt="" />)}
+      {MAKERS.map(([id], j) => <img loading="lazy" decoding="async" key={id} className={'sc-pose sc-mk' + (j === i ? ' on' : '')} src={u(id)} alt="" />)}
       {/* R8: one maker named at a time (its own pill), the rest as dots: nothing crowds or runs under the arrows */}
       <span className="sc-makers">
         <b key={i} className="sc-mk-name">{MAKERS[i][1]}</b>
@@ -100,7 +100,7 @@ function render(v: Vals) {
             {/* owner (27 Oct): each quality shows its REAL boxes from the standard stage (same renders as the hero):
                 Original = every Service Pack box we carry lined up (each ~70% showing) with the screen in front */}
             <div className="sc-un" aria-hidden="true">
-              {v.ad?.g === 'OR' ? <MakerCycle key={'m' + v.i} /> : <img key={'p' + v.i} className="sc-pose" src={v.pose} alt="" />}
+              {v.ad?.g === 'OR' ? <MakerCycle key={'m' + v.i} /> : <img loading="lazy" decoding="async" key={'p' + v.i} className="sc-pose" src={v.pose} alt="" />}
             </div>
             {v.hasPrice ? (
               <span className="sc-badge" data-s="badge">

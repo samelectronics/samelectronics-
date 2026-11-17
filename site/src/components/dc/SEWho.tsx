@@ -24,7 +24,7 @@ function Scene({ id, v }: { id: string; v: Vals }) {
     return (
       <div className="ws ws-ret">
         <span className="ws-key" />
-        {shot('samsung-sp') ? <img className="ws-hero" src={shot('samsung-sp')} alt="" /> : null}
+        {shot('samsung-sp') ? <img loading="lazy" decoding="async" className="ws-hero" src={shot('samsung-sp')} alt="" /> : null}
       </div>
     );
   }

@@ -14,10 +14,10 @@ function Screen({ s, play }: { s: HowStep['screen']; play: boolean }) {
   return (
     <div ref={ref} className={'ht-win' + (play ? ' play' : '')}>
       <span className="ht-bar"><i /><i /><i /><span className="ht-url" /></span>
-      <span className="ht-nav"><img src="/assets/se-logo-128.webp" alt="" /><b /><b /><b /><em /></span>
+      <span className="ht-nav"><img loading="lazy" decoding="async" src="/assets/se-logo-128.webp" alt="" /><b /><b /><b /><em /></span>
       <span className="ht-body">
         <span className="ht-h">{T(s.h)}</span>
-        {s.card ? <span className={'ht-card k-' + s.card}><img src="/assets/se-logo-128.webp" alt="" /><b>{s.card === 'grid' ? 'SAM GRID' : s.card === 'circle' ? 'SAM CIRCLE' : 'SAM CIRCUIT'}</b><small>{T('Your name here')}</small><i /></span> : null}
+        {s.card ? <span className={'ht-card k-' + s.card}><img loading="lazy" decoding="async" src="/assets/se-logo-128.webp" alt="" /><b>{s.card === 'grid' ? 'SAM GRID' : s.card === 'circle' ? 'SAM CIRCLE' : 'SAM CIRCUIT'}</b><small>{T('Your name here')}</small><i /></span> : null}
         {(s.rows || []).map((r) => <span key={r} className="ht-f"><small>{T(r)}</small><i /></span>)}
         <span className="ht-btn">{T(s.btn)}</span>
         {s.done ? <span className="ht-done">✓ {T(s.done)}</span> : null}

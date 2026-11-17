@@ -82,7 +82,7 @@ function Packed() {
   return (
     <div className="nwp" ref={ref} aria-hidden="true">
       <div className="pk-all">
-        <img className="pk-item" src="/assets/shots/sc-or-box-480.webp" alt="" />
+        <img loading="lazy" decoding="async" className="pk-item" src="/assets/shots/sc-or-box-480.webp" alt="" />
         <span className="pk-ctn">
           <span className="pk-pad" />
           <span className="pk-flap" />

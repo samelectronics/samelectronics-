@@ -1,7 +1,7 @@
 /* Issue 3 · Live Parts Board ("What's moving on our shelves"). Clean living graphite, one glass board,
    tiles → straight lanes → board. Animates transform/opacity only, except tiny SVG icons (G16). */
 .lb { position: relative; overflow: hidden; color: #fff; background: radial-gradient(60% 50% at 50% 0%, rgba(214, 222, 230, .07), rgba(214, 222, 230, 0) 70%), linear-gradient(180deg, #2A2C2F, #34363A); }
-.lb::before { content: ''; position: absolute; inset: 0; opacity: .03; pointer-events: none; background-image: url(/assets/noise/n-012165920b.png); }
+.lb::before { content: ''; position: absolute; inset: 0; opacity: .03; pointer-events: none; background-image: url(/assets/noise/n-012165920b.webp); }
 .lb-in { position: relative; z-index: 1; width: 1272px; max-width: calc(100% - 48px); margin: 0 auto; padding: 96px 0 88px; }
 .lb-deco { position: absolute; right: 0; top: 40px; width: 320px; height: 140px; opacity: .1; pointer-events: none; }
 .lb-top { display: flex; align-items: flex-end; justify-content: space-between; gap: 48px; margin-bottom: 40px; }
