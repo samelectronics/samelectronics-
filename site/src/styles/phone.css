@@ -344,3 +344,23 @@
   section.cx .cx-ladder li small { display: none; } section.cx .cx-ladder li b { font-size: 10.5px; }
   .mt-right { padding-top: 64px !important; } .mt-right .mt-bot { width: 84px !important; inset-inline-end: 14px !important; } .mt-chat-h .ct { display: none; }
 }
+/* 17 Nov · phone bar fits every phone: logo + name, a round search button, cart, menu. Nothing runs off the edge. */
+@media (max-width: 520px) {
+  html body header .se-nav-row { gap: 8px !important; padding: 0 14px !important; }
+  html body header .se-nav-row > a:first-child { flex: 1 1 auto !important; min-width: 0 !important; gap: 8px !important; }
+  html body header .se-nav-name { min-width: 0 !important; overflow: hidden; }
+  html body header .se-nav-name > span { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  html body header .sc-host:has(.scp-90837cfd), html body header .sc-host:has(.scp-90837cfd) > div { flex: none !important; width: 40px !important; min-width: 40px !important; }
+  html body header .scp-90837cfd { width: 40px !important; min-width: 40px !important; padding: 0 !important; justify-content: center !important; gap: 0 !important; }
+  html body header .scp-90837cfd .se-fmp-t, html body header .scp-90837cfd .se-fmp-q, html body header .scp-90837cfd .se-fmp-k, html body header .scp-90837cfd > svg:last-child { display: none !important; }
+  html body header .se-nav-right > * { flex: none !important; }
+}
+@media (max-width: 350px) { html body header .se-nav-name > span:last-child { display: none !important; } }
+/* 17 Nov · tablets (portrait iPad 768–834): the bar fitted 11px too wide; tighter gaps and a slimmer search button */
+@media (min-width: 521px) and (max-width: 1100px) {
+  html body header .se-nav-row { gap: 6px !important; padding: 0 16px !important; }
+  html body header .se-nav-right { gap: 6px !important; }
+  html body header .sc-host:has(.scp-90837cfd), html body header .sc-host:has(.scp-90837cfd) > div { flex: 0 1 auto !important; min-width: 0 !important; }
+  html body header .scp-90837cfd { width: auto !important; min-width: 0 !important; padding: 0 14px !important; }
+  html body header .scp-90837cfd > svg:last-child { display: none !important; }
+}

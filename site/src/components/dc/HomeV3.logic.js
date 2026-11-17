@@ -2,7 +2,7 @@
 /* eslint-disable */
 // Logic class from design/project/Sam Electronics Home v3.dc.html, unchanged except for this header, the export
 // and webpackIgnore on runtime imports. Converted 12 Oct 2026; maintained by hand since.
-import { think } from '@/components/samsoom/brain2';
+import { think, unknown } from '@/components/samsoom/brain2';
 import React from 'react';
 import { DCLogic, StreamableLogic } from '@/dc/runtime';
 import { shopStatus } from '@/lib/shopStatus';
@@ -388,7 +388,7 @@ class Component extends DCLogic {
     const tr = (en) => (window.seI18n && window.seI18n.tr ? window.seI18n.tr(en) : en);
     const fb = fallbackAnswer(text, { D, H, tr });
     if (fb) return { t: fb.t, ...this.chatAct(fb.act, ar), emote: fb.emote, own: ar };
-    return { t: ar ? 'لم أفهم هذه تماماً. جرّب موديلاً وقطعة، مثل «بطارية A54» أو «شاشة iPhone 13»، أو اسأل عن الدرجات أو الدوام أو الشحن.' : 'I didn’t catch that one. Try a model and part, like “A54 battery” or “iPhone 13 screen”, or ask about grades, hours or shipping.', ...this.chatAct('fmp', ar), emote: 'low', own: ar };
+    { const u = unknown(text, { history: [], tr: (x) => (window.seI18n && window.seI18n.t ? window.seI18n.t(x) : x) }); return { t: u.t, ...this.chatAct(u.act || 'fmp', ar), emote: u.emote, own: true }; }
   }
   // G8: Claude answers through /api/samsoom; until ANTHROPIC_API_KEY is set (or if it fails) the
   // typo-tolerant fallback above answers instead. The chat shows "thinking" until the answer lands.
