@@ -79,7 +79,7 @@ class Component extends DCLogic {
     if (tc >= 0 && tc < dur) { op = 1; const k = Math.floor(tc / (MOVE + STOP)), f = tc - k * (MOVE + STOP);
       if (k >= legs) { x = this.cx[legs - 1] + ((tc - legs * (MOVE + STOP)) / (MOVE + 0.2)) * 260; op = 1 - (tc - legs * (MOVE + STOP)) / (MOVE + 0.2); }
       else { const from = k === 0 ? this.cx[0] - 200 : this.cx[k - 1], to = this.cx[k], m = Math.min(1, f / MOVE), e = m < 0.5 ? 2 * m * m : 1 - Math.pow(-2 * m + 2, 2) / 2; x = from + (to - from) * e; if (f >= MOVE) lit = k; } }
-    const oi = this.t0 == null ? 0 : Math.floor(Math.max(0, this.t - this.t0 - 1.8) / CYCLE) % ORDERS.length; if (oi !== this._oi) { this._oi = oi; const o = ORDERS[oi]; ['no', 'who', 'item', 'qty', 'to'].forEach((k, j) => { const el = tk.querySelector('[data-o="' + k + '"]'); if (el) el.textContent = o[j]; }); }
+    const oi = this.t0 == null ? 0 : Math.floor(Math.max(0, this.t - this.t0 - 1.8) / CYCLE) % ORDERS.length; if (oi !== this._oi) { this._oi = oi; const o = ORDERS[oi]; ['no', 'who', 'item', 'qty', 'to'].forEach((k, j) => { const el = tk.querySelector('[data-o="' + k + '"]'); if (el) el.textContent = (typeof window !== 'undefined' && window.seI18n ? window.seI18n.t(o[j]) : o[j]); }); }
     tk.style.transform = 'translateX(' + x.toFixed(1) + 'px)'; tk.style.opacity = op.toFixed(2);
     this._c.forEach((c, i) => { const on = i === lit; if (c.classList.contains('lit') !== on) c.classList.toggle('lit', on); });
   }

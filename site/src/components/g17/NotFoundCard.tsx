@@ -2,6 +2,8 @@
 /** G17: "Signal lost. This page switched to airplane mode." In English or Arabic, following the saved choice. */
 import { useEffect, useState } from 'react';
 import { LANG_KEY } from '@/i18n/prepaint';
+import { T as tr } from '@/components/site/ui';
+import { installI18n } from '@/i18n/lang';
 
 const T = {
   en: { k: 'ERROR 404 · NO SERVICE', h: ['Signal lost.', 'This page switched', 'to airplane mode.'], p: 'The page you were looking for isn’t here. Everything else is one tap away.', b: 'Back to the home page' },
@@ -17,7 +19,10 @@ export default function NotFoundCard() {
       /* private mode */
     }
   }, []);
-  const t = T[lang];
+  const [, setTick] = useState(0);
+  useEffect(() => { installI18n(); const on = () => setTick((n) => n + 1); on(); window.addEventListener('se:lang', on); return () => window.removeEventListener('se:lang', on); }, []);
+  const e = T.en;
+  const t = lang === 'ar' ? T.ar : { k: tr(e.k), h: e.h.map((x) => tr(x)), p: tr(e.p), b: tr(e.b) };
   return (
     <main className="se-404" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
       <div className="se-404-bars" aria-hidden="true">

@@ -32,11 +32,11 @@ export default function Membership() {
     <>
       <PageHero eb={T('SAM CIRCUIT · MEMBERSHIP')} title={T('Three cards.')} accent={T('One is yours.')} crumb={[[T('Sam Circuit')]]} seed={57}
         sub={T('One for customers, one for suppliers, and one we give to our most loyal customers. Each is earned its own way, and each lives in your account.')}
-        right={<div className="ms-fan">{(['circle', 'grid', 'circuit'] as CardKind[]).map((k, i) => <div key={k} className={'ms-f f' + i}><MemberCard kind={k} name={me?.name || 'Your name here'} no={k === 'circuit' ? 'SC 214 508 2731' : k === 'grid' ? 'SG 771 093 2840' : 'SO 300 112 2903'} level={k === 'grid' ? 2 : 3} tilt={false} /></div>)}</div>}>
+        right={<div className="ms-fan">{(['circle', 'grid', 'circuit'] as CardKind[]).map((k, i) => <div key={k} className={'ms-f f' + i}><MemberCard kind={k} name={me?.name || T('Your name here')} no={k === 'circuit' ? 'SC 214 508 2731' : k === 'grid' ? 'SG 771 093 2840' : 'SO 300 112 2903'} level={k === 'grid' ? 2 : 3} tilt={false} /></div>)}</div>}>
         <div className="sp-acts">{me ? <a className="sp-btn" href="/account#points">{me.card ? T('See my card') : T('Connect my card')}</a> : <a className="sp-btn" href="/account">{T('Register online')}</a>}<a className="sp-btn ghost" href="#cards">{T('Compare the cards')}</a></div>
       </PageHero>
 
-      <Showroom name={me?.name || 'Your name here'} />
+      <Showroom name={me?.name || T('Your name here')} />
 
       {/* R11 (owner): a real walk-through of joining, instead of the home page's cards again */}
       <section className="sp-sec w"><div className="sp-wrap">
@@ -49,7 +49,7 @@ export default function Membership() {
       </div></section>
 
       <div id="cards">
-        {CARDS.map((c, ci) => <CardSection key={c.k} c={c} ci={ci} name={me?.name || 'Your name here'} />)}
+        {CARDS.map((c, ci) => <CardSection key={c.k} c={c} ci={ci} name={me?.name || T('Your name here')} />)}
       </div>
 
       <section className="sp-sec g">
