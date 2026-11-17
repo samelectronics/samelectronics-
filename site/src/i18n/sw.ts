@@ -2050,5 +2050,12 @@ const DICT: Record<string, string> = {
   'grades': 'madaraja',
   'warranty': 'dhamana',
   'messages': 'jumbe',
+  'CONNECTION': 'MUUNGANISHO',
+  'You are offline': 'Huko mtandaoni',
+  'Open pages keep showing.': 'Kurasa zilizofunguliwa zinaendelea kuonekana.',
+  'Slow connection': 'Muunganisho wa polepole',
+  'Pictures may load slower.': 'Picha zinaweza kupakia polepole.',
+  'Back online': 'Umerudi mtandaoni',
+  'Everything works again.': 'Kila kitu kinafanya kazi tena.',
 };
 export default DICT;

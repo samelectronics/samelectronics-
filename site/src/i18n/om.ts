@@ -2050,5 +2050,12 @@ const DICT: Record<string, string> = {
   'grades': 'sadarkaalee',
   'warranty': 'wabii',
   'messages': 'ergaawwan',
+  'CONNECTION': 'WALQUNNAMTII',
+  'You are offline': 'Toora irra hin jirtu',
+  'Open pages keep showing.': 'Fuulonni banaman mul’achuu itti fufu.',
+  'Slow connection': 'Walqunnamtii suuta',
+  'Pictures may load slower.': 'Suuraaleen suuta fe’amuu danda’u.',
+  'Back online': 'Deebitee toora irra jirta',
+  'Everything works again.': 'Hundi deebi’ee hojjeta.',
 };
 export default DICT;

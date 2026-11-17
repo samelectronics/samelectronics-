@@ -2050,5 +2050,12 @@ const DICT: Record<string, string> = {
   'grades': 'matakai',
   'warranty': 'garanti',
   'messages': 'saƙonni',
+  'CONNECTION': 'HAƊI',
+  'You are offline': 'Ba ka kan layi',
+  'Open pages keep showing.': 'Shafukan da aka buɗe za su ci gaba da bayyana.',
+  'Slow connection': 'Haɗi a hankali',
+  'Pictures may load slower.': 'Hotuna na iya ɗaukar lokaci kafin su buɗe.',
+  'Back online': 'Ka dawo kan layi',
+  'Everything works again.': 'Komai yana aiki kuma.',
 };
 export default DICT;

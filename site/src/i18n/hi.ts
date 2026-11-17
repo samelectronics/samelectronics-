@@ -3503,5 +3503,8 @@ const DICT: Record<string, string> = {
   'Easy:': 'आसान:',
   'month': 'महीना',
   'Copy': 'कॉपी',
+  'CONNECTION': 'कनेक्शन',
+  'Open pages keep showing.': 'खुले पेज दिखते रहेंगे।',
+  'Pictures may load slower.': 'तस्वीरें धीरे लोड हो सकती हैं।',
 };
 export default DICT;

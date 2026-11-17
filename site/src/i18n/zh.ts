@@ -2051,5 +2051,12 @@ const DICT: Record<string, string> = {
   'grades': '个等级',
   'warranty': '保修',
   'messages': '条消息',
+  'CONNECTION': '网络连接',
+  'You are offline': '你已离线',
+  'Open pages keep showing.': '已打开的页面仍会显示。',
+  'Slow connection': '网络较慢',
+  'Pictures may load slower.': '图片可能加载较慢。',
+  'Back online': '已恢复联网',
+  'Everything works again.': '一切恢复正常。',
 };
 export default DICT;

@@ -2007,5 +2007,12 @@ const DICT: Record<string, string> = {
   'grades': 'grade',
   'warranty': 'warranty',
   'messages': 'mensahe',
+  'CONNECTION': 'KONEKSYON',
+  'You are offline': 'Offline ka',
+  'Open pages keep showing.': 'Patuloy na makikita ang mga bukas na page.',
+  'Slow connection': 'Mabagal na koneksyon',
+  'Pictures may load slower.': 'Maaaring mabagal mag-load ang mga larawan.',
+  'Back online': 'Online ka na ulit',
+  'Everything works again.': 'Gumagana na ulit ang lahat.',
 };
 export default DICT;

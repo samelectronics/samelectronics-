@@ -2049,5 +2049,12 @@ const DICT: Record<string, string> = {
   'grades': 'ogo',
   'warranty': 'nkwa',
   'messages': 'ozi',
+  'CONNECTION': 'NJIKỌ',
+  'You are offline': 'Ị nọghị n’ịntanetị',
+  'Open pages keep showing.': 'Peeji ndị e meghere ga-anọgide na-egosi.',
+  'Slow connection': 'Njikọ nwayọọ',
+  'Pictures may load slower.': 'Foto nwere ike ibu nwayọọ.',
+  'Back online': 'Ị laghachila n’ịntanetị',
+  'Everything works again.': 'Ihe niile na-arụ ọrụ ọzọ.',
 };
 export default DICT;

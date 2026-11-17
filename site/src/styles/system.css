@@ -753,3 +753,37 @@ html[data-theme="dark"] .gd-more { color: #fff; }
 .gd-sam.copy .gd-surprise { color: #F7C032; }
 @keyframes gdPop { from { transform: scale(0) rotate(-20deg); opacity: 0; } }
 .gd-sam.ph2 .gd-wv { display: none; }
+/* 17 Nov · one system notice for every state (connection, VPN, copyright): white card under the header, where the
+   medal notice appears. Tile on the left, kicker, title, one line, actions, ×, and a draining bar. */
+.sn { position: fixed; z-index: 2147482100; left: 50%; top: 88px; transform: translateX(-50%); display: flex; align-items: flex-start; gap: 14px; width: min(520px, calc(100vw - 24px)); box-sizing: border-box; padding: 14px 44px 16px 14px; border-radius: 18px; background: #fff; color: #26282B; box-shadow: 0 0 0 1px rgba(38,40,43,.07), 0 24px 50px -22px rgba(0,0,0,.45); overflow: hidden; animation: snIn .42s cubic-bezier(.2,.9,.3,1.15) both; font-family: Inter, sans-serif; }
+.sn.out { animation: snOut .22s ease-in both; }
+@keyframes snIn { from { opacity: 0; transform: translate(-50%, -14px) scale(.97); } }
+@keyframes snOut { to { opacity: 0; transform: translate(-50%, -10px) scale(.98); } }
+.sn::before { content: ''; position: absolute; inset-inline-start: 0; top: 0; bottom: 0; width: 4px; background: #F7C032; }
+.sn-tile { position: relative; flex: none; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 14px; background: #26282B; color: #F7C032; }
+.sn-tile.sam { border-radius: 50%; background: radial-gradient(circle at 40% 30%, #FFD566, #F7C032 65%); overflow: visible; }
+.sn-tile.sam > span { width: 48px; height: 48px; border-radius: 50%; overflow: hidden; }
+.sn-badge { position: absolute; right: -4px; bottom: -4px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #E5484D; color: #fff; font: 700 13px/1 Inter, sans-serif; font-style: normal; box-shadow: 0 0 0 2.5px #fff; animation: snBadge 1.2s ease-in-out .3s 2; }
+.sn-badge.copy { background: #26282B; }
+@keyframes snBadge { 30% { transform: scale(1.18) rotate(-8deg); } 60% { transform: scale(.96) rotate(4deg); } }
+.sn-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1; }
+.sn-k { display: flex; align-items: center; gap: 7px; font: 600 10.5px 'JetBrains Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: #8C9096; }
+.sn-dot { width: 7px; height: 7px; border-radius: 50%; background: #F7C032; flex: none; }
+.sn-ok .sn-dot { background: #2BB673; } .sn-stop .sn-dot { background: #E5484D; animation: seNetPulse 1.6s ease-in-out infinite; }
+.sn-h { font: 700 16px/1.25 'Space Grotesk', sans-serif; color: #26282B; }
+.sn-p { font: 400 13.5px/1.45 Inter, sans-serif; color: #4A4D52; }
+.sn-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.sn-b { display: inline-flex; align-items: center; height: 34px; padding: 0 14px; border: 0; border-radius: 999px; background: #F1F2F3; color: #26282B; font: 600 13px Inter, sans-serif; text-decoration: none; cursor: pointer; transition: background .2s; }
+.sn-b:hover { background: #E6E8EA; } .sn-b.y { background: #F7C032; } .sn-b.y:hover { background: #FFD15A; }
+.sn-x { position: absolute; top: 10px; inset-inline-end: 10px; display: grid; place-items: center; width: 28px; height: 28px; border: 0; border-radius: 50%; background: #F1F2F3; color: #4A4D52; cursor: pointer; }
+.sn-x:hover { background: #E6E8EA; color: #26282B; }
+.sn-t { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: #F7C032; transform-origin: left; animation: snT linear forwards; }
+@keyframes snT { to { transform: scaleX(0); } }
+html[dir='rtl'] .sn-t { transform-origin: right; }
+html[data-theme="dark"] .sn { background: #2E3034; color: #fff; box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 24px 50px -22px rgba(0,0,0,.7); }
+html[data-theme="dark"] .sn-h { color: #fff; } html[data-theme="dark"] .sn-p { color: #C9CBCE; }
+html[data-theme="dark"] .sn-b:not(.y), html[data-theme="dark"] .sn-x { background: rgba(255,255,255,.08); color: #fff; }
+html[data-theme="dark"] .sn-badge { box-shadow: 0 0 0 2.5px #2E3034; }
+@media (max-width: 760px) { .sn { top: 76px; padding: 12px 42px 14px 12px; gap: 12px; } .sn-tile { width: 42px; height: 42px; } .sn-tile.sam > span { width: 42px; height: 42px; } .sn-h { font-size: 15px; } }
+@media (prefers-reduced-motion: reduce) { .sn, .sn.out, .sn-badge { animation: none !important; } .sn-t { display: none; } }
+html.se-embed .sn { display: none !important; }

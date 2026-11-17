@@ -2051,5 +2051,12 @@ const DICT: Record<string, string> = {
   'grades': 'ደረጃዎች',
   'warranty': 'ዋስትና',
   'messages': 'መልዕክቶች',
+  'CONNECTION': 'ግንኙነት',
+  'You are offline': 'ከመስመር ውጭ ነዎት',
+  'Open pages keep showing.': 'የተከፈቱ ገጾች መታየታቸውን ይቀጥላሉ።',
+  'Slow connection': 'ቀርፋፋ ግንኙነት',
+  'Pictures may load slower.': 'ምስሎች ዘግይተው ሊጫኑ ይችላሉ።',
+  'Back online': 'እንደገና መስመር ላይ',
+  'Everything works again.': 'ሁሉም ነገር እንደገና ይሠራል።',
 };
 export default DICT;

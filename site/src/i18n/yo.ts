@@ -2050,5 +2050,12 @@ const DICT: Record<string, string> = {
   'grades': 'ìpele',
   'warranty': 'ìdánilójú',
   'messages': 'ìfiránṣẹ́',
+  'CONNECTION': 'ÌSOPỌ̀',
+  'You are offline': 'O kò sí lórí ayélujára',
+  'Open pages keep showing.': 'Àwọn ojú-ìwé tó ṣí ṣì máa hàn.',
+  'Slow connection': 'Ìsopọ̀ tó lọ́ra',
+  'Pictures may load slower.': 'Àwọn àwòrán lè pẹ́ kí wọ́n tó ṣí.',
+  'Back online': 'O ti padà sórí ayélujára',
+  'Everything works again.': 'Gbogbo nǹkan tún ń ṣiṣẹ́.',
 };
 export default DICT;

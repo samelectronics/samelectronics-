@@ -1776,6 +1776,9 @@ export const R7: Record<string, string> = {
 
 /** Round 8: Sam Circuit's three cards, Samsoom's tour and chat menu. */
 export const R8: Record<string, string> = {
+  'CONNECTION': 'الاتصال',
+  'Open pages keep showing.': 'تبقى الصفحات المفتوحة ظاهرة.',
+  'Pictures may load slower.': 'قد تتأخر الصور في التحميل.',
   'Good morning!': 'صباح الخير!',
   'Good afternoon!': 'مساء الخير!',
   'Good evening!': 'مساء الخير!',

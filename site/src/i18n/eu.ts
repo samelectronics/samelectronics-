@@ -2049,5 +2049,12 @@ const DICT: Record<string, string> = {
   'grades': 'kalitate',
   'warranty': 'bermea',
   'messages': 'mezu',
+  'CONNECTION': 'KONEXIOA',
+  'You are offline': 'Linez kanpo zaude',
+  'Open pages keep showing.': 'Irekitako orriak ikusgai jarraitzen dute.',
+  'Slow connection': 'Konexio motela',
+  'Pictures may load slower.': 'Irudiek motelago karga dezakete.',
+  'Back online': 'Berriro linean',
+  'Everything works again.': 'Dena berriro dabil.',
 };
 export default DICT;

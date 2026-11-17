@@ -2045,5 +2045,12 @@ const DICT: Record<string, string> = {
   'grades': 'calități',
   'warranty': 'garanție',
   'messages': 'mesaje',
+  'CONNECTION': 'CONEXIUNE',
+  'You are offline': 'Ești offline',
+  'Open pages keep showing.': 'Paginile deschise rămân vizibile.',
+  'Slow connection': 'Conexiune lentă',
+  'Pictures may load slower.': 'Imaginile se pot încărca mai încet.',
+  'Back online': 'Din nou online',
+  'Everything works again.': 'Totul funcționează din nou.',
 };
 export default DICT;

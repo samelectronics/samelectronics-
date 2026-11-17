@@ -8,7 +8,7 @@
 import React, { useEffect, useState } from 'react';
 import { isEmbed } from '@/lib/embed';
 import { prefs } from '@/lib/prefs';
-import LiveSam from '@/components/samsoom/LiveSam';
+import SysNote from './SysNote';
 import { logWarning } from '@/lib/warnings';
 
 const tr = (s: string) => (typeof window !== 'undefined' && (window as unknown as { seI18n?: { t: (x: string) => string } }).seI18n?.t(s)) || s;
@@ -30,22 +30,6 @@ function errBeep() {
   try { const p = prefs().sound; if (!p.on) return; const c = new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)(), t = c.currentTime;
     [0, 0.16].forEach((d, i) => { const o = c.createOscillator(), g = c.createGain(), f = c.createBiquadFilter(); o.type = 'square'; o.frequency.value = i ? 392 : 523; f.type = 'lowpass'; f.frequency.value = 1800; g.gain.setValueAtTime(0.0001, t + d); g.gain.exponentialRampToValueAtTime(0.05 * Math.max(0.3, p.vol), t + d + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + d + 0.14); o.connect(f); f.connect(g); g.connect(c.destination); o.start(t + d); o.stop(t + d + 0.16); });
     window.setTimeout(() => c.close(), 600); } catch { /* */ } }
-
-/** Samsoom in a notice: blows his little red whistle (or raises the alarm), looks surprised, then keeps emoting */
-function SamAlarm({ kind }: { kind: 'vpn' | 'copy' }) {
-  const [ph, setPh] = useState(0);
-  useEffect(() => { const a = window.setTimeout(() => setPh(1), 1100), b = window.setTimeout(() => setPh(2), 2600); return () => { window.clearTimeout(a); window.clearTimeout(b); }; }, []);
-  return (
-    <span className={'gd-sam ph' + ph + ' ' + kind} aria-hidden="true">
-      <LiveSam size={86} mood={ph === 2 ? 'think' : 'idle'} play={ph === 0 ? 'blush' : ph === 1 ? 'wow' : 'happy'} />
-      {kind === 'vpn'
-        ? <i className="gd-whistle"><svg viewBox="0 0 40 24" width="34" height="20"><path d="M2 10h16a9 9 0 1 1 0 6H2z" fill="#E5484D" stroke="#9E1F23" strokeWidth="1.2" /><circle cx="25" cy="13" r="3.4" fill="#9E1F23" /><rect x="6" y="6" width="5" height="4" rx="1" fill="#E5484D" stroke="#9E1F23" strokeWidth="1" /></svg></i>
-        : <i className="gd-alert">!</i>}
-      <i className="gd-wv a" /><i className="gd-wv b" />
-      {ph >= 1 ? <i className="gd-surprise">!?</i> : null}
-    </span>
-  );
-}
 
 export default function Guard() {
   const [vpn, setVpn] = useState(false), [shot, setShot] = useState(false);
@@ -78,34 +62,10 @@ export default function Guard() {
   }, []);
   return (
     <>
-      {vpn ? (
-        <div className="gd-veil" role="dialog" aria-modal="true" aria-label={tr('VPN detected')}>
-          <div className="gd-card">
-            <SamAlarm kind="vpn" />
-            <span className="gd-k">{tr('SAMSOOM · HOLD ON')}</span>
-            <b className="gd-h">{tr('Hey! Is that a VPN?')}</b>
-            <p className="gd-p">{tr('Prices and delivery depend on where you really are. Please switch the VPN off.')}</p>
-            <a className="gd-more" href="/notices#vpn">{tr('Why am I seeing this?')} →</a>
-            <div className="gd-acts">
-              <button type="button" className="gd-b y" onClick={() => setVpn(false)}>{tr('OK, I will switch it off')}</button>
-              <button type="button" className="gd-b" onClick={() => setVpn(false)}>{tr('I am travelling, carry on')}</button>
-            </div>
-          </div>
-        </div>
-      ) : null}
-      {shot ? (
-        <div className="gd-veil" role="alertdialog" aria-modal="true" aria-label={tr('Copyright notice')} onClick={(e) => { if (e.target === e.currentTarget) setShot(false); }}>
-          <div className="gd-card">
-            <SamAlarm kind="copy" />
-            <span className="gd-k">{tr('COPYRIGHT NOTICE')}</span>
-            <b className="gd-h">{tr('This content is protected.')}</b>
-            <p className="gd-p">{tr('Keeping it for yourself is fine; sharing or publishing it needs our permission.')}</p>
-            <p className="gd-s">{tr('If you took it for another reason, you can safely ignore this message.')}</p>
-            <a className="gd-more" href="/notices#copyright">{tr('Read the full notice')} →</a>
-            <div className="gd-acts"><button type="button" className="gd-b y" onClick={() => setShot(false)}>{tr('I understand')}</button></div>
-          </div>
-        </div>
-      ) : null}
+      {vpn ? <SysNote tone="warn" role="alert" sam={{ badge: 'whistle', mood: 'wow' }} kicker={tr('SAMSOOM · HOLD ON')} title={tr('Hey! Is that a VPN?')} text={tr('Prices and delivery depend on where you really are. Please switch the VPN off.')} ms={20000} onClose={() => setVpn(false)}
+        acts={[{ label: tr('OK, I will switch it off'), primary: true }, { label: tr('I am travelling, carry on') }, { label: tr('Why am I seeing this?'), href: '/notices#vpn' }]} /> : null}
+      {shot ? <SysNote tone="stop" role="alert" sam={{ badge: 'copy', mood: 'think' }} kicker={tr('COPYRIGHT NOTICE')} title={tr('This content is protected.')} text={tr('Keeping it for yourself is fine; sharing or publishing it needs our permission.')} ms={15000} onClose={() => setShot(false)}
+        acts={[{ label: tr('I understand'), primary: true }, { label: tr('Read the full notice'), href: '/notices#copyright' }]} /> : null}
     </>
   );
 }
