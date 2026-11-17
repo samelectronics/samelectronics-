@@ -222,9 +222,7 @@ export function installI18n() {
   window.seI18n = { lang: () => lang, rtl: () => isRtl(lang), t, tr: t, set: sw, now: setLang, toggle: () => sw(lang === 'en' ? 'ar' : 'en') };
   patchCanvasText();
   if (isRtl(lang)) loadArabicFonts();
-  // R9: Spanish and French are ready before anyone asks (fetched once the page is idle); the rest load when picked
-  const pre = () => { loadAr().catch(() => {}); (['es', 'fr'] as Other[]).forEach((l) => { loadDict(l).catch(() => {}); }); };
-  if (document.readyState === 'complete') setTimeout(pre, 2500); else window.addEventListener('load', () => setTimeout(pre, 2500), { once: true });
+  // every language file loads only when that language is picked (or was saved before): nothing extra for English visitors
   if (lang === 'ar') {
     loadAr().then(() => { if (lang !== 'ar') return; startObserver(); if (document.body) walk(document.body); window.dispatchEvent(new CustomEvent('se:lang', { detail: 'ar' })); });
   } else if (lang !== 'en') {
