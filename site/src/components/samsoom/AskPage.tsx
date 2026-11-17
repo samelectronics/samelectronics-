@@ -6,6 +6,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { search, aed, data, byId, type Product , priceText } from '@/lib/catalog';
 import { fallbackAnswer, emoteFor } from './brain';
+import { think } from './brain2';
 import { T, flyToCart } from '@/components/site/ui';
 import LiveSam from './LiveSam';
 import Typed from './Typed';
@@ -49,7 +50,10 @@ export default function AskPage() {
     const hist: { role: string; text: string; image?: string }[] = [...(read().find((c) => c.id === cid)?.msgs || [])].map((m) => ({ role: m.me ? 'user' : 'assistant', text: m.t })).slice(-12);
     if (pic && hist.length) hist[hist.length - 1].image = pic.big;
     let ans: { t: string; act?: string; emote?: string; parts?: string[] };
-    try {
+    // owner (17 Nov): Samsoom thinks with his own brain first (free, no AI service); the AI route is only tried for
+    // questions he cannot answer, and only if a key was ever added
+    const own = pic ? null : think(text, { history: hist.filter((h) => h.role === 'user').slice(0, -1).map((h) => h.text), tr: (x: string) => T(x) });
+    if (own) { ans = own; } else try {
       const r = await fetch('/api/samsoom', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages: hist, lang: window.seI18n ? window.seI18n.lang() : 'en' }) });
       const j = r.ok ? await r.json() : { fallback: true };
       const lk = pic ? { t: T('Thanks for the photo! I can’t look at photos right now, so send it to the team on WhatsApp and they will tell you the part and the price.'), act: 'whatsapp', emote: 'think' } : local(text);

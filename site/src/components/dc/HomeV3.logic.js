@@ -2,6 +2,7 @@
 /* eslint-disable */
 // Logic class from design/project/Sam Electronics Home v3.dc.html, unchanged except for this header, the export
 // and webpackIgnore on runtime imports. Converted 12 Oct 2026; maintained by hand since.
+import { think } from '@/components/samsoom/brain2';
 import React from 'react';
 import { DCLogic, StreamableLogic } from '@/dc/runtime';
 import { shopStatus } from '@/lib/shopStatus';
@@ -399,6 +400,9 @@ class Component extends DCLogic {
     const t0 = Date.now(), lang = window.seI18n ? window.seI18n.lang() : 'en';
     const land = (r) => { const wait = Math.max(0, 650 - (Date.now() - t0)); setTimeout(() => { if (!this.dead) import('@/lib/voice').then((m) => m.babble(String(r.t || ''))).catch(() => {}); }, wait); setTimeout(() => !this.dead && this.setState((s) => ({ chatTyping: false, chatMsgs: [...(s.chatMsgs || []), { t: r.t, act: r.act, lbl: r.lbl, emote: r.emote, own: true, n: (s.chatMsgs || []).length + 1 }] })), wait); };
     const local = () => land(this.reply(q));
+    // owner (17 Nov): Samsoom's own brain answers first (free, no AI service)
+    { const own = think(q, { history: hist.filter((h) => h.role === 'user').map((h) => h.text), tr: (x) => (window.seI18n && window.seI18n.t ? window.seI18n.t(x) : x) });
+      if (own) return land({ t: own.t, ...this.chatAct(own.act, isArabic(q)), emote: own.emote || 'happy', own: true }); }
     fetch('/api/samsoom', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ messages: [...hist, { role: 'user', text: q }].slice(-12), lang }) })
       .then((r) => (r.ok ? r.json() : { fallback: true }))
       .then((j) => {
