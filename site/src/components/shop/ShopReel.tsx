@@ -100,7 +100,7 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
       // 5 · owner (18 Nov): no "in stock" ad. WORLDWIDE: the word slams with a shake, the pallet whips in, the regions pop
       (l) => { fill('#24323A', '#1F2023'); const s = u(); beams(l, '120,240,220', 0.35); spot(W * 0.68, H * 0.55, H, 'rgba(45,212,191,.16)');
         const sh = l < 0.16 ? (1 - l / 0.16) * 7 : 0; x.save(); x.translate((Math.random() * 2 - 1) * sh, 0);
-        x.globalAlpha = 0.08; x.font = font(900, Math.round(H * 0.5)); x.fillStyle = '#fff'; x.textAlign = 'center'; x.fillText('WORLDWIDE', W / 2 + (0.5 - l) * W * 0.3, H * 0.74); x.globalAlpha = 1;
+        x.globalAlpha = 0.08; x.font = font(900, Math.round(H * 0.5)); x.fillStyle = '#fff'; x.textAlign = 'center'; x.fillText(T('WORLDWIDE'), W / 2 + (0.5 - l) * W * 0.3, H * 0.74); x.globalAlpha = 1;
         const k = back(l * 2.2); pic('pal', (narrow() ? W * 0.7 : W * 0.7) + (1 - k) * W * 0.5, narrow() ? H * 0.66 : H * 0.58, H * (narrow() ? 0.36 : 0.6), (1 - k) * 0.3); x.restore(); flash(l);
         const tx = narrow() ? W * 0.06 : W * 0.08; text(T('Worldwide.'), tx, H * 0.34, font(800, Math.round(6.6 * s)), '#fff', 'left', eo((l - 0.08) * 3)); text(T('Every week.'), tx, H * 0.34 + 7 * s, font(800, Math.round(6.6 * s)), '#2DD4BF', 'left', eo((l - 0.18) * 3));
         ['MIDDLE EAST', 'AFRICA', 'EUROPE', 'ASIA'].forEach((r, n) => { const a = back((l - 0.4 - n * 0.08) * 4); if (a <= 0) return; tag(T(r), tx + (n % 2) * 16 * s + 7 * s, H * 0.62 + Math.floor(n / 2) * 4.2 * s, '#0F9F8F', '#3FD8C2', '#fff', a, s); }); },

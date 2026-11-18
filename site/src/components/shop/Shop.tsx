@@ -128,7 +128,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
       <ShopIntro />
       <section className="shop-hd shop-cine" data-tone="dark">
         <div className="cine-bg" aria-hidden="true"><i className="cine-wall" /><i className="cine-beam" /><span className="cine-bokeh">{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</span><i className="cine-floor" /><i className="cine-grain" /><HeroBack word={mode === 'deals' ? 'DEALS' : 'PARTS'} /></div>
-        <span className="shd-mq" aria-hidden="true" data-no-i18n="">{[0, 1].map((r) => <span key={r} className={'shd-row r' + r}>{[0, 1].map((x) => <span key={x}>{(r ? [...MQ].reverse() : MQ).map((w) => <b key={w}>{w}<i /></b>)}</span>)}</span>)}</span>
+        <span className="shd-mq" aria-hidden="true" data-no-i18n="">{[0, 1].map((r) => <span key={r} className={'shd-row r' + r}>{[0, 1].map((x) => <span key={x}>{(r ? [...MQ].reverse() : MQ).map((w) => <b key={w}>{T(w)}<i /></b>)}</span>)}</span>)}</span>
         <div className="sp-wrap">
           <nav className="sp-crumb"><a href="/">{T('Home')}</a><i /><span>{mode === 'deals' ? T('Deals & arrivals') : T('Shop')}</span></nav>
           <div className="shop-hd-row">
