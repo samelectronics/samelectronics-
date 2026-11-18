@@ -29,7 +29,7 @@ class Component extends DCLogic {
     const go = (url) => { this.setState({ open: false }); location.href = url; };
     const parts = mObj ? Ca.map((c) => { const cp = P.filter((p) => p.model_id === mObj.id && p.category === c.id).sort((x, y) => y.retail_price - x.retail_price); if (!cp.length) return null; const q = cp.reduce((t2, p) => t2 + p.stock_qty, 0);
       return { id: c.id, name: T(c.name), q: q ? k(q) + ' ' + T('in stock') : T('On request'), in: !!q, open: () => go(shopUrl({ brand: mObj.brand_id, model: mObj.id, cat: c.id })),
-        grades: cp.map((p) => ({ id: p.id, g: GN[p.grade] || p.grade, price: 'AED ' + fx(p.retail_price), out: !p.stock_qty, open: (ev) => { ev.stopPropagation(); go(shopUrl({ brand: mObj.brand_id, model: mObj.id, cat: c.id, grade: p.grade })); } })) }; }).filter(Boolean) : [];
+        grades: cp.map((p) => ({ id: p.id, code: p.grade, g: GN[p.grade] || p.grade, price: 'AED ' + fx(p.retail_price), out: !p.stock_qty, open: (ev) => { ev.stopPropagation(); go(shopUrl({ brand: mObj.brand_id, model: mObj.id, cat: c.id, grade: p.grade })); } })) }; }).filter(Boolean) : [];
     return {
       open: s.open, chevR: s.open ? 180 : 0, brandsK: T('BRANDS'),
       enter: () => { this._in = true; clearTimeout(this.t); this.t = setTimeout(() => this.setState({ open: true }), 120); },

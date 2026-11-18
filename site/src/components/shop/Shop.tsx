@@ -20,7 +20,7 @@ import Banners from './Banners';
 import InlineAd from './InlineAd';
 import ShopIntro from './ShopIntro';
 import CompareView from './CompareView';
-import { GradeTag } from './Tags';
+import { GradeTag, MakerTag } from './Tags';
 import { CompareIcon } from './Icons';
 import DevicePicker from './DevicePicker';
 
@@ -189,7 +189,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
                 <div className="sf-pr"><input type="number" placeholder={T('Min')} value={f.min ?? ''} onChange={(e) => set({ min: e.target.value === '' ? null : +e.target.value })} /><i>–</i><input type="number" placeholder={T('Max')} value={f.max ?? ''} onChange={(e) => set({ max: e.target.value === '' ? null : +e.target.value })} /></div>
                 <div className="sf-q">{[[0, 50], [50, 150], [150, 400], [400, null]].map(([a, b]) => <button key={String(a)} type="button" className={'sp-chip' + (f.min === a && f.max === b ? ' on' : '')} onClick={() => set({ min: a, max: b })}>{b ? a + '–' + b : a + '+'}</button>)}</div>
               </div>
-              <div className="sf"><b>{T('Manufacturer')}</b>{D.manufacturers.filter((m) => fc.makers[m.id] || f.makers.includes(m.id)).map((m) => <label key={m.id} className="sf-o"><input type="checkbox" checked={f.makers.includes(m.id)} onChange={() => tog('makers', m.id)} /><i /><span>{m.name}</span><small>{fc.makers[m.id] || 0}</small></label>)}</div>
+              <div className="sf"><b>{T('Manufacturer')}</b>{D.manufacturers.filter((m) => fc.makers[m.id] || f.makers.includes(m.id)).map((m) => <label key={m.id} className="sf-o"><input type="checkbox" checked={f.makers.includes(m.id)} onChange={() => tog('makers', m.id)} /><i /><span><MakerTag m={m.id} name={m.name} size="sm" /></span><small>{fc.makers[m.id] || 0}</small></label>)}</div>
               <div className="sf"><b>{T('Rating')}</b>{[4.5, 4, 3].map((r) => <button key={r} type="button" className={'sf-r' + (f.rating === r ? ' on' : '')} onClick={() => set({ rating: f.rating === r ? 0 : r })}><Stars v={r} /> {T('& up')}</button>)}</div>
               <button type="button" className="sp-btn sm dark shop-side-done" onClick={() => setSide(false)}>{T('Show')} {fmt(res.length)} {T('results')}</button>
             </div>

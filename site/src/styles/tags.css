@@ -38,3 +38,17 @@
 .tg-row { display: inline-flex; flex-wrap: wrap; gap: 5px; align-items: center; }
 @media (prefers-reduced-motion: reduce) { .tg-g::after, .tg-x::after, .tg-ping { animation: none; } }
 .tg b, .tg small { font: inherit !important; letter-spacing: inherit !important; color: inherit !important; margin: 0 !important; }
+
+/* every older grade chip on the site (cart, repair, brands, model and part pages, the hero iPad) wears the same tag */
+.pc-gr, .hi-gr { display: inline-flex !important; align-items: center; gap: 5px; height: 19px !important; padding: 0 7px 0 6px !important; border: 0 !important; border-radius: 0 !important; font: 700 9.5px/1 'JetBrains Mono', ui-monospace, monospace !important; letter-spacing: .07em !important; text-transform: uppercase; white-space: nowrap; clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px); box-shadow: inset 0 1px 0 rgba(255,255,255,.35) !important; background: linear-gradient(135deg, var(--c1, #3A3D42), var(--c2, #74787F)) !important; color: var(--ink, #fff) !important; }
+.pc-gr::before, .hi-gr::before { content: ''; width: 2.5px; height: 8px; border-radius: 1px; background: currentColor; opacity: .85; }
+.pc-gr.g-OR, .hi-gr.g-OR { --c1: #F7C032; --c2: #FFE38E; --ink: #26282B; }
+.pc-gr.g-CO, .hi-gr.g-CO { --c1: #0F9F8F; --c2: #3FD8C2; --ink: #fff; }
+.pc-gr.g-ST, .hi-gr.g-ST { --c1: #556274; --c2: #8C9AAE; --ink: #fff; }
+.pc-gr.g-AQ, .hi-gr.g-AQ { --c1: #6D28D9; --c2: #A78BFA; --ink: #fff; }
+.pc-gr.g-AA, .hi-gr.g-AA { --c1: #4338CA; --c2: #818CF8; --ink: #fff; }
+.pc-gr.g-OL, .hi-gr.g-OL { --c1: #C0267A; --c2: #F472B6; --ink: #fff; }
+.pc-gr.g-OB, .hi-gr.g-OB { --c1: #D21F4B; --c2: #FB7185; --ink: #fff; }
+.pc-gr.g-OS, .hi-gr.g-OS { --c1: #E0570F; --c2: #FB9A54; --ink: #fff; }
+.pc-gr.g-IN, .hi-gr.g-IN { --c1: #1D5FE0; --c2: #60A5FA; --ink: #fff; }
+.pc-gr.g-OT, .hi-gr.g-OT { --c1: #3A3D42; --c2: #74787F; --ink: #fff; }

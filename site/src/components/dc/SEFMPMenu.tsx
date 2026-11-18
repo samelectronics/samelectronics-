@@ -96,7 +96,7 @@ function render(v: Vals) {
                       <span className="fmq-gr">
                         {pt.grades.map((g: any) => (
                           <button key={g.id} type="button" className={'fmq-g' + (g.out ? ' out' : '')} onClick={g.open}>
-                            <em>{g.g}</em>
+                            <em className={'pc-gr g-' + g.code}>{g.g}</em>
                             <b>{g.price}</b>
                           </button>
                         ))}
