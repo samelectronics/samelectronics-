@@ -300,7 +300,7 @@ function render(v: Vals) {
                   height: '184px',
                   borderRadius: '24px',
                   background: 'radial-gradient(120% 60% at 30% 0%,#6A6E75 0%,rgba(106,110,117,0) 55%),linear-gradient(160deg,#4A4D53 0%,#2E3034 40%,#222427 75%,#33363B 100%)', /* owner (15 Nov): a cute, soft, glossy graphite shell, not a serious phone */ /* owner (15 Nov): a real titanium band with light on both edges */
-                  boxShadow: '0 16px 26px rgba(0,0,0,.32),inset 0 2px 1px rgba(255,255,255,.28),inset 0 -3px 6px rgba(0,0,0,.45),inset 3px 0 6px rgba(255,255,255,.06)',
+                  boxShadow: '0 22px 30px -6px rgba(0,0,0,.42),0 6px 10px rgba(0,0,0,.22),inset 0 2px 1px rgba(255,255,255,.32),inset 0 -4px 7px rgba(0,0,0,.55),inset 4px 0 6px rgba(255,255,255,.08),inset -5px 0 8px rgba(0,0,0,.45)', /* owner (18 Nov): slightly 3D: a darker right side for thickness, a rim of light, a real cast shadow */
                 }}
               >
                 {'\n          '}
@@ -312,7 +312,7 @@ function render(v: Vals) {
                     width: '3px',
                     height: '26px',
                     borderRadius: '2px',
-                    background: 'linear-gradient(90deg,#C9CCD0 0%,#8E9298 45%,#4E5156 100%)', boxShadow: '1px 0 1px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.5)',
+                    background: 'linear-gradient(90deg,#2A2C30 0%,#4E5258 40%,#1C1E21 100%)', boxShadow: '1.5px 1px 2px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.6)', width: '3.5px',
                   }}
                 ></span>
                 {'\n          '}
@@ -324,7 +324,7 @@ function render(v: Vals) {
                     width: '3px',
                     height: '14px',
                     borderRadius: '2px',
-                    background: 'linear-gradient(90deg,#4E5156 0%,#8E9298 55%,#C9CCD0 100%)', boxShadow: '-1px 0 1px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.5)',
+                    background: 'linear-gradient(90deg,#1C1E21 0%,#4E5258 60%,#2A2C30 100%)', boxShadow: '-1.5px 1px 2px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.6)', width: '3.5px',
                   }}
                 ></span>
                 <span
@@ -335,7 +335,7 @@ function render(v: Vals) {
                     width: '3px',
                     height: '22px',
                     borderRadius: '2px',
-                    background: 'linear-gradient(90deg,#4E5156 0%,#8E9298 55%,#C9CCD0 100%)', boxShadow: '-1px 0 1px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.5)',
+                    background: 'linear-gradient(90deg,#1C1E21 0%,#4E5258 60%,#2A2C30 100%)', boxShadow: '-1.5px 1px 2px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.6)', width: '3.5px',
                   }}
                 ></span>
                 {'\n          '}
@@ -354,7 +354,7 @@ function render(v: Vals) {
                   <path d="M16.4 9.2l2.6-1.8 1.4.2M17.6 13.4l3.4.6M15.8 17.8l2 2.4" fill="none" stroke="rgba(255,255,255,.34)" strokeWidth=".35" strokeLinecap="round" />
                   <path d="M11.4 6.2c2.3.2 4.4 1.6 5 3.8" fill="none" stroke="rgba(255,255,255,.28)" strokeWidth=".5" strokeLinecap="round" />
                 </svg>
-                <div style={{ position: 'absolute', inset: '3px', borderRadius: '23px', background: '#050506', overflow: 'hidden' }}>
+                <div style={{ position: 'absolute', inset: '3px', borderRadius: '23px', background: '#050506', overflow: 'hidden', boxShadow: 'inset 0 1px 2px rgba(0,0,0,.8)' }}>
                   {'\n            '}
                   <div
                     style={{
