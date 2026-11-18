@@ -211,7 +211,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
             {f.cats.length === 1 && f.cats[0] === 'SCR' ? <ScreenGrades items={base.filter((p) => p.category === 'SCR')} on={f.grades} onPick={(g) => tog('grades', g)} /> : null}
             {res.length ? (
               <div className={'shop-grid' + (view.list ? ' list' : '')} style={{ ['--cols' as string]: view.cols }}>
-                {shown.map((p, k) => { const every = (view.list ? 1 : Math.max(1, +view.cols || 4)) * 3; const ad = (k + 1) % every === 0 && k + 1 < shown.length && (k + 1) / every <= 3; return <React.Fragment key={p.id}><ProductCard p={p} st={st} trade={trade} open={open} list={view.list} fits={myModels.get(p.model_id)} tour={k === 0} />{ad ? <InlineAd slot={(k + 1) / every} lastCat={f.cats[0]} /> : null}</React.Fragment>; })}
+                {shown.map((p, k) => { const every = (view.list ? 1 : Math.max(1, +view.cols || 4)) * 3; const ad = (k + 1) % every === 0 && k + 1 < shown.length; /* owner (18 Nov): the ads keep coming as you scroll */ return <React.Fragment key={p.id}><ProductCard p={p} st={st} trade={trade} open={open} list={view.list} fits={myModels.get(p.model_id)} tour={k === 0} />{ad ? <InlineAd slot={(k + 1) / every} lastCat={f.cats[0]} /> : null}</React.Fragment>; })}
               </div>
             ) : (
               <div className="sp-empty shop-none">

@@ -52,3 +52,18 @@
 .pc-gr.g-OS, .hi-gr.g-OS { --c1: #E0570F; --c2: #FB9A54; --ink: #fff; }
 .pc-gr.g-IN, .hi-gr.g-IN { --c1: #1D5FE0; --c2: #60A5FA; --ink: #fff; }
 .pc-gr.g-OT, .hi-gr.g-OT { --c1: #3A3D42; --c2: #74787F; --ink: #fff; }
+
+/* owner (18 Nov, round 2): "clean colours that follow a sequence". Families share one hue and step dark → light
+   by tier: Original = brand yellow; everyday = graphite → silver; copies = steel blue (AAA → AA); OLED = teal
+   (Big → Soft → Small); Incell = slate; Other = neutral */
+.g4-OR, .pc-gr.g-OR, .hi-gr.g-OR { --c1: #F7C032 !important; --c2: #FFE38E !important; --ink: #26282B !important; }
+.g4-CO, .pc-gr.g-CO, .hi-gr.g-CO { --c1: #2E3034 !important; --c2: #55595F !important; --ink: #fff !important; }
+.g4-ST, .pc-gr.g-ST, .hi-gr.g-ST { --c1: #C9CCD0 !important; --c2: #EEF0F2 !important; --ink: #26282B !important; }
+.g4-AQ, .pc-gr.g-AQ, .hi-gr.g-AQ { --c1: #2563D9 !important; --c2: #5B93F0 !important; --ink: #fff !important; }
+.g4-AA, .pc-gr.g-AA, .hi-gr.g-AA { --c1: #8DB2EE !important; --c2: #C3D7F6 !important; --ink: #1B2C4A !important; }
+.g4-OB, .pc-gr.g-OB, .hi-gr.g-OB { --c1: #0B6E64 !important; --c2: #139A8B !important; --ink: #fff !important; }
+.g4-OL, .pc-gr.g-OL, .hi-gr.g-OL { --c1: #17A897 !important; --c2: #48CDBB !important; --ink: #fff !important; }
+.g4-OS, .pc-gr.g-OS, .hi-gr.g-OS { --c1: #9BE3D8 !important; --c2: #CBF2EC !important; --ink: #0B3B35 !important; }
+.g4-IN, .pc-gr.g-IN, .hi-gr.g-IN { --c1: #4F5B6B !important; --c2: #7B8798 !important; --ink: #fff !important; }
+.g4-OT, .pc-gr.g-OT, .hi-gr.g-OT { --c1: #E3E5E8 !important; --c2: #F4F5F6 !important; --ink: #4A4D52 !important; }
+.g4-OR, .g4-ST, .g4-AA, .g4-OS, .g4-OT { text-shadow: none !important; }

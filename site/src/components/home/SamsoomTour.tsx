@@ -128,11 +128,17 @@ export default function SamsoomTour() {
     // on a page someone opens for the first time (after the first welcome), he offers a tour of that page once
     let ot = 0;
     if (seen && location.pathname !== '/' && !location.pathname.startsWith('/staff')) {
-      const k = 'se-pt:' + location.pathname; let had = true; try { had = !!localStorage.getItem(k); localStorage.setItem(k, '1'); } catch { /* */ }
-      if (!had) ot = window.setTimeout(() => { if (!document.querySelector('.sc2-banner, .sc2-veil, .st-veil')) setOffer(true); }, 3500);
+      // owner (18 Nov): "I never got the 'want a tour of this page?' message". It now waits until nothing else is on
+      // screen (cookie banner, pop-ups, notices) and only counts as seen once it has really been shown.
+      const k = 'se-pt:' + location.pathname; let had = true; try { had = !!localStorage.getItem(k); } catch { /* */ }
+      if (!had) { const t0 = Date.now(); ot = window.setInterval(() => {
+        if (Date.now() - t0 < 2500) return;
+        if (document.querySelector('.sc2-banner, .sc2-veil, .st-veil, .sn2, .lp, .se-net-veil, .pv-veil, [role="dialog"][aria-modal="true"]')) return;
+        window.clearInterval(ot); try { localStorage.setItem(k, '1'); } catch { /* */ } setOffer(true);
+      }, 600); }
     }
     (window as unknown as { seWalk?: () => void }).seWalk = () => { setOffer(false); walk(); };
-    return () => { window.clearInterval(iv); window.clearTimeout(ot); window.removeEventListener('se:help', help); };
+    return () => { window.clearInterval(iv); window.clearInterval(ot); window.removeEventListener('se:help', help); };
   }, []);
   const wasOn = React.useRef(false);
   useEffect(() => { if (phase !== 'off') wasOn.current = true; else if (wasOn.current) (window as unknown as { __seTourIdle?: boolean }).__seTourIdle = true; }, [phase]);
@@ -168,11 +174,17 @@ export default function SamsoomTour() {
   });
 
   if (phase === 'off') return offer ? (
-    <div className="se-netp st-offer2" role="status" aria-live="polite">
-      <i className="dot" aria-hidden="true" />
-      <b>{T('Want a tour of this page?')}</b>
-      <button type="button" className="st-o2-go" data-sound="next" aria-label={T('Yes, show me')} title={T('Yes, show me')} onClick={() => { setOffer(false); walk(); }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg></button>
-      <button type="button" className="st-o2-x" data-sound="skip" onClick={() => setOffer(false)} aria-label={T('Not now')} title={T('Not now')}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.8" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
+    <div className="sn2-dock">
+      <div className="sn2 sn2-info" role="status" aria-live="polite">
+        <span className="sn2-sam" aria-hidden="true"><LiveSam size={92} mood="idle" play="wave" /></span>
+        <b className="sn2-h">{T('Want a tour of this page?')}</b>
+        <p className="sn2-p">{T('I will show you the useful tools here. It takes 20 seconds.')}</p>
+        <span className="sn2-acts">
+          <button type="button" className="sn2-b y" data-sound="next" onClick={() => { setOffer(false); walk(); }}>{T('Show me around')}</button>
+          <button type="button" className="sn2-b" data-sound="skip" onClick={() => setOffer(false)}>{T('Not now')}</button>
+        </span>
+        <button type="button" className="sn2-x" aria-label={T('Close')} onClick={() => setOffer(false)}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
+      </div>
     </div>
   ) : null;
   if (phase === 'lang') {

@@ -16,6 +16,7 @@ import { store, useStore } from '@/lib/store';
 import { backend, type Review, type User } from '@/lib/backend';
 import { useScrollLock } from '@/lib/scrollLock';
 import { GradeTag, MakerTag, DealTag, BestTag, NewTag } from './Tags';
+import { ShareSheet, ListSheet } from './ShareSheets';
 import SEBrandLogo from '@/components/dc/SEBrandLogo';
 import { Stars, T, flyToCart } from '@/components/site/ui';
 import ProductCard, { stockLabel } from './ProductCard';
@@ -50,20 +51,14 @@ const PV_D: Record<string, string> = {
   list: 'M8 6h12M8 12h12M8 18h8M4 6h.01M4 12h.01M4 18h.01',
 };
 function PvIc({ k }: { k: string }) { return <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={PV_D[k]} /></svg>; }
-function ListMenu({ id, kits }: { id: string; kits: { name: string; ids: string[] }[] }) {
-  const [open, setOpen] = React.useState(false), [nm, setNm] = React.useState('');
-  const inAny = kits.some((k) => k.ids.includes(id));
+function ListMenu({ p, kits }: { p: Product; kits: { name: string; ids: string[] }[] }) {
+  const [open, setOpen] = React.useState(false);
+  const inAny = kits.some((k) => k.ids.includes(p.id));
   return (
-    <span className="pv-lists">
-      <button type="button" className={inAny ? 'on' : ''} aria-expanded={open} onClick={() => setOpen(!open)}><PvIc k="list" />{T('List')}</button>
-      {open ? (
-        <span className="pv-lists-pop" role="dialog" aria-label={T('My lists')}>
-          {kits.length ? kits.map((k) => <label key={k.name}><input type="checkbox" checked={k.ids.includes(id)} onChange={() => { const had = k.ids.includes(id); store.toList(k.name, id); toast((had ? T('Removed from') : T('Added to')) + ' ' + k.name, had ? 'off' : 'ok'); }} /><span>{k.name}</span><small>{k.ids.length}</small></label>) : <small className="pv-lists-none">{T('No lists yet. Name one, e.g. “Shop order June”.')}</small>}
-          <form onSubmit={(e) => { e.preventDefault(); if (nm.trim()) { store.toList(nm, id); toast(T('Added to') + ' ' + nm.trim()); setNm(''); } }}><input value={nm} onChange={(e) => setNm(e.target.value)} placeholder={T('New list name')} maxLength={40} /><button type="submit">{T('Add')}</button></form>
-          <a href="/account#saved">{T('See my lists')} →</a>
-        </span>
-      ) : null}
-    </span>
+    <>
+      <button type="button" className={inAny ? 'on' : ''} aria-haspopup="dialog" onClick={() => setOpen(true)}><PvIc k="list" />{T('List')}</button>
+      {open ? <ListSheet p={p} kits={kits} onClose={() => setOpen(false)} /> : null}
+    </>
   );
 }
 
@@ -151,24 +146,12 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
             <div className="pv-tools">
               <button type="button" className={st.favs.includes(p.id) ? 'on' : ''} onClick={() => { const on = st.favs.includes(p.id); store.fav(p.id); toast(on ? T('Removed from your stars') : T('Starred'), on ? 'off' : 'ok'); }}><PvIc k="star" />{st.favs.includes(p.id) ? T('Starred') : T('Star')}</button>
               <button type="button" className={st.compare.includes(p.id) ? 'on' : ''} onClick={() => { const had = st.compare.includes(p.id); store.cmp(p.id); if (had) return; const n = Math.min(3, st.compare.length + 1); onClose(); if (n >= 2) window.setTimeout(() => window.dispatchEvent(new CustomEvent('se:cmp-open')), 120); }}><PvIc k="cmp" />{T('Compare')}</button>
-              <button type="button" onClick={() => { store.later(p.id); toast('Saved for later'); }}><PvIc k="save" />{T('Save')}</button>
+              <button type="button" onClick={() => { store.later(p.id); toast(T('Saved for later')); }}><PvIc k="save" />{T('Save')}</button>
               <button type="button" className={st.alerts.includes(p.id) ? 'on' : ''} onClick={() => { const on = st.alerts.includes(p.id); store.alert(p.id); toast(on ? 'Alert removed' : 'We will tell you when it changes', on ? 'off' : 'ok'); }}><PvIc k="bell" />{st.alerts.includes(p.id) ? T('Alert on') : T('Alert')}</button>
               <button type="button" onClick={() => setShareOpen(true)}><PvIc k="share" />{T('Share')}</button>
-              <ListMenu id={p.id} kits={st.kits} />
+              <ListMenu p={p} kits={st.kits} />
             </div>
-            {shareOpen ? (
-              <div className="pv-share" role="dialog" aria-label={T('Share')}>
-                <div className="pv-share-h"><b>{T('Share this part')}</b><button type="button" className="sp-x" style={{ position: 'static' }} onClick={() => setShareOpen(false)} aria-label={T('Close')}>×</button></div>
-                <div className="pv-share-card"><img src={p.img} alt="" /><span><b>{p.title}</b><small>{p.gradeName} · {aed(p.price, false)}</small><code dir="ltr">{link}</code></span></div>
-                <div className="pv-share-g">
-                  <button type="button" onClick={async () => { try { await navigator.clipboard.writeText(link); } catch { /* */ } toast('Link copied'); setShareOpen(false); }}><PvIc k="list" />{T('Copy link')}</button>
-                  <a className="wa" href={'https://wa.me/?text=' + encodeURIComponent(p.title + ' · ' + link)} target="_blank" rel="noopener noreferrer" onClick={() => setShareOpen(false)}><i className="ct-ic wa" />WhatsApp</a>
-                  <button type="button" className="wc" onClick={async () => { try { await navigator.clipboard.writeText(p.title + ' · ' + link); } catch { /* */ } toast('Copied for WeChat'); setShareOpen(false); }}><i className="ct-ic wc" />WeChat</button>
-                  <a href={'mailto:?subject=' + encodeURIComponent(p.title) + '&body=' + encodeURIComponent(link)} onClick={() => setShareOpen(false)}><PvIc k="share" />{T('E-mail')}</a>
-                  {typeof navigator !== 'undefined' && 'share' in navigator ? <button type="button" onClick={() => { share(); setShareOpen(false); }}><PvIc k="share" />{T('More…')}</button> : null}
-                </div>
-              </div>
-            ) : null}
+            {shareOpen ? <ShareSheet p={p} link={link} onClose={() => setShareOpen(false)} /> : null}
             <ul className="pv-promise">
               <li><b>{T('Pick up today')}</b><span>{T('Al Murar, Deira · ready in 20 minutes')}</span></li>
               <li><b>{T('UAE delivery')}</b><span>{T('Next working day · free over AED 500 (sample)')}</span></li>
