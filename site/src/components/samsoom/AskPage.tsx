@@ -22,10 +22,10 @@ type Chat = { id: string; title: string; named: boolean; msgs: Msg[]; at: number
 // owner (18 Nov): "add more useful tools: modes, tones (friendly by default, direct, …), search mode, comparison; settings"
 type Tone = 'friendly' | 'direct' | 'detailed' | 'fun';
 type Mode = 'chat' | 'search' | 'compare' | 'quote';
-type Cfg = { tone: Tone; mode: Mode; voice: boolean; speak: boolean; sugs: boolean };
+type Cfg = { tone: Tone; mode: Mode; voice: boolean; speak: boolean; sugs: boolean; big: boolean; enter: boolean };
 const CFG_KEY = 'se-sam-cfg';
-const CFG0: Cfg = { tone: 'friendly', mode: 'chat', voice: true, speak: false, sugs: true }; // owner (18 Nov): suggestions off by default
-const readCfg = (): Cfg => { try { const v = JSON.parse(localStorage.getItem(CFG_KEY) || '{}'); delete v.sugs; return { ...CFG0, ...v }; } catch { return CFG0; } };
+const CFG0: Cfg = { tone: 'friendly', mode: 'chat', voice: true, speak: false, sugs: true, big: false, enter: true }; // owner (18 Nov): suggestions off by default
+const readCfg = (): Cfg => { try { const v = JSON.parse(localStorage.getItem(CFG_KEY) || '{}'); return { ...CFG0, ...v }; } catch { return CFG0; } };
 const MICON: Record<string, string> = {"chat": "<path d=\"M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z\" />", "search": "<circle cx=\"11\" cy=\"11\" r=\"7\" /><path d=\"M20 20l-3.5-3.5\" />", "compare": "<path d=\"M4 6h7v12H4zM13 6h7v12h-7z\" />", "quote": "<path d=\"M7 3h10v18l-5-3-5 3z\" /><path d=\"M10 8h4M10 12h4\" />"};
 const TONES: [Tone, string, string][] = [['friendly', 'Friendly', 'Warm and helpful (default)'], ['direct', 'Direct', 'Short answers, straight to the point'], ['detailed', 'Detailed', 'Extra tips and the reasons why'], ['fun', 'Fun', 'Playful, with a bit of personality']];
 const MODES: [Mode, string, string][] = [['chat', 'Chat', 'Ask anything'], ['search', 'Search', 'Every message searches the catalogue'], ['compare', 'Compare', 'Grades side by side for a model and part'], ['quote', 'Quote', 'Build a price list, then send or add it to the cart']];
@@ -204,10 +204,12 @@ export default function AskPage() {
   const qTotal = qItems.reduce((a, x) => a + x.p.price * x.qty, 0);
   const setQty = (pid: string, d: number) => save((l) => l.map((c) => (c.id === id ? { ...c, quote: (c.quote || []).map((x) => (x.id === pid ? { ...x, qty: x.qty + d } : x)).filter((x) => x.qty > 0) } : c)));
   const sendQuote = () => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wa', text: T('Quote request') + ':\n' + qItems.map((x) => '• ' + x.qty + ' × ' + x.p.modelName + ' ' + x.p.catName + ' (' + x.p.gradeName + ') · ' + priceText(x.p.price)).join('\n') + '\n' + T('Total') + ': ' + priceText(qTotal) } }));
+  // the "Chat with us" sheet carries this conversation as its system message
+  useEffect(() => { const w = window as unknown as { seChatContext?: () => string }; w.seChatContext = () => (msgs.length ? '*' + T('From my chat with Samsoom') + '*\n' + msgs.slice(-6).map((m) => (m.me ? T('Me') : 'Samsoom') + ': ' + m.t.split('\n')[0].slice(0, 160)).join('\n') : ''); return () => { delete w.seChatContext; }; }, [msgs]);
   const lastBot = msgs.length && !msgs[msgs.length - 1].me ? msgs.length - 1 : -1;
 
   return (
-    <div className="ak">
+    <div className={'ak' + (cfg.big ? ' big' : '')}>
       <aside className={'ak-side' + (side ? ' open' : '')}>
         <button type="button" className="ak-new" onClick={fresh}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M12 5v14M5 12h14" /></svg>{T('New chat')}</button>
         <label className="ak-find"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg><input value={find} onChange={(e) => setFind(e.target.value)} placeholder={T('Search chats')} aria-label={T('Search chats')} /></label>
@@ -229,7 +231,7 @@ export default function AskPage() {
         </div>
         <div className="ak-people">
           <span className="ak-h">{T('Prefer a person?')}</span>
-          <button type="button" className="ak-contact" onClick={() => setMenu(menu === 'contact' ? '' : 'contact')}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>{T('Chat with us')}</button>
+          <button type="button" className="ak-contact" onClick={() => { setMenu(''); window.dispatchEvent(new CustomEvent('se:chatwith')); }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>{T('Chat with us')}</button>
           <div className="ak-acct">
             <a href="/account" className="ak-me"><span className={'ak-me-av lv' + (who?.lv || 0)}>{who ? who.name.trim().charAt(0).toUpperCase() : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></svg>}</span><span><b>{who ? who.name : T('Guest')}</b><small>{who ? who.plan : T('Sign in for your card perks')}</small></span></a>
             <button type="button" className="ak-me-set" onClick={() => setMenu(menu === 'settings' ? '' : 'settings')} aria-label={T('Samsoom settings')} title={T('Samsoom settings')}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" /></svg></button>
@@ -244,7 +246,7 @@ export default function AskPage() {
           <span className="ak-title">{cur ? cur.title : T('New chat')}</span>
           <span className="ak-acts">
             <button type="button" className={'ak-ic' + (menu === 'settings' ? ' on' : '')} onClick={() => setMenu(menu === 'settings' ? '' : 'settings')} aria-label={T('Samsoom settings')} title={T('Samsoom settings')} aria-expanded={menu === 'settings'}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0" /><circle cx="16" cy="6" r="2" /><circle cx="10" cy="12" r="2" /><circle cx="18" cy="18" r="2" /></svg></button>
-            <button type="button" className="ak-human" onClick={() => setMenu(menu === 'contact' ? '' : 'contact')} aria-expanded={menu === 'contact'}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg><span>{T('Chat with us')}</span></button>
+            <button type="button" className="ak-human" onClick={() => { setMenu(''); window.dispatchEvent(new CustomEvent('se:chatwith')); }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg><span>{T('Chat with us')}</span></button>
           </span>
         </header>
         {menu ? <button type="button" className="ak-veil" aria-label={T('Close')} data-close="" onClick={() => setMenu('')} /> : null}
@@ -255,18 +257,30 @@ export default function AskPage() {
           </div>
         ) : null}
         {menu === 'settings' ? (
-          <div className="ak-pop wide" role="dialog" aria-label={T('Samsoom settings')}>
-            <b className="ak-pop-h">{T('Samsoom settings')}</b>
-            <span className="ak-pop-l">{T('Tone')}</span>
-            <div className="ak-seg">{TONES.map(([k, l, d]) => <button key={k} type="button" className={cfg.tone === k ? 'on' : ''} onClick={() => setCfg({ tone: k })}><b>{T(l)}</b><small>{T(d)}</small></button>)}</div>
-            <span className="ak-pop-l">{T('Mode')}</span>
-            <div className="ak-seg">{MODES.map(([k, l, d]) => <button key={k} type="button" className={cfg.mode === k ? 'on' : ''} onClick={() => setCfg({ mode: k })}><b>{T(l)}</b><small>{T(d)}</small></button>)}</div>
-            <span className="ak-pop-l">{T('Sound')}</span>
-            <span className="ak-pop-l">{T('Chat')}</span>
-            <label className="ak-tg"><input type="checkbox" checked={cfg.sugs} onChange={(e) => setCfg({ sugs: e.target.checked })} /><span>{T('Show suggested questions')}</span></label>
-            <label className="ak-tg"><input type="checkbox" checked={cfg.voice} onChange={(e) => setCfg({ voice: e.target.checked })} /><span>{T('Samsoom babbles while he answers')}</span></label>
-            <label className="ak-tg"><input type="checkbox" checked={cfg.speak} onChange={(e) => setCfg({ speak: e.target.checked })} /><span>{T('Read answers aloud')}</span></label>
-            <button type="button" className="ak-pop-del" onClick={() => { if (confirm(T('Delete every chat on this device?'))) { write([]); setChats([]); fresh(); setMenu(''); } }}>{T('Delete all chats')}</button>
+          <div className="ak-pop wide ak-set" role="dialog" aria-label={T('Samsoom settings')}>
+            <span className="ak-set-h"><b>{T('Samsoom settings')}</b><button type="button" className="ak-set-x" onClick={() => setMenu('')} aria-label={T('Close')} data-close="">×</button></span>
+            <section><span className="ak-pop-l">{T('Answers')}</span>
+              <small className="ak-set-d">{T('How Samsoom talks to you')}</small>
+              <div className="ak-seg">{TONES.map(([k, l, d]) => <button key={k} type="button" className={cfg.tone === k ? 'on' : ''} onClick={() => setCfg({ tone: k })} aria-pressed={cfg.tone === k}><b>{T(l)}</b><small>{T(d)}</small></button>)}</div>
+              <small className="ak-set-d">{T('Mode for new messages')}</small>
+              <div className="ak-seg">{MODES.map(([k, l, d]) => <button key={k} type="button" className={cfg.mode === k ? 'on' : ''} onClick={() => setCfg({ mode: k })} aria-pressed={cfg.mode === k}><b>{T(l)}</b><small>{T(d)}</small></button>)}</div>
+            </section>
+            <section><span className="ak-pop-l">{T('Voice')}</span>
+              <label className="ak-sw"><span><b>{T('Samsoom babbles while he answers')}</b><small>{T('His little robot voice')}</small></span><input type="checkbox" checked={cfg.voice} onChange={(e) => setCfg({ voice: e.target.checked })} /><i /></label>
+              <label className="ak-sw"><span><b>{T('Read answers aloud')}</b><small>{T('Uses your device voice, in your language')}</small></span><input type="checkbox" checked={cfg.speak} onChange={(e) => { setCfg({ speak: e.target.checked }); if (!e.target.checked && 'speechSynthesis' in window) speechSynthesis.cancel(); }} /><i /></label>
+            </section>
+            <section><span className="ak-pop-l">{T('Chat')}</span>
+              <label className="ak-sw"><span><b>{T('Show related questions')}</b><small>{T('Under each answer')}</small></span><input type="checkbox" checked={cfg.sugs} onChange={(e) => setCfg({ sugs: e.target.checked })} /><i /></label>
+              <label className="ak-sw"><span><b>{T('Larger text')}</b><small>{T('Easier to read')}</small></span><input type="checkbox" checked={cfg.big} onChange={(e) => setCfg({ big: e.target.checked })} /><i /></label>
+              <label className="ak-sw"><span><b>{T('Enter sends the message')}</b><small>{T('Off: Enter adds a new line')}</small></span><input type="checkbox" checked={cfg.enter} onChange={(e) => setCfg({ enter: e.target.checked })} /><i /></label>
+            </section>
+            <section><span className="ak-pop-l">{T('Your data')}</span>
+              <small className="ak-set-d">{T('Chats are kept only on this device.')}</small>
+              <span className="ak-set-a">
+                <button type="button" className="ak-set-b" disabled={!chats.length} onClick={() => { const txt = chats.map((c) => '# ' + c.title + '\n' + c.msgs.map((m) => (m.me ? T('You') : 'Samsoom') + ': ' + m.t).join('\n')).join('\n\n'); const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([txt], { type: 'text/plain' })); a.download = 'samsoom-chats.txt'; a.click(); }}>{T('Download my chats')}</button>
+                <button type="button" className="ak-pop-del" disabled={!chats.length} onClick={() => { if (confirm(T('Delete every chat on this device?'))) { write([]); setChats([]); fresh(); setMenu(''); } }}>{T('Delete all chats')}</button>
+              </span>
+            </section>
           </div>
         ) : null}
         <div className="ak-msgs" ref={box}>
@@ -337,7 +351,7 @@ export default function AskPage() {
           {img ? <div className="ak-att"><img src={img.small} alt="" /><span>{T('Photo ready: Samsoom will read the model on it')}</span><button type="button" onClick={() => setImg(null)} aria-label={T('Remove the photo')}>×</button></div> : null}
           <form className="ak-in" onSubmit={(e) => { e.preventDefault(); ask(q); }}>
             <input ref={file} type="file" accept="image/*" hidden onChange={(e) => { pickImg(e.target.files?.[0]); e.target.value = ''; }} />
-            <textarea ref={inp} rows={1} value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ask(q); } }} placeholder={listening ? T('Listening…') : cfg.mode === 'search' ? T('Search the catalogue: model and part…') : cfg.mode === 'compare' ? T('Compare grades: model and part…') : cfg.mode === 'quote' ? T('Add to the quote: model and part…') : T('Message Samsoom…')} aria-label={T('Message Samsoom')} />
+            <textarea ref={inp} rows={1} value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey && cfg.enter) { e.preventDefault(); ask(q); } }} placeholder={listening ? T('Listening…') : cfg.mode === 'search' ? T('Search the catalogue: model and part…') : cfg.mode === 'compare' ? T('Compare grades: model and part…') : cfg.mode === 'quote' ? T('Add to the quote: model and part…') : T('Message Samsoom…')} aria-label={T('Message Samsoom')} />
             <div className="ak-bar">
               <button type="button" className={'ak-plus' + (tmenu ? ' on' : '')} onClick={() => setTmenu(!tmenu)} aria-expanded={tmenu} aria-label={T('Tools')} title={T('Tools')}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg></button>
               <span className="ak-seg2" role="tablist" aria-label={T('Mode')}>{MODES.map(([k, l, d]) => <button key={k} type="button" role="tab" aria-selected={cfg.mode === k} className={cfg.mode === k ? 'on' : ''} title={T(d)} onClick={() => setCfg({ mode: k })}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" dangerouslySetInnerHTML={{ __html: MICON[k] }} /><span>{T(l)}</span></button>)}</span>

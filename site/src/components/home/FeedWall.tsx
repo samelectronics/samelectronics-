@@ -77,6 +77,37 @@ function Profile({ net, k }: { net: (typeof NET)[number]; k: number }) {
   );
 }
 
+/** owner (18 Nov): "more realistic pages and videos": every few posts the phone plays a full-screen reel / TikTok like
+ *  the real apps: the clip slowly zooms, the side column counts up, the caption and the sound line scroll, a progress
+ *  bar runs along the bottom and a double-tap heart pops in the middle */
+function Reel({ net, k }: { net: (typeof NET)[number]; k: number }) {
+  const p = GRID[k % GRID.length], dark = p.bg === '#26282B' || p.bg === '#111111';
+  const [likes, setLikes] = useState(p.likes * 9);
+  useEffect(() => { setLikes(p.likes * 9); const t = window.setInterval(() => setLikes((v) => v + 1 + Math.floor(Math.random() * 4)), 260); return () => window.clearInterval(t); }, [k, p.likes]);
+  const fmt = (n: number) => (n >= 1000 ? (n / 1000).toFixed(1) + 'K' : String(n));
+  return (
+    <div className={'fw-phone rl n-' + net.id} aria-hidden="true">
+      <span className="fw-island" />
+      <div className="rl-scr" style={{ background: p.bg }}>
+        <img className="rl-img" src={p.img.replace('-480.webp', '-480.webp')} alt="" loading="lazy" decoding="async" key={k} />
+        <span className="rl-shade" />
+        <span className="pf-sb rl-sb"><b>9:41</b><i /></span>
+        <span className="rl-top">{net.id === 'tt' ? <><small>Following</small><b>For You</b></> : <b>{net.id === 'ig' ? 'Reels' : 'Reels'}</b>}</span>
+        <span className="rl-side">
+          <span className="rl-av"><img src="/assets/se-logo-128.webp" alt="" /><i>+</i></span>
+          <span className="rl-ic"><i className="h" /><small>{fmt(likes)}</small></span>
+          <span className="rl-ic"><i className="c" /><small>{fmt(Math.round(p.likes / 3))}</small></span>
+          <span className="rl-ic"><i className="s" /><small>{fmt(Math.round(p.likes / 5))}</small></span>
+          {net.id === 'tt' ? <span className="rl-disc"><img src="/assets/se-logo-128.webp" alt="" /></span> : null}
+        </span>
+        <span className={'rl-cap' + (dark ? '' : ' lt')}><b>@samelectronics.uae</b><small>{T(p.t)} · {T(p.m)}</small><span className="rl-snd"><i>♫</i><span><em>{T('original sound')} · samelectronics.uae · {T('original sound')} · samelectronics.uae</em></span></span></span>
+        <span className="rl-pop" key={'p' + k} />
+        <span className="rl-prog"><i key={'g' + k} /></span>
+      </div>
+    </div>
+  );
+}
+
 export default function FeedWall() {
   const ref = useRef<HTMLElement>(null), [k, setK] = useState(0), [net, setNet] = useState(0), [live, setLive] = useState(false), [hold, setHold] = useState(false);
   useEffect(() => {
@@ -86,7 +117,14 @@ export default function FeedWall() {
     return () => { io.disconnect(); window.clearInterval(iv); };
   }, []);
   useEffect(() => { if (!live) return; if (hold) return; const t = window.setInterval(() => setNet((n) => (n + 1) % NET.length), STEP * 2); return () => window.clearInterval(t); }, [live, hold]);
-  const N = NET[net];
+  // owner (18 Nov): "hearts going out of the phones, fading away"
+  const [hearts, setHearts] = useState<{ id: number; x: number; d: number; s: number; r: number; c: number }[]>([]);
+  useEffect(() => {
+    if (!live) return; let n = 0;
+    const t = window.setInterval(() => { if (document.hidden) return; const id = ++n + Date.now(); setHearts((h) => [...h.slice(-14), { id, x: Math.random() * 40 - 20, d: Math.random() * 80 - 40, s: 0.7 + Math.random() * 0.7, r: Math.random() * 40 - 20, c: Math.random() < 0.72 ? 0 : Math.random() < 0.5 ? 1 : 2 }]); window.setTimeout(() => setHearts((h) => h.filter((x) => x.id !== id)), 3200); }, 420);
+    return () => window.clearInterval(t);
+  }, [live]);
+  const N = NET[net], reel = k % 4 === 2 || k % 4 === 3;
   const strip = [T('NEXT LANDING') + ' · ' + T('Thursday') + ' 14:00', ...POSTS.map((p) => T(p.tag) + ' · ' + T(p.t))];
   return (
     <section id="social" ref={ref} className={'fw' + (live ? ' on' : '')} data-tone="light" data-screen-label="The Feed">
@@ -110,7 +148,8 @@ export default function FeedWall() {
         <div className="fw-stage" aria-label={T('Our latest posts')}>
           <span className="fw-glow" aria-hidden="true" />
           {/* owner (17 Nov): the account you pick opens in the phone, like the real app */}
-          <div className="fw-one" key={N.id}><Profile net={N} k={k} /></div>
+          <div className="fw-one" key={N.id + (reel ? '-r' : '')}>{reel ? <Reel net={N} k={k} /> : <Profile net={N} k={k} />}</div>
+          <span className="fw-hearts" aria-hidden="true">{hearts.map((h) => <i key={h.id} className={'c' + h.c} style={{ ['--x' as string]: h.x + 'px', ['--d' as string]: h.d + 'px', ['--s' as string]: h.s, ['--r' as string]: h.r + 'deg' } as React.CSSProperties} />)}</span>
         </div>
       </div>
       <div className="fw-strip" aria-hidden="true"><div className="fw-strip-in">{[...strip, ...strip].map((s, i) => <span key={i}><i />{s}</span>)}</div></div>
