@@ -36,30 +36,21 @@ function render(v: Vals) {
                 style={{
                   position: 'absolute',
                   left: '99px',
-                  top: '16px',
+                  top: '11px',
                   width: '2px',
-                  height: '16px',
+                  height: '21px',
                   borderRadius: '1px',
                   background: 'linear-gradient(90deg,#5E6064,#C9CCD0,#5E6064)',
                 }}
               ></span>
               {'\n        '}
-              {/* owner (18 Nov): "his light bulb should look real": a small glass bulb with a glowing filament, a ridged metal screw
-                   base on the antenna, a warm halo that breathes */}
-              <span aria-hidden="true" style={cssToObj(`position:absolute;left:84px;top:-12px;width:32px;height:32px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,214,102,.55),rgba(247,192,50,.18) 55%,rgba(247,192,50,0));animation:${s(v.antAnim)}`)} />
-              <svg aria-hidden="true" width="22" height="30" viewBox="0 0 22 30" style={{ position: 'absolute', left: '89px', top: '-8px', overflow: 'visible' }}>
-                <defs>
-                  <radialGradient id="samBulbG" cx=".38" cy=".32" r=".75"><stop offset="0" stopColor="#FFFDF2" /><stop offset=".35" stopColor="#FFE9A6" /><stop offset=".75" stopColor="#F7C032" stopOpacity=".92" /><stop offset="1" stopColor="#C98F12" stopOpacity=".95" /></radialGradient>
-                  <linearGradient id="samBase" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#6E7278" /><stop offset=".45" stopColor="#E3E5E8" /><stop offset=".7" stopColor="#9A9EA4" /><stop offset="1" stopColor="#55585D" /></linearGradient>
-                </defs>
-                <path d="M11 1.2c4.6 0 8 3.4 8 7.8 0 3-1.6 4.8-3 6.2-.9.9-1.4 1.9-1.4 3.1H7.4c0-1.2-.5-2.2-1.4-3.1C4.6 13.8 3 12 3 9c0-4.4 3.4-7.8 8-7.8z" fill="url(#samBulbG)" stroke="rgba(150,105,10,.55)" strokeWidth=".6" />
-                <path d="M8.6 18.2V13l1.2-2.2 1.2 2 1.2-2 1.2 2.2v5.2" fill="none" stroke="#FFF6D6" strokeWidth=".9" strokeLinejoin="round" />
-                <path d="M9 10.6c.6-.8 1.3-.8 2 0s1.4.8 2 0" fill="none" stroke="#FFFFFF" strokeWidth="1.1" strokeLinecap="round" />
-                <ellipse cx="7.6" cy="5.6" rx="2.1" ry="1.3" fill="rgba(255,255,255,.85)" transform="rotate(-38 7.6 5.6)" />
-                <rect x="7" y="18.2" width="8" height="6.2" rx="1.2" fill="url(#samBase)" stroke="#3A3D42" strokeWidth=".5" />
-                <path d="M7.2 19.9h7.6M7.2 21.5h7.6M7.2 23.1h7.6" stroke="rgba(40,42,45,.55)" strokeWidth=".55" />
-                <path d="M8.6 24.4h4.8l-1 1.6h-2.8z" fill="#3A3D42" />
-              </svg>
+              {/* owner (18 Nov): "his light circle on top, the way it was, just better-looking": a glowing glass orb with a bright
+                   core, a soft inner gradient, a crisp highlight, a thin metal collar on the antenna and a warm halo that breathes */}
+              <span aria-hidden="true" style={cssToObj(`position:absolute;left:82px;top:-16px;width:36px;height:36px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,214,102,.55),rgba(247,192,50,.2) 55%,rgba(247,192,50,0));animation:${s(v.antAnim)}`)} />
+              <span aria-hidden="true" style={{ position: 'absolute', left: '92.5px', top: '-5px', width: '15px', height: '15px', borderRadius: '50%', background: 'radial-gradient(circle at 34% 30%,#FFFFFF 0%,#FFF4D1 18%,#FFD566 42%,#F7C032 68%,#C98F12 100%)', boxShadow: '0 0 12px 3px rgba(247,192,50,.75), inset 0 -2px 3px rgba(150,95,0,.45), inset 0 1px 1px rgba(255,255,255,.8)', zIndex: 2 }}>
+                <span style={{ position: 'absolute', left: '3px', top: '2.5px', width: '5px', height: '3px', borderRadius: '50%', background: 'rgba(255,255,255,.9)', transform: 'rotate(-30deg)' }} />
+              </span>
+              <span aria-hidden="true" style={{ position: 'absolute', left: '96.5px', top: '9px', width: '7px', height: '3px', borderRadius: '1.5px', background: 'linear-gradient(90deg,#6E7278,#E3E5E8 50%,#55585D)', zIndex: 1 }} />
               {'\n        '}
               <div
                 style={cssToObj(
@@ -348,8 +339,7 @@ function render(v: Vals) {
                   }}
                 ></span>
                 {'\n          '}
-                {/* owner (18 Nov): a thicker, real titanium rim: light along the top-left edge, darker along the bottom-right */}
-                <span aria-hidden="true" style={{ position: 'absolute', inset: '-1px', borderRadius: '25px', pointerEvents: 'none', boxShadow: 'inset 1.5px 1.5px 0 rgba(255,255,255,.35), inset -1.5px -1.5px 0 rgba(0,0,0,.55), 0 0 0 1px rgba(0,0,0,.5)', zIndex: 1 }} />
+                
                 {/* owner (18 Nov): "his arms come out as cables, a little broken damage on the sides as if they're real":
                     a cracked opening in the frame on each side, a rubber grommet, chipped edges and a few copper strands */}
                 <svg aria-hidden="true" width="22" height="30" viewBox="0 0 22 30" style={{ position: 'absolute', left: '-11px', top: '95px', overflow: 'visible', zIndex: 6, pointerEvents: 'none' }}>
