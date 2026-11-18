@@ -20,6 +20,7 @@ import Banners from './Banners';
 import InlineAd from './InlineAd';
 import ShopIntro from './ShopIntro';
 import CompareView from './CompareView';
+import LogoMark from '@/components/site/LogoMark';
 import { GradeTag, MakerTag } from './Tags';
 import { CompareIcon } from './Icons';
 import DevicePicker from './DevicePicker';
@@ -231,7 +232,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
         <div className="sp-wrap shop-dock-in">
           {/* owner (16 Nov): once you scroll, the shop has its OWN bar (no double bar): logo, search, results and
               filters, then account, cart and the menu (they use the site bar's own buttons) */}
-          <a className="shop-dock-logo" href="/" aria-label="Sam Electronics"><img src="/assets/se-logo-128.webp" alt="" /><span><b>SAM ELECTRONICS</b><small>QUALITY · WARRANTY · PRICE</small></span></a>
+          <a className="shop-dock-logo" href="/" aria-label="Sam Electronics"><LogoMark size={40} animate={false} /><span><b>SAM ELECTRONICS</b><small>QUALITY · WARRANTY · PRICE</small></span></a>
           {/* owner (18 Nov): "a premium search that follows you, with an LED running round its outline, and only the shop's
               essential tools": search in a running-light frame, then Find My Part, Filters, Compare and the cart */}
           <span className="dk-led"><i className="dk-run" aria-hidden="true" /><ShopSearch compact count={res.length} q={f.q} onQ={(q) => { set({ q }); }} onFmp={openFmp} /></span>

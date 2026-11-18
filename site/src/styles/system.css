@@ -869,3 +869,19 @@ html[data-theme="dark"] .sn-b:not(.y) { background: rgba(255,255,255,.07) !impor
    after it ended (fill: both), which turns every position:fixed layer inside the page (product view, sheets) into a box
    as tall as the page, so it never scrolled and the scroll lock cancelled the wheel. The fade now leaves nothing behind. */
 main, body > div > main { animation: sePageIn .5s cubic-bezier(.2,.8,.2,1) backwards !important; }
+/* ── the logo mark (owner, 18 Nov): steel bezel · dark gap · yellow LED ring that fills · thin gap · white face ── */
+.lm { position: relative; display: inline-block; flex: none; border-radius: 50%; isolation: isolate; }
+.lm-steel { position: absolute; inset: 0; border-radius: 50%; background: conic-gradient(from 210deg, #6E7278, #E9EBEE 12%, #8C9096 24%, #4A4D52 38%, #D7DADE 52%, #7B7F85 64%, #3E4146 78%, #C9CCD0 90%, #6E7278); box-shadow: inset 0 1px 1px rgba(255,255,255,.7), inset 0 -1px 2px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.35); }
+.lm-steel::after { content: ''; position: absolute; inset: 7.5%; border-radius: 50%; background: radial-gradient(circle at 50% 40%, #2E3034, #17181A 75%); box-shadow: inset 0 1.5px 3px rgba(0,0,0,.85), 0 0 0 .5px rgba(255,255,255,.15); }
+.lm-led { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+.lm-led circle { fill: none; stroke-width: 2.8; }
+.lm-led .trk { stroke: rgba(247,192,50,.14); }
+.lm-led .on { stroke: #F7C032; stroke-linecap: round; stroke-dasharray: 100; stroke-dashoffset: 0; filter: drop-shadow(0 0 1.5px rgba(247,192,50,.9)) drop-shadow(0 0 4px rgba(247,192,50,.45)); }
+.lm.run .lm-led .on { animation: lmFill 1.5s cubic-bezier(.6,0,.2,1) .2s both, lmBreathe 3.6s ease-in-out 1.8s infinite; }
+@keyframes lmFill { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+@keyframes lmBreathe { 0%, 100% { opacity: 1; } 50% { opacity: .78; } }
+.lm-face { position: absolute; inset: 17%; border-radius: 50%; overflow: hidden; background: #fff; box-shadow: 0 0 0 .8px rgba(0,0,0,.35), inset 0 1px 2px rgba(0,0,0,.15); }
+.lm-face img { width: 100%; height: 100%; display: block; object-fit: cover; transform: scale(1.06); }
+a:hover > .lm .lm-led .on, .lm:hover .lm-led .on { filter: drop-shadow(0 0 3px #FFE38E) drop-shadow(0 0 10px rgba(247,192,50,.8)); }
+@media (prefers-reduced-motion: reduce) { .lm.run .lm-led .on { animation: none; } }
+.lm .lm-face img { width: 100% !important; height: 100% !important; max-width: none !important; border-radius: 0 !important; box-shadow: none !important; border: 0 !important; padding: 0 !important; margin: 0 !important; }

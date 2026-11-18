@@ -6,6 +6,7 @@ import NoteBell from '@/components/site/NoteBell';
 import ProgressScrub from '@/components/home/ProgressScrub';
 import HoursLive from '../HoursLive';
 import { site } from '@/content/facts';
+import LogoMark from '@/components/site/LogoMark';
 import React from 'react';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 import SEFMPMenu from '../../dc/SEFMPMenu';
@@ -32,19 +33,7 @@ export default function Nav({ v }: { v: Vals }) {
         {'\n    '}
         <a href="#top" onClick={v.goTop} style={{ display: 'flex', alignItems: 'center', gap: '13px', flex: 'none' }}>
           {'\n      '}
-          <span
-            style={{
-              width: '44px',
-              height: '44px',
-              borderRadius: '50%',
-              overflow: 'hidden',
-              background: '#FFFFFF',
-              boxShadow: '0 0 0 2px #F7C032,0 0 18px rgba(247,192,50,.4)',
-              flex: 'none',
-            }}
-          >
-            <img src="/assets/se-logo-128.webp" alt="Sam Electronics" style={{ width: '100%', height: '100%', display: 'block' }} />
-          </span>
+          <LogoMark size={46} />
           {'\n      '}
           <span style={{ display: 'flex', flexDirection: 'column', gap: '5px' }} className="se-nav-name">
             <span

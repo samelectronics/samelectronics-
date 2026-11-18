@@ -2,6 +2,7 @@
 // Home v3 section "Footer". Renders against the home page's values (`v`, from HomeV3's logic class).
 'use client';
 import LangMenu from '../LangMenu';
+import LogoMark from '@/components/site/LogoMark';
 import React from 'react';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 
@@ -40,17 +41,7 @@ export default function Footer({ v }: { v: Vals }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
             {'\n        '}
             <span style={{ display: 'flex', alignItems: 'center', gap: '13px' }}>
-              <span
-                style={{
-                  width: '52px',
-                  height: '52px',
-                  borderRadius: '50%',
-                  overflow: 'hidden',
-                  boxShadow: '0 0 0 2px #F7C032,0 0 22px rgba(247,192,50,.4)',
-                }}
-              >
-                <img loading="lazy" decoding="async" src="/assets/se-logo-128.webp" alt="Sam Electronics" style={{ width: '100%', height: '100%', display: 'block' }} />
-              </span>
+              <LogoMark size={56} />
               <span style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                 <span style={{ fontFamily: "'Space Grotesk',sans-serif", fontWeight: '600', fontSize: '17px', letterSpacing: '.16em' }}>
                   SAM ELECTRONICS

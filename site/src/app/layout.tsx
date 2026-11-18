@@ -48,10 +48,9 @@ export const metadata: Metadata = {
   title: 'Sam Electronics - Home', // R6 §01: "Sam Electronics - <page>" (src/components/site/TabTitle.tsx keeps it in the visitor's language)
   description:
     'Sam Electronics L.L.C, Al Murar, Deira, Dubai: wholesale and retail mobile phone spare parts, repairs and worldwide shipping since 2003. Quality · Warranty · Price.',
-  // R6 §01: the original round logo with a Signal Yellow ring (scripts/favicon/make-favicons.py); 16px = the two devices
+  // owner (18 Nov): the new mark (steel bezel, yellow LED ring, white face); was: the original round logo with a Signal Yellow ring (scripts/favicon/make-favicons.py); 16px = the two devices
   icons: {
     icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
       { url: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
       { url: '/favicon-48.png', sizes: '48x48', type: 'image/png' },
