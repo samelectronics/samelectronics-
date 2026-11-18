@@ -8,7 +8,7 @@ import LiveSam from '@/components/samsoom/LiveSam';
 
 export type Tone = 'info' | 'ok' | 'warn' | 'stop';
 type Act = { label: string; href?: string; on?: () => void; primary?: boolean };
-export type SysNoteProps = { tone: Tone; kicker: string; title: string; text?: string; acts?: Act[]; onClose: () => void; ms?: number; icon?: 'wifi' | 'wifi-off' | 'wifi-slow'; sam?: { mood: string; badge?: string }; role?: 'status' | 'alert' };
+export type SysNoteProps = { tone: Tone; kicker: string; title: string; text?: string; acts?: Act[]; onClose: () => void; ms?: number; icon?: 'wifi' | 'wifi-off' | 'wifi-slow'; sam?: { mood: string; badge?: string }; role?: 'status' | 'alert'; snd?: 'warn' | 'oops' | 'success' | 'notify' | 'none' };
 
 const WIFI = (k: 'wifi' | 'wifi-off' | 'wifi-slow') => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -19,16 +19,18 @@ const WIFI = (k: 'wifi' | 'wifi-off' | 'wifi-slow') => (
   </svg>
 );
 
-export default function SysNote({ tone, kicker, title, text, acts = [], onClose, ms = 12000, icon, sam, role = 'status' }: SysNoteProps) {
+export default function SysNote({ tone, kicker, title, text, acts = [], onClose, ms = 12000, icon, sam, role = 'status', snd }: SysNoteProps) {
   const [out, setOut] = useState(false);
+  // owner (18 Nov): serious alerts sound like a warning, connection problems like a soft error
+  useEffect(() => { const k = snd || (tone === 'stop' ? 'warn' : icon === 'wifi-off' || icon === 'wifi-slow' ? 'oops' : tone === 'ok' ? 'success' : 'notify'); if (k !== 'none') import('@/lib/sound').then((m) => m.play(k)).catch(() => {}); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const close = () => { setOut(true); window.setTimeout(onClose, 220); };
   useEffect(() => { if (!ms) return; const t = window.setTimeout(close, ms); return () => window.clearTimeout(t); }, [ms]);
   useEffect(() => { const k = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); }; window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k); }, []);
   return (
-    <div className={'sn sn-' + tone + (out ? ' out' : '')} role={role} aria-live={role === 'alert' ? 'assertive' : 'polite'}>
+    <div className={'sn sn-' + tone + (sam ? ' has-sam' : '') + (tone === 'stop' || tone === 'warn' ? ' serious' : '') + (out ? ' out' : '')} role={role} aria-live={role === 'alert' ? 'assertive' : 'polite'}>
       <span className={'sn-tile' + (sam ? ' sam' : '')} aria-hidden="true">
         {/* owner (18 Nov): Samsoom acts it out (a tiny whistle and a stop hand for VPN, a finger-wag for copyright); connection notices keep a plain wifi icon */}
-        {sam ? <LiveSam size={86} pose={sam.mood} /> : icon ? WIFI(icon) : null}
+        {sam ? <span className="sn-sam"><LiveSam size={64} pose={sam.mood} /></span> : icon ? WIFI(icon) : null}
       </span>
       <span className="sn-body">
         <small className="sn-k"><img src="/assets/se-logo-128.webp" alt="" width="14" height="14" />{kicker}</small>
@@ -41,6 +43,7 @@ export default function SysNote({ tone, kicker, title, text, acts = [], onClose,
         ) : null}
       </span>
       <button type="button" className="sn-x" aria-label="Close" onClick={close}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
+      <i className="sn-haz" aria-hidden="true" />
       {ms ? <em className="sn-t" style={{ animationDuration: ms + 'ms' }} aria-hidden="true" /> : null}
     </div>
   );

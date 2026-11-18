@@ -1,7 +1,6 @@
 'use client';
 // Page headers (owner, 16 Nov: "techy, readable, our own idea").
-//  · Scan reveal: when the page opens, one thin yellow scanning light sweeps across the header; the title is revealed
-//    behind it (it reads left to right, white line then yellow line) and the outlined page word lights up as it passes.
+//  · Slam-in title (18 Nov, replaces the scan reveal).
 //  · Live readout: a slim instrument line under the title with real, live numbers: Deira time (ticking), the shop's open
 //    status, the parts online (counting up) and one true fact for that page.
 import React, { useEffect, useState } from 'react';
@@ -11,19 +10,24 @@ import { products } from '@/lib/catalog';
 
 const tr = (s: string) => (typeof window !== 'undefined' && (window as unknown as { seI18n?: { t: (x: string) => string } }).seI18n?.t(s)) || s;
 
+// owner (18 Nov): "cancel that cheap entry where a straight LED line runs across the header and then everything appears".
+// No scan line any more. The title slams in word by word like the teardown ads (big and blurred → sharp, with a small
+// impact shake); the yellow line keeps a light running inside its letters and flickers once when it lands.
 export function HeroTitle({ a, b, className = 'sp-h1' }: { a: string; b?: string; className?: string }) {
   const [on, setOn] = useState(false);
-  useEffect(() => { const t = window.setTimeout(() => setOn(true), 40); return () => window.clearTimeout(t); }, []);
+  useEffect(() => { const t = window.setTimeout(() => setOn(true), 60); return () => window.clearTimeout(t); }, []);
+  const words = (t: string, off: number) => t.split(/\s+/).filter(Boolean).map((w, k) => <span key={k} className="ht4-w" style={{ ['--i' as string]: off + k } as React.CSSProperties}><span>{w}</span></span>);
+  const na = a.split(/\s+/).filter(Boolean).length;
   return (
-    <h1 className={className + ' ht3' + (on ? ' on' : '')}>
-      <span className="ht3-l a">{a}</span>
-      {b ? <> <span className="ht3-l b">{b}</span></> : null}
+    <h1 className={className + ' ht4' + (on ? ' on' : '')} aria-label={a + (b ? ' ' + b : '')}>
+      <span className="ht4-l a" aria-hidden="true">{words(a, 0)}</span>
+      {b ? <span className="ht4-l b" aria-hidden="true" data-t={b}>{words(b, na)}</span> : null}
     </h1>
   );
 }
 
-/** the scanning light (sits in the header background) */
-export function HeroBack(_: { word: string }) { return <i className="ht3-scan" aria-hidden="true" />; }
+/** (the old scanning light is gone; kept as an empty export so pages that place it need no change) */
+export function HeroBack(_: { word: string }) { return null; }
 
 const EXTRA: Record<string, string> = {
   repair: 'WARRANTY ON EVERY FIX', wholesale: 'TRADE PRICE ON EVERY PART', worldwide: 'SHIPS EVERY WEEK', membership: 'AED 1 = 1 POINT',

@@ -53,7 +53,7 @@ export default function Guard() {
     // 2. screenshot keys
     const seen = () => {
       setShot(true);
-      logWarning('screenshot', 'keys pressed on ' + (navigator.platform || 'computer')); errBeep();
+      logWarning('screenshot', 'keys pressed on ' + (navigator.platform || 'computer'));
     };
     const down = (e: KeyboardEvent) => { if (e.key === 'Escape') { setShot(false); setVpn(false); return; } const k = e.key.toLowerCase(); if ((e.metaKey && e.shiftKey && ['3', '4', '5', 's'].includes(k)) || (e.ctrlKey && e.shiftKey && k === 's' && navigator.platform.startsWith('Win'))) seen(); };
     const up = (e: KeyboardEvent) => { if (e.key === 'PrintScreen' || e.code === 'PrintScreen') seen(); };
@@ -62,7 +62,7 @@ export default function Guard() {
   }, []);
   return (
     <>
-      {vpn ? <SysNote tone="warn" role="alert" sam={{ mood: 'stop' }} kicker={tr('SAMSOOM · HOLD ON')} title={tr('Hey! Is that a VPN?')} text={tr('Prices and delivery depend on where you really are. Please switch the VPN off.')} ms={20000} onClose={() => setVpn(false)}
+      {vpn ? <SysNote tone="warn" snd="none" role="alert" sam={{ mood: 'stop' }} kicker={tr('SAMSOOM · HOLD ON')} title={tr('Hey! Is that a VPN?')} text={tr('Prices and delivery depend on where you really are. Please switch the VPN off.')} ms={20000} onClose={() => setVpn(false)}
         acts={[{ label: tr('OK, I will switch it off'), primary: true }, { label: tr('I am travelling, carry on') }, { label: tr('Why am I seeing this?'), href: '/notices#vpn' }]} /> : null}
       {shot ? <SysNote tone="stop" role="alert" sam={{ mood: 'nono' }} kicker={tr('COPYRIGHT NOTICE')} title={tr('This content is protected.')} text={tr('Keeping it for yourself is fine; sharing or publishing it needs our permission.')} ms={15000} onClose={() => setShot(false)}
         acts={[{ label: tr('I understand'), primary: true }, { label: tr('Read the full notice'), href: '/notices#copyright' }]} /> : null}

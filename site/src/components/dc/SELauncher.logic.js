@@ -26,18 +26,13 @@ class Component extends DCLogic {
   componentWillUnmount() { this.dead = true; this.sch && this.sch.stop(); this.tm.forEach(clearTimeout); window.removeEventListener('mousemove', this.mm); }
   componentDidUpdate() { this.measure(); }
   later(d, f) { this.tm.push(setTimeout(f, d)); }
-  msgs() { const p = this.props; return [p.m0 || 'Ask Samsoom', p.m1 || 'Open till 22:00', p.m2 || 'Need a screen?', p.m3 || 'Trade prices? Ask me', p.m4 || 'Track my order', 'DA-DAAAAA!', 'HEY YOU! 👋']; }
+  msgs() { const p = this.props; return [p.m0 || 'Ask Samsoom', p.m1 || 'Open till 22:00', p.m2 || 'Need a screen?', p.m3 || 'Trade prices? Ask me', p.m4 || 'Track my order']; }
   // G8 cycle, 16s: wave + smile (circle, 3s) → "Ask Samsoom" → collapse + blink → a page message while he
   // plays the next emote from the bag (3s) → collapse → repeat. Each emote is followed by a 5s rest.
   // After 3 ignored cycles he yawns once and rests (still blinking and following the cursor).
   cycle() {
     if (this.ign >= 3) { this.setState({ open: false }); this.ign = 0; this.later(16000, () => this.cycle()); return; } // keeps living: the scheduler goes on emoting
-    // owner (17 Nov): now and then (at most twice a visit) Samsoom yells "DA-DAAAAA!" with a fanfare, then "HEY YOU!"
-    if (this.alt > 2 && this.alt % 5 === 4 && (this.yells || 0) < 2) { this.yells = (this.yells || 0) + 1; this.alt++;
-      this.setState({ open: false }); this.sch.play('celebrate'); this.hint(5, true);
-      import('@/lib/sound').then((m) => m.play('tada')).catch(() => {}); import('@/lib/voice').then((v) => v.babble && v.babble('Da daaaaa!')).catch(() => {});
-      this.later(2200, () => { this.sch.play('wave'); this.hint(6, true); });
-      this.later(5200, () => this.setState({ open: false })); this.later(9000, () => this.cycle()); return; }
+    // owner (18 Nov, again): no yelling at all: no fanfare, no "Da daa", no "Hey you". Removed for good.
     const sub = 1 + (this.alt++ % 4);
     this.setState({ open: false });
     this.sch.play('wave');
