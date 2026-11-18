@@ -995,3 +995,66 @@ html[dir='rtl'] .pc-brand, html[dir='rtl'] .pv-brand { left: auto; right: 10px; 
 @media (max-width: 760px) { .cv-grid { grid-template-columns: 92px repeat(var(--n), minmax(150px, 1fr)); overflow-x: auto; padding: 14px; } .cv-hd { padding: 14px; } .cv-h { font-size: 18px; } }
 html[data-theme="dark"] .cv { background: #2A2C2F; } html[data-theme="dark"] .cv-hd { background: rgba(42,44,47,.94); border-color: rgba(255,255,255,.06); }
 html[data-theme="dark"] .cv-col { background: #323539; } html[data-theme="dark"] .cv-t, html[data-theme="dark"] .cv-h, html[data-theme="dark"] .cv-v { color: #fff; }
+
+/* ── owner (18 Nov): shop header with the ads' energy: a flipping second line, outlined category names drifting
+   behind; graphite (not black) tabs; a docked search in a running LED frame with only the shop's own tools ── */
+.shd { display: flex; flex-direction: column; gap: 0; }
+.shd-a { display: block; } .shd-a .ht4-l { display: block; }
+.shd-b { position: relative; display: flex; align-items: baseline; gap: 14px; min-height: 1.1em; perspective: 600px; }
+.shd-w { display: inline-block; color: transparent; background: linear-gradient(100deg, #F7C032 0%, #F7C032 40%, #FFF3C4 50%, #F7C032 60%, #F7C032 100%); background-size: 260% 100%; -webkit-background-clip: text; background-clip: text; transform-origin: 50% 100%; animation: shdFlip .62s cubic-bezier(.2,1.25,.35,1) both, ht4Glow 2.6s ease-in-out .5s infinite; filter: drop-shadow(0 0 24px rgba(247,192,50,.3)); }
+@keyframes shdFlip { 0% { opacity: 0; transform: rotateX(-88deg) translateY(10px); filter: blur(6px); } 40% { opacity: 1; filter: blur(0); } 70% { transform: rotateX(8deg); } 100% { opacity: 1; transform: none; } }
+.shd-n { font: 600 12px 'JetBrains Mono', monospace; font-style: normal; letter-spacing: .12em; color: rgba(255,255,255,.55); padding: 4px 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,.14); transform: translateY(-.6em); }
+.shd-mq { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; display: flex; flex-direction: column; justify-content: center; gap: 2px; -webkit-mask: linear-gradient(90deg, transparent, #000 40%, #000 92%, transparent); mask: linear-gradient(90deg, transparent, #000 40%, #000 92%, transparent); opacity: .9; }
+.shd-row { display: flex; width: max-content; white-space: nowrap; animation: shdMq 70s linear infinite; }
+.shd-row.r1 { animation-direction: reverse; animation-duration: 84s; }
+.shd-row > span { display: flex; }
+.shd-row b { display: inline-flex; align-items: center; gap: 28px; padding-inline-end: 28px; font: 800 clamp(64px, 9vw, 132px)/1 'Space Grotesk', sans-serif; letter-spacing: -.02em; color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,.07); }
+.shd-row.r0 b:nth-child(3n+1) { -webkit-text-stroke-color: rgba(247,192,50,.16); }
+.shd-row b i { width: 14px; height: 14px; border-radius: 50%; background: rgba(247,192,50,.18); }
+@keyframes shdMq { to { transform: translateX(-50%); } }
+html[dir='rtl'] .shd-row { animation-direction: reverse; } html[dir='rtl'] .shd-row.r1 { animation-direction: normal; }
+.shop-hd .sp-wrap { position: relative; z-index: 1; }
+.shop-hd .cine-word { display: none !important; }
+/* tabs: graphite, never black */
+.dt.on { background: linear-gradient(160deg, #42454B 0%, #2E3135 55%, #26282B 100%) !important; box-shadow: 0 0 0 2px #F7C032, inset 0 1px 0 rgba(255,255,255,.08), 0 20px 40px -18px rgba(38,40,43,.55) !important; }
+.dt { transition: transform .2s, box-shadow .2s, background .2s; }
+.dt:not(.on):hover { box-shadow: 0 0 0 1.5px rgba(247,192,50,.6), 0 14px 28px -20px rgba(0,0,0,.4); }
+/* the docked bar */
+.dk-led { position: relative; flex: 1 1 auto; max-width: 760px; min-width: 0; padding: 2px; border-radius: 16px; overflow: hidden; isolation: isolate; }
+.dk-led::before { content: ''; position: absolute; inset: 0; z-index: -2; border-radius: inherit; background: rgba(247,192,50,.25); }
+.dk-run { position: absolute; z-index: -1; left: 50%; top: 50%; width: 140%; aspect-ratio: 1; translate: -50% -50%; background: conic-gradient(from 0deg, transparent 0deg, transparent 250deg, rgba(247,192,50,.2) 290deg, #FFE38E 340deg, #F7C032 355deg, transparent 360deg); animation: dkRun 3.2s linear infinite; }
+@keyframes dkRun { to { rotate: 1turn; } }
+.dk-led .ss, .dk-led form { border-radius: 14px !important; }
+.shop-dock .dk-led .ss { max-width: none; }
+.dk-tools { display: flex; align-items: center; gap: 8px; flex: none; }
+.dk-b { position: relative; display: inline-flex; align-items: center; gap: 7px; height: 42px; padding: 0 14px; border-radius: 12px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); color: #fff; font: 600 13px Inter, sans-serif; cursor: pointer; transition: background .15s, border-color .15s; }
+.dk-b:hover:not(:disabled) { background: rgba(255,255,255,.12); border-color: rgba(247,192,50,.5); }
+.dk-b:disabled { opacity: .45; cursor: default; }
+.dk-b.y { background: linear-gradient(180deg, #F9CB4F, #F7C032); border-color: transparent; color: #26282B; box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 8px 18px -10px rgba(247,192,50,.9); }
+.dk-b em { min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: #F7C032; color: #26282B; font: 700 11px/18px 'JetBrains Mono', monospace; font-style: normal; text-align: center; box-sizing: border-box; }
+@media (max-width: 1100px) { .dk-b .t { display: none; } .dk-b { width: 42px; padding: 0; justify-content: center; } .dk-b em { position: absolute; top: -5px; right: -5px; } }
+@media (max-width: 700px) { .dk-tools .dk-b:not(.y) + .dk-b { display: none; } .shop-dock-logo { display: none !important; } }
+@media (prefers-reduced-motion: reduce) { .dk-run, .shd-row, .shd-w { animation: none !important; } .shd-w { opacity: 1; } }
+/* owner (18 Nov): search without cheap bits: matches in bold (no highlighter), counts and prices instead of "MODEL",
+   grade tags, a start screen with parts and tools, and a panel that always fits the screen */
+.ss-drop { max-height: min(70vh, 620px); overflow: auto; overscroll-behavior: contain; }
+.ss-txt b { font-weight: 500 !important; } .ss-txt b .ss-m { font-weight: 800; color: #1A1B1D; }
+.ss mark { background: none !important; color: inherit !important; font-weight: 800; }
+.ss-cnt { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; flex: none; } .ss-cnt b { font: 600 12.5px Inter, sans-serif; color: #26282B; } .ss-cnt small { font: 400 11.5px Inter, sans-serif; color: #8C9096; }
+.ss-chev { flex: none; color: #B4B7BC; transition: transform .15s, color .15s; } .ss-it.hi .ss-chev, .ss-it:hover .ss-chev { color: #26282B; transform: translateX(2px); }
+.ss-it .tg { flex: none; }
+.ss-k { display: none !important; }
+.ss-prev-g > span { display: flex !important; align-items: center; justify-content: space-between; gap: 10px; }
+.ss-cats { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; padding: 2px 16px 10px; }
+.ss-cats button { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 4px 8px; border: 1px solid #ECEDEF; border-radius: 12px; background: #fff; cursor: pointer; transition: border-color .15s, transform .15s; }
+.ss-cats button:hover { border-color: #F7C032; transform: translateY(-2px); }
+.ss-cats img { width: 44px; height: 44px; object-fit: contain; } .ss-cats small { font: 600 11.5px Inter, sans-serif; color: #26282B; text-align: center; }
+.ss-tools { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; padding: 4px 16px 16px; }
+.ss-tools > * { display: grid; grid-template-columns: auto 1fr; align-items: center; column-gap: 8px; padding: 10px 12px; border: 1px solid #ECEDEF; border-radius: 12px; background: #F7F7F5; color: #26282B; font: 600 13px Inter, sans-serif; text-decoration: none; cursor: pointer; text-align: start; }
+.ss-tools > * small { grid-column: 2; font: 400 11.5px Inter, sans-serif; color: #6B6F75; }
+.ss-tools > * svg { grid-row: span 2; }
+.ss-tools > .y { background: linear-gradient(180deg, #F9CB4F, #F7C032); border-color: transparent; } .ss-tools > .y small { color: #4A3B10; }
+@media (max-width: 760px) { .ss-cats { grid-template-columns: repeat(4, minmax(0, 1fr)); } .ss-tools { grid-template-columns: 1fr; } }
+.ss-pal .ss-it, .ss-grp .ss-it { display: flex !important; align-items: center; gap: 12px; grid-template-columns: none !important; }
+.ss-grp .ss-it .ss-txt { flex: 1; min-width: 0; }
+.ss-grp .ss-it .ss-pr { flex: none; }

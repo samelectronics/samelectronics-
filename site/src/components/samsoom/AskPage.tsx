@@ -107,6 +107,7 @@ export default function AskPage() {
   const box = useRef<HTMLDivElement>(null), inp = useRef<HTMLTextAreaElement>(null);
   useEffect(() => {
     setCfgS(readCfg()); const l = read(); setChats(l); const c = new URLSearchParams(location.search).get('c'); if (c && l.some((x) => x.id === c)) setId(c);
+    { const tq = new URLSearchParams(location.search).get('tool'); if (tq === 'photo') setTmenu(true); else if (tq && ['fit', 'track', 'stock', 'price', 'book', 'trade'].includes(tq)) setTool(tq as ToolKey); }
     const w = window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown }; setCanTalk(!!(w.SpeechRecognition || w.webkitSpeechRecognition));
     document.documentElement.classList.add('ak-page'); return () => document.documentElement.classList.remove('ak-page');
   }, []);

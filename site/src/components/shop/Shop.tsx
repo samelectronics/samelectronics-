@@ -21,6 +21,7 @@ import InlineAd from './InlineAd';
 import ShopIntro from './ShopIntro';
 import CompareView from './CompareView';
 import { GradeTag } from './Tags';
+import { CompareIcon } from './Icons';
 import DevicePicker from './DevicePicker';
 
 const LIST_KEYS = ['brands', 'models', 'cats', 'parts', 'grades', 'makers', 'qualities', 'warranty', 'device', 'colours'] as const;
@@ -53,6 +54,23 @@ const CMP_ROWS: [string, (p: Product) => string, ((p: Product) => number)?][] = 
   ['Price', (p) => priceText(p.price), (p) => -p.price], ['Grade', (p) => p.gradeName], ['Manufacturer', (p) => p.makerName], ['Quality', (p) => p.qualityName],
   ['Warranty', (p) => p.warranty, (p) => WMONTHS(p.warranty)], ['Rating', (p) => p.rating + ' ★', (p) => p.rating], ['Stock (estimate)', (p) => String(p.stock_qty), (p) => p.stock_qty], ['Model', (p) => p.modelName],
 ];
+
+/** owner (18 Nov): "the bold writing in the shop header should be more fun, like the ads: moving, crazy, techy". The
+ *  first line slams in; the second keeps flipping through what we carry (grade, screen, battery, brand, model) with a
+ *  glitch flip and a small counter, like a live readout. */
+const ROT = ['Every grade.', 'Every screen.', 'Every battery.', 'Every brand.', 'Every model.'];
+function ShopHeadline() {
+  const [k, setK] = React.useState(0);
+  React.useEffect(() => { const t = window.setInterval(() => { if (!document.hidden) setK((v) => v + 1); }, 2600); return () => window.clearInterval(t); }, []);
+  const i = k % ROT.length;
+  return (
+    <h1 className="sp-h1 shd" aria-label={T('Every part.') + ' ' + T('Every grade.')}>
+      <span className="ht4 on shd-a" aria-hidden="true"><span className="ht4-l a">{T('Every part.').split(/\s+/).map((w, n) => <span key={n} className="ht4-w" style={{ ['--i' as string]: n } as React.CSSProperties}><span>{w}</span></span>)}</span></span>
+      <span className="shd-b" aria-hidden="true"><span className="shd-w" key={k}>{T(ROT[i])}</span><em className="shd-n" data-no-i18n="">{String(i + 1).padStart(2, '0')}/{String(ROT.length).padStart(2, '0')}</em></span>
+    </h1>
+  );
+}
+const MQ = ['SCREENS', 'BATTERIES', 'FLEX CABLES', 'BACK COVERS', 'CAMERAS', 'FRAMES', 'SMALL PARTS'];
 
 export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
   const scanRef = useRef<HTMLDivElement>(null), [dock, setDock] = useState(false);
@@ -109,13 +127,13 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
       <ShopIntro />
       <section className="shop-hd shop-cine" data-tone="dark">
         <div className="cine-bg" aria-hidden="true"><i className="cine-wall" /><i className="cine-beam" /><span className="cine-bokeh">{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</span><i className="cine-floor" /><i className="cine-grain" /><HeroBack word={mode === 'deals' ? 'DEALS' : 'PARTS'} /></div>
-        <span className="cine-word" style={{ ['--n' as string]: (mode === 'deals' ? 'DEALS' : 'PARTS').length }} aria-hidden="true" data-no-i18n="">{mode === 'deals' ? 'DEALS' : 'PARTS'}</span>
+        <span className="shd-mq" aria-hidden="true" data-no-i18n="">{[0, 1].map((r) => <span key={r} className={'shd-row r' + r}>{[0, 1].map((x) => <span key={x}>{(r ? [...MQ].reverse() : MQ).map((w) => <b key={w}>{w}<i /></b>)}</span>)}</span>)}</span>
         <div className="sp-wrap">
           <nav className="sp-crumb"><a href="/">{T('Home')}</a><i /><span>{mode === 'deals' ? T('Deals & arrivals') : T('Shop')}</span></nav>
           <div className="shop-hd-row">
             <div className="shop-hd-l">
               <span className="sp-eb">{mode === 'deals' ? T('DEALS · ARRIVALS · LIMITED OFFERS') : T('THE PARTS SHOP')}</span>
-              <HeroTitle key={mode} a={mode === 'deals' ? T('Deals that') : T('Every part.')} b={mode === 'deals' ? T('end soon.') : T('Every grade.')} />
+              {mode === 'deals' ? <HeroTitle key={mode} a={T('Deals that')} b={T('end soon.')} /> : <ShopHeadline />}
             </div>
             <div className="shop-stats">
               <span><b><CountUp to={products().length} /></b><small>{T('parts')}</small></span>
@@ -212,15 +230,16 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
           {/* owner (16 Nov): once you scroll, the shop has its OWN bar (no double bar): logo, search, results and
               filters, then account, cart and the menu (they use the site bar's own buttons) */}
           <a className="shop-dock-logo" href="/" aria-label="Sam Electronics"><img src="/assets/se-logo-128.webp" alt="" /><span><b>SAM ELECTRONICS</b><small>QUALITY · WARRANTY · PRICE</small></span></a>
-          <ShopSearch compact count={res.length} q={f.q} onQ={(q) => { set({ q }); }} onFmp={openFmp} />
-          
-          <button type="button" className="sp-chip shop-dock-f" onClick={() => setSide(true)} aria-label={T('Filters')}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4" /></svg><span className="t">{T('Filters')}</span>{chips.length ? <em>{chips.length}</em> : null}</button>
-          <button type="button" className="sp-chip y" onClick={() => setCz(true)}>{T('Customize')}</button>
-          <span className="shop-dock-ic" ref={dockIc}>
-            {/* owner (16 Nov): the same buttons as the site bar, exactly (copied from it, so icons and the cart count match) */}
-            <button type="button" data-mirror='header .se-nav-bench' aria-label={T('My Bench')} onClick={() => (document.querySelector('header .se-nav-bench') as HTMLElement | null)?.click()} />
-            <button type="button" data-mirror='header [data-tour="cart"]' aria-label={T('Cart')} onClick={() => (document.querySelector('header [data-tour="cart"]') as HTMLElement | null)?.click()} />
-            <button type="button" data-mirror='header [data-tour="menu"]' aria-label={T('Menu')} className="mn" onClick={() => (document.querySelector('header [data-tour="menu"]') as HTMLElement | null)?.click()} />
+          {/* owner (18 Nov): "a premium search that follows you, with an LED running round its outline, and only the shop's
+              essential tools": search in a running-light frame, then Find My Part, Filters, Compare and the cart */}
+          <span className="dk-led"><i className="dk-run" aria-hidden="true" /><ShopSearch compact count={res.length} q={f.q} onQ={(q) => { set({ q }); }} onFmp={openFmp} /></span>
+          <span className="dk-tools">
+            <button type="button" className="dk-b y" onClick={openFmp}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg><span className="t">{T('Find My Part')}</span></button>
+            <button type="button" className="dk-b" onClick={() => setSide(true)} aria-label={T('Filters')}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4" /></svg><span className="t">{T('Filters')}</span>{chips.length ? <em>{chips.length}</em> : null}</button>
+            <button type="button" className="dk-b" disabled={cmp.length < 1} onClick={() => setCmpOpen(true)} aria-label={T('Compare')}><CompareIcon size={16} /><span className="t">{T('Compare')}</span>{cmp.length ? <em>{cmp.length}</em> : null}</button>
+            <span className="shop-dock-ic" ref={dockIc}>
+              <button type="button" data-mirror='header [data-tour="cart"]' aria-label={T('Cart')} onClick={() => (document.querySelector('header [data-tour="cart"]') as HTMLElement | null)?.click()} />
+            </span>
           </span>
         </div>
       </div>

@@ -2,7 +2,8 @@
 // P2 · The shop's search: free typing like the home hero, forgiving typos ("iphon 13 scren" → iPhone 13 screen), with
 // suggestions (models, brands, parts) as you type and your recent searches (kept on this device, removable).
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { suggest, fix, products, aed } from '@/lib/catalog';
+import { suggest, fix, products, aed, byId, data } from '@/lib/catalog';
+import { GradeTag } from './Tags';
 import { store, useStore } from '@/lib/store';
 import { T } from '@/components/site/ui';
 import SEBrandLogo from '@/components/dc/SEBrandLogo';
@@ -22,7 +23,6 @@ export default function ShopSearch({ q, onQ, onFmp, compact, count }: { q: strin
   const fx = useMemo(() => (v.trim().length > 2 ? fix(v) : null), [v]);
   const go = (s: string) => { store.searched(s); onQ(s); setV(s); setOpen(false); inp.current?.blur(); };
   const items = v.trim() ? sug.map((s) => s.q) : [...st.recent, ...TRY.filter((t) => !st.recent.includes(t)).slice(0, 4)];
-  void onFmp;
   const key = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowDown') { e.preventDefault(); setOpen(true); setHi((h) => Math.min(items.length - 1, h + 1)); }
     else if (e.key === 'ArrowUp') { e.preventDefault(); setHi((h) => Math.max(-1, h - 1)); }
@@ -48,7 +48,7 @@ export default function ShopSearch({ q, onQ, onFmp, compact, count }: { q: strin
                 // owner (17 Nov): a premium two-column search: grouped results on the left (logo, picture, highlighted match,
                 // price), a live preview of the highlighted one on the right
                 const words = v.trim().toLowerCase().split(/\s+/).filter((w) => w.length > 1);
-                const mark = (txt: string) => { if (!words.length) return txt; const re = new RegExp('(' + words.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')', 'ig'); return txt.split(re).map((x, k) => (k % 2 ? <mark key={k}>{x}</mark> : x)); };
+                const mark = (txt: string) => { if (!words.length) return txt; const re = new RegExp('(' + words.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')', 'ig'); return txt.split(re).map((x, k) => (k % 2 ? <strong key={k} className="ss-m">{x}</strong> : x)); };
                 const cur = sug[Math.max(0, hi)] || sug[0];
                 const rel = cur ? products().filter((p) => (cur.kind === 'part' ? p.model_id === cur.model && p.category === products().find((x) => x.id === cur.id)?.category : cur.kind === 'model' ? p.model_id === cur.model : p.brand === cur.brand)) : [];
                 const pic = cur?.img || rel.find((p) => p.img)?.img;
@@ -62,8 +62,10 @@ export default function ShopSearch({ q, onQ, onFmp, compact, count }: { q: strin
                           {xs.map((s) => { n++; const i = n; return (
                             <button key={s.kind + s.label} type="button" role="option" aria-selected={hi === i} className={'ss-it' + (hi === i ? ' hi' : '')} onMouseEnter={() => setHi(i)} onClick={() => go(s.q)}>
                               <span className="ss-thumb">{s.img ? <img src={s.img.replace(/-480\.webp$/, '-240.webp')} alt="" /> : s.brand ? <SEBrandLogo brand={s.brand} h={14} fit="56x16" color={brandInk(s.brand)} /> : null}</span>
-                              <span className="ss-txt"><b>{mark(s.label)}</b><small>{s.brand && s.img ? <SEBrandLogo brand={s.brand} h={10} fit="44x12" color={brandInk(s.brand)} /> : null}{T(s.sub)}</small></span>
-                              {s.price ? <span className="ss-pr">{aed(s.price, false)}</span> : <span className={'ss-k k-' + s.kind}>{s.kind === 'model' ? T('Model') : T('Brand')}</span>}
+                              <span className="ss-txt"><b>{mark(s.kind === 'part' ? s.label.split(' · ')[0] : s.label)}</b><small>{s.brand && s.img ? <SEBrandLogo brand={s.brand} h={10} fit="44x12" color={brandInk(s.brand)} /> : null}{T(s.sub)}</small></span>
+                              {s.kind === 'part' && s.id && byId(s.id) ? <GradeTag g={byId(s.id)!.grade} name={byId(s.id)!.gradeName} size="sm" /> : null}
+                              {s.price ? <span className="ss-pr">{aed(s.price, false)}</span> : (() => { const ps = products().filter((p) => (s.kind === 'model' ? p.model_id === s.model : p.brand === s.brand)); return ps.length ? <span className="ss-cnt"><b>{ps.length} {T('parts')}</b><small>{T('from')} {aed(Math.min(...ps.map((p) => p.price)), false)}</small></span> : <span className="ss-cnt"><small>{T('ask us')}</small></span>; })()}
+                              <svg className="ss-chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M9 6l6 6-6 6" /></svg>
                             </button>); })}
                         </div>) : null)}
                     </div>
@@ -72,7 +74,7 @@ export default function ShopSearch({ q, onQ, onFmp, compact, count }: { q: strin
                         <span className="ss-prev-img">{pic ? <img src={pic} alt="" /> : null}</span>
                         <span className="ss-prev-k">{cur.brand ? <SEBrandLogo brand={cur.brand} h={14} fit="64x16" color={brandInk(cur.brand)} /> : null}<i>{cur.kind === 'part' ? T('Part') : cur.kind === 'model' ? T('Model') : T('Brand')}</i></span>
                         <b className="ss-prev-t">{cur.label}</b>
-                        <span className="ss-prev-g">{rel.slice(0, 4).map((p) => <span key={p.id}><i>{p.gradeName}</i><em>{aed(p.price, false)}</em></span>)}</span>
+                        <span className="ss-prev-g">{rel.slice(0, 5).map((p) => <span key={p.id}><GradeTag g={p.grade} name={p.gradeName} size="sm" /><em>{aed(p.price, false)}</em></span>)}</span>
                         <span className="ss-prev-n">{rel.length} {T('parts')}</span>
                         <button type="button" className="ss-prev-go" onClick={() => go(cur.q)}>{T('Show results')} →</button>
                       </div>
@@ -89,7 +91,14 @@ export default function ShopSearch({ q, onQ, onFmp, compact, count }: { q: strin
                 ))}
                 <span className="ss-h">{T('Popular right now')}</span>
                 <span className="ss-pop">{items.slice(st.recent.length).map((t, k) => <button key={t} type="button" className={'sp-chip' + (hi === st.recent.length + k ? ' y' : '')} onClick={() => go(T(t))}>{T(t)}</button>)}</span>
-                {!st.recent.length ? <span className="ss-hint">{T('Your searches will be kept here on this device.')}</span> : null}
+                {/* owner (18 Nov): a richer start: browse by part, and the quick tools */}
+                <span className="ss-h">{T('Browse by part')}</span>
+                <span className="ss-cats">{(data()?.categories || []).filter((c) => !(c as { soon?: boolean }).soon).slice(0, 7).map((c) => <button key={c.id} type="button" onClick={() => go(T(c.name))}><img src={'/assets/pose/' + ({ SCR: 'solo-scr', BAT: 'solo-bat', FLX: 'solo-flx', BCV: 'solo-bcv', FRM: 'solo-frm', CAM: 'solo-cam', SML: 'solo-sml' } as Record<string, string>)[c.id] + '-240.webp'} alt="" /><small>{T(c.name)}</small></button>)}</span>
+                <span className="ss-tools">
+                  <button type="button" className="y" onClick={() => { setOpen(false); onFmp(); }}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg>{T('Find My Part')}<small>{T('Brand → model → part')}</small></button>
+                  <a href="/samsoom"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>{T('Ask Samsoom')}<small>{T('Describe it in your words')}</small></a>
+                  <a href="/samsoom?tool=photo"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="6" width="18" height="14" rx="2.5" /><circle cx="12" cy="13" r="3.6" /></svg>{T('Search by photo')}<small>{T('A label or Settings → About')}</small></a>
+                </span>
               </>}
           {!v.trim() || sug.length || (fx && fx.changed) ? null : <span className="ss-hint">{T('No quick match. Press Enter to search everything.')}</span>}
         </div>
