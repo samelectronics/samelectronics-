@@ -287,3 +287,38 @@ html[data-theme="dark"] .ak-rep { background: #2B2D31; border-color: rgba(255,25
 .ak-seg button { background: transparent; border-color: rgba(255,255,255,.12); } .ak-seg button.on { background: rgba(247,192,50,.12); }
 .ak-pop-del { background: transparent; }
 .ak-veil { background: rgba(0,0,0,.25); }
+/* owner (18 Nov): the account row at the bottom of the sidebar (name and the plan from the customer's card), like Claude */
+.ak-acct { display: flex; align-items: center; gap: 4px; padding: 8px 0 2px; border-top: 1px solid rgba(255,255,255,.06); }
+.ak-me { flex: 1; display: flex; align-items: center; gap: 10px; min-width: 0; padding: 8px 10px; border-radius: 10px; color: #ECECEC; text-decoration: none; }
+.ak-me:hover { background: rgba(255,255,255,.06); }
+.ak-me-av { flex: none; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #3A3D41; color: #ECECEC; font: 600 14px Inter, sans-serif; }
+.ak-me-av.lv1 { background: #B87333; color: #fff; } .ak-me-av.lv2 { background: #C9CCD0; color: #26282B; } .ak-me-av.lv3, .ak-me-av.lv4 { background: #F7C032; color: #26282B; }
+.ak-me > span:last-child { display: flex; flex-direction: column; min-width: 0; } .ak-me b { font: 500 14px Inter, sans-serif; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; } .ak-me small { font: 400 12px Inter, sans-serif; color: #8C9096; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ak-me-set { display: grid; place-items: center; width: 36px; height: 36px; border: 0; border-radius: 10px; background: none; color: #A9ADB2; cursor: pointer; } .ak-me-set:hover { background: rgba(255,255,255,.06); color: #ECECEC; }
+/* receipt answers, part cards and links in the dark, calmer style */
+.ak-rh { color: #ECECEC; font: 600 15px Inter, sans-serif; border-bottom: 0; padding-bottom: 2px; }
+.ak-row { background: transparent; border-bottom: 1px solid rgba(255,255,255,.07); border-radius: 0; padding: 9px 2px; }
+.ak-row b { color: #ECECEC; } .ak-row span { color: #B4B8BD; } .ak-rich p { color: #C9CCD0; font-size: 15px; }
+.ak-add { background: transparent !important; border: 1px solid rgba(255,255,255,.16) !important; color: #ECECEC !important; box-shadow: none !important; }
+.ak-add:hover { border-color: #F7C032 !important; color: #F7C032 !important; }
+.ak-go { background: transparent !important; color: #F7C032 !important; padding: 0 !important; height: auto !important; box-shadow: none !important; font-weight: 600; }
+.ak-go:hover { text-decoration: underline; text-underline-offset: 4px; }
+.ak-cmp-r button { background: transparent; border: 1px solid rgba(255,255,255,.16); color: #ECECEC; }
+/* welcome: like Claude, a quiet greeting in the middle and a few starters */
+.ak-hello { max-width: 640px; margin: auto; padding: 4vh 0 2vh; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 18px; }
+.ak-hello .ak-card { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 0 !important; }
+.ak-hello .ak-big { width: 96px; height: 96px; }
+.ak-hello .ak-big > span { transform: scale(.72); transform-origin: center top; }
+.ak-hello .ak-kick { display: none; }
+.ak-hello .sp-h2 { font: 500 34px/1.2 'Space Grotesk', sans-serif !important; letter-spacing: -.01em; }
+.ak-hello .sp-p { font-size: 15px !important; max-width: 520px; margin: 4px auto 0; }
+.ak-hello .ak-can, .ak-hello .ak-sub { display: none !important; }
+.ak-hello .ak-start { display: flex !important; flex-wrap: wrap; justify-content: center; gap: 8px; }
+.ak-hello .ak-start button { display: inline-flex !important; padding: 8px 14px !important; border-radius: 999px !important; background: transparent !important; border: 1px solid rgba(255,255,255,.12) !important; }
+.ak-hello .ak-start button:hover { border-color: rgba(247,192,50,.6) !important; }
+.ak-hello .ak-start em, .ak-hello .ak-start small { display: none !important; }
+.ak-hello .ak-start b { font: 500 13.5px Inter, sans-serif !important; }
+.ak-hello .ak-codebtn { font-size: 13px; text-decoration-color: rgba(247,192,50,.6); }
+.ak-hello .ak-card::after { display: none; }
+.ak-hello .ak-big { width: 110px; height: 120px; border-radius: 0; background: none; box-shadow: none; overflow: visible; }
+.ak-hello .ak-big > span { transform: scale(.78); }

@@ -71,9 +71,9 @@ function render(v: Vals) {
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 24 26"
-                  width="13.6"
-                  height="14.9"
-                  style={{ position: 'absolute', left: '1.98px', top: '46.6px', overflow: 'visible', transform: 'rotate(33.7deg)', transformOrigin: '6.82px 0', /* owner (15 Nov): the connector sits ON the cable end, along its direction */ filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
+                  width="17.6"
+                  height="19.1"
+                  style={{ position: 'absolute', left: '0px', top: '46.2px', overflow: 'visible', transform: 'rotate(33.7deg)', transformOrigin: '8.8px 0', /* owner (15 Nov): the connector sits ON the cable end, along its direction */ filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
                 >
                   {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
                   <defs>
@@ -81,20 +81,14 @@ function render(v: Vals) {
                     <linearGradient id="samHandL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
                   <g>
-                    {/* owner (18 Nov): "give him hands, black like his arms, with five cute fingers": a soft graphite mitten-hand (palm,
-                        four rounded fingers and a thumb) with a thin yellow cuff where it meets the arm */}
-                    <defs><linearGradient id="samGlove" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#4A4E54" /><stop offset=".5" stopColor="#2C2F33" /><stop offset="1" stopColor="#17191B" /></linearGradient></defs>
-                    <rect x="8.4" y="-.6" width="7.2" height="2.6" rx="1.3" fill="#F7C032" stroke="#1F2124" strokeWidth=".6" />
-                    <g fill="url(#samGlove)" stroke="#121315" strokeWidth=".7" strokeLinejoin="round">
-                      <rect x="4.2" y="10.4" width="3.4" height="7.4" rx="1.7" transform="rotate(14 5.9 10.4)" />
-                      <rect x="7.6" y="12" width="3.2" height="8.6" rx="1.6" />
-                      <rect x="10.6" y="12.6" width="3.2" height="9.2" rx="1.6" />
-                      <rect x="13.6" y="12" width="3.2" height="8.4" rx="1.6" />
-                      <rect x="16.6" y="5.2" width="3.4" height="7.6" rx="1.7" transform="rotate(-38 18.3 5.2)" />
-                      <path d="M6.4 3.2h11.2c1.3 0 2.2 1 2.1 2.3l-.6 7.6c-.1 1.6-1.4 2.7-3 2.7H7.9c-1.6 0-2.9-1.1-3-2.7l-.6-7.6c-.1-1.3.8-2.3 2.1-2.3z" />
-                    </g>
-                    <path d="M6.6 4.6h4.6" stroke="rgba(255,255,255,.28)" strokeWidth="1" strokeLinecap="round" />
-                    <path d="M8.6 13.6v4.4M11.7 14.2v5M14.7 13.6v4.4" stroke="rgba(255,255,255,.14)" strokeWidth=".7" strokeLinecap="round" />
+                    {/* owner (18 Nov): "cute and rounded": a soft round mitten in his arm's graphite, four little finger bumps and a
+                        thumb, one smooth outline (the dark outline is drawn under the fill, so the bumps merge), a glossy
+                        highlight and a thin yellow cuff */}
+                    <defs><radialGradient id="samMit" cx=".38" cy=".3" r=".8"><stop offset="0" stopColor="#5A5E65" /><stop offset=".55" stopColor="#2E3135" /><stop offset="1" stopColor="#16181A" /></radialGradient></defs>
+                    <rect x="8.6" y="-.8" width="6.8" height="2.6" rx="1.3" fill="#F7C032" stroke="#1F2124" strokeWidth=".6" />
+                    <g stroke="#0E0F10" strokeWidth="1.6"><circle cx="12" cy="8.2" r="6.2" /><circle cx="7.9" cy="13.4" r="2.3" /><circle cx="10.8" cy="14.9" r="2.3" /><circle cx="13.9" cy="14.9" r="2.3" /><circle cx="16.6" cy="13.2" r="2.2" /><circle cx="18.4" cy="6.4" r="2.4" /></g>
+                    <g fill="url(#samMit)"><circle cx="12" cy="8.2" r="6.2" /><circle cx="7.9" cy="13.4" r="2.3" /><circle cx="10.8" cy="14.9" r="2.3" /><circle cx="13.9" cy="14.9" r="2.3" /><circle cx="16.6" cy="13.2" r="2.2" /><circle cx="18.4" cy="6.4" r="2.4" /></g>
+                    <ellipse cx="9.6" cy="5.4" rx="2.6" ry="1.5" fill="rgba(255,255,255,.28)" transform="rotate(-24 9.6 5.4)" />
                   </g>
                 </svg>
                 {'\n          '}
@@ -151,9 +145,9 @@ function render(v: Vals) {
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 24 26"
-                  width="13.6"
-                  height="14.9"
-                  style={{ position: 'absolute', left: '4.38px', top: '46.6px', overflow: 'visible', transform: 'rotate(-33.7deg)', transformOrigin: '6.82px 0', filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
+                  width="17.6"
+                  height="19.1"
+                  style={{ position: 'absolute', left: '2.4px', top: '46.2px', overflow: 'visible', transform: 'rotate(-33.7deg)', transformOrigin: '8.8px 0', filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
                 >
                   {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
                   <defs>
@@ -161,20 +155,14 @@ function render(v: Vals) {
                     <linearGradient id="samHandR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
                   <g transform="translate(24 0) scale(-1 1)">
-                    {/* owner (18 Nov): "give him hands, black like his arms, with five cute fingers": a soft graphite mitten-hand (palm,
-                        four rounded fingers and a thumb) with a thin yellow cuff where it meets the arm */}
-                    <defs><linearGradient id="samGlove" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#4A4E54" /><stop offset=".5" stopColor="#2C2F33" /><stop offset="1" stopColor="#17191B" /></linearGradient></defs>
-                    <rect x="8.4" y="-.6" width="7.2" height="2.6" rx="1.3" fill="#F7C032" stroke="#1F2124" strokeWidth=".6" />
-                    <g fill="url(#samGlove)" stroke="#121315" strokeWidth=".7" strokeLinejoin="round">
-                      <rect x="4.2" y="10.4" width="3.4" height="7.4" rx="1.7" transform="rotate(14 5.9 10.4)" />
-                      <rect x="7.6" y="12" width="3.2" height="8.6" rx="1.6" />
-                      <rect x="10.6" y="12.6" width="3.2" height="9.2" rx="1.6" />
-                      <rect x="13.6" y="12" width="3.2" height="8.4" rx="1.6" />
-                      <rect x="16.6" y="5.2" width="3.4" height="7.6" rx="1.7" transform="rotate(-38 18.3 5.2)" />
-                      <path d="M6.4 3.2h11.2c1.3 0 2.2 1 2.1 2.3l-.6 7.6c-.1 1.6-1.4 2.7-3 2.7H7.9c-1.6 0-2.9-1.1-3-2.7l-.6-7.6c-.1-1.3.8-2.3 2.1-2.3z" />
-                    </g>
-                    <path d="M6.6 4.6h4.6" stroke="rgba(255,255,255,.28)" strokeWidth="1" strokeLinecap="round" />
-                    <path d="M8.6 13.6v4.4M11.7 14.2v5M14.7 13.6v4.4" stroke="rgba(255,255,255,.14)" strokeWidth=".7" strokeLinecap="round" />
+                    {/* owner (18 Nov): "cute and rounded": a soft round mitten in his arm's graphite, four little finger bumps and a
+                        thumb, one smooth outline (the dark outline is drawn under the fill, so the bumps merge), a glossy
+                        highlight and a thin yellow cuff */}
+                    <defs><radialGradient id="samMit" cx=".38" cy=".3" r=".8"><stop offset="0" stopColor="#5A5E65" /><stop offset=".55" stopColor="#2E3135" /><stop offset="1" stopColor="#16181A" /></radialGradient></defs>
+                    <rect x="8.6" y="-.8" width="6.8" height="2.6" rx="1.3" fill="#F7C032" stroke="#1F2124" strokeWidth=".6" />
+                    <g stroke="#0E0F10" strokeWidth="1.6"><circle cx="12" cy="8.2" r="6.2" /><circle cx="7.9" cy="13.4" r="2.3" /><circle cx="10.8" cy="14.9" r="2.3" /><circle cx="13.9" cy="14.9" r="2.3" /><circle cx="16.6" cy="13.2" r="2.2" /><circle cx="18.4" cy="6.4" r="2.4" /></g>
+                    <g fill="url(#samMit)"><circle cx="12" cy="8.2" r="6.2" /><circle cx="7.9" cy="13.4" r="2.3" /><circle cx="10.8" cy="14.9" r="2.3" /><circle cx="13.9" cy="14.9" r="2.3" /><circle cx="16.6" cy="13.2" r="2.2" /><circle cx="18.4" cy="6.4" r="2.4" /></g>
+                    <ellipse cx="9.6" cy="5.4" rx="2.6" ry="1.5" fill="rgba(255,255,255,.28)" transform="rotate(-24 9.6 5.4)" />
                   </g>
                 </svg>
                 {'\n          '}

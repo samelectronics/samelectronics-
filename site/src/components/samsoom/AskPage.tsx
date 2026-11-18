@@ -20,9 +20,9 @@ type Chat = { id: string; title: string; named: boolean; msgs: Msg[]; at: number
 // owner (18 Nov): "add more useful tools: modes, tones (friendly by default, direct, …), search mode, comparison; settings"
 type Tone = 'friendly' | 'direct' | 'detailed' | 'fun';
 type Mode = 'chat' | 'search' | 'compare' | 'quote';
-type Cfg = { tone: Tone; mode: Mode; voice: boolean; speak: boolean };
+type Cfg = { tone: Tone; mode: Mode; voice: boolean; speak: boolean; sugs: boolean };
 const CFG_KEY = 'se-sam-cfg';
-const CFG0: Cfg = { tone: 'friendly', mode: 'chat', voice: true, speak: false };
+const CFG0: Cfg = { tone: 'friendly', mode: 'chat', voice: true, speak: false, sugs: false }; // owner (18 Nov): suggestions off by default
 const readCfg = (): Cfg => { try { return { ...CFG0, ...JSON.parse(localStorage.getItem(CFG_KEY) || '{}') }; } catch { return CFG0; } };
 const TONES: [Tone, string, string][] = [['friendly', 'Friendly', 'Warm and helpful (default)'], ['direct', 'Direct', 'Short answers, straight to the point'], ['detailed', 'Detailed', 'Extra tips and the reasons why'], ['fun', 'Fun', 'Playful, with a bit of personality']];
 const MODES: [Mode, string, string][] = [['chat', 'Chat', 'Ask anything'], ['search', 'Search', 'Every message searches the catalogue'], ['compare', 'Compare', 'Grades side by side for a model and part'], ['quote', 'Quote', 'Build a price list, then send or add it to the cart']];
@@ -88,6 +88,8 @@ export default function AskPage() {
   const [cfg, setCfgS] = useState<Cfg>(CFG0), [menu, setMenu] = useState<'' | 'contact' | 'settings'>('');
   const setCfg = (c: Partial<Cfg>) => setCfgS((o) => { const n = { ...o, ...c }; try { localStorage.setItem(CFG_KEY, JSON.stringify(n)); } catch { /* */ } return n; });
   // owner (18 Nov): report an answer with a quick 'why?'; the team gets it in the Control Room inbox as a complaint
+  const [who, setWho] = useState<{ name: string; plan: string; lv: number } | null>(null);
+  useEffect(() => { backend.me().then((u) => { if (!u) return; const c = (u as unknown as { card?: { kind: string; level: number } }).card; const kinds: Record<string, [string, string[]]> = { circuit: ['Sam Circuit', ['Connected', 'Charged', 'Supercharged', 'Fully Charged', 'Lightning']], grid: ['Sam Grid', ['Node', 'Hub', 'Network', 'Backbone', 'Mainframe']], circle: ['Sam Circle', ['Member']] }; const k = c && kinds[c.kind]; setWho({ name: u.name || u.email, plan: k ? k[0] + ' · ' + T(k[1][Math.min(c!.level || 0, k[1].length - 1)]) : T('No card yet'), lv: c?.level || 0 }); }).catch(() => {}); }, []);
   const [find, setFind] = useState(''), [rep, setRep] = useState<number | null>(null), [why, setWhy] = useState(''), [repTxt, setRepTxt] = useState(''), [repDone, setRepDone] = useState<number[]>([]);
   const report = async (i: number) => {
     const m = msgs[i], prev = [...msgs.slice(0, i)].reverse().find((x) => x.me);
@@ -198,7 +200,10 @@ export default function AskPage() {
         <div className="ak-people">
           <span className="ak-h">{T('Prefer a person?')}</span>
           <button type="button" className="ak-contact" onClick={() => setMenu(menu === 'contact' ? '' : 'contact')}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /></svg>{T('Contact us')}</button>
-          <small className="ak-foot">{T('Chats are kept on this device only.')}</small>
+          <div className="ak-acct">
+            <a href="/account" className="ak-me"><span className={'ak-me-av lv' + (who?.lv || 0)}>{who ? who.name.trim().charAt(0).toUpperCase() : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="8" r="4" /><path d="M4 21a8 8 0 0 1 16 0" /></svg>}</span><span><b>{who ? who.name : T('Guest')}</b><small>{who ? who.plan : T('Sign in for your card perks')}</small></span></a>
+            <button type="button" className="ak-me-set" onClick={() => setMenu(menu === 'settings' ? '' : 'settings')} aria-label={T('Samsoom settings')} title={T('Samsoom settings')}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z" /></svg></button>
+          </div>
         </div>
       </aside>
 
@@ -227,6 +232,8 @@ export default function AskPage() {
             <span className="ak-pop-l">{T('Mode')}</span>
             <div className="ak-seg">{MODES.map(([k, l, d]) => <button key={k} type="button" className={cfg.mode === k ? 'on' : ''} onClick={() => setCfg({ mode: k })}><b>{T(l)}</b><small>{T(d)}</small></button>)}</div>
             <span className="ak-pop-l">{T('Sound')}</span>
+            <span className="ak-pop-l">{T('Chat')}</span>
+            <label className="ak-tg"><input type="checkbox" checked={cfg.sugs} onChange={(e) => setCfg({ sugs: e.target.checked })} /><span>{T('Show suggested questions')}</span></label>
             <label className="ak-tg"><input type="checkbox" checked={cfg.voice} onChange={(e) => setCfg({ voice: e.target.checked })} /><span>{T('Samsoom babbles while he answers')}</span></label>
             <label className="ak-tg"><input type="checkbox" checked={cfg.speak} onChange={(e) => setCfg({ speak: e.target.checked })} /><span>{T('Read answers aloud')}</span></label>
             <button type="button" className="ak-pop-del" onClick={() => { if (confirm(T('Delete every chat on this device?'))) { write([]); setChats([]); fresh(); setMenu(''); } }}>{T('Delete all chats')}</button>
@@ -236,10 +243,10 @@ export default function AskPage() {
           {!msgs.length ? (
             <div className="ak-hello">
               <div className="ak-card">
-                <span className="ak-big"><LiveSam size={130} mood="idle" play={mood} /></span>
+                <span className="ak-big"><LiveSam size={140} mood="idle" play={mood} /></span>
                 <div>
                   <span className="ak-kick">{T('Samsoom · Sam Electronics assistant')}</span>
-                  <h1 className="sp-h2">{T('Ask me anything.')}</h1>
+                  <h1 className="sp-h2">{who ? T('Hi') + ', ' + who.name.split(' ')[0] + '. ' + T('How can I help?') : T('How can I help you today?')}</h1>
                   <p className="sp-p">{T('Parts, grades, prices, repairs, shipping, opening hours: I know the shop inside out. Spelling mistakes are fine, and I speak your language.')}</p>
                 </div>
               </div>
@@ -277,7 +284,7 @@ export default function AskPage() {
                     <span className="ak-rep-a"><button type="button" onClick={() => setRep(null)}>{T('Cancel')}</button><button type="submit" className="y" disabled={!why}>{T('Send report')}</button></span>
                   </form>
                 ) : repDone.includes(i) ? <small className="ak-rep-ok">{T('Thanks. The team has your report and will look at it.')}</small> : null}
-                {i === lastBot && m.sug && !typing ? <div className="ak-sug">{m.sug.map(([l, qq]) => <button key={l} type="button" onClick={() => ask(T(qq))}>{T(l)}</button>)}<button type="button" className="p" onClick={() => setMenu('contact')}>{T('Contact us')}</button></div> : null}
+                {cfg.sugs && i === lastBot && m.sug && !typing ? <div className="ak-sug">{m.sug.map(([l, qq]) => <button key={l} type="button" onClick={() => ask(T(qq))}>{T(l)}</button>)}<button type="button" className="p" onClick={() => setMenu('contact')}>{T('Contact us')}</button></div> : null}
               </div>
             </div>
           ))}
@@ -292,7 +299,7 @@ export default function AskPage() {
             </div>
           ) : null}
           <div className="ak-modes" role="tablist" aria-label={T('Mode')}>{MODES.map(([k, l, d]) => <button key={k} type="button" role="tab" aria-selected={cfg.mode === k} className={cfg.mode === k ? 'on' : ''} title={T(d)} onClick={() => setCfg({ mode: k })}>{T(l)}</button>)}<span className="ak-tone">{T('Tone')}: <button type="button" onClick={() => setMenu('settings')}>{T(TONES.find((x) => x[0] === cfg.tone)![1])}</button></span></div>
-          {msgs.length && !(lastBot >= 0 && msgs[lastBot].sug && !typing) ? <div className="ak-topics">{TOPICS.map(([l, qq]) => <button key={l} type="button" onClick={() => ask(T(qq))}>{T(l)}</button>)}</div> : null}
+          {cfg.sugs && msgs.length && !(lastBot >= 0 && msgs[lastBot].sug && !typing) ? <div className="ak-topics">{TOPICS.map(([l, qq]) => <button key={l} type="button" onClick={() => ask(T(qq))}>{T(l)}</button>)}</div> : null}
           {img ? <div className="ak-att"><img src={img.small} alt="" /><span>{T('Photo ready: Samsoom will read the model on it')}</span><button type="button" onClick={() => setImg(null)} aria-label={T('Remove the photo')}>×</button></div> : null}
           <form className="ak-in" onSubmit={(e) => { e.preventDefault(); ask(q); }}>
             <input ref={file} type="file" accept="image/*" hidden onChange={(e) => { pickImg(e.target.files?.[0]); e.target.value = ''; }} />

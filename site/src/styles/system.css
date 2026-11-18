@@ -798,3 +798,15 @@ html[data-theme="dark"] [data-pop] [style*="color: rgb(94, 96, 100)"] { color: #
 html[data-theme="dark"] [data-pop] [style*="rgba(26, 27, 29, 0.14)"], html[data-theme="dark"] [data-pop] [style*="rgba(26, 27, 29, 0.08)"], html[data-theme="dark"] [data-pop] [style*="rgba(26, 27, 29, 0.06)"] { border-color: rgba(255,255,255,.1) !important; }
 html[data-theme="dark"] [data-pop] input, html[data-theme="dark"] [data-pop] textarea { background: #36393E !important; color: #fff !important; border-color: rgba(255,255,255,.12) !important; }
 html[data-theme="dark"] [data-pop] input::placeholder, html[data-theme="dark"] [data-pop] textarea::placeholder { color: #8C9096 !important; }
+
+/* owner (18 Nov): "the messages should look like the Samsoom tutorial: its colours and look". The notices take the
+   tutorial's language: white card, a soft yellow tile for Samsoom, the main action in yellow, the other one light grey;
+   in dark, the tutorial's graphite gradient with a thin warm edge and yellow actions. */
+.sn-b.y { background: #F7C032; border-color: #F7C032; color: #26282B; box-shadow: 0 8px 18px -10px rgba(247,192,50,.9); }
+.sn-b.y:hover { background: #FFD15A; border-color: #FFD15A; }
+.sn-b:not(.y) { background: #F1F2F3; border-color: #F1F2F3; }
+.sn-tile:not(.sam) { background: linear-gradient(180deg, #3A3D42, #26282B); }
+html[data-theme="dark"] .sn { background: linear-gradient(180deg, #2E3034, #26282B); border-color: rgba(247,192,50,.28); box-shadow: 0 0 0 1px rgba(247,192,50,.08), 0 28px 60px -24px rgba(0,0,0,.8); }
+html[data-theme="dark"] .sn-b.y { background: #F7C032; border-color: #F7C032; color: #26282B; }
+html[data-theme="dark"] .sn-b:not(.y) { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.08); color: #fff; }
+html[data-theme="dark"] .sn-tile.sam { background: radial-gradient(circle at 50% 35%, rgba(247,192,50,.28), rgba(247,192,50,.06) 70%); }
