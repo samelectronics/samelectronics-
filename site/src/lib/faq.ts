@@ -12,12 +12,23 @@ export const TOPICS: { id: Topic; name: string; theme: string; icon: string }[] 
   { id: 'account', name: 'Your account', theme: 'bench', icon: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0' },
 ];
 export const FAQ: Record<Topic, [string, string][]> = {
+  // owner (18 Nov): "the Good to know may be missing stuff": every grade and maker named as in the shop, and how ordering,
+  // delivery, returns, payment, alerts, compare, trade lists and stock really work
   shop: [
-    ['What do the grades mean?', 'Service Pack is the original part from the phone maker, in its own box. Original Pulled is original, taken from another phone and tested. Premium and Standard are high-quality aftermarket parts. Every grade is labelled on the part and in the shop.'],
+    ['What do the grades mean?', 'Original is the part the phone maker fits. Compatible is made by a third party to fit and work like it. Standard is everyday quality at a fair price. AAA is a high-grade copy close to the original, and AA a step under it. OLED Soft, OLED Big and OLED Small are OLED screens (flexible, full-size or compact panels). Incell is an LCD with the touch built in, the budget choice. Other means a quality we source on request. Every part shows its grade as a coloured tag.'],
+    ['What do the manufacturer names mean?', 'The dark tag with a light shows who made the part: Service Pack (the maker\'s own service box), OEM, Repaired OLED (an original OLED panel restored and tested), GX, ZY, YK and Taiwan (trusted aftermarket factories), or Other.'],
     ['Is every part tested?', 'Yes. Screens, batteries, cameras and flex cables are tested on the bench before they ship or are fitted.'],
-    ['How do I know a part fits my phone?', 'Add your phone under My devices and the shop marks every part that fits. Not sure of your model? Use the model code lookup on the Repair page.'],
+    ['How do I know a part fits my phone?', 'Add your phone under My devices and the shop marks every part that fits. Not sure of your model? Use Find My Part, ask Samsoom, or send him a photo of Settings → About.'],
+    ['How do I order?', 'Add parts to the cart and send the order, or tap Order on WhatsApp or WeChat on any part. The team confirms stock and the final price before you pay.'],
+    ['Can I collect it, or do you deliver?', 'Collect it at the counter in Al Murar, Deira (often the same day), have it delivered in the UAE, or shipped worldwide every week.'],
+    ['How do I pay?', 'Cash or card at the counter, bank transfer, or a payment link on WhatsApp. The Payments page has the details.'],
+    ['What warranty do parts have?', 'Each grade has its own warranty, shown on the part. Original grades carry the longest. The full terms are on the Warranty page.'],
+    ['Can I return a part?', 'A faulty part is replaced or refunded within its warranty when it is returned unfitted and undamaged, with the invoice. Fitted parts are checked on our bench first.'],
+    ['How do I get trade prices?', 'Apply for a trade account. Once it is approved, every part shows your trade price, and you can paste a whole parts list into Samsoom\'s Trade list.'],
+    ['Can I be told when a part is back or cheaper?', 'Yes. Tap the bell on any part, or use Stock alert and Price watch in Samsoom. The bell at the top rings when it happens.'],
+    ['How does Compare work?', 'Tap the two-cards button on up to three parts, then Compare now: price, warranty, rating and stock side by side, with the best value marked.'],
+    ['Is the stock number exact?', 'It is an estimate that updates through the day. The team confirms it on WhatsApp before you pay.'],
     ['Are the prices on the site final?', 'Prices shown now are samples while the shop is being set up. Final prices come from our stock system and appear here automatically.'],
-    ['What warranty do parts have?', 'Each grade has its own warranty, shown on the part. Service Pack and Original grades carry the longest. The full terms are on the Warranty page.'],
   ],
   repair: [
     ['How long does a repair take?', 'Most screen and battery fits take under an hour while you wait in Deira. Board work can take a day or more; we tell you before we start.'],

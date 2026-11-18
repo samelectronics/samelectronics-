@@ -30,7 +30,7 @@ export default function Faq({ topic, all = false }: { topic?: Topic; all?: boole
   if (!all && topic) {
     const tp = TOPICS.find((x) => x.id === topic)!;
     return (
-      <section className="sp-sec w fq-sec" id="faq">
+      <section className="sp-sec w fq-sec" id="faq" data-tour-step="11" data-tour-title="Good to know" data-tour-text="The questions people ask most, answered in one place. Still stuck? Ask Samsoom.">
         <div className="sp-wrap fq-wrap">
           <div className="fq-head"><span className={'fq-ico fq-' + tp.theme}><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d={tp.icon} /></svg></span><div><span className="sp-eb">{T('QUESTIONS')} · {T(tp.name)}</span><h2 className="sp-h2">{T('Good to know')}</h2></div><a className="fq-all" href={'/faq#' + topic}>{T('All questions')} →</a></div>
           <List topic={topic} items={D[topic]} />

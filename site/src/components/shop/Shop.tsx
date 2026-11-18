@@ -176,7 +176,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
           {/* quick filters on the left; the full panel is one tap away */}
           <aside className={'shop-side' + (side ? ' open' : '')} aria-label={T('Filters')}>
             <div className="shop-side-in">
-              <button type="button" className="shop-cz" onClick={() => setCz(true)} data-tour-step="5" data-tour-title="Customize everything" data-tour-text="Price, quality, manufacturer, color, warranty… set it all exactly how you like, and save it.">
+              <button type="button" className="shop-cz" onClick={() => setCz(true)} data-tour-step="6" data-tour-title="Customize everything" data-tour-text="Price, quality, manufacturer, color, warranty… set it all exactly how you like, and save it.">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0" /><circle cx="16" cy="6" r="2" /><circle cx="10" cy="12" r="2" /><circle cx="18" cy="18" r="2" /></svg>
                 <span><b>{T('Customize everything')}</b><small>{T('Price, quality, color, warranty…')}</small></span>
               </button>
@@ -197,7 +197,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
           </aside>
 
           <div className="shop-main">
-            <div className="shop-bar">
+            <div className="shop-bar" data-tour-step="9" data-tour-title="Sort and view" data-tour-text="Sort by price, newest or best match, and switch between the grid and the list.">
               <span className="shop-n"><b>{fmt(res.length)}</b> {T('results')}{f.q ? <> {T('for')} “<b>{f.q}</b>”</> : null}</span>
               <button type="button" className="sp-chip shop-fbtn" onClick={() => setSide(true)}>☰ {T('Filters')}{chips.length ? ' · ' + chips.length : ''}</button>
               <button type="button" className="sp-chip y" onClick={() => setCz(true)}>{T('Customize')}</button>
@@ -208,12 +208,12 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
               </span>
             </div>
             {chips.length ? <div className="shop-chips">{chips.map(([l, x], i) => <button key={l + i} type="button" className="sp-chip on" onClick={x}>{l}<span className="x">×</span></button>)}<button type="button" className="shop-clear" onClick={() => setF({ ...EMPTY, sort: f.sort })}>{T('Clear all')}</button></div> : null}
-            {!trade ? <div className="sp-note shop-tradenote"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg><span>{T('Prices shown are for everyone. Approved trade accounts see their trade price on every part.')} <a href="/wholesale">{T('How to get trade prices')}</a></span></div> : null}
+            {!trade ? <div className="sp-note shop-tradenote" data-tour-step="10" data-tour-title="Trade prices" data-tour-text="Repair shops and traders: apply once, and every part shows your trade price."><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg><span>{T('Prices shown are for everyone. Approved trade accounts see their trade price on every part.')} <a href="/wholesale">{T('How to get trade prices')}</a></span></div> : null}
 
             {f.cats.length === 1 && f.cats[0] === 'SCR' ? <ScreenGrades items={base.filter((p) => p.category === 'SCR')} on={f.grades} onPick={(g) => tog('grades', g)} /> : null}
             {res.length ? (
               <div className={'shop-grid' + (view.list ? ' list' : '')} style={{ ['--cols' as string]: view.cols }}>
-                {shown.map((p, k) => { const every = (view.list ? 1 : Math.max(1, +view.cols || 4)) * 3; const ad = (k + 1) % every === 0 && k + 1 < shown.length && (k + 1) / every <= 3; return <React.Fragment key={p.id}><ProductCard p={p} st={st} trade={trade} open={open} list={view.list} fits={myModels.get(p.model_id)} />{ad ? <InlineAd slot={(k + 1) / every} lastCat={f.cats[0]} /> : null}</React.Fragment>; })}
+                {shown.map((p, k) => { const every = (view.list ? 1 : Math.max(1, +view.cols || 4)) * 3; const ad = (k + 1) % every === 0 && k + 1 < shown.length && (k + 1) / every <= 3; return <React.Fragment key={p.id}><ProductCard p={p} st={st} trade={trade} open={open} list={view.list} fits={myModels.get(p.model_id)} tour={k === 0} />{ad ? <InlineAd slot={(k + 1) / every} lastCat={f.cats[0]} /> : null}</React.Fragment>; })}
               </div>
             ) : (
               <div className="sp-empty shop-none">

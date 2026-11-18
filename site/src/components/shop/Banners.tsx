@@ -38,7 +38,7 @@ export default function Banners({ onDeals, onCat, ctx, onGo }: { onDeals: () => 
   useEffect(() => { if (pause) return; const t = window.setTimeout(() => setI((n) => (n + 1) % S.length), S[i] && S[i].film ? 15000 : 6000); return () => window.clearTimeout(t); }, [i, pause, S.length]);
   const s = S[i];
   return (
-    <section className="ad" aria-label={T('Offers')}>
+    <section className="ad" aria-label={T('Offers')} data-tour-step="5" data-tour-title="Offers and adverts" data-tour-text="The big box plays our latest offers. Pick a tab, a part or a brand and it shows that topic's own deals.">
       {/* owner (16 Nov): the main advert is a real commercial that plays (ShopReel), not a phone and not a static slide */}
       <div className="ad-main ad-reel">{ctx ? <ContextAd ctx={ctx} onGo={onGo || (() => document.querySelector('.shop-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))} /> : <ShopReel onCat={onCat} onDeals={onDeals} onShop={() => document.querySelector('.shop-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />}</div>
       {/* owner: the ads always change and come in moving, never a squeezed line of cartons: two slots, each turning

@@ -14,7 +14,7 @@ import { CompareIcon } from './Icons';
 
 export const stockLabel = (q: number) => (q <= 0 ? ['Out of stock · request it', 'out'] : q < 4 ? ['Only ' + q + ' left (estimate)', 'low'] : q < 15 ? ['In stock (estimate)', 'ok'] : ['Plenty in stock (estimate)', 'ok']);
 
-export default function ProductCard({ p, st, trade, open, list, fits }: { p: Product; st: State; trade: boolean; open: (p: Product) => void; list?: boolean; fits?: string }) {
+export default function ProductCard({ p, st, trade, open, list, fits, tour }: { p: Product; st: State; trade: boolean; open: (p: Product) => void; list?: boolean; fits?: string; tour?: boolean }) {
   const img = useRef<HTMLImageElement>(null), fav = st.favs.includes(p.id), cmp = st.compare.includes(p.id), inCart = st.cart.find((l) => l.id === p.id);
   const [sl, sk] = stockLabel(p.stock_qty);
   return (
@@ -31,7 +31,7 @@ export default function ProductCard({ p, st, trade, open, list, fits }: { p: Pro
         <span className="pc-brand" aria-hidden="true"><SEBrandLogo brand={p.brand} h={12} fit="58x14" color="#26282B" /></span>
         <span className="pc-quick">{T('Quick view')}</span>
       </button>
-      <div className="pc-side">
+      <div className="pc-side" {...(tour ? { 'data-tour-step': '8', 'data-tour-title': 'Star and compare', 'data-tour-text': 'Star a part to keep it in My Bench. The two-cards button adds it to Compare: up to three parts side by side.' } : {})}>
         <button type="button" className={'pc-ic' + (fav ? ' on' : '')} onClick={() => store.fav(p.id)} aria-pressed={fav} title={fav ? T('Starred') : T('Star it')}>
           <svg viewBox="0 0 24 24" width="17" height="17"><path d="M12 2l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 16.8 6.1 20.1l1.3-6.6L2.5 8.9l6.6-.8z" fill={fav ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" /></svg>
         </button>
@@ -40,7 +40,7 @@ export default function ProductCard({ p, st, trade, open, list, fits }: { p: Pro
         </button>
       </div>
       <div className="pc-body">
-        <span className="pc-meta"><GradeTag g={p.grade} name={p.gradeName} size="sm" /><MakerTag m={p.manufacturer || ''} name={p.makerName} size="sm" />{fits ? <span className="pc-fits">✓ {T('Fits your')} {fits}</span> : null}</span>
+        <span className="pc-meta" {...(tour ? { 'data-tour-step': '7', 'data-tour-title': 'Grade and maker', 'data-tour-text': 'The coloured tag is the quality (Original, OLED, Incell, AAA and more). The dark tag with a light is who made it.' } : {})}><GradeTag g={p.grade} name={p.gradeName} size="sm" /><MakerTag m={p.manufacturer || ''} name={p.makerName} size="sm" />{fits ? <span className="pc-fits">✓ {T('Fits your')} {fits}</span> : null}</span>
         <button type="button" className="pc-t" onClick={() => open(p)}>{p.title}</button>
         <span className="pc-sub">{p.brandName} · {p.part_name}</span>
         <span className="pc-rate"><Stars v={p.rating} n={p.reviews} /><span className="sp-sample">sample</span></span>
