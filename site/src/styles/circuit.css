@@ -353,3 +353,38 @@ section.cx .cx-ladder li.on > i { background: #F7C032; box-shadow: 0 0 0 3px rgb
 section.cx .cx-ladder li.cur > i { box-shadow: 0 0 0 4px rgba(247,192,50,.3), 0 0 18px rgba(247,192,50,.8); }
 section.cx .cx-ladder li b { color: #FFFFFF; } section.cx .cx-ladder li small { color: #A7ABB1; }
 section.cx .cx-lvl { display: none !important; } /* the ladder under the cards is the level picker now */
+
+/* ── owner (18 Nov): "redesign the circuit card, more premium and wow" ──
+   Sam Circuit as a heavy black metal card: brushed finish, a bevelled edge that catches the light, gold-etched circuit
+   traces with current running through them, a gold emblem, the name and number engraved in silver, and a holographic
+   foil strip that shifts colour as the card tilts. Higher levels change the metal: Supercharged gold, Fully Charged
+   black and gold, Lightning holographic. */
+.mc .cx-card.k-circuit { color: #F3F4F5; background:
+    repeating-linear-gradient(90deg, rgba(255,255,255,.028) 0 1px, rgba(0,0,0,0) 1px 3px),
+    radial-gradient(120% 95% at var(--lx) var(--ly), rgba(255,255,255,.16), rgba(255,255,255,0) 42%),
+    linear-gradient(150deg, #44474D 0%, #24262A 38%, #141517 72%, #26282C 100%) !important;
+  box-shadow: 0 34px 60px -26px rgba(0,0,0,.75), 0 0 0 1px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.28), inset 0 -1px 0 rgba(0,0,0,.7), inset 1px 0 0 rgba(255,255,255,.08); }
+.mc .cx-card.k-circuit::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; box-shadow: inset 0 0 0 1.5px rgba(214,174,82,.35), inset 0 0 22px rgba(0,0,0,.45); }
+.mc .k-circuit svg.cx-trace path { stroke: #C9A24A; stroke-width: 1.5; filter: drop-shadow(0 0 2px rgba(247,192,50,.45)); opacity: .9; }
+.mc .k-circuit svg.cx-trace circle { fill: #F7C032; stroke: #8A6516; filter: drop-shadow(0 0 4px rgba(247,192,50,.8)); }
+.mc .k-circuit svg.cx-trace path:nth-child(odd) { stroke-dasharray: 18 220 !important; animation: mcCurrent 3.2s linear infinite !important; stroke: #FFE7A3; }
+@keyframes mcCurrent { to { stroke-dashoffset: -238; } }
+.mc .k-circuit .top b { background: linear-gradient(180deg, #FFF1C2, #D6AE52 55%, #A87C24); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: .18em; }
+.mc .k-circuit .top small { color: rgba(255,255,255,.55); }
+.mc .k-circuit .nm { background: linear-gradient(180deg, #FFFFFF 0%, #D4D7DB 45%, #8E9298 100%); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: none; filter: drop-shadow(0 1px 0 rgba(0,0,0,.8)); }
+.mc .k-circuit .no { color: #C9CCD0; opacity: 1; filter: drop-shadow(0 1px 0 rgba(0,0,0,.8)); }
+.mc .k-circuit .bot small { color: rgba(255,255,255,.5); } .mc .k-circuit .bot b { color: #F7C032; }
+.mc .k-circuit .mc-meter i { background: rgba(255,255,255,.18); } .mc .k-circuit .mc-meter i.on { background: #F7C032; box-shadow: 0 0 6px rgba(247,192,50,.8); }
+/* holographic foil strip: shifts with the tilt (the card sets --lx / --ly) */
+.mc .k-circuit .cx-holo { background: linear-gradient(105deg, rgba(0,0,0,0) 62%, rgba(255,255,255,0) 66%, rgba(255,120,200,.22) 70%, rgba(120,200,255,.26) 74%, rgba(160,255,190,.22) 78%, rgba(255,230,140,.26) 82%, rgba(0,0,0,0) 86%); background-size: 160% 100%; background-position: calc(var(--lx) * -1) 0; mix-blend-mode: screen; opacity: .9; }
+.mc .k-circuit .cx-logo { display: block !important; inset-inline-end: 22px; width: 116px; height: 116px; filter: grayscale(1) contrast(1.4) brightness(1.4); mix-blend-mode: overlay; opacity: .16; }
+/* levels: the metal changes */
+.mc .cx-card.k-circuit.lv-2 { color: #2B2008; background: repeating-linear-gradient(90deg, rgba(255,255,255,.06) 0 1px, rgba(0,0,0,0) 1px 3px), radial-gradient(120% 95% at var(--lx) var(--ly), rgba(255,255,255,.4), rgba(255,255,255,0) 42%), linear-gradient(140deg, #FBE7AE 0%, #E2B13D 38%, #B9861B 72%, #E5BC55 100%) !important; }
+.mc .k-circuit.lv-2 .nm, .mc .k-circuit.lv-2 .top b { background: linear-gradient(180deg, #4A3A10, #2B2008); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 1px 0 rgba(255,240,190,.6)); }
+.mc .k-circuit.lv-2 .no, .mc .k-circuit.lv-2 .bot b { color: #2B2008; filter: none; } .mc .k-circuit.lv-2 .bot small, .mc .k-circuit.lv-2 .top small { color: rgba(43,32,8,.6); }
+.mc .k-circuit.lv-2 svg.cx-trace path { stroke: rgba(90,60,0,.45); filter: none; } .mc .k-circuit.lv-2 svg.cx-trace path:nth-child(odd) { stroke: #FFF6D6; }
+.mc .cx-card.k-circuit.lv-3 { background: repeating-linear-gradient(90deg, rgba(255,255,255,.03) 0 1px, rgba(0,0,0,0) 1px 3px), radial-gradient(120% 95% at var(--lx) var(--ly), rgba(247,192,50,.22), rgba(247,192,50,0) 42%), linear-gradient(150deg, #2A2418 0%, #121110 45%, #050505 80%, #1E1A12 100%) !important; }
+.mc .cx-card.k-circuit.lv-3::after { box-shadow: inset 0 0 0 2px rgba(247,192,50,.65), inset 0 0 24px rgba(0,0,0,.5); }
+.mc .cx-card.k-circuit.lv-4 { background: radial-gradient(120% 95% at var(--lx) var(--ly), rgba(255,255,255,.22), rgba(255,255,255,0) 40%), conic-gradient(from calc(var(--lx) * 1.2) at 60% 40%, #1A1B1E, #2E2340, #12303A, #2F2A12, #1A1B1E) !important; }
+.mc .k-circuit.lv-4 .cx-holo { opacity: 1; background-size: 120% 100%; }
+@media (prefers-reduced-motion: reduce) { .mc .k-circuit svg.cx-trace path { animation: none !important; } }

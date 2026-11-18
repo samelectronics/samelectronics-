@@ -13,7 +13,7 @@ export default function MemberCard({ kind, name, no, level = 0, shop, tilt = tru
   const leave = () => { const c = ref.current; if (c) { c.style.transform = ''; c.style.setProperty('--lx', '30%'); c.style.setProperty('--ly', '20%'); } };
   return (
     <div className={'mc' + (ghost ? ' ghost' : '')} onPointerMove={move} onPointerLeave={leave}>
-      <div ref={ref} className={'cx-card k-' + kind}>
+      <div ref={ref} className={'cx-card k-' + kind + ' lv-' + level}>
         <span className="cx-holo" aria-hidden="true" /><span className="cx-edge" aria-hidden="true" /><span className="mc-brush" aria-hidden="true" /><span className="mc-hologram" aria-hidden="true" /><span className="mc-sheen" aria-hidden="true" />
         <svg className="cx-trace" viewBox="0 0 400 252" aria-hidden="true">
           <path d="M248 0 V34 L274 60 H332" /><path d="M400 96 H352 L334 114 V150" /><path d="M400 176 H338 L316 154 H262 L244 136 H214" /><path d="M300 0 V14 L314 28 H372" />
