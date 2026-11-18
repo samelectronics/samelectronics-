@@ -322,3 +322,35 @@ html[data-theme="dark"] .ak-rep { background: #2B2D31; border-color: rgba(255,25
 .ak-hello .ak-card::after { display: none; }
 .ak-hello .ak-big { width: 110px; height: 120px; border-radius: 0; background: none; box-shadow: none; overflow: visible; }
 .ak-hello .ak-big > span { transform: scale(.78); }
+/* owner (18 Nov, Perplexity as the reference): everything in the composer. Text on top; below it the photo (+), the mode
+   buttons as one segmented group, and on the right the tone menu, voice and send. "Related" questions as a clean list.
+   No underlined text anywhere. */
+.ak-in { flex-direction: column; align-items: stretch; gap: 4px; padding: 12px 12px 10px 16px; border-radius: 22px; }
+.ak-in textarea { padding: 4px 2px 6px; min-height: 28px; }
+.ak-bar { display: flex; align-items: center; gap: 8px; }
+.ak-plus { display: grid; place-items: center; width: 34px; height: 34px; border: 1px solid rgba(255,255,255,.12); border-radius: 50%; background: transparent; color: #C9CCD0; cursor: pointer; }
+.ak-plus:hover { background: rgba(255,255,255,.07); color: #fff; }
+.ak-seg2 { display: inline-flex; align-items: center; gap: 2px; padding: 3px; border-radius: 12px; background: rgba(0,0,0,.22); }
+.ak-seg2 button { display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 11px; border: 0; border-radius: 9px; background: transparent; color: #A9ADB2; font: 500 13px Inter, sans-serif; cursor: pointer; transition: background .15s, color .15s; }
+.ak-seg2 button:hover { color: #ECECEC; }
+.ak-seg2 button.on { background: #3E4146; color: #ECECEC; box-shadow: 0 1px 0 rgba(255,255,255,.06) inset, 0 1px 2px rgba(0,0,0,.35); }
+.ak-seg2 button.on svg { color: #F7C032; }
+.ak-bar-r { margin-inline-start: auto; display: inline-flex; align-items: center; gap: 6px; }
+.ak-tsel { position: relative; display: inline-flex; align-items: center; gap: 4px; height: 32px; padding: 0 10px; border-radius: 10px; color: #C9CCD0; cursor: pointer; }
+.ak-tsel:hover { background: rgba(255,255,255,.06); }
+.ak-tsel select { appearance: none; border: 0; background: transparent; color: inherit; font: 500 13px Inter, sans-serif; cursor: pointer; padding-inline-end: 2px; }
+.ak-tsel select option { background: #2F3236; color: #ECECEC; }
+.ak-tsel .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.ak-bar .ak-clip { width: 34px; height: 34px; }
+.ak-bar .ak-send { width: 34px; height: 34px; }
+.ak-rel { display: flex; flex-direction: column; margin-top: 14px; max-width: 100%; }
+.ak-rel-h { display: flex; align-items: center; gap: 8px; padding-bottom: 8px; font: 600 14px Inter, sans-serif; color: #ECECEC; }
+.ak-rel-h svg { color: #F7C032; }
+.ak-rel button { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 2px; border: 0; border-top: 1px solid rgba(255,255,255,.07); background: none; color: #C9CCD0; font: 400 14.5px Inter, sans-serif; text-align: start; cursor: pointer; }
+.ak-rel button:hover { color: #F7C032; }
+.ak-rel button svg { flex: none; color: #8C9096; }
+.ak-rel button:hover svg { color: #F7C032; }
+.ak-tone button, .ak-hello .ak-codebtn, .ak-codebtn { text-decoration: none !important; border-bottom: 0 !important; }
+.ak-go:hover { text-decoration: none; opacity: .85; }
+.ak-hello .ak-codebtn { padding: 7px 14px; border: 1px solid rgba(255,255,255,.12) !important; border-radius: 999px; background: transparent; color: #A9ADB2 !important; }
+@media (max-width: 620px) { .ak-seg2 button span { display: none; } .ak-seg2 button { padding: 0 10px; } }

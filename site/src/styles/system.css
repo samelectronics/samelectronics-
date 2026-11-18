@@ -810,3 +810,9 @@ html[data-theme="dark"] .sn { background: linear-gradient(180deg, #2E3034, #2628
 html[data-theme="dark"] .sn-b.y { background: #F7C032; border-color: #F7C032; color: #26282B; }
 html[data-theme="dark"] .sn-b:not(.y) { background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.08); color: #fff; }
 html[data-theme="dark"] .sn-tile.sam { background: radial-gradient(circle at 50% 35%, rgba(247,192,50,.28), rgba(247,192,50,.06) 70%); }
+
+/* owner (18 Nov): "we don't use the underlined / highlighted text look". Links and small text buttons are plain and bold;
+   hover just dims them. */
+.au-agree a, .au-shell .au-links a, .au-shell .au-links button, .pv-code-open, .sc2-panel .sc2-more, .fz-h span, .shop-clear, .ss-h button, .pv-rate button, .cart-paylink, .pt-trade a, .au-links a, .au-links button, .cmp-view, .sc2-banner .sc2-btxt a, .cc-more a, .gd-more, .wf-acct a, .st-menu-close, .ak-codebtn, .ak-tone button { text-decoration: none !important; }
+.au-agree a, .sc2-banner .sc2-btxt a, .gd-more, .cc-more a, .pt-trade a, .cart-paylink, .au-links a, .au-links button { font-weight: 600; }
+.au-agree a:hover, .sc2-banner .sc2-btxt a:hover, .gd-more:hover, .cc-more a:hover, .pt-trade a:hover, .cart-paylink:hover, .au-links a:hover, .au-links button:hover, .cmp-view:hover, .pv-code-open:hover { opacity: .75; }
