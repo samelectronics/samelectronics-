@@ -83,9 +83,9 @@ function render(v: Vals) {
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 24 26"
-                  width="17.6"
-                  height="19.1"
-                  style={{ position: 'absolute', left: '0px', top: '46.2px', overflow: 'visible', transform: 'rotate(33.7deg)', transformOrigin: '8.8px 0', /* owner (15 Nov): the connector sits ON the cable end, along its direction */ filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
+                  width="19"
+                  height="20.6"
+                  style={{ position: 'absolute', left: '-0.7px', top: '46.2px', overflow: 'visible', transform: 'rotate(33.7deg)', transformOrigin: '9.5px 0', /* owner (15 Nov): the connector sits ON the cable end, along its direction */ filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
                 >
                   {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
                   <defs>
@@ -93,12 +93,22 @@ function render(v: Vals) {
                     <linearGradient id="samHandL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
                   <g>
-                    {/* owner (18 Nov): one smooth, simple glove (no cartoon details): a soft silhouette with the thumb out, a gentle
-                        shading and three faint finger lines */}
-                    <defs><radialGradient id="samGl" cx=".35" cy=".3" r=".85"><stop offset="0" stopColor="#575B62" /><stop offset=".55" stopColor="#2D3034" /><stop offset="1" stopColor="#17191B" /></radialGradient></defs>
-                    <path d="M9.2 .6h5.6v2.6c2.6.5 4.5 2.2 5 4.5l1.5-1.2c1.2-1 2.8.4 1.9 1.7l-3 4.3c.3 2 .1 4.1-.4 6.1-.6 2.4-2.4 3.8-4.7 3.8H8.6c-2.3 0-4.1-1.6-4.5-3.9-.5-3-.6-6.1.2-8.9.7-2.5 2.5-4.3 4.9-4.7z" fill="url(#samGl)" stroke="#101113" strokeWidth=".8" strokeLinejoin="round" />
-                    <path d="M9.4 16v5M12.3 16.4v5.4M15.2 16v5" stroke="rgba(0,0,0,.45)" strokeWidth=".7" strokeLinecap="round" />
-                    <path d="M7 6.6c1.2-1.4 3-2 4.8-2" stroke="rgba(255,255,255,.25)" strokeWidth=".9" strokeLinecap="round" fill="none" />
+                    {/* owner (18 Nov): a real little hand in his graphite: tapered fingers fanning slightly, a thumb set at the side,
+                        soft shading across the back of the hand and between the fingers */}
+                    <defs>
+                      <linearGradient id="samF2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#4C5056" /><stop offset=".5" stopColor="#2B2E32" /><stop offset="1" stopColor="#15171A" /></linearGradient>
+                      <radialGradient id="samB2" cx=".4" cy=".3" r=".9"><stop offset="0" stopColor="#555960" /><stop offset=".6" stopColor="#2A2D31" /><stop offset="1" stopColor="#141517" /></radialGradient>
+                    </defs>
+                    <g stroke="#0D0E0F" strokeWidth=".55" strokeLinejoin="round">
+                      <path d="M6.2 11.6c-.4 2.6-.5 5.2-.2 7.6.1.9 1.5.9 1.7 0 .4-2.2.6-4.6.6-7z" fill="url(#samF2)" />
+                      <path d="M8.9 12.2c-.2 3-.2 6 .1 8.8.1 1 1.7 1 1.8 0 .3-2.8.4-5.8.3-8.6z" fill="url(#samF2)" />
+                      <path d="M11.9 12.3c0 3 .1 5.9.5 8.5.2 1 1.7.9 1.8-.1.2-2.7.1-5.6-.2-8.4z" fill="url(#samF2)" />
+                      <path d="M14.9 11.8c.3 2.4.6 4.7 1.2 6.8.3.9 1.6.6 1.6-.3-.1-2.2-.5-4.6-1-6.7z" fill="url(#samF2)" />
+                      <path d="M8.3 1.4h7.4l.6 2.6c1.4 1.6 2 3.6 1.6 5.8l-.4 2.5c-.3 1-1.2 1.6-2.2 1.6H7.6c-1 0-1.9-.7-2.1-1.7l-.4-2.4c-.4-2.2.2-4.2 1.6-5.8z" fill="url(#samB2)" />
+                      <path d="M16.9 6.4c1.7-.3 3.2.4 3.9 1.7.4.8.1 1.6-.7 1.8l-2.6.5" fill="url(#samF2)" />
+                    </g>
+                    <path d="M7.2 12.6c2.6.6 6 .6 8.8 0" stroke="rgba(0,0,0,.4)" strokeWidth=".7" strokeLinecap="round" fill="none" />
+                    <path d="M8 4.4c1.6-.7 3.6-.9 5.6-.5" stroke="rgba(255,255,255,.26)" strokeWidth=".8" strokeLinecap="round" fill="none" />
                   </g>
                 </svg>
                 {'\n          '}
@@ -156,9 +166,9 @@ function render(v: Vals) {
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 24 26"
-                  width="17.6"
-                  height="19.1"
-                  style={{ position: 'absolute', left: '2.4px', top: '46.2px', overflow: 'visible', transform: 'rotate(-33.7deg)', transformOrigin: '8.8px 0', filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
+                  width="19"
+                  height="20.6"
+                  style={{ position: 'absolute', left: '1.7px', top: '46.2px', overflow: 'visible', transform: 'rotate(-33.7deg)', transformOrigin: '9.5px 0', filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
                 >
                   {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
                   <defs>
@@ -166,12 +176,22 @@ function render(v: Vals) {
                     <linearGradient id="samHandR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
                   <g transform="translate(24 0) scale(-1 1)">
-                    {/* owner (18 Nov): one smooth, simple glove (no cartoon details): a soft silhouette with the thumb out, a gentle
-                        shading and three faint finger lines */}
-                    <defs><radialGradient id="samGl" cx=".35" cy=".3" r=".85"><stop offset="0" stopColor="#575B62" /><stop offset=".55" stopColor="#2D3034" /><stop offset="1" stopColor="#17191B" /></radialGradient></defs>
-                    <path d="M9.2 .6h5.6v2.6c2.6.5 4.5 2.2 5 4.5l1.5-1.2c1.2-1 2.8.4 1.9 1.7l-3 4.3c.3 2 .1 4.1-.4 6.1-.6 2.4-2.4 3.8-4.7 3.8H8.6c-2.3 0-4.1-1.6-4.5-3.9-.5-3-.6-6.1.2-8.9.7-2.5 2.5-4.3 4.9-4.7z" fill="url(#samGl)" stroke="#101113" strokeWidth=".8" strokeLinejoin="round" />
-                    <path d="M9.4 16v5M12.3 16.4v5.4M15.2 16v5" stroke="rgba(0,0,0,.45)" strokeWidth=".7" strokeLinecap="round" />
-                    <path d="M7 6.6c1.2-1.4 3-2 4.8-2" stroke="rgba(255,255,255,.25)" strokeWidth=".9" strokeLinecap="round" fill="none" />
+                    {/* owner (18 Nov): a real little hand in his graphite: tapered fingers fanning slightly, a thumb set at the side,
+                        soft shading across the back of the hand and between the fingers */}
+                    <defs>
+                      <linearGradient id="samF2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#4C5056" /><stop offset=".5" stopColor="#2B2E32" /><stop offset="1" stopColor="#15171A" /></linearGradient>
+                      <radialGradient id="samB2" cx=".4" cy=".3" r=".9"><stop offset="0" stopColor="#555960" /><stop offset=".6" stopColor="#2A2D31" /><stop offset="1" stopColor="#141517" /></radialGradient>
+                    </defs>
+                    <g stroke="#0D0E0F" strokeWidth=".55" strokeLinejoin="round">
+                      <path d="M6.2 11.6c-.4 2.6-.5 5.2-.2 7.6.1.9 1.5.9 1.7 0 .4-2.2.6-4.6.6-7z" fill="url(#samF2)" />
+                      <path d="M8.9 12.2c-.2 3-.2 6 .1 8.8.1 1 1.7 1 1.8 0 .3-2.8.4-5.8.3-8.6z" fill="url(#samF2)" />
+                      <path d="M11.9 12.3c0 3 .1 5.9.5 8.5.2 1 1.7.9 1.8-.1.2-2.7.1-5.6-.2-8.4z" fill="url(#samF2)" />
+                      <path d="M14.9 11.8c.3 2.4.6 4.7 1.2 6.8.3.9 1.6.6 1.6-.3-.1-2.2-.5-4.6-1-6.7z" fill="url(#samF2)" />
+                      <path d="M8.3 1.4h7.4l.6 2.6c1.4 1.6 2 3.6 1.6 5.8l-.4 2.5c-.3 1-1.2 1.6-2.2 1.6H7.6c-1 0-1.9-.7-2.1-1.7l-.4-2.4c-.4-2.2.2-4.2 1.6-5.8z" fill="url(#samB2)" />
+                      <path d="M16.9 6.4c1.7-.3 3.2.4 3.9 1.7.4.8.1 1.6-.7 1.8l-2.6.5" fill="url(#samF2)" />
+                    </g>
+                    <path d="M7.2 12.6c2.6.6 6 .6 8.8 0" stroke="rgba(0,0,0,.4)" strokeWidth=".7" strokeLinecap="round" fill="none" />
+                    <path d="M8 4.4c1.6-.7 3.6-.9 5.6-.5" stroke="rgba(255,255,255,.26)" strokeWidth=".8" strokeLinecap="round" fill="none" />
                   </g>
                 </svg>
                 {'\n          '}
@@ -333,20 +353,16 @@ function render(v: Vals) {
                 {/* owner (18 Nov): "his arms come out as cables, a little broken damage on the sides as if they're real":
                     a cracked opening in the frame on each side, a rubber grommet, chipped edges and a few copper strands */}
                 <svg aria-hidden="true" width="22" height="30" viewBox="0 0 22 30" style={{ position: 'absolute', left: '-11px', top: '95px', overflow: 'visible', zIndex: 6, pointerEvents: 'none' }}>
-                  <path d="M11 3.5l2.6 2.4 1.4-1.2 1.1 3.2 2.3.8-1.4 2.6 1.8 2.3-2.3 1.4.6 3-2.8-.2-.9 2.9-2.4-1.9-2.4 1.6-.4-2.9z" fill="#0A0B0C" stroke="#55585D" strokeWidth=".5" strokeLinejoin="round" />
-                  <path d="M12.8 6.3l.9-.7M16.1 8.3l1.9-1.1M18.2 13.4l2.6 1.1M15.8 19.6l1.3 2.4M12.6 20.9l-.1 2.6" stroke="#C9CCD0" strokeWidth=".45" strokeLinecap="round" opacity=".7" />
-                  <path d="M18.6 9.4l2.6-2.6 1.2.4M17.9 16.6l3.1 1.4" fill="none" stroke="rgba(255,255,255,.38)" strokeWidth=".4" strokeLinecap="round" />
-                  <path d="M12.6 10.2l2.1-1.6M13 13.4l2.6.2M12.8 16.4l1.9 1.4" stroke="#C47A3A" strokeWidth=".7" strokeLinecap="round" />
-                  <circle cx="12.2" cy="13.2" r="3.1" fill="#1F2124" stroke="#3A3D42" strokeWidth=".9" />
-                  <circle cx="11.8" cy="12.6" r="1" fill="rgba(255,255,255,.18)" />
+                  <defs><radialGradient id={"samHoleG"} cx=".45" cy=".45" r=".6"><stop offset="0" stopColor="#000" /><stop offset=".7" stopColor="#0B0C0D" /><stop offset="1" stopColor="#2A2C30" /></radialGradient></defs>
+                  <path d="M11.4 6.2c2.3.2 4.4 1.6 5 3.8.3 1 .9 1.6 1.6 2 .1 1.6-.6 3.1-1.8 4-.9.7-1.4 1.6-1.7 2.6-1.4.8-3.1.9-4.4.2z" fill="url(#samHoleG)" />
+                  <path d="M16.4 9.2l2.6-1.8 1.4.2M17.6 13.4l3.4.6M15.8 17.8l2 2.4" fill="none" stroke="rgba(255,255,255,.34)" strokeWidth=".35" strokeLinecap="round" />
+                  <path d="M11.4 6.2c2.3.2 4.4 1.6 5 3.8" fill="none" stroke="rgba(255,255,255,.28)" strokeWidth=".5" strokeLinecap="round" />
                 </svg>
                 <svg aria-hidden="true" width="22" height="30" viewBox="0 0 22 30" style={{ position: 'absolute', right: '-11px', top: '95px', overflow: 'visible', zIndex: 6, pointerEvents: 'none', transform: 'scaleX(-1)' }}>
-                  <path d="M11 3.5l2.6 2.4 1.4-1.2 1.1 3.2 2.3.8-1.4 2.6 1.8 2.3-2.3 1.4.6 3-2.8-.2-.9 2.9-2.4-1.9-2.4 1.6-.4-2.9z" fill="#0A0B0C" stroke="#55585D" strokeWidth=".5" strokeLinejoin="round" />
-                  <path d="M12.8 6.3l.9-.7M16.1 8.3l1.9-1.1M18.2 13.4l2.6 1.1M15.8 19.6l1.3 2.4M12.6 20.9l-.1 2.6" stroke="#C9CCD0" strokeWidth=".45" strokeLinecap="round" opacity=".7" />
-                  <path d="M18.6 9.4l2.6-2.6 1.2.4M17.9 16.6l3.1 1.4" fill="none" stroke="rgba(255,255,255,.38)" strokeWidth=".4" strokeLinecap="round" />
-                  <path d="M12.6 10.2l2.1-1.6M13 13.4l2.6.2M12.8 16.4l1.9 1.4" stroke="#C47A3A" strokeWidth=".7" strokeLinecap="round" />
-                  <circle cx="12.2" cy="13.2" r="3.1" fill="#1F2124" stroke="#3A3D42" strokeWidth=".9" />
-                  <circle cx="11.8" cy="12.6" r="1" fill="rgba(255,255,255,.18)" />
+                  <defs><radialGradient id={"samHoleG"} cx=".45" cy=".45" r=".6"><stop offset="0" stopColor="#000" /><stop offset=".7" stopColor="#0B0C0D" /><stop offset="1" stopColor="#2A2C30" /></radialGradient></defs>
+                  <path d="M11.4 6.2c2.3.2 4.4 1.6 5 3.8.3 1 .9 1.6 1.6 2 .1 1.6-.6 3.1-1.8 4-.9.7-1.4 1.6-1.7 2.6-1.4.8-3.1.9-4.4.2z" fill="url(#samHoleG)" />
+                  <path d="M16.4 9.2l2.6-1.8 1.4.2M17.6 13.4l3.4.6M15.8 17.8l2 2.4" fill="none" stroke="rgba(255,255,255,.34)" strokeWidth=".35" strokeLinecap="round" />
+                  <path d="M11.4 6.2c2.3.2 4.4 1.6 5 3.8" fill="none" stroke="rgba(255,255,255,.28)" strokeWidth=".5" strokeLinecap="round" />
                 </svg>
                 <div style={{ position: 'absolute', inset: '3px', borderRadius: '23px', background: '#050506', overflow: 'hidden' }}>
                   {'\n            '}
