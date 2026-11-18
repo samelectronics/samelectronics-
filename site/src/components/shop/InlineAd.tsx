@@ -11,12 +11,13 @@ import { siteRaw } from '@/lib/catalog';
 import { allowed } from '@/lib/prefs';
 import SEBrandLogo from '@/components/dc/SEBrandLogo';
 import { brandInk } from '@/lib/brandInk';
+import { GradeTag } from './Tags';
 
 export type AdFx = 'film' | 'grades' | 'fix' | 'ship' | 'years' | 'brand';
 export type Ad = { id: string; k: string; t: string; d: string; cta: string; href: string; img: string; tone: 'y' | 'd' | 'w'; cat?: string; fx?: AdFx; chips?: string[] };
 export const ADS_DEFAULT: Ad[] = [
   { id: 'a1', fx: 'film', k: 'INSIDE YOUR PHONE', t: 'Every part inside your phone.', d: 'Screens, batteries, cameras and flex cables, tested on our bench.', chips: ['TESTED', 'WARRANTY', 'IN STOCK'], cta: 'Shop all parts', href: '/shop', img: '/assets/pose/film-24-480.webp', tone: 'd' },
-  { id: 'a2', fx: 'grades', k: 'QUALITY GRADES', t: 'One screen. Four grades.', d: 'Original, OLED, Incell or AAA: you choose the quality and the price.', chips: ['ORIGINAL', 'OLED', 'INCELL', 'AAA'], cta: 'Compare grades', href: '/shop?cat=SCR', img: '/assets/pose/apple-sp-480.webp', tone: 'd', cat: 'SCR' },
+  { id: 'a2', fx: 'grades', k: 'QUALITY GRADES', t: 'One screen. Every grade.', d: 'Original, Compatible, OLED, Incell, AAA and more: you choose the quality and the price.', chips: ['10 GRADES', 'EVERY PRICE'], cta: 'Compare grades', href: '/shop?cat=SCR', img: '/assets/pose/apple-sp-480.webp', tone: 'd', cat: 'SCR' },
   { id: 'a3', fx: 'fix', k: 'REPAIR LAB', t: 'Cracked in the morning. Fixed by lunch.', d: 'Bring your phone to Deira. Most fits take under an hour.', chips: ['WHILE YOU WAIT', 'TESTED TWICE'], cta: 'Book a repair', href: '/repair', img: '/assets/pose/rep-fixed-480.webp', tone: 'd' },
   { id: 'a4', fx: 'ship', k: 'WORLDWIDE DELIVERY', t: 'Packed in Deira. Tracked to your door.', d: 'Every week to the Middle East, Africa, Europe and Asia.', chips: ['PACKED', 'SHIPPED', 'TRACKED'], cta: 'Get a shipping quote', href: '/worldwide', img: '/assets/pallet/full-600.webp', tone: 'd' },
   { id: 'b1', fx: 'brand', cat: 'SCR', k: 'SAMSUNG · SERVICE PACK', t: 'Straight from Samsung’s own box.', d: 'Service Pack screens for Galaxy S, A and Note, tested before they ship.', chips: ['SERVICE PACK', '6-MONTH WARRANTY'], cta: 'Shop Samsung', href: '/shop?q=Samsung', img: '/assets/pose/samsung-sp-480.webp', tone: 'w' },
@@ -57,35 +58,52 @@ function Years() {
   return <span className="iad2-years" data-no-i18n=""><b><i>’</i>03</b><small>{T('SINCE 2003')} · {y}+ {T('YEARS')}</small></span>;
 }
 
+/** owner (18 Nov): "the ads between products are all yellow, copy-paste, and the worldwide one is so cheap: nothing like
+ *  the teardown ad". v3: one graphite stage for all of them, but each ad has its own accent glow and its own big outlined
+ *  word drifting behind; the title slams in word by word with an impact flash; the picture whips in; two soft light bands
+ *  cross at a steady beat (never random); a compact button. Hovering never stops them. */
+const ACC: Record<string, [string, string]> = { film: ['#F7C032', 'PARTS'], grades: ['#A78BFA', 'GRADES'], fix: ['#60A5FA', 'REPAIR'], ship: ['#2DD4BF', 'WORLDWIDE'], years: ['#F7C032', 'SINCE 2003'], brand: ['#F7C032', 'BRANDS'] };
+function Vis3({ a, live }: { a: Ad; live: boolean }) {
+  if (a.fx === 'grades') return <span className="ia3-grades">{([['apple-sp', 'OR', 'Original'], ['apple-gx', 'OL', 'OLED Soft'], ['apple-zy', 'IN', 'Incell'], ['apple-temp', 'AQ', 'AAA']] as const).map(([g, k, n], i) => <span key={g} style={{ ['--i' as string]: i } as React.CSSProperties}><img src={'/assets/pose/' + g + '-480.webp'} alt="" /><GradeTag g={k} name={n} size="sm" /></span>)}</span>;
+  if (a.fx === 'ship') return (
+    <span className="ia3-ship">
+      <svg className="ia3-map" viewBox="0 0 320 120" aria-hidden="true">
+        <g className="arcs"><path d="M60 78 C 100 20, 150 20, 186 60" pathLength={1} /><path d="M186 60 C 220 30, 260 30, 290 50" pathLength={1} /><path d="M186 60 C 170 90, 150 104, 120 108" pathLength={1} /><path d="M186 60 C 150 30, 110 22, 70 30" pathLength={1} /></g>
+        {([[186, 60, 'DXB'], [290, 50, 'ASIA'], [120, 108, 'AFRICA'], [70, 30, 'EUROPE'], [60, 78, 'MIDDLE EAST']] as const).map(([x, y, n], k) => <g key={n} className="pin" style={{ ['--k' as string]: k } as React.CSSProperties}><circle cx={x} cy={y} r={k ? 3.2 : 4.6} /><circle className="ring" cx={x} cy={y} r={k ? 3.2 : 4.6} /><text x={x} y={y - 9} textAnchor="middle">{n}</text></g>)}
+        <circle className="plane" r="3" ><animateMotion dur="3.6s" repeatCount="indefinite" path="M186 60 C 220 30, 260 30, 290 50" /></circle>
+      </svg>
+      <img className="ia3-pal" src="/assets/pallet/full-600.webp" alt="" />
+    </span>
+  );
+  return <Visual a={a} live={live} />;
+}
+
 export default function InlineAd({ slot, lastCat }: { slot: number; lastCat?: string }) {
   const list = useMemo(() => {
     const all = shopAds(); const n = all.length; const rot = all.map((_, i) => all[(i + slot * 3) % n]);
     if (lastCat && allowed('booster')) { const m = rot.findIndex((a) => a.cat === lastCat); if (m > 0) rot.unshift(...rot.splice(m, 1)); }
     return rot.slice(0, 3);
   }, [slot, lastCat]);
-  const [i, setI] = useState(0), [prev, setPrev] = useState<number | null>(null), [pause, setPause] = useState(false), [live, setLive] = useState(false), box = useRef<HTMLAnchorElement>(null);
+  const [i, setI] = useState(0), [live, setLive] = useState(false), box = useRef<HTMLAnchorElement>(null);
   useEffect(() => { const el = box.current; if (!el) return; const io = new IntersectionObserver(([e]) => setLive(e.isIntersecting), { threshold: 0.25 }); io.observe(el); return () => io.disconnect(); }, []);
-  const go = (n: number) => { setPrev(i); setI(n); window.setTimeout(() => setPrev(null), 520); };
-  useEffect(() => { if (pause || !live || list.length < 2) return; const t = window.setTimeout(() => go((i + 1) % list.length), 7000); return () => window.clearTimeout(t); }, [i, pause, live, list.length]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (!live || list.length < 2) return; const t = window.setTimeout(() => setI((n) => (n + 1) % list.length), 6500); return () => window.clearTimeout(t); }, [i, live, list.length]);
   const a = list[i]; if (!a) return null;
-  const scene = (x: Ad, out: boolean) => (
-    <span className={'iad2-scene' + (out ? ' out' : '')} key={(out ? 'o' : 'n') + x.id} aria-hidden={out}>
-      <span className="iad2-txt">
-        <span className="iad2-k"><i className="rec" />{T(x.k)}<em>{T('Ad')}</em></span>
-        <b className="iad2-t" data-no-i18n="">{T(x.t).split(' ').map((w, k) => <span key={k} style={{ ['--w' as string]: k } as React.CSSProperties}>{w} </span>)}</b>
-        <small className="iad2-d">{T(x.d)}</small>
-        {x.chips?.length ? <span className="iad2-chips">{x.chips.map((c, k) => <i key={c} style={{ ['--c' as string]: k } as React.CSSProperties}>{T(c)}</i>)}</span> : null}
-      </span>
-      <span className="iad2-vis"><Visual a={x} live={live && !out} /></span>
-      <span className="iad2-cta">{T(x.cta)} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>
-    </span>
-  );
+  const [ac, word] = ACC[a.fx || 'film'] || ACC.film, brandC = a.fx === 'brand' ? brandInk(a.id === 'b1' ? 'samsung' : a.id === 'b2' ? 'apple' : 'xiaomi') : null;
   return (
-    <a ref={box} className={'iad2 t-' + (['d', 'y', 'w'][slot % 3]) + (live ? ' live' : '')} href={a.href} onPointerEnter={() => setPause(true)} onPointerLeave={() => setPause(false)} aria-label={T(a.t)}>
-      <span className="iad2-bg" aria-hidden="true"><i className="g1" /><i className="g2" /><i className="sweep" /><i className="ray r1" /><i className="ray r2" /><i className="ray r3" /></span>
-      {prev !== null && list[prev] ? scene(list[prev], true) : null}
-      {scene(a, false)}
-      {list.length > 1 ? <span className="iad2-dots" onClick={(e) => e.preventDefault()}>{list.map((x, k) => <button key={x.id} type="button" className={k === i ? 'on' : ''} onClick={() => k !== i && go(k)} aria-label={'Ad ' + (k + 1)}><i style={{ animationPlayState: pause || !live ? 'paused' : 'running' }} /></button>)}</span> : null}
+    <a ref={box} className={'ia3' + (live ? ' live' : '')} href={a.href} aria-label={T(a.t)} style={{ ['--ac' as string]: brandC && brandC !== '#000000' ? brandC : ac } as React.CSSProperties}>
+      <span className="ia3-bg" aria-hidden="true"><i className="glow" /><i className="band b1" /><i className="band b2" /><span className="ia3-word" data-no-i18n="">{[0, 1].map((k) => <b key={k}>{word} · {word} · </b>)}</span></span>
+      <span className="ia3-scene" key={a.id + '-' + i}>
+        <span className="ia3-txt">
+          <span className="ia3-k"><i className="rec" />{T(a.k)}<em>{T('Ad')}</em></span>
+          <b className="ia3-t" data-no-i18n="">{T(a.t).split(' ').map((w, k) => <span key={k} style={{ ['--w' as string]: k } as React.CSSProperties}>{w} </span>)}</b>
+          <small className="ia3-d">{T(a.d)}</small>
+          {a.chips?.length ? <span className="ia3-chips">{a.chips.map((c, k) => <i key={c} style={{ ['--c' as string]: k } as React.CSSProperties}>{T(c)}</i>)}</span> : null}
+        </span>
+        <span className="ia3-vis"><Vis3 a={a} live={live} /></span>
+        <span className="ia3-cta">{T(a.cta)}<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>
+        <i className="ia3-flash" aria-hidden="true" />
+      </span>
+      {list.length > 1 ? <span className="ia3-dots" aria-hidden="true">{list.map((x, k) => <i key={x.id} className={k === i ? 'on' : k < i ? 'done' : ''} />)}</span> : null}
     </a>
   );
 }

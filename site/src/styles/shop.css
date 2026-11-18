@@ -1058,3 +1058,102 @@ html[dir='rtl'] .shd-row { animation-direction: reverse; } html[dir='rtl'] .shd-
 .ss-pal .ss-it, .ss-grp .ss-it { display: flex !important; align-items: center; gap: 12px; grid-template-columns: none !important; }
 .ss-grp .ss-it .ss-txt { flex: 1; min-width: 0; }
 .ss-grp .ss-it .ss-pr { flex: none; }
+
+/* ── in-list ads v3 (owner, 18 Nov): one graphite stage, each ad its own accent and drifting word, slams, whips,
+   two light bands at a steady beat, a compact button; never paused by the mouse ── */
+.ia3 { --ac: #F7C032; position: relative; grid-column: 1 / -1; display: block; min-height: 236px; border-radius: 22px; overflow: hidden; isolation: isolate; text-decoration: none; color: #fff; background: radial-gradient(70% 120% at 72% 50%, #3A3D42 0%, #2A2C30 50%, #1F2023 100%); box-shadow: 0 0 0 1px rgba(255,255,255,.05), 0 30px 60px -36px rgba(0,0,0,.7); }
+.ia3-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.ia3-bg .glow { position: absolute; right: 8%; top: 50%; width: 520px; height: 520px; translate: 0 -50%; border-radius: 50%; background: radial-gradient(closest-side, color-mix(in srgb, var(--ac) 38%, transparent), transparent 70%); opacity: .55; filter: blur(10px); transition: background .6s; }
+.ia3-bg .band { position: absolute; top: -40%; width: 120px; height: 180%; rotate: 22deg; background: linear-gradient(90deg, transparent, rgba(255,240,205,.08) 35%, rgba(255,240,205,.22) 50%, rgba(255,240,205,.08) 65%, transparent); left: -20%; animation: ia3Band 5.2s linear infinite; }
+.ia3-bg .band.b2 { animation-delay: 2.6s; }
+@keyframes ia3Band { from { left: -20%; } to { left: 120%; } }
+.ia3-word { position: absolute; left: 0; bottom: -18px; display: flex; white-space: nowrap; animation: ia3Word 40s linear infinite; }
+.ia3-word b { font: 800 150px/1 'Space Grotesk', sans-serif; letter-spacing: -.03em; color: transparent; -webkit-text-stroke: 1.5px color-mix(in srgb, var(--ac) 22%, transparent); padding-inline-end: 40px; }
+@keyframes ia3Word { to { transform: translateX(-50%); } }
+.ia3-scene { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items: center; gap: 24px; min-height: 236px; padding: 26px 30px 26px 30px; box-sizing: border-box; }
+.ia3-txt { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.ia3-k { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; padding: 5px 10px 5px 8px; font: 700 10.5px 'JetBrains Mono', monospace; letter-spacing: .14em; color: #26282B; background: var(--ac); clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px); animation: ia3In .5s cubic-bezier(.2,1.3,.4,1) both; }
+.ia3-k .rec { width: 7px; height: 7px; border-radius: 50%; background: #E5484D; box-shadow: 0 0 0 2px rgba(255,255,255,.4); animation: ia3Rec 1.2s steps(2) infinite; }
+@keyframes ia3Rec { 50% { opacity: .3; } }
+.ia3-k em { font-style: normal; opacity: .55; margin-inline-start: 4px; }
+.ia3-t { font: 800 clamp(26px, 2.6vw, 38px)/1.06 'Space Grotesk', sans-serif; letter-spacing: -.02em; }
+.ia3-t span { display: inline-block; opacity: 0; transform: scale(1.5) translateY(-4px); filter: blur(10px); animation: ia3Slam .55s cubic-bezier(.2,1.35,.35,1) both; animation-delay: calc(.12s + var(--w) * .08s); }
+.ia3-t span:last-child { color: var(--ac); }
+@keyframes ia3Slam { 55% { opacity: 1; filter: blur(0); } 100% { opacity: 1; transform: none; filter: none; } }
+.ia3-scene { animation: ia3Shake .3s linear .55s both; }
+@keyframes ia3Shake { 25% { transform: translate(2px, -1px); } 50% { transform: translate(-2px, 1px); } 75% { transform: translate(1px, 0); } }
+.ia3-d { font: 400 14px/1.5 Inter, sans-serif; color: #C9CCD0; max-width: 460px; animation: ia3In .5s .5s both; }
+.ia3-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.ia3-chips i { font: 700 10px 'JetBrains Mono', monospace; font-style: normal; letter-spacing: .1em; padding: 5px 9px 5px 7px; color: #fff; background: linear-gradient(180deg, #3E4146, #2E3135); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px); border-inline-start: 3px solid var(--ac); animation: ia3In .45s cubic-bezier(.2,1.3,.4,1) both; animation-delay: calc(.7s + var(--c) * .1s); }
+@keyframes ia3In { from { opacity: 0; transform: translateY(10px) scale(.94); } }
+.ia3-vis { position: relative; height: 200px; display: grid; place-items: center; animation: ia3Whip .7s cubic-bezier(.2,1.2,.35,1) .15s both; }
+@keyframes ia3Whip { from { opacity: 0; transform: translateX(120px) rotate(8deg) scale(.9); filter: blur(8px); } to { opacity: 1; transform: none; filter: none; } }
+.ia3-vis img { max-height: 190px; max-width: 100%; object-fit: contain; filter: drop-shadow(0 26px 30px rgba(0,0,0,.55)); }
+.ia3-flash { position: absolute; inset: 0; z-index: 3; pointer-events: none; background: radial-gradient(60% 80% at 70% 50%, rgba(255,255,255,.55), transparent 70%); opacity: 0; animation: ia3Flash .5s ease-out .5s both; }
+@keyframes ia3Flash { 0% { opacity: 0; } 20% { opacity: .8; } 100% { opacity: 0; } }
+.ia3-cta { position: absolute; z-index: 2; right: 22px; bottom: 20px; display: inline-flex; align-items: center; gap: 7px; height: 36px; padding: 0 14px; border-radius: 999px; background: #fff; color: #26282B; font: 600 13px Inter, sans-serif; box-shadow: 0 10px 22px -12px rgba(0,0,0,.6); transition: background .15s; animation: ia3In .45s 1s both; }
+.ia3:hover .ia3-cta { background: var(--ac); }
+.ia3-dots { position: absolute; z-index: 2; left: 30px; bottom: 14px; display: flex; gap: 5px; }
+.ia3-dots i { width: 18px; height: 3px; border-radius: 3px; background: rgba(255,255,255,.2); } .ia3-dots i.on { background: var(--ac); width: 30px; } .ia3-dots i.done { background: rgba(255,255,255,.5); }
+.ia3-grades { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; width: 100%; }
+.ia3-grades > span { display: flex; flex-direction: column; align-items: center; gap: 8px; animation: ia3Drop .6s cubic-bezier(.2,1.3,.35,1) both; animation-delay: calc(.2s + var(--i) * .12s); }
+.ia3-grades img { height: 128px !important; max-height: none !important; }
+@keyframes ia3Drop { from { opacity: 0; transform: translateY(-60px); } }
+.ia3-ship { position: relative; width: 100%; height: 100%; display: grid; place-items: center; }
+.ia3-map { position: absolute; inset: 0 0 auto 0; width: 100%; height: 150px; overflow: visible; }
+.ia3-map .arcs path { fill: none; stroke: var(--ac); stroke-width: 1.4; stroke-dasharray: .02 .03; opacity: .8; }
+.ia3-map .pin circle { fill: var(--ac); } .ia3-map .pin .ring { fill: none; stroke: var(--ac); stroke-width: 1.2; transform-box: fill-box; transform-origin: center; animation: ia3Ping 1.8s ease-out infinite; animation-delay: calc(var(--k) * .3s); }
+@keyframes ia3Ping { from { opacity: .9; transform: scale(1); } to { opacity: 0; transform: scale(3.4); } }
+.ia3-map .pin text { font: 700 7px 'JetBrains Mono', monospace; letter-spacing: .08em; fill: #fff; opacity: .85; }
+.ia3-map .plane { fill: #fff; filter: drop-shadow(0 0 4px #fff); }
+.ia3-pal { position: absolute; right: 4%; bottom: -6px; height: 128px !important; }
+.ia3 .iad2-film, .ia3 .iad2-fix, .ia3 .iad2-brand, .ia3 .iad2-years { max-height: 200px; }
+@media (max-width: 760px) { .ia3-scene { grid-template-columns: 1fr; padding: 22px 20px 64px; } .ia3-vis { height: 160px; } .ia3-word b { font-size: 96px; } .ia3-grades img { height: 92px !important; } .ia3-cta { right: 16px; bottom: 16px; } .ia3-dots { left: 20px; bottom: 30px; } }
+@media (prefers-reduced-motion: reduce) { .ia3 *, .ia3 *::before { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; } }
+.ia3-t span { margin-inline-end: .24em; }
+.ia3-pal { right: 30% !important; bottom: 4px !important; height: 112px !important; }
+.ia3-vis { margin-bottom: 26px; }
+
+/* ── owner (18 Nov): the topic's own commercial when a tab, a part family or a brand is chosen (ContextAd) ── */
+.cad { --ac: #F7C032; position: relative; height: 100%; min-height: 360px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; padding: 30px 32px; box-sizing: border-box; border-radius: inherit; overflow: hidden; isolation: isolate; color: #fff; background: radial-gradient(80% 120% at 75% 50%, #3A3D42 0%, #2A2C30 50%, #1F2023 100%); }
+.cad-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.cad-bg .glow { position: absolute; right: 6%; top: 50%; width: 560px; height: 560px; translate: 0 -50%; border-radius: 50%; background: radial-gradient(closest-side, color-mix(in srgb, var(--ac) 40%, transparent), transparent 70%); opacity: .5; }
+.cad-bg .band { position: absolute; top: -40%; width: 140px; height: 180%; rotate: 22deg; left: -20%; background: linear-gradient(90deg, transparent, rgba(255,240,205,.08) 35%, rgba(255,240,205,.2) 50%, rgba(255,240,205,.08) 65%, transparent); animation: ia3Band 5.2s linear infinite; }
+.cad-bg .band.b2 { animation-delay: 2.6s; }
+.cad-word { position: absolute; left: 0; bottom: -24px; display: flex; white-space: nowrap; animation: ia3Word 46s linear infinite; }
+.cad-word b { font: 800 190px/1 'Space Grotesk', sans-serif; letter-spacing: -.03em; color: transparent; -webkit-text-stroke: 1.5px color-mix(in srgb, var(--ac) 24%, transparent); padding-inline-end: 50px; }
+.cad-l { position: relative; z-index: 1; display: flex; flex-direction: column; justify-content: center; gap: 14px; min-width: 0; }
+.cad-k { display: inline-flex; align-items: center; gap: 8px; align-self: flex-start; padding: 6px 11px 6px 9px; font: 700 10.5px 'JetBrains Mono', monospace; letter-spacing: .14em; color: #26282B; background: var(--ac); clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px); animation: ia3In .5s cubic-bezier(.2,1.3,.4,1) both; }
+.cad-k .rec { width: 7px; height: 7px; border-radius: 50%; background: #E5484D; box-shadow: 0 0 0 2px rgba(255,255,255,.4); animation: ia3Rec 1.2s steps(2) infinite; }
+.cad-t { display: flex; flex-direction: column; font: 800 clamp(36px, 4vw, 58px)/1 'Space Grotesk', sans-serif; letter-spacing: -.025em; animation: ia3Shake .3s linear .6s both; }
+.cad-t > span > span { display: inline-block; margin-inline-end: .22em; opacity: 0; transform: scale(1.5); filter: blur(12px); animation: ia3Slam .58s cubic-bezier(.2,1.35,.35,1) both; animation-delay: calc(.1s + var(--w) * .09s); }
+.cad-t .b { color: var(--ac); }
+.cad-stats { display: flex; flex-wrap: wrap; gap: 22px; animation: ia3In .5s .7s both; }
+.cad-stats > span { display: flex; flex-direction: column; gap: 3px; } .cad-stats b { font: 800 24px 'Space Grotesk', sans-serif; } .cad-stats small { font: 600 10px 'JetBrains Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: #9DA1A6; }
+.cad-cd { display: inline-flex; align-items: center; gap: 2px; font: 800 22px 'JetBrains Mono', monospace; color: var(--ac); } .cad-cd i { font-style: normal; opacity: .5; animation: ia3Rec 1s steps(2) infinite; }
+.cad-g > span { animation: ia3Drop .5s cubic-bezier(.2,1.3,.35,1) both; animation-delay: calc(.8s + var(--i) * .08s); }
+.cad-cta { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px; border: 0; border-radius: 999px; background: #fff; color: #26282B; font: 600 13.5px Inter, sans-serif; cursor: pointer; box-shadow: 0 10px 22px -12px rgba(0,0,0,.6); transition: background .15s; animation: ia3In .45s 1s both; }
+.cad-cta:hover { background: var(--ac); }
+.cad-r { position: relative; z-index: 1; min-height: 280px; }
+.cad-p { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 8px; animation: cadWhip .7s cubic-bezier(.2,1.25,.35,1) both; }
+.cad-p img { height: 190px; object-fit: contain; filter: drop-shadow(0 26px 28px rgba(0,0,0,.55)); }
+.cad-p.p0 { left: 32%; top: 2%; z-index: 3; } .cad-p.p1 { left: 0; top: 26%; z-index: 2; animation-delay: .12s; } .cad-p.p1 img, .cad-p.p2 img { height: 140px; opacity: .9; } .cad-p.p2 { right: 0; top: 30%; z-index: 1; animation-delay: .22s; }
+.cad-pl { display: flex; align-items: center; gap: 7px; padding: 5px 9px; border-radius: 10px; background: rgba(20,21,23,.72); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+.cad-pl b { font: 600 12px Inter, sans-serif; white-space: nowrap; max-width: 130px; overflow: hidden; text-overflow: ellipsis; } .cad-pl em { font: 700 12px 'Space Grotesk', sans-serif; font-style: normal; color: var(--ac); }
+@keyframes cadWhip { from { opacity: 0; transform: translateX(90px) rotate(10deg) scale(.86); filter: blur(8px); } to { opacity: 1; transform: none; filter: none; } }
+.cad-flash { position: absolute; inset: -20%; pointer-events: none; background: radial-gradient(40% 50% at 55% 40%, rgba(255,255,255,.5), transparent 70%); opacity: 0; animation: ia3Flash .5s ease-out .15s both; }
+@media (max-width: 900px) { .cad { grid-template-columns: 1fr; min-height: 0; padding: 24px 22px; } .cad-r { min-height: 230px; } .cad-p img { height: 150px; } .cad-p.p1 img, .cad-p.p2 img { height: 110px; } .cad-word b { font-size: 120px; } }
+
+/* ── side ads (owner, 18 Nov): calmer and simpler than the big box, but with the teardown feel: graphite, a drifting
+   outlined word, a chamfered tag, the picture; they change every 3 seconds and never stop under the mouse ── */
+.ad-tile { background: radial-gradient(90% 120% at 85% 60%, #3A3D42, #26282B 70%) !important; color: #fff !important; box-shadow: 0 0 0 1px rgba(255,255,255,.05), 0 22px 40px -30px rgba(0,0,0,.7) !important; animation: adTileIn .5s cubic-bezier(.2,1.2,.4,1) both; }
+@keyframes adTileIn { from { opacity: 0; transform: translateY(10px) scale(.98); } }
+.ad-tile .clip-sweep { display: none !important; }
+.ad-tile .clip-big { color: transparent !important; -webkit-text-stroke: 1.2px rgba(247,192,50,.14) !important; opacity: 1 !important; animation: ia3Word 30s linear infinite !important; white-space: nowrap; }
+.ad-tile .ad-k { display: inline-flex !important; align-self: flex-start; padding: 4px 9px 4px 7px !important; font: 700 10px 'JetBrains Mono', monospace !important; letter-spacing: .14em !important; color: #26282B !important; background: #F7C032 !important; clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px); border-radius: 0 !important; }
+.ad-tile b { color: #fff !important; } .ad-tile small { color: #B9BCC1 !important; }
+.ad-tile .ad-go { color: #F7C032 !important; }
+.ad-tile .clip-pic { animation: ia3Whip .6s cubic-bezier(.2,1.2,.35,1) .1s both; }
+.ad-tile .ad-pips i.on { background: #F7C032 !important; }
+.reel-cta { height: 40px !important; padding: 0 16px !important; font-size: 13.5px !important; border-radius: 999px !important; }
+.cad-p.p1 .cad-pl, .cad-p.p2 .cad-pl { display: none; }

@@ -167,7 +167,9 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
             </button>
           ))}
         </div>
-        {scope === 'all' && !f.q && !chips.length ? <Banners onDeals={() => setScope('deals')} onCat={(c) => set({ cats: [c] })} /> : null}
+        {/* owner (18 Nov): every filter has its ads: mixed for everything, the topic's own commercial for a tab, a part family or a brand */}
+        <Banners onDeals={() => setScope('deals')} onCat={(c) => set({ cats: [c] })} onGo={() => document.querySelector('.shop-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+          ctx={scope !== 'all' ? { kind: scope as 'deals' | 'new' | 'limited', items: res } : f.cats.length === 1 ? { kind: 'cat', id: f.cats[0], items: res } : f.brands.length === 1 ? { kind: 'brand', id: f.brands[0], items: res } : null} />
 
         <div className="shop-body">
           {/* quick filters on the left; the full panel is one tap away */}

@@ -9,7 +9,7 @@ import { T } from '@/components/site/ui';
 const Y = '#F7C032', G = '#26282B', D = '#26282B'; // owner (17 Nov): graphite, never black
 const IMG: Record<string, string> = {
   scr: '/assets/pose/samsung-sp-960.webp', sp: '/assets/pose/apple-sp-960.webp', gx: '/assets/pose/apple-gx-960.webp', zy: '/assets/pose/apple-zy-960.webp',
-  tmp: '/assets/pose/apple-temp-960.webp', bat: '/assets/pose/solo-bat-960.webp', board: '/assets/pose/solo-board-960.webp', cam: '/assets/pose/solo-cam-960.webp', logo: '/assets/se-logo-320.webp',
+  tmp: '/assets/pose/apple-temp-960.webp', pal: '/assets/pallet/pallet-600.webp', bat: '/assets/pose/solo-bat-960.webp', board: '/assets/pose/solo-board-960.webp', cam: '/assets/pose/solo-cam-960.webp', logo: '/assets/se-logo-320.webp',
 };
 type Cta = { t: string; go: () => void };
 const DUR = [2.6, 3.4, 3.6, 3.2, 3.4, 3.4]; // seconds per scene
@@ -20,7 +20,7 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
   const cv = useRef<HTMLCanvasElement>(null), wrap = useRef<HTMLDivElement>(null), [scene, setScene] = useState(0), [hold, setHold] = useState(false);
   const CTA: Cta[] = [
     { t: 'Shop all parts', go: onShop }, { t: 'Shop screens', go: () => onCat('SCR') }, { t: 'Compare the grades', go: () => onCat('SCR') },
-    { t: 'Shop batteries', go: () => onCat('BAT') }, { t: 'Get trade prices', go: () => { location.href = '/wholesale'; } }, { t: 'See every deal', go: onDeals },
+    { t: 'Shop batteries', go: () => onCat('BAT') }, { t: 'Get trade prices', go: () => { location.href = '/wholesale'; } }, { t: 'Ship with us', go: () => { location.href = '/worldwide'; } },
   ];
   useEffect(() => {
     const c = cv.current, host = wrap.current; if (!c || !host) return;
@@ -37,7 +37,7 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
     const spot = (cx: number, cy: number, r: number, col: string) => { const g = x.createRadialGradient(cx, cy, 0, cx, cy, r); g.addColorStop(0, col); g.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = g; x.fillRect(0, 0, W, H); };
     // glowing light lines drifting diagonally (same family as the teardown ad)
     const beams = (l: number, rgb: string, a = 0.6) => { x.save(); x.translate(W / 2, H / 2); x.rotate(-0.38); x.globalCompositeOperation = 'screen';
-      for (let k = 0; k < 3; k++) { const off = (((l * (0.9 + k * 0.15) + k * 0.33) % 1) - 0.5) * H * 2.2, len = W * (0.9 + (k % 2) * 0.5), x0 = -len / 2; const g = x.createLinearGradient(x0, 0, x0 + len, 0); g.addColorStop(0, 'rgba(' + rgb + ',0)'); g.addColorStop(0.5, 'rgba(' + rgb + ',' + a + ')'); g.addColorStop(1, 'rgba(' + rgb + ',0)');
+      for (let k = 0; k < 2; k++) { /* owner (18 Nov): never random: exactly two soft bands, half a beat apart, at one steady speed */ const off = (((l * 0.7 + k * 0.5) % 1) - 0.5) * H * 1.4, len = W * 1.3, x0 = -len / 2; const g = x.createLinearGradient(x0, 0, x0 + len, 0); g.addColorStop(0, 'rgba(' + rgb + ',0)'); g.addColorStop(0.5, 'rgba(' + rgb + ',' + a + ')'); g.addColorStop(1, 'rgba(' + rgb + ',0)');
         // owner: the light is a soft glowing band with a bright core, not a thin straight wire
         { const r = Math.max(28, H * 0.09); x.save(); x.translate(0, off); x.scale(len / 2 / r, 1); const rg = x.createRadialGradient(0, 0, 0, 0, 0, r);
           rg.addColorStop(0, 'rgba(' + rgb + ',' + a * 0.6 + ')'); rg.addColorStop(0.3, 'rgba(' + rgb + ',' + a * 0.22 + ')'); rg.addColorStop(1, 'rgba(' + rgb + ',0)'); x.fillStyle = rg; x.fillRect(-r, -r, r * 2, r * 2); x.restore(); }
@@ -52,6 +52,10 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
       if (shadow) { x.shadowColor = 'rgba(0,0,0,.35)'; x.shadowBlur = 30; x.shadowOffsetY = 18; } x.drawImage(i, -w / 2, -h / 2, w, h); x.restore(); };
     const flash = (l: number, col = '#fff') => { if (l < 0.08) { x.globalAlpha = (1 - l / 0.08) * 0.75; x.fillStyle = col; x.fillRect(0, 0, W, H); x.globalAlpha = 1; } };
     const narrow = () => W < 640;
+    // owner (18 Nov): the grade labels are the site's techy tags (chamfered, own gradient), not 1990s boxes
+    const tag = (lab: string, cx: number, cy: number, c1: string, c2: string, ink: string, a: number, s: number) => { x.save(); x.globalAlpha = Math.max(0, Math.min(1, a)); x.font = '700 ' + Math.round(1.5 * s) + "px 'JetBrains Mono', monospace"; const tw = x.measureText(lab).width, w = tw + 3.6 * s, h = 3 * s, c = 0.8 * s, x0 = cx - w / 2, y0 = cy - h / 2;
+      const g = x.createLinearGradient(x0, y0, x0 + w, y0 + h); g.addColorStop(0, c1); g.addColorStop(1, c2); x.fillStyle = g; x.beginPath(); x.moveTo(x0 + c, y0); x.lineTo(x0 + w, y0); x.lineTo(x0 + w, y0 + h - c); x.lineTo(x0 + w - c, y0 + h); x.lineTo(x0, y0 + h); x.lineTo(x0, y0 + c); x.closePath(); x.fill();
+      x.fillStyle = ink; x.fillRect(x0 + 1.1 * s, cy - 0.6 * s, 0.32 * s, 1.2 * s); x.textAlign = 'left'; x.textBaseline = 'middle'; x.fillText(lab, x0 + 2 * s, cy + 0.08 * s); x.restore(); };
 
     const scenes: ((l: number, k: number) => void)[] = [
       // 0 · open: the logo lands in a ring of light, the line tracks in
@@ -72,10 +76,10 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
         const n = Math.round(25 + 0 * l); text(T('from'), tx, H * 0.5, '500 ' + Math.round(1.8 * s) + 'px Inter, sans-serif', '#9DA1A6', 'left', eo((l - 0.45) * 3));
         text('AED ' + Math.round(n * eo((l - 0.45) * 2.2)), tx, H * 0.5 + 6 * s, font(800, Math.round(6 * s)), Y, 'left', eo((l - 0.45) * 3)); },
       // 2 · four grades drop in one after another, each with its own pill
-      (l) => { fill('#F7F5F0', '#E9E6DF'); const s = u(); const G4: [string, string, string, string][] = [['sp', 'ORIGINAL', '#26282B', '#F7C032'], ['gx', 'OLED SOFT', '#F7C032', '#26282B'], ['zy', 'INCELL', '#5B6B7A', '#fff'], ['tmp', 'AAA', '#C9CBCE', '#26282B']];
-        text(T('One screen. Four grades.'), W / 2, H * 0.17, font(800, Math.round(4.6 * s)), G, 'center', eo(l * 3));
-        const n = narrow() ? 2 : 4; G4.slice(0, n).forEach(([k, lab, bg, ink], i) => { const st = 0.12 + i * 0.13, a = back((l - st) * 3), cx = W * ((i + 0.5) / n), cy = H * 0.48 - (1 - a) * H * 0.5;
-          if (a <= 0) return; pic(k, cx, cy, H * 0.5, 0, Math.min(1, a)); const pw = 15 * s, ph = 3.6 * s; x.fillStyle = bg; x.beginPath(); x.roundRect(cx - pw / 2, H * 0.78 - ph, pw, ph, ph / 2); x.fill(); text(lab, cx, H * 0.78 - ph * 0.32, '700 ' + Math.round(1.6 * s) + "px 'JetBrains Mono', monospace", ink, 'center', Math.min(1, a)); });
+      (l) => { fill('#F7F5F0', '#E9E6DF'); const s = u(); const G4: [string, string, string, string, string][] = [['sp', 'ORIGINAL', '#F7C032', '#FFE38E', '#26282B'], ['gx', 'OLED SOFT', '#C0267A', '#F472B6', '#fff'], ['zy', 'INCELL', '#1D5FE0', '#60A5FA', '#fff'], ['tmp', 'AAA', '#6D28D9', '#A78BFA', '#fff']];
+        text(T('One screen. Every grade.'), W / 2, H * 0.17, font(800, Math.round(4.6 * s)), G, 'center', eo(l * 3));
+        const n = narrow() ? 2 : 4; G4.slice(0, n).forEach(([k, lab, c1, c2, ink], i) => { const st = 0.12 + i * 0.13, a = back((l - st) * 3), cx = W * ((i + 0.5) / n), cy = H * 0.44 - (1 - a) * H * 0.5;
+          if (a <= 0) return; pic(k, cx, cy, H * 0.44, 0, Math.min(1, a)); tag(lab, cx, H * 0.71, c1, c2, ink, a, s); });
         flash(l, '#fff'); },
       // 3 · battery week: yellow, the battery spins in, a -15% stamp slams with a shake
       (l) => { fill('#F7C032', '#E8A912'); const s = u(); spot(W * 0.6, H * 0.5, H, 'rgba(255,255,255,.35)'); beams(l, '255,250,232', 0.7);
@@ -93,11 +97,13 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
         const a = eo((l - 0.3) * 3); text(T('Everyone') + '  AED 575', tx, H * 0.5, '500 ' + Math.round(2.4 * s) + 'px Inter, sans-serif', '#9DA1A6', 'left', a);
         if (l > 0.48) { x.font = '500 ' + Math.round(2.4 * s) + 'px Inter, sans-serif'; const w = x.measureText(T('Everyone') + '  AED 575').width * eo((l - 0.48) * 4); x.strokeStyle = '#E85C4A'; x.lineWidth = 2.5; x.beginPath(); x.moveTo(tx, H * 0.5 - 0.8 * s); x.lineTo(tx + w, H * 0.5 - 0.8 * s); x.stroke(); }
         const b = eo((l - 0.55) * 3); text(T('Trade') + '  AED ' + Math.round(449 + (575 - 449) * (1 - b)), tx, H * 0.5 + 6.4 * s, font(800, Math.round(4.6 * s)), Y, 'left', b); },
-      // 5 · in stock in Deira: the camera module drifts, the count runs, the button pulses
-      (l) => { fill('#2A2C2F'); const s = u(); beams(l, '255,214,120', 0.5); spot(W / 2, H * 0.55, H, 'rgba(247,192,50,.14)');
-        if (!narrow()) { pic('cam', W * 0.18, H * 0.55 + Math.sin(l * 4) * 6, H * 0.5, -0.2, eo(l * 2)); pic('scr', W * 0.82, H * 0.52 - Math.sin(l * 4) * 6, H * 0.62, 0.12, eo(l * 2)); }
-        text(T('In stock.'), W / 2, H * 0.4, font(800, Math.round(7 * s)), '#fff', 'center', eo(l * 3)); text(T('In Deira.'), W / 2, H * 0.4 + 7.4 * s, font(800, Math.round(7 * s)), Y, 'center', eo((l - 0.12) * 3));
-        const n = Math.round(9000 * eo((l - 0.25) * 1.6)); text(n.toLocaleString('en-US') + '+ ' + T('parts on the shelf'), W / 2, H * 0.4 + 14 * s, '600 ' + Math.round(2.2 * s) + "px 'JetBrains Mono', monospace", '#C9CBCE', 'center', eo((l - 0.25) * 3)); flash(l); },
+      // 5 · owner (18 Nov): no "in stock" ad. WORLDWIDE: the word slams with a shake, the pallet whips in, the regions pop
+      (l) => { fill('#24323A', '#1F2023'); const s = u(); beams(l, '120,240,220', 0.35); spot(W * 0.68, H * 0.55, H, 'rgba(45,212,191,.16)');
+        const sh = l < 0.16 ? (1 - l / 0.16) * 7 : 0; x.save(); x.translate((Math.random() * 2 - 1) * sh, 0);
+        x.globalAlpha = 0.08; x.font = font(900, Math.round(H * 0.5)); x.fillStyle = '#fff'; x.textAlign = 'center'; x.fillText('WORLDWIDE', W / 2 + (0.5 - l) * W * 0.3, H * 0.74); x.globalAlpha = 1;
+        const k = back(l * 2.2); pic('pal', (narrow() ? W * 0.7 : W * 0.7) + (1 - k) * W * 0.5, narrow() ? H * 0.66 : H * 0.58, H * (narrow() ? 0.36 : 0.6), (1 - k) * 0.3); x.restore(); flash(l);
+        const tx = narrow() ? W * 0.06 : W * 0.08; text(T('Worldwide.'), tx, H * 0.34, font(800, Math.round(6.6 * s)), '#fff', 'left', eo((l - 0.08) * 3)); text(T('Every week.'), tx, H * 0.34 + 7 * s, font(800, Math.round(6.6 * s)), '#2DD4BF', 'left', eo((l - 0.18) * 3));
+        ['MIDDLE EAST', 'AFRICA', 'EUROPE', 'ASIA'].forEach((r, n) => { const a = back((l - 0.4 - n * 0.08) * 4); if (a <= 0) return; tag(T(r), tx + (n % 2) * 16 * s + 7 * s, H * 0.62 + Math.floor(n / 2) * 4.2 * s, '#0F9F8F', '#3FD8C2', '#fff', a, s); }); },
     ];
     const draw = (tt: number) => { const t = ((tt % TOTAL) + TOTAL) % TOTAL; let i = 0; while (i < DUR.length - 1 && t >= START[i] + DUR[i]) i++; const l = (t - START[i]) / DUR[i];
       x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, W, H);
@@ -113,11 +119,11 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
   useEffect(() => { wrap.current?.dispatchEvent(new CustomEvent('se:reelhold', { detail: hold })); }, [hold]);
   const c = CTA[scene];
   return (
-    <div className="reel" ref={wrap} onPointerEnter={() => setHold(true)} onPointerLeave={() => setHold(false)}>
+    <div className="reel" ref={wrap}>
       <canvas ref={cv} aria-hidden="true" />
       <button type="button" className={'reel-cta' + (scene === 3 ? ' dark' : '')} key={scene} onClick={c.go}>{T(c.t)}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button>
       <span className="reel-bar" aria-hidden="true">{DUR.map((d, i) => <i key={i} className={i === scene ? 'on' : i < scene ? 'done' : ''} style={{ ['--d' as string]: d + 's' } as React.CSSProperties} />)}</span>
-      <span className="sr-only">{T('Shop commercial: screens, the four grades, battery week, trade prices, in stock in Deira.')}</span>
+      <span className="sr-only">{T('Shop commercial: screens, every grade, battery week, trade prices, worldwide shipping.')}</span>
     </div>
   );
 }
