@@ -354,3 +354,4 @@ html[data-theme="dark"] .ak-rep { background: #2B2D31; border-color: rgba(255,25
 .ak-go:hover { text-decoration: none; opacity: .85; }
 .ak-hello .ak-codebtn { padding: 7px 14px; border: 1px solid rgba(255,255,255,.12) !important; border-radius: 999px; background: transparent; color: #A9ADB2 !important; }
 @media (max-width: 620px) { .ak-seg2 button span { display: none; } .ak-seg2 button { padding: 0 10px; } }
+.ak-tsel select { -webkit-appearance: none !important; -moz-appearance: none !important; appearance: none !important; background-image: none !important; padding: 0 2px 0 0 !important; height: auto !important; border: 0 !important; box-shadow: none !important; }
