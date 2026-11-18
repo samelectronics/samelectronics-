@@ -230,3 +230,10 @@ html[dir='rtl'] .ln-paper { transform-origin: 30% 100%; }
 .ct-note { width: 100%; box-sizing: border-box; resize: vertical; min-height: 54px; padding: 10px 12px; border: 0; border-radius: 12px; background: #F4F5F6; box-shadow: inset 0 0 0 1px #E2E4E7; font: 400 14px Inter, sans-serif; color: #26282B; }
 .ct-note:focus { outline: 0; box-shadow: inset 0 0 0 2px #F7C032; }
 .ct-acts .wc-btn:not(.go) { background: #F4F5F6; color: #26282B; border: 0; cursor: pointer; }
+/* phone + small tablet: the chooser stacks (Samsoom strip on top, the full list under it); the desktop two-column rule above was leaking to phones */
+@media (max-width: 680px) {
+  .st-veil-lang .st-lang2 { grid-template-columns: min(360px, calc(100vw - 28px)) !important; grid-template-rows: auto minmax(0, 1fr) !important; height: min(600px, calc(100dvh - 28px)) !important; }
+  .st-veil-lang .st-l2-sam { flex-direction: row !important; justify-content: center !important; gap: 12px !important; padding: 14px 16px !important; min-height: 0; }
+  .st-veil-lang .st-l2-av { transform: scale(.62); transform-origin: center; margin: -26px -20px; }
+  .st-veil-lang .st-l2-bubble { font-size: 17px !important; max-width: 200px; }
+}
