@@ -36,7 +36,7 @@ class Component extends DCLogic {
     if (this.alt > 2 && this.alt % 5 === 4 && (this.yells || 0) < 2) { this.yells = (this.yells || 0) + 1; this.alt++;
       this.setState({ open: false }); this.sch.play('celebrate'); this.hint(5, true);
       import('@/lib/sound').then((m) => m.play('tada')).catch(() => {}); import('@/lib/voice').then((v) => v.babble && v.babble('Da daaaaa!')).catch(() => {});
-      this.later(2200, () => { this.sch.play('wave'); this.hint(6, true); import('@/lib/voice').then((v) => v.babble && v.babble('Hey you!')).catch(() => {}); });
+      this.later(2200, () => { this.sch.play('wave'); this.hint(6, true); });
       this.later(5200, () => this.setState({ open: false })); this.later(9000, () => this.cycle()); return; }
     const sub = 1 + (this.alt++ % 4);
     this.setState({ open: false });

@@ -74,7 +74,10 @@ export default function SiteControls() {
     // every click gives its own quiet sound (buttons and links; the element can name one with data-sound)
     const click = (e: MouseEvent) => { const el = (e.target as Element | null)?.closest?.('button, a, [role="button"], [role="tab"], [role="option"]') as HTMLElement | null; if (!el || el.closest('[data-no-sound]')) return; const s = (el.closest('[data-sound]') as HTMLElement | null)?.dataset.sound as Snd | undefined;
       // owner (16 Nov): one family, each function its own touch
-      const auto: Snd = el.closest('.nb, [aria-label*="otification"]') ? 'bell' : el.closest('[data-tour="cart"]') ? 'cart' : el.closest('[data-tour="menu"], .se-lm-btn') ? 'menu' : el.getAttribute('role') === 'tab' ? 'tab' : el.tagName === 'A' ? 'link' : 'click';
+      const lbl = ((el.getAttribute('aria-label') || '') + ' ' + (el.getAttribute('title') || '') + ' ' + el.className.toString() + ' ' + (el.dataset.en || '')).toLowerCase(), txt = (el.textContent || '').trim();
+      // owner (18 Nov): closing has its own tone (a soft falling pair), not the same click as opening
+      const isClose = /(^|[\s_-])(close|dismiss|cancel|x-btn|xbtn|sn-x|cls)([\s_-]|$)|\bclose\b|إغلاق/.test(lbl) || /^[×✕✖]$/.test(txt) || !!el.closest('[data-close]');
+      const auto: Snd = isClose ? 'close' : el.closest('.nb, [aria-label*="otification"]') ? 'bell' : el.closest('[data-tour="cart"]') ? 'cart' : el.closest('[data-tour="menu"], .se-lm-btn') ? 'menu' : el.getAttribute('role') === 'tab' ? 'tab' : el.tagName === 'A' ? 'link' : 'click';
       play(s || auto); };
     // R11b: every WhatsApp message a visitor starts from the website is also saved in the Control Room inbox (topic
     // "WhatsApp"), with the page it came from, so the team keeps each customer's requests and history in one place
@@ -83,7 +86,8 @@ export default function SiteControls() {
     document.addEventListener('click', waLog, true);
     // R12: messages opened from code (cart orders, forms) are laid out too, and the signed-in customer is named in them
     const W = window as unknown as { __seWaOpen?: boolean }; if (!W.__seWaOpen) { W.__seWaOpen = true; const op = window.open.bind(window); window.open = ((url?: string | URL, ...rest: unknown[]) => op(typeof url === 'string' && !location.pathname.startsWith('/staff') ? formatWaUrl(url) : url, ...(rest as [string?, string?]))) as typeof window.open; }
-    import('@/lib/backend').then(async ({ backend }) => { const me = await backend.me().catch(() => null); setWaCustomer(me ? { name: me.name, email: me.email, phone: (me as { phone?: string }).phone } : null); }).catch(() => {});
+    let signed = false; try { signed = Object.keys(localStorage).some((k) => /^sb-.*-auth-token$/.test(k)) || /"session":"[^"]/.test(localStorage.getItem('se-db') || ''); } catch { /* */ }
+    if (signed) import('@/lib/backend').then(async ({ backend }) => { const me = await backend.me().catch(() => null); setWaCustomer(me ? { name: me.name, email: me.email, phone: (me as { phone?: string }).phone } : null); }).catch(() => {});
     const cart = () => play('add');
     const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setPanel(false); }; document.addEventListener('keydown', esc);
     window.addEventListener('se:prefs', onP); window.addEventListener('se:settings', onOpen); window.addEventListener('se:lang', onLang); document.addEventListener('click', click, true); window.addEventListener('se:cart', cart);

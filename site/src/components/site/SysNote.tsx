@@ -8,7 +8,7 @@ import LiveSam from '@/components/samsoom/LiveSam';
 
 export type Tone = 'info' | 'ok' | 'warn' | 'stop';
 type Act = { label: string; href?: string; on?: () => void; primary?: boolean };
-export type SysNoteProps = { tone: Tone; kicker: string; title: string; text?: string; acts?: Act[]; onClose: () => void; ms?: number; icon?: 'wifi' | 'wifi-off' | 'wifi-slow'; sam?: { badge: 'whistle' | 'copy'; mood: string }; role?: 'status' | 'alert' };
+export type SysNoteProps = { tone: Tone; kicker: string; title: string; text?: string; acts?: Act[]; onClose: () => void; ms?: number; icon?: 'wifi' | 'wifi-off' | 'wifi-slow'; sam?: { mood: string; badge?: string }; role?: 'status' | 'alert' };
 
 const WIFI = (k: 'wifi' | 'wifi-off' | 'wifi-slow') => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -27,11 +27,11 @@ export default function SysNote({ tone, kicker, title, text, acts = [], onClose,
   return (
     <div className={'sn sn-' + tone + (out ? ' out' : '')} role={role} aria-live={role === 'alert' ? 'assertive' : 'polite'}>
       <span className={'sn-tile' + (sam ? ' sam' : '')} aria-hidden="true">
-        {sam ? <LiveSam size={40} mood="idle" play={sam.mood} /> : icon ? WIFI(icon) : null}
-        {sam ? <i className={'sn-badge ' + sam.badge}>{sam.badge === 'copy' ? '©' : <svg viewBox="0 0 40 24" width="18" height="11"><path d="M2 10h16a9 9 0 1 1 0 6H2z" fill="#fff" /><circle cx="25" cy="13" r="3.2" fill="#E5484D" /></svg>}</i> : null}
+        {/* owner (18 Nov): Samsoom acts it out (a tiny whistle and a stop hand for VPN, a finger-wag for copyright); connection notices keep a plain wifi icon */}
+        {sam ? <LiveSam size={86} pose={sam.mood} /> : icon ? WIFI(icon) : null}
       </span>
       <span className="sn-body">
-        <small className="sn-k"><i className="sn-dot" />{kicker}</small>
+        <small className="sn-k"><img src="/assets/se-logo-128.webp" alt="" width="14" height="14" />{kicker}</small>
         <b className="sn-h">{title}</b>
         {text ? <span className="sn-p">{text}</span> : null}
         {acts.length ? (

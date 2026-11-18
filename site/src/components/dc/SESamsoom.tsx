@@ -52,7 +52,7 @@ function render(v: Vals) {
               {'\n        '}
               <div
                 style={cssToObj(
-                  `position:absolute;left:${s(v.armLx)}px;top:136px;width:20px;height:60px;transform-origin:16px 4px;--a:${s(v.armLa)}deg;transform:rotate(${s(v.armLa)}deg);animation:${s(v.armLanim)};transition:transform .6s cubic-bezier(.2,.8,.2,1)`,
+                  `position:absolute;left:${s(v.armLx)}px;top:136px;width:20px;height:60px;transform-origin:16px 4px;--a:${s(v.armLa)}deg;transform:rotate(${s(v.armLa)}deg);animation:${s(v.armLanim)};transition:transform .6s cubic-bezier(.2,.8,.2,1);z-index:${s(v.armZ)}`,
                 )}
               >
                 {'\n          '}
@@ -71,9 +71,9 @@ function render(v: Vals) {
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 24 26"
-                  width="22"
-                  height="24"
-                  style={{ position: 'absolute', left: '-2.2px', top: '46.6px', overflow: 'visible', transform: 'rotate(33.7deg)', transformOrigin: '11px 0', /* owner (15 Nov): the connector sits ON the cable end, along its direction */ filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
+                  width="13.6"
+                  height="14.9"
+                  style={{ position: 'absolute', left: '1.98px', top: '46.6px', overflow: 'visible', transform: 'rotate(33.7deg)', transformOrigin: '6.82px 0', /* owner (15 Nov): the connector sits ON the cable end, along its direction */ filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
                 >
                   {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
                   <defs>
@@ -81,21 +81,20 @@ function render(v: Vals) {
                     <linearGradient id="samHandL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
                   <g>
-                    {/* owner (15 Nov): the cable ends in a machined connector that gives off electricity: three smooth current arcs with light travelling along them */}
-                    <rect x="8.6" y="0" width="6.8" height="6" rx="1.8" fill="url(#samHandF)" stroke="#26282B" strokeWidth=".9" />
-                    <rect x="9.3" y=".7" width="5.4" height="1.1" rx=".55" fill="rgba(255,255,255,.3)" />
-                    <rect x="8.6" y="5.6" width="6.8" height="1.4" rx=".5" fill="#26282B" />
-                    <circle cx="12" cy="8.6" r="3.4" fill="#F7C032" opacity=".28" className="sam-zap-core" />
-                    <circle cx="12" cy="8.4" r="1.3" fill="#FFF4D1" />
-                    <g className="sam-zap" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 8.6c-1.4 2.2-3.6 3-4.4 6.2" stroke="#26282B" strokeWidth="1.15" />
-                      <path d="M12 8.6c.2 2.6-.6 4.6.4 8" stroke="#26282B" strokeWidth="1.15" />
-                      <path d="M12 8.6c1.4 2.2 3.6 3 4.4 6.2" stroke="#26282B" strokeWidth="1.15" />
-                      <path d="M12 8.6c-1.4 2.2-3.6 3-4.4 6.2" stroke="#FFF4D1" strokeWidth=".9" pathLength="10" strokeDasharray="2.2 7.8" className="sam-zap-run" />
-                      <path d="M12 8.6c.2 2.6-.6 4.6.4 8" stroke="#FFF4D1" strokeWidth=".9" pathLength="10" strokeDasharray="2.2 7.8" className="sam-zap-run b" />
-                      <path d="M12 8.6c1.4 2.2 3.6 3 4.4 6.2" stroke="#FFF4D1" strokeWidth=".9" pathLength="10" strokeDasharray="2.2 7.8" className="sam-zap-run c" />
+                    {/* owner (18 Nov): "give him hands, black like his arms, with five cute fingers": a soft graphite mitten-hand (palm,
+                        four rounded fingers and a thumb) with a thin yellow cuff where it meets the arm */}
+                    <defs><linearGradient id="samGlove" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#4A4E54" /><stop offset=".5" stopColor="#2C2F33" /><stop offset="1" stopColor="#17191B" /></linearGradient></defs>
+                    <rect x="8.4" y="-.6" width="7.2" height="2.6" rx="1.3" fill="#F7C032" stroke="#1F2124" strokeWidth=".6" />
+                    <g fill="url(#samGlove)" stroke="#121315" strokeWidth=".7" strokeLinejoin="round">
+                      <rect x="4.2" y="10.4" width="3.4" height="7.4" rx="1.7" transform="rotate(14 5.9 10.4)" />
+                      <rect x="7.6" y="12" width="3.2" height="8.6" rx="1.6" />
+                      <rect x="10.6" y="12.6" width="3.2" height="9.2" rx="1.6" />
+                      <rect x="13.6" y="12" width="3.2" height="8.4" rx="1.6" />
+                      <rect x="16.6" y="5.2" width="3.4" height="7.6" rx="1.7" transform="rotate(-38 18.3 5.2)" />
+                      <path d="M6.4 3.2h11.2c1.3 0 2.2 1 2.1 2.3l-.6 7.6c-.1 1.6-1.4 2.7-3 2.7H7.9c-1.6 0-2.9-1.1-3-2.7l-.6-7.6c-.1-1.3.8-2.3 2.1-2.3z" />
                     </g>
-                    <circle cx="7.6" cy="14.8" r="1.05" fill="#fff" stroke="#26282B" strokeWidth=".7" /><circle cx="12.4" cy="16.6" r="1.05" fill="#fff" stroke="#26282B" strokeWidth=".7" /><circle cx="16.4" cy="14.8" r="1.05" fill="#fff" stroke="#26282B" strokeWidth=".7" />
+                    <path d="M6.6 4.6h4.6" stroke="rgba(255,255,255,.28)" strokeWidth="1" strokeLinecap="round" />
+                    <path d="M8.6 13.6v4.4M11.7 14.2v5M14.7 13.6v4.4" stroke="rgba(255,255,255,.14)" strokeWidth=".7" strokeLinecap="round" />
                   </g>
                 </svg>
                 {'\n          '}
@@ -133,7 +132,7 @@ function render(v: Vals) {
               {'\n        '}
               <div
                 style={cssToObj(
-                  `position:absolute;left:${s(v.armRx)}px;top:136px;width:20px;height:60px;transform-origin:4px 4px;--a:${s(v.armRa)}deg;transform:rotate(${s(v.armRa)}deg);animation:${s(v.armRanim)};transition:transform .6s cubic-bezier(.2,.8,.2,1)`,
+                  `position:absolute;left:${s(v.armRx)}px;top:136px;width:20px;height:60px;transform-origin:4px 4px;--a:${s(v.armRa)}deg;transform:rotate(${s(v.armRa)}deg);animation:${s(v.armRanim)};transition:transform .6s cubic-bezier(.2,.8,.2,1);z-index:${s(v.armZ)}`,
                 )}
               >
                 {'\n          '}
@@ -152,9 +151,9 @@ function render(v: Vals) {
                 <svg
                   aria-hidden="true"
                   viewBox="0 0 24 26"
-                  width="22"
-                  height="24"
-                  style={{ position: 'absolute', left: '0.2px', top: '46.6px', overflow: 'visible', transform: 'rotate(-33.7deg)', transformOrigin: '11px 0', filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
+                  width="13.6"
+                  height="14.9"
+                  style={{ position: 'absolute', left: '4.38px', top: '46.6px', overflow: 'visible', transform: 'rotate(-33.7deg)', transformOrigin: '6.82px 0', filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
                 >
                   {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
                   <defs>
@@ -162,21 +161,20 @@ function render(v: Vals) {
                     <linearGradient id="samHandR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
                   <g transform="translate(24 0) scale(-1 1)">
-                    {/* owner (15 Nov): the cable ends in a machined connector that gives off electricity: three smooth current arcs with light travelling along them */}
-                    <rect x="8.6" y="0" width="6.8" height="6" rx="1.8" fill="url(#samHandF)" stroke="#26282B" strokeWidth=".9" />
-                    <rect x="9.3" y=".7" width="5.4" height="1.1" rx=".55" fill="rgba(255,255,255,.3)" />
-                    <rect x="8.6" y="5.6" width="6.8" height="1.4" rx=".5" fill="#26282B" />
-                    <circle cx="12" cy="8.6" r="3.4" fill="#F7C032" opacity=".28" className="sam-zap-core" />
-                    <circle cx="12" cy="8.4" r="1.3" fill="#FFF4D1" />
-                    <g className="sam-zap" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 8.6c-1.4 2.2-3.6 3-4.4 6.2" stroke="#26282B" strokeWidth="1.15" />
-                      <path d="M12 8.6c.2 2.6-.6 4.6.4 8" stroke="#26282B" strokeWidth="1.15" />
-                      <path d="M12 8.6c1.4 2.2 3.6 3 4.4 6.2" stroke="#26282B" strokeWidth="1.15" />
-                      <path d="M12 8.6c-1.4 2.2-3.6 3-4.4 6.2" stroke="#FFF4D1" strokeWidth=".9" pathLength="10" strokeDasharray="2.2 7.8" className="sam-zap-run" />
-                      <path d="M12 8.6c.2 2.6-.6 4.6.4 8" stroke="#FFF4D1" strokeWidth=".9" pathLength="10" strokeDasharray="2.2 7.8" className="sam-zap-run b" />
-                      <path d="M12 8.6c1.4 2.2 3.6 3 4.4 6.2" stroke="#FFF4D1" strokeWidth=".9" pathLength="10" strokeDasharray="2.2 7.8" className="sam-zap-run c" />
+                    {/* owner (18 Nov): "give him hands, black like his arms, with five cute fingers": a soft graphite mitten-hand (palm,
+                        four rounded fingers and a thumb) with a thin yellow cuff where it meets the arm */}
+                    <defs><linearGradient id="samGlove" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#4A4E54" /><stop offset=".5" stopColor="#2C2F33" /><stop offset="1" stopColor="#17191B" /></linearGradient></defs>
+                    <rect x="8.4" y="-.6" width="7.2" height="2.6" rx="1.3" fill="#F7C032" stroke="#1F2124" strokeWidth=".6" />
+                    <g fill="url(#samGlove)" stroke="#121315" strokeWidth=".7" strokeLinejoin="round">
+                      <rect x="4.2" y="10.4" width="3.4" height="7.4" rx="1.7" transform="rotate(14 5.9 10.4)" />
+                      <rect x="7.6" y="12" width="3.2" height="8.6" rx="1.6" />
+                      <rect x="10.6" y="12.6" width="3.2" height="9.2" rx="1.6" />
+                      <rect x="13.6" y="12" width="3.2" height="8.4" rx="1.6" />
+                      <rect x="16.6" y="5.2" width="3.4" height="7.6" rx="1.7" transform="rotate(-38 18.3 5.2)" />
+                      <path d="M6.4 3.2h11.2c1.3 0 2.2 1 2.1 2.3l-.6 7.6c-.1 1.6-1.4 2.7-3 2.7H7.9c-1.6 0-2.9-1.1-3-2.7l-.6-7.6c-.1-1.3.8-2.3 2.1-2.3z" />
                     </g>
-                    <circle cx="7.6" cy="14.8" r="1.05" fill="#fff" stroke="#26282B" strokeWidth=".7" /><circle cx="12.4" cy="16.6" r="1.05" fill="#fff" stroke="#26282B" strokeWidth=".7" /><circle cx="16.4" cy="14.8" r="1.05" fill="#fff" stroke="#26282B" strokeWidth=".7" />
+                    <path d="M6.6 4.6h4.6" stroke="rgba(255,255,255,.28)" strokeWidth="1" strokeLinecap="round" />
+                    <path d="M8.6 13.6v4.4M11.7 14.2v5M14.7 13.6v4.4" stroke="rgba(255,255,255,.14)" strokeWidth=".7" strokeLinecap="round" />
                   </g>
                 </svg>
                 {'\n          '}
@@ -555,6 +553,7 @@ function render(v: Vals) {
                     {/* owner (15 Nov): always a little blush, cute */}
                     <span aria-hidden="true" style={{ position: 'absolute', left: '11px', top: '93px', width: '16px', height: '8px', borderRadius: '50%', background: 'rgba(255,110,120,.42)', filter: 'blur(2px)', zIndex: 2 }} />
                     <span aria-hidden="true" style={{ position: 'absolute', right: '11px', top: '93px', width: '16px', height: '8px', borderRadius: '50%', background: 'rgba(255,110,120,.42)', filter: 'blur(2px)', zIndex: 2 }} />
+                    {v.kissH ? (<><span aria-hidden="true" style={{ position: 'absolute', left: '6px', top: '88px', width: '24px', height: '12px', borderRadius: '50%', background: 'rgba(255,92,104,.6)', filter: 'blur(2.5px)', zIndex: 2, animation: 'smKissBlush 2.8s ease-in-out infinite' }} /><span aria-hidden="true" style={{ position: 'absolute', right: '6px', top: '88px', width: '24px', height: '12px', borderRadius: '50%', background: 'rgba(255,92,104,.6)', filter: 'blur(2.5px)', zIndex: 2, animation: 'smKissBlush 2.8s ease-in-out infinite' }} /></>) : null}
                     {v.blush ? (
                       <>
                         <span
@@ -612,12 +611,22 @@ function render(v: Vals) {
                             style={
                               v.yawnO
                                 ? { width: '16px', height: '20px', boxSizing: 'border-box', border: '3px solid #26282B', borderRadius: '50%', background: '#5A2E1E', animation: 'smYawn 3s ease-in-out 1 both' }
-                                : { width: '10px', height: '12px', boxSizing: 'border-box', border: '3px solid #26282B', borderRadius: '50%' }
+                                : v.kissH ? { width: '11px', height: '11px', boxSizing: 'border-box', border: '3px solid #26282B', borderRadius: '50%', background: '#E9707A', marginTop: '2px', animation: 'smPucker 2.8s ease-in-out infinite' } : { width: '10px', height: '12px', boxSizing: 'border-box', border: '3px solid #26282B', borderRadius: '50%' }
                             }
                           ></span>
                         </>
                       ) : null}
                       {'\n                '}
+                      {v.flat ? <span style={{ width: '16px', height: '3.5px', borderRadius: '2px', background: '#26282B', marginTop: '6px' }} /> : null}
+                      {v.whistle ? (
+                        <svg aria-hidden="true" width="34" height="20" viewBox="0 0 34 20" style={{ marginTop: '-1px', overflow: 'visible' }}>
+                          <defs><linearGradient id="samWh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".55" stopColor="#B9BDC2" /><stop offset="1" stopColor="#7C8086" /></linearGradient></defs>
+                          <path d="M4 5h12v5H4z" fill="url(#samWh)" stroke="#55585D" strokeWidth=".8" />
+                          <circle cx="21" cy="11" r="7" fill="url(#samWh)" stroke="#55585D" strokeWidth=".8" />
+                          <circle cx="21" cy="11" r="2.4" fill="#55585D" />
+                          <path d="M29 4l3-2M30 9h4M29 14l3 2" stroke="#26282B" strokeWidth="1.6" strokeLinecap="round" style={{ animation: 'smToot .5s ease-in-out infinite alternate' }} />
+                        </svg>
+                      ) : null}
                       {v.mWavy ? (
                         <>
                           <svg width="26" height="10" viewBox="0 0 26 10" fill="none">
@@ -742,6 +751,15 @@ function render(v: Vals) {
                 </>
               ) : null}
               {'\n        '}
+              {v.kissH ? (
+                <>
+                  {[['smKissHL', -1], ['smKissHR', 1]].map(([an, d]) => (
+                    <svg key={an as string} aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" style={{ position: 'absolute', left: '91px', top: '130px', opacity: 0, zIndex: 6, animation: `${an} 2.8s cubic-bezier(.3,.7,.3,1) infinite`, filter: 'drop-shadow(0 2px 3px rgba(229,72,77,.35))' }}>
+                      <path d="M12 21s-7-4.4-9.5-8.6C.7 9.3 2.4 5 6.3 5c2.2 0 3.6 1.3 4.2 2.4h3C14.1 6.3 15.5 5 17.7 5c3.9 0 5.6 4.3 3.8 7.4C19 16.6 12 21 12 21z" fill="#E5484D" />
+                    </svg>
+                  ))}
+                </>
+              ) : null}
               {v.heart ? (
                 <>
                   <svg

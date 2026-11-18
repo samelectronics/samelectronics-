@@ -113,7 +113,7 @@ export default function SamsoomChat({ v }: { v: Vals }) {
     <>
       {v.chat?.open ? (
         <>
-          <aside
+          <aside data-pop=""
             style={{
               position: 'fixed',
               insetInlineEnd: '24px', // R6 Part D: bottom-left in Arabic, with the floating button

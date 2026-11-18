@@ -40,6 +40,7 @@ import '@/styles/studio.css';
 import '@/styles/system.css';
 import '@/styles/sequence.css';
 import '@/styles/phone.css';
+import '@/styles/dark-popups.css';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? 'https://' + process.env.VERCEL_PROJECT_PRODUCTION_URL : 'http://localhost:3000')),

@@ -26,7 +26,7 @@ export default function CartDrawer({ v }: { v: Vals }) {
               }}
             ></div>
             {'\n  '}
-            <aside
+            <aside data-pop=""
               data-drawer=""
               style={{
                 position: 'relative',

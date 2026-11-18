@@ -289,3 +289,17 @@ export async function readPhoto(src: string, ctx: Ctx, extra = ''): Promise<NonN
   if (/\b\d{15}\b/.test(text.replace(/\s/g, ''))) return { t: T('I can see an IMEI number on the photo. Send it to the team on WhatsApp and they will find the exact model.'), act: 'whatsapp', emote: 'think' };
   return { t: T(pick('photo', ['I looked closely but couldn’t read a model on this photo. A screenshot of Settings → About phone works best, or just tell me the model.', 'I can read text on photos, but I couldn’t find a model on this one. Try the label on the box, or type the model, and I’ll take it from there.'])), act: 'whatsapp', emote: 'think' };
 }
+
+/** Owner (18 Nov): tools for Samsoom's modes (search, compare, quote). Reads a question in any site language and returns
+ *  the model, the part and the matching products from the real catalogue (cheapest first, in stock first). */
+export function lookup(q: string): { model: string | null; cat: string | null; grade: string | null; list: Product[] } {
+  const n = canon(typo(N(q.trim())));
+  const m = findModel(n), cat = findCat(n), grade = findGrade(n);
+  let list = products();
+  if (m) list = list.filter((p) => p.model_id === m.id);
+  if (cat) list = list.filter((p) => p.category === cat);
+  if (grade) { const g = list.filter((p) => p.grade === grade); if (g.length) list = g; }
+  if (!m && !cat) list = [];
+  list = [...list].sort((a, b) => (b.stock_qty > 0 ? 1 : 0) - (a.stock_qty > 0 ? 1 : 0) || a.price - b.price);
+  return { model: m ? m.name : null, cat, grade, list };
+}
