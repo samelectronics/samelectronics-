@@ -29,6 +29,7 @@ export default function Switchboard({ c }: { c: Cn }) {
   return (
     <div className="sb" data-rise>
       <div className="sb-top"><span className="mono">{T('SWITCHBOARD')}</span><span className="sb-clock mono">DXB {clock}</span><span className={'sb-main' + (open ? ' on' : '')}><i />{open ? T('Shop open') : T('Shop closed')}</span></div>
+      <a className="sb-cmp" href="/complaints"><span><b>{T('Not happy with something?')}</b><small>{T('File a complaint: every case gets a number and goes to the management team.')}</small></span><em>{T('File a complaint')}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></em></a>
       <div className="sb-grid">
         {lines.map((l) => (
           <a key={l.k} className={'sb-l k-' + l.k + (l.on ? ' on' : '')} href={l.href} {...(l.ext ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
