@@ -33,6 +33,7 @@ import '@/styles/pages.css';
 import '@/styles/cine.css';
 import '@/styles/store.css';
 import '@/styles/shop.css';
+import '@/styles/tags.css';
 import '@/styles/account.css';
 import '@/styles/info.css';
 import '@/styles/staff-door.css';

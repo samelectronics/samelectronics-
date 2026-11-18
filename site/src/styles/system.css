@@ -865,3 +865,7 @@ html[data-theme="dark"] .sn-h { color: #fff !important; } html[data-theme="dark"
 html[data-theme="dark"] .sn-b:not(.y) { background: rgba(255,255,255,.07) !important; border-color: rgba(255,255,255,.1) !important; color: #fff !important; }
 @media (max-width: 760px) { .sn { top: 74px !important; padding: 14px 42px 14px 12px !important; gap: 12px !important; } .sn-tile.sam { width: 78px !important; min-height: 96px !important; } .sn-h { font-size: 16px !important; } .sn-acts .sn-b { flex: 1 1 auto; justify-content: center; } }
 @media (prefers-reduced-motion: reduce) { .sn, .sn.serious { animation: none !important; } .sn-haz { animation: none; } }
+/* owner (18 Nov): "I can't scroll the product unless I grab the scrollbar". The page fade-in kept a transform on <main>
+   after it ended (fill: both), which turns every position:fixed layer inside the page (product view, sheets) into a box
+   as tall as the page, so it never scrolled and the scroll lock cancelled the wheel. The fade now leaves nothing behind. */
+main, body > div > main { animation: sePageIn .5s cubic-bezier(.2,.8,.2,1) backwards !important; }

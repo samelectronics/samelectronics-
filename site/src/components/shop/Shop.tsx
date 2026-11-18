@@ -19,6 +19,8 @@ import Customize, { type View } from './Customize';
 import Banners from './Banners';
 import InlineAd from './InlineAd';
 import ShopIntro from './ShopIntro';
+import CompareView from './CompareView';
+import { GradeTag } from './Tags';
 import DevicePicker from './DevicePicker';
 
 const LIST_KEYS = ['brands', 'models', 'cats', 'parts', 'grades', 'makers', 'qualities', 'warranty', 'device', 'colours'] as const;
@@ -227,29 +229,12 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
       {cmp.length ? (
         <div className="cmp-tray">
           <span className="cmp-l"><b>{T('Compare')}</b><small>{cmp.length < 2 ? T('Pick another part to compare') : cmp.length + ' / 3'}</small></span>
-          <span className="cmp-items">{cmp.map((p) => <span key={p.id} className="cmp-it"><img src={p.img} alt="" /><small>{p.title}</small><button type="button" onClick={() => store.cmp(p.id)} aria-label={T('Remove')}>×</button></span>)}</span>
+          <span className="cmp-items">{cmp.map((p) => <span key={p.id} className="cmp-it"><img src={p.img} alt="" /><span className="cmp-it-t"><small>{p.title}</small><GradeTag g={p.grade} name={p.gradeName} size="sm" /></span><button type="button" onClick={() => store.cmp(p.id)} aria-label={T('Remove')}>×</button></span>)}</span>
           <button type="button" className="sp-btn sm" disabled={cmp.length < 2} onClick={() => { close(); setCmpOpen(true); }}>{T('Compare now')}</button>
           <button type="button" className="cmp-clr" onClick={() => cmp.forEach((p) => store.cmp(p.id))}>{T('Clear')}</button>
         </div>
       ) : null}
-      {cmpOpen && cmp.length ? (
-        <>
-          <div className="sp-veil" onClick={() => setCmpOpen(false)} />
-          <div className="sp-modal cmp-m">
-            <button type="button" className="sp-x" onClick={() => setCmpOpen(false)} aria-label={T('Close')}>×</button>
-            <div className="cmp-hd"><h3 className="sp-h3">{T('Side by side')}</h3>
-              <label className="sf-tg cmp-diff"><input type="checkbox" checked={diffOnly} onChange={(e) => setDiffOnly(e.target.checked)} /><i /><span>{T('Only differences')}</span></label></div>
-            {/* owner: a better compare: the best value in each row is marked, rows that are all the same can be hidden,
-                and any part can be taken out right here */}
-            <div className="cmp-scroll"><table className="sp-table cmp-t"><tbody>
-              <tr className="cmp-top"><th /> {cmp.map((p) => <td key={p.id}><button type="button" className="cmp-rm" onClick={() => store.cmp(p.id)} aria-label={T('Remove')}>×</button><img src={p.img} alt="" /><b>{p.title}</b><small>{p.brandName}</small></td>)}</tr>
-              {(CMP_ROWS.filter(([, fn]) => !diffOnly || new Set(cmp.map((p) => fn(p))).size > 1)).map(([k, fn, score]) => { const sc = score ? cmp.map((p) => score(p)) : null, top = sc ? Math.max(...sc) : null, win = sc && new Set(sc).size > 1;
-                return <tr key={k}><th>{T(k)}</th>{cmp.map((p, j) => <td key={p.id} className={win && sc![j] === top ? 'best' : ''}>{T(fn(p))}{win && sc![j] === top ? <em className="cmp-best">{T('Best')}</em> : null}</td>)}</tr>; })}
-              <tr><th /> {cmp.map((p) => <td key={p.id}><button type="button" className="sp-btn sm" onClick={(e) => { window.dispatchEvent(new CustomEvent('se:cart', { detail: { id: p.id, clientX: e.clientX, clientY: e.clientY } })); }}>{T('Add to cart')}</button><button type="button" className="cmp-view" onClick={() => { setCmpOpen(false); open(p); }}>{T('View details')}</button></td>)}</tr>
-            </tbody></table></div>
-          </div>
-        </>
-      ) : null}
+      {cmpOpen && cmp.length ? <CompareView items={cmp} onClose={() => setCmpOpen(false)} onOpen={(p) => open(p)} /> : null}
 
       <Customize open={cz} f={f} view={view} onClose={() => setCz(false)} onApply={(nf, nv) => { setF(nf); setView(nv); setCz(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />
       <ProductView id={pid} me={me} onClose={close} onOpen={open} />

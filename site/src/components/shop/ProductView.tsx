@@ -9,11 +9,14 @@ import PriceTag from './PriceTag';
 import { buyable } from '@/lib/catalog';
 import { siteRaw as _sr } from '@/lib/catalog';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { openContact } from '@/components/site/WeChatSheet';
 import { type Product, aed, alsoFor, byId, data, grades, similar, waLink, waCard, fmt, VAT } from '@/lib/catalog';
 import { store, useStore } from '@/lib/store';
 import { backend, type Review, type User } from '@/lib/backend';
 import { useScrollLock } from '@/lib/scrollLock';
+import { GradeTag, MakerTag, DealTag, BestTag, NewTag } from './Tags';
+import SEBrandLogo from '@/components/dc/SEBrandLogo';
 import { Stars, T, flyToCart } from '@/components/site/ui';
 import ProductCard, { stockLabel } from './ProductCard';
 
@@ -22,6 +25,12 @@ const GRADE_INFO: Record<string, [string, string]> = {
   OL: ['OLED Soft', 'A flexible OLED panel made to the original spec: deep blacks and true colors, close to original at a lower price.'],
   IN: ['Incell', 'An LCD with the touch layer built in. Bright and reliable for everyday use, at a budget price.'],
   AQ: ['AAA', 'A good, tested aftermarket part for the best price. Ideal when cost matters most.'],
+  CO: ['Compatible', 'Made by a third party to fit and work like the original. A sensible middle ground.'],
+  ST: ['Standard', 'Everyday quality at a fair price, tested on our bench before it ships.'],
+  AA: ['AA', 'A good copy, one step under AAA. The budget choice for older phones.'],
+  OB: ['OLED Big', 'A full-size OLED panel: deep blacks and the original look, edge to edge.'],
+  OS: ['OLED Small', 'A compact OLED panel with original colours, at a lower price than OLED Big.'],
+  OT: ['Other', 'Other qualities we can source on request. Ask the team on WhatsApp.'],
 };
 const TABS = ['Description', 'Specifications', 'Manufacturer', 'Warranty & quality', 'Reviews'] as const;
 
@@ -34,7 +43,7 @@ function Countdown({ to }: { to: number }) {
 
 const PV_D: Record<string, string> = {
   star: 'M12 3.5l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8z',
-  cmp: 'M7 4v13M7 17l-3-3M7 17l3-3M17 20V7M17 7l-3 3M17 7l3 3',
+  cmp: 'M2.5 4h6.5v16H2.5zM15 4h6.5v16H15zM10.6 9.5h3.2M12.4 8l1.5 1.5-1.5 1.5M13.4 14.5h-3.2M11.6 13l-1.5 1.5 1.5 1.5',
   save: 'M7 3.5h10a1 1 0 0 1 1 1V21l-6-4-6 4V4.5a1 1 0 0 1 1-1z',
   bell: 'M6 9a6 6 0 0 1 12 0c0 6 2.5 7.5 2.5 7.5h-17S6 15 6 9zM10 20a2 2 0 0 0 4 0',
   share: 'M12 15V3.5M7.5 8L12 3.5 16.5 8M5 12.5V19a1.5 1.5 0 0 0 1.5 1.5h11A1.5 1.5 0 0 0 19 19v-6.5',
@@ -83,7 +92,9 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
   const share = async () => { try { if (navigator.share) await navigator.share({ title: p.title, url: link }); else { await navigator.clipboard.writeText(link); setCopied(true); window.setTimeout(() => setCopied(false), 1800); } } catch { /* cancelled */ } };
   const submit = async (e: React.FormEvent) => { e.preventDefault(); const r = await backend.addReview({ product: p.id, ...form }); if (r.ok) { setRv([r.data, ...rv]); setForm({ stars: 5, title: '', text: '' }); setMsg(T('Thank you! Your review is live.')); } else setMsg(T(r.error)); };
 
-  return (
+  // owner (18 Nov): "I can't scroll unless I grab the scrollbar": a parent's transform made this 'fixed' layer as tall as
+  // the shop, so it never scrolled and the wheel was cancelled. It now renders straight into <body>.
+  return createPortal((
     <div className="pv-veil" role="dialog" aria-modal="true" aria-label={p.title} onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="pv" ref={sheet}>
         <div className="pv-bar">
@@ -95,14 +106,15 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
           <div className="pv-gal">
             <div className="pv-stage" onPointerMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); setZoom({ x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100 }); }} onPointerLeave={() => setZoom(null)}>
               <img ref={img} src={shots[shot] || p.img} alt={p.title} style={zoom ? { transform: 'scale(1.9)', transformOrigin: zoom.x + '% ' + zoom.y + '%' } : undefined} />
-              <span className="pc-badges">{p.deal ? <span className="sp-tag r">−{p.deal}%</span> : null}{p.isNew ? <span className="sp-tag y">NEW</span> : null}{p.best ? <span className="sp-tag d">BEST SELLER</span> : null}</span>
+              <span className="pc-badges">{p.deal ? <DealTag pct={p.deal} /> : null}{p.isNew ? <NewTag /> : null}{p.best ? <BestTag /> : null}</span>
+              <span className="pv-brand" aria-hidden="true"><SEBrandLogo brand={p.brand} h={16} fit="84x18" color="#26282B" /></span>
               <span className="pv-zoomhint">{T('Hover to zoom')}</span>
             </div>
             <div className="pv-thumbs">{shots.map((s, i) => <button key={i} type="button" className={shot === i ? 'on' : ''} onClick={() => setShot(i)}><img src={s} alt="" /></button>)}<span className="pv-photo">{T('Real photos of this exact part arrive with the owner’s pictures.')}</span></div>
           </div>
 
           <div className="pv-info">
-            <span className="pv-meta"><span className={'pc-gr g-' + p.grade}>{p.gradeName}</span><a href={'/brands#maker-' + p.manufacturer}>{p.makerName}</a><span className="sp-tag">{p.id}</span></span>
+            <span className="pv-meta"><GradeTag g={p.grade} name={p.gradeName} /><a href={'/brands#maker-' + p.manufacturer} className="pv-mkl"><MakerTag m={p.manufacturer} name={p.makerName} /></a><span className="pv-ref" data-no-i18n="">{p.id}</span></span>
             <h2 className="pv-t">{p.title}</h2>
             <span className="pv-rate"><Stars v={avg} n={nRev} /><button type="button" onClick={() => setTab('Reviews')}>{T('Read reviews')}</button><span className="sp-sample">{rv.length ? '' : 'sample rating'}</span></span>
             {fits ? <span className="pv-fits ok">✓ {T('Fits your')} {fits.nick || fits.name}</span> : model ? <button type="button" className="pv-fits" onClick={() => store.device({ model_id: model.id, name: model.name })}>+ {T('Add')} {model.name} {T('to My devices')}</button> : null}
@@ -118,7 +130,7 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
 
             {sib.length > 1 ? (
               <div className="pv-grades"><small>{T('Choose the grade')}</small>
-                <div>{sib.map((g) => <button key={g.id} type="button" className={'pv-g g-' + g.grade + (g.id === p.id ? ' on' : '')} onClick={() => onOpen(g)}><b>{g.gradeName}</b><small>{g.makerName}</small><span>{aed(g.price, false)}</span></button>)}</div>
+                <div>{sib.map((g) => <button key={g.id} type="button" className={'pv-g g-' + g.grade + (g.id === p.id ? ' on' : '')} onClick={() => onOpen(g)}><GradeTag g={g.grade} name={g.gradeName} size="sm" /><small>{g.makerName}</small><span>{aed(g.price, false)}</span></button>)}</div>
               </div>
             ) : null}
 
@@ -225,7 +237,7 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
         {viewed.length ? <section className="pv-more"><div className="sp-head"><div><span className="sp-eb">{T('Recently viewed')}</span></div></div><div className="pv-row">{viewed.map((s) => <ProductCard key={s.id} p={s} st={st} trade={trade} open={onOpen} />)}</div></section> : null}
         <p className="pv-foot sp-sample">{fmt(p.stock_qty)} {T('units (estimate)')} · {T('Prices and stock shown are test data while the shop is set up')}</p>
       </div>
-    </div>
+    </div>), document.body
   );
 }
 

@@ -8,6 +8,9 @@ import React, { useRef } from 'react';
 import { type Product, aed } from '@/lib/catalog';
 import { store, type State } from '@/lib/store';
 import { Stars, flyToCart, T } from '@/components/site/ui';
+import SEBrandLogo from '@/components/dc/SEBrandLogo';
+import { GradeTag, MakerTag, DealTag, BestTag, NewTag } from './Tags';
+import { CompareIcon } from './Icons';
 
 export const stockLabel = (q: number) => (q <= 0 ? ['Out of stock · request it', 'out'] : q < 4 ? ['Only ' + q + ' left (estimate)', 'low'] : q < 15 ? ['In stock (estimate)', 'ok'] : ['Plenty in stock (estimate)', 'ok']);
 
@@ -20,10 +23,12 @@ export default function ProductCard({ p, st, trade, open, list, fits }: { p: Pro
         <span className="pc-stage" />
         {p.img ? <img ref={img} src={p.img} alt="" loading="lazy" decoding="async" /> : null}
         <span className="pc-badges">
-          {p.deal ? <span className="sp-tag r">−{p.deal}%</span> : null}
-          {p.isNew ? <span className="sp-tag y">NEW</span> : null}
-          {p.best ? <span className="sp-tag d">BEST SELLER</span> : null}
+          {p.deal ? <DealTag pct={p.deal} /> : null}
+          {p.isNew ? <NewTag /> : null}
+          {p.best ? <BestTag /> : null}
         </span>
+        {/* owner (18 Nov): room for the brand's logo on every part, so it catches the eye */}
+        <span className="pc-brand" aria-hidden="true"><SEBrandLogo brand={p.brand} h={12} fit="58x14" color="#26282B" /></span>
         <span className="pc-quick">{T('Quick view')}</span>
       </button>
       <div className="pc-side">
@@ -31,11 +36,11 @@ export default function ProductCard({ p, st, trade, open, list, fits }: { p: Pro
           <svg viewBox="0 0 24 24" width="17" height="17"><path d="M12 2l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 16.8 6.1 20.1l1.3-6.6L2.5 8.9l6.6-.8z" fill={fav ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" /></svg>
         </button>
         <button type="button" className={'pc-ic' + (cmp ? ' on' : '')} onClick={() => store.cmp(p.id)} aria-pressed={cmp} title={T('Compare')} aria-label={T('Compare')}>
-          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round"><path d="M8 3v18M16 3v18M3 8h5M16 16h5" /></svg>
+          <CompareIcon />
         </button>
       </div>
       <div className="pc-body">
-        <span className="pc-meta"><span className={'pc-gr g-' + p.grade}>{p.gradeName}</span><span>{p.makerName}</span>{fits ? <span className="pc-fits">✓ {T('Fits your')} {fits}</span> : null}</span>
+        <span className="pc-meta"><GradeTag g={p.grade} name={p.gradeName} size="sm" /><MakerTag m={p.manufacturer || ''} name={p.makerName} size="sm" />{fits ? <span className="pc-fits">✓ {T('Fits your')} {fits}</span> : null}</span>
         <button type="button" className="pc-t" onClick={() => open(p)}>{p.title}</button>
         <span className="pc-sub">{p.brandName} · {p.part_name}</span>
         <span className="pc-rate"><Stars v={p.rating} n={p.reviews} /><span className="sp-sample">sample</span></span>

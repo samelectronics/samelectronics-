@@ -15,6 +15,10 @@
   // every model in the Excel (Find My Part lists them all); `fits` = the "Also fits" groups from the MI / Oppo / Huawei lists
   const models = CAT.models.map(([id, brand, series, name, dev, fits]) => ({ id, brand_id: brand, series: series || '', name, model_numbers: [], device: DEV[dev], fits: fits.map((i) => ({ names: CAT.fits[i][0], ids: CAT.fits[i][1] })) }));
   const partName = Object.fromEntries(CAT.parts), qName = Object.fromEntries(CAT.qualities), mName = Object.fromEntries(CAT.manufacturers);
+  // owner (18 Nov): the manufacturers are Service Pack, OEM, Repaired OLED, GX, ZY, YK, Taiwan and Other (no plain "OLED")
+  mName.repaied = 'Repaired OLED'; mName.anther = 'Other'; qName.ather = 'Other';
+  CAT.manufacturers = CAT.manufacturers.filter(([id]) => id !== 'oled').map(([id, n]) => [id, mName[id] || n]);
+  CAT.qualities = CAT.qualities.map(([id, n]) => [id, qName[id] || n]);
 
   // the home page's part families (reviewer's grouping of the Excel's 30 parts, to be approved by the owner); `part` = the
   // Excel part a SAMPLE product of this family uses
@@ -27,12 +31,14 @@
   // Quality and Manufacturer are two lists (the Excel), never mixed. A product's `grade` key names one SAMPLE combination;
   // which combinations really exist per part comes from the Control Room. Featured until the owner chooses: Original,
   // OLED, Incell, AAA, and Service Pack / GX as manufacturers.
-  const G = { OR: ['original', 'service-pack'], OL: ['oled-soft', 'oled'], IN: ['incell', 'zy'], AQ: ['aaa', 'gx'] };
+  // owner (18 Nov): all ten qualities appear on sample parts (each with a maker from the owner's list)
+  const G = { OR: ['original', 'service-pack'], CO: ['compatible', 'taiwan'], ST: ['standard', 'oem'], AQ: ['aaa', 'gx'], AA: ['aa', 'yk'], OL: ['oled-soft', 'yk'], OB: ['oled-big', 'repaied'], OS: ['oled-small', 'gx'], IN: ['incell', 'zy'], OT: ['ather', 'anther'] };
   const gradeNames = Object.fromEntries(Object.entries(G).map(([k, [q]]) => [k, qName[q] || q]));
   const makerNames = Object.fromEntries(Object.entries(G).map(([k, [, m]]) => [k, mName[m] || m]));
-  const grades = Object.entries(G).map(([code, [q, m]]) => ({ code, name: qName[q], maker: mName[m], desc: { OR: 'The genuine part', OL: 'OLED replacement, deep blacks', IN: 'LCD with built-in touch, budget friendly', AQ: 'High-grade copy, closest to the original' }[code] }));
+  const grades = Object.entries(G).map(([code, [q, m]]) => ({ code, name: qName[q], maker: mName[m], desc: { OR: 'The genuine part', CO: 'Fits and works like the original, made by a third party', ST: 'Everyday quality at a fair price', AQ: 'High-grade copy, closest to the original', AA: 'Good copy, a step under AAA', OL: 'Flexible OLED replacement, deep blacks', OB: 'Full-size OLED panel, original look', OS: 'Compact OLED panel, original colours', IN: 'LCD with built-in touch, budget friendly', OT: 'Other qualities on request' }[code] }));
   const qualities = CAT.qualities.map(([id, name]) => ({ id, name })), manufacturers = CAT.manufacturers.map(([id, name]) => ({ id, name })), colours = CAT.colours.map(([id, name]) => ({ id, name }));
-  const gradeMul = { OR: 1, OL: 0.56, IN: 0.32, AQ: 0.44 };
+  const gradeMul = { OR: 1, CO: 0.5, ST: 0.4, AQ: 0.44, AA: 0.36, OL: 0.56, OB: 0.66, OS: 0.5, IN: 0.32, OT: 0.28 };
+  const partMul = { OR: 1, CO: 0.72, ST: 0.66, AQ: 0.6, AA: 0.52, OT: 0.45 };
   const tierBase = { 1: 170, 2: 340, 3: 560 };
   // SAMPLE offers until the Control Room exists: only models that are in the Excel. [model id, tier 1-3, short code]
   const SAMPLE = [
@@ -46,8 +52,9 @@
   ];
   const sampleModels = SAMPLE.map(([id, tier, code]) => { const m = models.find((x) => x.id === id); if (!m) { console.warn('se-data.js: sample model not in the catalogue: ' + id); return null; } m.tier = tier; m.code = code; return m; }).filter(Boolean);
   const catPlan = (m) => {
-    const scr = m.brand_id === 'apple' || m.brand_id === 'samsung' ? ['OR', 'OL', 'IN'] : ['OR', 'AQ'];
-    const p = [['SCR', scr, 1], ['BAT', ['OR', 'AQ'], 0.2], ['FLX', ['OR', 'AQ'], 0.12], ['BCV', ['OR', 'AQ'], 0.16], ['SML', ['OR'], 0.07]];
+    const big = m.brand_id === 'apple' || m.brand_id === 'samsung';
+    const scr = big ? (m.tier >= 2 ? ['OR', 'OL', 'OB', 'IN', 'AQ'] : ['OR', 'OS', 'IN', 'AA']) : (m.tier >= 2 ? ['OR', 'AQ', 'CO', 'OL'] : ['OR', 'AQ', 'ST', 'OT']);
+    const p = [['SCR', scr, 1], ['BAT', m.tier >= 2 ? ['OR', 'AQ', 'CO'] : ['OR', 'AQ', 'ST'], 0.2], ['FLX', ['OR', 'AQ', 'AA'], 0.12], ['BCV', ['OR', 'AQ', 'CO'], 0.16], ['SML', ['OR', 'OT'], 0.07]];
     if (m.tier >= 2) p.push(['CAM', ['OR'], 0.34], ['FRM', ['AQ'], 0.22]);
     return p;
   };
@@ -55,7 +62,7 @@
   const products = [];
   sampleModels.forEach((m) => catPlan(m).forEach(([cat, gs, mul]) => gs.forEach((g) => {
     const id = `SE-${m.code}-${cat}-${g}`, h = hash(id), c = categories.find((x) => x.id === cat);
-    const retail = Math.round((tierBase[m.tier] * mul * (cat === 'SCR' ? gradeMul[g] : g === 'AQ' ? 0.6 : 1)) / 5) * 5 + 15;
+    const retail = Math.round((tierBase[m.tier] * mul * (cat === 'SCR' ? gradeMul[g] : partMul[g] || 0.6)) / 5) * 5 + 15;
     const r = h % 20, stock = r < 2 ? 0 : r < 5 ? 1 + (h % 3) : 6 + (h % 40);
     const badges = [];
     if (h % 11 === 0) badges.push('New arrival');

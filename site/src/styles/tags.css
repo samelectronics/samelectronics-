@@ -1,0 +1,40 @@
+/* Owner (18 Nov): bold, techy, modern tags with their own shiny colours (see src/components/shop/Tags.tsx).
+   Chamfered chips (cut corners like the teardown HUD), mono caps, a highlight on top, and one light sweep that passes
+   every tag on the page at the same moment (so it never looks random). */
+.tg { --c1: #3A3D42; --c2: #6B6F75; --ink: #fff; position: relative; display: inline-flex; align-items: center; gap: 6px; height: 22px; padding: 0 9px 0 7px; box-sizing: border-box; font: 700 10.5px/1 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .07em; text-transform: uppercase; white-space: nowrap; color: var(--ink); clip-path: polygon(6px 0, 100% 0, 100% calc(100% - 6px), calc(100% - 6px) 100%, 0 100%, 0 6px); overflow: hidden; vertical-align: middle; isolation: isolate; }
+.tg b { position: relative; z-index: 1; font-weight: 700; }
+.tg.sm { height: 19px; font-size: 9.5px; padding: 0 7px 0 6px; gap: 5px; clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px); }
+.tg.lg { height: 28px; font-size: 12px; padding: 0 12px 0 9px; gap: 8px; clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px); }
+/* grades: filled with their own gradient */
+.tg-g { background: linear-gradient(135deg, var(--c1), var(--c2)); box-shadow: inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.18); text-shadow: 0 1px 0 rgba(0,0,0,.18); }
+.tg-g::after, .tg-x::after { content: ''; position: absolute; inset: 0; z-index: 0; background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,.55) 46%, transparent 62%); transform: translateX(-120%); animation: tgSweep 4.8s cubic-bezier(.5,0,.3,1) infinite; animation-delay: calc(var(--tg-sync, 0s)); }
+@keyframes tgSweep { 0%, 62% { transform: translateX(-120%); } 82%, 100% { transform: translateX(120%); } }
+.tg-bar { position: relative; z-index: 1; width: 3px; height: 10px; border-radius: 1px; background: currentColor; opacity: .85; box-shadow: 0 0 6px currentColor; }
+.tg.sm .tg-bar { height: 8px; width: 2.5px; } .tg.lg .tg-bar { height: 13px; width: 3.5px; }
+.g4-OR { --c1: #F7C032; --c2: #FFE38E; --ink: #26282B; text-shadow: none; }
+.g4-CO { --c1: #0F9F8F; --c2: #3FD8C2; }
+.g4-ST { --c1: #556274; --c2: #8C9AAE; }
+.g4-AQ { --c1: #6D28D9; --c2: #A78BFA; }
+.g4-AA { --c1: #4338CA; --c2: #818CF8; }
+.g4-OL { --c1: #C0267A; --c2: #F472B6; }
+.g4-OB { --c1: #D21F4B; --c2: #FB7185; }
+.g4-OS { --c1: #E0570F; --c2: #FB9A54; }
+.g4-IN { --c1: #1D5FE0; --c2: #60A5FA; }
+.g4-OT { --c1: #3A3D42; --c2: #74787F; }
+/* makers: graphite chip, a glowing LED in the maker's colour */
+.tg-m { --led: #A9ADB2; background: linear-gradient(180deg, #34373C, #26282B); color: #fff; box-shadow: inset 0 1px 0 rgba(255,255,255,.08), inset 0 0 0 1px rgba(255,255,255,.06); }
+.tg-led { width: 7px; height: 7px; border-radius: 50%; background: var(--led); box-shadow: 0 0 0 2px rgba(255,255,255,.06), 0 0 8px var(--led); flex: none; }
+.tg.sm .tg-led { width: 6px; height: 6px; }
+.m4-sp { --led: #22C55E; } .m4-oem { --led: #38BDF8; } .m4-ro { --led: #F472B6; } .m4-gx { --led: #F43F5E; } .m4-zy { --led: #2DD4BF; } .m4-yk { --led: #A3E635; } .m4-tw { --led: #A78BFA; } .m4-ot { --led: #A9ADB2; }
+/* offers */
+.tg-x { gap: 5px; box-shadow: inset 0 1px 0 rgba(255,255,255,.4); }
+.tg-x.deal { background: linear-gradient(135deg, #FF3B5C, #FF7A59); color: #fff; }
+.tg-x.best { background: linear-gradient(135deg, #F7C032, #FFE38E); color: #26282B; }
+.tg-x.best svg { color: #E5532E; }
+.tg-x.new { background: linear-gradient(135deg, #0EA5E9, #6366F1); color: #fff; }
+.tg-x svg, .tg-ping { position: relative; z-index: 1; }
+.tg-ping { width: 6px; height: 6px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 0 rgba(255,255,255,.7); animation: tgPing 1.6s ease-out infinite; }
+@keyframes tgPing { 70%, 100% { box-shadow: 0 0 0 6px rgba(255,255,255,0); } }
+.tg-row { display: inline-flex; flex-wrap: wrap; gap: 5px; align-items: center; }
+@media (prefers-reduced-motion: reduce) { .tg-g::after, .tg-x::after, .tg-ping { animation: none; } }
+.tg b, .tg small { font: inherit !important; letter-spacing: inherit !important; color: inherit !important; margin: 0 !important; }
