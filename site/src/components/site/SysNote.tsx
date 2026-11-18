@@ -26,25 +26,25 @@ export default function SysNote({ tone, kicker, title, text, acts = [], onClose,
   const close = () => { setOut(true); window.setTimeout(onClose, 220); };
   useEffect(() => { if (!ms) return; const t = window.setTimeout(close, ms); return () => window.clearTimeout(t); }, [ms]);
   useEffect(() => { const k = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); }; window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k); }, []);
-  return (
-    <div className={'sn sn-' + tone + (sam ? ' has-sam' : '') + (tone === 'stop' || tone === 'warn' ? ' serious' : '') + (out ? ' out' : '')} role={role} aria-live={role === 'alert' ? 'assertive' : 'polite'}>
-      <span className={'sn-tile' + (sam ? ' sam' : '')} aria-hidden="true">
-        {/* owner (18 Nov): Samsoom acts it out (a tiny whistle and a stop hand for VPN, a finger-wag for copyright); connection notices keep a plain wifi icon */}
-        {sam ? <span className="sn-sam"><LiveSam size={64} pose={sam.mood} /></span> : icon ? WIFI(icon) : null}
-      </span>
-      <span className="sn-body">
-        <small className="sn-k"><img src="/assets/se-logo-128.webp" alt="" width="14" height="14" />{kicker}</small>
-        <b className="sn-h">{title}</b>
-        {text ? <span className="sn-p">{text}</span> : null}
-        {acts.length ? (
-          <span className="sn-acts">
-            {acts.map((a) => (a.href ? <a key={a.label} className={'sn-b' + (a.primary ? ' y' : '')} href={a.href} onClick={() => a.on?.()}>{a.label}</a> : <button key={a.label} type="button" className={'sn-b' + (a.primary ? ' y' : '')} onClick={() => { a.on?.(); close(); }}>{a.label}</button>))}
-          </span>
-        ) : null}
-      </span>
-      <button type="button" className="sn-x" aria-label="Close" onClick={close}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
-      <i className="sn-haz" aria-hidden="true" />
-      {ms ? <em className="sn-t" style={{ animationDuration: ms + 'ms' }} aria-hidden="true" /> : null}
+  // owner (18 Nov, round 2): "look how simple and nice the Samsoom tutorial is". Every system notice is now that card:
+  // Samsoom in his yellow circle sitting on top, one clear title, one line, the buttons. No kicker label, no tiny logo,
+  // no hazard stripe. Serious notices (copyright, VPN) sit in the middle over a soft veil; connection notices float
+  // at the bottom without blocking the page.
+  const serious = tone === 'stop' || tone === 'warn';
+  const pose = sam?.mood || (icon === 'wifi-off' ? 'sad' : icon === 'wifi-slow' ? 'think' : tone === 'ok' ? 'happy' : 'idle');
+  const card = (
+    <div className={'sn2 sn2-' + tone + (out ? ' out' : '')} role={role} aria-live={role === 'alert' ? 'assertive' : 'polite'} aria-label={kicker}>
+      <span className="sn2-sam" aria-hidden="true"><LiveSam size={92} pose={pose} />{icon ? <i className={'sn2-badge ' + icon}>{WIFI(icon)}</i> : null}</span>
+      <b className="sn2-h">{title}</b>
+      {text ? <p className="sn2-p">{text}</p> : null}
+      {acts.length ? (
+        <span className="sn2-acts">
+          {acts.map((a) => (a.href ? <a key={a.label} className={'sn2-b' + (a.primary ? ' y' : '')} href={a.href} onClick={() => a.on?.()}>{a.label}</a> : <button key={a.label} type="button" className={'sn2-b' + (a.primary ? ' y' : '')} onClick={() => { a.on?.(); close(); }}>{a.label}</button>))}
+        </span>
+      ) : null}
+      <button type="button" className="sn2-x" aria-label="Close" onClick={close}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
+      {ms ? <em className="sn2-t" style={{ animationDuration: ms + 'ms' }} aria-hidden="true" /> : null}
     </div>
   );
+  return serious ? <div className={'sn2-veil' + (out ? ' out' : '')} onClick={(e) => { if (e.target === e.currentTarget) close(); }}>{card}</div> : <div className="sn2-dock">{card}</div>;
 }

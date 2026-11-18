@@ -5,6 +5,7 @@
 import React, { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Medal from './Medal';
+import LiveSam from '@/components/samsoom/LiveSam';
 import { MEDALS, unlock, visitMedal } from '@/lib/achievements';
 import { T } from '@/components/site/ui';
 import { play } from '@/lib/sound';
@@ -25,11 +26,16 @@ export default function MedalWatch() {
   }, []);
   const m = show ? MEDALS.find((x) => x.id === show) : null;
   if (!m || path?.startsWith('/staff')) return null;
+  // owner (18 Nov, round 2): notices are the Samsoom card (no tiny kicker labels): Samsoom celebrating in his circle,
+  // the medal beside its name, one button
   return (
-    <div className="md-toast" role="status" aria-live="polite" key={m.id}>
-      <Medal tier={m.tier} size={52} group={m.id === 'teardown' ? 'teardown' : m.group} />
-      <span><small>{T('Medal earned')} · {T(m.tier === 'gold' ? 'Gold' : m.tier === 'silver' ? 'Silver' : 'Bronze')}</small><b>{T(m.t)}</b></span>
-      <a href="/account#medals" onClick={() => setShow(null)}>{T('See all')}</a>
+    <div className="sn2-dock" key={m.id}>
+      <div className="sn2 sn2-ok md2" role="status" aria-live="polite">
+        <span className="sn2-sam" aria-hidden="true"><LiveSam size={92} pose="celebrate" /></span>
+        <span className="md2-row"><Medal tier={m.tier} size={44} group={m.id === 'teardown' ? 'teardown' : m.group} /><span><b className="sn2-h">{T('New medal')}: {T(m.t)}</b><p className="sn2-p">{T(m.tier === 'gold' ? 'Gold' : m.tier === 'silver' ? 'Silver' : 'Bronze')}</p></span></span>
+        <span className="sn2-acts"><a className="sn2-b y" href="/account#medals" onClick={() => setShow(null)}>{T('See all')}</a></span>
+        <button type="button" className="sn2-x" aria-label="Close" onClick={() => setShow(null)}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
+      </div>
     </div>
   );
 }

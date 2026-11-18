@@ -1,16 +1,16 @@
 'use client';
-// Owner (18 Nov): "a new idea for the logo, more premium: I love the yellow LED ring in the shop ad that fills up until
-// it's complete, with a space between it and the white logo, and the steel frame from the page before the footer". The
-// mark: a polished steel bezel, a dark gap, a yellow LED ring that draws itself once (then breathes softly), a thin gap,
-// and the white logo face. Used in the site bar, the footer and the shop bar; the browser tab icon is the same drawing.
+// Owner (18 Nov): the brand mark is the finale medallion: the gunmetal bezel and a yellow LED line round the white face
+// (owner: no outer ring, no dark line after the yellow), and the original logo artwork with its materials changed (phones and banners
+// in brushed graphite metal, the yellow lettering and arc lit like LEDs). Shapes of the logo are never redrawn.
 import React from 'react';
 
 export default function LogoMark({ size = 44, animate = true, alt = 'Sam Electronics' }: { size?: number; animate?: boolean; alt?: string }) {
+  // crystal clear on every screen: the browser picks the size that matches the display's pixel density
+  const set = '/assets/se-logo-metal-128.webp 128w, /assets/se-logo-metal-320.webp 320w, /assets/se-logo-metal-512.webp 512w, /assets/se-logo-metal-1024.webp 1024w';
   return (
-    <span className={'lm' + (animate ? ' run' : '')} style={{ width: size, height: size, ['--s' as string]: size + 'px' } as React.CSSProperties} role="img" aria-label={alt}>
-      <span className="lm-steel" aria-hidden="true" />
-      <svg className="lm-led" viewBox="0 0 100 100" aria-hidden="true"><circle className="trk" cx="50" cy="50" r="41.5" /><circle className="on" cx="50" cy="50" r="41.5" pathLength={100} /></svg>
-      <span className="lm-face" aria-hidden="true"><img src="/assets/se-logo-128.webp" alt="" /></span>
+    <span className={'lm2' + (animate ? ' run' : '')} style={{ width: size, height: size, ['--s' as string]: size + 'px' } as React.CSSProperties} role="img" aria-label={alt}>
+      <span className="lm2-edge" aria-hidden="true" />
+      <span className="lm2-face" aria-hidden="true"><img src="/assets/se-logo-metal-320.webp" srcSet={set} sizes={Math.round(size * 0.82) + 'px'} alt="" decoding="async" /></span>
     </span>
   );
 }

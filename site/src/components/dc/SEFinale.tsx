@@ -54,10 +54,10 @@ function render(v: Vals) {
               <svg className="fz4-ring" viewBox="0 0 200 200"><circle cx="100" cy="100" r="96" pathLength="100" /></svg>
               <span className="fz4-coin">
                 <span className="fz4-edge" />
-                <span className="fz4-face"><img src="/assets/se-logo-512.webp" alt="" loading="lazy" decoding="async" /><span className="fz4-shine" /></span>
+                <span className="fz4-face"><img src="/assets/se-logo-metal-1024.webp" alt="" loading="lazy" decoding="async" /><span className="fz4-shine" /></span>
               </span>
             </span>
-            <span className="fz4-refl"><img src="/assets/se-logo-320.webp" alt="" loading="lazy" decoding="async" /></span>
+            <span className="fz4-refl"><img src="/assets/se-logo-metal-320.webp" alt="" loading="lazy" decoding="async" /></span>
             <span className="fz4-hud"><i />SAM ELECTRONICS · SINCE 2003</span>
             <span className="fz4-tag t1"><b>4 grades</b><small>Original · OLED · Incell · AAA</small></span>
             <span className="fz4-tag t2"><b>Bench-tested</b><small>Before it ships</small></span>

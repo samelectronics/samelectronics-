@@ -263,3 +263,4 @@ html[data-theme="dark"] .se-toast { background: #2E3034; color: #fff; }
 @keyframes seToast { 0% { opacity: 0; transform: translateY(-10px) scale(.96); } 10%, 85% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-6px); } }
 /* the shop's sticky search: slimmer, with breathing room, buttons the same height as the search */
 .shop-dock .shop-scan, .shop-dock .ss, .shop-dock form { max-height: 46px; }
+.se-toast.off i { background: #E5484D; }

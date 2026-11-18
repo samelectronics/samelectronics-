@@ -1157,3 +1157,27 @@ html[dir='rtl'] .shd-row { animation-direction: reverse; } html[dir='rtl'] .shd-
 .ad-tile .ad-pips i.on { background: #F7C032 !important; }
 .reel-cta { height: 40px !important; padding: 0 16px !important; font-size: 13.5px !important; border-radius: 999px !important; }
 .cad-p.p1 .cad-pl, .cad-p.p2 .cad-pl { display: none; }
+/* owner (18 Nov, round 2): the sticky search wears the HOME HERO search light: a crisp 2px yellow outline and a soft
+   glow that breathes; no rotating conic (it read as a thick outline on the left) and no clipping, so the
+   suggestions drop down freely again */
+.dk-led { overflow: visible !important; padding: 0 !important; border-radius: 16px; }
+.dk-led::before { content: ''; position: absolute; inset: 0; z-index: 2; border-radius: inherit; pointer-events: none; background: none !important; box-shadow: 0 0 0 1.5px rgba(247,192,50,.5), 0 0 22px -8px rgba(247,192,50,.35); }
+.dk-led::after { content: ''; position: absolute; inset: 0; z-index: 2; border-radius: inherit; pointer-events: none; box-shadow: 0 0 0 2px #F7C032, 0 0 46px rgba(247,192,50,.5); opacity: 0; animation: seSearchGlowO 3.2s linear infinite; }
+.dk-led:focus-within::after { animation: none; opacity: 1; }
+.dk-run { display: none !important; }
+.shop-dock .dk-led .ss .ss-bar { box-shadow: none !important; }
+.shop-dock .ss-drop { z-index: 5; }
+@media (prefers-reduced-motion: reduce) { .dk-led::after { animation: none; } }
+/* owner (18 Nov, round 2): the shop header borrows the HOME HERO material: the 135deg graphite, the fine diamond
+   texture fading from the left, a soft diagonal sheen, and yellow lights that breathe slowly in brightness so grey
+   and yellow mix smoothly */
+.shop-cine .cine-wall { background: linear-gradient(135deg, #3D3E3F 0%, #26282B 48%, #1A1B1D 100%) !important; }
+.shop-cine .cine-wall::before { content: ''; position: absolute; inset: 0; opacity: .6; background-image: linear-gradient(45deg, rgba(255,255,255,.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.03) 75%), linear-gradient(45deg, rgba(255,255,255,.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.03) 75%); background-size: 6px 6px; background-position: 0 0, 3px 3px; -webkit-mask-image: linear-gradient(90deg, #000, transparent 60%); mask-image: linear-gradient(90deg, #000, transparent 60%); }
+.shop-cine .cine-wall::after { content: ''; position: absolute; left: 30%; top: -40%; width: 220px; height: 200%; transform: rotate(28deg); background: linear-gradient(90deg, transparent, rgba(255,255,255,.05), transparent); }
+.shop-cine .cine-bokeh i { animation: shdBreath 7s ease-in-out infinite !important; mix-blend-mode: screen; }
+.shop-cine .cine-bokeh i:nth-child(2n) { animation-duration: 9s !important; animation-delay: -3s !important; }
+.shop-cine .cine-bokeh i:nth-child(3n) { animation-duration: 11s !important; animation-delay: -6s !important; }
+.shop-cine .cine-bg::after { content: ''; position: absolute; right: -8%; top: -30%; width: 58%; aspect-ratio: 1; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgba(247,192,50,.22), rgba(247,192,50,.08) 45%, rgba(247,192,50,0)); animation: shdBreath 8s ease-in-out infinite; }
+@keyframes shdBreath { 0%, 100% { opacity: .45; transform: translate(0, 0) scale(1); } 50% { opacity: 1; transform: translate(10px, -8px) scale(1.08); } }
+@media (prefers-reduced-motion: reduce) { .shop-cine .cine-bokeh i, .shop-cine .cine-bg::after { animation: none !important; } }
+.dk-led:has(.open)::before, .dk-led:has(.open)::after, .dk-led:focus-within::after { opacity: 0 !important; animation: none !important; }

@@ -78,30 +78,12 @@ function render(v: Vals) {
                   height="20.6"
                   style={{ position: 'absolute', left: '-0.7px', top: '46.2px', overflow: 'visible', transform: 'rotate(33.7deg) scaleX(-1)', transformOrigin: '9.5px 0', /* owner (18 Nov): each hand is the mirror of the other, both thumbs pointing outward */ /* owner (15 Nov): the connector sits ON the cable end, along its direction */ filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
                 >
-                  {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
+                  
                   <defs>
                     <linearGradient id="samHandF" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#FFFFFF" /><stop offset=".55" stopColor="#F1F2F4" /><stop offset="1" stopColor="#C9CDD2" /></linearGradient>
                     <linearGradient id="samHandL" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
-                  <g>
-                    {/* owner (18 Nov): a real little hand in his graphite: tapered fingers fanning slightly, a thumb set at the side,
-                        soft shading across the back of the hand and between the fingers */}
-                    <defs>
-                      <linearGradient id="samF2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#4C5056" /><stop offset=".5" stopColor="#2B2E32" /><stop offset="1" stopColor="#15171A" /></linearGradient>
-                      <radialGradient id="samB2" cx=".4" cy=".3" r=".9"><stop offset="0" stopColor="#555960" /><stop offset=".6" stopColor="#2A2D31" /><stop offset="1" stopColor="#141517" /></radialGradient>
-                    </defs>
-                    <path d="M12 -4.5V3.4" stroke="#1A1C1F" strokeWidth="8.1" strokeLinecap="round" /><path d="M12 -4.5V3.4" stroke="#3A3D42" strokeWidth="5.8" strokeLinecap="round" />
-                    <g stroke="#0D0E0F" strokeWidth=".55" strokeLinejoin="round">
-                      <path d="M6.2 11.6c-.4 2.6-.5 5.2-.2 7.6.1.9 1.5.9 1.7 0 .4-2.2.6-4.6.6-7z" fill="url(#samF2)" />
-                      <path d="M8.9 12.2c-.2 3-.2 6 .1 8.8.1 1 1.7 1 1.8 0 .3-2.8.4-5.8.3-8.6z" fill="url(#samF2)" />
-                      <path d="M11.9 12.3c0 3 .1 5.9.5 8.5.2 1 1.7.9 1.8-.1.2-2.7.1-5.6-.2-8.4z" fill="url(#samF2)" />
-                      <path d="M14.9 11.8c.3 2.4.6 4.7 1.2 6.8.3.9 1.6.6 1.6-.3-.1-2.2-.5-4.6-1-6.7z" fill="url(#samF2)" />
-                      <path d="M8.3 1.4h7.4l.6 2.6c1.4 1.6 2 3.6 1.6 5.8l-.4 2.5c-.3 1-1.2 1.6-2.2 1.6H7.6c-1 0-1.9-.7-2.1-1.7l-.4-2.4c-.4-2.2.2-4.2 1.6-5.8z" fill="url(#samB2)" />
-                      <path d="M16.9 6.4c1.7-.3 3.2.4 3.9 1.7.4.8.1 1.6-.7 1.8l-2.6.5" fill="url(#samF2)" />
-                    </g>
-                    <path d="M7.2 12.6c2.6.6 6 .6 8.8 0" stroke="rgba(0,0,0,.4)" strokeWidth=".7" strokeLinecap="round" fill="none" />
-                    <path d="M8 4.4c1.6-.7 3.6-.9 5.6-.5" stroke="rgba(255,255,255,.26)" strokeWidth=".8" strokeLinecap="round" fill="none" />
-                  </g>
+                  <CuteHand point={false} />
                 </svg>
                 {'\n          '}
                 {v.tool ? (
@@ -162,30 +144,12 @@ function render(v: Vals) {
                   height="20.6"
                   style={{ position: 'absolute', left: '1.7px', top: '46.2px', overflow: 'visible', transform: 'rotate(-33.7deg)', transformOrigin: '9.5px 0', filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
                 >
-                  {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
+                  
                   <defs>
                     <linearGradient id="samHandF" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#FFFFFF" /><stop offset=".55" stopColor="#F1F2F4" /><stop offset="1" stopColor="#C9CDD2" /></linearGradient>
                     <linearGradient id="samHandR" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F4F5F6" /><stop offset=".5" stopColor="#C3C7CC" /><stop offset="1" stopColor="#7E838A" /></linearGradient>
                   </defs>
-                  <g transform="translate(24 0) scale(-1 1)">
-                    {/* owner (18 Nov): a real little hand in his graphite: tapered fingers fanning slightly, a thumb set at the side,
-                        soft shading across the back of the hand and between the fingers */}
-                    <defs>
-                      <linearGradient id="samF2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#4C5056" /><stop offset=".5" stopColor="#2B2E32" /><stop offset="1" stopColor="#15171A" /></linearGradient>
-                      <radialGradient id="samB2" cx=".4" cy=".3" r=".9"><stop offset="0" stopColor="#555960" /><stop offset=".6" stopColor="#2A2D31" /><stop offset="1" stopColor="#141517" /></radialGradient>
-                    </defs>
-                    <path d="M12 -4.5V3.4" stroke="#1A1C1F" strokeWidth="8.1" strokeLinecap="round" /><path d="M12 -4.5V3.4" stroke="#3A3D42" strokeWidth="5.8" strokeLinecap="round" />
-                    <g stroke="#0D0E0F" strokeWidth=".55" strokeLinejoin="round">
-                      <path d="M6.2 11.6c-.4 2.6-.5 5.2-.2 7.6.1.9 1.5.9 1.7 0 .4-2.2.6-4.6.6-7z" fill="url(#samF2)" />
-                      <path d="M8.9 12.2c-.2 3-.2 6 .1 8.8.1 1 1.7 1 1.8 0 .3-2.8.4-5.8.3-8.6z" fill="url(#samF2)" />
-                      <path d="M11.9 12.3c0 3 .1 5.9.5 8.5.2 1 1.7.9 1.8-.1.2-2.7.1-5.6-.2-8.4z" fill="url(#samF2)" />
-                      <path d="M14.9 11.8c.3 2.4.6 4.7 1.2 6.8.3.9 1.6.6 1.6-.3-.1-2.2-.5-4.6-1-6.7z" fill="url(#samF2)" />
-                      <path d="M8.3 1.4h7.4l.6 2.6c1.4 1.6 2 3.6 1.6 5.8l-.4 2.5c-.3 1-1.2 1.6-2.2 1.6H7.6c-1 0-1.9-.7-2.1-1.7l-.4-2.4c-.4-2.2.2-4.2 1.6-5.8z" fill="url(#samB2)" />
-                      <path d="M16.9 6.4c1.7-.3 3.2.4 3.9 1.7.4.8.1 1.6-.7 1.8l-2.6.5" fill="url(#samF2)" />
-                    </g>
-                    <path d="M7.2 12.6c2.6.6 6 .6 8.8 0" stroke="rgba(0,0,0,.4)" strokeWidth=".7" strokeLinecap="round" fill="none" />
-                    <path d="M8 4.4c1.6-.7 3.6-.9 5.6-.5" stroke="rgba(255,255,255,.26)" strokeWidth=".8" strokeLinecap="round" fill="none" />
-                  </g>
+                  <g transform="translate(24 0) scale(-1 1)"><CuteHand point={!!v.point} /></g>
                 </svg>
                 {'\n          '}
                 {v.hanky ? (
@@ -1014,3 +978,25 @@ function SamsoomItem({ v }: { v: Vals }) {
 
 const SESamsoom = createDC('SE Samsoom', Logic, render);
 export default SESamsoom;
+
+/** Owner (18 Nov, round 2): "I don't like the gloves, I want cute little hands, a right and a left one". A round little
+ *  hand in Samsoom's own yellow with his dark outline: a soft palm, three chubby fingers and a thumb on the outer side
+ *  (the right hand is the mirror). `point`: the index finger stretches out and the others curl in, for "no no" and
+ *  pointing at things. Drawn fingers-down in a 24x26 box; the wrist meets the arm cable at the top. */
+function CuteHand({ point }: { point: boolean }) {
+  const st = { stroke: '#26282B', strokeWidth: 1.15, strokeLinejoin: 'round' as const };
+  const f = (x: number, y2: number) => <rect x={x - 1.85} y={9.5} width={3.7} height={y2 - 9.5} rx={1.85} fill="url(#samCute)" {...st} />;
+  return (
+    <g>
+      <defs>
+        <linearGradient id="samCute" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#FFE38E" /><stop offset=".5" stopColor="#F7C032" /><stop offset="1" stopColor="#DFA01A" /></linearGradient>
+      </defs>
+      <path d="M12 -4.5V3.6" stroke="#1A1C1F" strokeWidth="6.6" strokeLinecap="round" /><path d="M12 -4.5V3.6" stroke="#3A3D42" strokeWidth="4.6" strokeLinecap="round" />
+      {point ? <>{f(8.3, 14.6)}{f(12.2, 23.2)}{f(15.9, 14.2)}</> : <>{f(8.1, 18.2)}{f(12, 19.2)}{f(15.9, 18.2)}</>}
+      <rect x="15.6" y="5.2" width="3.7" height="7.4" rx="1.85" transform="rotate(-38 17.45 8.9)" fill="url(#samCute)" {...st} />
+      <ellipse cx="12" cy="9" rx="6.3" ry="5.4" fill="url(#samCute)" {...st} />
+      <path d="M8.2 6.6c1.2-1.3 3-1.9 4.8-1.7" stroke="rgba(255,255,255,.75)" strokeWidth="1.1" strokeLinecap="round" fill="none" />
+      {point ? <path d="M7.4 12.4c1.2.8 2.4.8 3.2.2M13.9 12.3c.8.6 2 .7 3.1-.1" stroke="rgba(38,40,43,.45)" strokeWidth=".7" strokeLinecap="round" fill="none" /> : null}
+    </g>
+  );
+}

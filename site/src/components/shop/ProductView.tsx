@@ -58,7 +58,7 @@ function ListMenu({ id, kits }: { id: string; kits: { name: string; ids: string[
       <button type="button" className={inAny ? 'on' : ''} aria-expanded={open} onClick={() => setOpen(!open)}><PvIc k="list" />{T('List')}</button>
       {open ? (
         <span className="pv-lists-pop" role="dialog" aria-label={T('My lists')}>
-          {kits.length ? kits.map((k) => <label key={k.name}><input type="checkbox" checked={k.ids.includes(id)} onChange={() => { const had = k.ids.includes(id); store.toList(k.name, id); toast((had ? T('Removed from') : T('Added to')) + ' ' + k.name); }} /><span>{k.name}</span><small>{k.ids.length}</small></label>) : <small className="pv-lists-none">{T('No lists yet. Name one, e.g. “Shop order June”.')}</small>}
+          {kits.length ? kits.map((k) => <label key={k.name}><input type="checkbox" checked={k.ids.includes(id)} onChange={() => { const had = k.ids.includes(id); store.toList(k.name, id); toast((had ? T('Removed from') : T('Added to')) + ' ' + k.name, had ? 'off' : 'ok'); }} /><span>{k.name}</span><small>{k.ids.length}</small></label>) : <small className="pv-lists-none">{T('No lists yet. Name one, e.g. “Shop order June”.')}</small>}
           <form onSubmit={(e) => { e.preventDefault(); if (nm.trim()) { store.toList(nm, id); toast(T('Added to') + ' ' + nm.trim()); setNm(''); } }}><input value={nm} onChange={(e) => setNm(e.target.value)} placeholder={T('New list name')} maxLength={40} /><button type="submit">{T('Add')}</button></form>
           <a href="/account#saved">{T('See my lists')} →</a>
         </span>
@@ -149,10 +149,10 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
             <PvCode id={p.id} cat={p.category} />
             {/* R10 P2: one clean icon set; parts go into the visitor's own named lists */}
             <div className="pv-tools">
-              <button type="button" className={st.favs.includes(p.id) ? 'on' : ''} onClick={() => { const on = st.favs.includes(p.id); store.fav(p.id); toast(on ? T('Removed from your stars') : T('Starred')); }}><PvIc k="star" />{st.favs.includes(p.id) ? T('Starred') : T('Star')}</button>
+              <button type="button" className={st.favs.includes(p.id) ? 'on' : ''} onClick={() => { const on = st.favs.includes(p.id); store.fav(p.id); toast(on ? T('Removed from your stars') : T('Starred'), on ? 'off' : 'ok'); }}><PvIc k="star" />{st.favs.includes(p.id) ? T('Starred') : T('Star')}</button>
               <button type="button" className={st.compare.includes(p.id) ? 'on' : ''} onClick={() => { const had = st.compare.includes(p.id); store.cmp(p.id); if (had) return; const n = Math.min(3, st.compare.length + 1); onClose(); if (n >= 2) window.setTimeout(() => window.dispatchEvent(new CustomEvent('se:cmp-open')), 120); }}><PvIc k="cmp" />{T('Compare')}</button>
               <button type="button" onClick={() => { store.later(p.id); toast('Saved for later'); }}><PvIc k="save" />{T('Save')}</button>
-              <button type="button" className={st.alerts.includes(p.id) ? 'on' : ''} onClick={() => { const on = st.alerts.includes(p.id); store.alert(p.id); toast(on ? 'Alert removed' : 'We will tell you when it changes'); }}><PvIc k="bell" />{st.alerts.includes(p.id) ? T('Alert on') : T('Alert')}</button>
+              <button type="button" className={st.alerts.includes(p.id) ? 'on' : ''} onClick={() => { const on = st.alerts.includes(p.id); store.alert(p.id); toast(on ? 'Alert removed' : 'We will tell you when it changes', on ? 'off' : 'ok'); }}><PvIc k="bell" />{st.alerts.includes(p.id) ? T('Alert on') : T('Alert')}</button>
               <button type="button" onClick={() => setShareOpen(true)}><PvIc k="share" />{T('Share')}</button>
               <ListMenu id={p.id} kits={st.kits} />
             </div>

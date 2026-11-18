@@ -18,7 +18,6 @@ import ProductView from './ProductView';
 import Customize, { type View } from './Customize';
 import Banners from './Banners';
 import InlineAd from './InlineAd';
-import ShopIntro from './ShopIntro';
 import CompareView from './CompareView';
 import LogoMark from '@/components/site/LogoMark';
 import { GradeTag, MakerTag } from './Tags';
@@ -67,7 +66,7 @@ function ShopHeadline() {
   return (
     <h1 className="sp-h1 shd" aria-label={T('Every part.') + ' ' + T('Every grade.')}>
       <span className="ht4 on shd-a" aria-hidden="true"><span className="ht4-l a">{T('Every part.').split(/\s+/).map((w, n) => <span key={n} className="ht4-w" style={{ ['--i' as string]: n } as React.CSSProperties}><span>{w}</span></span>)}</span></span>
-      <span className="shd-b" aria-hidden="true"><span className="shd-w" key={k}>{T(ROT[i])}</span><em className="shd-n" data-no-i18n="">{String(i + 1).padStart(2, '0')}/{String(ROT.length).padStart(2, '0')}</em></span>
+      <span className="shd-b" aria-hidden="true"><span className="shd-w" key={k}>{T(ROT[i])}</span></span>
     </h1>
   );
 }
@@ -125,7 +124,6 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
   return (
     <div className={'shop' + (mode === 'deals' ? ' is-deals' : '')}>
       {/* header: the hero's language — graphite, live circuits, the search, Samsoom ready to help */}
-      <ShopIntro />
       <section className="shop-hd shop-cine" data-tone="dark">
         <div className="cine-bg" aria-hidden="true"><i className="cine-wall" /><i className="cine-beam" /><span className="cine-bokeh">{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</span><i className="cine-floor" /><i className="cine-grain" /><HeroBack word={mode === 'deals' ? 'DEALS' : 'PARTS'} /></div>
         <span className="shd-mq" aria-hidden="true" data-no-i18n="">{[0, 1].map((r) => <span key={r} className={'shd-row r' + r}>{[0, 1].map((x) => <span key={x}>{(r ? [...MQ].reverse() : MQ).map((w) => <b key={w}>{T(w)}<i /></b>)}</span>)}</span>)}</span>
@@ -235,10 +233,9 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
           <a className="shop-dock-logo" href="/" aria-label="Sam Electronics"><LogoMark size={40} animate={false} /><span><b>SAM ELECTRONICS</b><small>QUALITY · WARRANTY · PRICE</small></span></a>
           {/* owner (18 Nov): "a premium search that follows you, with an LED running round its outline, and only the shop's
               essential tools": search in a running-light frame, then Find My Part, Filters, Compare and the cart */}
-          <span className="dk-led"><i className="dk-run" aria-hidden="true" /><ShopSearch compact count={res.length} q={f.q} onQ={(q) => { set({ q }); }} onFmp={openFmp} /></span>
+          <span className="dk-led"><ShopSearch compact count={res.length} q={f.q} onQ={(q) => { set({ q }); }} onFmp={openFmp} /></span>
           <span className="dk-tools">
-            <button type="button" className="dk-b y" onClick={openFmp}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" /></svg><span className="t">{T('Find My Part')}</span></button>
-            <button type="button" className="dk-b" onClick={() => setSide(true)} aria-label={T('Filters')}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4" /></svg><span className="t">{T('Filters')}</span>{chips.length ? <em>{chips.length}</em> : null}</button>
+                        <button type="button" className="dk-b" onClick={() => setSide(true)} aria-label={T('Filters')}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4" /></svg><span className="t">{T('Filters')}</span>{chips.length ? <em>{chips.length}</em> : null}</button>
             <button type="button" className="dk-b" disabled={cmp.length < 1} onClick={() => setCmpOpen(true)} aria-label={T('Compare')}><CompareIcon size={16} /><span className="t">{T('Compare')}</span>{cmp.length ? <em>{cmp.length}</em> : null}</button>
             <span className="shop-dock-ic" ref={dockIc}>
               <button type="button" data-mirror='header [data-tour="cart"]' aria-label={T('Cart')} onClick={() => (document.querySelector('header [data-tour="cart"]') as HTMLElement | null)?.click()} />
