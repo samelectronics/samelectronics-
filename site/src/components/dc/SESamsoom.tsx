@@ -311,10 +311,10 @@ function render(v: Vals) {
                     position: 'absolute',
                     right: '-2px',
                     top: '52px',
-                    width: '3px',
+                    width: '2.6px',
                     height: '26px',
                     borderRadius: '2px',
-                    background: 'linear-gradient(90deg,#2A2C30 0%,#4E5258 40%,#1C1E21 100%)', boxShadow: '1.5px 1px 2px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.6)', width: '2.6px',
+                    background: 'linear-gradient(90deg,#2A2C30 0%,#4E5258 40%,#1C1E21 100%)', boxShadow: '1.5px 1px 2px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.6)',
                   }}
                 ></span>
                 {'\n          '}
@@ -323,10 +323,10 @@ function render(v: Vals) {
                     position: 'absolute',
                     left: '-2px',
                     top: '44px',
-                    width: '3px',
+                    width: '2.6px',
                     height: '14px',
                     borderRadius: '2px',
-                    background: 'linear-gradient(90deg,#1C1E21 0%,#4E5258 60%,#2A2C30 100%)', boxShadow: '-1.5px 1px 2px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.6)', width: '2.6px',
+                    background: 'linear-gradient(90deg,#1C1E21 0%,#4E5258 60%,#2A2C30 100%)', boxShadow: '-1.5px 1px 2px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.6)',
                   }}
                 ></span>
                 <span
@@ -334,10 +334,10 @@ function render(v: Vals) {
                     position: 'absolute',
                     left: '-2px',
                     top: '64px',
-                    width: '3px',
+                    width: '2.6px',
                     height: '22px',
                     borderRadius: '2px',
-                    background: 'linear-gradient(90deg,#1C1E21 0%,#4E5258 60%,#2A2C30 100%)', boxShadow: '-1.5px 1px 2px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.6)', width: '2.6px',
+                    background: 'linear-gradient(90deg,#1C1E21 0%,#4E5258 60%,#2A2C30 100%)', boxShadow: '-1.5px 1px 2px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.6)',
                   }}
                 ></span>
                 {'\n          '}

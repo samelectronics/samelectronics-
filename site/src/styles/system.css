@@ -816,3 +816,9 @@ html[data-theme="dark"] .sn-tile.sam { background: radial-gradient(circle at 50%
 .au-agree a, .au-shell .au-links a, .au-shell .au-links button, .pv-code-open, .sc2-panel .sc2-more, .fz-h span, .shop-clear, .ss-h button, .pv-rate button, .cart-paylink, .pt-trade a, .au-links a, .au-links button, .cmp-view, .sc2-banner .sc2-btxt a, .cc-more a, .gd-more, .wf-acct a, .st-menu-close, .ak-codebtn, .ak-tone button { text-decoration: none !important; }
 .au-agree a, .sc2-banner .sc2-btxt a, .gd-more, .cc-more a, .pt-trade a, .cart-paylink, .au-links a, .au-links button { font-weight: 600; }
 .au-agree a:hover, .sc2-banner .sc2-btxt a:hover, .gd-more:hover, .cc-more a:hover, .pt-trade a:hover, .cart-paylink:hover, .au-links a:hover, .au-links button:hover, .cmp-view:hover, .pv-code-open:hover { opacity: .75; }
+
+/* owner (18 Nov): the hold that lets an animation play on phone/tablet: a small Skip chip at the bottom */
+.sh-skip { position: fixed; z-index: 2147482000; left: 50%; bottom: calc(18px + env(safe-area-inset-bottom)); transform: translateX(-50%); height: 40px; padding: 0 18px; border: 0; border-radius: 999px; background: rgba(38,40,43,.92); color: #fff; font: 600 13.5px Inter, sans-serif; box-shadow: 0 10px 26px -10px rgba(0,0,0,.6); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); animation: shIn .3s ease-out both; }
+.sh-skip.out { opacity: 0; transition: opacity .2s; }
+@keyframes shIn { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
+html.sh-on { overscroll-behavior: none; }
