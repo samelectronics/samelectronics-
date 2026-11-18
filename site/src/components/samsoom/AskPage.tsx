@@ -9,11 +9,13 @@ import React, { useEffect, useRef, useState } from 'react';
 import { search, data, byId, type Product, priceText } from '@/lib/catalog';
 import { emoteFor } from './brain';
 import { think, unknown, readPhoto, lookup } from './brain2';
-import { store } from '@/lib/store';
+import { store, useStore } from '@/lib/store';
 import { backend } from '@/lib/backend';
 import { T, flyToCart } from '@/components/site/ui';
 import LiveSam from './LiveSam';
 import Typed from './Typed';
+import ToolPanel, { TOOLS, ToolIcon, cardLine, type ToolKey, type ToolOut } from './SamTools';
+import { checkWatches, watchBase } from '@/lib/watch';
 
 type Msg = { cmp?: string[]; mode?: string; t: string; me: boolean; emote?: string | null; own?: boolean; parts?: string[]; img?: string; act?: string; at?: number; sug?: [string, string][]; rate?: 1 | -1 };
 type Chat = { id: string; title: string; named: boolean; msgs: Msg[]; at: number; quote?: { id: string; qty: number }[] };
@@ -52,7 +54,6 @@ const START: [string, string, string][] = [
 ];
 const TOPICS: [string, string][] = [['Find a part', 'iPhone 13 screen'], ['Opening hours', 'Are you open right now?'], ['Repair price', 'How much to fit an iPhone 13 battery?'], ['Shipping', 'Do you ship worldwide?'], ['Grades', 'What is the difference between the grades?'], ['Wholesale', 'How do I get trade prices?']];
 const shrink = (f: File, max: number, q = 0.82): Promise<string> => new Promise((res, rej) => { const u = URL.createObjectURL(f), im = new Image(); im.onload = () => { const k = Math.min(1, max / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = Math.round(im.width * k); c.height = Math.round(im.height * k); c.getContext('2d')!.drawImage(im, 0, 0, c.width, c.height); URL.revokeObjectURL(u); res(c.toDataURL('image/jpeg', q)); }; im.onerror = () => { URL.revokeObjectURL(u); rej(new Error('bad image')); }; im.src = u; });
-const CAN: [string, string][] = [['Finds parts', 'Any model, any grade, with the price and stock'], ['Prices repairs', 'Part and fitting, with the time it takes'], ['Reads photos', 'A screenshot of Settings → About, or the box label'], ['Hands you to a person', 'The team on WhatsApp or WeChat, with your chat']];
 const CODES: [string, string][] = [['iPhone', 'Settings → General → About → Model Number. Tap it once to see the A-number (e.g. A2633). Or read it on the SIM tray slot.'], ['Samsung', 'Settings → About phone → Model number (SM-A546B…). Also on the box label.'], ['Xiaomi / Redmi / POCO', 'Settings → About phone → All specs → Model.'], ['Huawei / Honor', 'Settings → About phone → Model.'], ['Google Pixel', 'Settings → About phone → Model (e.g. GD1YQ).'], ['Any phone', 'Dial *#06# for the IMEI and send it to us: we find the exact model.']];
 const ACT: Record<string, [string, string]> = { visit: ['Opening hours & directions', '/contact#visit'], repair: ['Repair Lab', '/repair'], wholesale: ['Wholesale', '/wholesale'], network: ['Worldwide shipping', '/worldwide'], models: ['Brands & grades', '/brands'], fmp: ['Open the shop', '/shop'], story: ['Our story', '/story'], circuit: ['Sam Circuit', '/membership'], whatsapp: ['WhatsApp the team', 'https://wa.me/971503420015'] };
 /** one-tap follow-ups that fit the answer */
@@ -89,8 +90,10 @@ export default function AskPage() {
   const [cfg, setCfgS] = useState<Cfg>(CFG0), [menu, setMenu] = useState<'' | 'contact' | 'settings'>('');
   const setCfg = (c: Partial<Cfg>) => setCfgS((o) => { const n = { ...o, ...c }; try { localStorage.setItem(CFG_KEY, JSON.stringify(n)); } catch { /* */ } return n; });
   // owner (18 Nov): report an answer with a quick 'why?'; the team gets it in the Control Room inbox as a complaint
-  const [who, setWho] = useState<{ name: string; plan: string; lv: number } | null>(null);
-  useEffect(() => { backend.me().then((u) => { if (!u) return; const c = (u as unknown as { card?: { kind: string; level: number } }).card; const kinds: Record<string, [string, string[]]> = { circuit: ['Sam Circuit', ['Connected', 'Charged', 'Supercharged', 'Fully Charged', 'Lightning']], grid: ['Sam Grid', ['Node', 'Hub', 'Network', 'Backbone', 'Mainframe']], circle: ['Sam Circle', ['Member']] }; const k = c && kinds[c.kind]; setWho({ name: u.name || u.email, plan: k ? k[0] + ' · ' + T(k[1][Math.min(c!.level || 0, k[1].length - 1)]) : T('No card yet'), lv: c?.level || 0 }); }).catch(() => {}); }, []);
+  const [who, setWho] = useState<{ name: string; plan: string; lv: number; kind: string; level: number; email?: string; phone?: string } | null>(null);
+  const [tool, setTool] = useState<ToolKey | null>(null), [tmenu, setTmenu] = useState(false), [news, setNews] = useState<{ id: string; what: 'back' | 'drop'; from?: number; to?: number }[]>([]);
+  useEffect(() => { const t = setTimeout(() => { try { setNews(checkWatches()); } catch { /* catalogue not ready */ } }, 1200); return () => clearTimeout(t); }, []);
+  useEffect(() => { backend.me().then((u) => { if (!u) return; const c = (u as unknown as { card?: { kind: string; level: number } }).card; const kinds: Record<string, [string, string[]]> = { circuit: ['Sam Circuit', ['Connected', 'Charged', 'Supercharged', 'Fully Charged', 'Lightning']], grid: ['Sam Grid', ['Node', 'Hub', 'Network', 'Backbone', 'Mainframe']], circle: ['Sam Circle', ['Member']] }; const k = c && kinds[c.kind]; setWho({ kind: c?.kind || '', level: c?.level || 0, email: u.email, phone: (u as { phone?: string }).phone, name: u.name || u.email, plan: k ? k[0] + ' · ' + T(k[1][Math.min(c!.level || 0, k[1].length - 1)]) : T('No card yet'), lv: c?.level || 0 }); }).catch(() => {}); }, []);
   const [find, setFind] = useState(''), [rep, setRep] = useState<number | null>(null), [why, setWhy] = useState(''), [repTxt, setRepTxt] = useState(''), [repDone, setRepDone] = useState<number[]>([]);
   const report = async (i: number) => {
     const m = msgs[i], prev = [...msgs.slice(0, i)].reverse().find((x) => x.me);
@@ -122,6 +125,21 @@ export default function AskPage() {
     const me: Msg = { t: text, me: true, at: Date.now(), ...(pic ? { img: pic.small } : {}) };
     save((l) => l.map((c) => (c.id === cid ? { ...c, msgs: [...c.msgs.map((m) => ({ ...m, sug: undefined })), me], at: Date.now() } : c)));
     setTyping(pic ? 'photo' : 'think'); setMood('think');
+    const intent: ToolKey | null = pic ? null
+      : /\b(track|where('?s| is)? my order|order status|my order)\b|طلبي|تتبع/i.test(text) ? 'track'
+      : /\b(book|appointment|reserve|booking)\b.*\b(repair|fix|slot|time)?|حجز|موعد/i.test(text) ? 'book'
+      : /\b(back in stock|notify me|alert me|tell me when)\b/i.test(text) ? 'stock'
+      : /\b(price (drop|watch|alert)|cheaper|watch the price)\b/i.test(text) ? 'price'
+      : /\b(does it fit|will it fit|fit check|fits my|compatible)\b|يناسب/i.test(text) ? 'fit'
+      : /\b(trade list|bulk (list|order)|parts list)\b/i.test(text) ? 'trade' : null;
+    if (intent) {
+      await new Promise((r) => setTimeout(r, 380));
+      const L: Record<string, string> = { track: 'Sure, let us find your order. I opened the order tracker below.', book: 'Happy to book you in. Pick the problem, a day and a time below.', stock: 'I can watch that for you. Find the part below and I will ring the bell when it is back.', price: 'I can watch the price for you. Find the part below.', fit: 'Let us check what fits. Tell me your phone below.', trade: 'Paste your parts list below, one part per line.' };
+      setTyping(false); setMood('happy'); setTool(intent);
+      const bot: Msg = { t: T(L[intent]), me: false, emote: 'happy', own: true, at: Date.now() };
+      save((l) => l.map((c) => (c.id === cid ? { ...c, msgs: [...c.msgs, bot], at: Date.now() } : c)));
+      return;
+    }
     const hist: { role: string; text: string; image?: string }[] = [...(read().find((c) => c.id === cid)?.msgs || [])].map((m) => ({ role: m.me ? 'user' : 'assistant', text: m.t })).slice(-12);
     let ans: { t: string; act?: string; emote?: string; parts?: string[] };
     const ctx = { history: hist.filter((h) => h.role === 'user').slice(0, -1).map((h) => h.text), tr: (x: string) => T(x) };
@@ -147,6 +165,17 @@ export default function AskPage() {
     const bot: Msg = { ...(cmp ? { cmp } : {}), mode: cfg.mode, t: ans.t, me: false, emote: ans.emote || null, own: true, parts: ans.parts, at: Date.now(), sug: followUps(ans), ...(ans.act ? { act: ans.act } : {}) };
     save((l) => l.map((c) => (c.id === cid ? { ...c, msgs: [...c.msgs, bot], at: Date.now() } : c)));
   };
+  /** a tool's result lands in the chat as Samsoom's answer (a new chat is opened when none is) */
+  const toolOut = (o: ToolOut, title: string) => {
+    let cid = id;
+    if (!cid) { cid = 'c' + Date.now().toString(36); const c: Chat = { id: cid, title, named: false, msgs: [], at: Date.now() }; save((l) => [c, ...l]); setId(cid); history.replaceState(null, '', '/samsoom?c=' + cid); }
+    const bot: Msg = { t: o.t, me: false, emote: o.emote || 'happy', own: true, parts: o.parts, at: Date.now(), sug: followUps(o), mode: 'tool', ...(o.act ? { act: o.act } : {}) };
+    const me: Msg = { t: title, me: true, at: Date.now() };
+    save((l) => l.map((c) => (c.id === cid ? { ...c, msgs: [...c.msgs.map((m) => ({ ...m, sug: undefined })), me, bot], at: Date.now() } : c)));
+    setMood(o.emote || 'happy'); if (cfg.voice) import('@/lib/voice').then((m) => m.babble(o.t)).catch(() => {});
+    if (o.emote !== 'celebrate' || tool !== 'book') setTool(null);
+  };
+  const openTool = (k: ToolKey) => { setTmenu(false); if (k === 'photo') { file.current?.click(); return; } setTool(k); };
   const fresh = () => { setId(null); setMood('wave'); history.replaceState(null, '', '/samsoom'); inp.current?.focus(); setSide(false); };
   const rate = (i: number, v: 1 | -1) => save((l) => l.map((c) => (c.id === id ? { ...c, msgs: c.msgs.map((m, k) => (k === i ? { ...m, rate: m.rate === v ? undefined : v } : m)) } : c)));
   const copy = (i: number, t: string) => { navigator.clipboard?.writeText(t).then(() => { setCopied(i); setTimeout(() => setCopied(null), 1400); }).catch(() => {}); };
@@ -251,7 +280,9 @@ export default function AskPage() {
                   <p className="sp-p">{T('Parts, grades, prices, repairs, shipping, opening hours: I know the shop inside out. Spelling mistakes are fine, and I speak your language.')}</p>
                 </div>
               </div>
-              <div className="ak-can">{CAN.map(([t, d]) => <span key={t}><b>{T(t)}</b><small>{T(d)}</small></span>)}</div>
+              {news.length ? <div className="ak-news" role="status"><b>{T('Good news on your alerts')}</b>{news.map((n) => { const p = byId(n.id); return p ? <a key={n.id + n.what} href={'/shop?p=' + p.id}><span>{p.modelName} · {T(p.catName)} · {p.gradeName}</span><em>{n.what === 'back' ? T('Back in stock') : priceText(n.from || 0) + ' → ' + priceText(n.to || 0)}</em></a> : null; })}</div> : null}
+              <span className="ak-sub">{T('Tools')}</span>
+              <div className="ak-tools3">{TOOLS.filter(([k]) => k !== 'photo').map(([k, l, d]) => <button key={k} type="button" onClick={() => openTool(k)}><span className="ak-tmi"><ToolIcon k={k} size={20} /></span><b>{T(l)}</b><small>{T(d)}</small>{k === 'trade' && who?.kind !== 'grid' ? <em>{T('Sam Grid')}</em> : null}</button>)}</div>
               <span className="ak-sub">{T('Popular questions')}</span>
               <div className="ak-start">{START.map(([n, t, qq]) => <button key={t} type="button" onClick={() => ask(T(qq))}><em>{n}</em><span><b>{T(t)}</b><small>{T(qq)}</small></span></button>)}</div>
               <button type="button" className="ak-codebtn" onClick={() => setCodes(!codes)} aria-expanded={codes}>{T('Where do I find my model code?')}</button>
@@ -266,7 +297,7 @@ export default function AskPage() {
                   {m.img ? <img className="ak-img" src={m.img} alt={T('Your photo')} /> : null}
                   {m.me ? <p>{m.t}</p> : /\n•/.test(m.t) ? <Rich text={m.t} /> : <p>{i === msgs.length - 1 && m.own ? <Typed text={m.t} /> : m.t}</p>}
                   {m.cmp ? <div className="ak-cmp" role="table">{[['Grade', 'Maker', 'Warranty', 'Stock', 'Price']].map((h) => <div key="h" className="ak-cmp-r h" role="row">{h.map((x) => <span key={x} role="columnheader">{T(x)}</span>)}<span /></div>)}{m.cmp.map((pid) => { const p = byId(pid); return p ? <div key={pid} className="ak-cmp-r" role="row"><span><b>{p.gradeName}</b></span><span>{p.makerName}</span><span>{T(p.warranty || '')}</span><span className={p.stock_qty > 0 ? 'in' : 'out'}>{p.stock_qty > 0 ? T('in stock') : T('ask us')}</span><span><b>{priceText(p.price)}</b></span><button type="button" onClick={(e) => flyToCart(null, p.id, e)} aria-label={T('Add to cart')}>+</button></div> : null; })}</div> : null}
-                  {m.parts ? <div className="ak-parts">{m.parts.map((pid) => { const p = byId(pid); return p ? <PartCard key={pid} p={p} /> : null; })}</div> : null}
+                  {m.parts ? <div className="ak-parts">{m.parts.map((pid) => { const p = byId(pid); return p ? <PartCard key={pid} p={p} line={cardLine(p.price, who)} /> : null; })}</div> : null}
                   {m.act && ACT[m.act] ? <a className={'ak-go' + (m.act === 'whatsapp' ? ' wa' : '')} href={ACT[m.act][1]} target={ACT[m.act][1].startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer">{T(ACT[m.act][0])}<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a> : null}
                 </div>
                 {!m.me ? (
@@ -301,15 +332,17 @@ export default function AskPage() {
           ) : null}
 
           
+          {tmenu ? <><button type="button" className="ak-tveil" aria-label={T('Close')} data-close="" onClick={() => setTmenu(false)} /><div className="ak-tmenu" role="menu">{TOOLS.map(([k, l, d]) => <button key={k} type="button" role="menuitem" onClick={() => openTool(k)} className={k === 'trade' && who?.kind !== 'grid' ? 'lk' : ''}><span className="ak-tmi"><ToolIcon k={k} /></span><span><b>{T(l)}</b><small>{T(d)}</small></span>{k === 'trade' && who?.kind !== 'grid' ? <em>{T('Sam Grid')}</em> : null}</button>)}</div></> : null}
+          {tool ? <ToolPanel key={tool} k={tool} who={who} close={() => setTool(null)} setMood={setMood} out={(o) => toolOut(o, T(TOOLS.find((x) => x[0] === tool)?.[1] || ''))} /> : null}
           {img ? <div className="ak-att"><img src={img.small} alt="" /><span>{T('Photo ready: Samsoom will read the model on it')}</span><button type="button" onClick={() => setImg(null)} aria-label={T('Remove the photo')}>×</button></div> : null}
           <form className="ak-in" onSubmit={(e) => { e.preventDefault(); ask(q); }}>
             <input ref={file} type="file" accept="image/*" hidden onChange={(e) => { pickImg(e.target.files?.[0]); e.target.value = ''; }} />
             <textarea ref={inp} rows={1} value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); ask(q); } }} placeholder={listening ? T('Listening…') : cfg.mode === 'search' ? T('Search the catalogue: model and part…') : cfg.mode === 'compare' ? T('Compare grades: model and part…') : cfg.mode === 'quote' ? T('Add to the quote: model and part…') : T('Message Samsoom…')} aria-label={T('Message Samsoom')} />
             <div className="ak-bar">
-              <button type="button" className="ak-plus" onClick={() => file.current?.click()} aria-label={T('Send a photo')} title={T('Send a photo')}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg></button>
+              <button type="button" className={'ak-plus' + (tmenu ? ' on' : '')} onClick={() => setTmenu(!tmenu)} aria-expanded={tmenu} aria-label={T('Tools')} title={T('Tools')}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg></button>
               <span className="ak-seg2" role="tablist" aria-label={T('Mode')}>{MODES.map(([k, l, d]) => <button key={k} type="button" role="tab" aria-selected={cfg.mode === k} className={cfg.mode === k ? 'on' : ''} title={T(d)} onClick={() => setCfg({ mode: k })}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" dangerouslySetInnerHTML={{ __html: MICON[k] }} /><span>{T(l)}</span></button>)}</span>
               <span className="ak-bar-r">
-                <label className="ak-tsel"><span className="sr">{T('Tone')}</span><select value={cfg.tone} onChange={(e) => setCfg({ tone: e.target.value as Tone })} aria-label={T('Tone')}>{TONES.map(([k, l]) => <option key={k} value={k}>{T(l)}</option>)}</select><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M6 9l6 6 6-6" /></svg></label>
+                <label className="ak-tsel"><span className="sr">{T('Tone')}</span><select value={cfg.tone} onChange={(e) => setCfg({ tone: e.target.value as Tone })} aria-label={T('Tone')}>{TONES.map(([k, l]) => <option key={k} value={k}>{T(l)}</option>)}</select></label>
                 {canTalk ? <button type="button" className={'ak-clip' + (listening ? ' rec' : '')} onClick={talk} aria-label={T('Speak your question')} title={T('Speak your question')}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="3" width="6" height="11" rx="3" /><path d="M5 11a7 7 0 0 0 14 0M12 18v3" /></svg></button> : null}
                 <button type="submit" className="ak-send" disabled={(!q.trim() && !img) || !!typing} aria-label={T('Send')}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button>
               </span>
@@ -322,12 +355,13 @@ export default function AskPage() {
   );
 }
 
-function PartCard({ p }: { p: Product }) {
-  const img = useRef<HTMLImageElement>(null);
+function PartCard({ p, line }: { p: Product; line?: string }) {
+  const img = useRef<HTMLImageElement>(null), st = useStore(), on = st.alerts.includes(p.id);
   return (
     <div className="ak-part">
       <a href={'/shop?p=' + p.id}><img ref={img} src={p.img} alt="" /></a>
-      <span><a href={'/shop?p=' + p.id}><b>{T(((data()?.categories || []) as { id: string; one?: string }[]).find((c) => c.id === p.category)?.one || p.catName) + ' ' + p.modelName}</b></a><small>{p.gradeName} · {p.makerName} · {p.stock_qty > 0 ? T('in stock') : T('ask us')}</small><b className="ak-pr">{priceText(p.price)}</b></span>
+      <span><a href={'/shop?p=' + p.id}><b>{T(((data()?.categories || []) as { id: string; one?: string }[]).find((c) => c.id === p.category)?.one || p.catName) + ' ' + p.modelName}</b></a><small>{p.gradeName} · {p.makerName} · {p.stock_qty > 0 ? T('in stock') : T('ask us')}</small><b className="ak-pr">{priceText(p.price)}</b>{line ? <small className="ak-pts">{line}</small> : null}</span>
+      <button type="button" className={'ak-bell' + (on ? ' on' : '')} onClick={() => { if (!on) watchBase(p.id, p.stock_qty > 0 ? 'price' : 'stock'); store.alert(p.id); }} aria-pressed={on} aria-label={p.stock_qty > 0 ? T('Watch the price') : T('Tell me when it is back')} title={on ? T('Alert on') : p.stock_qty > 0 ? T('Watch the price') : T('Tell me when it is back')}><svg width="16" height="16" viewBox="0 0 24 24" fill={on ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z" /><path d="M10 20.5a2 2 0 0 0 4 0" /></svg></button>
       <button type="button" className="ak-add" onClick={(e) => flyToCart(img.current, p.id, e)} aria-label={T('Add to cart')} title={T('Add to cart')}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M12 5v14M5 12h14" /></svg></button>
     </div>
   );
