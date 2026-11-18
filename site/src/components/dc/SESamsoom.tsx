@@ -36,19 +36,30 @@ function render(v: Vals) {
                 style={{
                   position: 'absolute',
                   left: '99px',
-                  top: '8px',
+                  top: '16px',
                   width: '2px',
-                  height: '24px',
+                  height: '16px',
                   borderRadius: '1px',
                   background: 'linear-gradient(90deg,#5E6064,#C9CCD0,#5E6064)',
                 }}
               ></span>
               {'\n        '}
-              <span
-                style={cssToObj(
-                  `position:absolute;left:94px;top:2px;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFF4D1,#F7C032 55%,#F7C032);box-shadow:0 0 10px 3px rgba(247,192,50,.85);animation:${s(v.antAnim)}`,
-                )}
-              ></span>
+              {/* owner (18 Nov): "his light bulb should look real": a small glass bulb with a glowing filament, a ridged metal screw
+                   base on the antenna, a warm halo that breathes */}
+              <span aria-hidden="true" style={cssToObj(`position:absolute;left:84px;top:-12px;width:32px;height:32px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,214,102,.55),rgba(247,192,50,.18) 55%,rgba(247,192,50,0));animation:${s(v.antAnim)}`)} />
+              <svg aria-hidden="true" width="22" height="30" viewBox="0 0 22 30" style={{ position: 'absolute', left: '89px', top: '-8px', overflow: 'visible' }}>
+                <defs>
+                  <radialGradient id="samBulbG" cx=".38" cy=".32" r=".75"><stop offset="0" stopColor="#FFFDF2" /><stop offset=".35" stopColor="#FFE9A6" /><stop offset=".75" stopColor="#F7C032" stopOpacity=".92" /><stop offset="1" stopColor="#C98F12" stopOpacity=".95" /></radialGradient>
+                  <linearGradient id="samBase" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#6E7278" /><stop offset=".45" stopColor="#E3E5E8" /><stop offset=".7" stopColor="#9A9EA4" /><stop offset="1" stopColor="#55585D" /></linearGradient>
+                </defs>
+                <path d="M11 1.2c4.6 0 8 3.4 8 7.8 0 3-1.6 4.8-3 6.2-.9.9-1.4 1.9-1.4 3.1H7.4c0-1.2-.5-2.2-1.4-3.1C4.6 13.8 3 12 3 9c0-4.4 3.4-7.8 8-7.8z" fill="url(#samBulbG)" stroke="rgba(150,105,10,.55)" strokeWidth=".6" />
+                <path d="M8.6 18.2V13l1.2-2.2 1.2 2 1.2-2 1.2 2.2v5.2" fill="none" stroke="#FFF6D6" strokeWidth=".9" strokeLinejoin="round" />
+                <path d="M9 10.6c.6-.8 1.3-.8 2 0s1.4.8 2 0" fill="none" stroke="#FFFFFF" strokeWidth="1.1" strokeLinecap="round" />
+                <ellipse cx="7.6" cy="5.6" rx="2.1" ry="1.3" fill="rgba(255,255,255,.85)" transform="rotate(-38 7.6 5.6)" />
+                <rect x="7" y="18.2" width="8" height="6.2" rx="1.2" fill="url(#samBase)" stroke="#3A3D42" strokeWidth=".5" />
+                <path d="M7.2 19.9h7.6M7.2 21.5h7.6M7.2 23.1h7.6" stroke="rgba(40,42,45,.55)" strokeWidth=".55" />
+                <path d="M8.6 24.4h4.8l-1 1.6h-2.8z" fill="#3A3D42" />
+              </svg>
               {'\n        '}
               <div
                 style={cssToObj(
@@ -292,7 +303,7 @@ function render(v: Vals) {
                     width: '3px',
                     height: '26px',
                     borderRadius: '2px',
-                    background: 'linear-gradient(90deg,#9DA1A6,#5E6064)',
+                    background: 'linear-gradient(90deg,#C9CCD0 0%,#8E9298 45%,#4E5156 100%)', boxShadow: '1px 0 1px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.5)',
                   }}
                 ></span>
                 {'\n          '}
@@ -304,7 +315,7 @@ function render(v: Vals) {
                     width: '3px',
                     height: '14px',
                     borderRadius: '2px',
-                    background: 'linear-gradient(90deg,#5E6064,#9DA1A6)',
+                    background: 'linear-gradient(90deg,#4E5156 0%,#8E9298 55%,#C9CCD0 100%)', boxShadow: '-1px 0 1px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.5)',
                   }}
                 ></span>
                 <span
@@ -315,10 +326,30 @@ function render(v: Vals) {
                     width: '3px',
                     height: '22px',
                     borderRadius: '2px',
-                    background: 'linear-gradient(90deg,#5E6064,#9DA1A6)',
+                    background: 'linear-gradient(90deg,#4E5156 0%,#8E9298 55%,#C9CCD0 100%)', boxShadow: '-1px 0 1px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.5)',
                   }}
                 ></span>
                 {'\n          '}
+                {/* owner (18 Nov): a thicker, real titanium rim: light along the top-left edge, darker along the bottom-right */}
+                <span aria-hidden="true" style={{ position: 'absolute', inset: '-1px', borderRadius: '25px', pointerEvents: 'none', boxShadow: 'inset 1.5px 1.5px 0 rgba(255,255,255,.35), inset -1.5px -1.5px 0 rgba(0,0,0,.55), 0 0 0 1px rgba(0,0,0,.5)', zIndex: 1 }} />
+                {/* owner (18 Nov): "his arms come out as cables, a little broken damage on the sides as if they're real":
+                    a cracked opening in the frame on each side, a rubber grommet, chipped edges and a few copper strands */}
+                <svg aria-hidden="true" width="22" height="30" viewBox="0 0 22 30" style={{ position: 'absolute', left: '-11px', top: '95px', overflow: 'visible', zIndex: 6, pointerEvents: 'none' }}>
+                  <path d="M11 3.5l2.6 2.4 1.4-1.2 1.1 3.2 2.3.8-1.4 2.6 1.8 2.3-2.3 1.4.6 3-2.8-.2-.9 2.9-2.4-1.9-2.4 1.6-.4-2.9z" fill="#0A0B0C" stroke="#55585D" strokeWidth=".5" strokeLinejoin="round" />
+                  <path d="M12.8 6.3l.9-.7M16.1 8.3l1.9-1.1M18.2 13.4l2.6 1.1M15.8 19.6l1.3 2.4M12.6 20.9l-.1 2.6" stroke="#C9CCD0" strokeWidth=".45" strokeLinecap="round" opacity=".7" />
+                  <path d="M18.6 9.4l2.6-2.6 1.2.4M17.9 16.6l3.1 1.4" fill="none" stroke="rgba(255,255,255,.38)" strokeWidth=".4" strokeLinecap="round" />
+                  <path d="M12.6 10.2l2.1-1.6M13 13.4l2.6.2M12.8 16.4l1.9 1.4" stroke="#C47A3A" strokeWidth=".7" strokeLinecap="round" />
+                  <circle cx="12.2" cy="13.2" r="3.1" fill="#1F2124" stroke="#3A3D42" strokeWidth=".9" />
+                  <circle cx="11.8" cy="12.6" r="1" fill="rgba(255,255,255,.18)" />
+                </svg>
+                <svg aria-hidden="true" width="22" height="30" viewBox="0 0 22 30" style={{ position: 'absolute', right: '-11px', top: '95px', overflow: 'visible', zIndex: 6, pointerEvents: 'none', transform: 'scaleX(-1)' }}>
+                  <path d="M11 3.5l2.6 2.4 1.4-1.2 1.1 3.2 2.3.8-1.4 2.6 1.8 2.3-2.3 1.4.6 3-2.8-.2-.9 2.9-2.4-1.9-2.4 1.6-.4-2.9z" fill="#0A0B0C" stroke="#55585D" strokeWidth=".5" strokeLinejoin="round" />
+                  <path d="M12.8 6.3l.9-.7M16.1 8.3l1.9-1.1M18.2 13.4l2.6 1.1M15.8 19.6l1.3 2.4M12.6 20.9l-.1 2.6" stroke="#C9CCD0" strokeWidth=".45" strokeLinecap="round" opacity=".7" />
+                  <path d="M18.6 9.4l2.6-2.6 1.2.4M17.9 16.6l3.1 1.4" fill="none" stroke="rgba(255,255,255,.38)" strokeWidth=".4" strokeLinecap="round" />
+                  <path d="M12.6 10.2l2.1-1.6M13 13.4l2.6.2M12.8 16.4l1.9 1.4" stroke="#C47A3A" strokeWidth=".7" strokeLinecap="round" />
+                  <circle cx="12.2" cy="13.2" r="3.1" fill="#1F2124" stroke="#3A3D42" strokeWidth=".9" />
+                  <circle cx="11.8" cy="12.6" r="1" fill="rgba(255,255,255,.18)" />
+                </svg>
                 <div style={{ position: 'absolute', inset: '3px', borderRadius: '23px', background: '#050506', overflow: 'hidden' }}>
                   {'\n            '}
                   <div
