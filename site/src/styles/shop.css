@@ -147,6 +147,9 @@ html[dir='rtl'] .sf-tg input:checked + i::after { transform: translateX(-14px); 
   .shop-side-done, .shop-fbtn { display: inline-flex !important; }
   .shop-grid:not(.list) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+/* owner (18 Nov): on a tablet three parts per row (four on the wider ones), not two */
+@media (min-width: 700px) and (max-width: 1000px) { .shop-grid:not(.list) { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; } }
+@media (min-width: 920px) and (max-width: 1000px) { .shop-grid:not(.list) { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
 @media (max-width: 420px) { .shop-grid:not(.list) { gap: 10px; } .ss-fmp span { display: none; } .ss-bar { height: 56px; padding-inline-start: 12px; } .ss-kbd { display: none; } }
 .shop-more { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 30px; font: 500 13px Inter, sans-serif; color: var(--g4); }
 .shop-more i { width: 220px; height: 4px; border-radius: 4px; background: var(--g2); overflow: hidden; } .shop-more em { display: block; height: 100%; background: var(--y); }

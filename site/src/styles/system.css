@@ -822,3 +822,12 @@ html[data-theme="dark"] .sn-tile.sam { background: radial-gradient(circle at 50%
 .sh-skip.out { opacity: 0; transition: opacity .2s; }
 @keyframes shIn { from { opacity: 0; transform: translate(-50%, 8px); } to { opacity: 1; transform: translate(-50%, 0); } }
 html.sh-on { overscroll-behavior: none; }
+/* owner (18 Nov) iPad: no grey band behind the status bar; the time and date sit lower, inside the rounded corner, and
+   their ink adapts (dark over the light shop, white over the graphite header); the camera island always stays. */
+.hi-sb { background: transparent !important; box-shadow: none !important; align-items: flex-end; padding: 0 24px 4px 28px; transition: color .35s ease; }
+.hi-sb.dark { color: #141518; } .hi-sb.dark svg { fill: #141518; } .hi-sb.dark i { background: #141518; box-shadow: 0 0 0 1px rgba(20,21,24,.35); } .hi-sb.dark i::after { background: rgba(20,21,24,.5); }
+.hi-sb.light { color: #fff; }
+.hi-sb .hi-isl { position: absolute; left: 50%; top: 6px; width: 54px; height: 12px; margin-left: -27px; border-radius: 7px; background: #050506; box-shadow: inset 0 0 0 .5px rgba(255,255,255,.08), 0 0 0 .5px rgba(0,0,0,.4); }
+.hi-sb .hi-isl i { position: absolute; right: 8px; top: 3px; left: auto; width: 6px; height: 6px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #3A4A6A, #0B0E16 60%) !important; box-shadow: 0 0 0 1px #15171C, inset 0 0 1px rgba(120,160,255,.6) !important; }
+.hi-sb .hi-isl i::after { display: none; }
+.hi-sb { background: var(--tint, transparent) !important; transition: color .35s ease, background-color .35s ease; }

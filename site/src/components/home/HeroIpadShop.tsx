@@ -24,11 +24,11 @@ type Row = { k: number; a: Product; b: Product };
 /** Owner (16 Nov): "the iPad is not running the real shop". It now runs the REAL /shop page in a frame, scaled to the
  *  iPad screen, scrolling slowly by itself (pause, scroll, pause, back to the top). It loads only after the home page
  *  has finished loading and while the hero is on screen; until then the drawn shop below stands in for it. */
-const VW = 834; // an iPad Air in portrait, so the shop lays out exactly as it does on a real iPad
+const VW = 880; // owner (18 Nov): "less zoomed, 3 to 4 items per row": a slightly wider iPad, three parts per row
 const SB = 52; // the iPad status bar (virtual px); the shop's own header sits just under it, like a real app
 function RealShop({ live, onReady }: { live: React.MutableRefObject<boolean>; onReady: () => void }) {
   const box = useRef<HTMLDivElement>(null), fr = useRef<HTMLIFrameElement>(null), [go, setGo] = useState(false), [ready, setReady] = useState(false), [sc, setSc] = useState(0.46), [h, setH] = useState(1100);
-  const [tap, setTap] = useState<{ x: number; y: number; n: number } | null>(null), [clock, setClock] = useState('');
+  const [tap, setTap] = useState<{ x: number; y: number; n: number } | null>(null), [clock, setClock] = useState(''), [ink, setInk] = useState<'dark' | 'light'>('light'), [tint, setTint] = useState('');
   useEffect(() => {
     const start = () => { const w = window as unknown as { requestIdleCallback?: (f: () => void, o?: { timeout: number }) => number }; (w.requestIdleCallback || ((f: () => void) => window.setTimeout(f, 1200)))(() => setGo(true), { timeout: 4000 }); };
     if (document.readyState === 'complete') window.setTimeout(start, 1200); else window.addEventListener('load', () => window.setTimeout(start, 1200), { once: true });
@@ -39,6 +39,15 @@ function RealShop({ live, onReady }: { live: React.MutableRefObject<boolean>; on
   // the frame sleeps (display: none, the browser stops drawing it) whenever the hero is off screen
   const [shown, setShown] = useState(true);
   useEffect(() => { const el = box.current?.closest('section') || box.current; if (!el) return; const io = new IntersectionObserver(([e]) => setShown(e.isIntersecting)); io.observe(el); return () => io.disconnect(); }, []);
+  // owner (18 Nov): "the time and date should adapt dark/light": like iOS, the status bar has no band of its own; its ink
+  // turns dark over a light screen and white over a dark one (we read the colour of whatever sits under it)
+  useEffect(() => {
+    if (!ready) return;
+    // like Safari on an iPad: the bar takes the colour of the page right under it, and its ink follows
+    const rgb = (c: string) => { const m = c.match(/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?/); return !m || (m[4] !== undefined && +m[4] < 0.5) ? null : [+m[1], +m[2], +m[3]]; };
+    const probe = () => { const d = fr.current?.contentDocument, w = fr.current?.contentWindow; if (!d || !w) return; let el = d.elementFromPoint(VW * 0.5, SB + 6) as HTMLElement | null, c: number[] | null = null; while (el && !c) { c = rgb(w.getComputedStyle(el).backgroundColor); el = el.parentElement; } if (!c) c = [247, 247, 245]; const l = (0.299 * c[0] + 0.587 * c[1] + 0.114 * c[2]) / 255; setTint('rgb(' + c.join(',') + ')'); setInk(l > 0.6 ? 'dark' : 'light'); };
+    probe(); const iv = window.setInterval(probe, 500); return () => window.clearInterval(iv);
+  }, [ready]);
   // a customer using it: a quick flick, a pause to look, sometimes open a part, read it, close it, carry on;
   // after a while back to the top
   useEffect(() => {
@@ -46,8 +55,9 @@ function RealShop({ live, onReady }: { live: React.MutableRefObject<boolean>; on
     const wait = (ms: number) => new Promise<void>((r) => tm.push(window.setTimeout(r, ms)));
     const W = () => fr.current?.contentWindow || null, D = () => fr.current?.contentDocument || null;
     const awake = async () => { while (alive && (!live.current || document.hidden)) await wait(800); };
-    const flick = async (dy: number) => { const w = W(); if (!w) return; const y0 = w.scrollY, t0 = performance.now(), dur = 520 + Math.abs(dy) * 0.35;
-      await new Promise<void>((res) => { const f = (t: number) => { const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3); w.scrollTo(0, y0 + dy * e); if (k < 1 && alive) requestAnimationFrame(f); else res(); }; requestAnimationFrame(f); }); };
+    // owner (18 Nov): "the shop inside should scroll smoother": a longer, eased glide (slow in, slow out) like a thumb
+    const flick = async (dy: number) => { const w = W(); if (!w) return; const y0 = w.scrollY, t0 = performance.now(), dur = 1100 + Math.abs(dy) * 1.4;
+      await new Promise<void>((res) => { const f = (t: number) => { const k = Math.min(1, (t - t0) / dur), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; w.scrollTo(0, y0 + dy * e); if (k < 1 && alive) requestAnimationFrame(f); else res(); }; requestAnimationFrame(f); }); };
     const press = async (el: Element | null) => { if (!el) return false; const r = el.getBoundingClientRect(); setTap({ x: (r.left + r.width / 2) * sc, y: (r.top + r.height / 2) * sc, n: ++n }); await wait(320); (el as HTMLElement).click(); return true; };
     const run = async () => {
       await wait(1600);
@@ -55,7 +65,7 @@ function RealShop({ live, onReady }: { live: React.MutableRefObject<boolean>; on
         await awake(); const w = W(), d = D(); if (!w || !d) { await wait(1000); continue; }
         const max = d.documentElement.scrollHeight - w.innerHeight;
         if (w.scrollY > Math.min(max - 50, 5200)) { await wait(1400); w.scrollTo({ top: 0, behavior: 'smooth' }); await wait(2600); continue; }
-        await flick(260 + Math.random() * 360); await wait(1100 + Math.random() * 1600);
+        await flick(220 + Math.random() * 260); await wait(1300 + Math.random() * 1500);
         if (Math.random() < 0.42) { // open a part that is fully on screen
           const cards = Array.from(d.querySelectorAll('.pc-img')).filter((c) => { const r = c.getBoundingClientRect(); return r.top > 140 && r.bottom < w.innerHeight - 60; });
           if (cards.length && (await press(cards[Math.floor(Math.random() * cards.length)]))) {
@@ -70,7 +80,7 @@ function RealShop({ live, onReady }: { live: React.MutableRefObject<boolean>; on
   return (
     <div ref={box} className={'hi-real' + (ready ? ' on' : '') + (shown ? '' : ' off')} aria-hidden="true">
       {go ? <iframe ref={fr} src="/shop" title="Sam Electronics shop" tabIndex={-1} scrolling="no" onLoad={() => window.setTimeout(() => { setReady(true); onReady(); }, 900)} style={{ width: VW + 'px', height: h + 'px', transform: 'scale(' + sc + ')' }} /> : null}
-      <div className="hi-sb" style={{ height: SB * sc + 'px' }}><b>{clock}</b><span><svg width="13" height="9" viewBox="0 0 13 9"><path d="M6.5 8.6 4.5 6.4a2.8 2.8 0 0 1 4 0zM2.6 4.6a5.5 5.5 0 0 1 7.8 0l-1.2 1.2a3.8 3.8 0 0 0-5.4 0zM.6 2.6a8.3 8.3 0 0 1 11.8 0l-1.2 1.2a6.6 6.6 0 0 0-9.4 0z" /></svg><small>100%</small><i /></span></div>
+      <div className={'hi-sb ' + ink} style={{ height: SB * sc + 'px', ['--tint' as string]: tint || undefined }}><b>{clock}</b><span className="hi-isl" aria-hidden="true"><i /></span><span><svg width="13" height="9" viewBox="0 0 13 9"><path d="M6.5 8.6 4.5 6.4a2.8 2.8 0 0 1 4 0zM2.6 4.6a5.5 5.5 0 0 1 7.8 0l-1.2 1.2a3.8 3.8 0 0 0-5.4 0zM.6 2.6a8.3 8.3 0 0 1 11.8 0l-1.2 1.2a6.6 6.6 0 0 0-9.4 0z" /></svg><small>100%</small><i /></span></div>
       {tap ? <span key={tap.n} className="hs-tap go hi-rtap" style={{ left: tap.x + 'px', top: tap.y + 'px' }} /> : null}
     </div>
   );
