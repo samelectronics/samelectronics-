@@ -54,6 +54,8 @@ export default function SiteControls() {
   const [p, setP] = useState<Prefs | null>(null), [banner, setBanner] = useState(false), [panel, setPanel] = useState<false | 'all' | 'privacy'>(false), [, force] = useState(0);
   const [inst, setInst] = useState<null | { prompt: () => void }>(null);
   const [draft, setDraft] = useState({ memory: true, signal: false, booster: false });
+  // Samsoom's stock alerts and price watches: compare with the live catalogue once the page settles (rings the bell)
+  useEffect(() => { const t = window.setTimeout(() => { import('@/lib/watch').then((m) => m.checkWatches()).catch(() => {}); }, 5000); return () => window.clearTimeout(t); }, []);
   useEffect(() => {
     installBrandSelects();
     const cur = prefs(); setP(cur); let iv = 0; if (!cur.consent) {
