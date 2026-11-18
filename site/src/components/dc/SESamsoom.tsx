@@ -76,7 +76,7 @@ function render(v: Vals) {
                   viewBox="0 0 24 26"
                   width="19"
                   height="20.6"
-                  style={{ position: 'absolute', left: '-0.7px', top: '46.2px', overflow: 'visible', transform: 'rotate(33.7deg)', transformOrigin: '9.5px 0', /* owner (15 Nov): the connector sits ON the cable end, along its direction */ filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
+                  style={{ position: 'absolute', left: '-0.7px', top: '46.2px', overflow: 'visible', transform: 'rotate(33.7deg) scaleX(-1)', transformOrigin: '9.5px 0', /* owner (18 Nov): each hand is the mirror of the other, both thumbs pointing outward */ /* owner (15 Nov): the connector sits ON the cable end, along its direction */ filter: 'drop-shadow(0 1.5px 1.5px rgba(0,0,0,.35))' }}
                 >
                   {/* owner (15 Nov): a smooth little tech hand (five fingers, graphite glove, yellow cuff), not a plug */}
                   <defs>
@@ -90,6 +90,7 @@ function render(v: Vals) {
                       <linearGradient id="samF2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#4C5056" /><stop offset=".5" stopColor="#2B2E32" /><stop offset="1" stopColor="#15171A" /></linearGradient>
                       <radialGradient id="samB2" cx=".4" cy=".3" r=".9"><stop offset="0" stopColor="#555960" /><stop offset=".6" stopColor="#2A2D31" /><stop offset="1" stopColor="#141517" /></radialGradient>
                     </defs>
+                    <path d="M12 -4.5V3.4" stroke="#1A1C1F" strokeWidth="8.1" strokeLinecap="round" /><path d="M12 -4.5V3.4" stroke="#3A3D42" strokeWidth="5.8" strokeLinecap="round" />
                     <g stroke="#0D0E0F" strokeWidth=".55" strokeLinejoin="round">
                       <path d="M6.2 11.6c-.4 2.6-.5 5.2-.2 7.6.1.9 1.5.9 1.7 0 .4-2.2.6-4.6.6-7z" fill="url(#samF2)" />
                       <path d="M8.9 12.2c-.2 3-.2 6 .1 8.8.1 1 1.7 1 1.8 0 .3-2.8.4-5.8.3-8.6z" fill="url(#samF2)" />
@@ -173,6 +174,7 @@ function render(v: Vals) {
                       <linearGradient id="samF2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#4C5056" /><stop offset=".5" stopColor="#2B2E32" /><stop offset="1" stopColor="#15171A" /></linearGradient>
                       <radialGradient id="samB2" cx=".4" cy=".3" r=".9"><stop offset="0" stopColor="#555960" /><stop offset=".6" stopColor="#2A2D31" /><stop offset="1" stopColor="#141517" /></radialGradient>
                     </defs>
+                    <path d="M12 -4.5V3.4" stroke="#1A1C1F" strokeWidth="8.1" strokeLinecap="round" /><path d="M12 -4.5V3.4" stroke="#3A3D42" strokeWidth="5.8" strokeLinecap="round" />
                     <g stroke="#0D0E0F" strokeWidth=".55" strokeLinejoin="round">
                       <path d="M6.2 11.6c-.4 2.6-.5 5.2-.2 7.6.1.9 1.5.9 1.7 0 .4-2.2.6-4.6.6-7z" fill="url(#samF2)" />
                       <path d="M8.9 12.2c-.2 3-.2 6 .1 8.8.1 1 1.7 1 1.8 0 .3-2.8.4-5.8.3-8.6z" fill="url(#samF2)" />
@@ -312,7 +314,7 @@ function render(v: Vals) {
                     width: '3px',
                     height: '26px',
                     borderRadius: '2px',
-                    background: 'linear-gradient(90deg,#2A2C30 0%,#4E5258 40%,#1C1E21 100%)', boxShadow: '1.5px 1px 2px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.6)', width: '3.5px',
+                    background: 'linear-gradient(90deg,#2A2C30 0%,#4E5258 40%,#1C1E21 100%)', boxShadow: '1.5px 1px 2px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.6)', width: '2.6px',
                   }}
                 ></span>
                 {'\n          '}
@@ -324,7 +326,7 @@ function render(v: Vals) {
                     width: '3px',
                     height: '14px',
                     borderRadius: '2px',
-                    background: 'linear-gradient(90deg,#1C1E21 0%,#4E5258 60%,#2A2C30 100%)', boxShadow: '-1.5px 1px 2px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.6)', width: '3.5px',
+                    background: 'linear-gradient(90deg,#1C1E21 0%,#4E5258 60%,#2A2C30 100%)', boxShadow: '-1.5px 1px 2px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.6)', width: '2.6px',
                   }}
                 ></span>
                 <span
@@ -335,7 +337,7 @@ function render(v: Vals) {
                     width: '3px',
                     height: '22px',
                     borderRadius: '2px',
-                    background: 'linear-gradient(90deg,#1C1E21 0%,#4E5258 60%,#2A2C30 100%)', boxShadow: '-1.5px 1px 2px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.6)', width: '3.5px',
+                    background: 'linear-gradient(90deg,#1C1E21 0%,#4E5258 60%,#2A2C30 100%)', boxShadow: '-1.5px 1px 2px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.35), inset 0 -1px 0 rgba(0,0,0,.6)', width: '2.6px',
                   }}
                 ></span>
                 {'\n          '}
