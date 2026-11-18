@@ -25,7 +25,9 @@ class Component extends DCLogic {
   renderVals() {
     const D = window.SE_DATA, L = window.seI18n, line = 'A phone on your bench? We have the part.';
     const head = (L && L.lang() !== 'en' ? L.tr(line) : line).split(' '); // word by word, in the visitor's language
-    return { secRef: this.secRef, on: this.state.on, head,
+    // the numbers come from the live catalogue, rounded down so the "+" stays true
+    const nB = D ? D.brands.length : 15, nM = D ? Math.floor(D.models.length / 50) * 50 : 800, nP = D ? Math.floor(D.products.reduce((a, x) => a + Math.max(0, x.stock_qty || 0), 0) / 100) * 100 : 7000;
+    return { secRef: this.secRef, on: this.state.on, head, nB, nM, nP,
       wa: D ? 'https://wa.me/' + D.contact.wa + '?text=' + encodeURIComponent('Hi Sam Electronics, I found you on your website.') : '#',
       dir: SITE.contact.mapsLink,
       browse: (ev) => { ev.preventDefault(); window.dispatchEvent(new CustomEvent('se:go', { detail: { id: 'offer' } })); } };

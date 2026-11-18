@@ -6,15 +6,6 @@
 import React from 'react';
 import { type Vals, createDC } from '@/dc/runtime';
 import Logic from './SEFinale.logic.js';
-import FinaleRoom from './FinaleRoom';
-
-const FR = Array.from({ length: 24 }, (_, i) => '/assets/pose/film-' + String(i * 2).padStart(2, '0') + '-480.webp');
-/** the teardown film, slowly opening and closing while the finale is on screen */
-function FinaleFilm({ on }: { on: boolean }) {
-  const [f, setF] = React.useState(0);
-  React.useEffect(() => { if (!on) return; FR.forEach((x) => { const i = new Image(); i.src = x; }); let t = 0; const id = window.setInterval(() => { t++; const n = FR.length, cyc = n * 2 + 24, p = t % cyc; setF(p < n ? p : p < n + 12 ? n - 1 : p < n * 2 + 12 ? n * 2 + 11 - p : 0); }, 90); return () => window.clearInterval(id); }, [on]);
-  return <img loading="lazy" decoding="async" className="fz3-film" src={FR[f]} alt="" />;
-}
 
 // R11 (owner): the traces run closer together into the ring
 // owner (15 Nov): never three lines starting/ending together: each trace starts at its own pad, at its own distance
@@ -29,34 +20,56 @@ const start = (d: string) => { const m = d.match(/^M(\d+) (\d+)/)!; return [Numb
 // owner (16 Nov): "cheap: logo circuits, random buttons, too yellow". Rebuilt as a bright product studio: the real 3D
 // pallet from Home on a turntable under a soft spotlight, a carton and a single boxed part floating either side, one
 // clear headline, three buttons of one family, the stats. Colour order: reviews (graphite) → finale (white) → footer.
+// owner (18 Nov): "the page before the footer: the idea is better now but still not professional". A calm white closing
+// spread (the colour order is reviews: graphite → finale: white → footer: graphite): the promise on the left with three
+// promise cards, the teardown film on the right in a framed studio stage, and a stats band underneath.
+const PROMISES: [string, string, string][] = [
+  ['01', 'Quality', 'Every part is tested on a bench before it leaves the counter.'],
+  ['02', 'Warranty', 'Each grade carries its own warranty, written on the invoice.'],
+  ['03', 'Price', 'Fair retail prices, and trade prices for repair shops.'],
+];
 function render(v: Vals) {
   const head = (v.head || HEAD) as string[], cut = Math.max(1, head.findIndex((w) => /[?؟？]$/.test(w)) + 1);
   return (
-    <section ref={v.secRef} id="finale" data-tone="dark" data-screen-label="Finale" className={'fz2 fz3s' + (v.on ? ' fz-on' : '')}>
-      <div className="fz2-light" aria-hidden="true" />
-      <div className="fz2-in">
-        <span className="fz2-eb">{WORDS.join(' · ')}</span>
-        <h2 className="fz2-h" data-no-i18n="">
-          <span className="a">{head.slice(0, cut).map((w, i) => <span key={i} style={{ ['--i' as string]: i } as React.CSSProperties}>{w} </span>)}</span>
-          <span className="b">{head.slice(cut).map((w, i) => <span key={i} style={{ ['--i' as string]: i + cut } as React.CSSProperties}>{w} </span>)}</span>
-        </h2>
-        {/* owner (17 Nov): "what the hell is this footer": the ending is a graphite film stage now: the teardown film plays
-            on a glowing floor with light beams crossing, like the teardown ad */}
-        <div className="fz2-stage fz3" aria-hidden="true">
-          <i className="fz3-ray a" /><i className="fz3-ray b" /><i className="fz3-ray c" />
-          <span className="fz2-floor" />
-          <FinaleFilm on={!!v.on} />
+    <section ref={v.secRef} id="finale" data-tone="light" data-screen-label="Finale" className={'fz4' + (v.on ? ' fz-on' : '')}>
+      <div className="fz4-in">
+        <div className="fz4-l">
+          <span className="fz4-eb"><i />{WORDS.join(' · ')}</span>
+          <h2 className="fz4-h" data-no-i18n="">
+            <span className="a">{head.slice(0, cut).map((w, i) => <span key={i} style={{ ['--i' as string]: i } as React.CSSProperties}>{w} </span>)}</span>
+            <span className="b">{head.slice(cut).map((w, i) => <span key={i} style={{ ['--i' as string]: i + cut } as React.CSSProperties}>{w} </span>)}</span>
+          </h2>
+          <p className="fz4-p">Screens, batteries, flex cables and every small part, for every popular model. Tested, graded and ready at the counter in Deira, or shipped to your door.</p>
+          <div className="fz4-acts">
+            <a href="#offer" onClick={v.browse} className="fz4-btn y">Browse all parts<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a>
+            <button type="button" className="fz4-btn duo" onClick={() => window.dispatchEvent(new CustomEvent('se:chatwith'))}><span className="duo-ic" aria-hidden="true"><i className="ct-ic wa" /><i className="ct-ic wc" /></span>Talk to us</button>
+            <a href={v.dir} target="_blank" rel="noopener noreferrer" className="fz4-btn ghost">Visit Deira</a>
+          </div>
+          <div className="fz4-pro">{PROMISES.map(([n, t, d], i) => <span key={n} style={{ ['--i' as string]: i } as React.CSSProperties}><em>{n}</em><b>{t}</b><small>{d}</small></span>)}</div>
         </div>
-        <div className="fz2-acts">
-          <a href="#offer" onClick={v.browse} className="fz2-btn y">Browse all parts<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a>
-          <button type="button" className="fz2-btn duo" onClick={() => window.dispatchEvent(new CustomEvent('se:chatwith'))}><span className="duo-ic" aria-hidden="true"><i className="ct-ic wa" /><i className="ct-ic wc" /></span>Talk to us</button>
-          <a href={v.dir} target="_blank" rel="noopener noreferrer" className="fz2-btn">Visit Deira</a>
+        <div className="fz4-r" aria-hidden="true">
+          <div className="fz4-stage">
+            <span className="fz4-spot" /><span className="fz4-grid" /><span className="fz4-floor" />
+            <span className="fz4-medal">
+              <svg className="fz4-ring" viewBox="0 0 200 200"><circle cx="100" cy="100" r="96" pathLength="100" /></svg>
+              <span className="fz4-coin">
+                <span className="fz4-edge" />
+                <span className="fz4-face"><img src="/assets/se-logo-512.webp" alt="" loading="lazy" decoding="async" /><span className="fz4-shine" /></span>
+              </span>
+            </span>
+            <span className="fz4-refl"><img src="/assets/se-logo-320.webp" alt="" loading="lazy" decoding="async" /></span>
+            <span className="fz4-hud"><i />SAM ELECTRONICS · SINCE 2003</span>
+            <span className="fz4-tag t1"><b>4 grades</b><small>Original · OLED · Incell · AAA</small></span>
+            <span className="fz4-tag t2"><b>Bench-tested</b><small>Before it ships</small></span>
+            <span className="fz4-tag t3"><b>Same day</b><small>Pickup in Deira</small></span>
+          </div>
         </div>
-        <div className="fz2-stats">
-          <span><b><em data-fn="20">20</em>+</b><small>years in Deira</small></span>
-          <span><b><em data-fn="14">14</em></b><small>brands</small></span>
-          <span><b><em data-fn="9000">9,000</em>+</b><small>parts in stock</small></span>
-        </div>
+      </div>
+      <div className="fz4-stats">
+        <span><b><em data-fn="20">20</em>+</b><small>years in Deira</small></span>
+        <span><b><em data-fn={v.nB}>{v.nB}</em></b><small>brands</small></span>
+        <span><b><em data-fn={v.nM}>{v.nM}</em>+</b><small>phone models</small></span>
+        <span><b><em data-fn={v.nP}>{Number(v.nP).toLocaleString('en-US')}</em>+</b><small>parts in stock</small></span>
       </div>
     </section>
   );
