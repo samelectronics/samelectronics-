@@ -2,7 +2,7 @@
 // R10 P7 · Wholesale: the trade floor (one pallet per part family, live stock from the catalogue), the live trade
 // calculator (pick parts and quantities → retail vs trade, per order and per month) and the application tracker.
 import React, { useEffect, useMemo, useState } from 'react';
-import { products, aed, type Product } from '@/lib/catalog';
+import { products, aed, type Product, ptitle } from '@/lib/catalog';
 import { useMe } from '@/lib/backend';
 import { T } from '@/components/site/ui';
 
@@ -110,7 +110,7 @@ export function TwoPrices() {
           <a key={p.id} className={'wf2-pc' + (trade ? ' tr' : '')} href={'/shop?q=' + encodeURIComponent(p.title)}>
             <span className="im"><img src={SHOT(p)} alt="" loading="lazy" /></span>
             <small>{p.catName} · {p.gradeName}</small>
-            <b>{p.title}</b>
+            <b>{ptitle(p)}</b>
             <span className="pr"><s className={trade ? 'show' : ''}>{aed(p.retail_price, false)}</s><strong key={trade ? 't' : 'r'}>{aed(trade ? p.wholesale_price : p.retail_price, false)}</strong>{trade ? <em>−{off}%</em> : null}</span>
           </a>); })}
       </div>

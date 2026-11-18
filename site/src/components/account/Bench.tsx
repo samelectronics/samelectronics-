@@ -1,4 +1,5 @@
 'use client';
+import { ListShareSheet } from '@/components/shop/ShareSheets';
 // P3 · MY BENCH, the customer's account: overview, orders (with their status steps), cart & saved, stars & alerts,
 // points & membership card, company profiles (on top of the personal one: details and locations), My devices, Samsoom
 // chats, messages with the team (live chat), and profile & settings. Sections are in the link (#orders, #companies…).
@@ -37,6 +38,7 @@ type Chat = { id: string; title: string; msgs: { t: string; me: boolean }[]; at:
 export default function Bench({ me, refresh }: { me: User; refresh: () => void }) {
   const [sec, setSec] = useState('overview'), [orders, setOrders] = useState<Order[]>([]), [cos, setCos] = useState<Company[]>([]), [threads, setThreads] = useState<Thread[]>([]);
   const st = useStore();
+  const [shareKit, setShareKit] = useState<string | null>(null); const shk = shareKit ? st.kits.find((k) => k.name === shareKit) : null;
   useEffect(() => { const h = () => setSec((location.hash.slice(1) || 'overview')); h(); window.addEventListener('hashchange', h); return () => window.removeEventListener('hashchange', h); }, []);
   const load = () => { backend.myOrders().then(setOrders); backend.companies().then(setCos); backend.threads().then(setThreads); };
   useEffect(load, []);
@@ -87,7 +89,8 @@ export default function Bench({ me, refresh }: { me: User; refresh: () => void }
             <List title="In your cart" ids={st.cart.map((l) => l.id)} act={['Checkout', () => (location.href = '/cart')]} />
             <List title="Saved for later" ids={st.saved} each={['Move to cart', (id) => store.add(id)]} />
             <List title="Stars" ids={st.favs} each={['Remove star', (id) => store.fav(id)]} />
-            {st.kits.map((k) => <List key={k.name} title={k.name} ids={k.ids} act={['Add all to cart', () => k.ids.forEach((id) => store.add(id))]} each={['Remove', (id) => store.toList(k.name, id)]} />)}
+            {shk ? <ListShareSheet name={shk.name} ids={shk.ids} onClose={() => setShareKit(null)} /> : null}
+            {st.kits.map((k) => <List key={k.name} title={k.name} ids={k.ids} share={() => setShareKit(k.name)} act={['Add all to cart', () => k.ids.forEach((id) => store.add(id))]} each={['Remove', (id) => store.toList(k.name, id)]} />)}
             <List title="Price & stock alerts" ids={st.alerts} each={['Stop alert', (id) => store.alert(id)]} note="We will message you when the price drops or stock is back (e-mail alerts start when the database is connected)." />
           </Sec>
         ) : sec === 'points' ? (
@@ -196,11 +199,11 @@ function OrderRow({ o, full }: { o: Order; full?: boolean }) {
     </div>
   );
 }
-function List({ title, ids, act, each, note }: { title: string; ids: string[]; act?: [string, () => void]; each?: [string, (id: string) => void]; note?: string }) {
+function List({ title, ids, act, each, note, share }: { title: string; ids: string[]; act?: [string, () => void]; each?: [string, (id: string) => void]; note?: string; share?: () => void }) {
   const ps = ids.map(byId).filter(Boolean) as Product[];
   return (
     <div className="sp-card bn-list">
-      <div className="bn-ch"><h3 className="sp-h3">{T(title)} <small className="sp-muted">· {ps.length}</small></h3>{act && ps.length ? <button type="button" className="sp-btn sm" onClick={act[1]}>{T(act[0])}</button> : null}</div>
+      <div className="bn-ch"><h3 className="sp-h3">{T(title)} <small className="sp-muted">· {ps.length}</small></h3><span className="bn-ch-acts">{share && ps.length ? <button type="button" className="sp-btn sm ghost" onClick={share}>{T('Share')}</button> : null}{act && ps.length ? <button type="button" className="sp-btn sm" onClick={act[1]}>{T(act[0])}</button> : null}</span></div>
       {note ? <small className="sp-muted">{T(note)}</small> : null}
       {ps.length ? <div className="bn-items">{ps.map((p) => <div key={p.id} className="bn-item"><a href={'/shop?p=' + p.id}><img src={p.img} alt="" /></a><span><a href={'/shop?p=' + p.id}><b>{p.title}</b></a><small>{p.gradeName} · {priceText(p.price)}</small></span>{each ? <button type="button" className="shop-clear" onClick={() => each[1](p.id)}>{T(each[0])}</button> : null}</div>)}</div> : <small className="sp-muted">{T('Nothing here yet.')}</small>}
     </div>

@@ -3725,5 +3725,16 @@ const DICT: Record<string, string> = {
   'POCO parts at trade prices.': 'Akụkụ POCO n’ọnụahịa azụmahịa.',
   'Screens and batteries for POCO X, F and M, ready in Deira.': 'Ihuenyo na batrị maka POCO X, F na M, dị njikere na Deira.',
   'Shop POCO': 'Zụta POCO',
+  'Only parts that fit my phones': 'Naanị akụkụ dabara ekwentị m',
+  'Only parts that fit my phone': 'Naanị akụkụ dabara ekwentị m',
+  'Share this list': 'Kesaa ndepụta a',
+  'e.g. Please confirm stock and price': 'dịka: Biko kwado ngwongwo na ọnụahịa',
+  'Earpiece': 'Ọkà ntị',
+  'Flex': 'Flex',
+  'Tool': 'Ngwaọrụ',
+  'Charging board': 'Bọọdụ chaja',
+  'Loudspeaker': 'Ọkà ụda',
+  'Vibrator': 'Ihe na-ama jijiji',
+  'Power flex': 'Flex ike',
 };
 export default DICT;

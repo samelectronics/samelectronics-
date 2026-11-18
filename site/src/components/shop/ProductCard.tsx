@@ -1,9 +1,10 @@
 'use client';
+import { toast } from '@/components/site/Toaster';
 // P2 · One product in the shop grid (or list). Photo on the standard stage, grade + maker, rating, price ("· sample" until
 // the owner's prices), the trade price (locked until the trade account is approved), stock estimate, and the actions:
 // add to cart (flies into the cart), star, compare, "fits my device".
 import PriceTag from './PriceTag';
-import { buyable } from '@/lib/catalog';
+import { buyable, ptitle } from '@/lib/catalog';
 import React, { useRef } from 'react';
 import { type Product, aed } from '@/lib/catalog';
 import { store, type State } from '@/lib/store';
@@ -41,7 +42,7 @@ export default function ProductCard({ p, st, trade, open, list, fits, tour }: { 
       </div>
       <div className="pc-body">
         <span className="pc-meta" {...(tour ? { 'data-tour-step': '7', 'data-tour-title': 'Grade and maker', 'data-tour-text': 'The coloured tag is the quality (Original, OLED, Incell, AAA and more). The dark tag with a light is who made it.' } : {})}><GradeTag g={p.grade} name={p.gradeName} size="sm" /><MakerTag m={p.manufacturer || ''} name={p.makerName} size="sm" />{fits ? <span className="pc-fits">✓ {T('Fits your')} {fits}</span> : null}</span>
-        <button type="button" className="pc-t" onClick={() => open(p)}>{p.title}</button>
+        <button type="button" className="pc-t" onClick={() => open(p)}>{ptitle(p)}</button>
         <span className="pc-sub">{p.brandName} · {p.part_name}</span>
         <span className="pc-rate"><Stars v={p.rating} n={p.reviews} /><span className="sp-sample">sample</span></span>
         <span className="pc-price">
@@ -56,6 +57,8 @@ export default function ProductCard({ p, st, trade, open, list, fits, tour }: { 
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6" /><circle cx="10" cy="20" r="1.4" /><circle cx="17" cy="20" r="1.4" /></svg>
             {p.stock_qty <= 0 ? (inCart ? T('Requested') + ' · ' + inCart.qty : T('Request it')) : inCart ? T('Add another') + ' · ' + inCart.qty : T('Add to cart')}
           </button>
+          {/* owner (18 Nov): trade accounts buy in bulk: +5 and +10 straight from the card */}
+          {trade && buyable(p, trade) ? <span className="pc-bulk">{[5, 10].map((n) => <button key={n} type="button" data-sound="add" aria-label={T('Add') + ' ' + n} onClick={() => { store.add(p.id, n); toast(T('Added to cart') + ' · +' + n); }}>+{n}</button>)}</span> : null}
         </span>
       </div>
     </article>

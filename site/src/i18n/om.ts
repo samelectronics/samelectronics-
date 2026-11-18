@@ -3726,5 +3726,16 @@ const DICT: Record<string, string> = {
   'POCO parts at trade prices.': 'Kutaalee POCO gatii daldalaan.',
   'Screens and batteries for POCO X, F and M, ready in Deira.': 'Iskiriinota fi baatirii POCO X, F fi M, Deira keessatti qophaa’an.',
   'Shop POCO': 'POCO bitadhu',
+  'Only parts that fit my phones': 'Kutaalee bilbilota koof ta’an qofa',
+  'Only parts that fit my phone': 'Kutaalee bilbila kootiif ta’an qofa',
+  'Share this list': 'Tarree kana qoodi',
+  'e.g. Please confirm stock and price': 'fkn. Maaloo kuusaa fi gatii mirkaneessaa',
+  'Earpiece': 'Sagalee gurraa',
+  'Flex': 'Flex',
+  'Tool': 'Meeshaa',
+  'Charging board': 'Boordii chaarjii',
+  'Loudspeaker': 'Sagalee guddaa',
+  'Vibrator': 'Raafamaa',
+  'Power flex': 'Flex humnaa',
 };
 export default DICT;

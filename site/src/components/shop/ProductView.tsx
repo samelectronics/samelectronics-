@@ -6,7 +6,7 @@ import { toast } from '@/components/site/Toaster';
 // "fits my devices", estimated stock (confirm on WhatsApp), delivery estimate, then the tabs (description, specifications,
 // manufacturer, warranty & quality, reviews by account holders), the repair kit for this model, similar parts and recently viewed.
 import PriceTag from './PriceTag';
-import { buyable } from '@/lib/catalog';
+import { buyable, ptitle } from '@/lib/catalog';
 import { siteRaw as _sr } from '@/lib/catalog';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -110,7 +110,7 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
 
           <div className="pv-info">
             <span className="pv-meta"><GradeTag g={p.grade} name={p.gradeName} /><a href={'/brands#maker-' + p.manufacturer} className="pv-mkl"><MakerTag m={p.manufacturer} name={p.makerName} /></a><span className="pv-ref" data-no-i18n="">{p.id}</span></span>
-            <h2 className="pv-t">{p.title}</h2>
+            <h2 className="pv-t">{ptitle(p)}</h2>
             <span className="pv-rate"><Stars v={avg} n={nRev} /><button type="button" onClick={() => setTab('Reviews')}>{T('Read reviews')}</button><span className="sp-sample">{rv.length ? '' : 'sample rating'}</span></span>
             {fits ? <span className="pv-fits ok">✓ {T('Fits your')} {fits.nick || fits.name}</span> : model ? <button type="button" className="pv-fits" onClick={() => store.device({ model_id: model.id, name: model.name })}>+ {T('Add')} {model.name} {T('to My devices')}</button> : null}
 

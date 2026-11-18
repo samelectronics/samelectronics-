@@ -3727,5 +3727,16 @@ const DICT: Record<string, string> = {
   'POCO parts at trade prices.': 'POCO 配件，批发价。',
   'Screens and batteries for POCO X, F and M, ready in Deira.': 'POCO X、F、M 的屏幕和电池，Deira 现货。',
   'Shop POCO': '选购 POCO',
+  'Only parts that fit my phones': '只看适配我手机的配件',
+  'Only parts that fit my phone': '只看适配我手机的配件',
+  'Share this list': '分享这个清单',
+  'e.g. Please confirm stock and price': '例如：请确认库存和价格',
+  'Earpiece': '听筒',
+  'Flex': '排线',
+  'Tool': '工具',
+  'Charging board': '充电小板',
+  'Loudspeaker': '扬声器',
+  'Vibrator': '振动马达',
+  'Power flex': '开机排线',
 };
 export default DICT;

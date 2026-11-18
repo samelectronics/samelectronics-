@@ -4,7 +4,7 @@
 // case you want to copy it". Two clean sheets in the Samsoom-card family: Share and Save to a list.
 import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { type Product, aed } from '@/lib/catalog';
+import { type Product, aed, ptitle, byId } from '@/lib/catalog';
 import { store } from '@/lib/store';
 import { toast } from '@/components/site/Toaster';
 import { T } from '@/components/site/ui';
@@ -35,7 +35,7 @@ export function ShareSheet({ p, link, onClose }: { p: Product; link: string; onC
   const copy = async (s: string, msg: string) => { try { await navigator.clipboard.writeText(s); } catch { /* */ } toast(msg); };
   return (
     <Sheet title={T('Share this part')} onClose={onClose}>
-      <div className="shs-card"><img src={p.img} alt="" /><span><GradeTag g={p.grade} name={p.gradeName} /><b>{p.title}</b><small>{aed(p.price, false)}</small></span></div>
+      <div className="shs-card"><img src={p.img} alt="" /><span><GradeTag g={p.grade} name={p.gradeName} /><b>{ptitle(p)}</b><small>{aed(p.price, false)}</small></span></div>
       <label className="shs-l">{T('The message')}</label>
       <div className="shs-msg">
         {own.trim() ? <p className="own">{own.trim()}</p> : null}
@@ -58,16 +58,19 @@ export function ShareSheet({ p, link, onClose }: { p: Product; link: string; onC
 }
 
 export function ListSheet({ p, kits, onClose }: { p: Product; kits: { name: string; ids: string[] }[]; onClose: () => void }) {
-  const [nm, setNm] = useState('');
+  const [nm, setNm] = useState(''), [sh, setSh] = useState<string | null>(null);
+  const shk = sh ? kits.find((k) => k.name === sh) : null;
+  if (shk) return <ListShareSheet name={shk.name} ids={shk.ids} onClose={() => setSh(null)} />;
   const flip = (name: string) => { const had = kits.find((k) => k.name === name)?.ids.includes(p.id); store.toList(name, p.id); toast((had ? T('Removed from') : T('Added to')) + ' ' + name, had ? 'off' : 'ok'); };
   return (
-    <Sheet title={T('Save to a list')} sub={p.title} onClose={onClose}>
+    <Sheet title={T('Save to a list')} sub={ptitle(p)} onClose={onClose}>
       {kits.length ? (
         <div className="shs-lists">
           {kits.map((k) => { const on = k.ids.includes(p.id); return (
             <button type="button" key={k.name} className={'shs-row' + (on ? ' on' : '')} aria-pressed={on} onClick={() => flip(k.name)}>
               <i aria-hidden="true">{on ? <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg> : null}</i>
               <span><b>{k.name}</b><small>{k.ids.length} {T(k.ids.length === 1 ? 'part' : 'parts')}</small></span>
+              {k.ids.length ? <span role="button" tabIndex={0} className="shs-rsh" aria-label={T('Share this list')} title={T('Share this list')} onClick={(e) => { e.stopPropagation(); setSh(k.name); }} onKeyDown={(e) => { if (e.key === 'Enter') { e.stopPropagation(); setSh(k.name); } }}><Ic d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M12 3v13M7 8l5-5 5 5" /></span> : null}
             </button>
           ); })}
         </div>
@@ -77,6 +80,34 @@ export function ListSheet({ p, kits, onClose }: { p: Product; kits: { name: stri
         <button type="submit" className="shs-b y" disabled={!nm.trim()}>{T('Create')}</button>
       </form>
       <a className="shs-all" href="/account#saved">{T('See my lists')} →</a>
+    </Sheet>
+  );
+}
+
+// owner (18 Nov): "share a whole list": the same sheet for a list, so a shop can send a full order on WhatsApp in one tap
+export function ListShareSheet({ name, ids, onClose }: { name: string; ids: string[]; onClose: () => void }) {
+  const ps = ids.map(byId).filter(Boolean) as Product[];
+  const total = ps.reduce((a, p) => a + p.price, 0);
+  const lines = ps.map((p) => '• ' + p.title + ' · ' + p.gradeName + ' · ' + aed(p.price, false));
+  const [own, setOwn] = useState('');
+  const text = (own.trim() ? own.trim() + '\n\n' : '') + name + '\n' + lines.join('\n') + '\n' + T('Total') + ': ' + aed(total, false);
+  return (
+    <Sheet title={T('Share this list')} sub={name + ' · ' + ps.length + ' ' + T(ps.length === 1 ? 'part' : 'parts')} onClose={onClose}>
+      <label className="shs-l">{T('The message')}</label>
+      <div className="shs-msg">
+        {own.trim() ? <p className="own">{own.trim()}</p> : null}
+        <p className="sys"><b>{name}</b><br />{ps.map((p) => <React.Fragment key={p.id}>• {ptitle(p)} · {p.gradeName} · {aed(p.price, false)}<br /></React.Fragment>)}<b>{T('Total')}: {aed(total, false)}</b></p>
+      </div>
+      <label className="shs-l" htmlFor="shs-own2">{T('Add your own message (optional)')}</label>
+      <textarea id="shs-own2" className="shs-in" rows={2} maxLength={300} value={own} onChange={(e) => setOwn(e.target.value)} placeholder={T('e.g. Please confirm stock and price')} />
+      <div className="shs-acts">
+        <a className="shs-b wa" href={'https://wa.me/?text=' + encodeURIComponent(text)} target="_blank" rel="noopener noreferrer" onClick={onClose}><i className="ct-ic wa" />WhatsApp</a>
+        <button type="button" className="shs-b wc" onClick={async () => { try { await navigator.clipboard.writeText(text); } catch { /* */ } toast(T('Copied for WeChat')); onClose(); }}><i className="ct-ic wc" />WeChat</button>
+      </div>
+      <div className="shs-more">
+        <button type="button" onClick={async () => { try { await navigator.clipboard.writeText(text); } catch { /* */ } toast(T('Copied')); }}><Ic d="M9 9h10v12H9zM5 15V3h10" />{T('Copy')}</button>
+        <button type="button" onClick={() => { ps.forEach((p) => store.add(p.id)); toast(T('Added to cart') + ' · ' + ps.length); onClose(); }}><Ic d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6" />{T('Add all to cart')}</button>
+      </div>
     </Sheet>
   );
 }

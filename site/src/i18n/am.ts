@@ -3727,5 +3727,16 @@ const DICT: Record<string, string> = {
   'POCO parts at trade prices.': 'የPOCO ክፍሎች በንግድ ዋጋ።',
   'Screens and batteries for POCO X, F and M, ready in Deira.': 'ለPOCO X፣ F እና M ስክሪኖችና ባትሪዎች፣ በዴይራ ዝግጁ።',
   'Shop POCO': 'POCO ይግዙ',
+  'Only parts that fit my phones': 'ለስልኮቼ የሚገጥሙ ክፍሎች ብቻ',
+  'Only parts that fit my phone': 'ለስልኬ የሚገጥሙ ክፍሎች ብቻ',
+  'Share this list': 'ይህን ዝርዝር አጋራ',
+  'e.g. Please confirm stock and price': 'ለምሳሌ፦ እባክዎ ክምችትና ዋጋ ያረጋግጡ',
+  'Earpiece': 'የጆሮ ስፒከር',
+  'Flex': 'ፍሌክስ',
+  'Tool': 'መሳሪያ',
+  'Charging board': 'የቻርጅ ቦርድ',
+  'Loudspeaker': 'ድምጽ ማጉያ',
+  'Vibrator': 'ንዝረት ሞተር',
+  'Power flex': 'የፓወር ፍሌክስ',
 };
 export default DICT;

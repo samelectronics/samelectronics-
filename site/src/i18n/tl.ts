@@ -3692,5 +3692,16 @@ const DICT: Record<string, string> = {
   'POCO parts at trade prices.': 'Mga piyesa ng POCO sa trade price.',
   'Screens and batteries for POCO X, F and M, ready in Deira.': 'Mga screen at baterya para sa POCO X, F at M, handa sa Deira.',
   'Shop POCO': 'Bumili ng POCO',
+  'Only parts that fit my phones': 'Mga piyesang kasya lang sa phones ko',
+  'Only parts that fit my phone': 'Mga piyesang kasya lang sa phone ko',
+  'Share this list': 'I-share ang listahang ito',
+  'e.g. Please confirm stock and price': 'hal. Pakikumpirma ang stock at presyo',
+  'Earpiece': 'Earpiece',
+  'Flex': 'Flex',
+  'Tool': 'Kagamitan',
+  'Charging board': 'Charging board',
+  'Loudspeaker': 'Loudspeaker',
+  'Vibrator': 'Vibrator',
+  'Power flex': 'Power flex',
 };
 export default DICT;

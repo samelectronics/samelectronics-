@@ -1242,3 +1242,38 @@ html[data-theme="dark"] .shs-in, html[data-theme="dark"] .shs-row, html[data-the
 @keyframes iaBoom { 0% { opacity: .95; transform: scale(.4); } 100% { opacity: 0; transform: scale(24); } }
 @media (prefers-reduced-motion: reduce) { .ia3.live, .ia3.live .ia3-boom { animation: none !important; } }
 .shs-card .tg { flex: none; }
+/* "Only parts that fit my phone" switch in the device row */
+.fit-sw { display: inline-flex; align-items: center; gap: 9px; height: 34px; padding: 0 14px 0 6px; border: 1.5px solid rgba(247,192,50,.45); border-radius: 999px; background: rgba(255,255,255,.06); color: #fff; font: 600 13.5px Inter, sans-serif; cursor: pointer; transition: background .2s, border-color .2s; }
+.fit-sw i { position: relative; width: 34px; height: 20px; border-radius: 999px; background: rgba(255,255,255,.18); transition: background .2s; }
+.fit-sw i::after { content: ''; position: absolute; left: 2px; top: 2px; width: 16px; height: 16px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.35); transition: transform .22s cubic-bezier(.3,1.4,.5,1); }
+.fit-sw.on { background: rgba(247,192,50,.16); border-color: #F7C032; }
+.fit-sw.on i { background: #F7C032; } .fit-sw.on i::after { transform: translateX(14px); }
+/* recently viewed: a slim row of the parts you opened last */
+.rv-row { margin: 0 0 18px; padding: 14px 16px 16px; border-radius: 20px; background: #FFFFFF; box-shadow: 0 0 0 1px rgba(38,40,43,.06), 0 10px 24px -18px rgba(0,0,0,.35); }
+.rv-h { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.rv-h b { font: 700 15px 'Space Grotesk', Inter, sans-serif; color: #26282B; }
+.rv-h button { border: 0; background: none; font: 500 13px Inter, sans-serif; color: #6B7076; cursor: pointer; }
+.rv-h button:hover { color: #26282B; }
+.rv-list { display: flex; gap: 10px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 4px; scrollbar-width: thin; }
+.rv-it { flex: 0 0 auto; width: 236px; display: flex; gap: 10px; align-items: center; padding: 8px; border: 1.5px solid #ECEDEF; border-radius: 14px; background: #FAFAFB; text-align: start; cursor: pointer; scroll-snap-align: start; transition: border-color .15s, transform .15s; }
+.rv-it:hover { border-color: #F7C032; transform: translateY(-1px); }
+.rv-it img { width: 54px; height: 54px; object-fit: contain; border-radius: 10px; background: #fff; flex: none; }
+.rv-it span { display: flex; flex-direction: column; align-items: flex-start; gap: 3px; min-width: 0; }
+.rv-it b { display: block; max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 600 13px Inter, sans-serif; color: #26282B; }
+.rv-it small { font: 700 12.5px Inter, sans-serif; color: #26282B; }
+.rv-it .tg { transform: scale(.88); transform-origin: left center; }
+html[dir="rtl"] .rv-it .tg { transform-origin: right center; }
+html[data-theme="dark"] .rv-row { background: #2B2D31; } html[data-theme="dark"] .rv-h b, html[data-theme="dark"] .rv-it b, html[data-theme="dark"] .rv-it small { color: #F2F3F5; } html[data-theme="dark"] .rv-it { background: #232427; border-color: #3A3D42; }
+/* trade bulk buttons beside Add to cart */
+.pc-acts { display: flex; gap: 6px; align-items: stretch; }
+.pc-acts .pc-add { flex: 1 1 auto; min-width: 0; }
+.pc-bulk { display: flex; gap: 6px; flex: none; }
+.pc-bulk button { min-width: 46px; padding: 0 10px; border: 1.5px solid #26282B; border-radius: 12px; background: #26282B; color: #F7C032; font: 700 14px 'JetBrains Mono', monospace; cursor: pointer; transition: transform .15s, background .15s; }
+.pc-bulk button:hover { transform: translateY(-1px); background: #3A3D42; }
+.pc-bulk button:active { transform: scale(.95); }
+.shs-row { position: relative; }
+.shs-rsh { margin-inline-start: auto; width: 36px; height: 36px; display: grid; place-items: center; border-radius: 10px; color: #5A5E64; background: #F2F3F5; flex: none; }
+.shs-rsh:hover { background: #26282B; color: #F7C032; }
+.shs-msg p.sys b { font-weight: 700; }
+.bn-ch-acts { display: inline-flex; gap: 8px; }
+.rv-it .tg { transform: none !important; }

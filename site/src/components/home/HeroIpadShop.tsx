@@ -8,7 +8,7 @@
 //   it closes and the browsing carries on; now and then the chips switch category
 // Everything is decorative (aria-hidden) and pauses when the hero is off screen or the tab is hidden.
 import React, { useEffect, useRef, useState } from 'react';
-import { data, products, shots, type Product } from '@/lib/catalog';
+import { data, products, shots, type Product, ptitle } from '@/lib/catalog';
 import { T } from '@/components/site/ui';
 
 const RH = 196; // one row of two cards, px (owner, 16 Nov: the cards look like the real shop's)
@@ -162,7 +162,7 @@ export default function HeroIpadShop() {
   const card = (p: Product) => (
     <span className={'hi-card' + (press === p.id ? ' press' : '')} data-id={p.id} key={p.id}>
       <span className="hi-img"><span className={'hi-gr g-' + p.grade}>{p.gradeName}</span><img src={small(p.img)} alt="" loading="lazy" decoding="async" /></span>
-      <b>{p.title}</b>
+      <b>{ptitle(p)}</b>
       <span className="hi-pr"><em>AED {p.price}</em><small>· {T('SAMPLE')}</small></span>
       <span className="hi-stk"><i />{T('In stock')}</span>
       <span className="hi-addb"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 7h14l-1.2 12.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z" /><path d="M9 10V6a3 3 0 0 1 6 0v4" /></svg>{T('Add to cart')}</span>

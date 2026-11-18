@@ -3,7 +3,7 @@
 // customer's details (filled from the account, or a company profile), then the order is placed (backend.placeOrder —
 // on Supabase the server recomputes prices and VAT) and confirmed on WhatsApp. Saved-for-later and stars sit underneath.
 import { PAY_DEFAULT } from '@/lib/payments';
-import { siteRaw , priceText } from '@/lib/catalog';
+import { siteRaw , priceText, ptitle } from '@/lib/catalog';
 import { notify } from '@/lib/notes';
 import React, { useEffect, useState } from 'react';
 import { type Product, aed, byId, data, VAT, waLink, waCard, fmt, siteSetting, fixedPrice } from '@/lib/catalog';
@@ -94,7 +94,7 @@ export default function CartPage() {
                 <div key={p.id} className="cart-ln">
                   <a href={'/shop?p=' + p.id} className="cart-img"><img src={p.img} alt="" /></a>
                   <div className="cart-info">
-                    <a href={'/shop?p=' + p.id}><b>{p.title}</b></a>
+                    <a href={'/shop?p=' + p.id}><b>{ptitle(p)}</b></a>
                     <span className="pc-meta"><span className={'pc-gr g-' + p.grade}>{p.gradeName}</span><span>{p.makerName}</span><span>{p.warranty} {T('warranty')}</span></span>
                     <span className="cart-acts"><button type="button" onClick={() => store.later(p.id)}>{T('Save for later')}</button><button type="button" onClick={() => store.fav(p.id)}>{st.favs.includes(p.id) ? '★ ' + T('Starred') : '☆ ' + T('Star it')}</button><button type="button" onClick={() => store.remove(p.id)}>{T('Remove')}</button></span>
                   </div>

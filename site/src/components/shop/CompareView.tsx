@@ -3,7 +3,7 @@
 // stage, grade + maker tags, price); every measurable row is drawn as a bar so the winner shows at a glance (the best
 // cell is marked); a "Best value" ribbon sits on the strongest all-rounder, and Samsoom sums it up in one line.
 import React, { useState } from 'react';
-import { type Product, priceText } from '@/lib/catalog';
+import { type Product, priceText, ptitle } from '@/lib/catalog';
 import { store } from '@/lib/store';
 import { T, Stars } from '@/components/site/ui';
 import { GradeTag, MakerTag } from './Tags';
@@ -41,7 +41,7 @@ export default function CompareView({ items, onClose, onOpen }: { items: Product
               <button type="button" className="cv-rm" onClick={() => store.cmp(p.id)} aria-label={T('Remove')}>×</button>
               <span className="cv-img"><img src={p.img} alt="" /></span>
               <span className="tg-row"><GradeTag g={p.grade} name={p.gradeName} size="sm" /><MakerTag m={p.manufacturer} name={p.makerName} size="sm" /></span>
-              <b className="cv-t">{p.title}</b>
+              <b className="cv-t">{ptitle(p)}</b>
               <small className="cv-s">{p.brandName} · {p.modelName}</small>
             </div>
           ))}

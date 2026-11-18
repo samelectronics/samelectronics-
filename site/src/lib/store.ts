@@ -44,6 +44,7 @@ export const store = {
   device(d: Device) { const l = get().devices; set({ devices: l.some((x) => x.model_id === d.model_id) ? l.filter((x) => x.model_id !== d.model_id) : [...l, d].slice(-8) }); },
   searched(q: string) { q = q.trim(); if (q.length < 2) return; set({ recent: [q, ...get().recent.filter((x) => x.toLowerCase() !== q.toLowerCase())].slice(0, 8) }); },
   forget(q?: string) { set({ recent: q ? get().recent.filter((x) => x !== q) : [] }); },
+  clearViewed() { set({ viewed: [] }); },
   view(id: string) { set({ viewed: [id, ...get().viewed.filter((x) => x !== id)].slice(0, 16) }); },
   kit(name: string, ids: string[]) { set({ kits: [{ name, ids }, ...get().kits.filter((k) => k.name !== name)].slice(0, 12) }); },
   /** R10 P2: put a part in (or take it out of) a named list such as "Shop order June" or "For Ahmed" */

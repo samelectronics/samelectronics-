@@ -149,7 +149,7 @@ export function suggest(q: string, n = 8) {
   const ms = d.models.filter((m) => terms.every((x) => norm(m.name + ' ' + m.series).includes(x) || norm(d.brands.find((b) => b.id === m.brand_id)?.name || '').includes(x)));
   const has = new Set(products().map((p) => p.model_id));
   ms.sort((a, b) => +has.has(b.id) - +has.has(a.id)).slice(0, 5).forEach((m) => out.push({ kind: 'model', label: m.name, sub: has.has(m.id) ? 'in stock' : 'ask us', q: m.name, brand: m.brand_id, model: m.id }));
-  search(t).slice(0, 5).forEach((p) => out.push({ kind: 'part', label: p.title + ' · ' + p.gradeName, sub: p.makerName, q: p.title, brand: p.brand, id: p.id, img: p.img, price: p.price, model: p.model_id }));
+  search(t).slice(0, 5).forEach((p) => out.push({ kind: 'part', label: ptitle(p) + ' · ' + p.gradeName, sub: p.makerName, q: p.title, brand: p.brand, id: p.id, img: p.img, price: p.price, model: p.model_id }));
   const seen = new Set<string>(); return out.filter((x) => (seen.has(x.label) ? false : (seen.add(x.label), true))).slice(0, n);
 }
 
@@ -202,4 +202,19 @@ export const waCard = (title: string, rows: [string, string | number | undefined
   if (from && (from.name || from.phone)) L.push('', '*From:* ' + [from.name, from.phone].filter(Boolean).join(' · '));
   L.push('', '_' + d + ' (Dubai)_', '_Sent from ' + page + '_');
   return L.join('\n');
+};
+
+// Owner (18 Nov): "translate the part words in product names, keep the model name as it is". The longest known part
+// phrase in a title is swapped for its translation ("iPhone 13 Screen" → "iPhone 13 شاشة"); everything else (model,
+// codes, brackets) stays exactly as written. Staff messages keep the original title.
+const PART_WORDS = ['Back cover with chassis', 'Full Display Screen', 'Charging connector Flex', 'Charging board', 'Charging flex', 'Charging port', 'Power flex', 'Volume flex',
+  'Rear camera', 'Front camera', 'Camera lens', 'Back cover', 'Back glass', 'SIM tray', 'Loudspeaker', 'Earpiece', 'Vibrator', 'Speaker', 'Housing', 'Battery', 'Screen', 'Display', 'Camera', 'Frame', 'Flex', 'Tool'];
+const PART_RX = new RegExp('(^|\\s)(' + PART_WORDS.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')(?=\\s|$|[),.])', 'i');
+export const ptitle = (p: { title: string }): string => {
+  const t = typeof window !== 'undefined' ? (window as unknown as { seI18n?: { t: (s: string) => string; lang?: string } }).seI18n : undefined;
+  if (!t) return p.title;
+  const m = p.title.match(PART_RX); if (!m) return p.title;
+  const key = PART_WORDS.find((w) => w.toLowerCase() === m[2].toLowerCase()) || m[2];
+  const tr = t.t(key); if (!tr || tr === key) return p.title;
+  return p.title.slice(0, (m.index || 0) + m[1].length) + tr + p.title.slice((m.index || 0) + m[0].length);
 };

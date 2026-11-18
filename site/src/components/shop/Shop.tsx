@@ -6,7 +6,7 @@ import { HeroTitle, HeroBack } from '@/components/site/HeroType';
 // mode="deals" is the Deals page: the same shop engine showing offers, new arrivals and limited stock.
 // Everything reads the URL, so any view can be shared: /shop?q=a54&cat=BAT&sort=price-asc
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { type Filters, type Product, EMPTY, apply, data, products, fmt, aed, byId, facets, shots , priceText } from '@/lib/catalog';
+import { type Filters, type Product, EMPTY, apply, data, products, fmt, aed, byId, facets, shots , priceText, ptitle } from '@/lib/catalog';
 import { store, useStore } from '@/lib/store';
 import { useMe } from '@/lib/backend';
 import { T, CountUp, Stars } from '@/components/site/ui';
@@ -144,6 +144,10 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
           {/* owner (latest): a smaller, professional search that follows smoothly (see .shop-dock) */}
           <div className="shop-devs" data-tour-step="2" data-tour-title="My devices" data-tour-text="Add the phones you fix most. I will mark every part that fits them.">
             <span>{T('My devices')}:</span>
+            {/* owner (18 Nov): one switch shows only the parts that fit the phones you saved */}
+            {st.devices.length ? (() => { const ids = st.devices.map((d) => d.model_id), on = ids.every((m) => f.models.includes(m)) && f.models.length === ids.length; return (
+              <button type="button" role="switch" aria-checked={on} className={'fit-sw' + (on ? ' on' : '')} onClick={() => set({ models: on ? [] : ids })}><i aria-hidden="true" />{T(st.devices.length > 1 ? 'Only parts that fit my phones' : 'Only parts that fit my phone')}</button>
+            ); })() : null}
             {st.devices.map((d) => <button key={d.model_id} type="button" className={'sp-chip' + (f.models.includes(d.model_id) ? ' y' : '')} onClick={() => tog('models', d.model_id)}>{d.nick || d.name}<span className="x" onClick={(e) => { e.stopPropagation(); store.device(d); }}>×</span></button>)}
             <DevicePicker have={st.devices.map((d) => d.model_id)} onPick={(m) => store.device({ model_id: m.id, name: m.name })} />
           </div>
@@ -209,6 +213,18 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
             {!trade ? <div className="sp-note shop-tradenote" data-tour-step="10" data-tour-title="Trade prices" data-tour-text="Repair shops and traders: apply once, and every part shows your trade price."><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg><span>{T('Prices shown are for everyone. Approved trade accounts see their trade price on every part.')} <a href="/wholesale">{T('How to get trade prices')}</a></span></div> : null}
 
             {f.cats.length === 1 && f.cats[0] === 'SCR' ? <ScreenGrades items={base.filter((p) => p.category === 'SCR')} on={f.grades} onPick={(g) => tog('grades', g)} /> : null}
+            {/* owner (18 Nov): repair shops come back for the same parts: the last ones you opened, one tap away */}
+            {(() => { const rv = st.viewed.map(byId).filter(Boolean).slice(0, 10) as Product[]; return rv.length ? (
+              <div className="rv-row" aria-label={T('Recently viewed')}>
+                <div className="rv-h"><b>{T('Recently viewed')}</b><button type="button" onClick={() => store.clearViewed()}>{T('Clear')}</button></div>
+                <div className="rv-list">{rv.map((p) => (
+                  <button type="button" key={p.id} className="rv-it" onClick={() => open(p)}>
+                    <img src={p.img} alt="" loading="lazy" />
+                    <span><GradeTag g={p.grade} name={p.gradeName} /><b>{ptitle(p)}</b><small>{aed(p.price, false)}</small></span>
+                  </button>
+                ))}</div>
+              </div>
+            ) : null; })()}
             {res.length ? (
               <div className={'shop-grid' + (view.list ? ' list' : '')} style={{ ['--cols' as string]: view.cols }}>
                 {shown.map((p, k) => { const every = (view.list ? 1 : Math.max(1, +view.cols || 4)) * 3; const ad = (k + 1) % every === 0 && k + 1 < shown.length; /* owner (18 Nov): the ads keep coming as you scroll */ return <React.Fragment key={p.id}><ProductCard p={p} st={st} trade={trade} open={open} list={view.list} fits={myModels.get(p.model_id)} tour={k === 0} />{ad ? <InlineAd slot={(k + 1) / every} lastCat={f.cats[0]} /> : null}</React.Fragment>; })}

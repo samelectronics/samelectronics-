@@ -1776,6 +1776,17 @@ export const R7: Record<string, string> = {
 
 /** Round 8: Sam Circuit's three cards, Samsoom's tour and chat menu. */
 export const R8: Record<string, string> = {
+  'Only parts that fit my phones': 'فقط القطع المناسبة لهواتفي',
+  'Only parts that fit my phone': 'فقط القطع المناسبة لهاتفي',
+  'Share this list': 'شارك هذه القائمة',
+  'e.g. Please confirm stock and price': 'مثلًا: يرجى تأكيد المخزون والسعر',
+  'Earpiece': 'سماعة الأذن',
+  'Flex': 'فليكس',
+  'Tool': 'أداة',
+  'Charging board': 'بورد الشحن',
+  'Loudspeaker': 'السماعة الخارجية',
+  'Vibrator': 'الهزاز',
+  'Power flex': 'فليكس الباور',
   'New medal': 'وسام جديد',
   'I will show you the useful tools here. It takes 20 seconds.': 'سأريك الأدوات المفيدة هنا. يستغرق 20 ثانية.',
   'The message': 'الرسالة',

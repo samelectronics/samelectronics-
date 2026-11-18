@@ -4038,5 +4038,16 @@ const DICT: Record<string, string> = {
   'POCO parts at trade prices.': 'POCO पार्ट ट्रेड क़ीमत पर।',
   'Screens and batteries for POCO X, F and M, ready in Deira.': 'POCO X, F और M की स्क्रीन और बैटरी, देरा में तैयार।',
   'Shop POCO': 'POCO देखें',
+  'Only parts that fit my phones': 'सिर्फ़ मेरे फ़ोन के पार्ट',
+  'Only parts that fit my phone': 'सिर्फ़ मेरे फ़ोन के पार्ट',
+  'Share this list': 'यह सूची शेयर करें',
+  'e.g. Please confirm stock and price': 'जैसे: कृपया स्टॉक और क़ीमत कन्फ़र्म करें',
+  'Earpiece': 'ईयरपीस',
+  'Flex': 'फ़्लेक्स',
+  'Tool': 'टूल',
+  'Charging board': 'चार्जिंग बोर्ड',
+  'Loudspeaker': 'लाउडस्पीकर',
+  'Vibrator': 'वाइब्रेटर',
+  'Power flex': 'पावर फ़्लेक्स',
 };
 export default DICT;
