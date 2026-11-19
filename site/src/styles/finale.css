@@ -407,3 +407,40 @@ html[data-theme="dark"] .fz4 { background: linear-gradient(180deg, #F7F7F5, #EFE
 .fz5 .fz4-pro { width: 100%; text-align: start; }
 .fz5 .fz4-acts { transition-delay: 2.4s !important; } .fz5.fz-on .fz4-pro { transition-delay: 2.6s !important; }
 @media (max-width: 700px) { .fz5-hero { height: 260px; } .fz5-tr { display: none; } }
+
+/* ═════ R10 (owner: "this became so cheap … cartoonish; I want it professional, wow and fun"): a cinematic graphite stage.
+   A spotlight sweeps slowly, fog drifts, the logo stands on a glossy floor with its reflection, fine glowing traces with
+   light pulses running along them, frosted-glass promise tiles with icons, white headline with a yellow second line. ═════ */
+html body #finale.fz5 { background: radial-gradient(70% 60% at 50% 18%, #3A3D42 0%, #26282B 45%, #18191B 100%) !important; color: #fff !important; overflow: hidden; position: relative; }
+#finale.fz5 .fz6-spot { position: absolute; left: 50%; top: -20%; width: 1400px; height: 1100px; margin-left: -700px; background: conic-gradient(from 168deg at 50% 0%, transparent 0deg, rgba(255,236,170,.16) 10deg, rgba(255,236,170,.05) 16deg, transparent 24deg); transform-origin: 50% 0; animation: fz6Sweep 9s ease-in-out infinite alternate; pointer-events: none; mix-blend-mode: screen; }
+@keyframes fz6Sweep { from { transform: rotate(-9deg); } to { transform: rotate(9deg); } }
+#finale.fz5 .fz6-fog { position: absolute; inset: 40% -10% -20%; background: radial-gradient(50% 40% at 30% 50%, rgba(255,255,255,.05), transparent 70%), radial-gradient(40% 35% at 75% 60%, rgba(247,192,50,.06), transparent 70%); animation: fz6Fog 14s ease-in-out infinite alternate; pointer-events: none; }
+@keyframes fz6Fog { to { transform: translateX(4%) translateY(-3%); } }
+#finale.fz5 .fz6-floor { position: absolute; left: 50%; bottom: 2%; width: 720px; height: 120px; margin-left: -360px; border-radius: 50%; background: radial-gradient(closest-side, rgba(247,192,50,.22), rgba(247,192,50,.06) 55%, transparent); filter: blur(4px); pointer-events: none; }
+#finale.fz5 .fz5-rays, #finale.fz5 .fz5-bloom { opacity: 0 !important; animation: none !important; display: none; }
+#finale.fz5 .fz5-tr .bg { stroke: rgba(255,255,255,.07); stroke-width: 1.2; }
+#finale.fz5 .fz5-tr .run { stroke: rgba(247,192,50,.85); stroke-width: 1.2; filter: drop-shadow(0 0 4px rgba(247,192,50,.8)); }
+#finale.fz5 .fz5-tr circle { fill: #26282B; stroke: #F7C032; stroke-width: 1.4; r: 4; filter: drop-shadow(0 0 6px #F7C032); }
+#finale.fz5.fz-on .fz5-tr .run { animation: fz5Run 1s calc(var(--k) * .14s) cubic-bezier(.6,0,.3,1) forwards, fz6Pulse 3.2s calc(1.4s + var(--k) * .5s) linear infinite; }
+@keyframes fz6Pulse { 0% { stroke-dasharray: 6 94; stroke-dashoffset: 100; } 100% { stroke-dasharray: 6 94; stroke-dashoffset: 0; } }
+#finale.fz5 .fz5-logo img { box-shadow: 0 0 0 3px #F7C032, 0 0 50px rgba(247,192,50,.45), 0 40px 70px -24px rgba(0,0,0,.8) !important; -webkit-box-reflect: below 26px linear-gradient(transparent 62%, rgba(255,255,255,.18)); }
+#finale.fz5 .fz5-ring circle { stroke: #F7C032 !important; stroke-width: 1.6 !important; filter: drop-shadow(0 0 6px #F7C032); }
+#finale.fz5 .fz4-eb, #finale.fz5 .fz4-eb * { color: #F7C032 !important; } #finale.fz5 .fz4-eb i { background: #F7C032 !important; }
+#finale.fz5 .fz4-h, #finale.fz5 .fz4-h .a, #finale.fz5 .fz4-h .a * { color: #fff !important; -webkit-text-fill-color: #fff !important; }
+#finale.fz5 .fz4-h .b, #finale.fz5 .fz4-h .b * { color: #F7C032 !important; -webkit-text-fill-color: #F7C032 !important; }
+#finale.fz5 .fz4-p { color: #C9CCD0 !important; }
+#finale.fz5 .fz4-btn.y { background: #F7C032 !important; color: #26282B !important; box-shadow: 0 14px 30px -12px rgba(247,192,50,.8) !important; }
+#finale.fz5 .fz4-btn.duo, #finale.fz5 .fz4-btn.ghost { background: rgba(255,255,255,.06) !important; color: #fff !important; box-shadow: inset 0 0 0 1.5px rgba(255,255,255,.35) !important; border: 0 !important; }
+#finale.fz5 .fz4-btn.duo:hover, #finale.fz5 .fz4-btn.ghost:hover { box-shadow: inset 0 0 0 1.5px #F7C032 !important; color: #F7C032 !important; }
+#finale.fz5 .fz4-pro { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 18px; }
+#finale.fz5 .fz4-pro > span { position: relative; display: grid !important; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 14px; align-items: center; padding: 18px 20px !important; border-radius: 18px !important; background: linear-gradient(160deg, rgba(255,255,255,.08), rgba(255,255,255,.02)) !important; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08), 0 20px 40px -24px rgba(0,0,0,.8) !important; border: 0 !important; color: #fff !important; overflow: hidden; transition: transform .3s, box-shadow .3s; }
+#finale.fz5 .fz4-pro > span:hover { transform: translateY(-3px); box-shadow: inset 0 0 0 1px rgba(247,192,50,.5), 0 24px 40px -20px rgba(247,192,50,.35) !important; }
+#finale.fz5 .fz4-pro > span::after { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 40%, rgba(255,255,255,.08) 50%, transparent 60%); background-size: 260% 100%; animation: fz6Glint 6s calc(var(--i) * 1.2s + 3s) ease-in-out infinite; pointer-events: none; }
+@keyframes fz6Glint { 0%, 70% { background-position: 130% 0; } 100% { background-position: -30% 0; } }
+.fz6-ic { grid-row: 1 / span 2; width: 46px; height: 46px; border-radius: 14px; display: grid; place-items: center; background: linear-gradient(180deg, #FFD566, #F7C032); color: #26282B; box-shadow: 0 10px 20px -10px rgba(247,192,50,.8); font-style: normal; }
+#finale.fz5 .fz4-pro em { position: absolute; top: 12px; inset-inline-end: 14px; font: 600 10px 'JetBrains Mono', monospace !important; color: rgba(255,255,255,.35) !important; font-style: normal; }
+#finale.fz5 .fz4-pro b { font: 700 17px 'Space Grotesk', sans-serif !important; color: #fff !important; align-self: end; }
+#finale.fz5 .fz4-pro small { font: 400 13px/1.45 Inter, sans-serif !important; color: #B9BCC0 !important; align-self: start; }
+#finale.fz5 .fz4-stats { background: #F7C032 !important; border: 0 !important; }
+@media (max-width: 800px) { #finale.fz5 .fz4-pro { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { #finale.fz5 .fz6-spot, #finale.fz5 .fz6-fog, #finale.fz5 .fz4-pro > span::after { animation: none; } }

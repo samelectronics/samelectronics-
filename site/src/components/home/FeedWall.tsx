@@ -129,7 +129,7 @@ export default function FeedWall() {
   const N = NET[net], reel = k % 4 === 2 || k % 4 === 3;
   const strip = [T('NEXT LANDING') + ' · ' + T('Thursday') + ' 14:00', ...POSTS.map((p) => T(p.tag) + ' · ' + T(p.t))];
   return (
-    <section id="social" ref={ref} className={'fw' + (live ? ' on' : '')} data-tone="light" data-screen-label="The Feed">
+    <section id="social" ref={ref} className={'fw' + (live ? ' on' : '')} data-tone="yellow" data-screen-label="The Feed">
       <div className="fw-in">
         <div className="fw-l">
           <span className="fw-eb">{T('THE FEED')} · @SAMELECTRONICS.UAE</span>
@@ -152,9 +152,11 @@ export default function FeedWall() {
           {/* owner (17 Nov): the account you pick opens in the phone, like the real app */}
           {/* owner (19 Nov): keep the three phones; the centre one shows what you pick, the two beside it show the other
               accounts (tap one to bring it to the centre) */}
-          <button type="button" className="fw-side l" aria-label={NET[(net + NET.length - 1) % NET.length].name} onClick={() => setNet((net + NET.length - 1) % NET.length)}><Profile net={NET[(net + NET.length - 1) % NET.length]} k={k + 3} /></button>
-          <button type="button" className="fw-side r" aria-label={NET[(net + 1) % NET.length].name} onClick={() => setNet((net + 1) % NET.length)}><Profile net={NET[(net + 1) % NET.length]} k={k + 5} /></button>
-          <div className="fw-one" key={N.id + (reel ? '-r' : '')}>{reel ? <Reel net={N} k={k} /> : <Profile net={N} k={k} />}</div>
+          {/* owner (R10): "the phones behind the main one are horrible": instead, the latest posts float around the phone
+              as cards (they change with the account), and likes and comments pop out of it */}
+          <div className="fw-posts" key={'p' + N.id} aria-hidden="true">{POSTS.slice(0, 3).map((p, j) => { const q = POSTS[(j + net) % POSTS.length]; return (
+            <span key={j} className={'fw-pc c' + j} style={{ ['--j' as string]: j } as React.CSSProperties}><img src={q.img} alt="" loading="lazy" /><span><em>{T(q.tag)}</em><b>{T(q.t)}</b><small>♥ {q.likes + j * 17}</small></span></span>); })}</div>
+          <div className="fw-one fw-swap" key={N.id + (reel ? '-r' : '')}>{reel ? <Reel net={N} k={k} /> : <Profile net={N} k={k} />}</div>
           <span className="fw-hearts" aria-hidden="true">{hearts.map((h) => <i key={h.id} className={'c' + h.c + (h.L ? ' L' : '')} style={{ ['--x' as string]: h.x + 'px', ['--d' as string]: h.d + 'px', ['--s' as string]: h.s, ['--r' as string]: h.r + 'deg' } as React.CSSProperties} />)}</span>
         </div>
       </div>

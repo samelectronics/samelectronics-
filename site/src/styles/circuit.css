@@ -537,3 +537,47 @@ html[dir='rtl'] .mc .k-circuit .cx-logo { right: auto !important; left: 20px !im
 #circuit .cx-card.k-circle { background: linear-gradient(160deg, #F3F4F6 0%, #D6D9DD 30%, #B7BCC2 62%, #DADDE1 100%) !important; }
 #circuit .cx-med .coin img { object-fit: contain; background: #9A9EA4; }
 #circuit .k-circuit .cx-med .coin img { background: #A88A47; }
+/* ═════ R10 (owner: "the cards don't follow our colours; the logo circle and the patterns aren't centred with each other;
+   the yellow shine isn't high quality"): graphite / yellow / white cards, the medallion locked to the exact centre of the
+   engraved rosette (288,118 of 400×252), and a fine moving glare instead of a flat sheen ═════ */
+#circuit .cx-card .cx-med { left: calc(72% - 15.5%) !important; right: auto !important; top: 46.8% !important; transform: translate(0, -50%) !important; }
+#circuit .cx-card.k-circuit { background: radial-gradient(90% 120% at 72% 46.8%, #3D4045 0%, #2B2D31 45%, #1C1D20 100%) !important; color: #F2F3F4 !important; }
+#circuit .k-circuit .cx-guil path { stroke: rgba(247,192,50,.34) !important; } #circuit .k-circuit .cx-guil .f { stroke: rgba(247,192,50,.14) !important; } #circuit .k-circuit .cx-guil .n { stroke: rgba(255,226,140,.5) !important; }
+#circuit .k-circuit .cx-med .disc { background: repeating-conic-gradient(rgba(247,192,50,.35) 0 1.2deg, rgba(0,0,0,.2) 1.2deg 2.4deg) !important; }
+#circuit .k-circuit .cx-med .coin img { filter: none !important; background: #fff !important; }
+#circuit .k-circuit .top b, #circuit .k-circuit .nm { color: #fff !important; -webkit-text-fill-color: #fff !important; background: none !important; text-shadow: 0 1px 0 rgba(0,0,0,.6) !important; }
+#circuit .k-circuit .top small, #circuit .k-circuit .no { color: #F7C032 !important; -webkit-text-fill-color: #F7C032 !important; }
+#circuit .cx-card.k-grid { background: radial-gradient(90% 120% at 72% 46.8%, #FFE08A 0%, #F7C032 45%, #DDA21A 100%) !important; color: #26282B !important; }
+#circuit .k-grid .cx-guil path { stroke: rgba(38,40,43,.3) !important; } #circuit .k-grid .cx-guil .f { stroke: rgba(38,40,43,.14) !important; }
+#circuit .k-grid .nm, #circuit .k-grid .no, #circuit .k-grid .top b { color: #26282B !important; -webkit-text-fill-color: #26282B !important; text-shadow: 0 1px 0 rgba(255,255,255,.35) !important; }
+#circuit .cx-card.k-circle { background: radial-gradient(90% 120% at 72% 46.8%, #FFFFFF 0%, #F4F5F6 50%, #DCDFE3 100%) !important; color: #26282B !important; }
+#circuit .k-circle .cx-guil path { stroke: rgba(38,40,43,.22) !important; } #circuit .k-circle .cx-guil .f { stroke: rgba(38,40,43,.1) !important; }
+#circuit .cx-card .cx-metal { background: repeating-linear-gradient(90deg, rgba(255,255,255,.03) 0 1px, rgba(0,0,0,.025) 1px 2px) !important; }
+#circuit .cx-card::before { content: ''; position: absolute; inset: 0; z-index: 4; border-radius: inherit; pointer-events: none; background: linear-gradient(115deg, transparent 38%, rgba(255,255,255,.0) 42%, rgba(255,255,255,.28) 48%, rgba(255,246,214,.12) 52%, transparent 58%); background-size: 280% 100%; mix-blend-mode: soft-light; animation: cxGlare 7s ease-in-out infinite; }
+#circuit .cx-card.k-circuit::before { mix-blend-mode: screen; background: linear-gradient(115deg, transparent 40%, rgba(247,192,50,.0) 44%, rgba(255,226,140,.22) 49%, rgba(255,255,255,.1) 51%, transparent 56%); background-size: 280% 100%; }
+@keyframes cxGlare { 0%, 55% { background-position: 120% 0; } 100% { background-position: -40% 0; } }
+@media (prefers-reduced-motion: reduce) { #circuit .cx-card::before { animation: none; } }
+/* R10 (owner: "redesign the left side, it's really boring and normal"): the three cards as tiles with a mini card each,
+   the name field as the card's engraving plate, the steps as a lit circuit trace */
+#circuit .cx-pick { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; border: 0 !important; padding: 0 !important; margin-top: 8px; }
+#circuit .cx-pick::after, #circuit .cx-pick > i { display: none !important; }
+#circuit .cx-pick > button { position: relative; display: grid !important; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 12px; row-gap: 2px; align-items: center; text-align: start; padding: 14px !important; border-radius: 16px !important; background: rgba(255,255,255,.04) !important; box-shadow: inset 0 0 0 1px rgba(255,255,255,.08) !important; border: 0 !important; cursor: pointer; transition: transform .25s cubic-bezier(.2,1.4,.4,1), box-shadow .25s, background .25s; }
+#circuit .cx-pick > button::after { display: none !important; }
+#circuit .cx-pick > button:hover { transform: translateY(-2px); background: rgba(255,255,255,.07) !important; }
+#circuit .cx-pick > button.on { transform: translateY(-3px); background: rgba(247,192,50,.08) !important; box-shadow: inset 0 0 0 1.5px #F7C032, 0 16px 30px -18px rgba(247,192,50,.7) !important; }
+#circuit .cx-pick .sw { grid-row: 1 / span 2; width: 52px !important; height: 34px !important; border-radius: 6px !important; position: relative; box-shadow: 0 6px 14px -6px rgba(0,0,0,.7), inset 0 0 0 1px rgba(255,255,255,.12) !important; }
+#circuit .cx-pick .k-circuit .sw { background: radial-gradient(120% 120% at 72% 46%, #3D4045, #1C1D20) !important; }
+#circuit .cx-pick .k-grid .sw { background: radial-gradient(120% 120% at 72% 46%, #FFE08A, #DDA21A) !important; }
+#circuit .cx-pick .k-circle .sw { background: radial-gradient(120% 120% at 72% 46%, #fff, #DCDFE3) !important; }
+#circuit .cx-pick .sw::before { content: ''; position: absolute; left: 6px; top: 9px; width: 10px; height: 8px; border-radius: 2px; background: linear-gradient(135deg, #FFE08A, #C89A28); }
+#circuit .cx-pick .sw::after { content: ''; position: absolute; right: 7px; top: 50%; width: 14px; height: 14px; margin-top: -7px; border-radius: 50%; box-shadow: 0 0 0 1.5px #F7C032; }
+#circuit .cx-pick > button b { font: 700 13px 'JetBrains Mono', monospace !important; letter-spacing: .08em; color: #fff !important; align-self: end; }
+#circuit .cx-pick > button.on b { color: #F7C032 !important; }
+#circuit .cx-pick > button small { font: 400 12px/1.35 Inter, sans-serif !important; color: #B9BCC0 !important; align-self: start; }
+#circuit .cx-form label > span { color: #9DA1A6 !important; font: 600 10px 'JetBrains Mono', monospace !important; letter-spacing: .16em; text-transform: uppercase; }
+#circuit .cx-form input { height: 52px !important; border-radius: 14px !important; background: linear-gradient(180deg, #2B2D31, #222326) !important; color: #fff !important; border: 0 !important; box-shadow: inset 0 0 0 1px rgba(255,255,255,.1), inset 0 2px 6px rgba(0,0,0,.4) !important; font: 600 16px 'JetBrains Mono', monospace !important; letter-spacing: .14em; text-transform: uppercase; padding: 0 16px !important; }
+#circuit .cx-form input::placeholder { color: #6E7378 !important; text-transform: none; letter-spacing: 0; font-family: Inter, sans-serif; font-weight: 500; }
+#circuit .cx-form input:focus { box-shadow: inset 0 0 0 1.5px #F7C032, 0 0 0 4px rgba(247,192,50,.15), inset 0 2px 6px rgba(0,0,0,.4) !important; outline: 0; }
+#circuit .cx-steps li > i { box-shadow: 0 0 0 4px rgba(247,192,50,.15), 0 0 16px rgba(247,192,50,.6) !important; }
+#circuit .cx-steps li::before, #circuit .cx-steps li::after { background: linear-gradient(90deg, #F7C032, rgba(247,192,50,.25)) !important; box-shadow: 0 0 8px rgba(247,192,50,.5); }
+@media (max-width: 760px) { #circuit .cx-pick { grid-template-columns: 1fr; } }

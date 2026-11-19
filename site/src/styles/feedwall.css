@@ -173,3 +173,24 @@ html[dir="rtl"] .fw-strip { direction: ltr; }
 .fw-stage .fw-glow { z-index: 0; }
 @media (max-width: 1100px) { .fw-side.l { transform: translate(calc(-50% - 110px), -50%) rotateY(16deg) scale(.78); } .fw-side.r { transform: translate(calc(-50% + 110px), -50%) rotateY(-16deg) scale(.78); } }
 @media (max-width: 640px) { .fw-side.l { transform: translate(calc(-50% - 78px), -50%) rotateY(18deg) scale(.7); } .fw-side.r { transform: translate(calc(-50% + 78px), -50%) rotateY(-18deg) scale(.7); } }
+/* ═════ R10 · the feed: one phone, the latest posts floating around it as cards, a smooth swap between accounts, graphite
+   (never black) on the yellow section ═════ */
+#social .fw-side { display: none !important; }
+#social .fw-stage { position: relative; }
+#social .fw-posts { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+#social .fw-pc { position: absolute; display: flex; align-items: center; gap: 10px; width: 230px; padding: 8px 12px 8px 8px; border-radius: 16px; background: #fff; color: #26282B; box-shadow: 0 24px 44px -22px rgba(38,40,43,.55), 0 0 0 1px rgba(38,40,43,.05); animation: fwPcIn .7s calc(.15s + var(--j) * .12s) cubic-bezier(.2,1.2,.4,1) both, fwPcFloat 6s calc(var(--j) * -2s) ease-in-out infinite; }
+#social .fw-pc img { width: 54px; height: 54px; border-radius: 11px; object-fit: cover; background: #F2F3F4; flex: none; }
+#social .fw-pc > span { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+#social .fw-pc em { font: 700 9px 'JetBrains Mono', monospace; letter-spacing: .12em; font-style: normal; color: #B07F00; }
+#social .fw-pc b { font: 600 12.5px/1.25 Inter, sans-serif; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+#social .fw-pc small { font: 600 11px Inter, sans-serif; color: #E5484D; }
+#social .fw-pc.c0 { left: -6%; top: 10%; } #social .fw-pc.c1 { right: -4%; top: 34%; } #social .fw-pc.c2 { left: 2%; bottom: 10%; }
+@keyframes fwPcIn { from { opacity: 0; transform: translateY(24px) scale(.9); filter: blur(4px); } }
+@keyframes fwPcFloat { 50% { translate: 0 -10px; } }
+#social .fw-swap { animation: fwSwap .6s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes fwSwap { from { opacity: 0; transform: translateX(30px) scale(.96); filter: blur(6px); } }
+#social .fw-island, #social .pf-grid.tt { background: #26282B !important; }
+#social .fw-qr { background: #26282B !important; }
+@media (max-width: 900px) { #social .fw-pc { width: 190px; } #social .fw-pc.c0 { left: 0; } #social .fw-pc.c1 { right: 0; } }
+@media (max-width: 600px) { #social .fw-posts { display: none; } }
+@media (prefers-reduced-motion: reduce) { #social .fw-pc, #social .fw-swap { animation: none; } }

@@ -1,173 +1,164 @@
 'use client';
-// Owner (19 Nov, round 2): "the iPad ad is dead, a grey screen. I asked for the boom and pam of the teardown ad, the
-// screen filled with beauty, transitions, animations and colours, and the shop features from the ACTUAL shop."
-// One loop (~33s), every scene a different colour and a different entrance:
-//   1 WALL    graphite · bold lines slide across in turns; three rush in, slow down, and LIGHT UP as yellow bands with a
-//             boom each time (white flash, the screen kicks, sparks fly)
-//   2 BOOM    yellow · a sunburst spins, shock rings, real parts fly out of the centre, the live stock count punches in
-//   3 SHOP    the REAL /shop page fades in (zooming out to fit) and scrolls like a customer is browsing
-//   4 SEARCH  the REAL shop's own search bar types "iPhone 13 screen" and its real results appear; captions slam in
-//   5 BRANDS  white · the real brand logos slam onto tiles one by one, then the brand/model count booms
-//   6 GRADES  graphite · the shop's own grade and maker tags rain down, a light sweeps across
-//   7 CALL    yellow → graphite · rays, the logo powers on (LED ring flicker), "Open the shop" pulses
-// Status bar (no band, ink follows the screen under it), a big lowered camera island, the home bar. Decorative,
-// aria-hidden, paused off screen and in hidden tabs. The real shop loads once, after the home page has settled.
-import React, { useEffect, useRef, useState } from 'react';
-import { data, products, shots, type Product } from '@/lib/catalog';
+// Owner (R10): "the iPad needs a full redesign … I want a cinematic, premium, high-quality ad with the teardown video's
+// energy; introduce things before showing them; never put text over the shop; brands, qualities and makers shown in a
+// premium way; the status bar like Apple does (dark on light, light on dark, pixel by pixel), no big island or grey box".
+// One loop (~37s), crossfading scenes:
+//   1 OPEN      graphite · a spotlight sweeps, the logo's LED ring draws itself, the name tracks in
+//   2 TEARDOWN  graphite · a phone splits into its layers in 3D (glass, frame, battery, board, back) with callout lines;
+//               the live stock count rolls in
+//   3 CARD      yellow · title card that introduces the shop: "Now open: the parts shop."
+//   4 SHOP      the REAL /shop tilts in from 3D and browses (no text over it)
+//   5 CARD      graphite · "Type it. Find it."
+//   6 SEARCH    the REAL shop's own search bar types and shows its results (no text over it)
+//   7 BRANDS    white · one brand at a time lands in a spotlight while the others orbit in a 3D ring behind
+//   8 GRADES    graphite · the quality tags are dealt out like premium cards, the makers follow, a light sweeps over
+//   9 CALL      yellow · the logo, "Open the shop", and every way to reach us
+// The status bar is drawn as a mask over the screen itself (grayscale, inverted, full contrast), so every pixel of the
+// time and icons is black over light and white over dark, exactly like iOS. iPads have no island: only a tiny camera dot
+// in the bezel. Decorative, aria-hidden, paused off screen and in hidden tabs; the real shop loads after the page settles.
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { data, products, type Product } from '@/lib/catalog';
 import { T } from '@/components/site/ui';
 import { GradeTag, MakerTag } from '@/components/shop/Tags';
 
-type Scene = { id: string; ms: number; ink: 'light' | 'dark' };
+type Scene = { id: string; ms: number };
 const SCENES: Scene[] = [
-  { id: 'wall', ms: 5800, ink: 'light' },
-  { id: 'boom', ms: 2800, ink: 'dark' },
-  { id: 'shop', ms: 5600, ink: 'light' },
-  { id: 'search', ms: 5600, ink: 'light' },
-  { id: 'brands', ms: 4600, ink: 'dark' },
-  { id: 'grades', ms: 4200, ink: 'light' },
-  { id: 'call', ms: 4400, ink: 'light' },
+  { id: 'open', ms: 3400 },
+  { id: 'tear', ms: 5600 },
+  { id: 'card1', ms: 2300 },
+  { id: 'shop', ms: 5600 },
+  { id: 'card2', ms: 2000 },
+  { id: 'search', ms: 5400 },
+  { id: 'brands', ms: 5200 },
+  { id: 'grades', ms: 4800 },
+  { id: 'call', ms: 4400 },
 ];
-const WORDS = ['SCREENS', 'BATTERIES', 'FLEX CABLES', 'CAMERAS', 'BACK COVERS', 'CHARGING PORTS', 'SPEAKERS', 'FRAMES', 'SMALL PARTS'];
-const LIT: Record<number, string> = { 1: 'EVERY PART.', 4: 'EVERY MODEL.', 7: 'EVERY GRADE.' };
-const LIT_AT = [0.9, 2.1, 3.3]; // seconds: when each lit line lands (a boom each time)
 const QUERY = 'iPhone 13 screen';
 const VW = 880; // the real shop is drawn at this width, scaled to the screen
-const BRAND_SVG = ['apple', 'samsung', 'xiaomi', 'huawei', 'oppo', 'honor', 'oneplus', 'google', 'poco', 'infinix', 'realme', 'vivo'];
+const BRANDS = ['apple', 'samsung', 'xiaomi', 'huawei', 'oppo', 'honor', 'google', 'oneplus', 'realme', 'vivo', 'infinix', 'tecno'];
+const LAYERS: [string, string][] = [['glass', 'Screen'], ['frame', 'Frame'], ['bat', 'Battery'], ['board', 'Board & flex'], ['back', 'Back glass']];
 
-/** sets a value on a React-controlled input inside the shop frame, the way typing does */
 function typeInto(input: HTMLInputElement, v: string) {
   const set = Object.getOwnPropertyDescriptor(Object.getPrototypeOf(input), 'value')?.set;
   set?.call(input, v); input.dispatchEvent(new Event('input', { bubbles: true }));
 }
+const svgUrl = (svg: string) => 'url("data:image/svg+xml,' + encodeURIComponent(svg) + '")';
 
 export default function HeroIpadAd() {
   const root = useRef<HTMLDivElement>(null), fr = useRef<HTMLIFrameElement>(null), live = useRef(true);
-  const [i, setI] = useState(0), [loop, setLoop] = useState(0), [time, setTime] = useState(''), [bat, setBat] = useState(84), [ok, setOk] = useState(false);
-  const [go, setGo] = useState(false), [ready, setReady] = useState(false), [sc, setSc] = useState(0.43), [fh, setFh] = useState(1240);
+  const [i, setI] = useState(0), [loop, setLoop] = useState(0), [time, setTime] = useState('9:41'), [bat, setBat] = useState(84), [ok, setOk] = useState(false);
+  const [go, setGo] = useState(false), [ready, setReady] = useState(false), [sc, setSc] = useState(0.43), [fh, setFh] = useState(1240), [bi, setBi] = useState(0);
   useEffect(() => { if (data()) { setOk(true); return; } const iv = window.setInterval(() => { if (data()) { setOk(true); window.clearInterval(iv); } }, 300); return () => window.clearInterval(iv); }, []);
   useEffect(() => {
-    const c = () => setTime(new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Dubai' }));
+    const c = () => setTime(new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Asia/Dubai' }));
     c(); const a = window.setInterval(c, 15000), b = window.setInterval(() => setBat((v) => (v <= 22 ? 84 : v - 1)), 20000);
     return () => { window.clearInterval(a); window.clearInterval(b); };
   }, []);
-  // the real shop loads once the home page has finished loading
   useEffect(() => {
     const start = () => { const w = window as unknown as { requestIdleCallback?: (f: () => void, o?: { timeout: number }) => number }; (w.requestIdleCallback || ((f: () => void) => window.setTimeout(f, 1500)))(() => setGo(true), { timeout: 5000 }); };
     if (document.readyState === 'complete') window.setTimeout(start, 1500); else window.addEventListener('load', () => window.setTimeout(start, 1500), { once: true });
   }, []);
   useEffect(() => { const el = root.current; if (!el) return; const fit = () => { const k = el.offsetWidth / VW; setSc(k); setFh(Math.ceil(el.offsetHeight / k)); }; fit(); const ro = new ResizeObserver(fit); ro.observe(el); return () => ro.disconnect(); }, []);
-  useEffect(() => { const el = root.current; if (!el || typeof IntersectionObserver === 'undefined') return; const io = new IntersectionObserver(([e]) => { live.current = e.isIntersecting; if (e.isIntersecting) el.removeAttribute('data-off'); else el.setAttribute('data-off', '1'); }); io.observe(el); return () => io.disconnect(); }, []);
-  // the timeline (skips the two shop scenes until the real shop has loaded)
+  useEffect(() => { const el = root.current; if (!el || typeof IntersectionObserver === 'undefined') return; const io = new IntersectionObserver(([e]) => { live.current = e.isIntersecting; if (e.isIntersecting) el.removeAttribute('data-off'); else el.setAttribute('data-off', ''); }, { threshold: 0.05 }); io.observe(el); return () => io.disconnect(); }, []);
+  // the timeline (the shop scenes and their title cards wait until the real shop has loaded)
   useEffect(() => {
     let t = 0, left = SCENES[i].ms, last = performance.now();
+    const needsShop = (id: string) => id === 'card1' || id === 'shop' || id === 'card2' || id === 'search';
     const tick = () => { const now = performance.now(); if (live.current && !document.hidden) left -= now - last; last = now;
-      if (left <= 0) { setI((x) => { let n = (x + 1) % SCENES.length; while (!ready && (SCENES[n].id === 'shop' || SCENES[n].id === 'search')) n = (n + 1) % SCENES.length; if (n <= x) setLoop((l) => l + 1); return n; }); return; }
+      if (left <= 0) { setI((x) => { let n = (x + 1) % SCENES.length; while (!ready && needsShop(SCENES[n].id)) n = (n + 1) % SCENES.length; if (n <= x) setLoop((l) => l + 1); return n; }); return; }
       t = window.setTimeout(tick, 100); };
     t = window.setTimeout(tick, 100); return () => window.clearTimeout(t);
   }, [i, ready]);
+  // brands: one logo in the spotlight at a time
+  useEffect(() => { if (SCENES[i].id !== 'brands') return; setBi(0); const iv = window.setInterval(() => setBi((x) => x + 1), 620); return () => window.clearInterval(iv); }, [i]);
   // drive the real shop: browse (scroll) in SHOP, type into its own search bar in SEARCH
   useEffect(() => {
     const id = SCENES[i].id, w = fr.current?.contentWindow, d = fr.current?.contentDocument; if (!w || !d || !ready) return;
     const tm: number[] = []; let raf = 0;
     const glide = (to: number, ms: number) => { const y0 = w.scrollY, t0 = performance.now(); const f = (t: number) => { const k = Math.min(1, (t - t0) / ms), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; w.scrollTo(0, y0 + (to - y0) * e); if (k < 1) raf = requestAnimationFrame(f); }; raf = requestAnimationFrame(f); };
     const input = () => d.querySelector<HTMLInputElement>('.ss-bar input');
-    if (id === 'shop') { const inp = input(); if (inp && inp.value) { typeInto(inp, ''); d.querySelector<HTMLButtonElement>('.ss-go')?.click(); } w.scrollTo(0, 0); tm.push(window.setTimeout(() => glide(560, 1900), 700), window.setTimeout(() => glide(1150, 1700), 3000)); }
+    if (id === 'card1') { const inp = input(); if (inp && inp.value) { typeInto(inp, ''); d.querySelector<HTMLButtonElement>('.ss-go')?.click(); } w.scrollTo(0, 0); }
+    if (id === 'shop') tm.push(window.setTimeout(() => glide(560, 1900), 1100), window.setTimeout(() => glide(1150, 1700), 3300));
+    if (id === 'card2') w.scrollTo(0, 0);
     if (id === 'search') {
-      w.scrollTo(0, 0);
-      for (let k = 1; k <= QUERY.length; k++) tm.push(window.setTimeout(() => { const inp = input(); if (inp) typeInto(inp, QUERY.slice(0, k)); }, 500 + k * 70));
-      tm.push(window.setTimeout(() => { d.querySelector<HTMLButtonElement>('.ss-go')?.click(); (d.activeElement as HTMLElement | null)?.blur?.(); }, 600 + QUERY.length * 70 + 300));
-      tm.push(window.setTimeout(() => glide(380, 1500), 600 + QUERY.length * 70 + 1100));
+      for (let k = 1; k <= QUERY.length; k++) tm.push(window.setTimeout(() => { const inp = input(); if (inp) typeInto(inp, QUERY.slice(0, k)); }, 450 + k * 70));
+      tm.push(window.setTimeout(() => { d.querySelector<HTMLButtonElement>('.ss-go')?.click(); (d.activeElement as HTMLElement | null)?.blur?.(); }, 550 + QUERY.length * 70 + 300));
+      tm.push(window.setTimeout(() => glide(380, 1500), 550 + QUERY.length * 70 + 1100));
     }
     return () => { tm.forEach(clearTimeout); cancelAnimationFrame(raf); };
   }, [i, ready]);
 
   const D = ok ? data() : null, all: Product[] = ok ? products() : [];
   const stock = all.reduce((t, p) => t + (p.stock_qty || 0), 0) || all.length;
-  const flyers = all.filter((p) => p.img).slice(0, 60).filter((_, k) => k % 6 === 0).slice(0, 8);
   const brandsN = D?.brands.length || 15, modelsN = D?.models.length || 0;
   const grades = Object.entries(D?.gradeNames || {}).slice(0, 6);
-  const makers = Object.entries(D?.makerNames || {}).slice(0, 6);
-  const box = typeof window !== 'undefined' && shots() ? shots()!.url('samsung-sp', 480) : '';
+  const makers = Object.entries(D?.makerNames || {}).filter(([, nm], k, a) => a.findIndex((x) => x[1] === nm) === k).slice(0, 6);
   const sc0 = SCENES[i], key = loop + '-' + i, n = (v: number) => v.toLocaleString('en-US');
   const shopOn = ready && (sc0.id === 'shop' || sc0.id === 'search');
+  // the status bar mask: the time on the left, signal + wifi + battery on the right (drawn as shapes, so the screen shows through)
+  const sb = useMemo(() => {
+    const tm = svgUrl(`<svg xmlns='http://www.w3.org/2000/svg' width='60' height='14'><text x='0' y='11.5' font-family='-apple-system,Inter,Arial' font-size='12' font-weight='600'>${time}</text></svg>`);
+    const w = Math.max(2, Math.round(16 * bat / 100));
+    const ic = svgUrl(`<svg xmlns='http://www.w3.org/2000/svg' width='62' height='14'><g><rect x='0' y='8' width='2.6' height='4' rx='.8'/><rect x='3.8' y='6' width='2.6' height='6' rx='.8'/><rect x='7.6' y='4' width='2.6' height='8' rx='.8'/><rect x='11.4' y='2' width='2.6' height='10' rx='.8'/></g><path transform='translate(18 1.5)' d='M7 10.5 5 8.3a2.8 2.8 0 0 1 4 0zM3.1 6.5a5.5 5.5 0 0 1 7.8 0L9.7 7.7a3.8 3.8 0 0 0-5.4 0zM1.1 4.5a8.3 8.3 0 0 1 11.8 0L11.7 5.7a6.6 6.6 0 0 0-9.4 0z'/><rect x='36.5' y='2.5' width='21' height='9.5' rx='2.6' fill='none' stroke='black' stroke-width='1.1'/><rect x='38.4' y='4.4' width='${w}' height='5.7' rx='1.3'/><rect x='58.4' y='5.5' width='1.6' height='3.4' rx='.8'/></svg>`);
+    return { tm, ic };
+  }, [time, bat]);
 
   return (
-    <div className={'hia s-' + sc0.id} ref={root} aria-hidden="true">
-      {/* the real shop, scaled to the screen; visible only in its two scenes */}
-      <div className={'hia-real' + (shopOn ? ' on' : '')}>
+    <div className={'hia3 s-' + sc0.id} ref={root} aria-hidden="true">
+      <div className={'h3-real' + (shopOn ? ' on' : '') + (sc0.id === 'shop' ? ' tilt' : '')}>
         {go ? <iframe ref={fr} src="/shop" title="Sam Electronics shop" tabIndex={-1} scrolling="no" onLoad={() => window.setTimeout(() => setReady(true), 1200)} style={{ width: VW + 'px', height: fh + 'px', transform: 'scale(' + sc + ')' }} /> : null}
       </div>
-      <div className="hia-stage" key={key}>
-        {sc0.id === 'wall' ? (
-          <div className="hia-wall">
-            {WORDS.map((w, r) => LIT[r] ? (
-              <span key={r} className={'hia-row lit' + (r % 2 ? ' rl' : ' lr')} style={{ ['--d' as string]: LIT_AT[Object.keys(LIT).indexOf(String(r))] + 's' }}><i className="band" /><b>{T(LIT[r])}</b></span>
-            ) : (
-              <span key={r} className={'hia-row' + (r % 2 ? ' rl' : ' lr')} style={{ ['--d' as string]: r * 0.05 + 's' }}><b>{T(w)} · {T(WORDS[(r + 3) % WORDS.length])} · {T(WORDS[(r + 5) % WORDS.length])} ·</b></span>
-            ))}
-            {LIT_AT.map((t, k) => <span key={k} className="hia-hit" style={{ ['--d' as string]: t + 0.18 + 's' }}><i className="fl" />{Array.from({ length: 10 }, (_, j) => <i key={j} className="sp" style={{ ['--a' as string]: j * 36 + k * 11 + 'deg' }} />)}</span>)}
+      <div className="h3-stage" key={key}>
+        {sc0.id === 'open' ? (
+          <div className="h3-open">
+            <span className="h3-spot" /><span className="h3-dust" />
+            <span className="h3-logo"><svg className="h3-ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" pathLength="100" /></svg><img src="/assets/se-logo-metal-320.webp" alt="" /></span>
+            <b className="h3-name">SAM ELECTRONICS</b>
+            <small className="h3-tag">{T('QUALITY · WARRANTY · PRICE')}</small>
           </div>
         ) : null}
-        {sc0.id === 'boom' ? (
-          <div className="hia-boom">
-            <span className="hia-rays" /><span className="hia-flash" /><span className="hia-ring" /><span className="hia-ring r2" /><span className="hia-ring r3" />
-            {flyers.map((p, k) => <img key={p.id} className="hia-fly" src={p.img.replace(/-480\.webp$/, '-240.webp')} alt="" style={{ ['--a' as string]: k * 45 + 20 + 'deg', ['--k' as string]: k }} />)}
-            <b className="hia-big">{n(stock)}</b>
-            <span className="hia-sub">{T('parts in stock, right now')}</span>
-            <span className="hia-tick"><i />{T('Live from our shelves in Deira')}</span>
+        {sc0.id === 'tear' ? (
+          <div className="h3-tear">
+            <span className="h3-grid" />
+            <div className="h3-phone">{LAYERS.map(([k], z) => <span key={k} className={'ly ' + k} style={{ ['--z' as string]: z }}>{k === 'board' ? <><i /><i /><i /><i /></> : k === 'back' ? <em /> : null}</span>)}</div>
+            <div className="h3-calls">{LAYERS.map(([k, l], z) => <span key={k} style={{ ['--z' as string]: z }}><i />{T(l)}</span>)}</div>
+            <span className="h3-count"><b>{n(stock)}</b><small>{T('parts in stock, right now')}</small></span>
           </div>
         ) : null}
-        {sc0.id === 'shop' ? (
-          <div className="hia-over">
-            <span className="hia-cap top">{T('THE PARTS SHOP')}</span>
-            <span className="hia-cap a">{T('Every part. Every grade.')}</span>
-            <span className="hia-cap b y">{n(all.length)} {T('parts')} · {brandsN} {T('brands')}</span>
-          </div>
-        ) : null}
-        {sc0.id === 'search' ? (
-          <div className="hia-over">
-            <span className="hia-cap a s">{T('Search anything.')}</span>
-            <span className="hia-cap b y s">{T('Found in a blink.')}</span>
-          </div>
-        ) : null}
+        {sc0.id === 'card1' ? <div className="h3-card y"><small>{T('NOW OPEN')}</small><b>{T('The parts shop.')}</b><span>{n(all.length)} {T('parts')} · {brandsN} {T('brands')}</span></div> : null}
+        {sc0.id === 'card2' ? <div className="h3-card"><small>{T('SEARCH')}</small><b>{T('Type it.')} <em>{T('Find it.')}</em></b></div> : null}
         {sc0.id === 'brands' ? (
-          <div className="hia-brands">
-            <span className="hia-k d">{T('THE BRANDS WE STOCK')}</span>
-            <div className="hia-bgrid">{BRAND_SVG.map((b, k) => <span key={b} style={{ ['--k' as string]: k }}><img src={'/assets/brands/' + b + '.svg'} alt="" onError={(e) => { (e.currentTarget.parentElement as HTMLElement).style.display = 'none'; }} /></span>)}</div>
-            <span className="hia-bcount"><b>{brandsN}</b>{T('brands')}<i /><b>{n(modelsN)}</b>{T('phone models')}</span>
+          <div className="h3-brands">
+            <span className="h3-spot w" />
+            <div className="h3-orbit">{BRANDS.map((b, k) => <span key={b} style={{ ['--k' as string]: k, ['--n' as string]: BRANDS.length }}><img src={'/assets/brands/' + b + '.svg'} alt="" /></span>)}</div>
+            <span className="h3-hero" key={bi}><img src={'/assets/brands/' + BRANDS[bi % BRANDS.length] + '.svg'} alt="" /></span>
+            <span className="h3-bk">{T('THE BRANDS WE STOCK')}</span>
+            <span className="h3-bn"><b>{brandsN}</b> {T('brands')} <i /> <b>{n(modelsN)}</b> {T('phone models')}</span>
           </div>
         ) : null}
         {sc0.id === 'grades' ? (
-          <div className="hia-grades">
-            <span className="hia-sweep" />
-            <span className="hia-k">{T('MANUFACTURERS & QUALITIES')}</span>
-            <b className="hia-h">{T('Every grade.')} <em>{T('Tested on the bench.')}</em></b>
-            <div className="hia-rain">{grades.map(([g, nm], k) => <span key={g} style={{ ['--k' as string]: k }}><GradeTag g={g} name={nm} size="lg" /></span>)}</div>
-            <div className="hia-rain m">{makers.map(([m, nm], k) => <span key={m} style={{ ['--k' as string]: k + 4 }}><MakerTag m={m} name={nm} size="lg" /></span>)}</div>
-            {box ? <img className="hia-box" src={box} alt="" /> : null}
+          <div className="h3-grades">
+            <span className="h3-sweep" />
+            <span className="h3-gk">{T('EVERY GRADE · TESTED ON THE BENCH')}</span>
+            <div className="h3-deal">{grades.map(([g, nm], k) => <span key={g} style={{ ['--k' as string]: k, ['--m' as string]: grades.length }}><GradeTag g={g} name={nm} size="lg" /></span>)}</div>
+            <div className="h3-makers">{makers.map(([m, nm], k) => <span key={m} style={{ ['--k' as string]: k }}><MakerTag m={m} name={nm} size="lg" /></span>)}</div>
           </div>
         ) : null}
         {sc0.id === 'call' ? (
-          <div className="hia-call">
-            <span className="hia-rays y" />
-            <span className="hia-logo"><span className="ring" /><img src="/assets/se-logo-metal-320.webp" alt="" /></span>
-            <span className="hia-k">{T('THE PARTS SHOP')}</span>
-            <b className="hia-h">{T('Every part.')} <em>{T('Every grade.')}</em></b>
-            <span className="hia-btn">{T('Open the shop')} →</span>
-            <span className="hia-foot">{T('Al Murar, Deira')} · {T('Shipped worldwide')}</span>
+          <div className="h3-call">
+            <span className="h3-rays" />
+            <span className="h3-logo sm"><svg className="h3-ring" viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" pathLength="100" /></svg><img src="/assets/se-logo-metal-320.webp" alt="" /></span>
+            <b className="h3-ch">{T('Every part.')} <em>{T('Every grade.')}</em></b>
+            <span className="h3-btn">{T('Open the shop')} →</span>
+            <span className="h3-ways"><i className="wa" />WhatsApp<i className="wc" />WeChat<i className="ml" />{T('E-mail')}<i className="web" />{T('Website')}</span>
           </div>
         ) : null}
       </div>
-      <div className={'hia-sb ' + sc0.ink}>
-        <b>{time}</b>
-        <span className="hia-isl"><i /></span>
-        <span className="hia-ic">
-          <svg width="14" height="10" viewBox="0 0 13 9"><path d="M6.5 8.6 4.5 6.4a2.8 2.8 0 0 1 4 0zM2.6 4.6a5.5 5.5 0 0 1 7.8 0l-1.2 1.2a3.8 3.8 0 0 0-5.4 0zM.6 2.6a8.3 8.3 0 0 1 11.8 0l-1.2 1.2a6.6 6.6 0 0 0-9.4 0z" /></svg>
-          <small>{bat}%</small>
-          <i className="bat"><i style={{ width: bat + '%' }} /></i>
-        </span>
-      </div>
-      <span className={'hia-home ' + sc0.ink} />
+      {/* iOS-style status bar: every pixel black over light, white over dark (the screen itself, inverted, through the shapes) */}
+      <span className="h3-sb t" style={{ WebkitMaskImage: sb.tm, maskImage: sb.tm }} />
+      <span className="h3-sb r" style={{ WebkitMaskImage: sb.ic, maskImage: sb.ic }} />
+      <span className="h3-cam" />
+      <span className="h3-home" />
     </div>
   );
 }

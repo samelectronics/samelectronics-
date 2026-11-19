@@ -115,3 +115,5 @@
   .tm-lan { height: 196px; }
   .tm-lan span { top: 40px; }
 }
+/* R10 (owner: "the lanyards are too low now, too long"): shorter, still a clear lane under the rail */
+@media (min-width: 1101px) { .tm-stage { height: 640px; } .tm-lan { height: 150px; } .tm-lan span { top: 24px; } }

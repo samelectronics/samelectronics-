@@ -29,7 +29,8 @@ function Sheet({ title, sub, onClose, children }: { title: string; sub?: string;
 const Ic = ({ d }: { d: string }) => <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={d} /></svg>;
 
 export function ShareSheet({ p, link, onClose }: { p: Product; link: string; onClose: () => void }) {
-  const sys = p.title + '\n' + p.gradeName + ' · ' + aed(p.price, false) + '\n' + link;
+  // owner (R10): a friendly message between customers (the formal system block is only for messages to our team)
+  const sys = T('Hey there! Look what I found at Sam Electronics 👀') + '\n\n*' + ptitle(p) + '*\n' + p.gradeName + ' · ' + aed(p.price, false) + '\n' + link;
   const [own, setOwn] = useState(''), [copied, setCopied] = useState(false);
   const text = (own.trim() ? own.trim() + '\n\n' : '') + sys;
   const copy = async (s: string, msg: string) => { try { await navigator.clipboard.writeText(s); } catch { /* */ } toast(msg); };
@@ -93,7 +94,7 @@ export function ListShareSheet({ name, ids, onClose }: { name: string; ids: stri
   const host = typeof location !== 'undefined' ? location.origin : '';
   const lines = ps.map((p, i) => `*${i + 1}. ${ptitle(p)}*\n   ${T('Model')}: ${p.modelName || '—'} · ${T('Part')}: ${p.catName}\n   ${T('Grade')}: ${p.gradeName} · ${T('Maker')}: ${p.makerName}${p.colour ? ' · ' + T('Color') + ': ' + p.colour : ''}\n   ${T('Price')}: ${aed(p.price, false)} · ${T('Ref')}: ${p.id}\n   ${host}/shop?p=${p.id}`);
   const [own, setOwn] = useState('');
-  const text = (own.trim() ? own.trim() + '\n\n' : '') + '*' + T('PARTS LIST') + ': ' + name + '*\n━━━━━━━━━━━━\n' + lines.join('\n\n') + '\n\n*' + T('Total') + ': ' + aed(total, false) + '* (' + ps.length + ' ' + T(ps.length === 1 ? 'part' : 'parts') + ')\n_' + new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Dubai' }) + ' · Sam Electronics_';
+  const text = (own.trim() ? own.trim() + '\n\n' : '') + T('Hey there! Here is my parts list from Sam Electronics 🛠️') + '\n\n*' + T('PARTS LIST') + ': ' + name + '*\n━━━━━━━━━━━━\n' + lines.join('\n\n') + '\n\n*' + T('Total') + ': ' + aed(total, false) + '* (' + ps.length + ' ' + T(ps.length === 1 ? 'part' : 'parts') + ')\n_' + new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Dubai' }) + ' · Sam Electronics_';
   return (
     <Sheet title={T('Share this list')} sub={name + ' · ' + ps.length + ' ' + T(ps.length === 1 ? 'part' : 'parts')} onClose={onClose}>
       <label className="shs-l">{T('The message')}</label>

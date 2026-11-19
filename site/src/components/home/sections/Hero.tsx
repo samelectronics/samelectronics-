@@ -1467,25 +1467,21 @@ export default function Hero({ v }: { v: Vals }) {
                     style={{
                       position: 'absolute',
                       left: '50%',
-                      top: '10px',
-                      width: '58px',
-                      height: '17px',
-                      marginLeft: '-29px',
-                      borderRadius: '9px',
+                      top: '9px',
+                      width: '46px',
+                      height: '13px',
+                      marginLeft: '-23px',
+                      borderRadius: '7px',
                       zIndex: '30',
                       background: 'linear-gradient(180deg,#1C1D20 0%,#050506 45%,#000000 100%)',
                       boxShadow: 'inset 0 .6px 0 rgba(255,255,255,.16),inset 0 -.5px 0 rgba(255,255,255,.05),0 0 0 .5px rgba(0,0,0,.6)',
                     }}
                   ></span>
                   {/* owner (19 Nov): the phone's own status bar: time, signal, Wi-Fi, battery; no band, the ink follows the ad */}
-                  <span className="hp-sb" aria-hidden="true" style={{ animation: v.sbInk }}>
-                    <b>{v.clock}</b>
-                    <span>
-                      <svg width="14" height="9" viewBox="0 0 15 9"><rect x="0" y="6" width="2.6" height="3" rx=".6" /><rect x="4" y="4" width="2.6" height="5" rx=".6" /><rect x="8" y="2" width="2.6" height="7" rx=".6" /><rect x="12" y="0" width="2.6" height="9" rx=".6" /></svg>
-                      <svg width="12" height="9" viewBox="0 0 13 9"><path d="M6.5 8.6 4.5 6.4a2.8 2.8 0 0 1 4 0zM2.6 4.6a5.5 5.5 0 0 1 7.8 0l-1.2 1.2a3.8 3.8 0 0 0-5.4 0zM.6 2.6a8.3 8.3 0 0 1 11.8 0l-1.2 1.2a6.6 6.6 0 0 0-9.4 0z" /></svg>
-                      <i><i /></i>
-                    </span>
-                  </span>
+                  {/* owner (R10): like iOS, every pixel of the time and icons is black over light and white over dark (the
+                      screen itself, inverted, through their shapes); smaller, clear of the island */}
+                  <span className="hp-sbx t" aria-hidden="true" style={(() => { const u = 'url("data:image/svg+xml,' + encodeURIComponent("<svg xmlns='http://www.w3.org/2000/svg' width='34' height='11'><text x='0' y='9' font-family='-apple-system,Inter,Arial' font-size='9.5' font-weight='600'>" + String(v.clock || '') + '</text></svg>') + '")'; return { WebkitMaskImage: u, maskImage: u }; })()} />
+                  <span className="hp-sbx r" aria-hidden="true" />
                   {'\n              '}
                   {/* 14 Oct §05 D: real glass (faint top-left reflection, bezel ring, vignette) replaces the strong top-right gloss */}
                   <span className="se-glass" style={{ zIndex: 31 }}></span>
