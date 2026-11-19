@@ -40,15 +40,11 @@ const ORDER: Kind[] = ['circuit', 'grid', 'circle'];
 
 /** guilloche engraving (computed once): a spirograph rosette on the right and fine waves across the card */
 const GUIL = (() => {
-  const r = (n: number) => n.toFixed(1); let rose = '';
-  for (let k = 0; k < 14; k++) { const ph = (k / 14) * Math.PI * 2; let d = '';
-    for (let i = 0; i <= 360; i++) { const t = (i / 360) * Math.PI * 2, R = 64 + 26 * Math.sin(7 * t + ph) + 6 * Math.cos(19 * t); const x = 292 + R * Math.cos(t), y = 112 + R * 0.92 * Math.sin(t); d += (i ? 'L' : 'M') + r(x) + ' ' + r(y); }
-    rose += d + 'Z'; }
-  let waves = '';
-  for (let k = 0; k < 22; k++) { let d = ''; const y0 = 150 + k * 5.2, ph = k * 0.42;
-    for (let x = -10; x <= 410; x += 4) { const y = y0 + 6 * Math.sin(x / 26 + ph) + 3 * Math.sin(x / 9 - ph); d += (x === -10 ? 'M' : 'L') + r(x) + ' ' + r(y); }
-    waves += d; }
-  return { rose, waves };
+  // owner (19 Nov, round 2): "like the Citi Premier card": dense spirograph rings (many circles whose centres walk round a
+  // circle) gathering around the medallion, plus a second, wider field across the left of the card
+  const r = (x: number) => x.toFixed(1);
+  const ring = (cx: number, cy: number, R: number, rr: number, n: number) => { let d = ''; for (let k = 0; k < n; k++) { const a = (k / n) * Math.PI * 2, x = cx + R * Math.cos(a), y = cy + R * Math.sin(a); d += 'M' + r(x + rr) + ' ' + r(y) + 'a' + rr + ' ' + rr + ' 0 1 0 ' + -2 * rr + ' 0a' + rr + ' ' + rr + ' 0 1 0 ' + 2 * rr + ' 0'; } return d; };
+  return { rose: ring(288, 118, 46, 58, 40), field: ring(120, 150, 120, 96, 28), fine: ring(288, 118, 20, 44, 30) };
 })();
 
 
@@ -138,8 +134,10 @@ export default function SECircuit() {
                 patterns around". Brushed metal + guilloche engraving + the mark pressed into the metal (light and shadow
                 edges), with a light that follows the pointer. */}
             <span className="cx-metal" aria-hidden="true" />
-            <svg className="cx-guil" viewBox="0 0 400 252" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><path d={GUIL.rose} /><path className="w" d={GUIL.waves} /></svg>
-            <span className="cx-press" aria-hidden="true"><i className="lo" /><i className="hi" /><i className="face" /></span>
+            <svg className="cx-guil" viewBox="0 0 400 252" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><path className="f" d={GUIL.field} /><path d={GUIL.rose} /><path className="n" d={GUIL.fine} /></svg>
+            {/* the medallion: our real logo struck in metal inside a fine radial disc with a beaded rim, our LED arc above it */}
+            <span className="cx-med" aria-hidden="true"><svg className="arc" viewBox="0 0 100 100"><path d="M14 50a36 36 0 0 1 72 0" /></svg><span className="disc"><span className="coin"><img src="/assets/se-logo-metal-320.webp" alt="" /></span></span></span>
+            <span className="cx-line" aria-hidden="true" />
             <span className="cx-sheen" aria-hidden="true" />
             <div className="cx-card-in">
               <span className="top">

@@ -503,3 +503,37 @@ html[dir='rtl'] .mc .k-circuit .cx-logo { right: auto !important; left: 20px !im
 #circuit .k-grid .nm, #circuit .k-grid .no, #circuit .k-grid .top b { text-shadow: -1px -1px 0 rgba(255,255,255,.18), 1px 1px 1px rgba(0,0,0,.7); }
 #circuit .cx-card .chip { background: linear-gradient(135deg, #F6E3A8, #D4AE52 45%, #F2D88E 70%, #B98E2E) !important; box-shadow: inset 0 0 0 1px rgba(90,60,0,.35), 0 1px 1px rgba(0,0,0,.25) !important; }
 #circuit .cx-card { box-shadow: 0 34px 50px -26px rgba(0,0,0,.65), 0 12px 20px -14px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.45) !important; }
+
+/* ── owner (19 Nov, round 2): built like the premium bank card he sent: deep steel with a dense spirograph engraving that
+   gathers round a struck medallion (our whole logo, monochrome metal, recessed, beaded rim, fine radial disc), our
+   yellow LED arc over it, a silver wordmark, a thin accent line at the base. No pressed mask (it looked bitten). ── */
+#circuit .cx-press { display: none !important; }
+.cx-card.k-circuit { background: linear-gradient(160deg, #6E5A2E 0%, #9A7B33 22%, #C9A24A 40%, #8E7131 62%, #5E4C25 100%) !important; color: #F6EBCB !important; }
+.cx-card.k-grid { background: linear-gradient(160deg, #5C6066 0%, #43464B 28%, #2F3135 60%, #3D4045 100%) !important; color: #E9EBEE !important; }
+.cx-card.k-circle { background: linear-gradient(160deg, #F3F4F6 0%, #D6D9DD 30%, #B7BCC2 62%, #DADDE1 100%) !important; color: #2E3034 !important; }
+.cx-card .cx-metal { background: repeating-linear-gradient(90deg, rgba(255,255,255,.035) 0 1px, rgba(0,0,0,.03) 1px 2px), radial-gradient(120% 90% at 20% 0%, rgba(255,255,255,.22), rgba(255,255,255,0) 50%) !important; mix-blend-mode: normal !important; opacity: 1 !important; }
+.cx-card .cx-guil { stroke-width: .38 !important; }
+.cx-card .cx-guil path { fill: none; }
+.k-circuit .cx-guil path { stroke: rgba(40,28,6,.42) !important; } .k-circuit .cx-guil .f { stroke: rgba(40,28,6,.22) !important; }
+.k-grid .cx-guil path { stroke: rgba(0,0,0,.5) !important; } .k-grid .cx-guil .f { stroke: rgba(0,0,0,.3) !important; }
+.k-circle .cx-guil path { stroke: rgba(60,66,74,.3) !important; } .k-circle .cx-guil .f { stroke: rgba(60,66,74,.16) !important; }
+.cx-card .cx-guil .n { stroke-width: .3 !important; }
+.cx-med { position: absolute; right: 14%; top: 50%; width: 31%; aspect-ratio: 1; transform: translate(0, -55%); pointer-events: none; }
+.cx-med .arc { position: absolute; inset: -16%; width: 132%; height: 132%; overflow: visible; }
+.cx-med .arc path { fill: none; stroke: #F7C032; stroke-width: 4.4; stroke-linecap: butt; filter: drop-shadow(0 0 3px rgba(247,192,50,.6)); }
+.cx-med .disc { position: absolute; inset: 0; border-radius: 50%; background: repeating-conic-gradient(rgba(0,0,0,.22) 0 1.2deg, rgba(255,255,255,.08) 1.2deg 2.4deg); box-shadow: inset 0 2px 4px rgba(0,0,0,.45), inset 0 -1px 0 rgba(255,255,255,.25), 0 1px 0 rgba(255,255,255,.2); }
+.cx-med .coin { position: absolute; inset: 16%; border-radius: 50%; overflow: hidden; background: #888; box-shadow: 0 0 0 2px rgba(255,255,255,.35), 0 0 0 4px rgba(0,0,0,.25), inset 0 3px 6px rgba(0,0,0,.5); }
+.cx-med .coin::before { content: ''; position: absolute; inset: 3px; z-index: 2; border-radius: 50%; background: repeating-conic-gradient(rgba(255,255,255,.7) 0 2deg, transparent 2deg 9deg); -webkit-mask: radial-gradient(closest-side, transparent 93%, #000 94%); mask: radial-gradient(closest-side, transparent 93%, #000 94%); }
+.cx-med .coin::after { content: ''; position: absolute; inset: 0; z-index: 3; border-radius: 50%; background: radial-gradient(70% 70% at 30% 25%, rgba(255,255,255,.45), rgba(255,255,255,0) 55%), radial-gradient(90% 90% at 70% 80%, rgba(0,0,0,.35), rgba(0,0,0,0) 60%); }
+.cx-med .coin img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.35) brightness(.92); }
+.k-circuit .cx-med .coin img { filter: grayscale(1) sepia(.7) saturate(1.3) contrast(1.3) brightness(.95); }
+.k-circle .cx-med .coin img { filter: grayscale(1) contrast(1.2) brightness(1.05); }
+.cx-line { position: absolute; left: 0; right: 0; bottom: 14px; height: 2px; background: linear-gradient(90deg, #F7C032 0 36%, rgba(247,192,50,0) 36%); opacity: .9; }
+#circuit .cx-card .top b { background: linear-gradient(180deg, #FFFFFF, #C9CDD2); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: none !important; }
+#circuit .k-circle .top b { background: linear-gradient(180deg, #4A4D52, #26282B); -webkit-background-clip: text; background-clip: text; }
+#circuit .cx-card .nm, #circuit .cx-card .no { text-shadow: 0 1px 0 rgba(255,255,255,.18), 0 -1px 0 rgba(0,0,0,.45) !important; }
+#circuit .cx-card.k-circuit { background: linear-gradient(160deg, #6E5A32 0%, #9E8142 24%, #C4A45C 42%, #8F743A 64%, #5F4D2B 100%) !important; color: #F6EBCB !important; }
+#circuit .cx-card.k-grid { background: linear-gradient(160deg, #5C6066 0%, #43464B 28%, #2F3135 60%, #3D4045 100%) !important; }
+#circuit .cx-card.k-circle { background: linear-gradient(160deg, #F3F4F6 0%, #D6D9DD 30%, #B7BCC2 62%, #DADDE1 100%) !important; }
+#circuit .cx-med .coin img { object-fit: contain; background: #9A9EA4; }
+#circuit .k-circuit .cx-med .coin img { background: #A88A47; }

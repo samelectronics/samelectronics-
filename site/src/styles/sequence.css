@@ -246,3 +246,13 @@ section.st .st-stats small { opacity: .7; } section.st .st-stats span { opacity:
 section.st .st-stats, section.st .st-stats > div { border-color: rgba(38,40,43,.18) !important; background: transparent !important; }
 section.st .st-rail { background: transparent !important; height: 24px !important; } /* owner (19 Nov): one line only (the rail itself drew a second line above the dots) */
 section.st .st-rail::before { height: 3px !important; top: 10.5px !important; background: rgba(38,40,43,.2) !important; }
+
+/* owner (19 Nov, round 2): "grey and light grey on yellow in the timeline": solid white branch cards, real maps in their
+   natural colours (no washed-out filter), the drawn graphite map underneath while it loads, graphite stats */
+section.st .st-bc { background: #FFFFFF !important; box-shadow: 0 1px 0 rgba(38,40,43,.06), 0 30px 50px -30px rgba(90,60,0,.45) !important; opacity: 1 !important; }
+section.st .st-bc .st-map { background: #26282B !important; }
+section.st .st-bc .st-gmap { filter: none !important; }
+section.st .st-bc .st-bc-in p, section.st .st-bc .st-today { color: #4A4D52 !important; }
+section.st .st-stats b, section.st .st-stats b *, section.st .st-stats > div > span, section.st .st-stats small, section.st .st-note { color: #26282B !important; -webkit-text-fill-color: #26282B !important; }
+section.st .st-stats { border-top-color: #26282B !important; border-bottom-color: #26282B !important; }
+section.st .st-stats > div + div { border-color: rgba(38,40,43,.22) !important; }

@@ -1059,3 +1059,20 @@ footer .ft-mark { opacity: 1 !important; bottom: 18px !important; font: 800 clam
 @keyframes ftLed { 0% { background-position: -60% 0, 0 0; } 60%, 100% { background-position: 160% 0, 0 0; } }
 footer:has(.ft-mark) { padding-bottom: clamp(90px, 12vw, 200px) !important; }
 .sn2-ln { color: #26282B; font-weight: 600; text-decoration: none; white-space: nowrap; } .sn2-ln:hover { color: #000; }
+
+/* owner (19 Nov, round 2): the contacts card laid out like the language chooser (horizontal) */
+.cc-card.cc2 { width: min(780px, calc(100vw - 28px)) !important; display: grid; grid-template-columns: 260px 1fr; padding: 0 !important; overflow: hidden !important; text-align: start !important; }
+.cc-card.cc2 .wc-x { z-index: 3; }
+.cc-side { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 14px; padding: 26px 20px 24px; background: radial-gradient(120% 70% at 50% 0%, #3A3C40 0%, #26282B 55%, #1F2124 100%); color: #fff; text-align: center; }
+.cc-bub { max-width: 210px; padding: 11px 15px; border-radius: 18px 18px 18px 6px; background: #FFFFFF; color: #26282B; font: 700 16px/1.3 'Space Grotesk', sans-serif; box-shadow: 0 10px 24px -12px rgba(0,0,0,.5); align-self: flex-start; animation: stBub .45s cubic-bezier(.2,1.2,.4,1) both; }
+.cc-av { display: grid; place-items: center; width: 150px; height: 150px; border-radius: 50%; background: radial-gradient(closest-side, rgba(247,192,50,.22), rgba(247,192,50,0)); }
+.cc-card.cc2 .cc-p { margin: 0 !important; color: #C9CCD0 !important; font-size: 13px !important; }
+.cc-card.cc2 .cc-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-height: none; padding: 52px 18px 18px; align-content: start; }
+.cc-card.cc2 .cc-row { flex-direction: column; align-items: flex-start; gap: 10px; padding: 14px; min-height: 108px; }
+.cc-card.cc2 .cc-row .cc-la { position: absolute; top: 12px; right: 12px; } .cc-card.cc2 .cc-row { position: relative; }
+html[dir="rtl"] .cc-card.cc2 .cc-row .cc-la { right: auto; left: 12px; }
+.cc-card.cc2 .cc-row:first-child { grid-column: 1 / -1; flex-direction: row; align-items: center; min-height: 0; background: #FFF6D8; }
+@media (max-width: 700px) { .cc-card.cc2 { grid-template-columns: 1fr; } .cc-side { flex-direction: row; justify-content: flex-start; padding: 16px; } .cc-av { width: 70px; height: 70px; zoom: .5; } .cc-card.cc2 .cc-p { display: none; } .cc-card.cc2 .cc-list { padding: 14px; } .cc-card.cc2 .cc-row { min-height: 0; padding: 12px; } }
+.ers-card.sam { position: relative; margin-top: 60px; padding-top: 74px; border-radius: 26px; text-align: center; }
+.ers-card.sam .ers-acts { justify-content: center; } .ers-card.sam .ers-why { text-align: start; }
+.ers-sam .sn2-badge { color: #FF8A80; }

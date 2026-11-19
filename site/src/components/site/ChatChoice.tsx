@@ -61,9 +61,13 @@ export default function ChatChoice() {
         </>) : (<>
           {/* owner (19 Nov): "contact us / chat with us is Samsoom talking with a list of all contacts one after the
               other, not the squared table": the same card as the system notices, Samsoom on top, every way in a list */}
-          <span className="sn2-sam cc-sam" aria-hidden="true"><LiveSam size={92} pose="happy" /></span>
-          <b className="cc-h">{T('How would you like to reach us?')}</b>
-          <p className="cc-p">{T('Pick any way. A person from the shop replies, Samsoom answers straight away.')}</p>
+          {/* owner (19 Nov, round 2): "too long down; make it like the language chooser, horizontal": Samsoom on a graphite
+              panel on the left, every way in a two-column grid on the right */}
+          <div className="cc-side" aria-hidden="false">
+            <span className="cc-bub">{T('How would you like to reach us?')}</span>
+            <span className="cc-av"><LiveSam size={130} pose="happy" /></span>
+            <p className="cc-p">{T('Pick any way. A person from the shop replies, Samsoom answers straight away.')}</p>
+          </div>
           <div className="cc-list">
             {ROWS.map((r, k) => {
               const inner = (<><span className={'cc-li ' + r.k}>{r.ic}</span><span className="cc-lt"><b>{r.k === 'wa' ? 'WhatsApp' : r.k === 'wc' ? 'WeChat' : T(r.b)}</b><small dir={r.ltr ? 'ltr' : undefined}>{r.ltr ? r.s : T(r.s)}</small></span><i className="cc-la" aria-hidden="true">›</i></>);

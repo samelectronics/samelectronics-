@@ -158,3 +158,18 @@ html[dir="rtl"] .fw-strip { direction: ltr; }
 /* the old side-phone rules (nth-child rotate) caught the reel phone and tilted it: the phones inside the trio never take them */
 .fw-one > .fw-phone, .fw-side > .fw-phone { transform: none !important; animation: none; filter: none; margin: 0 !important; position: relative !important; left: auto !important; top: auto !important; }
 .fw-side { width: auto; height: auto; }
+
+/* owner (19 Nov, round 2): "one in the centre, the other two behind it in a cinematic way": the side phones sit BEHIND
+   the centre one, smaller, turned slightly towards it, softly out of focus, drifting slowly like a camera dolly */
+.fw-side { z-index: 1; filter: brightness(.72) saturate(.85) blur(1.2px); }
+.fw-side.l { transform: translate(calc(-50% - 150px), -50%) translateZ(-120px) rotateY(16deg) scale(.82); animation: fwDriftL 9s ease-in-out infinite; }
+.fw-side.r { transform: translate(calc(-50% + 150px), -50%) translateZ(-120px) rotateY(-16deg) scale(.82); animation: fwDriftR 9s ease-in-out infinite; }
+.fw-side.l:hover, .fw-side.r:hover { filter: brightness(.9) blur(0); }
+.fw-side.l:hover { transform: translate(calc(-50% - 160px), -50%) translateZ(-100px) rotateY(12deg) scale(.84); } .fw-side.r:hover { transform: translate(calc(-50% + 160px), -50%) translateZ(-100px) rotateY(-12deg) scale(.84); }
+@keyframes fwDriftL { 0%, 100% { translate: 0 0; } 50% { translate: -10px -8px; } }
+@keyframes fwDriftR { 0%, 100% { translate: 0 0; } 50% { translate: 10px 8px; } }
+.fw-one { animation: fwOneIn2 .6s cubic-bezier(.2,1,.4,1) both, fwFloat 7s 1s ease-in-out infinite !important; }
+@keyframes fwFloat { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+.fw-stage .fw-glow { z-index: 0; }
+@media (max-width: 1100px) { .fw-side.l { transform: translate(calc(-50% - 110px), -50%) rotateY(16deg) scale(.78); } .fw-side.r { transform: translate(calc(-50% + 110px), -50%) rotateY(-16deg) scale(.78); } }
+@media (max-width: 640px) { .fw-side.l { transform: translate(calc(-50% - 78px), -50%) rotateY(18deg) scale(.7); } .fw-side.r { transform: translate(calc(-50% + 78px), -50%) rotateY(-18deg) scale(.7); } }
