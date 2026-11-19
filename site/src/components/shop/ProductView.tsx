@@ -143,7 +143,7 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
             <button type="button" className="sp-btn pv-ordnow" onClick={() => setAsk(true)}>{T('Order now')}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button>
             {ask ? (
               <div className="pv-ask" role="dialog" aria-label={T('Done shopping?')}>
-                <span className="pv-ask-sam" aria-hidden="true"><LiveSam size={64} mood="idle" play="think" /></span>
+                <span className="pv-ask-sam" aria-hidden="true"><LiveSam size={52} mood="idle" play="think" /></span>
                 <b>{T('Done shopping?')}</b>
                 <p>{(st.cart.length ? T('{n} other parts are already in your cart.').replace('{n}', String(st.cart.length)) + ' ' : '') + T('Add everything you need first, then send it all in one go. It is faster for both of us.')}</p>
                 <span className="pv-ask-r">
