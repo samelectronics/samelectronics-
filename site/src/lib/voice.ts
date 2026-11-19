@@ -179,9 +179,9 @@ export function babble(text: string, opts: { onEnd?: () => void } = {}) {
     if (!L) inW = false; });
   const lastW = wi; syl.forEach((x, j) => { x.last = x.w === lastW && (j === syl.length - 1); });
   const opens = syl.map((x) => at[x.k]);
-  let line: GainNode | null = null;
+  let line: GainNode | null = null, aStart = -1;
   const words = Array.from(t.matchAll(/[\p{L}\p{N}]+/gu)).map((m) => m[0]);
-  const schedule = () => { if (!can() || !syl.length) return; try { const c = ac(), now = c.currentTime + 0.02; line = c.createGain(); line.gain.value = 1;
+  const schedule = () => { if (!can() || !syl.length) return; try { const c = ac(), now = c.currentTime + 0.02; aStart = now; line = c.createGain(); line.gain.value = 1;
     const hp = c.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 220; line.connect(hp); hp.connect(out());
     syl.forEach((x, j) => {
       const h = hash(words[x.w] || 'a') + j * 7, nextT = j + 1 < syl.length ? at[syl[j + 1].k] : total;
@@ -210,11 +210,15 @@ export function babble(text: string, opts: { onEnd?: () => void } = {}) {
   } catch { /* silent */ } };
   // run only once the audio clock is really running (phones pause it)
   if (can()) { const c = ac(); if (c.state === 'running') schedule(); else c.resume().then(schedule).catch(() => { /* */ }); }
-  // the mouth opens on each syllable and closes between them, on the same clock as the text
+  // R10 (owner: "his mouth doesn't move right with the sound"): while the voice plays, the mouth reads the AUDIO clock
+  // (minus the speaker's output latency), so it opens exactly when each syllable is heard, even when the audio device
+  // started late; with the sound off it follows the text clock. The line ends when the audio has really finished.
   let alive = true, raf = 0; const t0 = performance.now();
-  const flap = () => { if (!alive) return; const el = (performance.now() - t0) / 1000; const open = opens.some((o) => el >= o && el < o + 0.075); mouth(open); if (el < total) raf = requestAnimationFrame(flap); else mouth(false); };
+  const finish = () => { if (!alive) return; alive = false; cancelAnimationFrame(raf); window.clearTimeout(endTm); speaking(false); mouth(false); document.documentElement.setAttribute('data-sam-done', ''); window.setTimeout(() => document.documentElement.removeAttribute('data-sam-done'), 1400); opts.onEnd && opts.onEnd(); };
+  const elapsed = () => { const c = ctx as (AudioContext & { outputLatency?: number }) | null; if (aStart >= 0 && c && c.state === 'running') return c.currentTime - aStart - (c.outputLatency || c.baseLatency || 0); if (can() && aStart < 0 && performance.now() - t0 < 400) return -1; return (performance.now() - t0) / 1000; };
+  const flap = () => { if (!alive) return; const el = elapsed(); const open = el >= 0 && opens.some((o) => el >= o && el < o + 0.09); mouth(open); if (el < total + 0.05) raf = requestAnimationFrame(flap); else finish(); };
   document.documentElement.removeAttribute('data-sam-done'); speaking(true); raf = requestAnimationFrame(flap);
-  const endTm = window.setTimeout(() => { if (!alive) return; alive = false; speaking(false); mouth(false); document.documentElement.setAttribute('data-sam-done', ''); window.setTimeout(() => document.documentElement.removeAttribute('data-sam-done'), 1400); opts.onEnd && opts.onEnd(); }, total * 1000 + 120);
+  const endTm = window.setTimeout(finish, total * 1000 + 1500); // safety net only (a hidden tab pauses animation frames)
   stopCur = () => { alive = false; speaking(false); cancelAnimationFrame(raf); window.clearTimeout(endTm); mouth(false);
     const ln = line as GainNode | null;
     if (ln) { try { const c = ac(), n0 = c.currentTime; ln.gain.cancelScheduledValues(n0); ln.gain.setValueAtTime(ln.gain.value, n0); ln.gain.linearRampToValueAtTime(0, n0 + 0.04); window.setTimeout(() => { try { ln.disconnect(); } catch { /* */ } }, 80); } catch { /* */ } }

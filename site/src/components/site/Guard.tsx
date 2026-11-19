@@ -35,8 +35,12 @@ export default function Guard() {
   const [vpn, setVpn] = useState(false), [shot, setShot] = useState(false), [terms, setTerms] = useState(false), [agree, setAgree] = useState(false);
   // owner (18 Nov night): screenshots can be allowed once the visitor agrees to the terms; from then on the page carries a
   // faint watermark (© Sam Electronics, all rights reserved, the date and the agreement number) on every screenshot
-  const [wm, setWm] = useState<{ ref: string; at: number } | null>(null), [flash, setFlash] = useState(false);
+  const [wm, setWm] = useState<{ ref: string; at: number } | null>(null), [refId, setRefId] = useState('');
+  const [now, setNow] = useState('');
+  useEffect(() => { import('@/lib/ids').then((m) => setRefId(m.customerId())).catch(() => {}); const tick = () => setNow(new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })); tick(); const iv = window.setInterval(tick, 30000); return () => window.clearInterval(iv); }, []);
   useEffect(() => { try { const v = JSON.parse(sessionStorage.getItem('se-shot-ok') || 'null'); if (v && v.ref) setWm(v); } catch { /* */ } }, []);
+  // owner (R10): the agreement lasts 10 minutes; after that the next screenshot asks for it again (one tap)
+  const okNow = () => { try { const v = JSON.parse(sessionStorage.getItem('se-shot-ok') || 'null'); return !!(v && v.at && Date.now() - v.at < 10 * 60e3); } catch { return false; } };
   const allow = () => { const ref = 'SC-' + Date.now().toString(36).toUpperCase().slice(-6); const v = { ref, at: Date.now() }; try { sessionStorage.setItem('se-shot-ok', JSON.stringify(v)); } catch { /* */ } setWm(v); setTerms(false); setAgree(false); logWarning('screenshot', 'screenshot terms accepted · agreement ' + ref); import('./Toaster').then((m) => m.toast(tr('Screenshots allowed. Each one carries our watermark.'))).catch(() => {}); };
   useEffect(() => {
     if (isEmbed()) return;
@@ -68,13 +72,16 @@ export default function Guard() {
     // owner (19 Nov): once screenshots are allowed the watermark is NOT on screen all the time; it appears only when a
     // screenshot is being taken. The moment the screenshot shortcut starts (Cmd+Shift on a Mac, Win+Shift on Windows) it
     // is already showing, before the capture key; a snipping tool taking focus shows it too. It fades after a few seconds.
+    // owner (R10): the watermark must ALWAYS be on the capture. It is always in the page (allowed or not) and switches on
+    // synchronously in the very first key handler (a class on <html>, no React render in between); a "hang tight" card
+    // covers the page for a moment while it settles, and the warning sound always plays.
     let ft = 0;
-    const flashWm = () => { let ok = false; try { ok = !!sessionStorage.getItem('se-shot-ok'); } catch { /* */ } if (!ok) return; setFlash(true); window.clearTimeout(ft); ft = window.setTimeout(() => setFlash(false), 4500); };
-    const pre = (e: KeyboardEvent) => { if ((e.metaKey && e.shiftKey) || e.key === 'PrintScreen' || e.code === 'PrintScreen') flashWm(); };
+    const flashWm = () => { const h = document.documentElement; h.classList.add('shot-on', 'shot-hold'); window.clearTimeout(ft); window.setTimeout(() => h.classList.remove('shot-hold'), 1100); ft = window.setTimeout(() => h.classList.remove('shot-on'), 5000); };
+    const pre = (e: KeyboardEvent) => { if ((e.metaKey && e.shiftKey) || (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 's') || e.key === 'PrintScreen' || e.code === 'PrintScreen' || e.key === 'Meta' && e.shiftKey) flashWm(); };
     window.addEventListener('keydown', pre, true); window.addEventListener('blur', flashWm);
     const seen = () => {
-      let ok = false; try { ok = !!sessionStorage.getItem('se-shot-ok'); } catch { /* */ }
-      if (ok) { flashWm(); logWarning('screenshot', 'screenshot taken under the screenshot terms'); return; }
+      flashWm(); import('@/lib/sound').then((m) => m.play('warn', true)).catch(() => {});
+      if (okNow()) { logWarning('screenshot', 'screenshot taken under the screenshot terms'); return; }
       setShot(true);
       logWarning('screenshot', 'keys pressed on ' + (navigator.platform || 'computer'));
     };
@@ -88,7 +95,7 @@ export default function Guard() {
       {vpn ? <SysNote tone="warn" snd="none" role="alert" sam={{ mood: 'stop' }} kicker={tr('SAMSOOM · HOLD ON')} title={tr('Hey! Is that a VPN?')} text={tr('Prices and delivery depend on where you really are. Please switch the VPN off.')} ms={20000} onClose={() => setVpn(false)}
         acts={[{ label: tr('OK, I will switch it off'), primary: true }, { label: tr('I am travelling, carry on'), on: () => { try { sessionStorage.setItem('se-vpn-ok', '1'); } catch { /* */ } } }, { label: tr('Why am I seeing this?'), href: '/notices#vpn', link: true }]} /> : null}
       {shot ? <SysNote tone="stop" role="alert" sam={{ mood: 'nono' }} kicker={tr('COPYRIGHT NOTICE')} title={tr('This content is protected.')} text={tr('Keeping it for yourself is fine; sharing or publishing it needs our permission.')} ms={15000} onClose={() => setShot(false)}
-        acts={[{ label: tr('I understand'), primary: true }, { label: tr('Allow screenshots'), on: () => setTerms(true) }, { label: tr('Read the full notice'), href: '/notices#copyright' }]} /> : null}
+        acts={[{ label: tr('I understand'), primary: true }, { label: tr('Allow screenshots'), on: () => setTerms(true) }, { label: tr('Read the full notice'), href: '/notices#copyright', link: true }]} /> : null}
       {terms ? (
         <div className="sn2-veil" onClick={(e) => { if (e.target === e.currentTarget) setTerms(false); }}>
           <div className="sn2 sn2-warn shot-terms" role="dialog" aria-modal="true" aria-label={tr('Screenshot terms')}>
@@ -101,12 +108,12 @@ export default function Guard() {
           </div>
         </div>
       ) : null}
-      {wm ? (
-        <div className={'shot-wm' + (flash ? ' on' : '')} aria-hidden="true" data-no-i18n="">
-          <span className="tile" style={{ backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='420' height='220'><text x='10' y='120' transform='rotate(-24 210 110)' font-family='Inter,Arial' font-size='15' font-weight='600' fill='%23808080'>© Sam Electronics · ${wm.ref}</text></svg>`).replace(/%2523/g, '%23')}")` }} />
-          <span className="side"><i />© Sam Electronics · {tr('All rights reserved')} · {tr('Captured on')} {new Date().toLocaleDateString()} · {tr('Agreement')} {wm.ref}</span>
-        </div>
-      ) : null}
+      {/* always in the page; shown only while a screenshot is being taken (html.shot-on) */}
+      <div className="shot-wm" aria-hidden="true" data-no-i18n="">
+        <span className="tile" style={{ backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='360' height='200'><text x='20' y='110' transform='rotate(-24 180 100)' font-family='Inter,Arial' font-size='16' font-weight='700' fill='%23808080'>© Sam Electronics</text></svg>`).replace(/%2523/g, '%23')}")` }} />
+        <span className="foot"><img src="/assets/se-logo-metal-128.webp" alt="" /><b>© Sam Electronics</b><span>{tr('All rights reserved')} · {tr('Captured on')} {now}</span><em>{wm ? tr('Agreement') + ' ' + wm.ref : tr('Not agreed')}</em><em>Ref {refId}</em></span>
+      </div>
+      <div className="shot-holdc" aria-hidden="true"><span className="ring" /><b>{tr('Hang tight…')}</b><small>{tr('This page is protected by Sam Electronics.')}</small></div>
     </>
   );
 }

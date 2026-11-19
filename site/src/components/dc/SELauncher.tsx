@@ -37,7 +37,7 @@ function render(v: Vals) {
             }}
           >
             {'\n      '}
-            <span style={{ position: 'absolute', left: '5px', top: '3px', width: '38px', height: '48px' }}>
+            <span data-sam-talk="" style={{ position: 'absolute', left: '5px', top: '3px', width: '38px', height: '48px' }}>
               <SESamsoom mood={v.mood} still={v.still} lookX={v.lx} lookY={v.ly} size={38} />
             </span>
             {'\n    '}

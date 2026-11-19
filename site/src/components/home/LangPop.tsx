@@ -5,6 +5,7 @@
 // by setLang (localStorage).
 import React, { useEffect, useRef, useState } from 'react';
 import LiveSam from '@/components/samsoom/LiveSam';
+import SESamsoom from '@/components/dc/SESamsoom';
 // Hero 3 (owner): the battery charges with a percentage counting up, the end is a drawn tick, the card fits its text
 // (nothing centred awkwardly) and has real color and detail: graphite case, segmented green charge, yellow accents.
 
@@ -37,6 +38,33 @@ const TXT: Record<string, { eb: string; load: string; done: string; sub: string;
   om: { eb: 'AFAAN · OROMOO', load: 'Iskiriinii fi baatirii hunda hiikaa jirra…', done: 'Ergamni milkaa\'e!', sub: '', close: 'Cufi' },
 };
 
+// owner (R10): while the language loads Samsoom is a cartoon mechanic fixing himself. One hand goes behind his back
+// (the right one time, the left another) while dust puffs up behind him, then comes back with the screwdriver; his eyes
+// roll left, down, right, never at the visitor, and now and then his tongue pokes out in concentration. Only when the
+// language is ready does he look at you and celebrate (that part is the 'celebrate' pose above).
+type Fx = { mood: string; reach?: 'L' | 'R'; lx: number; ly: number; tongue?: boolean; dust?: boolean };
+const FIX: Fx[] = [
+  { mood: 'idle', reach: 'R', lx: -0.9, ly: -0.5, tongue: true, dust: true },
+  { mood: 'fix', lx: 0.25, ly: 0.95 },
+  { mood: 'idle', reach: 'L', lx: 0.95, ly: -0.35, dust: true },
+  { mood: 'tool', lx: -0.85, ly: 0.7 },
+  { mood: 'idle', reach: 'R', lx: 0.85, ly: 0.85, dust: true },
+  { mood: 'fix', lx: -0.7, ly: -0.75 },
+  { mood: 'idle', reach: 'L', lx: -0.95, ly: 0.2, tongue: true, dust: true },
+  { mood: 'tool', lx: 0.6, ly: -0.9 },
+];
+function FixSam() {
+  const [k, setK] = React.useState(() => (Math.random() * 2) | 0);
+  React.useEffect(() => { const t = window.setInterval(() => setK((x) => x + 1), 640); return () => window.clearInterval(t); }, []);
+  const f = FIX[k % FIX.length];
+  return (
+    <span className="fx-sam">
+      {f.dust ? <span className={'fx-dust ' + (f.reach === 'L' ? 'l' : 'r')} key={k} aria-hidden="true"><i /><i /><i /><i /></span> : null}
+      <SESamsoom mood={f.mood} reach={f.reach} tongue={f.tongue} lookX={f.lx} lookY={f.ly} size={92} />
+    </span>
+  );
+}
+
 export default function LangPop() {
   const [phase, setPhase] = useState<Phase>('off');
   const [to, setTo] = useState<Lang>('ar');
@@ -58,7 +86,7 @@ export default function LangPop() {
       // the card stays until the tick has fully played.
       requestAnimationFrame(() => requestAnimationFrame(() => {
         if (window.seI18n) window.seI18n.now(l as never);
-        later(120, () => { const t0 = performance.now(); const step = (n: number) => { const k = Math.min(1, (n - t0) / 1600), e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; setPct(Math.min(99, Math.round(e * 100))); if (k < 1) raf.current = requestAnimationFrame(step); else { const t1 = performance.now(); const wait = () => { if ((window.seI18n && window.seI18n.lang() === l) || performance.now() - t1 > 8000) { setPct(100); later(150, () => setPhase('done')); later(1650, close); } else { setPct(99); later(120, wait); } }; wait(); } }; raf.current = requestAnimationFrame(step); });
+        later(120, () => { const t0 = performance.now(); const step = (n: number) => { const k = Math.min(1, (n - t0) / 3000) /* R10: long enough to watch Samsoom fix himself */, e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; setPct(Math.min(99, Math.round(e * 100))); if (k < 1) raf.current = requestAnimationFrame(step); else { const t1 = performance.now(); const wait = () => { if ((window.seI18n && window.seI18n.lang() === l) || performance.now() - t1 > 8000) { setPct(100); later(150, () => setPhase('done')); later(1650, close); } else { setPct(99); later(120, wait); } }; wait(); } }; raf.current = requestAnimationFrame(step); });
       }));
     };
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
@@ -75,7 +103,7 @@ export default function LangPop() {
     <div className={'lp lp3-veil' + (phase === 'out' ? ' lp-out' : '')} data-no-i18n="" role="dialog" aria-modal="true" aria-live="polite" aria-label={done ? T.done : T.load}>
       <div className={'sn2 lp3' + (done ? ' done' : '')} dir={to === 'ar' || to === 'fa' || to === 'ur' ? 'rtl' : 'ltr'} lang={to}>
         <span className="sn2-sam" aria-hidden="true">
-          <span className="lp3-jump" key={done ? 'd' : 'l'}><LiveSam size={92} pose={done ? 'celebrate' : 'fix'} /></span>
+          <span className="lp3-jump" key={done ? 'd' : 'l'}>{done ? <LiveSam size={92} pose="celebrate" /> : <FixSam />}</span>
           <i className="sn2-badge lp3-bat">{done ? <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg> : <span className="cell" dir="ltr"><i style={{ transform: `scaleX(${pct / 100})` }} /></span>}</i>
         </span>
         <small className="lp3-eb">{T.eb}</small>

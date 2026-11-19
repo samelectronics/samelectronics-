@@ -743,8 +743,8 @@ function render(v: Vals) {
               {'\n        '}
               {v.kissH ? (
                 <>
-                  {[['smKissHL', -1], ['smKissHR', 1]].map(([an, d]) => (
-                    <svg key={an as string} aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" style={{ position: 'absolute', left: '91px', top: '130px', opacity: 0, zIndex: 6, animation: `${an} 2.8s cubic-bezier(.3,.7,.3,1) infinite`, filter: 'drop-shadow(0 2px 3px rgba(229,72,77,.35))' }}>
+                  {[['smKissHR', 1]].map(([an, d]) => (
+                    <svg key={an as string} aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" style={{ position: 'absolute', left: '91px', top: '130px', opacity: 0, zIndex: 6, animation: `${an} 2.8s cubic-bezier(.3,.7,.3,1) 1 both`, filter: 'drop-shadow(0 2px 3px rgba(229,72,77,.35))' }}>
                       <path d="M12 21s-7-4.4-9.5-8.6C.7 9.3 2.4 5 6.3 5c2.2 0 3.6 1.3 4.2 2.4h3C14.1 6.3 15.5 5 17.7 5c3.9 0 5.6 4.3 3.8 7.4C19 16.6 12 21 12 21z" fill="#E5484D" />
                     </svg>
                   ))}

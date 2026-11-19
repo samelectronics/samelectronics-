@@ -34,7 +34,7 @@ const NAV: Step[] = [
   { sel: '.se-lm', mood: 'pt-blush', t: 'Language and settings', d: 'Change the language, sounds and currency here.', open: '.se-lm-btn' },
   { sel: '.nb', mood: 'pt-wink', t: 'Your notifications', d: 'Orders, repairs and offers land here.' },
   { sel: '[data-tour="hours"]', mood: 'pt-wink', t: 'Open right now?', d: 'Live hours, in Dubai time.' },
-  { sel: '[data-tour="cart"]', mood: 'pt-smile', t: 'Your cart', d: 'Add parts; we confirm on WhatsApp.' },
+  { sel: '[data-tour="cart"]', mood: 'pt-smile', t: 'Your cart', d: 'Add your parts, then send the list your way: WhatsApp, WeChat, e-mail or right here on the website.' },
   { sel: '[data-tour="menu"]', mood: 'pt-think', t: 'The whole site', d: 'Every page, in one menu.' },
 ];
 const END: Step[] = [
@@ -81,6 +81,9 @@ function buildSteps(): Step[] {
 
 export default function SamsoomTour() {
   const [phase, setPhase] = useState<'off' | 'lang' | 'store' | 'hello' | 'recall' | 'walk' | 'bye'>('off'), [i, setI] = useState(0), [box, setBox] = useState<DOMRect | null>(null);
+  // owner (R10): each finished tour ends with a different goodbye (kiss, thumbs up, wink, celebrate, blush), never the same twice in a row
+  const byeEmote = React.useMemo(() => { const L = ['kiss', 'happy', 'wink', 'celebrate', 'blush']; let n = 0; try { n = Number(localStorage.getItem('se-tour-ends') || 0) || 0; } catch { /* */ } return L[n % L.length]; }, [phase === 'bye']); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (phase !== 'bye') return; try { localStorage.setItem('se-tour-ends', String((Number(localStorage.getItem('se-tour-ends') || 0) || 0) + 1)); } catch { /* */ } }, [phase]);
   const [offer, setOffer] = useState(false), [jump, setJump] = useState(false), [mute, setMute] = useState(false);
   useEffect(() => { setMute(isMuted()); const f = () => setMute(isMuted()); window.addEventListener('se:sam-mute', f); return () => window.removeEventListener('se:sam-mute', f); }, []);
   useEffect(() => { if (phase !== 'walk') setJump(false); }, [phase]);
@@ -134,7 +137,7 @@ export default function SamsoomTour() {
       if (!had) { const t0 = Date.now(); ot = window.setInterval(() => {
         if (Date.now() - t0 < 2500) return;
         if (document.querySelector('.sc2-banner, .sc2-veil, .st-veil, .sn2, .lp, .se-net-veil, .pv-veil, [role="dialog"][aria-modal="true"]')) return;
-        window.clearInterval(ot); try { localStorage.setItem(k, '1'); } catch { /* */ } setOffer(true);
+        window.clearInterval(ot); try { localStorage.setItem(k, '1'); } catch { /* */ } setOffer(true); import('@/lib/sound').then((m) => m.play('notify')).catch(() => {});
       }, 600); }
     }
     (window as unknown as { seWalk?: () => void }).seWalk = () => { setOffer(false); walk(); };
@@ -178,8 +181,9 @@ export default function SamsoomTour() {
     <div className="tq-offer" role="status" aria-live="polite" onAnimationEnd={(e) => { if ((e.target as HTMLElement).classList.contains('tq-t')) setOffer(false); }}>
       <span className="tq-sam" aria-hidden="true"><LiveSam size={40} mood="idle" play="wave" /></span>
       <b>{T('Want a quick tour of this page?')}</b>
-      <button type="button" className="tq-go" data-sound="next" onClick={() => { setOffer(false); walk(); }}>{T('Yes, show me')}</button>
-      <button type="button" className="tq-no" data-sound="skip" onClick={() => setOffer(false)}>{T('No thanks')}</button>
+      {/* owner (R10): a yes tick and a no cross instead of two wide text buttons */}
+      <button type="button" className="tq-go tq-ic" data-sound="next" aria-label={T('Yes, show me')} title={T('Yes, show me')} onClick={() => { setOffer(false); walk(); }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5" /></svg></button>
+      <button type="button" className="tq-no tq-ic" data-sound="skip" aria-label={T('No thanks')} title={T('No thanks')} onClick={() => setOffer(false)}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><path d="M6 6l12 12M18 6 6 18" /></svg></button>
       <i className="tq-t" aria-hidden="true" />
     </div>
   ) : null;
@@ -218,7 +222,7 @@ export default function SamsoomTour() {
     return (
       <div className="st-veil" role="dialog" aria-modal="true" aria-label={T('Welcome')} onClick={(e) => { if (e.target === e.currentTarget && phase !== 'bye') bye(1); }}>
         <div className={'st-hello' + (phase === 'bye' ? ' bye' : '')}>
-          <span className="st-sam" data-sam-talk=""><LiveSam size={120} mood="idle" play={phase === 'bye' ? 'kiss' : phase === 'recall' ? 'happy' : cfg().welcome || 'kiss' /* owner (17 Nov): the welcome blows kisses with both hands */} /></span>
+          <span className="st-sam" data-sam-talk=""><LiveSam size={120} mood="idle" play={phase === 'bye' ? byeEmote : phase === 'recall' ? 'happy' : cfg().welcome || 'kiss' /* owner (17 Nov): the welcome blows kisses with both hands */} /></span>
           {phase === 'hello' ? (
             <>
               <b><Typed text={T('Welcome to Sam Electronics!')} /></b>

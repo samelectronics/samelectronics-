@@ -536,3 +536,5 @@ a{color:inherit;text-decoration:none}a:hover{color:inherit}
 @keyframes smWag{0%{transform:rotate(-140deg)}100%{transform:rotate(-116deg)}}
 @keyframes smToot{0%{opacity:.25;transform:translateX(0)}100%{opacity:1;transform:translateX(2px)}}
 @keyframes smHoldWh{0%,100%{transform:rotate(-95deg) scale(.74)}}
+@keyframes smRummage { from { transform: rotate(var(--a)) scaleY(.82); } to { transform: rotate(calc(var(--a) + 12deg)) translateY(2px) scaleY(.74); } }
+[style*="smRummage"] { z-index: -1 !important; }
