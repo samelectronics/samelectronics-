@@ -13,7 +13,6 @@ import LiveSam from '@/components/samsoom/LiveSam';
 import { logWarning } from '@/lib/warnings';
 
 const tr = (s: string) => (typeof window !== 'undefined' && (window as unknown as { seI18n?: { t: (x: string) => string } }).seI18n?.t(s)) || s;
-const offsetOf = (tz: string) => { try { const d = new Date(), s = d.toLocaleString('en-US', { timeZone: tz, hour12: false }); return Math.round((new Date(s).getTime() - new Date(d.toLocaleString('en-US', { hour12: false })).getTime()) / 36e5) + -d.getTimezoneOffset() / 60; } catch { return null; } };
 
 function whistle() {
   try {
@@ -41,20 +40,29 @@ export default function Guard() {
   const allow = () => { const ref = 'SC-' + Date.now().toString(36).toUpperCase().slice(-6); const v = { ref, at: Date.now() }; try { sessionStorage.setItem('se-shot-ok', JSON.stringify(v)); } catch { /* */ } setWm(v); setTerms(false); setAgree(false); logWarning('screenshot', 'screenshot terms accepted · agreement ' + ref); import('./Toaster').then((m) => m.toast(tr('Screenshots allowed. Each one carries our watermark.'))).catch(() => {}); };
   useEffect(() => {
     if (isEmbed()) return;
-    // 1. VPN check, once per visit, never in the Control Room
+    // 1. VPN check (owner, 19 Nov: "not detected, not instantly and not even after a long wait"). It runs ~1s after load,
+    //    again whenever the visitor comes back to the tab or the connection returns, and every 45s, so switching a VPN
+    //    on mid-visit is caught too. Any real gap of an hour or more between the connection's time zone and the device's
+    //    clock counts. One notice per detected location; "I am travelling" silences it for the visit. Never in the Control Room.
+    let vpnTimer = 0, busy = false;
+    const offAt = (tz: string) => { try { const v = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'shortOffset' }).formatToParts(new Date()).find((x) => x.type === 'timeZoneName')?.value || ''; if (v === 'GMT') return 0; const m = v.match(/GMT([+-]\d+)(?::(\d+))?/); return m ? +m[1] + (m[2] ? Math.sign(+m[1]) * +m[2] / 60 : 0) : null; } catch { return null; } };
+    const check = () => {
+      if (busy || location.pathname.startsWith('/staff') || document.visibilityState === 'hidden') return;
+      let quiet = false; try { quiet = sessionStorage.getItem('se-vpn-ok') === '1'; } catch { /* */ } if (quiet) return;
+      busy = true;
+      fetch('/api/geo', { cache: 'no-store' }).then((r) => r.json()).then((g: { tz: string | null; cc?: string | null }) => {
+        if (!g || !g.tz) return; const here = Intl.DateTimeFormat().resolvedOptions().timeZone; if (!here || here === g.tz) return;
+        const ipOff = offAt(g.tz), dev = -new Date().getTimezoneOffset() / 60; if (ipOff == null) return;
+        if (Math.abs(ipOff - dev) < 1) return; // same clock, a neighbouring zone name: not a VPN
+        let last = ''; try { last = sessionStorage.getItem('se-vpn-tz') || ''; } catch { /* */ } if (last === g.tz) return;
+        try { sessionStorage.setItem('se-vpn-tz', g.tz); } catch { /* */ }
+        setVpn(true); whistle(); logWarning('vpn', 'connection ' + g.tz + (g.cc ? ' (' + g.cc + ')' : '') + ' · device ' + here + ' · gap ' + Math.abs(ipOff - dev) + 'h');
+      }).catch(() => { /* offline or not on Vercel */ }).finally(() => { busy = false; });
+    };
+    const vis = () => { if (document.visibilityState === 'visible') check(); };
     if (!location.pathname.startsWith('/staff')) {
-      let done = false; try { done = sessionStorage.getItem('se-geo') === '1'; } catch { /* */ }
-      if (!done) {
-        try { sessionStorage.setItem('se-geo', '1'); } catch { /* */ }
-        window.setTimeout(() => {
-          fetch('/api/geo', { cache: 'no-store' }).then((r) => r.json()).then((g: { tz: string | null }) => {
-            if (!g || !g.tz) return; const here = Intl.DateTimeFormat().resolvedOptions().timeZone; if (!here || here === g.tz) return;
-            const a = offsetOf(g.tz), b = -new Date().getTimezoneOffset() / 60; if (a == null) return;
-            const ipOff = (() => { try { const d = new Date(); const s = new Intl.DateTimeFormat('en-US', { timeZone: g.tz!, timeZoneName: 'shortOffset' }).formatToParts(d).find((x) => x.type === 'timeZoneName')?.value || ''; const m = s.match(/GMT([+-]\d+)(?::(\d+))?/); return m ? +m[1] + (m[2] ? Math.sign(+m[1]) * +m[2] / 60 : 0) : s === 'GMT' ? 0 : null; } catch { return null; } })();
-            if (ipOff == null) return; if (Math.abs(ipOff - b) >= 2) { setVpn(true); whistle(); logWarning('vpn', 'connection ' + g.tz + ' · device ' + here); }
-          }).catch(() => { /* offline or not on Vercel */ });
-        }, 4000);
-      }
+      window.setTimeout(check, 1200); vpnTimer = window.setInterval(check, 45000);
+      document.addEventListener('visibilitychange', vis); window.addEventListener('online', check); window.addEventListener('focus', check);
     }
     // 2. screenshot keys
     const seen = () => {
@@ -66,12 +74,12 @@ export default function Guard() {
     const down = (e: KeyboardEvent) => { if (e.key === 'Escape') { setShot(false); setVpn(false); return; } const k = e.key.toLowerCase(); if ((e.metaKey && e.shiftKey && ['3', '4', '5', 's'].includes(k)) || (e.ctrlKey && e.shiftKey && k === 's' && navigator.platform.startsWith('Win'))) seen(); };
     const up = (e: KeyboardEvent) => { if (e.key === 'PrintScreen' || e.code === 'PrintScreen') seen(); };
     window.addEventListener('keydown', down, true); window.addEventListener('keyup', up, true);
-    return () => { window.removeEventListener('keydown', down, true); window.removeEventListener('keyup', up, true); };
+    return () => { window.removeEventListener('keydown', down, true); window.removeEventListener('keyup', up, true); window.clearInterval(vpnTimer); document.removeEventListener('visibilitychange', vis); window.removeEventListener('online', check); window.removeEventListener('focus', check); };
   }, []);
   return (
     <>
       {vpn ? <SysNote tone="warn" snd="none" role="alert" sam={{ mood: 'stop' }} kicker={tr('SAMSOOM · HOLD ON')} title={tr('Hey! Is that a VPN?')} text={tr('Prices and delivery depend on where you really are. Please switch the VPN off.')} ms={20000} onClose={() => setVpn(false)}
-        acts={[{ label: tr('OK, I will switch it off'), primary: true }, { label: tr('I am travelling, carry on') }, { label: tr('Why am I seeing this?'), href: '/notices#vpn' }]} /> : null}
+        acts={[{ label: tr('OK, I will switch it off'), primary: true }, { label: tr('I am travelling, carry on'), on: () => { try { sessionStorage.setItem('se-vpn-ok', '1'); } catch { /* */ } } }, { label: tr('Why am I seeing this?'), href: '/notices#vpn' }]} /> : null}
       {shot ? <SysNote tone="stop" role="alert" sam={{ mood: 'nono' }} kicker={tr('COPYRIGHT NOTICE')} title={tr('This content is protected.')} text={tr('Keeping it for yourself is fine; sharing or publishing it needs our permission.')} ms={15000} onClose={() => setShot(false)}
         acts={[{ label: tr('I understand'), primary: true }, { label: tr('Allow screenshots'), on: () => setTerms(true) }, { label: tr('Read the full notice'), href: '/notices#copyright' }]} /> : null}
       {terms ? (

@@ -1406,3 +1406,24 @@ html .shop-dock .dk-led { border-radius: 14px !important; }
 @keyframes shdDrift { 0% { transform: translate(0, 0) scale(1); } 33% { transform: translate(8vw, -7vh) scale(1.25); } 66% { transform: translate(-6vw, 6vh) scale(.85); } 100% { transform: translate(4vw, 3vh) scale(1.1); } }
 .shop-cine .cine-bokeh i { animation-name: shdDrift, shdPulse !important; }
 @media (hover: none) { .shd-glow { animation-name: shdDrift !important; } }
+/* brand ads: the part is the star — bigger */
+.ia3[data-brand] .ia3-vis { height: 250px !important; margin-bottom: 0 !important; }
+.ia3[data-brand] .ia3-brand2 img { height: 270px !important; margin-block: -14px; }
+@media (max-width: 760px) { .ia3[data-brand] .ia3-vis { height: 190px !important; } .ia3[data-brand] .ia3-brand2 img { height: 200px !important; } }
+/* docked: the header's own search button gives way to the shop search; on phones the bar is just a clean search field */
+header .sc-host { transition: opacity .3s ease, transform .35s cubic-bezier(.2,.8,.2,1); }
+html[data-shop-dock] header .sc-host { opacity: 0 !important; transform: translateY(-14px) !important; pointer-events: none !important; position: absolute !important; }
+@media (max-width: 700px) {
+  html .shop-dock .dk-tools { display: none !important; }
+  html .shop-dock .ss-go, html .shop-dock .ss-count, html .shop-dock .ss-kbd { display: none !important; }
+  html .shop-dock .ss .ss-bar { padding: 0 10px !important; height: 42px !important; }
+  html .shop-dock .ss input { font-size: 15px !important; }
+}
+@media (max-width: 700px) { html .shop-dock .ss-n { display: none !important; } }
+.ia3[data-brand] .ia3-vis img { max-height: none !important; }
+/* the light frame wraps the search exactly (same box, same radius) */
+html .shop-dock .dk-led { display: flex !important; align-items: stretch; height: 44px; }
+html .shop-dock .dk-led > .ss { flex: 1; height: 100% !important; }
+@media (max-width: 700px) { html .shop-dock .dk-led { height: 42px; } }
+html .shop-dock .dk-led > .ss, html .shop-dock .dk-led .ss form, html .shop-dock .dk-led .ss-bar { min-width: 0 !important; max-width: 100% !important; width: 100% !important; box-sizing: border-box !important; }
+html .shop-dock .dk-led .ss-bar input { min-width: 0 !important; width: 100% !important; flex: 1 1 auto !important; }

@@ -1776,6 +1776,20 @@ export const R7: Record<string, string> = {
 
 /** Round 8: Sam Circuit's three cards, Samsoom's tour and chat menu. */
 export const R8: Record<string, string> = {
+  'Want a quick tour of this page?': 'جولة سريعة في هذه الصفحة؟',
+  'Show me': 'أرني',
+  'Before': 'قبل',
+  'After': 'بعد',
+  'Allow screenshots': 'السماح بلقطات الشاشة',
+  'Screenshot terms': 'شروط لقطات الشاشة',
+  'Screenshots are for your own use only, for example to remember a part or to send it to your technician.': 'لقطات الشاشة لاستخدامك الشخصي فقط، مثلًا لتتذكر قطعة أو ترسلها لفنيّك.',
+  'Publishing, reselling or editing them, or using our photos and prices elsewhere, needs our written permission.': 'نشرها أو إعادة بيعها أو تعديلها أو استخدام صورنا وأسعارنا في مكان آخر يتطلب إذنًا كتابيًا منا.',
+  'Every screenshot carries our watermark with the date and your agreement number.': 'كل لقطة شاشة تحمل علامتنا المائية مع التاريخ ورقم موافقتك.',
+  'I agree to the screenshot terms': 'أوافق على شروط لقطات الشاشة',
+  'Screenshots allowed. Each one carries our watermark.': 'تم السماح بلقطات الشاشة. كل لقطة تحمل علامتنا المائية.',
+  'All rights reserved': 'جميع الحقوق محفوظة',
+  'Captured on': 'التُقطت في',
+  'Agreement': 'الموافقة',
   'Only parts that fit my phones': 'فقط القطع المناسبة لهواتفي',
   'Only parts that fit my phone': 'فقط القطع المناسبة لهاتفي',
   'Share this list': 'شارك هذه القائمة',

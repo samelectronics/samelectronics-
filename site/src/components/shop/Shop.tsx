@@ -82,10 +82,12 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
   useEffect(() => {
     const fit = () => {
       const h = document.querySelector('header'); if (!h) return;
-      const logo = h.querySelector('.se-nav-row > a'), right = h.querySelector('.se-nav-right');
-      if (!logo || !right) return;
-      const keep = Array.from(right.children).filter((c) => !c.matches('.se-status, .se-contact-dd') && (c as HTMLElement).offsetWidth > 0);
-      const L = Math.round(logo.getBoundingClientRect().right + 18), R = keep.length ? Math.min(...keep.map((c) => c.getBoundingClientRect().left)) : window.innerWidth - 20;
+      const a = h.querySelector('.se-nav-row > a'), right = h.querySelector('.se-nav-right');
+      if (!a || !right) return;
+      // on a phone the logo's name hides in this mode, so measure from the round mark itself
+      const small = window.innerWidth <= 700, logo = (small && a.querySelector('.lm2')) || a;
+      const keep = Array.from(right.children).filter((c) => !c.matches('.se-status, .se-contact-dd, .sc-host') && (c as HTMLElement).offsetWidth > 0);
+      const L = Math.round(logo.getBoundingClientRect().right + (small ? 10 : 18)), R = keep.length ? Math.min(...keep.map((c) => c.getBoundingClientRect().left)) : window.innerWidth - 20;
       const root = document.documentElement; root.style.setProperty('--dock-l', L + 'px'); root.style.setProperty('--dock-r', Math.max(12, Math.round(window.innerWidth - R + 14)) + 'px');
     };
     fit(); const t = window.setTimeout(fit, 400); window.addEventListener('resize', fit);
