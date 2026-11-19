@@ -11,7 +11,7 @@ function Card({ c }: { c: any }) {
       <div className="mt-card prod">
         <span className="th">{c.img ? <img loading="lazy" decoding="async" src={c.img} alt="" /> : null}</span>
         <span className="tx">
-          <b data-no-i18n="">{c.title}</b>
+          <b data-i18n-part="">{c.title}</b>
           <small>
             <em>{c.grade}</em> · {c.stock}
           </small>

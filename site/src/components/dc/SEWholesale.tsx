@@ -232,7 +232,7 @@ function render(v: Vals) {
                       <li key={h.id}>
                         <button type="button" onMouseDown={h.pick}>
                           <span className="th">{h.img ? <img loading="lazy" decoding="async" src={h.img} alt="" /> : null}</span>
-                          <b data-no-i18n="">{h.name}</b>
+                          <b data-i18n-part="">{h.name}</b>
                           <small>{h.grade}</small>
                           <em>{h.price}</em>
                         </button>
@@ -250,7 +250,7 @@ function render(v: Vals) {
                 <button key={p.id} type="button" role="radio" aria-checked={p.on} className={p.on ? 'on' : ''} onClick={p.pick}>
                   <span className="th">{p.img ? <img loading="lazy" decoding="async" src={p.img} alt="" /> : null}</span>
                   <span className="nm">
-                    <b data-no-i18n="">{p.name}</b>
+                    <b data-i18n-part="">{p.name}</b>
                     <small>{p.grade}</small>
                   </span>
                 </button>
@@ -327,7 +327,7 @@ function render(v: Vals) {
             {v.enq ? <p className="wf-enq">Above 1,000 units we quote you directly: send the request on WhatsApp.</p> : null}
             <div className="wf-list">
               {(v.list || []).map((it: any) => (
-                <span key={it.k} className="wf-li"><b data-no-i18n="">{it.name}</b><small>{it.grade} · × {it.qty}</small><button type="button" onClick={it.del} aria-label="Remove">×</button></span>
+                <span key={it.k} className="wf-li"><b data-i18n-part="">{it.name}</b><small>{it.grade} · × {it.qty}</small><button type="button" onClick={it.del} aria-label="Remove">×</button></span>
               ))}
               <div className="wf-li-acts">
                 <button type="button" className="wf-add" onClick={v.addLine}>+ Add to request</button>
@@ -431,7 +431,7 @@ function render(v: Vals) {
                       {FLAGS[cc]}
                     </svg>
                     <small>{who}</small>
-                    <span data-no-i18n="">{what}</span>
+                    <span data-i18n-part="">{what}</span>
                     <b>{q}</b>
                   </span>
                 ))}

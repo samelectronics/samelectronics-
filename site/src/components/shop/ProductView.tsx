@@ -112,7 +112,7 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
           <div className="pv-info">
             <span className="pv-meta"><GradeTag g={p.grade} name={p.gradeName} /><a href={'/brands#maker-' + p.manufacturer} className="pv-mkl"><MakerTag m={p.manufacturer} name={p.makerName} /></a><span className="pv-ref" data-no-i18n="">{p.id}</span></span>
             <h2 className="pv-t">{ptitle(p)}</h2>
-            <span className="pv-rate"><Stars v={avg} n={nRev} /><button type="button" onClick={() => setTab('Reviews')}>{T('Read reviews')}</button><span className="sp-sample">{rv.length ? '' : 'sample rating'}</span></span>
+            <span className="pv-rate"><Stars v={avg} n={nRev} /><button type="button" onClick={() => setTab('Reviews')}>{T('Read reviews')}</button><span className="sp-sample">{rv.length ? '' : T('sample rating')}</span></span>
             {fits ? <span className="pv-fits ok">✓ {T('Fits your')} {fits.nick || fits.name}</span> : model ? <button type="button" className="pv-fits" onClick={() => store.device({ model_id: model.id, name: model.name })}>+ {T('Add')} {model.name} {T('to My devices')}</button> : null}
 
             <div className="pv-price">
@@ -130,7 +130,7 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
               </div>
             ) : null}
 
-            <div className={'pv-stock s-' + sk}><i /><span><b>{sk === 'low' ? T('Only') + ' ' + p.stock_qty + ' ' + T('left (estimate)') : T(sl)}</b><small>{T('Stock is an estimate: we confirm it on WhatsApp before you pay.')}</small></span></div>
+            <div className={'pv-stock s-' + sk}><i /><span><b>{sk === 'low' ? T('Only {n} left (estimate)').replace('{n}', String(p.stock_qty)) : T(sl)}</b><small>{T('Stock is an estimate: we confirm it on WhatsApp before you pay.')}</small></span></div>
 
             <div className="pv-buy">
               <span className="pv-qty"><button type="button" onClick={() => setQty(Math.max(1, qty - 1))} aria-label="−">−</button><input value={qty} inputMode="numeric" onChange={(e) => setQty(Math.max(1, Math.min(999, +e.target.value || 1)))} aria-label={T('Quantity')} /><button type="button" onClick={() => setQty(qty + 1)} aria-label="+">+</button></span>
@@ -145,7 +145,7 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
               <div className="pv-ask" role="dialog" aria-label={T('Done shopping?')}>
                 <span className="pv-ask-sam" aria-hidden="true"><LiveSam size={64} mood="idle" play="think" /></span>
                 <b>{T('Done shopping?')}</b>
-                <p>{(st.cart.length ? T('You have') + ' ' + st.cart.length + ' ' + T('other parts in your cart.') + ' ' : '') + T('Add everything you need first, then send it all in one go. It is faster for both of us.')}</p>
+                <p>{(st.cart.length ? T('{n} other parts are already in your cart.').replace('{n}', String(st.cart.length)) + ' ' : '') + T('Add everything you need first, then send it all in one go. It is faster for both of us.')}</p>
                 <span className="pv-ask-r">
                   <button type="button" className="sp-btn ghost" onClick={(e) => { flyToCart(img.current, p.id, e); if (qty > 1) store.add(p.id, qty - 1); setAsk(false); onClose(); }}>{T('Add it, keep shopping')}</button>
                   <button type="button" className="sp-btn" onClick={() => { if (!st.cart.some((l) => l.id === p.id)) store.add(p.id, qty); location.href = '/cart'; }}>{T('Go to checkout')} →</button>
@@ -183,7 +183,7 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
         <div className="pv-tab">
           {tab === 'Description' ? (
             <div className="pv-desc">
-              <p>{T('The')} {p.part_name.toLowerCase()} {T('for the')} {p.brandName} {p.modelName}, {T('in')} {p.gradeName} {T('grade from')} {p.makerName}. {T(GRADE_INFO[p.grade]?.[1] || '')}</p>
+              <p>{T('{part} for the {model}, {grade} grade, made by {maker}.').replace('{part}', T(p.part_name)).replace('{model}', p.brandName + ' ' + p.modelName).replace('{grade}', T(p.gradeName)).replace('{maker}', T(p.makerName))} {T(GRADE_INFO[p.grade]?.[1] || '')}</p>
               <p>{T('Every part is checked on our bench before it leaves the shop, and comes with a')} {p.warranty} {T('warranty')}. {T('Not sure it is the right one? Send us your model number on WhatsApp and we will check it for you.')}</p>
               <span className="sp-sample">{T('Descriptions are written per product once the owner’s details arrive.')}</span>
             </div>

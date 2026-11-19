@@ -167,7 +167,7 @@ function render(v: Vals) {
                     {r.tag}
                   </span>
                   <span className="lb-th">{r.hasTh ? <img loading="lazy" decoding="async" src={r.th} alt="" /> : r.hasCc ? <span className="lb-cc" data-no-i18n="">{r.cc}</span> : null}</span>
-                  <span className="lb-item" data-no-i18n={r.hasCc ? undefined : ''}>
+                  <span className="lb-item" data-i18n-part={r.hasCc ? undefined : ''}>
                     <span className="lb-type">{r.text}</span>
                   </span>
                   <span className="lb-note" style={{ color: r.noteC }}>
@@ -199,7 +199,7 @@ function render(v: Vals) {
             <div className="lb-tick-in">
               {(v.trend || []).map((x: any, i: number) => (
                 <span key={i} className="lb-chip">
-                  <span data-no-i18n="">{x.t}</span>
+                  <span data-i18n-part="">{x.t}</span>
                   <b key={x.n}>{x.n} searches</b>
                 </span>
               ))}

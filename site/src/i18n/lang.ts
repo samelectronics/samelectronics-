@@ -10,6 +10,7 @@
  * - Canvas engines and the map iframe use window.seI18n.t(text) and listen for the 'se:lang' event.
  */
 import { isolateNumbers } from './isolate';
+import { swapPart } from './parts';
 // R10: the Arabic translator (and its big dictionary) is its own file: fetched at once for Arabic visitors, otherwise
 // preloaded in the background with Spanish and French once the page is idle. The other 20 languages load when picked.
 let TR: ((s: string) => string) | null = null;
@@ -84,7 +85,9 @@ function doText(n: Text) {
   const o = textOrig.get(n);
   // React (or a logic class) changed the text since we translated it: that new text is the English.
   const en = o && cur === o.out ? o.en : REV.get(cur) ?? REV.get(cur.replace(/[\u2066\u2069]/g, '')) ?? cur;
-  const out = lang === 'en' ? en : isRtl(lang) ? isolateNumbers(trCur(en)) : trCur(en);
+  // product names: only the part word is translated, the model stays as written
+  const tx = n.parentElement?.closest('[data-i18n-part]') ? (x: string) => swapPart(x, trCur) : trCur;
+  const out = lang === 'en' ? en : isRtl(lang) ? isolateNumbers(tx(en)) : tx(en);
   if (out !== cur) n.data = out;
   if (lang !== 'en') textOrig.set(n, { en, out });
   else textOrig.delete(n);

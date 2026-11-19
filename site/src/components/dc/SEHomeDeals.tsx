@@ -80,7 +80,7 @@ function render(v: Vals) {
               </div>
               <div className="dl-spot-t">
                 <span className="dl-grade">{spot.grade}</span>
-                <h3 data-no-i18n="">{spot.title}</h3>
+                <h3 data-i18n-part="">{spot.title}</h3>
               </div>
               <div className="dl-price">
                 <span className="dl-old">
@@ -159,7 +159,7 @@ function render(v: Vals) {
                         <span className="dl-card-sheen" aria-hidden="true" />
                       </div>
                       <span className="dl-grade">{c.grade}</span>
-                      <h4 data-no-i18n="">{c.title}</h4>
+                      <h4 data-i18n-part="">{c.title}</h4>
                       <div className="dl-card-p">
                         <b key={c.price}>{c.price}</b>
                         {c.was ? (
@@ -306,7 +306,7 @@ function render(v: Vals) {
                   <li key={p.k} aria-hidden={p.clone || undefined}>
                     {p.img ? <span className="dl-pre-img" aria-hidden="true"><img src={p.img} alt="" loading="lazy" /></span> : <span className="dl-sil" aria-hidden="true" />}
                     <span className="dl-pre-t">
-                      <b data-no-i18n="">{p.model}</b>
+                      <b>{p.model}</b>
                       <small>{p.parts}</small>
                     </span>
                     <button type="button" tabIndex={p.clone ? -1 : undefined} onClick={p.reserve}>

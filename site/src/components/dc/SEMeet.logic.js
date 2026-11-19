@@ -67,7 +67,7 @@ class Component extends DCLogic {
     return { secRef: this.secRef, seen: s.seen, mood: !live ? 'idle' : st === 1 ? 'think' : 'type', still: !live, front: lib && lib.front ? lib.front : null, phone: img(9), msgs, ci: s.ci, n: CONVOS.length, flyQ: st === 1 ? c.q : '',
       ask: () => window.dispatchEvent(new CustomEvent('se:chat', { detail: {} })), drift: DRIFT,
       // owner (28 Oct): a 'try asking' question plays right here in the chat on screen (typed in, answered), not in a new window
-      compose: st === 0 && s.seen ? c.q.slice(0, Math.min(c.q.length, Math.floor((s.t / 1.55) * c.q.length))) : '', ready: st === 0 && s.seen && s.t >= 1.55, sent: st === 1,
+      compose: st === 0 && s.seen ? (() => { const L = typeof window !== 'undefined' ? window.seI18n : null, q = L && L.t ? L.t(c.q) : c.q; return q.slice(0, Math.min(q.length, Math.floor((s.t / 1.55) * q.length))); })() : '', ready: st === 0 && s.seen && s.t >= 1.55, sent: st === 1,
       tries: CONVOS.map((c, j) => ({ q: c.q, on: j === s.ci, go: () => { this.ov = null; this.t = 0; this._st = null; this.setState({ ci: j, t: 0, seen: true }); } })) };
   }
 }

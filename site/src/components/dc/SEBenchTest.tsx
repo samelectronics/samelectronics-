@@ -222,7 +222,7 @@ function render(v: Vals) {
                 </div>
                 <div className="bt-o-r">
                   <span>Part</span>
-                  <span data-no-i18n="">iPhone 15 Pro screen</span>
+                  <span data-i18n-part="">iPhone 15 Pro Screen</span>
                 </div>
                 <div className="bt-o-r">
                   <span>Grade</span>

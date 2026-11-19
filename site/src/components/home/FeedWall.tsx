@@ -94,7 +94,7 @@ function Reel({ net, k }: { net: (typeof NET)[number]; k: number }) {
         <img className="rl-img" src={p.img.replace('-480.webp', '-480.webp')} alt="" loading="lazy" decoding="async" key={k} />
         <span className="rl-shade" />
         <span className="pf-sb rl-sb"><b>9:41</b><i /></span>
-        <span className="rl-top">{net.id === 'tt' ? <><small>Following</small><b>For You</b></> : <b>{net.id === 'ig' ? 'Reels' : 'Reels'}</b>}</span>
+        <span className="rl-top">{net.id === 'tt' ? <><small>{T('Following')}</small><b>{T('For You')}</b></> : <b>{T('Reels')}</b>}</span>
         <span className="rl-side">
           <span className="rl-av"><img src="/assets/se-logo-128.webp" alt="" /><i>+</i></span>
           <span className="rl-ic"><i className="h" /><small>{fmt(likes)}</small></span>

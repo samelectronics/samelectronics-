@@ -40,6 +40,7 @@ export const VAT = 0.05; // UAE VAT (owner: 5%)
 export const fmt = (n: number) => Math.round(n).toLocaleString('en-US');
 // R9: prices can be shown in USD or EUR (the visitor's choice in Settings); orders and invoices stay in AED
 import { prefs, RATES } from './prefs';
+import { swapPart } from '@/i18n/parts';
 export const aed = (n: number, sample = true) => { const c = typeof window === 'undefined' ? 'AED' : prefs().currency; return (c === 'AED' ? 'AED ' + fmt(n) : '≈ ' + c + ' ' + (n * RATES[c]).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })) + (sample ? ' · sample' : ''); };
 
 /** R9 · a product's price as text: never “AED 0” — no price means we confirm it */
@@ -204,17 +205,7 @@ export const waCard = (title: string, rows: [string, string | number | undefined
   return L.join('\n');
 };
 
-// Owner (18 Nov): "translate the part words in product names, keep the model name as it is". The longest known part
-// phrase in a title is swapped for its translation ("iPhone 13 Screen" → "iPhone 13 شاشة"); everything else (model,
-// codes, brackets) stays exactly as written. Staff messages keep the original title.
-const PART_WORDS = ['Back cover with chassis', 'Full Display Screen', 'Charging connector Flex', 'Charging board', 'Charging flex', 'Charging port', 'Power flex', 'Volume flex',
-  'Rear camera', 'Front camera', 'Camera lens', 'Back cover', 'Back glass', 'SIM tray', 'Loudspeaker', 'Earpiece', 'Vibrator', 'Speaker', 'Housing', 'Battery', 'Screen', 'Display', 'Camera', 'Frame', 'Flex', 'Tool'];
-const PART_RX = new RegExp('(^|\\s)(' + PART_WORDS.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|') + ')(?=\\s|$|[),.])', 'i');
 export const ptitle = (p: { title: string }): string => {
-  const t = typeof window !== 'undefined' ? (window as unknown as { seI18n?: { t: (s: string) => string; lang?: string } }).seI18n : undefined;
-  if (!t) return p.title;
-  const m = p.title.match(PART_RX); if (!m) return p.title;
-  const key = PART_WORDS.find((w) => w.toLowerCase() === m[2].toLowerCase()) || m[2];
-  const tr = t.t(key); if (!tr || tr === key) return p.title;
-  return p.title.slice(0, (m.index || 0) + m[1].length) + tr + p.title.slice((m.index || 0) + m[0].length);
+  const t = typeof window !== 'undefined' ? (window as unknown as { seI18n?: { t: (s: string) => string } }).seI18n : undefined;
+  return t ? swapPart(p.title, t.t) : p.title;
 };
