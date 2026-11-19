@@ -10,7 +10,7 @@ const LEVELS_AT = (i: number) => LEVELS[i].at;
 import { T } from '@/components/site/ui';
 import { play } from '@/lib/sound';
 
-const MS = 6500;
+const MS = 4200; // owner (19 Nov): small and quick, it never interrupts
 export default function MedalWatch() {
   const path = usePathname(), [show, setShow] = useState<string | null>(null);
   useEffect(() => { if (path && !path.startsWith('/staff')) { visitMedal(path); if (path === '/account') { /* the bench itself */ } } }, [path]);

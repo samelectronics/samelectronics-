@@ -25,3 +25,21 @@ html[data-theme="dark"] .tq { background: color-mix(in srgb, var(--qt) 22%, #232
 .pc-gr.g-AA, .hi-gr.g-AA { --qt: #3E4784; --qb: #EEF0FB; --ql: #D1D5F2; } .pc-gr.g-OB, .hi-gr.g-OB { --qt: #05605A; --qb: #E3F7F4; --ql: #B2E5DE; }
 .pc-gr.g-OL, .hi-gr.g-OL { --qt: #0E6E87; --qb: #E5F6FB; --ql: #B9E4F0; } .pc-gr.g-OS, .hi-gr.g-OS { --qt: #2F7A4F; --qb: #E8F6EE; --ql: #BFE5CE; }
 .pc-gr.g-IN, .hi-gr.g-IN { --qt: #5B3FB0; --qb: #F1EDFC; --ql: #D9CFF6; } .pc-gr.g-OT, .hi-gr.g-OT { --qt: #5A5E64; --qb: #F5F6F7; --ql: #E3E5E8; }
+
+/* ── owner (19 Nov): "the colours are dead (grey, light grey, weird blue/cyan); use better, more visible colours, all
+   different, and make the tags a bit more unique". Qualities = solid chips in their own vivid colour with a notched
+   corner and a small diamond; makers = a different shape: white with a coloured outline, coloured text and a glowing dot ── */
+.q-OR { --qc: #E8A200; --qd: #FFCB3D; --qi: #26282B; } .q-OL { --qc: #D6336C; --qd: #F06595; --qi: #fff; } .q-OB { --qc: #7C3AED; --qd: #A78BFA; --qi: #fff; }
+.q-OS { --qc: #EA6A0C; --qd: #FB923C; --qi: #fff; } .q-IN { --qc: #2563EB; --qd: #60A5FA; --qi: #fff; } .q-AQ { --qc: #0D9488; --qd: #2DD4BF; --qi: #fff; }
+.q-AA { --qc: #16A34A; --qd: #4ADE80; --qi: #fff; } .q-CO { --qc: #E11D48; --qd: #FB7185; --qi: #fff; } .q-ST { --qc: #A16207; --qd: #CA8A04; --qi: #fff; } .q-OT { --qc: #475569; --qd: #64748B; --qi: #fff; }
+.tq, .pc-gr, .hi-gr { position: relative; gap: 5px; color: var(--qi) !important; background: linear-gradient(135deg, var(--qd), var(--qc) 60%) !important; border: 0 !important; border-radius: 5px !important; clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 0 100%); font-weight: 700 !important; letter-spacing: .01em !important; box-shadow: inset 0 1px 0 rgba(255,255,255,.35); text-shadow: 0 1px 0 rgba(0,0,0,.12); padding-inline-end: 10px !important; }
+.q-OR.tq, .pc-gr.g-OR, .hi-gr.g-OR { text-shadow: none; }
+.tq::before { content: ''; width: 6px; height: 6px; flex: none; background: currentColor; transform: rotate(45deg); opacity: .9; }
+.pc-gr.g-OR, .hi-gr.g-OR { --qc: #E8A200; --qd: #FFCB3D; --qi: #26282B; } .pc-gr.g-OL, .hi-gr.g-OL { --qc: #D6336C; --qd: #F06595; --qi: #fff; } .pc-gr.g-OB, .hi-gr.g-OB { --qc: #7C3AED; --qd: #A78BFA; --qi: #fff; }
+.pc-gr.g-OS, .hi-gr.g-OS { --qc: #EA6A0C; --qd: #FB923C; --qi: #fff; } .pc-gr.g-IN, .hi-gr.g-IN { --qc: #2563EB; --qd: #60A5FA; --qi: #fff; } .pc-gr.g-AQ, .hi-gr.g-AQ { --qc: #0D9488; --qd: #2DD4BF; --qi: #fff; }
+.pc-gr.g-AA, .hi-gr.g-AA { --qc: #16A34A; --qd: #4ADE80; --qi: #fff; } .pc-gr.g-CO, .hi-gr.g-CO { --qc: #E11D48; --qd: #FB7185; --qi: #fff; } .pc-gr.g-ST, .hi-gr.g-ST { --qc: #A16207; --qd: #CA8A04; --qi: #fff; } .pc-gr.g-OT, .hi-gr.g-OT { --qc: #475569; --qd: #64748B; --qi: #fff; }
+html[data-theme="dark"] .tq { background: linear-gradient(135deg, var(--qd), var(--qc) 60%) !important; color: var(--qi) !important; }
+.k-sp { --kc: #DC2626; } .k-oem { --kc: #0891B2; } .k-ro { --kc: #9333EA; } .k-gx { --kc: #EA580C; } .k-zy { --kc: #059669; } .k-yk { --kc: #2563EB; } .k-tw { --kc: #DB2777; } .k-ot { --kc: #64748B; }
+.tmk { gap: 6px; color: var(--kc, #64748B) !important; background: #FFFFFF !important; border: 1.5px solid color-mix(in srgb, var(--kc, #64748B) 45%, transparent) !important; border-radius: 99px !important; font-weight: 700 !important; padding: 0 9px 0 7px !important; }
+.tmk::before { content: ''; width: 7px; height: 7px; flex: none; border-radius: 50%; background: var(--kc, #64748B); box-shadow: 0 0 0 2px color-mix(in srgb, var(--kc, #64748B) 22%, transparent), 0 0 6px var(--kc, #64748B); }
+html[data-theme="dark"] .tmk, .shop-cine .tmk, .ia3[data-tone="d"] .tmk, .shop-dock .tmk { background: rgba(255,255,255,.06) !important; color: color-mix(in srgb, var(--kc, #94A3B8) 65%, #fff) !important; border-color: color-mix(in srgb, var(--kc, #94A3B8) 55%, transparent) !important; }

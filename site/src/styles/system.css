@@ -1076,3 +1076,24 @@ html[dir="rtl"] .cc-card.cc2 .cc-row .cc-la { right: auto; left: 12px; }
 .ers-card.sam { position: relative; margin-top: 60px; padding-top: 74px; border-radius: 26px; text-align: center; }
 .ers-card.sam .ers-acts { justify-content: center; } .ers-card.sam .ers-why { text-align: start; }
 .ers-sam .sn2-badge { color: #FF8A80; }
+/* owner (19 Nov): the watermark only shows while a screenshot is being taken; the side tab in the site's own style */
+.shot-wm { opacity: 0; transition: opacity .12s ease-out; } .shot-wm.on { opacity: 1; transition: opacity .05s; }
+.shot-wm .tile { opacity: .09 !important; }
+.shot-wm .side { display: flex; align-items: center; gap: 8px; background: #26282B !important; color: #FFFFFF !important; font: 600 10px 'JetBrains Mono', monospace !important; letter-spacing: .12em; box-shadow: inset 2px 0 0 #F7C032, 0 10px 24px -10px rgba(0,0,0,.5); padding: 14px 7px !important; border-radius: 10px 0 0 10px !important; }
+.shot-wm .side i { width: 7px; height: 7px; border-radius: 50%; background: #F7C032; box-shadow: 0 0 6px #F7C032; }
+.st-sum { text-align: center; } .sn2-ln.y { color: #E0A100; font-weight: 700; } .sn2-ln.y:hover { color: #26282B; background: #F7C032; border-radius: 4px; padding: 0 3px; }
+
+/* owner (19 Nov): "want a tour?" is small, at the top under the header, never in the way: yes / no and a timer */
+.tq-offer { top: 84px !important; bottom: auto !important; animation: tqDrop .5s cubic-bezier(.2,1.3,.35,1) both !important; padding: 5px 5px 5px 6px !important; }
+@keyframes tqDrop { from { opacity: 0; transform: translate(-50%, -24px) scale(.96); } to { opacity: 1; transform: translate(-50%, 0); } }
+.tq-offer .tq-t { animation-duration: 12s !important; }
+.tq-no { flex: none; height: 34px; padding: 0 12px; border: 0; border-radius: 999px; background: #F2F3F5; color: #5A5E64; font: 600 13px Inter, sans-serif; cursor: pointer; }
+.tq-no:hover { background: #E6E7E9; color: #26282B; }
+html[data-theme="dark"] .tq-no { background: #3A3D42; color: #F2F3F5; }
+@media (max-width: 700px) { .tq-offer { top: 70px !important; } }
+/* the achievement notice: smaller, a compact strip */
+.mdt-dock { width: min(400px, calc(100vw - 24px)) !important; }
+.mdt { gap: 10px !important; padding: 8px 10px 10px 8px !important; border-radius: 16px !important; }
+.mdt-chip { width: 46px !important; height: 46px !important; } .mdt-chip .md2, .mdt-chip svg { width: 46px !important; height: 46px !important; }
+.mdt-tx b { font-size: 15px !important; } .mdt-tx small { font-size: 9px !important; } .mdt-lv { margin-top: 2px !important; font-size: 11px !important; }
+.mdt-go { height: 30px !important; padding: 0 10px !important; font-size: 12px !important; }

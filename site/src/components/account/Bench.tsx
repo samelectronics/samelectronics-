@@ -14,7 +14,7 @@ import NotesPanel from './NotesPanel';
 import SoundSettings from '@/components/site/SoundSettings';
 import { Repairs, WarrantyCheck, TradeTools } from './BenchTools';
 import Medal, { Rank } from './Medal';
-import { MEDALS, LESSONS, LEVELS as XLEVELS, got, unlock, startLesson, level } from '@/lib/achievements';
+import { MEDALS, LESSONS, LEVELS as XLEVELS, XP, got, unlock, startLesson, level } from '@/lib/achievements';
 
 const NAV: [string, string, string][] = [
   ['overview', 'Overview', 'M3 12l9-8 9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z'],
@@ -160,7 +160,7 @@ function Medals() {
       {/* owner (19 Nov): medals add points, points climb levels, every level brings a reward */}
       {(() => { const L = level(g); return (
         <div className="bn-lv">
-          <div className="bn-lv-h"><span><small>{T('YOUR LEVEL')}</small><b>{T(L.name)}</b></span><span className="xp"><b>{L.xp}</b> {T('points')}</span></div>
+          <div className="bn-lv-h"><span><small>{T('YOUR LEVEL')} · {L.i + 1}</small><b>{T(L.name)}</b></span><span className="xp"><b>{L.xp}</b> {T('points')}</span></div>
           <span className="bn-lv-bar"><i style={{ width: L.pct + '%' }} /></span>
           <small className="bn-lv-next">{L.next ? T('Next') + ': ' + T(L.next.n) + ' · ' + (L.next.at - L.xp) + ' ' + T('points to go') : T('Top level reached')}</small>
           <ol className="bn-lv-list">{XLEVELS.map((l, k) => <li key={l.n} className={(k <= L.i ? 'on' : '') + (k === L.i ? ' cur' : '')}><i>{k + 1}</i><span><b>{T(l.n)}</b><small>{T(l.reward)}</small></span><em dir="ltr">{l.at}</em></li>)}</ol>
@@ -179,8 +179,14 @@ function Medals() {
       </div>
       {GROUPS.map(([k, l]) => (
         <div key={k} className="bn-md-g">
-          <div className="bn-md-h"><h3>{T(l)}</h3><span className="bn-md-prog"><i style={{ width: Math.round((got(k) / Math.max(1, doneIn(k).length)) * 100) + '%' }} /></span><small dir="ltr">{got(k)} / {doneIn(k).length}</small></div>
-          <div className="bn-md-case">{MEDALS.filter((m) => m.group === k).map((m) => { const on = !!g[m.id]; const inner = <><Medal tier={m.tier} on={on} size={64} group={m.id === 'teardown' ? 'teardown' : m.group} /><b>{T(m.t)}</b><small>{T(m.d)}</small><em>{on ? when(g[m.id]) : T(TIER(m.tier)) + ' · ' + T('locked')}</em></>;
+          {/* owner (19 Nov): "a badge is a big thing you earn after unlocking certain tokens": each track is a badge built
+              from its tokens; every token is worth points by how hard it is (easy +10 · medium +25 · hard +60) */}
+          <div className={'bn-badge' + (got(k) === doneIn(k).length ? ' on' : '')} style={{ ['--p' as string]: Math.round((got(k) / Math.max(1, doneIn(k).length)) * 100) } as React.CSSProperties}>
+            <span className="bn-badge-ring"><Rank on={got(k) === doneIn(k).length} size={58} /></span>
+            <span className="bn-badge-t"><small>{T('BADGE')} · {T(l)}</small><b>{T(PROMO[k])}</b><em dir="ltr">{got(k)} / {doneIn(k).length} {T('tokens')}</em></span>
+            <span className="bn-md-prog"><i style={{ width: Math.round((got(k) / Math.max(1, doneIn(k).length)) * 100) + '%' }} /></span>
+          </div>
+          <div className="bn-md-case">{MEDALS.filter((m) => m.group === k).map((m) => { const on = !!g[m.id]; const inner = <><Medal tier={m.tier} on={on} size={64} group={m.id === 'teardown' ? 'teardown' : m.group} /><b>{T(m.t)}</b><small>{T(m.d)}</small><em>{on ? when(g[m.id]) : T(TIER(m.tier)) + ' · ' + T('locked')}</em><i className={'bn-xp t-' + m.tier}>+{XP[m.tier]}</i></>;
             return m.path && !on ? <a key={m.id} className="bn-md-it off" href={m.path}>{inner}</a> : <div key={m.id} className={'bn-md-it' + (on ? '' : ' off')}>{inner}</div>; })}
             <div className={'bn-md-it promo' + (got(k) === doneIn(k).length ? '' : ' off')}><Rank on={got(k) === doneIn(k).length} size={64} /><b>{T(PROMO[k])}</b><small>{T('Promotion: earn every medal in this track.')}</small><em>{got(k) === doneIn(k).length ? T('Promoted') : (doneIn(k).length - got(k)) + ' ' + T('to go')}</em></div>
           </div>

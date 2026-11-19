@@ -9,10 +9,12 @@ import React, { useEffect, useState } from 'react';
 import { type Product, aed, byId, data, VAT, waLink, waCard, fmt, siteSetting, fixedPrice } from '@/lib/catalog';
 import { store, useStore } from '@/lib/store';
 import { backend, useMe, type Company, type Order } from '@/lib/backend';
-import { T, PageHero, useRise } from '@/components/site/ui';
+import { T, useRise } from '@/components/site/ui';
 import LiveSam from '@/components/samsoom/LiveSam';
 type Coupon = { code: string; kind: 'pct' | 'aed'; value: number; min?: number; until?: number; trade?: boolean; active?: boolean; ids?: string[]; cats?: string[] };
 
+type Via = 'wa' | 'wc' | 'mail' | 'web';
+const VIA: [Via, string, string][] = [['wa', 'WhatsApp', 'Opens WhatsApp with your list'], ['wc', 'WeChat', 'Copy the list, send it in WeChat'], ['mail', 'E-mail', 'Your e-mail app, list included'], ['web', 'The website', 'We reply here and in My Bench']];
 const DL = () => siteSetting('delivery', { uae: 25, freeOver: 500, pickupReady: '20 minutes' }); // set in the Control Room → Settings
 
 export default function CartPage() {
@@ -24,6 +26,8 @@ export default function CartPage() {
   useEffect(() => { try { if (cpCode) localStorage.setItem('se-coupon', cpCode); } catch { /* */ } }, [cpCode]);
   const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', country: 'United Arab Emirates', note: '', company: '' });
   const [busy, setBusy] = useState(false), [err, setErr] = useState(''), [done, setDone] = useState<Order | null>(null), [code, setCode] = useState(''), [codeMsg, setCodeMsg] = useState('');
+  // owner (19 Nov): send it any way (WhatsApp, WeChat, e-mail, the website), always after a preview laid out like an invoice
+  const [via, setVia] = useState<Via>('wa'), [pv, setPv] = useState(false), [sentVia, setSentVia] = useState<Via>('wa');
   useEffect(() => { const iv = window.setInterval(() => { if (data()) { window.clearInterval(iv); setReady(true); } }, 60); return () => window.clearInterval(iv); }, []);
   useEffect(() => { if (me) { setForm((f) => ({ ...f, name: f.name || me.name, email: f.email || me.email, phone: f.phone || me.phone || '' })); backend.companies().then(setCos); } }, [me]);
   useRise(ready);
@@ -46,18 +50,20 @@ export default function CartPage() {
   const ship = del === 'uae' ? (sub >= FREE ? 0 : SHIP.uae) : 0, vat = Math.round((sub - disc + ship) * VAT * 100) / 100, total = sub - disc + ship + vat;
   const saved = st.saved.map(byId).filter(Boolean) as Product[], favs = st.favs.map(byId).filter(Boolean) as Product[];
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setForm({ ...form, [k]: e.target.value });
-  const place = async (e: React.FormEvent) => {
-    e.preventDefault(); setErr('');
+  const check = (e: React.FormEvent) => { e.preventDefault(); setErr(''); if (!lines.length) return; if (del !== 'pickup' && !form.address.trim()) return setErr(T('Please add the delivery address.')); setPv(true); };
+  const place = async () => {
     if (!lines.length) return;
-    if (del !== 'pickup' && !form.address.trim()) return setErr(T('Please add the delivery address.'));
     setBusy(true);
-    // with items to confirm, WhatsApp opens right away (a tab opened before the wait is not blocked) and gets the list after
-    const tab = toConfirm ? window.open('', '_blank') : null;
-    const r = await backend.placeOrder({ email: form.email, name: form.name, phone: form.phone, lines: lines.map(({ l, p }) => ({ id: p.id, title: p.title, grade: p.gradeName, qty: l.qty, unit: unit(p), ...(fixed(p) ? {} : { confirm: true }) })), sub: sub - disc, vat, ship, total, delivery: del, address: form.address, country: form.country, note: (toConfirm ? '[Prices to confirm on WhatsApp: ' + toConfirm + '] ' : '') + (cp ? '[Coupon ' + cp.code + ' −' + disc.toFixed(2) + '] ' : '') + form.note, pay: toConfirm ? 'whatsapp' : pay, company: form.company || undefined, ...(toConfirm ? { pending: true } : {}) });
+    // WhatsApp opens right away (a tab opened before the wait is not blocked) and gets the list after
+    const tab = via === 'wa' ? window.open('', '_blank') : null;
+    const r = await backend.placeOrder({ email: form.email, name: form.name, phone: form.phone, lines: lines.map(({ l, p }) => ({ id: p.id, title: p.title, grade: p.gradeName, qty: l.qty, unit: unit(p), ...(fixed(p) ? {} : { confirm: true }) })), sub: sub - disc, vat, ship, total, delivery: del, address: form.address, country: form.country, note: '[Sent by ' + ({ wa: 'WhatsApp', wc: 'WeChat', mail: 'e-mail', web: 'website' } as const)[via] + '] ' + (toConfirm ? '[Prices to confirm: ' + toConfirm + '] ' : '') + (cp ? '[Coupon ' + cp.code + ' −' + disc.toFixed(2) + '] ' : '') + form.note, pay: toConfirm ? 'whatsapp' : pay, company: form.company || undefined, ...(toConfirm ? { pending: true } : {}) });
     setBusy(false);
-    if (!r.ok) { tab?.close(); return setErr(T(r.error)); }
-    if (toConfirm) { const link = waLink(listMsg(r.data)); if (tab) tab.location.href = link; else window.open(link, '_blank', 'noopener'); }
-    setDone(r.data); store.clear(); notify({ kind: 'order', t: 'Order received', d: 'We will confirm stock and message you shortly.', href: '/account#orders' }); window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (!r.ok) { tab?.close(); setPv(false); return setErr(T(r.error)); }
+    const msg = listMsg(r.data);
+    if (via === 'wa') { const link = waLink(msg); if (tab) tab.location.href = link; else window.open(link, '_blank', 'noopener'); }
+    if (via === 'wc') window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wc', text: msg } }));
+    if (via === 'mail') location.href = 'mailto:' + (data()?.contact.email || 'samelectronics.uae@gmail.com') + '?subject=' + encodeURIComponent(T('Order') + ' ' + r.data.no) + '&body=' + encodeURIComponent(msg.replace(/\*/g, '').replace(/_/g, ''));
+    setSentVia(via); setPv(false); setDone(r.data); store.clear(); notify({ kind: 'order', t: 'Order received', d: 'We will confirm stock and message you shortly.', href: '/account#orders' }); window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   // R9: the full list for WhatsApp: name, model, part, grade/quality, color, quantity, price if known; then name + reference
   const listMsg = (o: Order) => {
@@ -66,26 +72,33 @@ export default function CartPage() {
   };
   const waMsg = (o: Order) => waCard('Order ' + o.no, [['Parts', '\n' + o.lines.map((x) => `• ${x.qty} × ${x.title} · ${x.grade}`).join('\n')], ['Total', aed(o.total, false) + ' incl. VAT'], ['Delivery', o.delivery], ['Please', 'confirm stock and price']], { name: form.name });
 
+  const steps = (n: number) => <ol className="ck-steps">{['Cart', 'Your details', 'Preview & send'].map((x, k) => <li key={x} className={k < n ? 'ok' : k === n ? 'on' : ''}><i>{k < n ? '✓' : k + 1}</i>{T(x)}</li>)}</ol>;
+  const viaName = (v: Via) => (v === 'wa' ? 'WhatsApp' : v === 'wc' ? 'WeChat' : T(v === 'mail' ? 'E-mail' : 'The website'));
   if (done) return (
-    <>
-      <PageHero eb={T('ORDER RECEIVED')} title={T('Thank you,') + ' ' + (done.name.split(' ')[0] || '') + '!'} accent={done.no} sub={T('We received your order. Our team confirms stock, delivery and the final price on WhatsApp, usually within minutes during opening hours.')} right={<LiveSam circle size={180} mood="idle" play="celebrate" />}>
-        <div className="sp-acts">{done.pending ? <span className="sp-note">{T('Your list was sent to us on WhatsApp. We confirm prices and stock there.')}</span> : null}<a className="sp-btn wa" href={waLink(waMsg(done))} target="_blank" rel="noopener noreferrer">{T('Confirm on WhatsApp')}</a><a className="sp-btn ghost" href="/shop">{T('Keep shopping')}</a>{me ? <a className="sp-btn ghost" href="/account#orders">{T('My orders')}</a> : null}</div>
-      </PageHero>
-      <section className="sp-sec w"><div className="sp-wrap cart-done">
-        <div className="sp-card"><h3 className="sp-h3">{T('Your order')}</h3>
-          <table className="sp-table"><tbody>{done.lines.map((x) => <tr key={x.id}><td>{x.qty} ×</td><td>{x.title} · {x.grade}</td><td style={{ textAlign: 'end' }}>{aed(x.unit * x.qty, false)}</td></tr>)}</tbody></table>
-          <div className="cart-sum"><span>{T('Subtotal')}<b>{aed(done.sub, false)}</b></span><span>{T('Delivery')}<b>{done.ship ? aed(done.ship, false) : T('Free')}</b></span><span>{T('VAT 5%')}<b>{aed(done.vat, false)}</b></span><span className="tot">{T('Total')}<b>{aed(done.total, false)}</b></span></div>
-          <span className="sp-sample">{T('Sample prices · a copy is e-mailed to')} {done.email}</span>
-        </div>
-        <ol className="cart-steps">{['Order received', 'Stock & price confirmed on WhatsApp', 'Paid & packed', done.delivery === 'pickup' ? 'Ready to collect in Deira' : 'Shipped to you'].map((s, i) => <li key={s} className={i === 0 ? 'on' : ''}><i>{i + 1}</i>{T(s)}</li>)}</ol>
-      </div></section>
-    </>
+    <section className="ck"><div className="sp-wrap ck-done">
+      {/* owner (19 Nov): a clean confirmation, not a page header */}
+      <div className="ck-ok">
+        <span className="ck-ok-sam"><LiveSam size={120} mood="idle" play="celebrate" /></span>
+        <span className="ck-k">{T('ORDER RECEIVED')} · <span dir="ltr">{done.no}</span></span>
+        <h1>{T('Thank you,') + ' ' + (done.name.split(' ')[0] || '') + '!'}</h1>
+        <p>{sentVia === 'web' ? T('Your order is with our team. We confirm stock, delivery and the final price here and in My Bench.') : T('Your order is with our team, and we sent the list') + ' ' + T('by') + ' ' + viaName(sentVia) + '. ' + T('We confirm stock, delivery and the final price, usually within minutes during opening hours.')}</p>
+        <div className="sp-acts"><a className="sp-btn" href="/shop">{T('Keep shopping')}</a>{me ? <a className="sp-btn ghost" href="/account#orders">{T('My orders')}</a> : null}</div>
+        <ol className="cart-steps">{['Order received', 'Stock & price confirmed', 'Paid & packed', done.delivery === 'pickup' ? 'Ready to collect in Deira' : 'Shipped to you'].map((s2, k) => <li key={s2} className={k === 0 ? 'on' : ''}><i>{k + 1}</i>{T(s2)}</li>)}</ol>
+      </div>
+    </div></section>
   );
 
   return (
     <>
-      <PageHero eb={T('YOUR CART')} title={T('Ready when')} accent={T('you are.')} crumb={[[T('Shop'), '/shop'], [T('Cart')]]} sub={lines.length ? `${lines.reduce((a, x) => a + x.l.qty, 0)} ${T('items')} · ${sub > 0 ? aed(total, false) + ' ' + T('incl. 5% VAT') : T('prices confirmed on WhatsApp')} · ${T('sample prices')}` : T('Your cart is empty. Every part you add, here or on the home page, waits here.')} seed={31} right={<LiveSam circle size={150} mood="idle" play={lines.length ? 'happy' : 'think'} />} />
-      <section className="sp-sec g"><div className="sp-wrap cart">
+      {/* owner (19 Nov): "this is a checkout, it should be clean": a slim bar with the steps, no page header */}
+      <section className="ck"><div className="sp-wrap">
+        <div className="ck-top">
+          <a className="ck-back" href="/shop">← {T('Keep shopping')}</a>
+          <h1 className="ck-title">{T('Checkout')}{lines.length ? <span className="ck-n">{lines.reduce((a, x) => a + x.l.qty, 0)} {T('items')}</span> : null}</h1>
+          {lines.length ? steps(pv ? 2 : 1) : null}
+        </div>
+      </div></section>
+      <section className="sp-sec g ck-body"><div className="sp-wrap cart">
         <div className="cart-l">
           {lines.length ? (
             <div className="sp-card cart-lines" data-rise>
@@ -105,11 +118,11 @@ export default function CartPage() {
               <span className="sp-sample">{T('All prices are samples until the owner’s prices are in.')}</span>
             </div>
           ) : (
-            <div className="sp-card sp-empty" data-rise><LiveSam circle size={110} mood="think" /><b className="sp-h3">{T('Nothing here yet')}</b><span>{T('Find your part in seconds and it will wait here.')}</span><span className="sp-acts" style={{ justifyContent: 'center' }}><a className="sp-btn" href="/shop">{T('Go to the shop')}</a><button type="button" className="sp-btn ghost" onClick={() => window.dispatchEvent(new CustomEvent('se:fmp', { detail: {} }))}>Find My Part</button></span></div>
+            <div className="sp-card sp-empty ck-empty" data-rise><span className="ck-empty-sam"><LiveSam size={150} mood="idle" play="wave" /></span><b className="sp-h3">{T('Nothing here yet')}</b><span>{T('Find your part in seconds and it will wait here.')}</span><span className="sp-acts" style={{ justifyContent: 'center' }}><a className="sp-btn" href="/shop">{T('Go to the shop')}</a><button type="button" className="sp-btn ghost" onClick={() => window.dispatchEvent(new CustomEvent('se:fmp', { detail: {} }))}>Find My Part</button></span></div>
           )}
 
           {lines.length ? (
-            <form className="sp-card cart-form" onSubmit={place} data-rise>
+            <form className="sp-card cart-form" onSubmit={check} data-rise>
               <h3 className="sp-h3">{T('Delivery')}</h3>
               <div className="cart-del">
                 {([['pickup', 'Pick up in Deira', 'Ready in about 20 minutes · free'], ['uae', 'Delivery in the UAE', sub >= FREE ? 'Next working day · free' : 'Next working day · AED 25 (free over AED 500)'], ['world', 'Worldwide', 'Door to door with Sky Dragon, Emirates SkyCargo, UPS or DHL, or your own shipper: we quote it']] as const).map(([k, t, d]) => (
@@ -135,8 +148,10 @@ export default function CartPage() {
               </>}
               <a className="cart-paylink" href="/payments" target="_blank" rel="noopener">{T('Every way to pay')} →</a>
               {err ? <div className="sp-note" style={{ background: 'rgba(229,72,77,.1)', color: '#9B1C20' }}>{err}</div> : null}
-              {toConfirm ? <div className="sp-note">{toConfirm === 1 ? T('1 item has no fixed price.') : toConfirm + ' ' + T('items have no fixed price.')} {T('We send your full list to WhatsApp, confirm prices and stock there, then you pay.')}</div> : null}
-              <button type="submit" className={'sp-btn cart-place' + (toConfirm ? ' wa' : '')} disabled={busy}>{busy ? T('Placing your order…') : toConfirm ? T('Send my list on WhatsApp') : T('Place order') + ' · ' + aed(total, false)}</button>
+              <h3 className="sp-h3">{T('How should we receive it?')}</h3>
+              <div className="ck-via" role="radiogroup">{VIA.map(([k, n, d]) => <button key={k} type="button" role="radio" aria-checked={via === k} className={'ck-v v-' + k + (via === k ? ' on' : '')} onClick={() => setVia(k)}><span className="ic">{k === 'wa' || k === 'wc' ? <i className={'ct-ic ' + k} /> : k === 'mail' ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M3 6h18v12H3zM3 7l9 6 9-6" /></svg> : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" /></svg>}</span><b>{k === 'wa' || k === 'wc' ? n : T(n)}</b><small>{T(d)}</small></button>)}</div>
+              {toConfirm ? <div className="sp-note">{toConfirm === 1 ? T('1 item has no fixed price.') : toConfirm + ' ' + T('items have no fixed price.')} {T('We confirm prices and stock with you first, then you pay.')}</div> : null}
+              <button type="submit" className="sp-btn cart-place" disabled={busy}>{T('Review my order')} →</button>
               <small className="sp-muted">{T('By placing the order you agree to our')} <a href="/legal#terms">{T('terms')}</a>, <a href="/legal#returns">{T('returns')}</a> {T('and')} <a href="/legal#privacy">{T('privacy policy')}</a>.</small>
             </form>
           ) : null}
@@ -158,12 +173,6 @@ export default function CartPage() {
             </div>}
             {del === 'uae' && sub < FREE && sub > 0 ? <div className="cart-free"><small>{T('Add')} {aed(FREE - sub, false)} {T('more for free UAE delivery')}</small><i><em style={{ width: Math.min(100, (sub / FREE) * 100) + '%' }} /></i></div> : null}
             <span className="sp-sample" style={{ color: '#9DA1A6' }}>{T('Sample prices · TRN shown on the invoice')}</span>
-            {lines.length && toConfirm ? <button type="button" className="sp-btn wa" onClick={() => document.querySelector('.cart-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}>{T('Send my list on WhatsApp')}</button> : lines.length ? <a className="sp-btn wa" href={waLink('Hi Sam Electronics, I would like to order:\n' + lines.map(({ l, p }) => `${l.qty} × ${p.title} · ${p.gradeName} (${p.id})`).join('\n') + '\nPlease confirm stock and price.')} target="_blank" rel="noopener noreferrer">{T('Or send it on WhatsApp')}</a> : null}
-          </div>
-          <div className="sp-card cart-promo" data-rise>
-            <b>{T('Promo or member code')}</b>
-            <span className="cart-code"><input className="sp-in" value={code} onChange={(e) => setCode(e.target.value)} placeholder="SAMCIRCUIT" /><button type="button" className="sp-btn sm dark" onClick={() => setCodeMsg(code.trim() ? T('Codes open with the Control Room. We will apply it when we confirm.') : '')}>{T('Apply')}</button></span>
-            {codeMsg ? <small className="sp-muted">{codeMsg}</small> : null}
           </div>
           <ul className="cart-trust" data-rise>
             <li><b>{T('Tested before it ships')}</b><span>{T('Every part, on our bench')}</span></li>
@@ -180,6 +189,21 @@ export default function CartPage() {
           {favs.length ? <><div className="sp-head" style={{ marginTop: 40 }}><div><span className="sp-eb">{T('Your stars')}</span><h2 className="sp-h2">{T('Parts you starred')}</h2></div></div>
             <div className="pv-row">{favs.map((p) => <div key={p.id} className="cart-saved"><img src={p.img} alt="" /><b>{p.title}</b><small>{p.gradeName} · {priceText(p.price)}</small><button type="button" className="sp-btn sm" onClick={() => store.add(p.id)}>{T('Add to cart')}</button></div>)}</div></> : null}
         </div></section>
+      ) : null}
+      {pv ? (
+        <div className="ck-veil" onClick={(e) => { if (e.target === e.currentTarget) setPv(false); }}>
+          {/* the preview, laid out like the invoice the team will issue (owner, 19 Nov: "the preview before anything is sent") */}
+          <div className="ck-inv" role="dialog" aria-modal="true" aria-label={T('Preview your order')}>
+            <div className="ck-inv-h"><img src="/assets/se-logo-metal-128.webp" alt="" /><span><b>SAM ELECTRONICS</b><small>{T('Al Murar, Deira, Dubai, UAE')}</small></span><span className="ck-inv-no"><small>{T('ORDER REQUEST')}</small><b>{new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</b></span></div>
+            <div className="ck-inv-to"><span><small>{T('For')}</small><b>{form.name || '—'}</b><em dir="ltr">{form.phone}{form.email ? ' · ' + form.email : ''}</em></span><span><small>{T('Delivery')}</small><b>{T(({ pickup: 'Pick up in Deira', uae: 'Delivery in the UAE', world: 'Worldwide' } as const)[del])}</b>{del !== 'pickup' ? <em>{form.address}</em> : null}</span><span><small>{T('Sent by')}</small><b>{viaName(via)}</b></span></div>
+            <table className="ck-inv-t"><thead><tr><th>#</th><th>{T('Part')}</th><th>{T('Qty')}</th><th>{T('Unit')}</th><th>{T('Total')}</th></tr></thead>
+              <tbody>{lines.map(({ l, p }, n) => <tr key={p.id}><td>{n + 1}</td><td><b>{ptitle(p)}</b><small>{p.gradeName} · {p.makerName}{p.colour ? ' · ' + p.colour : ''}</small></td><td>{l.qty}</td><td>{fixed(p) ? aed(unit(p), false) : T('To confirm')}</td><td>{fixed(p) ? aed(unit(p) * l.qty, false) : '—'}</td></tr>)}</tbody></table>
+            <div className="ck-inv-sum"><span>{T('Subtotal')}<b>{aed(sub, false)}</b></span>{disc > 0 ? <span>{T('Coupon')} {cp!.code}<b>−{aed(disc, false)}</b></span> : null}<span>{T('Delivery')}<b>{del === 'world' ? T('Quoted') : ship ? aed(ship, false) : T('Free')}</b></span><span>{T('VAT 5%')}<b>{aed(vat, false)}</b></span><span className="tot">{T('Total')}<b>{aed(total, false)}</b></span>{toConfirm ? <em>+ {toConfirm} {toConfirm === 1 ? T('item to confirm') : T('items to confirm')}</em> : null}</div>
+            {form.note ? <p className="ck-inv-note"><small>{T('Note')}</small>{form.note}</p> : null}
+            <p className="ck-inv-f">{T('Nothing is charged now. Our team confirms stock and the final price with you first.')}</p>
+            <div className="ck-inv-acts"><button type="button" className="sp-btn ghost" onClick={() => setPv(false)}>← {T('Edit')}</button><button type="button" className={'sp-btn ck-send v-' + via} disabled={busy} onClick={place}>{busy ? T('Sending…') : T('Send by') + ' ' + viaName(via)}</button></div>
+          </div>
+        </div>
       ) : null}
     </>
   );

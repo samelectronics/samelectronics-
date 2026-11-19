@@ -583,6 +583,7 @@ function render(v: Vals) {
                         justifyContent: 'center',
                       }}
                     >
+                      {v.tongue ? <span className="sm-tongue" aria-hidden="true" /> : null}
                       {'\n                '}
                       {v.mSmile ? (
                         <>

@@ -11,8 +11,11 @@ import { brandInk } from '@/lib/brandInk';
 
 const TRY = ['iPhone 13 screen', 'A54 battery', 'Redmi Note 12 charging flex', 'S23 back cover', 'Pixel 7 camera'];
 
-export default function ShopSearch({ q, onQ, onFmp, compact, count }: { q: string; onQ: (q: string) => void; onFmp: () => void; compact?: boolean; count?: number }) {
-  const [v, setV] = useState(q), [open, setOpen] = useState(false), [hi, setHi] = useState(-1), [ph, setPh] = useState(0);
+export default function ShopSearch({ q, onQ, onFmp, compact, count, onFilters, nFilters = 0 }: { q: string; onQ: (q: string) => void; onFmp: () => void; compact?: boolean; count?: number; onFilters?: () => void; nFilters?: number }) {
+  const [v, setV] = useState(q), [open, setOpen] = useState(false), [hi, setHi] = useState(-1), [ph, setPh] = useState(0), [nw, setNw] = useState(false);
+  // in the docked bar on a phone or tablet there is only room for a short hint
+  useEffect(() => { if (!compact) return; const f = () => setNw(window.innerWidth <= 1100); f(); window.addEventListener('resize', f); return () => window.removeEventListener('resize', f); }, [compact]);
+  const narrow = compact && nw;
   const st = useStore(), box = useRef<HTMLDivElement>(null), inp = useRef<HTMLInputElement>(null);
   useEffect(() => setV(q), [q]);
   useEffect(() => { const iv = window.setInterval(() => setPh((n) => (n + 1) % TRY.length), 2600); return () => window.clearInterval(iv); }, []);
@@ -34,9 +37,11 @@ export default function ShopSearch({ q, onQ, onFmp, compact, count }: { q: strin
       <div className="ss-bar">
         <svg className="ss-ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
         <input ref={inp} value={v} onChange={(e) => { setV(e.target.value); setOpen(true); setHi(-1); }} onFocus={() => setOpen(true)} onKeyDown={key}
-          placeholder={T('Search') + ' “' + T(TRY[ph]) + '”'} aria-label={T('Search the shop')} autoComplete="off" spellCheck={false} />
+          placeholder={narrow ? T('Search') : T('Search') + ' “' + T(TRY[ph]) + '”'} aria-label={T('Search the shop')} autoComplete="off" spellCheck={false} />
         {v ? <button type="button" className="ss-clr" onClick={() => { setV(''); onQ(''); inp.current?.focus(); }} aria-label={T('Clear')}>×</button> : <kbd className="ss-kbd">/</kbd>}
         {count != null ? <span className="ss-n" aria-live="polite"><b>{count.toLocaleString('en-US')}</b> {T('results')}</span> : null}
+        {/* owner (19 Nov): Filters sits INSIDE the search, beside the send button */}
+        {onFilters ? <button type="button" className="ss-flt" onClick={onFilters} aria-label={T('Filters')} title={T('Filters')}><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4" /></svg>{nFilters ? <em>{nFilters}</em> : null}</button> : null}
         <button type="button" className="ss-go" onClick={() => go(v)}>{T('Search')}</button>
       </div>
       {open ? (

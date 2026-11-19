@@ -42,8 +42,11 @@ export default function ChatChoice() {
     const on = (e: Event) => { setPre(((e as CustomEvent).detail as { text?: string; subject?: string }) || {}); setMode(''); setOpen(true); play('open'); };
     const esc = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
     const onP = () => { setPre({}); setMode(''); setOpen(true); play('open'); };
+    // owner (19 Nov): "Website chat" picked on a part opens the live chat straight away, with the part already written
+    const onL = (e: Event) => { setPre(((e as CustomEvent).detail as { text?: string }) || {}); setMode('person'); setOpen(true); play('open'); };
+    window.addEventListener('se:livechat', onL);
     window.addEventListener('se:chatwith', on); window.addEventListener('se:person', onP); document.addEventListener('keydown', esc);
-    return () => { window.removeEventListener('se:chatwith', on); window.removeEventListener('se:person', onP); document.removeEventListener('keydown', esc); };
+    return () => { window.removeEventListener('se:livechat', onL); window.removeEventListener('se:chatwith', on); window.removeEventListener('se:person', onP); document.removeEventListener('keydown', esc); };
   }, []);
   const go = (k: string) => {
     if (k === 'sam') { setOpen(false); if (location.pathname.startsWith('/samsoom')) { document.querySelector<HTMLTextAreaElement>('.ak-in textarea')?.focus(); return; } window.dispatchEvent(new CustomEvent('se:chat', { detail: {} })); return; }

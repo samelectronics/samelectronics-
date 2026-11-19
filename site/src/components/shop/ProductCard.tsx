@@ -54,7 +54,7 @@ export default function ProductCard({ p, st, trade, open, list, fits, tour }: { 
         <span className={'pc-stock s-' + sk}><i />{sk === 'low' ? T('Only') + ' ' + p.stock_qty + ' ' + T('left (estimate)') : T(sl)}</span>
         <span className="pc-acts">
           <button type="button" className={'pc-add' + (inCart ? ' in' : '')} disabled={!buyable(p, trade)} onClick={(e) => flyToCart(img.current, p.id, e)}>
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6" /><circle cx="10" cy="20" r="1.4" /><circle cx="17" cy="20" r="1.4" /></svg>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>
             {p.stock_qty <= 0 ? (inCart ? T('Requested') + ' · ' + inCart.qty : T('Request it')) : inCart ? T('Add another') + ' · ' + inCart.qty : T('Add to cart')}
           </button>
           {/* owner (18 Nov): trade accounts buy in bulk: +5 and +10 straight from the card */}

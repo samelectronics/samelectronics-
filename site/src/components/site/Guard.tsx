@@ -35,7 +35,7 @@ export default function Guard() {
   const [vpn, setVpn] = useState(false), [shot, setShot] = useState(false), [terms, setTerms] = useState(false), [agree, setAgree] = useState(false);
   // owner (18 Nov night): screenshots can be allowed once the visitor agrees to the terms; from then on the page carries a
   // faint watermark (© Sam Electronics, all rights reserved, the date and the agreement number) on every screenshot
-  const [wm, setWm] = useState<{ ref: string; at: number } | null>(null);
+  const [wm, setWm] = useState<{ ref: string; at: number } | null>(null), [flash, setFlash] = useState(false);
   useEffect(() => { try { const v = JSON.parse(sessionStorage.getItem('se-shot-ok') || 'null'); if (v && v.ref) setWm(v); } catch { /* */ } }, []);
   const allow = () => { const ref = 'SC-' + Date.now().toString(36).toUpperCase().slice(-6); const v = { ref, at: Date.now() }; try { sessionStorage.setItem('se-shot-ok', JSON.stringify(v)); } catch { /* */ } setWm(v); setTerms(false); setAgree(false); logWarning('screenshot', 'screenshot terms accepted · agreement ' + ref); import('./Toaster').then((m) => m.toast(tr('Screenshots allowed. Each one carries our watermark.'))).catch(() => {}); };
   useEffect(() => {
@@ -65,16 +65,23 @@ export default function Guard() {
       document.addEventListener('visibilitychange', vis); window.addEventListener('online', check); window.addEventListener('focus', check);
     }
     // 2. screenshot keys
+    // owner (19 Nov): once screenshots are allowed the watermark is NOT on screen all the time; it appears only when a
+    // screenshot is being taken. The moment the screenshot shortcut starts (Cmd+Shift on a Mac, Win+Shift on Windows) it
+    // is already showing, before the capture key; a snipping tool taking focus shows it too. It fades after a few seconds.
+    let ft = 0;
+    const flashWm = () => { let ok = false; try { ok = !!sessionStorage.getItem('se-shot-ok'); } catch { /* */ } if (!ok) return; setFlash(true); window.clearTimeout(ft); ft = window.setTimeout(() => setFlash(false), 4500); };
+    const pre = (e: KeyboardEvent) => { if ((e.metaKey && e.shiftKey) || e.key === 'PrintScreen' || e.code === 'PrintScreen') flashWm(); };
+    window.addEventListener('keydown', pre, true); window.addEventListener('blur', flashWm);
     const seen = () => {
       let ok = false; try { ok = !!sessionStorage.getItem('se-shot-ok'); } catch { /* */ }
-      if (ok) { logWarning('screenshot', 'screenshot taken under the screenshot terms'); return; }
+      if (ok) { flashWm(); logWarning('screenshot', 'screenshot taken under the screenshot terms'); return; }
       setShot(true);
       logWarning('screenshot', 'keys pressed on ' + (navigator.platform || 'computer'));
     };
     const down = (e: KeyboardEvent) => { if (e.key === 'Escape') { setShot(false); setVpn(false); return; } const k = e.key.toLowerCase(); if ((e.metaKey && e.shiftKey && ['3', '4', '5', 's'].includes(k)) || (e.ctrlKey && e.shiftKey && k === 's' && navigator.platform.startsWith('Win'))) seen(); };
     const up = (e: KeyboardEvent) => { if (e.key === 'PrintScreen' || e.code === 'PrintScreen') seen(); };
     window.addEventListener('keydown', down, true); window.addEventListener('keyup', up, true);
-    return () => { window.removeEventListener('keydown', down, true); window.removeEventListener('keyup', up, true); window.clearInterval(vpnTimer); document.removeEventListener('visibilitychange', vis); window.removeEventListener('online', check); window.removeEventListener('focus', check); };
+    return () => { window.removeEventListener('keydown', pre, true); window.removeEventListener('blur', flashWm); window.clearTimeout(ft); window.removeEventListener('keydown', down, true); window.removeEventListener('keyup', up, true); window.clearInterval(vpnTimer); document.removeEventListener('visibilitychange', vis); window.removeEventListener('online', check); window.removeEventListener('focus', check); };
   }, []);
   return (
     <>
@@ -87,20 +94,17 @@ export default function Guard() {
           <div className="sn2 sn2-warn shot-terms" role="dialog" aria-modal="true" aria-label={tr('Screenshot terms')}>
             <span className="sn2-sam" aria-hidden="true"><LiveSam size={92} pose="think" /></span>
             <b className="sn2-h">{tr('Screenshot terms')}</b>
-            <ul className="st-list">
-              <li>{tr('Screenshots are for your own use only, for example to remember a part or to send it to your technician.')}</li>
-              <li>{tr('Publishing, reselling or editing them, or using our photos and prices elsewhere, needs our written permission.')}</li>
-              <li>{tr('Every screenshot carries our watermark with the date and your agreement number.')}</li>
-            </ul>
+            {/* owner (19 Nov): a short overview; the full terms are one small yellow link away */}
+            <p className="sn2-p st-sum">{tr('Screenshots are for your own use, and every one carries our watermark. Sharing or publishing them needs our permission.')} <a className="sn2-ln y" href="/notices#copyright" target="_blank" rel="noopener">{tr('Read the full terms')}</a></p>
             <label className="st-agree"><input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} /><span>{tr('I agree to the screenshot terms')}</span></label>
             <span className="sn2-acts"><button type="button" className="sn2-b y" disabled={!agree} onClick={allow}>{tr('Allow screenshots')}</button><button type="button" className="sn2-b" onClick={() => setTerms(false)}>{tr('Cancel')}</button></span>
           </div>
         </div>
       ) : null}
       {wm ? (
-        <div className="shot-wm" aria-hidden="true" data-no-i18n="">
+        <div className={'shot-wm' + (flash ? ' on' : '')} aria-hidden="true" data-no-i18n="">
           <span className="tile" style={{ backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='420' height='220'><text x='10' y='120' transform='rotate(-24 210 110)' font-family='Inter,Arial' font-size='15' font-weight='600' fill='%23808080'>© Sam Electronics · ${wm.ref}</text></svg>`).replace(/%2523/g, '%23')}")` }} />
-          <span className="side">© Sam Electronics · {tr('All rights reserved')} · {tr('Captured on')} {new Date().toLocaleDateString()} · {tr('Agreement')} {wm.ref}</span>
+          <span className="side"><i />© Sam Electronics · {tr('All rights reserved')} · {tr('Captured on')} {new Date().toLocaleDateString()} · {tr('Agreement')} {wm.ref}</span>
         </div>
       ) : null}
     </>

@@ -178,8 +178,8 @@ export default function SamsoomTour() {
     <div className="tq-offer" role="status" aria-live="polite" onAnimationEnd={(e) => { if ((e.target as HTMLElement).classList.contains('tq-t')) setOffer(false); }}>
       <span className="tq-sam" aria-hidden="true"><LiveSam size={40} mood="idle" play="wave" /></span>
       <b>{T('Want a quick tour of this page?')}</b>
-      <button type="button" className="tq-go" data-sound="next" onClick={() => { setOffer(false); walk(); }}>{T('Show me')}</button>
-      <button type="button" className="tq-x" data-sound="skip" aria-label={T('Not now')} onClick={() => setOffer(false)}><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
+      <button type="button" className="tq-go" data-sound="next" onClick={() => { setOffer(false); walk(); }}>{T('Yes, show me')}</button>
+      <button type="button" className="tq-no" data-sound="skip" onClick={() => setOffer(false)}>{T('No thanks')}</button>
       <i className="tq-t" aria-hidden="true" />
     </div>
   ) : null;

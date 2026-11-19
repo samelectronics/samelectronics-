@@ -10,7 +10,8 @@ class Component extends DCLogic {
   // Added: blush, thanks (blush + heart), spin, wink, yawn, type (writing), and the context emotes
   // clock, check (checklist), tool (screwdriver), tag (price tag), parcel, globe, part (holds a part up).
   renderVals() {
-    const p = this.props, raw = p.mood || 'idle';
+    // owner (19 Nov): 'fix' = working on himself with the screwdriver, tongue out at the side in concentration
+    const p = this.props, fixing = p.mood === 'fix', raw = fixing ? 'tool' : p.mood || 'idle';
     // R9 tour poses: 'pt-<face>' points the right arm at the thing being shown (angle in p.pointA, default up-left)
     // with a matching face: smile (blinks), happy, wink, blush (other hand at the chin), think (hand at the chin), wow.
     const pt = raw.slice(0, 3) === 'pt-' ? raw.slice(3) : '', m0 = pt ? ({ smile: 'idle', happy: 'happy', wink: 'wink', blush: 'blush', think: 'think', wow: 'found' }[pt] || 'idle') : raw, size = Number(p.size) || 200, k = size / 200, still = !!p.still;
@@ -45,7 +46,7 @@ class Component extends DCLogic {
       armRanim: A(m0 === 'stop' ? 'smStopHand .5s ease-in-out infinite alternate' : m0 === 'nono' ? 'smWag .42s ease-in-out infinite alternate' : pt ? 'smPoint 1.6s cubic-bezier(.45,0,.55,1) infinite' : m0 === 'type' ? 'smTap .3s .15s ease-in-out infinite' : item ? 'smShow 3s cubic-bezier(.2,.8,.2,1) 1 both' : m === 'wave' ? 'smWaveOnce 2.4s cubic-bezier(.45,0,.55,1) 1 both' : m === 'dabke' ? 'smWave .45s cubic-bezier(.45,0,.55,1) infinite' : m === 'kiss' ? 'smKissR 2.8s cubic-bezier(.45,0,.55,1) infinite' : m === 'celebrate' ? 'smWave .5s .25s ease-in-out infinite' : 'none'),
       tool: m === 'think' && m0 !== 'type' && !pt, thumb: m === 'happy' && !item && m0 === 'happy' && !pt, hanky: m === 'dabke', mag: m === 'found' && !p.hold && !pt && m0 !== 'stop', whistle: m0 === 'stop', flat: m0 === 'nono', point: m0 === 'nono' || !!pt, hasHold: !!hold, hold, holdRot: m === 'found' ? 160 : 180,
       hasItem: !!item && item !== 'part', item, itemRot: -L[1], itemAnim: A(item === 'clock' ? 'smTick 3s linear 1' : item === 'globe' ? 'smGlobe 1.5s linear infinite' : item === 'tool' ? 'smTwist .5s ease-in-out .4s 4 alternate' : 'none'),
-      isClock: item === 'clock', isCheck: item === 'check', isTool: item === 'tool', isTag: item === 'tag', isParcel: item === 'parcel', isGlobe: item === 'globe',
+      isClock: item === 'clock', isCheck: item === 'check', isTool: item === 'tool', tongue: fixing, isTag: item === 'tag', isParcel: item === 'parcel', isGlobe: item === 'globe',
       chin: pt === 'blush' || pt === 'think', chinAnim: A('smChinTap 2.4s ease-in-out infinite'),
       zzz: m === 'sleep', heart: m0 === 'thanks', spark: (m === 'found' && !pt && m0 !== 'stop') || (!!item && !still), confetti: m === 'celebrate' && !still,
       conf: Array.from({ length: 12 }, (_, i) => { const a = (i / 12) * Math.PI * 2; return { x: Math.round(Math.cos(a) * 70), y: Math.round(Math.sin(a) * 60 - 30), c: ['#F7C032', '#FFFFFF', '#3D3E3F', '#F7C032', '#E5484D', '#B87333'][i % 6], d: (i % 3) * 0.12 + 's' }; })

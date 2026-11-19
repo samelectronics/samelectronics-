@@ -85,7 +85,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
       const a = h.querySelector('.se-nav-row > a'), right = h.querySelector('.se-nav-right');
       if (!a || !right) return;
       // on a phone the logo's name hides in this mode, so measure from the round mark itself
-      const small = window.innerWidth <= 700, logo = (small && a.querySelector('.lm2')) || a;
+      const small = window.innerWidth <= 1100, logo = (small && a.querySelector('.lm2')) || a;
       const keep = Array.from(right.children).filter((c) => !c.matches('.se-status, .se-contact-dd, .sc-host') && (c as HTMLElement).offsetWidth > 0);
       const L = Math.round(logo.getBoundingClientRect().right + (small ? 10 : 18)), R = keep.length ? Math.min(...keep.map((c) => c.getBoundingClientRect().left)) : window.innerWidth - 20;
       const root = document.documentElement; root.style.setProperty('--dock-l', L + 'px'); root.style.setProperty('--dock-r', Math.max(12, Math.round(window.innerWidth - R + 14)) + 'px');
@@ -169,10 +169,11 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
               <span><b>{D.brands.length}</b><small>{T('brands')}</small></span>
             </div>
           </div>
-          <div className="shop-scan" ref={scanRef}><i className="shop-beam" aria-hidden="true" /><ShopSearch q={f.q} onQ={(q) => set({ q })} onFmp={openFmp} /></div>
+          <div className="shop-scan" ref={scanRef}><i className="shop-beam" aria-hidden="true" /><ShopSearch q={f.q} onQ={(q) => set({ q })} onFmp={openFmp} onFilters={() => setSide(true)} nFilters={chips.length} /></div>
           {/* owner (latest): a smaller, professional search that follows smoothly (see .shop-dock) */}
           <div className="shop-devs" data-tour-step="2" data-tour-title="My devices" data-tour-text="Add the phones you fix most. I will mark every part that fits them.">
-            <span>{T('My devices')}:</span>
+            {/* owner (19 Nov): one tidy panel: the label, your phones as small device tiles and Add, then the fit switch in its own zone */}
+            <span className="sd-lab"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="6" y="2" width="12" height="20" rx="3" /><path d="M11 18h2" /></svg>{T('My devices')}</span>
             {/* owner (18 Nov): one switch shows only the parts that fit the phones you saved */}
             {st.devices.length ? (() => { const ids = st.devices.map((d) => d.model_id), on = ids.every((m) => f.models.includes(m)) && f.models.length === ids.length; return (
               <button type="button" role="switch" aria-checked={on} className={'fit-sw' + (on ? ' on' : '')} onClick={() => set({ models: on ? [] : ids })}><i aria-hidden="true" />{T(st.devices.length > 1 ? 'Only parts that fit my phones' : 'Only parts that fit my phone')}</button>
@@ -245,13 +246,15 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
             {/* owner (18 Nov): repair shops come back for the same parts: the last ones you opened, one tap away */}
             {(() => { const rv = st.viewed.map(byId).filter(Boolean).slice(0, 10) as Product[]; return rv.length ? (
               <div className="rcv-row" aria-label={T('Recently viewed')}>
-                <div className="rcv-h"><b>{T('Recently viewed')}</b><button type="button" onClick={() => store.clearViewed()}>{T('Clear')}</button></div>
+                {/* owner (19 Nov): "crowded and weird": one slim history strip */}
+                <span className="rcv-h"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></svg><b>{T('Recently viewed')}</b></span>
                 <div className="rcv-list">{rv.map((p) => (
                   <button type="button" key={p.id} className="rcv-it" onClick={() => open(p)}>
                     <img src={p.img} alt="" loading="lazy" />
-                    <span><GradeTag g={p.grade} name={p.gradeName} /><b>{ptitle(p)}</b><small>{aed(p.price, false)}</small></span>
+                    <span><b>{ptitle(p)}</b><small>{p.gradeName} · {aed(p.price, false)}</small></span>
                   </button>
                 ))}</div>
+                <button type="button" className="rcv-clr" onClick={() => store.clearViewed()} aria-label={T('Clear')} title={T('Clear')}>×</button>
               </div>
             ) : null; })()}
             {res.length ? (
@@ -278,9 +281,8 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
           <a className="shop-dock-logo" href="/" aria-label="Sam Electronics"><LogoMark size={40} animate={false} /><span><b>SAM ELECTRONICS</b><small>QUALITY · WARRANTY · PRICE</small></span></a>
           {/* owner (18 Nov): "a premium search that follows you, with an LED running round its outline, and only the shop's
               essential tools": search in a running-light frame, then Find My Part, Filters, Compare and the cart */}
-          <span className="dk-led"><ShopSearch compact count={res.length} q={f.q} onQ={(q) => { set({ q }); }} onFmp={openFmp} /></span>
+          <span className="dk-led"><ShopSearch compact count={res.length} q={f.q} onQ={(q) => { set({ q }); }} onFmp={openFmp} onFilters={() => setSide(true)} nFilters={chips.length} /></span>
           <span className="dk-tools">
-                        <button type="button" className="dk-b" onClick={() => setSide(true)} aria-label={T('Filters')}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M4 6h16M7 12h10M10 18h4" /></svg><span className="t">{T('Filters')}</span>{chips.length ? <em>{chips.length}</em> : null}</button>
             <button type="button" className="dk-b" disabled={cmp.length < 1} onClick={() => setCmpOpen(true)} aria-label={T('Compare')}><CompareIcon size={16} /><span className="t">{T('Compare')}</span>{cmp.length ? <em>{cmp.length}</em> : null}</button>
             <span className="shop-dock-ic" ref={dockIc}>
               <button type="button" data-mirror='header [data-tour="cart"]' aria-label={T('Cart')} onClick={() => (document.querySelector('header [data-tour="cart"]') as HTMLElement | null)?.click()} />

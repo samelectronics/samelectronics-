@@ -88,25 +88,30 @@ export function ListSheet({ p, kits, onClose }: { p: Product; kits: { name: stri
 export function ListShareSheet({ name, ids, onClose }: { name: string; ids: string[]; onClose: () => void }) {
   const ps = ids.map(byId).filter(Boolean) as Product[];
   const total = ps.reduce((a, p) => a + p.price, 0);
-  const lines = ps.map((p) => '• ' + p.title + ' · ' + p.gradeName + ' · ' + aed(p.price, false));
+  // owner (19 Nov): "the system message should show full details": every part with model, part, grade, maker, colour,
+  // price, reference and link, numbered like an order, then the total and the date
+  const host = typeof location !== 'undefined' ? location.origin : '';
+  const lines = ps.map((p, i) => `*${i + 1}. ${ptitle(p)}*\n   ${T('Model')}: ${p.modelName || '—'} · ${T('Part')}: ${p.catName}\n   ${T('Grade')}: ${p.gradeName} · ${T('Maker')}: ${p.makerName}${p.colour ? ' · ' + T('Color') + ': ' + p.colour : ''}\n   ${T('Price')}: ${aed(p.price, false)} · ${T('Ref')}: ${p.id}\n   ${host}/shop?p=${p.id}`);
   const [own, setOwn] = useState('');
-  const text = (own.trim() ? own.trim() + '\n\n' : '') + name + '\n' + lines.join('\n') + '\n' + T('Total') + ': ' + aed(total, false);
+  const text = (own.trim() ? own.trim() + '\n\n' : '') + '*' + T('PARTS LIST') + ': ' + name + '*\n━━━━━━━━━━━━\n' + lines.join('\n\n') + '\n\n*' + T('Total') + ': ' + aed(total, false) + '* (' + ps.length + ' ' + T(ps.length === 1 ? 'part' : 'parts') + ')\n_' + new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Dubai' }) + ' · Sam Electronics_';
   return (
     <Sheet title={T('Share this list')} sub={name + ' · ' + ps.length + ' ' + T(ps.length === 1 ? 'part' : 'parts')} onClose={onClose}>
       <label className="shs-l">{T('The message')}</label>
       <div className="shs-msg">
         {own.trim() ? <p className="own">{own.trim()}</p> : null}
-        <p className="sys"><b>{name}</b><br />{ps.map((p) => <React.Fragment key={p.id}>• {ptitle(p)} · {p.gradeName} · {aed(p.price, false)}<br /></React.Fragment>)}<b>{T('Total')}: {aed(total, false)}</b></p>
+        <div className="sys shs-full"><b className="h">{T('PARTS LIST')} · {name}</b>{ps.map((p, i) => <span key={p.id} className="it"><img src={p.img} alt="" /><span><b>{i + 1}. {ptitle(p)}</b><small>{p.modelName} · {p.catName} · {p.gradeName} · {p.makerName}{p.colour ? ' · ' + p.colour : ''}</small><small dir="ltr">{aed(p.price, false)} · {T('Ref')} {p.id}</small></span></span>)}<b className="t">{T('Total')}: {aed(total, false)} · {ps.length} {T(ps.length === 1 ? 'part' : 'parts')}</b></div>
       </div>
       <label className="shs-l" htmlFor="shs-own2">{T('Add your own message (optional)')}</label>
       <textarea id="shs-own2" className="shs-in" rows={2} maxLength={300} value={own} onChange={(e) => setOwn(e.target.value)} placeholder={T('e.g. Please confirm stock and price')} />
       <div className="shs-acts">
         <a className="shs-b wa" href={'https://wa.me/?text=' + encodeURIComponent(text)} target="_blank" rel="noopener noreferrer" onClick={onClose}><i className="ct-ic wa" />WhatsApp</a>
         <button type="button" className="shs-b wc" onClick={async () => { try { await navigator.clipboard.writeText(text); } catch { /* */ } toast(T('Copied for WeChat')); onClose(); }}><i className="ct-ic wc" />WeChat</button>
+        <a className="shs-b ml" href={'mailto:?subject=' + encodeURIComponent(T('Parts list') + ': ' + name) + '&body=' + encodeURIComponent(text.replace(/[*_]/g, ''))}><Ic d="M3 6h18v12H3zM3 7l9 6 9-6" />{T('E-mail')}</a>
+        <button type="button" className="shs-b wb" onClick={() => { onClose(); window.dispatchEvent(new CustomEvent('se:livechat', { detail: { text } })); }}><Ic d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" />{T('Website chat')}</button>
       </div>
       <div className="shs-more">
         <button type="button" onClick={async () => { try { await navigator.clipboard.writeText(text); } catch { /* */ } toast(T('Copied')); }}><Ic d="M9 9h10v12H9zM5 15V3h10" />{T('Copy')}</button>
-        <button type="button" onClick={() => { ps.forEach((p) => store.add(p.id)); toast(T('Added to cart') + ' · ' + ps.length); onClose(); }}><Ic d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6" />{T('Add all to cart')}</button>
+        <button type="button" onClick={() => { ps.forEach((p) => store.add(p.id)); toast(T('Added to cart') + ' · ' + ps.length); onClose(); }}><Ic d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4zM3 6h18M16 10a4 4 0 0 1-8 0" />{T('Add all to cart')}</button>
       </div>
     </Sheet>
   );

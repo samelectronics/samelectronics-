@@ -20,6 +20,7 @@ import { ShareSheet, ListSheet } from './ShareSheets';
 import SEBrandLogo from '@/components/dc/SEBrandLogo';
 import { Stars, T, flyToCart } from '@/components/site/ui';
 import ProductCard, { stockLabel } from './ProductCard';
+import LiveSam from '@/components/samsoom/LiveSam';
 
 const GRADE_INFO: Record<string, [string, string]> = {
   OR: ['Original · Service Pack', 'The part the brand itself fits, in its service box. Same colors, brightness, touch and battery life as new. Our longest warranty.'],
@@ -64,7 +65,7 @@ function ListMenu({ p, kits }: { p: Product; kits: { name: string; ids: string[]
 
 export default function ProductView({ id, me, onClose, onOpen }: { id: string | null; me: User | null | undefined; onClose: () => void; onOpen: (p: Product) => void }) {
   const p = id ? byId(id) : null, st = useStore(), trade = !!me?.tradeApproved;
-  const [qty, setQty] = useState(1), [tab, setTab] = useState<(typeof TABS)[number]>('Description'), [zoom, setZoom] = useState<{ x: number; y: number } | null>(null), [shot, setShot] = useState(0);
+  const [ask, setAsk] = useState(false), [qty, setQty] = useState(1), [tab, setTab] = useState<(typeof TABS)[number]>('Description'), [zoom, setZoom] = useState<{ x: number; y: number } | null>(null), [shot, setShot] = useState(0);
   const [canRate, setCanRate] = useState(false), [shareOpen, setShareOpen] = useState(false);
   const [rv, setRv] = useState<Review[]>([]), [form, setForm] = useState({ stars: 5, title: '', text: '' }), [msg, setMsg] = useState(''), [kit, setKit] = useState<string[]>([]), [copied, setCopied] = useState(false);
   const img = useRef<HTMLImageElement>(null), sheet = useRef<HTMLDivElement>(null);
@@ -134,13 +135,30 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
             <div className="pv-buy">
               <span className="pv-qty"><button type="button" onClick={() => setQty(Math.max(1, qty - 1))} aria-label="−">−</button><input value={qty} inputMode="numeric" onChange={(e) => setQty(Math.max(1, Math.min(999, +e.target.value || 1)))} aria-label={T('Quantity')} /><button type="button" onClick={() => setQty(qty + 1)} aria-label="+">+</button></span>
               <button type="button" className="sp-btn pv-add" disabled={!buyable(p, trade)} onClick={(e) => { flyToCart(img.current, p.id, e); if (qty > 1) store.add(p.id, qty - 1); }}>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6" /><circle cx="10" cy="20" r="1.4" /><circle cx="17" cy="20" r="1.4" /></svg>{p.stock_qty <= 0 ? T('Request it') : T('Add to cart')}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></svg>{p.stock_qty <= 0 ? T('Request it') : T('Add to cart')}
               </button>
             </div>
-            {/* owner (17 Nov): WhatsApp and WeChat side by side, same size, both open the message with the order ready */}
-            <div className="pv-order">
-              {(['wa', 'wc'] as const).map((m) => <button key={m} type="button" className={'sp-btn ' + m} onClick={() => openContact(m, decodeURIComponent(wa.split('text=')[1] || ''))}><i className={'ct-ic ' + m} aria-hidden="true" />{m === 'wa' ? T('Order on WhatsApp') : T('Order on WeChat')}</button>)}
-            </div>
+            {/* owner (19 Nov): "imagine getting 10 orders one by one": Order now asks first whether you are done shopping, then
+                sends everything in one go (or just this part) by WhatsApp, WeChat, e-mail or the website */}
+            <button type="button" className="sp-btn pv-ordnow" onClick={() => setAsk(true)}>{T('Order now')}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></button>
+            {ask ? (
+              <div className="pv-ask" role="dialog" aria-label={T('Done shopping?')}>
+                <span className="pv-ask-sam" aria-hidden="true"><LiveSam size={64} mood="idle" play="think" /></span>
+                <b>{T('Done shopping?')}</b>
+                <p>{(st.cart.length ? T('You have') + ' ' + st.cart.length + ' ' + T('other parts in your cart.') + ' ' : '') + T('Add everything you need first, then send it all in one go. It is faster for both of us.')}</p>
+                <span className="pv-ask-r">
+                  <button type="button" className="sp-btn ghost" onClick={(e) => { flyToCart(img.current, p.id, e); if (qty > 1) store.add(p.id, qty - 1); setAsk(false); onClose(); }}>{T('Add it, keep shopping')}</button>
+                  <button type="button" className="sp-btn" onClick={() => { if (!st.cart.some((l) => l.id === p.id)) store.add(p.id, qty); location.href = '/cart'; }}>{T('Go to checkout')} →</button>
+                </span>
+                <small className="pv-ask-k">{T('Or send just this part')}</small>
+                <span className="pv-ask-via">
+                  {(['wa', 'wc'] as const).map((m) => <button key={m} type="button" className={'sp-btn ' + m} onClick={() => { setAsk(false); openContact(m, decodeURIComponent(wa.split('text=')[1] || '')); }}><i className={'ct-ic ' + m} aria-hidden="true" />{m === 'wa' ? 'WhatsApp' : 'WeChat'}</button>)}
+                  <a className="sp-btn mail" href={'mailto:' + (data()?.contact.email || 'samelectronics.uae@gmail.com') + '?subject=' + encodeURIComponent(T('Order request') + ': ' + p.title) + '&body=' + encodeURIComponent(decodeURIComponent(wa.split('text=')[1] || '').replace(/\*/g, ''))}>{T('E-mail')}</a>
+                  <button type="button" className="sp-btn web" onClick={() => { setAsk(false); window.dispatchEvent(new CustomEvent('se:livechat', { detail: { text: decodeURIComponent(wa.split('text=')[1] || '') } })); }}>{T('Website chat')}</button>
+                </span>
+                <button type="button" className="pv-ask-x" aria-label={T('Close')} onClick={() => setAsk(false)}>×</button>
+              </div>
+            ) : null}
             <PvCode id={p.id} cat={p.category} />
             {/* R10 P2: one clean icon set; parts go into the visitor's own named lists */}
             <div className="pv-tools">
