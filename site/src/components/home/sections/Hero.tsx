@@ -1630,7 +1630,7 @@ export default function Hero({ v }: { v: Vals }) {
                       {'\n            '}
                     </span>
                     {'\n            '}
-                    <span style={{ flex: '1', whiteSpace: 'nowrap' }}>{t(v.b?.label)}</span>{v.b?.shop ? <span className="se-hb-info"><span className="hb-live"><i aria-hidden="true" /><b>{Number(v.totalRaw || 0).toLocaleString('en-US')}</b> {t('parts in stock')}</span><span className="hb-brands" title={v.brandCount + ' ' + t('brands')}>{['apple', 'samsung', 'xiaomi', 'google'].map((b) => <img key={b} src={'/assets/brands/' + b + '.svg'} alt="" />)}<em>+{Math.max(0, Number(v.brandCount || 0) - 4)}</em></span></span> : null}
+                    <span className={'hb-lb' + (v.b?.shop ? ' hb-shop' : '')} style={{ flex: '1', whiteSpace: 'nowrap' }}>{t(v.b?.label)}</span>{v.b?.shop ? <span className="se-hb-info"><span className="hb-live"><i aria-hidden="true" /><b>{Number(v.totalRaw || 0).toLocaleString('en-US')}</b> {t('parts in stock')}</span><span className="hb-brands" title={v.brandCount + ' ' + t('brands')}>{['apple', 'samsung', 'xiaomi', 'google'].map((b) => <img key={b} src={'/assets/brands/' + b + '.svg'} alt="" />)}<em>+{Math.max(0, Number(v.brandCount || 0) - 4)}</em></span></span> : null}
                     {'\n            '}
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
                       <path d="M5 12h14M13 6l6 6-6 6"></path>

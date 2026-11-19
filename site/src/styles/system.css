@@ -1240,3 +1240,13 @@ html body footer:has(.ft-mark)::after { content: ''; position: absolute; left: 5
 @keyframes ftLed { 50% { opacity: .5; } }
 html body footer:has(.ft-mark)::before { content: ''; position: absolute; left: 50%; bottom: -60px; width: min(90%, 1300px); height: 160px; transform: translateX(-50%); background: radial-gradient(closest-side, rgba(247,192,50,.18), transparent); pointer-events: none; z-index: 0; }
 @media (prefers-reduced-motion: reduce) { html body footer .ft-mark, html body footer:has(.ft-mark)::after { animation: none !important; } }
+/* owner (R10): "nothing broken or crowded in any language": long translations of the hero buttons wrap onto two tidy
+   lines instead of running into the next button; the shop button's stock info gives way before the label does */
+html body a.scp-5861bbd1 { min-width: 0; }
+html body a.scp-5861bbd1 .hb-lb:not(.hb-shop) { white-space: normal !important; line-height: 1.15; min-width: 0; overflow-wrap: anywhere; text-wrap: balance; }
+html body a.scp-5861bbd1 .se-hb-info { min-width: 0; overflow: hidden; }
+html body a.scp-5861bbd1 .hb-live { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 760px) {
+  html body a.scp-5861bbd1 .hb-lb:not(.hb-shop) { font-size: 13.5px !important; }
+  html body a.scp-5861bbd1 .hb-brands { display: none !important; }
+}
