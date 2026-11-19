@@ -36,20 +36,20 @@ function render(v: Vals) {
         <div className="fz4-l">
           <span className="fz4-eb"><i />{WORDS.join(' · ')}</span>
           <h2 className="fz4-h" data-no-i18n="">
-            <span className="a">{head.slice(0, cut).map((w, i) => <span key={i} style={{ ['--i' as string]: i } as React.CSSProperties}>{w} </span>)}</span>
-            <span className="b">{head.slice(cut).map((w, i) => <span key={i} style={{ ['--i' as string]: i + cut } as React.CSSProperties}>{w} </span>)}</span>
+            <span className="a">{head.slice(0, cut).map((w, i) => <React.Fragment key={i}><span style={{ ['--i' as string]: i } as React.CSSProperties}>{w}</span>{' '}</React.Fragment>)}</span>{' '}
+            <span className="b">{head.slice(cut).map((w, i) => <React.Fragment key={i}><span style={{ ['--i' as string]: i + cut } as React.CSSProperties}>{w}</span>{' '}</React.Fragment>)}</span>
           </h2>
           <p className="fz4-p">Screens, batteries, flex cables and every small part, for every popular model. Tested, graded and ready at the counter in Deira, or shipped to your door.</p>
           <div className="fz4-acts">
             <a href="#offer" onClick={v.browse} className="fz4-btn y">Browse all parts<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a>
-            <button type="button" className="fz4-btn duo" onClick={() => window.dispatchEvent(new CustomEvent('se:chatwith'))}><span className="duo-ic" aria-hidden="true"><i className="ct-ic wa" /><i className="ct-ic wc" /></span>Talk to us</button>
+            <button type="button" className="fz4-btn duo" onClick={() => window.dispatchEvent(new CustomEvent('se:chatwith'))}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" /><path d="M8.5 11h.01M12 11h.01M15.5 11h.01" /></svg>Talk to us</button>
             <a href={v.dir} target="_blank" rel="noopener noreferrer" className="fz4-btn ghost">Visit Deira</a>
           </div>
           <div className="fz4-pro">{PROMISES.map(([n, t, d], i) => <span key={n} style={{ ['--i' as string]: i } as React.CSSProperties}><em>{n}</em><b>{t}</b><small>{d}</small></span>)}</div>
         </div>
         <div className="fz4-r" aria-hidden="true">
           <div className="fz4-stage">
-            <span className="fz4-spot" /><span className="fz4-grid" /><span className="fz4-floor" />
+            <span className="fz4-spot" /><span className="fz4-flash" /><span className="fz4-grid" /><span className="fz4-floor" />
             <span className="fz4-medal">
               <svg className="fz4-ring" viewBox="0 0 200 200"><circle cx="100" cy="100" r="96" pathLength="100" /></svg>
               <span className="fz4-coin">

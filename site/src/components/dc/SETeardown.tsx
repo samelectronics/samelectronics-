@@ -14,6 +14,7 @@ function render(v: Vals) {
       <section
         id="teardown"
         data-loading={v.loading ? '1' : undefined}
+        data-pre={v.pre ? '1' : undefined}
         data-tone="dark"
         data-screen-label="02 Teardown"
         ref={v.secRef}

@@ -9,7 +9,7 @@ import { registerScene } from '@/dc/gl-budget';
 import { jumping, jumpTo } from '@/lib/jumpScroll';
 
 class Component extends DCLogic {
-  state = { p: 0, data: window.SE_DATA || null, loading: true, vw: document.documentElement.clientWidth || 1440, vh: window.innerHeight || 900, fs: 1, ft: 0, fo: false, si: 0, ps: -1, cT: 1, ent: 0, thumbs: null, oT: 3.4, ck: 0, mag: [0, 0], fmpH: false, shopH: false, hov: -1, lib: null };
+  state = { pre: (() => { const w = document.documentElement.clientWidth || 1440, h = window.innerHeight || 900; return !(w < 768 || (w < 1100 && h > w * 1.1)); })(), p: 0, data: window.SE_DATA || null, loading: true, vw: document.documentElement.clientWidth || 1440, vh: window.innerHeight || 900, fs: 1, ft: 0, fo: false, si: 0, ps: -1, cT: 1, ent: 0, thumbs: null, oT: 3.4, ck: 0, mag: [0, 0], fmpH: false, shopH: false, hov: -1, lib: null };
   secRef = React.createRef(); h2Ref = React.createRef(); opDone = false; opSp = 1; tl = null; hostRef = React.createRef(); finRef = React.createRef(); td = { p: 0.15, hover: null };
   T = { rise0: 0.10, rise1: 0.15, pwr0: 0.165, pwr1: 0.185, lay0: 0.19, lay1: 0.26, l0: 0.27, ls: 0.055, ld: 0.05, b8: 0.655, sh0: 0.68, sh1: 0.745, re0: 0.75, rs: 0.0143, st0: 0.852, st1: 0.89, fin0: 0.89 };
   L = [['Screen', 'SCR', 'GLASS + OLED ASSEMBLY', 'Shop screens', 'scr'], ['Frame', 'FRM', 'FRAMES & HOUSINGS', 'Shop frames', 'frm'], ['Flex cables', 'FLX', 'CHARGING & FLEX', 'Shop flex cables', 'flx'], ['Logic board', 'SML:0', 'BOARD COMPONENTS', 'Ask us', 'board'], ['Battery', 'BAT', 'BATTERIES', 'Shop batteries', 'bat'], ['Cameras', 'CAM', 'CAMERAS', 'Shop cameras', 'cam'], ['Small parts', 'SML:1', 'PORTS & BUTTONS', 'Shop small parts', 'sml'], ['Back glass', 'BCV', 'BACK COVERS', 'Shop back covers', 'bcv']];
@@ -17,7 +17,7 @@ class Component extends DCLogic {
   S = [0.15, 0.185, 0.32, 0.375, 0.43, 0.485, 0.54, 0.595, 0.65, 0.668, 0.85, 1];
   opBusy() { return !this.isMob() && this.state.oT < 3.4; }
   opFF() { /* opening is never skipped by scroll input: input is held until it finishes */ }
-  opPlay(replay) { try { cancelAnimationFrame(this.oraf); clearTimeout(this.opWd); this.opRunning = true; this.opRun2 = false; this.opSp = 1; let last = performance.now(); this.td.op = 0; this.setState({ oT: 0 });
+  opPlay(replay) { try { cancelAnimationFrame(this.oraf); clearTimeout(this.opWd); this.opRunning = true; this.opRun2 = false; this.opSp = 1; let last = performance.now(); this.td.op = 0; this.setState({ oT: 0, pre: false });
     const sched = (fn) => { let dn = false; this.oraf = requestAnimationFrame((x) => { if (!dn) { dn = true; fn(x); } }); setTimeout(() => { if (!dn) { dn = true; cancelAnimationFrame(this.oraf); fn(performance.now()); } }, 40); };
     const f = (t) => { if (!this.opRunning) return; this.opRun2 = true; const dt = Math.min(0.1, (t - last) / 1000); last = t; const oT = Math.min(3.4, this.state.oT + dt * this.opSp); this.td.oT = oT; this.td.lt = this.lightAt(oT); this.setState({ oT }); if (oT < 3.4) sched(f); else { this.opDone = true; this.opRunning = false; this.td.oT = null; this.td.lt = 1; if (this.mode === 'film' && (this.idx || 0) === 0 && !this.props.fw) { this.pend = 0; this.step(1); } /* 14 Oct §07 C: the turn follows the opening on its own */ } };
     sched(f); this.opWd = setTimeout(() => { if (this.state.oT < 3.4 && !this.opRun2) this.opShow('animation frames never ran'); }, 6000); } catch (e) { this.opShow('opPlay error: ' + (e && e.message)); } }
@@ -27,12 +27,13 @@ class Component extends DCLogic {
   tossRev() { this.revOn = true; this.tossOn = false; cancelAnimationFrame(this.graf); const a0 = Math.min(2.15, this.td.tossAt == null ? 2.15 : this.td.tossAt), g0 = this.state.gT || 0, t0 = performance.now();
     const f = () => { if (!this.revOn) return; const el = (performance.now() - t0) / 1000, gT = Math.max(0, g0 * (1 - el / 0.5)), tA = Math.max(0, a0 - Math.max(0, el - 0.3)); this.td.tossAt = tA; if (gT !== this.state.gT) this.setState({ gT }); if (tA > 0) this.raf('graf', f); else { this.td.tossAt = null; this.revOn = false; } }; this.raf('graf', f); }
   tossEnd() { this.tossOn = false; this.revOn = false; cancelAnimationFrame(this.graf); this.td.tossAt = null; this.setState({ gT: 0 }); }
-  opShow(why) { if (why) console.warn('[SE Teardown] opening safety net activated: ' + why); cancelAnimationFrame(this.oraf); this.opRunning = false; this.opArm = false; this.opDone = true; this.td.op = 1; this.td.oT = null; this.td.lt = 1; this.setState({ oT: 3.4 }); }
+  opShow(why) { if (why) console.warn('[SE Teardown] opening safety net activated: ' + why); cancelAnimationFrame(this.oraf); this.opRunning = false; this.opArm = false; this.opDone = true; this.td.op = 1; this.td.oT = null; this.td.lt = 1; this.setState({ pre: false, oT: 3.4 }); }
   lightAt(t) { return 1; }
   cardKick() { this.setState({ cT: 0, ck: (this.state.ck || 0) + 1 }); const t0 = performance.now(); cancelAnimationFrame(this.craf); const f = (t) => { const k = Math.min(1, (t - t0 - 120) / 700); this.setState({ cT: Math.max(0, k) }); if (k < 1) this.craf = requestAnimationFrame(f); }; this.craf = requestAnimationFrame(f); }
   // opening trigger: armed only when the section is fully below the viewport; plays when its top comes within 75% of the viewport (and only at the Intro step)
   // opening trigger: while the stage is not yet pinned only the empty lit studio shows; the opening starts the moment the stage is pinned (top at 0, i.e. under the nav) and the 3D is ready
-  opReset() { if (this.failed3d && !this.ready3d && (!this._retry3d || performance.now() - this._retry3d > 8000)) { this._retry3d = performance.now(); this.failed3d = false; this.setup(); } // owner (27 Oct): a failed load is retried when the visitor comes back, so it can never stay skipped
+  // owner (19 Nov, "the frozen text with the back cover"): until the film starts, only the empty lit studio shows
+  opReset() { if (!this.isMob() && !this.state.pre) this.setState({ pre: true }); if (this.failed3d && !this.ready3d && (!this._retry3d || performance.now() - this._retry3d > 8000)) { this._retry3d = performance.now(); this.failed3d = false; this.setup(); } // owner (27 Oct): a failed load is retried when the visitor comes back, so it can never stay skipped
     this.pend = 0; cancelAnimationFrame(this.twRaf); cancelAnimationFrame(this.sraf); this.anim = false; this.scrolling = false; this.idx = 0; this.waitOp = false; this.td.faceBack = true; this.opArm = true; this.filmOn = false; this.opDone = false; this.opRunning = false; cancelAnimationFrame(this.oraf); this.revOn = false; this.tossOn = false; cancelAnimationFrame(this.graf); clearTimeout(this.autoT); this.td.tossAt = null; this.td.oT = 0; this.td.lt = 1; this.busyUntil = 0; this.setState({ oT: 0, gT: 0 }); }
   // Entry (Issue 1 · D): the film starts only when the stage is fully pinned under the nav. From above it always
   // starts at step 0 (the page is held at the section top; the empty lit studio holds until the 3D is ready);
@@ -295,18 +296,23 @@ class Component extends DCLogic {
     const skpOn = si < last, fx = !!this.props.fh;
     const tags = [];
 
-    return { tags, secH: fx ? vh + 'px' : 'calc(100vh + ' + last * 60 + 'vh)', stageH: fx ? vh + 'px' : '100vh', z1, z3, cards, studio, fin: { o: (finK * 0.95).toFixed(3), cx: rtl ? 34 : 66 }, msgLines, secRef: this.secRef, hostRef: this.hostRef, finRef: this.finRef, loading: s.loading, desk: !mob, mob, bg, floorM, glow: glowM, hd, words, cnt, rows: mob ? rowsM : rowsD, msg: mob ? msgM : msg7, msgWords, counts, chips, chipH: Math.round(Math.min(78, Math.max(56, (lw - 30) / 4 * 0.55))), chipI: Math.round(Math.min(68, Math.max(48, (lw - 30) / 4 * 0.46))),
+    return { tags, secH: fx ? vh + 'px' : 'calc(100vh + ' + last * 60 + 'vh)', stageH: fx ? vh + 'px' : '100vh', z1, z3, cards, studio, fin: { o: (finK * 0.95).toFixed(3), cx: rtl ? 34 : 66 }, msgLines, secRef: this.secRef, hostRef: this.hostRef, finRef: this.finRef, loading: s.loading, pre: s.pre, desk: !mob, mob, bg, floorM, glow: glowM, hd, words, cnt, rows: mob ? rowsM : rowsD, msg: mob ? msgM : msg7, msgWords, counts, chips, chipH: Math.round(Math.min(78, Math.max(56, (lw - 30) / 4 * 0.55))), chipI: Math.round(Math.min(68, Math.max(48, (lw - 30) / 4 * 0.46))),
       hint: { o: si === 0 && s.oT != null && s.oT < 3.4 ? Math.max(0, Math.min(1, 1 - (oT - 0.4) / 0.2)) : 0 }, op, opWords, opSw: (() => { const x = Math.max(0, Math.min(1, ((s.oT || 0) - 1.15) / 1.2)); return { x: (-35 + x * 170).toFixed(1), o: (x > 0 && x < 1 ? Math.sin(x * Math.PI) : 0).toFixed(3) }; })(), h2Ref: this.h2Ref,
       mag: { x: s.mag[0].toFixed(1), y: s.mag[1].toFixed(1), sh: s.fmpH ? '0 0 30px rgba(247,192,50,.45),0 10px 24px rgba(0,0,0,.25)' : '0 0 0 rgba(0,0,0,0)', ic: s.fmpH ? 'rotate(-14deg) scale(1.14)' : 'none' },
       fmpMove: (e) => { const r = e.currentTarget.getBoundingClientRect(), dx = (e.clientX - r.left - r.width / 2) / (r.width / 2), dy = (e.clientY - r.top - r.height / 2) / (r.height / 2); this.setState({ mag: [Math.max(-1, Math.min(1, dx)) * 6, Math.max(-1, Math.min(1, dy)) * 4], fmpH: true }); },
       fmpLeave: () => this.setState({ mag: [0, 0], fmpH: false }),
       shop: { bd: s.shopH ? '#F7C032' : 'rgba(255,255,255,.32)', ty: s.shopH ? -2 : 0, sh: s.shopH ? '0 0 30px rgba(247,192,50,.35)' : '0 0 0 rgba(0,0,0,0)', ax: s.shopH ? 4 : 0 }, shopIn: () => this.setState({ shopH: true }), shopOut: () => this.setState({ shopH: false }), skp: { o: skpOn ? 1 : 0, pe: skpOn ? 'auto' : 'none' },
-      skip: (ev) => { ev && ev.preventDefault && ev.preventDefault(); if (!this.secRef.current) return;
-        /* R10 C5: Skip goes TO the final call (the ad still plays), not past it */
-        clearTimeout(this.autoT); this.manual = false; if (this.opBusy()) this.opShow(); this.tossEnd(); this.passing = 0;
-        const last = this.FS.length - 1; this.mode = 'film'; this.td.faceBack = false; this.busyUntil = performance.now() + 1500;
-        window.__seJumpForced = 0; cancelAnimationFrame(this.twRaf); this.anim = false; this.enterFilm(true); /* a clean cut to the final call: no sweep through the stages */ this.busyUntil = performance.now() + 600;
-        /* owner (17 Nov): skipping means done: show the final call for a moment, then carry on past the teardown by itself (no scrolling through what was skipped) */ clearTimeout(this._skipT); this._skipT = setTimeout(() => { try { window.dispatchEvent(new CustomEvent('se:td-done')); } catch (e) { /* */ } const sec = this.secRef.current; if (!sec) return; const y = window.scrollY + sec.getBoundingClientRect().bottom - 72; this.mode = 'out'; this.side = 'below'; this.releasing = performance.now(); cancelAnimationFrame(this.sraf); this.scrolling = false; window.__seOwnScroll = true; window.scrollTo(0, y); setTimeout(() => { window.__seOwnScroll = false; }, 300); }, 1400); },
+      skip: (ev) => { ev && ev.preventDefault && ev.preventDefault(); const sec = this.secRef.current; if (!sec) return;
+        /* owner (19 Nov): Skip means done, right now: no held final call that swallows the scroll, no leftover push.
+           The page glides to the start of the next section and stops there (wheel/trackpad momentum is ignored briefly). */
+        clearTimeout(this.autoT); clearTimeout(this._skipT); this.manual = false; if (this.opBusy()) this.opShow(); this.tossEnd(); this.passing = 0;
+        cancelAnimationFrame(this.twRaf); cancelAnimationFrame(this.sraf); this.anim = false; this.scrolling = false; window.__seJumpForced = 0;
+        const last = this.FS.length - 1; this.idx = last; this.td.faceBack = false; this.td.p = 1; this.td.snap = true; this.setState({ p: 1, gT: 1.1, pre: false });
+        this.mode = 'out'; this.side = 'below'; this.releasing = performance.now(); this.busyUntil = 0;
+        try { window.dispatchEvent(new CustomEvent('se:td-done')); } catch (e) { /* */ }
+        const y = Math.round(window.scrollY + sec.getBoundingClientRect().bottom - 72);
+        window.__seCalmUntil = performance.now() + 1100; window.__seOwnScroll = true; window.scrollTo({ top: y, behavior: 'smooth' });
+        this._skipT = setTimeout(() => { window.__seOwnScroll = false; if (Math.abs(window.scrollY - y) > 4) window.scrollTo(0, y); }, 950); },
       mt: { ink: fin > 0.5 ? '#26282B' : '#FFFFFF', sub: fin > 0.5 ? '#26282B' : '#F7C032' }, mRail: fin < 0.5, mFin: fin >= 0.5,
       railFill: (allLit ? 1 : Math.max(0, act) / 7).toFixed(3),
       prev: () => this.goStep(Math.max(-1, act - 1)), next: () => this.goStep(Math.min(7, act + 1)), replay: () => { this.stopAuto(); this.at(0.02); setTimeout(() => this.play(), 200); },

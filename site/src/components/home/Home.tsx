@@ -4,6 +4,7 @@ import OffscreenPause from '@/components/perf/OffscreenPause';
 import HScrollArrows from '@/components/perf/HScrollArrows';
 import CircuitSurge from '@/components/perf/CircuitSurge';
 import SectionFX from '@/components/perf/SectionFX';
+import ScrollSafe from '@/components/perf/ScrollSafe';
 import LangPop from '@/components/home/LangPop';
 import SectionLife from '@/components/home/SectionLife';
 import NetNotice from '@/components/home/NetNotice';
@@ -26,6 +27,7 @@ export default function Home() {
     <div id="dc-root">
       <HomeV3 />
       <OffscreenPause />
+      <ScrollSafe />
       <HScrollArrows />
       <CircuitSurge />
       <SectionFX />

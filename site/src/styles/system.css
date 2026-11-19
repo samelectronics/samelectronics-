@@ -949,9 +949,9 @@ html[data-theme="dark"] .sn2-p { color: #B5B9BF; } html[data-theme="dark"] .sn2-
 .lm2-face img { display: block; width: 100% !important; height: 100% !important; max-width: none !important; object-fit: cover; border: 0 !important; border-radius: 0 !important; box-shadow: none !important; padding: 0 !important; margin: 0 !important; }
 a:hover > .lm2 .lm2-ring circle { filter: drop-shadow(0 0 calc(var(--s) * .08) #F7C032); }
 @media (prefers-reduced-motion: reduce) { .lm2.run .lm2-ring circle { animation: none; } }
-.md2-row { display: flex; align-items: center; justify-content: center; gap: 12px; text-align: start; }
-.md2-row .sn2-p { margin-top: 2px; }
-.md2 .sn2-h { font-size: 18px; }
+.mdc-row { display: flex; align-items: center; justify-content: center; gap: 12px; text-align: start; }
+.mdc-row .sn2-p { margin-top: 2px; }
+.mdc .sn2-h { font-size: 18px; }
 /* owner (18 Nov): no outer ring, no dark line after the yellow: bezel → yellow LED line → face */
 .lm2-edge { inset: 0 !important; }
 .lm2-face { inset: 9% !important; box-shadow: 0 0 0 max(1.2px, calc(var(--s) * .022)) #F7C032, 0 0 calc(var(--s) * .09) rgba(247,192,50,.55), inset 0 calc(var(--s) * .02) calc(var(--s) * .05) rgba(0,0,0,.18) !important; }
@@ -1000,3 +1000,6 @@ html[data-theme="dark"] .lp3-bar { background: #3A3D42; } html[data-theme="dark"
 .shot-wm .side { position: absolute; right: -2px; top: 50%; transform-origin: right center; transform: translate(0, -50%) rotate(-90deg) translateX(50%); padding: 5px 12px; border-radius: 8px 8px 0 0; background: rgba(38,40,43,.72); color: #F7C032; font: 600 10.5px 'JetBrains Mono', monospace; letter-spacing: .06em; white-space: nowrap; }
 html[data-theme="dark"] .shot-terms .st-list li { color: #C9CCD0; } html[data-theme="dark"] .shot-terms .st-agree { background: #34373C; color: #F2F3F5; }
 .shot-wm .side { right: 0 !important; top: 50% !important; transform: translateY(-50%) !important; writing-mode: vertical-rl; padding: 12px 5px !important; border-radius: 8px 0 0 8px !important; }
+/* teardown: before the film starts, only the lit studio (no frozen title, no phone) */
+#teardown .td-stage canvas, #teardown .td-stage h2, #teardown .td-stage h2 + * { transition: opacity .35s ease; }
+#teardown[data-pre="1"] .td-stage canvas, #teardown[data-pre="1"] .td-stage h2, #teardown[data-pre="1"] .td-stage h2 ~ *, #teardown[data-pre="1"] .td-stage h2 + * { opacity: 0 !important; transition: none; }

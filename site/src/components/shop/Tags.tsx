@@ -20,7 +20,7 @@ export function GradeTag({ g, name, size }: { g: string; name: string; size?: 's
   return <span className={'tq q-' + gradeKey(g) + (size ? ' ' + size : '')}>{name}</span>;
 }
 export function MakerTag({ m, name, size }: { m: string; name: string; size?: 'sm' | 'lg' }) {
-  return <span className={'tm k-' + makerKey(m || name) + (size ? ' ' + size : '')}>{name}</span>;
+  return <span className={'tmk k-' + makerKey(m || name) + (size ? ' ' + size : '')}>{name}</span>;
 }
 export function DealTag({ pct }: { pct: number }) {
   return <span className="tg tg-x deal"><svg width="11" height="11" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z" fill="currentColor" /></svg><b>−{pct}%</b></span>;

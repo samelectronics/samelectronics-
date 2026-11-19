@@ -244,10 +244,10 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
             {f.cats.length === 1 && f.cats[0] === 'SCR' ? <ScreenGrades items={base.filter((p) => p.category === 'SCR')} on={f.grades} onPick={(g) => tog('grades', g)} /> : null}
             {/* owner (18 Nov): repair shops come back for the same parts: the last ones you opened, one tap away */}
             {(() => { const rv = st.viewed.map(byId).filter(Boolean).slice(0, 10) as Product[]; return rv.length ? (
-              <div className="rv-row" aria-label={T('Recently viewed')}>
-                <div className="rv-h"><b>{T('Recently viewed')}</b><button type="button" onClick={() => store.clearViewed()}>{T('Clear')}</button></div>
-                <div className="rv-list">{rv.map((p) => (
-                  <button type="button" key={p.id} className="rv-it" onClick={() => open(p)}>
+              <div className="rcv-row" aria-label={T('Recently viewed')}>
+                <div className="rcv-h"><b>{T('Recently viewed')}</b><button type="button" onClick={() => store.clearViewed()}>{T('Clear')}</button></div>
+                <div className="rcv-list">{rv.map((p) => (
+                  <button type="button" key={p.id} className="rcv-it" onClick={() => open(p)}>
                     <img src={p.img} alt="" loading="lazy" />
                     <span><GradeTag g={p.grade} name={p.gradeName} /><b>{ptitle(p)}</b><small>{aed(p.price, false)}</small></span>
                   </button>

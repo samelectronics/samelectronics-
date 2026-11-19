@@ -343,3 +343,28 @@ html[dir='rtl'] .fz4-pro b::after { left: auto; right: 0; }
 }
 @media (prefers-reduced-motion: reduce) { .fz4 .fz4-coin, .fz4 .fz4-shine, .fz4 .fz4-ring circle { animation: none !important; opacity: 1; transform: none; filter: none; stroke-dashoffset: 0; } }
 html[data-theme="dark"] .fz4 { background: linear-gradient(180deg, #F7F7F5, #EFEFEC); }
+
+/* ── owner (19 Nov): the finale follows the colour order (YELLOW) and is a real final call: the logo powers on (the LED
+   ring flickers on like a neon tube, a flash, the medallion rises, light sweeps across it) and the words land one by one ── */
+.fz4, html[data-theme="dark"] .fz4 { background: radial-gradient(70% 80% at 80% 0%, rgba(255,232,160,.55), rgba(255,232,160,0) 60%), url(/assets/noise/n-d6cb514b42.webp), #F7C032 !important; color: #26282B; }
+.fz4-eb, .fz4-eb * { color: #26282B !important; } .fz4-eb i { background: #26282B !important; }
+.fz4-h .a { color: #26282B !important; } .fz4-h .b { color: #FFFFFF !important; text-shadow: 0 2px 0 rgba(150,100,0,.18); }
+.fz4-h span span { margin-inline-end: 0 !important; transform: translateY(26px) scale(.92); transition: opacity .5s, transform .7s cubic-bezier(.2,1.3,.35,1), filter .5s; transition-delay: calc(1.1s + var(--i, 0) * .09s) !important; }
+.fz4-p { color: #3A3D42 !important; }
+.fz4-btn.y { background: #26282B !important; color: #F7C032 !important; box-shadow: 0 14px 30px -14px rgba(38,40,43,.7) !important; }
+.fz4-btn.duo { background: #FFFFFF !important; color: #26282B !important; box-shadow: 0 14px 28px -16px rgba(120,80,0,.5) !important; }
+.fz4-btn.ghost { color: #26282B !important; border-color: rgba(38,40,43,.5) !important; background: transparent !important; }
+.fz4-acts, .fz4-pro { opacity: 0; transform: translateY(16px); transition: opacity .6s, transform .6s cubic-bezier(.2,.8,.2,1); }
+.fz4.fz-on .fz4-acts { opacity: 1; transform: none; transition-delay: 1.9s; } .fz4.fz-on .fz4-pro { opacity: 1; transform: none; transition-delay: 2.15s; }
+.fz4-pro span { background: #FFFFFF; }
+.fz4 .fz4-stats, .fz4 .fz4-stats * { color: #26282B; } .fz4 .fz4-stats { border-color: rgba(38,40,43,.18) !important; }
+/* the stage stays graphite: the power-on */
+.fz4 .fz4-ring circle { animation: none; }
+.fz4.fz-on .fz4-ring circle { animation: fz5Neon 1.2s .15s steps(1, end) forwards, fz4Ring 1.4s .2s cubic-bezier(.6,0,.2,1) forwards !important; }
+@keyframes fz5Neon { 0% { opacity: 0; } 8% { opacity: 1; } 14% { opacity: .1; } 22% { opacity: .9; } 28% { opacity: .2; } 40% { opacity: 1; } 46% { opacity: .5; } 55%, 100% { opacity: 1; } }
+.fz4-flash { position: absolute; inset: 0; z-index: 4; pointer-events: none; background: radial-gradient(40% 40% at 50% 44%, rgba(255,240,200,.9), rgba(247,192,50,.35) 40%, rgba(247,192,50,0) 70%); opacity: 0; }
+.fz4.fz-on .fz4-flash { animation: fz5Flash .9s 1.05s ease-out both; }
+@keyframes fz5Flash { 0% { opacity: 0; } 25% { opacity: 1; } 100% { opacity: 0; } }
+.fz4 .fz4-face { box-shadow: 0 0 0 3px rgba(247,192,50,.2), inset 0 6px 14px rgba(0,0,0,.18) !important; transition: box-shadow .4s 1.05s; }
+.fz4.fz-on .fz4-face { box-shadow: 0 0 0 3px #F7C032, 0 0 34px rgba(247,192,50,.55), inset 0 6px 14px rgba(0,0,0,.18) !important; }
+@media (prefers-reduced-motion: reduce) { .fz4 .fz4-acts, .fz4 .fz4-pro, .fz4 .fz4-h span span { opacity: 1 !important; transform: none !important; filter: none !important; transition: none !important; } .fz4-flash { display: none; } }
