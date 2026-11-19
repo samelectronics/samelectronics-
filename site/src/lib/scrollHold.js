@@ -6,6 +6,9 @@
 import { T } from '@/components/site/ui';
 
 let active = null;
+/** owner (19 Nov): any jump the visitor asks for (menu, buttons, Skip) lets go of a hold first */
+export function releaseHold() { if (active) active(); }
+if (typeof window !== 'undefined') window.__seReleaseHold = releaseHold;
 export function holdAt(el, { onSwipe, onRelease } = {}) {
   if (typeof window === 'undefined' || !el) return () => {};
   if (active) active();

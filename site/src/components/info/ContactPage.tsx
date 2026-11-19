@@ -20,8 +20,8 @@ const HELP: [string, [string, string][]][] = [
   ['Account & trade', [['How do I get trade prices?', 'Create an account, add your company and apply on the Wholesale page. Once approved, the shop shows your price on every part.'], ['I forgot my password.', 'Use “Forgot your password?” on the sign-in page and we e-mail you a reset link.']]],
 ];
 
-export function LiveChat() {
-  const [me] = useMe(), [tid, setTid] = useState<string | null>(null), [msgs, setMsgs] = useState<Message[]>([]), [text, setText] = useState(''), [name, setName] = useState(''), box = useRef<HTMLDivElement>(null);
+export function LiveChat({ initial = '' }: { initial?: string } = {}) {
+  const [me] = useMe(), [tid, setTid] = useState<string | null>(null), [msgs, setMsgs] = useState<Message[]>([]), [text, setText] = useState(initial), [name, setName] = useState(''), box = useRef<HTMLDivElement>(null);
   useEffect(() => { try { const t = JSON.parse(localStorage.getItem('se-my-threads') || '[]')[0]; if (t) setTid(t); } catch { /* */ } }, []);
   useEffect(() => { if (me) setName(me.name); }, [me]);
   useEffect(() => { if (!tid) return; const load = () => backend.messages(tid).then(setMsgs); load(); const iv = window.setInterval(load, 5000); window.addEventListener('se:db', load); return () => { window.clearInterval(iv); window.removeEventListener('se:db', load); }; }, [tid]);

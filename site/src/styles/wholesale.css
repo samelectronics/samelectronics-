@@ -407,3 +407,5 @@ html[dir='rtl'] .wf-real > svg:last-child { transform: scaleX(-1); }
 .duo-ic .ct-ic.wa { color: #25D366; width: 18px; height: 18px; } .duo-ic .ct-ic.wc { color: #07C160; width: 18px; height: 18px; }
 .wf-btn.duo { display: inline-flex; align-items: center; }
 .mt-go2.duo { display: inline-flex; align-items: center; }
+.wf-send2.more { background: rgba(255,255,255,.08); color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.22); }
+.wf-send2.more { grid-column: 1 / -1; }

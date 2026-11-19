@@ -415,7 +415,10 @@ class Component extends DCLogic {
       })
       .catch(local);
   }
-  openFmpAt(b, m, c, q) { this.setState({ fmpOpen: true, fmpB: b || null, fmpM: m || null, fmpC: c || null, fmpQ: (!m && q) || '', drawerMap: false, drawerCart: false }); }
+  // owner (19 Nov): "any shop button takes you straight to the shop with the filter on; Find My Part is something customers
+  // open on their own". Only the plain Find My Part button (no brand/model/category/query) opens it now.
+  openFmpAt(b, m, c, q) { if (b || m || c || q) return this.shopAt({ b, m, c, q: !m ? q : '' });
+    this.setState({ fmpOpen: true, fmpB: b || null, fmpM: m || null, fmpC: c || null, fmpQ: (!m && q) || '', drawerMap: false, drawerCart: false }); }
   extC(s, D, P, fmt, cl, pad, bars, KIND) {
     const GN = ((typeof window !== 'undefined' && window.SE_DATA && window.SE_DATA.gradeNames) || {}) /* R6 Part E: Excel qualities */, H = this.hours(), yr = new Date(s.now).getFullYear();
     const wa = D ? 'https://wa.me/' + D.contact.wa : '#', sm = (x) => 'url(/icons/' + x + '.svg) center / contain no-repeat' /* R6 Part C4: self-hosted (the CDN mask came back empty) */;
@@ -755,6 +758,8 @@ class Component extends DCLogic {
     const pgFr = (j) => ads.flatMap((a, i) => [[i * 3.2, 'background:' + PG[a[1]][j]], [i * 3.2 + 3.19, 'background:' + PG[a[1]][j]]]);
     // Issue 1B: step-based progress, one segment per ad: finished ads stay filled, the current one is highlighted
     const pgTrack = this.tlK('hrPgT', REEL_D, 0, pgFr(0)), pgCol = this.tlK('hrPgC', REEL_D, 0, pgFr(1));
+    // owner (19 Nov): the phone gets a real status bar and home bar; their ink follows the ad under them (no band)
+    const sbC = (th) => (th === 'dark' ? '#FFFFFF' : '#26282B'), sbInk = this.tlK('hrSbInk', REEL_D, 0, ads.flatMap((a, i) => [[i * 3.2, 'color:' + sbC(a[1])], [i * 3.2 + 3.19, 'color:' + sbC(a[1])]]));
     const pgSegs = ads.map((_, i) => { const a0 = i * 3.2, fr = i === 0 ? [[0, 'opacity:1'], [3.2, 'opacity:1'], [3.35, 'opacity:.5'], [REEL_D, 'opacity:.5']] : [[0, 'opacity:0'], [a0, 'opacity:0'], [a0 + 0.15, 'opacity:1'], [a0 + 3.2, 'opacity:1'], [Math.min(REEL_D, a0 + 3.35), i === ads.length - 1 ? 'opacity:1' : 'opacity:.5'], [REEL_D, i === ads.length - 1 ? 'opacity:1' : 'opacity:.5']]; return { a: this.tlK('hrSeg' + i, REEL_D, 0, fr) + ',' + pgCol }; });
     
     // offer
@@ -776,7 +781,7 @@ class Component extends DCLogic {
       navLinks: [['Shop', '/shop'], ['Repair', '/repair'], ['Wholesale', '/wholesale'], ['Contact', '/contact']].map(([label, href]) => ({ label, href, go: () => {} })), // P4: the pages
       cartPop: 1, cartCount: 0, 
       z: s.z.toFixed(4), heroH: Math.round(1030 * s.z), glowX: 560, glowY: 420, clock: H.clock, ipQuery: 'Search 1,000+ parts', ipCart: s.ipCart, ipCartN: (s.ipCart || 2) + (s.ipBuys || 0), ipToastO: s.ipToast ? 1 : 0, ipToastY: s.ipToast ? 0 : 48, ipChips, ipCards: this._ipSeq || ipCards, ipAnim: this.kf('seIpScroll2', Array.from({ length: 9 }, (_, i) => -i * 195), 2.8, 'Y') + ' 22.4s',
-      showRest: !window.SE_ONLY, reel: reelAll, pgTrack, pgSegs, sweepPh, sweepIp, ipFrom: (() => { const ps = P.filter((p) => p.category === 'SCR' && p.shot === 'samsung-sp'); return ps.length ? 'from AED ' + Math.min(...ps.map((p) => p.retail_price)) : ''; })(), reelCtl: this.reelCtl(), poster: this.posterVals(ads, cs, fmt), openFmpAt: (b, m, c, q) => this.openFmpAt(b, m, c, q), ipCartP: Math.max(0, (s.ipCart || 2) + (s.ipBuys || 0) - 1), ipOdo: s.ipBuys ? 'ipOdo .35s cubic-bezier(.2,.8,.2,1) both' : 'none', ipToastName: s.ipToastName || 'Part',
+      showRest: !window.SE_ONLY, reel: reelAll, pgTrack, pgSegs, sbInk, sweepPh, sweepIp, ipFrom: (() => { const ps = P.filter((p) => p.category === 'SCR' && p.shot === 'samsung-sp'); return ps.length ? 'from AED ' + Math.min(...ps.map((p) => p.retail_price)) : ''; })(), reelCtl: this.reelCtl(), poster: this.posterVals(ads, cs, fmt), openFmpAt: (b, m, c, q) => this.openFmpAt(b, m, c, q), ipCartP: Math.max(0, (s.ipCart || 2) + (s.ipBuys || 0) - 1), ipOdo: s.ipBuys ? 'ipOdo .35s cubic-bezier(.2,.8,.2,1) both' : 'none', ipToastName: s.ipToastName || 'Part',
       typedWords, trust: ['Tested before it ships', 'Warranty on every grade', 'Trusted since 2003'],
       // R12 (owner: repeated buttons, the shop must be the obvious next step; chat and WhatsApp must be easy to find):
       // one big way into the shop, then the two ways to talk to us. Trade prices and repairs live in the nav.

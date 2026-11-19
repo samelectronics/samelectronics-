@@ -2,7 +2,7 @@
 // Owner (16 Nov): every WhatsApp or WeChat button on the site opens the same contact sheet, over a blurred page:
 // - WhatsApp: open it on this device, or scan the code with your phone, and the number with a one-tap copy
 // - WeChat: open WeChat, and the number to add with a one-tap copy (WeChat has no public chat link by number)
-// The two are tabs of one sheet, so a visitor can switch. Any link to wa.me anywhere on the site lands here first.
+// owner (19 Nov): each opens on its own (no switching); the all-contacts list is ChatChoice. Any link to wa.me anywhere on the site lands here first.
 import React, { useEffect, useMemo, useState } from 'react';
 import qrcode from 'qrcode-generator';
 import { play } from '@/lib/sound';
@@ -12,11 +12,13 @@ import { customerId, messageId } from '@/lib/ids';
 
 // every tap on "Open WhatsApp" / "Open WeChat" also lands in the Control Room inbox with the page and the message,
 // unless a form already sent that same card. Visitors stay anonymous unless they signed in.
+// owner (19 Nov): staff see how loyal a visitor is: their website level and points travel with every contact
+const lvl = () => { try { const w = window as unknown as { __seLvl?: () => { name: string; xp: number } }; const L = w.__seLvl?.(); return L ? '\n*Website level:* ' + L.name + ' (' + L.xp + ' points)' : ''; } catch { return ''; } };
 const logTap = (mode: Mode, text: string) => {
   import('@/lib/achievements').then((a) => a.unlock('contact')).catch(() => {});
   if (wasSent(text)) return;
   backend.me().then((u) => backend.send({ name: u?.name || 'Website visitor', email: u?.email || undefined, topic: (mode === 'wa' ? 'WhatsApp' : 'WeChat') + ' · ' + location.pathname,
-    text: '*' + (mode === 'wa' ? 'Opened WhatsApp' : 'Opened WeChat') + '*\n*Page:* ' + location.href + '\n\n' + text })).catch(() => { /* offline: WhatsApp still opens */ });
+    text: '*' + (mode === 'wa' ? 'Opened WhatsApp' : 'Opened WeChat') + '*\n*Page:* ' + location.href + lvl() + '\n\n' + text })).catch(() => { /* offline: WhatsApp still opens */ });
 };
 
 export const WECHAT = { number: '+971 50 342 0015', raw: '971503420015' };
@@ -62,10 +64,8 @@ export default function WeChatSheet() {
       <div className={'wc-card ct-card ' + mode} role="dialog" aria-modal="true" aria-label={t(mode === 'wa' ? 'WhatsApp us' : 'WeChat us')}>
         <button type="button" className="wc-x" aria-label={t('Close')} onClick={() => setOpen(false)}>✕</button>
         <div className="ct-cols"><div className="ct-l">
-        <div className="ct-tabs" role="tablist">
-          <button type="button" role="tab" aria-selected={mode === 'wa'} className={mode === 'wa' ? 'on wa' : 'wa'} onClick={() => { setMode('wa'); setCopied(false); }}><i className="ct-ic wa" />WhatsApp</button>
-          <button type="button" role="tab" aria-selected={mode === 'wc'} className={mode === 'wc' ? 'on wc' : 'wc'} onClick={() => { setMode('wc'); setCopied(false); }}><i className="ct-ic wc" />WeChat</button>
-        </div>
+        {/* owner (19 Nov): a WhatsApp button opens WhatsApp only, a WeChat button WeChat only: no switch between them */}
+        <span className={'ct-one ' + mode}><i className={'ct-ic ' + mode} />{mode === 'wa' ? 'WhatsApp' : 'WeChat'}</span>
         <b className="wc-h">{t(mode === 'wa' ? 'WhatsApp us' : 'WeChat us')}</b>
         <p className="wc-p">{t(mode === 'wa' ? 'Chat with our team. Open WhatsApp on this device, or scan the code with your phone.' : 'Add our number in WeChat and send us a message. We reply in Arabic, English and Chinese.')}</p>
         <div className="ct-body">

@@ -52,6 +52,7 @@ function Profile({ net, k }: { net: (typeof NET)[number]; k: number }) {
   const ava = <span className="pf-ava"><img loading="lazy" decoding="async" src="/assets/se-logo-128.webp" alt="" /></span>;
   return (
     <div className={'fw-phone pf n-' + net.id} aria-hidden="true">
+      <span className="fw-glass" />
       <span className="fw-island" />
       <div className="pf-scr">
         <span className="pf-sb"><b>9:41</b><i /></span>
@@ -87,6 +88,7 @@ function Reel({ net, k }: { net: (typeof NET)[number]; k: number }) {
   const fmt = (n: number) => (n >= 1000 ? (n / 1000).toFixed(1) + 'K' : String(n));
   return (
     <div className={'fw-phone rl n-' + net.id} aria-hidden="true">
+      <span className="fw-glass" />
       <span className="fw-island" />
       <div className="rl-scr" style={{ background: p.bg }}>
         <img className="rl-img" src={p.img.replace('-480.webp', '-480.webp')} alt="" loading="lazy" decoding="async" key={k} />
@@ -118,10 +120,10 @@ export default function FeedWall() {
   }, []);
   useEffect(() => { if (!live) return; if (hold) return; const t = window.setInterval(() => setNet((n) => (n + 1) % NET.length), STEP * 2); return () => window.clearInterval(t); }, [live, hold]);
   // owner (18 Nov): "hearts going out of the phones, fading away"
-  const [hearts, setHearts] = useState<{ id: number; x: number; d: number; s: number; r: number; c: number }[]>([]);
+  const [hearts, setHearts] = useState<{ id: number; x: number; d: number; s: number; r: number; c: number; L?: boolean }[]>([]);
   useEffect(() => {
     if (!live) return; let n = 0;
-    const t = window.setInterval(() => { if (document.hidden) return; const id = ++n + Date.now(); setHearts((h) => [...h.slice(-14), { id, x: Math.random() * 40 - 20, d: Math.random() * 80 - 40, s: 0.7 + Math.random() * 0.7, r: Math.random() * 40 - 20, c: Math.random() < 0.72 ? 0 : Math.random() < 0.5 ? 1 : 2 }]); window.setTimeout(() => setHearts((h) => h.filter((x) => x.id !== id)), 3200); }, 420);
+    const t = window.setInterval(() => { if (document.hidden) return; const id = ++n + Date.now(); setHearts((h) => [...h.slice(-14), { id, L: n % 2 === 0, x: Math.random() * 40 - 20, d: Math.random() * 80 - 40, s: 0.7 + Math.random() * 0.7, r: Math.random() * 40 - 20, c: Math.random() < 0.72 ? 0 : Math.random() < 0.5 ? 1 : 2 }]); window.setTimeout(() => setHearts((h) => h.filter((x) => x.id !== id)), 3200); }, 420);
     return () => window.clearInterval(t);
   }, [live]);
   const N = NET[net], reel = k % 4 === 2 || k % 4 === 3;
@@ -148,8 +150,12 @@ export default function FeedWall() {
         <div className="fw-stage" aria-label={T('Our latest posts')}>
           <span className="fw-glow" aria-hidden="true" />
           {/* owner (17 Nov): the account you pick opens in the phone, like the real app */}
+          {/* owner (19 Nov): keep the three phones; the centre one shows what you pick, the two beside it show the other
+              accounts (tap one to bring it to the centre) */}
+          <button type="button" className="fw-side l" aria-label={NET[(net + NET.length - 1) % NET.length].name} onClick={() => setNet((net + NET.length - 1) % NET.length)}><Profile net={NET[(net + NET.length - 1) % NET.length]} k={k + 3} /></button>
+          <button type="button" className="fw-side r" aria-label={NET[(net + 1) % NET.length].name} onClick={() => setNet((net + 1) % NET.length)}><Profile net={NET[(net + 1) % NET.length]} k={k + 5} /></button>
           <div className="fw-one" key={N.id + (reel ? '-r' : '')}>{reel ? <Reel net={N} k={k} /> : <Profile net={N} k={k} />}</div>
-          <span className="fw-hearts" aria-hidden="true">{hearts.map((h) => <i key={h.id} className={'c' + h.c} style={{ ['--x' as string]: h.x + 'px', ['--d' as string]: h.d + 'px', ['--s' as string]: h.s, ['--r' as string]: h.r + 'deg' } as React.CSSProperties} />)}</span>
+          <span className="fw-hearts" aria-hidden="true">{hearts.map((h) => <i key={h.id} className={'c' + h.c + (h.L ? ' L' : '')} style={{ ['--x' as string]: h.x + 'px', ['--d' as string]: h.d + 'px', ['--s' as string]: h.s, ['--r' as string]: h.r + 'deg' } as React.CSSProperties} />)}</span>
         </div>
       </div>
       <div className="fw-strip" aria-hidden="true"><div className="fw-strip-in">{[...strip, ...strip].map((s, i) => <span key={i}><i />{s}</span>)}</div></div>

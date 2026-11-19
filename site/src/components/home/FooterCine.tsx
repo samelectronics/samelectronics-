@@ -25,7 +25,7 @@ export default function FooterCine() {
       <div className="fc-in" aria-hidden="true">
         <span className="fc-logo">
           <svg className="fc-ring" viewBox="0 0 120 120"><circle cx="60" cy="60" r="56" pathLength="100" /></svg>
-          <img src="/assets/se-logo-320.webp" alt="" loading="lazy" decoding="async" />
+          <img src="/assets/se-logo-metal-320.webp" alt="" loading="lazy" decoding="async" />
           <span className="fc-gl" />
         </span>
         <span className="fc-txt">

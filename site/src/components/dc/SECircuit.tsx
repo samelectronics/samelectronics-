@@ -38,6 +38,20 @@ const CARDS: Record<Kind, Card> = {
 };
 const ORDER: Kind[] = ['circuit', 'grid', 'circle'];
 
+/** guilloche engraving (computed once): a spirograph rosette on the right and fine waves across the card */
+const GUIL = (() => {
+  const r = (n: number) => n.toFixed(1); let rose = '';
+  for (let k = 0; k < 14; k++) { const ph = (k / 14) * Math.PI * 2; let d = '';
+    for (let i = 0; i <= 360; i++) { const t = (i / 360) * Math.PI * 2, R = 64 + 26 * Math.sin(7 * t + ph) + 6 * Math.cos(19 * t); const x = 292 + R * Math.cos(t), y = 112 + R * 0.92 * Math.sin(t); d += (i ? 'L' : 'M') + r(x) + ' ' + r(y); }
+    rose += d + 'Z'; }
+  let waves = '';
+  for (let k = 0; k < 22; k++) { let d = ''; const y0 = 150 + k * 5.2, ph = k * 0.42;
+    for (let x = -10; x <= 410; x += 4) { const y = y0 + 6 * Math.sin(x / 26 + ph) + 3 * Math.sin(x / 9 - ph); d += (x === -10 ? 'M' : 'L') + r(x) + ' ' + r(y); }
+    waves += d; }
+  return { rose, waves };
+})();
+
+
 /** R9 (owner): the battery on the card charges like a real one: a liquid fill that grows smoothly to the level (with a
  *  charging shimmer running through it), five faint cell marks on top, never flat blocks */
 function Battery({ n, of, k }: { n: number; of: number; k: Kind }) {
@@ -114,23 +128,22 @@ export default function SECircuit() {
         </div>
 
         <div className="cx-r" onPointerMove={tilt} onPointerLeave={untilt}>
-          <span className="cx-floor" aria-hidden="true" />
           {/* owner (16 Nov, "make it exciting"): the three cards stand together on a charging dock; the one you pick
               floats to the front and charges, the other two wait behind (tap one to bring it forward) */}
           <span className="cx-dock" aria-hidden="true" key={'d' + kind + lvl}><i className="r1" /><i className="r2" /><i className="r3" /><i className="beam" /></span>
           {ORDER.map((k) => { const CC = CARDS[k], hl = CC.levels.length > 0, front = k === kind, others = ORDER.filter((x) => x !== kind), pos = front ? 'front' : others[0] === k ? 'back-l' : 'back-r';
             return (
           <div key={k} ref={front ? card : undefined} className={'cx-card k-' + k + ' ' + pos} onClick={front ? undefined : () => pick(k)} role={front ? undefined : 'button'} aria-label={front ? undefined : CC.name} tabIndex={front ? undefined : 0}>
-            <span className="cx-holo" aria-hidden="true" />
-            {/* printed traces: fixed on the card, like a real PCB print */}
-            <svg className="cx-trace" viewBox="0 0 400 252" aria-hidden="true">
-              <path d="M248 0 V34 L274 60 H332" /><path d="M400 96 H352 L334 114 V150" /><path d="M400 176 H338 L316 154 H262 L244 136 H214" /><path d="M300 0 V14 L314 28 H372" />
-              <circle cx="332" cy="60" r="3.4" /><circle cx="334" cy="150" r="3.4" /><circle cx="214" cy="136" r="3.4" /><circle cx="372" cy="28" r="3" />
-            </svg>
-            <span className="cx-mat" aria-hidden="true" />
+            {/* owner (19 Nov): "like the premium bank card: the logo looks deep inside the card, tinted in steel, cool
+                patterns around". Brushed metal + guilloche engraving + the mark pressed into the metal (light and shadow
+                edges), with a light that follows the pointer. */}
+            <span className="cx-metal" aria-hidden="true" />
+            <svg className="cx-guil" viewBox="0 0 400 252" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><path d={GUIL.rose} /><path className="w" d={GUIL.waves} /></svg>
+            <span className="cx-press" aria-hidden="true"><i className="lo" /><i className="hi" /><i className="face" /></span>
+            <span className="cx-sheen" aria-hidden="true" />
             <div className="cx-card-in">
               <span className="top">
-                <span className="brand"><img loading="lazy" decoding="async" className="cx-badge" src="/assets/se-logo-320.webp" alt="" aria-hidden="true" /><span><b data-no-i18n="">{CC.name}</b><small>{T(CC.kind)}</small></span></span>
+                <span className="brand"><span><b data-no-i18n="">{CC.name}</b><small>{T(CC.kind)}</small></span></span>
                 {hl ? <Battery n={front ? lvl : 0} of={5} k={k} /> : <span className="cx-seal" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M12 2l2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 15.3 6.8 18l1-5.8L3.6 8.1l5.8-.8z" /></svg></span>}
               </span>
               <span className="cx-chiprow" aria-hidden="true"><span className="chip"><i /><i /><i /></span><svg className="cx-nfc" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M8.5 7.5a6 6 0 0 1 0 9M12 5a9.5 9.5 0 0 1 0 14M5 10a2.5 2.5 0 0 1 0 4" /></svg></span>

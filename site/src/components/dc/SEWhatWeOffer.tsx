@@ -111,6 +111,7 @@ function render(v: Vals) {
             viewBox="0 0 60 1000"
             preserveAspectRatio="none"
             style={{
+              display: 'none', /* owner (19 Nov): "a dead circuit on the right, connected to nothing": removed like the left one */
               position: 'absolute',
               right: '0',
               top: '180px',
@@ -143,6 +144,7 @@ function render(v: Vals) {
           {'\n    '}
           <span
             style={{
+              display: 'none',
               position: 'absolute',
               left: '15px',
               top: '477px',
@@ -157,6 +159,7 @@ function render(v: Vals) {
           {'\n    '}
           <span
             style={{
+              display: 'none',
               position: 'absolute',
               right: '15px',
               top: '377px',

@@ -176,9 +176,10 @@ function render(v: Vals) {
                 </svg>
               </a>
               {/* owner (17 Nov): WhatsApp and WeChat are both offered: the sheet opens with the bulk-list message ready */}
-              <a href={v.wa} target="_blank" rel="noopener noreferrer" className="wf-btn line duo" onClick={(e) => { e.preventDefault(); let x = ''; try { x = new URL(v.wa).searchParams.get('text') || ''; } catch { /* */ } window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wa', text: x } })); }}>
-                <span className="duo-ic" aria-hidden="true"><i className="ct-ic wa" /><i className="ct-ic wc" /></span>Send a bulk list
-              </a>
+              <button type="button" className="wf-btn line" onClick={() => { let x = ''; try { x = new URL(v.wa).searchParams.get('text') || ''; } catch { /* */ } window.dispatchEvent(new CustomEvent('se:chatwith', { detail: { text: x, subject: 'Bulk list' } })); }}>
+                {/* owner (19 Nov): the top button reaches us every way (Samsoom's contact list), not only WhatsApp/WeChat */}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" /><path d="M8.5 11h7M8.5 14h4" /></svg>Send a bulk list
+              </button>
             </div>
           </div>
         </header>
@@ -332,6 +333,8 @@ function render(v: Vals) {
                 <button type="button" className="wf-add" onClick={v.addLine}>+ Add to request</button>
 <span className="wf-sends">
                   {(['wa', 'wc'] as const).map((m) => <button key={m} type="button" className={'wf-send2 ' + m} onClick={() => { let x = ''; try { x = new URL(v.send).searchParams.get('text') || ''; } catch { /* */ } window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: m, text: x } })); }}><i className={'ct-ic ' + m} aria-hidden="true" />{m === 'wa' ? 'Send on WhatsApp' : 'Send on WeChat'}</button>)}
+                  {/* owner (19 Nov): the list can also go by e-mail or the website chat */}
+                  <button type="button" className="wf-send2 more" onClick={() => { let x = ''; try { x = new URL(v.send).searchParams.get('text') || ''; } catch { /* */ } window.dispatchEvent(new CustomEvent('se:chatwith', { detail: { text: x, subject: 'Bulk list' } })); }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" aria-hidden="true"><path d="M3 6h18v12H3zM3 7l9 6 9-6" /></svg>E-mail or website</button>
                 </span>
               </div>
               <a className="wf-real" href="#wholesale" onClick={v.apply}>

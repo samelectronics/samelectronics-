@@ -132,3 +132,29 @@ html[dir="rtl"] .fw-strip { direction: ltr; }
 @keyframes rlProg { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @media (max-width: 640px) { .fw-phone.rl { width: 220px !important; height: 452px !important; margin: -226px 0 0 -110px; } .fw-hearts i { left: calc(86px + var(--x)); top: 130px; } }
 @media (prefers-reduced-motion: reduce) { .fw-hearts { display: none; } .rl-img, .rl-snd em, .rl-disc { animation: none !important; } }
+
+/* ── owner (19 Nov): three phones again (the picked account in the centre, the other two beside it, tap to swap); real
+   phones, not flat: titanium edge, side buttons, glass reflection, depth; no random tilting; hearts from both sides ── */
+.fw-stage { perspective: 1600px; }
+.fw-one { z-index: 3; animation: fwOneIn2 .6s cubic-bezier(.2,1,.4,1) both !important; }
+@keyframes fwOneIn2 { from { opacity: 0; transform: translate(-50%, -48%) scale(.96); } to { opacity: 1; transform: translate(-50%, -50%); } }
+@keyframes rlZoom { from { transform: translate(-50%, -50%) scale(.98); } to { transform: translate(-50%, -51%) scale(1.1); } }
+.fw-side { position: absolute; top: 50%; z-index: 1; padding: 0; border: 0; background: none; cursor: pointer; transform-style: preserve-3d; transition: transform .6s cubic-bezier(.2,1,.3,1), filter .3s; filter: brightness(.86) saturate(.9); }
+.fw-side .fw-phone.pf { width: 230px !important; height: 472px !important; border-radius: 38px !important; }
+.fw-side.l { left: 50%; transform: translate(calc(-50% - 215px), -50%) rotateY(28deg) scale(.86); }
+.fw-side.r { left: 50%; transform: translate(calc(-50% + 215px), -50%) rotateY(-28deg) scale(.86); }
+.fw-side:hover { filter: brightness(.97); }
+.fw-side.l:hover { transform: translate(calc(-50% - 222px), -50%) rotateY(22deg) scale(.88); } .fw-side.r:hover { transform: translate(calc(-50% + 222px), -50%) rotateY(-22deg) scale(.88); }
+.fw-side * { pointer-events: none; }
+/* a real phone: titanium band, a black bezel, glass with a soft reflection, buttons on the sides */
+.fw-phone.pf, .fw-phone.rl { background: linear-gradient(90deg, #6E7279 0%, #C9CDD2 4%, #8A8F96 9%, #2B2D31 14%, #1A1B1E 86%, #8A8F96 91%, #C9CDD2 96%, #6E7279 100%) !important; padding: 11px !important; box-shadow: inset 0 0 0 1px rgba(255,255,255,.25), inset 0 0 0 4px #0C0D0F, 0 2px 0 #5C6066, 0 50px 80px -30px rgba(0,0,0,.55), 0 18px 30px -18px rgba(0,0,0,.45) !important; }
+.fw-phone.pf::before, .fw-phone.rl::before { content: ''; position: absolute; right: -3px; top: 132px; width: 3px; height: 64px; border-radius: 0 2px 2px 0; background: linear-gradient(180deg, #8A8F96, #D7DADE, #8A8F96); }
+.fw-phone.pf::after, .fw-phone.rl::after { content: ''; position: absolute; left: -3px; top: 104px; width: 3px; height: 92px; border-radius: 2px 0 0 2px; background: linear-gradient(180deg, #8A8F96 0 30%, transparent 30% 42%, #8A8F96 42% 100%); }
+.fw-phone .fw-glass { position: absolute; inset: 11px; border-radius: 33px; pointer-events: none; z-index: 8; background: linear-gradient(125deg, rgba(255,255,255,.16) 0%, rgba(255,255,255,0) 32%), linear-gradient(305deg, rgba(255,255,255,.05), rgba(255,255,255,0) 40%); }
+/* hearts: every other one leaves from the left edge of the phone */
+.fw-hearts i.L { left: calc(-140px + var(--x)); }
+@media (max-width: 1100px) { .fw-side.l { transform: translate(calc(-50% - 150px), -50%) rotateY(28deg) scale(.78); } .fw-side.r { transform: translate(calc(-50% + 150px), -50%) rotateY(-28deg) scale(.78); } }
+@media (max-width: 640px) { .fw-side .fw-phone.pf { width: 180px !important; height: 370px !important; } .fw-side.l { transform: translate(calc(-50% - 104px), -50%) rotateY(30deg) scale(.7); } .fw-side.r { transform: translate(calc(-50% + 104px), -50%) rotateY(-30deg) scale(.7); } .fw-hearts i.L { left: calc(-110px + var(--x)); } }
+/* the old side-phone rules (nth-child rotate) caught the reel phone and tilted it: the phones inside the trio never take them */
+.fw-one > .fw-phone, .fw-side > .fw-phone { transform: none !important; animation: none; filter: none; margin: 0 !important; position: relative !important; left: auto !important; top: auto !important; }
+.fw-side { width: auto; height: auto; }

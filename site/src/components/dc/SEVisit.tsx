@@ -190,11 +190,9 @@ function render(v: Vals) {
               <i className="ct-ic wc" style={{ color: '#07C160', width: 17, height: 17 }} aria-hidden="true" />
               WeChat
             </button>
-            <button type="button" className="vs-btn line dk" onClick={() => window.dispatchEvent(new CustomEvent('se:chatwith'))}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z" /></svg>
-              Chat with us
-            </button>
           </div>
+          {/* owner (19 Nov): "Chat with us" next to WhatsApp and WeChat repeated them; the other ways sit behind one quiet link */}
+          <button type="button" className="vs-more" onClick={() => window.dispatchEvent(new CustomEvent('se:chatwith'))}>More ways to reach us: e-mail, website chat, Samsoom</button>
         </div>
       </div>
     </section>

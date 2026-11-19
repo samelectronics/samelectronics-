@@ -14,7 +14,7 @@ import NotesPanel from './NotesPanel';
 import SoundSettings from '@/components/site/SoundSettings';
 import { Repairs, WarrantyCheck, TradeTools } from './BenchTools';
 import Medal, { Rank } from './Medal';
-import { MEDALS, LESSONS, got, unlock, startLesson } from '@/lib/achievements';
+import { MEDALS, LESSONS, LEVELS as XLEVELS, got, unlock, startLesson, level } from '@/lib/achievements';
 
 const NAV: [string, string, string][] = [
   ['overview', 'Overview', 'M3 12l9-8 9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z'],
@@ -157,6 +157,14 @@ function Medals() {
           <div className={'bn-md-rank' + (master ? ' on' : '')}><Rank on={master} size={40} /><span><small>{T('FINAL PROMOTION')}</small><b>{T('Master Technician')}</b><em>{master ? T('Earned') : GROUPS.filter(([k]) => got(k) === doneIn(k).length).length + ' / ' + GROUPS.length + ' ' + T('tracks complete')}</em></span></div>
         </div>
       </div>
+      {/* owner (19 Nov): medals add points, points climb levels, every level brings a reward */}
+      {(() => { const L = level(g); return (
+        <div className="bn-lv">
+          <div className="bn-lv-h"><span><small>{T('YOUR LEVEL')}</small><b>{T(L.name)}</b></span><span className="xp"><b>{L.xp}</b> {T('points')}</span></div>
+          <span className="bn-lv-bar"><i style={{ width: L.pct + '%' }} /></span>
+          <small className="bn-lv-next">{L.next ? T('Next') + ': ' + T(L.next.n) + ' · ' + (L.next.at - L.xp) + ' ' + T('points to go') : T('Top level reached')}</small>
+          <ol className="bn-lv-list">{XLEVELS.map((l, k) => <li key={l.n} className={(k <= L.i ? 'on' : '') + (k === L.i ? ' cur' : '')}><i>{k + 1}</i><span><b>{T(l.n)}</b><small>{T(l.reward)}</small></span><em dir="ltr">{l.at}</em></li>)}</ol>
+        </div>); })()}
       <div className="bn-md-g">
         <h3>{T('Samsoom’s lessons')}</h3>
         <div className="bn-tr">

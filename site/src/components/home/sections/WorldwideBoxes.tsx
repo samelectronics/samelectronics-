@@ -155,24 +155,49 @@ export default function WorldwideBoxes() {
 }
 
 /** Reviewer's idea: click a country on the network map → a small card with its details and a pre-filled quote. */
+type Ctry = { name: string; region: string; x: number; y: number };
+const REGION: Record<string, string> = { me: 'Middle East', af: 'Africa', eu: 'Europe', as: 'Asia' };
+/** the map tells us which country was clicked; the detail section below the map opens for it */
 export function CountryCard() {
-  const [c, setC] = useState<{ name: string; region: string; x: number; y: number } | null>(null);
-  useEffect(() => { const on = (e: MessageEvent) => { if (e.data && e.data.type === 'se-country') setC(e.data); }; window.addEventListener('message', on); return () => window.removeEventListener('message', on); }, []);
-  if (!c) return null;
+  useEffect(() => { const on = (e: MessageEvent) => { if (e.data && e.data.type === 'se-country') window.dispatchEvent(new CustomEvent('se:country', { detail: e.data })); }; window.addEventListener('message', on); return () => window.removeEventListener('message', on); }, []);
+  return null;
+}
+
+/** owner (19 Nov): "you should be able to click any country, and it takes you to a detailed section dedicated to it" */
+export function CountryDetail() {
+  const [c, setC] = useState<Ctry | null>(null), ref = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const on = (e: Event) => { setC((e as CustomEvent).detail as Ctry); window.setTimeout(() => { const el = ref.current; if (!el) return; const y = el.getBoundingClientRect().top + window.scrollY - 90; const w = window as unknown as { seJumpTo?: (y: number, ms: number) => void }; if (w.seJumpTo) w.seJumpTo(y, 700); else window.scrollTo({ top: y, behavior: 'smooth' }); }, 60); };
+    window.addEventListener('se:country', on); return () => window.removeEventListener('se:country', on);
+  }, []);
+  if (!c) return <section ref={ref} className="cdt-anchor" aria-hidden="true" />;
   const T = (s: string) => (window.seI18n ? window.seI18n.t(s) : s);
-  let h = 0; for (const ch of c.name) h = (h * 31 + ch.charCodeAt(0)) % 997;
-  const wa = 'https://wa.me/' + (data()?.contact?.wa || '971503420015') + '?text=' + encodeURIComponent('Hi Sam Electronics, I would like a shipping quote to ' + c.name + '. Parts and quantity: …');
+  const N = T(c.name), eta = T(ETA[c.region] || 'Ask us'), msg = 'Hi Sam Electronics, I would like a shipping quote to ' + c.name + '. Parts and quantity: …';
+  const cats: [string, string, string][] = [['SCR', 'Screens', 'solo-scr'], ['BAT', 'Batteries', 'solo-bat'], ['FLX', 'Flex cables', 'solo-flx'], ['BCV', 'Back covers', 'solo-bcv']];
+  const steps: [string, string][] = [['Quote', 'Send your list: we price it and confirm shipping the same day.'], ['Payment', 'Confirm and pay; the invoice comes with your order.'], ['Packed in Deira', 'Screens boxed flat, batteries packed to air-freight rules.'], ['Tracked', 'A tracking number for every box, door to door.'], ['Delivered', 'Invoice and packing list inside for customs.']];
   return (
-    <div className="nwc" role="dialog" aria-label={c.name} style={{ left: Math.min(78, Math.max(4, c.x * 100 - 10)) + '%', top: Math.min(62, Math.max(4, c.y * 100 - 30)) + '%' }}>
-      <button type="button" className="x" aria-label={T('Close')} onClick={() => setC(null)}>×</button>
-      <b>{T(c.name)}</b>
-      <dl>
-        <dt>{T('Typical delivery')}</dt>
-        <dd>{T(ETA[c.region] || 'Ask us')}</dd>
-        <dt>{T('Last shipment')}</dt>
-        <dd><span data-no-i18n="">SE-{4000 + h}</span> · {(h % 6) + 1} {T('days ago')}</dd>
-      </dl>
-      <a href={wa} target="_blank" rel="noopener noreferrer">{T('Get a quote for')} {T(c.name)}</a>
-    </div>
+    <section ref={ref} className="cdt" aria-label={N} key={c.name}>
+      <button type="button" className="cdt-x" aria-label={T('Close')} onClick={() => setC(null)}>×</button>
+      <div className="cdt-head">
+        <span className="cdt-k">{T('SHIPPING TO')} · {T(REGION[c.region] || '')}</span>
+        <h3 className="cdt-h">{N}</h3>
+        <p className="cdt-p">{T('Parts leave our shelves in Deira, packed and invoiced for export, and arrive tracked at your door.')}</p>
+      </div>
+      <div className="cdt-stats">
+        <span><small>{T('Typical delivery')}</small><b>{eta}</b></span>
+        <span><small>{T('From')}</small><b>{T('Deira, Dubai')}</b></span>
+        <span><small>{T('Tracking')}</small><b>{T('Every box')}</b></span>
+        <span><small>{T('Paperwork')}</small><b>{T('Invoice + packing list')}</b></span>
+      </div>
+      <ol className="cdt-steps">{steps.map(([h, d], i) => <li key={h} style={{ ['--i' as string]: i } as React.CSSProperties}><i>{String(i + 1).padStart(2, '0')}</i><b>{T(h)}</b><span>{T(d)}</span></li>)}</ol>
+      <div className="cdt-cats">
+        <span className="cdt-k">{T('WHAT SHOPS ORDER MOST')}</span>
+        <div>{cats.map(([id, n, img]) => <a key={id} href={'/shop?cat=' + id}><img src={'/assets/pose/' + img + '-480.webp'} alt="" loading="lazy" decoding="async" /><b>{T(n)}</b></a>)}</div>
+      </div>
+      <div className="cdt-acts">
+        <button type="button" className="cdt-btn y" onClick={() => window.dispatchEvent(new CustomEvent('se:chatwith', { detail: { text: msg, subject: 'Shipping quote: ' + c.name } }))}>{T('Get a quote for')} {N}</button>
+        <a className="cdt-btn" href="/shop">{T('Browse the shop')}</a>
+      </div>
+    </section>
   );
 }

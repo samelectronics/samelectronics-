@@ -7,7 +7,7 @@
 //  · never interferes inside menus, lists, dialogs or anything that scrolls on its own, or while a section owns the scroll.
 import { useEffect } from 'react';
 
-type W = Window & { __seCalmUntil?: number; __seOwnScroll?: boolean };
+type W = Window & { __seCalmUntil?: number; __seOwnScroll?: boolean; __seRigHold?: boolean };
 
 function innerScroller(t: EventTarget | null) {
   let el = t as HTMLElement | null, n = 0;
@@ -29,6 +29,7 @@ export default function ScrollSafe() {
       if (!e.ctrlKey && (w.__seCalmUntil || 0) > now) { e.preventDefault(); return; } // leftover momentum after a jump: ignored
       if (e.ctrlKey || e.defaultPrevented || w.__seOwnScroll) return;
       if (innerScroller(e.target)) return;
+      if (w.__seRigHold && e.deltaY > 0) { e.preventDefault(); return; } // the rig's test is still catching up: hold here
       const dy = e.deltaMode === 1 ? e.deltaY * 32 : e.deltaMode === 2 ? e.deltaY * innerHeight : e.deltaY;
       if (now - winStart > 160) { winStart = now; winSum = 0; }
       winSum += Math.abs(dy);

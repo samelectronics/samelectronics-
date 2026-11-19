@@ -126,3 +126,4 @@ html[dir='rtl'] .vs-close { float: left; }
 /* owner (16 Nov): four contact buttons in a tidy 2 × 2 grid (WhatsApp, call, WeChat, website chat) */
 #visit .vs-acts { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 8px !important; }
 #visit .vs-acts > .vs-btn { justify-content: center; min-width: 0; white-space: nowrap; }
+.vs-more { display: block; margin-top: 12px; padding: 0; border: 0; background: none; color: #5D6166; font: 500 13px Inter, sans-serif; cursor: pointer; text-align: start; } .vs-more:hover { color: #26282B; }

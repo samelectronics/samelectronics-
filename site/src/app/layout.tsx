@@ -41,6 +41,7 @@ import '@/styles/staff-door.css';
 import '@/styles/studio.css';
 import '@/styles/system.css';
 import '@/styles/sequence.css';
+import '@/styles/ipad-ad.css';
 import '@/styles/phone.css';
 import '@/styles/dark-popups.css';
 

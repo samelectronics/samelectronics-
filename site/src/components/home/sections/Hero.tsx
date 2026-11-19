@@ -6,7 +6,7 @@ import React from 'react';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 import SEBrandLogo from '../../dc/SEBrandLogo';
 import HeroSearch from '../HeroSearch';
-import HeroIpadShop from '../HeroIpadShop';
+import HeroIpadAd from '../HeroIpadAd';
 import SEPart from '../../dc/SEPart';
 
 // R13 (owner: phone/tablet need safe spacing, nothing may touch): on phones the devices sit a fixed safe gap under the
@@ -576,7 +576,7 @@ export default function Hero({ v }: { v: Vals }) {
                 <span className="se-glass" style={{ zIndex: 5 }}></span>
                 <span className="se-glass-sweep" style={{ zIndex: 6, animationDelay: '0s', ['--d' as string]: '300px', ['--sw' as string]: v.sweepIp } as React.CSSProperties}></span>
                 {/* R12 (owner): the iPad shows our real shop, browsing slowly: pause, scroll, pause, back to the top */}
-                <HeroIpadShop />
+                <HeroIpadAd />
                 <div
                   style={{
                     position: 'absolute',
@@ -1477,6 +1477,15 @@ export default function Hero({ v }: { v: Vals }) {
                       boxShadow: 'inset 0 .6px 0 rgba(255,255,255,.16),inset 0 -.5px 0 rgba(255,255,255,.05),0 0 0 .5px rgba(0,0,0,.6)',
                     }}
                   ></span>
+                  {/* owner (19 Nov): the phone's own status bar: time, signal, Wi-Fi, battery; no band, the ink follows the ad */}
+                  <span className="hp-sb" aria-hidden="true" style={{ animation: v.sbInk }}>
+                    <b>{v.clock}</b>
+                    <span>
+                      <svg width="14" height="9" viewBox="0 0 15 9"><rect x="0" y="6" width="2.6" height="3" rx=".6" /><rect x="4" y="4" width="2.6" height="5" rx=".6" /><rect x="8" y="2" width="2.6" height="7" rx=".6" /><rect x="12" y="0" width="2.6" height="9" rx=".6" /></svg>
+                      <svg width="12" height="9" viewBox="0 0 13 9"><path d="M6.5 8.6 4.5 6.4a2.8 2.8 0 0 1 4 0zM2.6 4.6a5.5 5.5 0 0 1 7.8 0l-1.2 1.2a3.8 3.8 0 0 0-5.4 0zM.6 2.6a8.3 8.3 0 0 1 11.8 0l-1.2 1.2a6.6 6.6 0 0 0-9.4 0z" /></svg>
+                      <i><i /></i>
+                    </span>
+                  </span>
                   {'\n              '}
                   {/* 14 Oct §05 D: real glass (faint top-left reflection, bezel ring, vignette) replaces the strong top-right gloss */}
                   <span className="se-glass" style={{ zIndex: 31 }}></span>
@@ -1485,7 +1494,7 @@ export default function Hero({ v }: { v: Vals }) {
                     aria-hidden="true"
                     style={{
                       position: 'absolute', left: '50%', bottom: '7px', width: '35%', height: '4px', transform: 'translateX(-50%)', borderRadius: '3px', zIndex: 33,
-                      background: 'linear-gradient(180deg,rgba(225,228,232,.72),rgba(170,174,180,.6))', boxShadow: '0 0 0 .5px rgba(255,255,255,.35),0 1px 3px rgba(0,0,0,.25)',
+                      background: 'currentColor', opacity: 0.72, animation: v.sbInk,
                     }}
                   ></span>
                   {'\n            '}

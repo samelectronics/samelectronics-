@@ -4,10 +4,10 @@
 // can read on /notices. Nothing else about them is collected.
 import { customerId } from './ids';
 
-export type WarnKind = 'vpn' | 'screenshot';
+export type WarnKind = 'vpn' | 'screenshot' | 'slow' | 'crash';
 export type Warn = { kind: WarnKind; at: number; page: string; detail?: string };
 const KEY = 'se-warnings';
-export const WARN_TITLE: Record<WarnKind, string> = { vpn: 'Location mismatch (VPN)', screenshot: 'Screenshot · copyright notice' };
+export const WARN_TITLE: Record<WarnKind, string> = { vpn: 'Location mismatch (VPN)', screenshot: 'Screenshot · copyright notice', slow: 'Slow connection', crash: 'Page error' };
 
 export function warnings(): Warn[] { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch { return []; } }
 

@@ -60,3 +60,22 @@ export function unlock(id: string) {
 }
 export const visitMedal = (path: string) => { const p = PAGES.find(([x]) => path === x || path.startsWith(x + '/')); if (p) unlock('visit' + p[0].replace('/', '-')); };
 export const startLesson = (id: string) => { const l = LESSONS.find((x) => x.id === id); if (l) location.href = l.path + (l.path.includes('?') ? '&' : '?') + 'lesson=' + id; };
+
+// owner (19 Nov): "rewards for collecting them and levels of users, so we can tell how loyal each customer is to the
+// website": every medal is worth points (bronze 10 · silver 25 · gold 60); points climb six levels, each with a reward.
+// The rewards are what the shop already offers members; anything with a price is confirmed by the team.
+export const XP: Record<Tier, number> = { bronze: 10, silver: 25, gold: 60 };
+export const LEVELS: { n: string; at: number; reward: string }[] = [
+  { n: 'Visitor', at: 0, reward: 'Your bench and your medals' },
+  { n: 'Explorer', at: 40, reward: 'Saved searches and part alerts' },
+  { n: 'Regular', at: 120, reward: 'Early access to deals' },
+  { n: 'Insider', at: 260, reward: 'Priority stock alerts' },
+  { n: 'Loyal', at: 450, reward: 'A thank-you offer from the team' },
+  { n: 'Legend', at: 700, reward: 'An invitation to the Sam Circle card' },
+];
+export function level(g: Record<string, number> = got()) {
+  const xp = MEDALS.filter((m) => g[m.id]).reduce((t, m) => t + XP[m.tier], 0);
+  let i = 0; LEVELS.forEach((l, k) => { if (xp >= l.at) i = k; });
+  const cur = LEVELS[i], nx = LEVELS[i + 1] || null;
+  return { i, xp, name: cur.n, reward: cur.reward, next: nx, pct: nx ? Math.round(((xp - cur.at) / (nx.at - cur.at)) * 100) : 100 };
+}

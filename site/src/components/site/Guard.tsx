@@ -79,7 +79,7 @@ export default function Guard() {
   return (
     <>
       {vpn ? <SysNote tone="warn" snd="none" role="alert" sam={{ mood: 'stop' }} kicker={tr('SAMSOOM · HOLD ON')} title={tr('Hey! Is that a VPN?')} text={tr('Prices and delivery depend on where you really are. Please switch the VPN off.')} ms={20000} onClose={() => setVpn(false)}
-        acts={[{ label: tr('OK, I will switch it off'), primary: true }, { label: tr('I am travelling, carry on'), on: () => { try { sessionStorage.setItem('se-vpn-ok', '1'); } catch { /* */ } } }, { label: tr('Why am I seeing this?'), href: '/notices#vpn' }]} /> : null}
+        acts={[{ label: tr('OK, I will switch it off'), primary: true }, { label: tr('I am travelling, carry on'), on: () => { try { sessionStorage.setItem('se-vpn-ok', '1'); } catch { /* */ } } }, { label: tr('Why am I seeing this?'), href: '/notices#vpn', link: true }]} /> : null}
       {shot ? <SysNote tone="stop" role="alert" sam={{ mood: 'nono' }} kicker={tr('COPYRIGHT NOTICE')} title={tr('This content is protected.')} text={tr('Keeping it for yourself is fine; sharing or publishing it needs our permission.')} ms={15000} onClose={() => setShot(false)}
         acts={[{ label: tr('I understand'), primary: true }, { label: tr('Allow screenshots'), on: () => setTerms(true) }, { label: tr('Read the full notice'), href: '/notices#copyright' }]} /> : null}
       {terms ? (

@@ -14,6 +14,7 @@ export function markJump(ms) { window.__seJumpUntil = Math.max(window.__seJumpUn
 
 /** Scroll to y quickly (~600ms, instant with reduced motion); nothing on the way may stop it. */
 export function jumpTo(y, ms = 600) {
+  if (typeof window !== 'undefined' && window.__seReleaseHold) window.__seReleaseHold();
   cancelAnimationFrame(raf);
   const max = Math.max(0, document.documentElement.scrollHeight - window.innerHeight), y1 = Math.max(0, Math.min(max, y)), y0 = window.scrollY;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;

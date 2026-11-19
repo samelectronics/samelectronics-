@@ -30,12 +30,12 @@ class Component extends DCLogic {
     window.addEventListener('resize', this.onResize); this.onResize();
     window.seBench = (p) => { this.ov = p; this.p = p; this.frame(true); };
   }
-  componentWillUnmount() { this.nearIO && this.nearIO.disconnect(); this.runIO && this.runIO.disconnect(); this.alive = false; cancelAnimationFrame(this.raf); window.removeEventListener('resize', this.onResize); }
+  componentWillUnmount() { window.__seRigHold = false; this.nearIO && this.nearIO.disconnect(); this.runIO && this.runIO.disconnect(); this.alive = false; cancelAnimationFrame(this.raf); window.removeEventListener('resize', this.onResize); }
   q(k) { const R = this.secRef.current; if (!R) return null; this._q = this._q || {}; const c = this._q[k]; if (c && c.isConnected) return c; return (this._q[k] = R.querySelector('[data-b="' + k + '"]')); }
   set(k, s) { const e = this.q(k); if (e) for (const n in s) { const v = s[n]; if (e.style[n] !== v) e.style[n] = v; } return e; }
   frame(force) {
     const R = this.secRef.current; if (!R) return; const r = R.getBoundingClientRect(), vh = window.innerHeight;
-    if (!force && (r.bottom < -50 || r.top > vh + 50)) return; // off-screen: nothing to do (G16)
+    if (!force && (r.bottom < -50 || r.top > vh + 50)) { window.__seRigHold = false; return; } // off-screen: nothing to do (G16)
     const now = performance.now();
     // Urgent 4: scroll drives the tests again. The section holds (sticky) for 160vh; p runs over the first 85% of that
     // hold and the passed state stays for the rest. The phone is already clamped on arrival (p starts at 0.1), so the
@@ -46,7 +46,12 @@ class Component extends DCLogic {
     // jerky wheel never makes it jump. 'Run the test yourself' still plays one pass on its own clock.
     let el = this.runAt == null ? -1 : (now - this.runAt) / 1000; if (el > 5) { this.runAt = null; el = -1; }
     const target = 0.1 + 0.9 * sp, dt = Math.min(0.05, (now - (this.lastT || now)) / 1000); this.lastT = now;
-    if (this.sp == null || Math.abs(target - this.sp) > 0.6) this.sp = target; else this.sp += (target - this.sp) * (1 - Math.exp(-dt * 7));
+    // owner (19 Nov): "a scroll can make it all run instantly; make it stop more": the show never moves faster than a
+    // real test (≈ one full pass in 5s) whatever the wheel does, and while it is behind, the page holds on the rig
+    // (ScrollSafe reads __seRigHold and ignores further downward scrolling until the show has caught up).
+    if (this.sp == null || (target - this.sp > 0.6 && r.top > 0) || (this.sp - target > 0.6)) this.sp = target;
+    else { const want = (target - this.sp) * (1 - Math.exp(-dt * 4)), cap = 0.2 * dt; this.sp += Math.max(-cap * 3, Math.min(cap, want)); }
+    { const pinned = r.top <= 1 && r.bottom > vh + 2; window.__seRigHold = pinned && target - this.sp > 0.12; }
     this.p = this.ov != null ? this.ov : el >= 0 ? (el < 0.6 ? 0.1 * (el / 0.6) : el < 3.2 ? 0.1 + 0.75 * ((el - 0.6) / 2.6) : Math.min(1, 0.85 + 0.15 * ((el - 3.2) / 0.8))) : this.sp;
     const p = this.p, t = now / 1000;
     // Today on the rig: rolls up on arrival, then every pass adds one test, one pass and one sticker (the unit on the rig)

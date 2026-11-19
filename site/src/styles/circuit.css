@@ -469,3 +469,37 @@ html[dir='rtl'] .mc .k-circuit .cx-logo { inset: auto auto 18px 22px !important;
 html[dir='rtl'] .mc .k-circuit .cx-logo { left: 22.4% !important; inset: auto !important; }
 .mc .k-circuit .cx-logo { left: auto !important; top: auto !important; right: 20px !important; bottom: 16px !important; transform: none !important; width: 46px !important; height: 46px !important; padding: 3px !important; filter: grayscale(1) brightness(.62) contrast(1.3) !important; box-shadow: inset 0 3px 5px rgba(0,0,0,.95), inset 0 -1px 2px rgba(255,255,255,.12), 0 -1px 1px rgba(0,0,0,.75), 0 1.5px 0 rgba(255,255,255,.2), 0 0 12px 2px rgba(0,0,0,.35) !important; }
 html[dir='rtl'] .mc .k-circuit .cx-logo { right: auto !important; left: 20px !important; }
+
+/* ── owner (19 Nov): premium metal cards (like a premium bank card): brushed steel tinted per card, guilloche engraving,
+   the Sam Electronics mark pressed deep into the metal, embossed lettering; no charging dock / yellow floor glow ── */
+.cx-dock, .cx-floor { display: none !important; }
+.cx-card { border-radius: 18px !important; }
+.cx-card.k-circuit { background: linear-gradient(118deg, #D9A22A 0%, #F7C032 18%, #FFE7A3 34%, #EDB531 52%, #C8921F 74%, #F3C243 100%) !important; color: #3A2A06 !important; }
+.cx-card.k-grid { background: linear-gradient(118deg, #3A3D42 0%, #5C6066 22%, #7A7F86 36%, #43464B 55%, #2B2D31 78%, #4E5257 100%) !important; color: #EEF0F2 !important; }
+.cx-card.k-circle { background: linear-gradient(118deg, #C9CDD2 0%, #F3F4F6 20%, #FFFFFF 33%, #D7DADE 55%, #AEB3B9 78%, #E6E8EB 100%) !important; color: #26282B !important; }
+.cx-card.k-circle::after { inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgba(255,255,255,.7), inset 0 -1px 0 rgba(0,0,0,.12) !important; }
+/* brushed metal: fine horizontal grain + a soft tint band */
+.cx-metal { position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(255,255,255,.07) 0 1px, rgba(0,0,0,.035) 1px 2px, rgba(255,255,255,0) 2px 3px); mix-blend-mode: overlay; }
+.k-grid .cx-metal { opacity: .8; }
+/* guilloche: hair-thin engraved lines */
+.cx-guil { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; fill: none; stroke-width: .45; }
+.k-circuit .cx-guil { stroke: rgba(120,80,0,.28); } .k-circuit .cx-guil .w { stroke: rgba(255,255,255,.35); }
+.k-grid .cx-guil { stroke: rgba(255,255,255,.13); } .k-grid .cx-guil .w { stroke: rgba(247,192,50,.18); }
+.k-circle .cx-guil { stroke: rgba(60,66,74,.16); } .k-circle .cx-guil .w { stroke: rgba(255,255,255,.75); }
+/* the mark pressed into the metal: a dark lower-right edge, a bright upper-left edge, then the face in the card's tint */
+.cx-press { position: absolute; right: 7%; top: 14%; width: 40%; aspect-ratio: 359 / 315; pointer-events: none; }
+.cx-press i { position: absolute; inset: 0; -webkit-mask: url(/assets/se-emboss.png) center / contain no-repeat; mask: url(/assets/se-emboss.png) center / contain no-repeat; }
+.cx-press .lo { transform: translate(-1.2px, -1.2px); background: rgba(0,0,0,.42); }
+.cx-press .hi { transform: translate(1.1px, 1.1px); background: rgba(255,255,255,.75); }
+.cx-press .face { background: inherit; }
+.k-circuit .cx-press .face { background: linear-gradient(118deg, #E0A92A, #F4BD36 45%, #D69D22); }
+.k-grid .cx-press .face { background: linear-gradient(118deg, #474A4F, #5B5F65 45%, #3A3D41); }
+.k-circle .cx-press .face { background: linear-gradient(118deg, #D9DCE0, #EEF0F2 45%, #C9CDD2); }
+.k-grid .cx-press .hi { background: rgba(255,255,255,.28); } .k-grid .cx-press .lo { background: rgba(0,0,0,.6); }
+/* the light that follows the pointer across the metal */
+.cx-sheen { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(70% 90% at var(--lx) var(--ly), rgba(255,255,255,.38), rgba(255,255,255,0) 55%), linear-gradient(105deg, rgba(255,255,255,0) 40%, rgba(255,255,255,.18) 50%, rgba(255,255,255,0) 60%); mix-blend-mode: soft-light; }
+/* embossed lettering */
+#circuit .cx-card .nm, #circuit .cx-card .no, #circuit .cx-card .top b { text-shadow: -1px -1px 0 rgba(255,255,255,.55), 1px 1px 1px rgba(0,0,0,.35); }
+#circuit .k-grid .nm, #circuit .k-grid .no, #circuit .k-grid .top b { text-shadow: -1px -1px 0 rgba(255,255,255,.18), 1px 1px 1px rgba(0,0,0,.7); }
+#circuit .cx-card .chip { background: linear-gradient(135deg, #F6E3A8, #D4AE52 45%, #F2D88E 70%, #B98E2E) !important; box-shadow: inset 0 0 0 1px rgba(90,60,0,.35), 0 1px 1px rgba(0,0,0,.25) !important; }
+#circuit .cx-card { box-shadow: 0 34px 50px -26px rgba(0,0,0,.65), 0 12px 20px -14px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.45) !important; }

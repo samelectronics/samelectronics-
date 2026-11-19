@@ -122,3 +122,28 @@ html[dir='rtl'] .nwr canvas { left: auto; right: 12px; } html[dir='rtl'] .nwr .r
 .nwr .rg-l { position: static !important; transform: none !important; }
 .nwt-num { white-space: nowrap; } .nwt .nwt-globe { width: 112px !important; height: 112px !important; }
 .nwt-num { white-space: normal !important; } .nwt-num b { display: block; margin: 2px 0 0 !important; white-space: nowrap; } /* R10 L8: the tracking number on its own line, never cut on laptops */
+
+/* owner (19 Nov): a country's own section, opened by clicking it on the map */
+.cdt-anchor { display: block; height: 0; }
+.cdt { position: relative; margin-top: 28px; padding: 30px 32px 28px; border-radius: 26px; background: #FFFFFF; color: #26282B; box-shadow: 0 1px 0 rgba(38,40,43,.06), 0 30px 60px -36px rgba(38,40,43,.45); animation: cdtIn .6s cubic-bezier(.2,1,.3,1) both; }
+@keyframes cdtIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+.cdt-x { position: absolute; top: 16px; right: 16px; width: 36px; height: 36px; border: 0; border-radius: 50%; background: #F2F3F4; color: #26282B; font-size: 20px; cursor: pointer; }
+html[dir="rtl"] .cdt-x { right: auto; left: 16px; }
+.cdt-k { font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .16em; color: #8A8E94; }
+.cdt-h { margin: 8px 0 6px; font: 700 clamp(30px, 3.6vw, 48px)/1.05 'Space Grotesk', sans-serif; letter-spacing: -.02em; }
+.cdt-p { margin: 0; max-width: 620px; font: 400 16px/1.55 Inter, sans-serif; color: #5D6166; }
+.cdt-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 22px; }
+.cdt-stats span { padding: 14px 16px; border-radius: 16px; background: #F6F6F7; } .cdt-stats small { display: block; font: 600 10px 'JetBrains Mono', monospace; letter-spacing: .14em; text-transform: uppercase; color: #8A8E94; } .cdt-stats b { display: block; margin-top: 6px; font: 700 18px 'Space Grotesk', sans-serif; }
+.cdt-stats span:first-child { background: #26282B; color: #fff; } .cdt-stats span:first-child b { color: #F7C032; }
+.cdt-steps { list-style: none; margin: 22px 0 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; counter-reset: s; }
+.cdt-steps li { position: relative; padding: 14px 14px 16px; border-radius: 16px; box-shadow: inset 0 0 0 1px rgba(38,40,43,.1); animation: cdtIn .5s cubic-bezier(.2,1,.3,1) calc(.15s + var(--i) * .07s) both; }
+.cdt-steps i { font: 600 11px 'JetBrains Mono', monospace; font-style: normal; color: #F7C032; background: #26282B; padding: 3px 7px; border-radius: 6px; } .cdt-steps b { display: block; margin-top: 10px; font: 700 16px 'Space Grotesk', sans-serif; } .cdt-steps span { display: block; margin-top: 4px; font: 400 13px/1.45 Inter, sans-serif; color: #5D6166; }
+.cdt-cats { margin-top: 22px; } .cdt-cats > div { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 10px; }
+.cdt-cats a { display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 8px; border-radius: 14px; background: #F6F6F7; color: #26282B; text-decoration: none; transition: transform .2s, box-shadow .2s; } .cdt-cats a:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 2px #F7C032; }
+.cdt-cats img { width: 52px; height: 52px; object-fit: contain; border-radius: 10px; background: #fff; } .cdt-cats b { font: 600 14px Inter, sans-serif; }
+.cdt-acts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.cdt-btn { display: inline-flex; align-items: center; height: 48px; padding: 0 20px; border: 0; border-radius: 12px; background: #F2F3F4; color: #26282B; font: 600 15px Inter, sans-serif; text-decoration: none; cursor: pointer; } .cdt-btn.y { background: #F7C032; }
+@media (max-width: 1000px) { .cdt-stats { grid-template-columns: repeat(2, 1fr); } .cdt-steps { grid-template-columns: 1fr 1fr; } .cdt-cats > div { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 560px) { .cdt { padding: 24px 18px 20px; } .cdt-steps { grid-template-columns: 1fr; } }
+.cdt .cdt-acts, .cdt > div { background: transparent !important; box-shadow: none !important; border-radius: 0 !important; padding-left: 0 !important; padding-right: 0 !important; }
+.cdt .cdt-stats > span:first-child { background: #26282B !important; }

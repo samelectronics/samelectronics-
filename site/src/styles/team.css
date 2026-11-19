@@ -108,3 +108,10 @@
 .tm-ticket .paper .ln { display: flex; justify-content: space-between; gap: 6px; font: 600 8.5px 'JetBrains Mono', monospace; font-style: normal; color: #26282B; }
 .tm-ticket .paper .ln span { font: inherit !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .tm-ticket .paper .bar { height: 12px; margin-top: 3px; background: repeating-linear-gradient(90deg, #26282B 0 1px, transparent 1px 3px, #26282B 3px 5px, transparent 5px 6px); opacity: .85; }
+/* owner (19 Nov): "make it slightly longer and the lanyards longer, so the riders pass smoothly without looking
+   crowded": on computers the lanyards are ~70% longer and the stage taller, leaving a clear lane under the rail */
+@media (min-width: 1101px) {
+  .tm-stage { height: 700px; }
+  .tm-lan { height: 196px; }
+  .tm-lan span { top: 40px; }
+}

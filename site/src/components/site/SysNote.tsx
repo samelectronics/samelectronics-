@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import LiveSam from '@/components/samsoom/LiveSam';
 
 export type Tone = 'info' | 'ok' | 'warn' | 'stop';
-type Act = { label: string; href?: string; on?: () => void; primary?: boolean };
+type Act = { label: string; href?: string; on?: () => void; primary?: boolean; link?: boolean };
 export type SysNoteProps = { tone: Tone; kicker: string; title: string; text?: string; acts?: Act[]; onClose: () => void; ms?: number; icon?: 'wifi' | 'wifi-off' | 'wifi-slow'; sam?: { mood: string; badge?: string }; role?: 'status' | 'alert'; snd?: 'warn' | 'oops' | 'success' | 'notify' | 'none' };
 
 const WIFI = (k: 'wifi' | 'wifi-off' | 'wifi-slow') => (
@@ -36,10 +36,11 @@ export default function SysNote({ tone, kicker, title, text, acts = [], onClose,
     <div className={'sn2 sn2-' + tone + (out ? ' out' : '')} role={role} aria-live={role === 'alert' ? 'assertive' : 'polite'} aria-label={kicker}>
       <span className="sn2-sam" aria-hidden="true"><LiveSam size={92} pose={pose} />{icon ? <i className={'sn2-badge ' + icon}>{WIFI(icon)}</i> : null}</span>
       <b className="sn2-h">{title}</b>
-      {text ? <p className="sn2-p">{text}</p> : null}
-      {acts.length ? (
+      {/* owner (19 Nov): a "read more" act is an inline text link after the line, like "Cookies" in the cookie note */}
+      {text ? <p className="sn2-p">{text}{acts.filter((a) => a.link).map((a) => <React.Fragment key={a.label}> <a className="sn2-ln" href={a.href} onClick={() => a.on?.()}>{a.label}</a></React.Fragment>)}</p> : null}
+      {acts.some((a) => !a.link) ? (
         <span className="sn2-acts">
-          {acts.map((a) => (a.href ? <a key={a.label} className={'sn2-b' + (a.primary ? ' y' : '')} href={a.href} onClick={() => a.on?.()}>{a.label}</a> : <button key={a.label} type="button" className={'sn2-b' + (a.primary ? ' y' : '')} onClick={() => { a.on?.(); close(); }}>{a.label}</button>))}
+          {acts.filter((a) => !a.link).map((a) => (a.href ? <a key={a.label} className={'sn2-b' + (a.primary ? ' y' : '')} href={a.href} onClick={() => a.on?.()}>{a.label}</a> : <button key={a.label} type="button" className={'sn2-b' + (a.primary ? ' y' : '')} onClick={() => { a.on?.(); close(); }}>{a.label}</button>))}
         </span>
       ) : null}
       <button type="button" className="sn2-x" aria-label="Close" onClick={close}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
