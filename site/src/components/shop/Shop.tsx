@@ -22,7 +22,7 @@ import CompareView from './CompareView';
 import LogoMark from '@/components/site/LogoMark';
 import { GradeTag, MakerTag } from './Tags';
 import { CompareIcon } from './Icons';
-import DevicePicker from './DevicePicker';
+import DevicePicker, { DevIcon, kindOf } from './DevicePicker';
 
 const LIST_KEYS = ['brands', 'models', 'cats', 'parts', 'grades', 'makers', 'qualities', 'warranty', 'device', 'colours'] as const;
 const URLK: Record<(typeof LIST_KEYS)[number], string> = { brands: 'brand', models: 'model', cats: 'cat', parts: 'part', grades: 'grade', makers: 'maker', qualities: 'quality', warranty: 'warranty', device: 'device', colours: 'colour' };
@@ -177,9 +177,9 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
             <span className="sd-lab"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="6" y="2" width="12" height="20" rx="3" /><path d="M11 18h2" /></svg>{T('My devices')}</span>
             {/* owner (18 Nov): one switch shows only the parts that fit the phones you saved */}
             {st.devices.length ? (() => { const ids = st.devices.map((d) => d.model_id), on = ids.every((m) => f.models.includes(m)) && f.models.length === ids.length; return (
-              <button type="button" role="switch" aria-checked={on} className={'fit-sw' + (on ? ' on' : '')} onClick={() => set({ models: on ? [] : ids })}><i aria-hidden="true" />{T(st.devices.length > 1 ? 'Only parts that fit my phones' : 'Only parts that fit my phone')}</button>
+              <button type="button" role="switch" aria-checked={on} className={'fit-sw' + (on ? ' on' : '')} onClick={() => set({ models: on ? [] : ids })}><i aria-hidden="true" />{T(st.devices.length > 1 ? 'Only parts that fit my devices' : 'Only parts that fit my device')}</button>
             ); })() : null}
-            {st.devices.map((d) => <button key={d.model_id} type="button" className={'sp-chip' + (f.models.includes(d.model_id) ? ' y' : '')} onClick={() => tog('models', d.model_id)}>{d.nick || d.name}<span className="x" onClick={(e) => { e.stopPropagation(); store.device(d); }}>×</span></button>)}
+            {st.devices.map((d) => { const k = kindOf(d.model_id), br = D.brands.find((b) => b.id === D.models.find((m) => m.id === d.model_id)?.brand_id)?.name; return <button key={d.model_id} type="button" className={'sd-dev' + (f.models.includes(d.model_id) ? ' y' : '')} aria-pressed={f.models.includes(d.model_id)} title={d.nick || d.name} onClick={() => tog('models', d.model_id)}><DevIcon kind={k} size={28} /><span className="sd-n"><b>{d.nick || d.name}</b><small>{br}{br ? ' · ' : ''}{T(k === 'watch' ? 'Watch' : k === 'tablet' ? 'Tablet' : 'Phone')}</small></span><span className="x" role="button" aria-label={T('Remove')} onClick={(e) => { e.stopPropagation(); store.device(d); }}>×</span></button>; })}
             <DevicePicker have={st.devices.map((d) => d.model_id)} onPick={(m) => store.device({ model_id: m.id, name: m.name })} />
           </div>
         </div>
