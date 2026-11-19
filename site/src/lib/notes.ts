@@ -5,7 +5,7 @@ const KEY = 'se-notes';
 const read = (): Note[] => { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch { return []; } };
 const write = (l: Note[]) => { try { localStorage.setItem(KEY, JSON.stringify(l.slice(0, 40))); } catch {} window.dispatchEvent(new CustomEvent('se:notes')); };
 export const notes = (): Note[] => (typeof window === 'undefined' ? [] : read());
-export function notify(n: Omit<Note, 'id' | 'at'> & { id?: string }) { const l = read(); if (n.id && l.some((x) => x.id === n.id)) return; write([{ ...n, id: n.id || 'n' + Date.now().toString(36), at: Date.now() }, ...l]); if (n.id !== 'welcome') import('./sound').then((m) => m.play('notify')).catch(() => {}); }
+export function notify(n: Omit<Note, 'id' | 'at'> & { id?: string }) { const l = read(); if (n.id && l.some((x) => x.id === n.id)) return; write([{ ...n, id: n.id || 'n' + Date.now().toString(36), at: Date.now() }, ...l]); if (n.id !== 'welcome') import('./sound').then((m) => m.play('msg')).catch(() => {}); }
 
 /** R11: the browser tab's icon shows a blinking yellow dot while there are unread notifications (seen from other tabs too). */
 let fvBase: string | null = null, fvIv = 0, fvImg: HTMLImageElement | null = null;

@@ -53,9 +53,10 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
     const flash = (l: number, col = '#fff') => { if (l < 0.08) { x.globalAlpha = (1 - l / 0.08) * 0.75; x.fillStyle = col; x.fillRect(0, 0, W, H); x.globalAlpha = 1; } };
     const narrow = () => W < 640;
     // owner (18 Nov): the grade labels are the site's techy tags (chamfered, own gradient), not 1990s boxes
-    const tag = (lab: string, cx: number, cy: number, c1: string, c2: string, ink: string, a: number, s: number) => { x.save(); x.globalAlpha = Math.max(0, Math.min(1, a)); x.font = '700 ' + Math.round(1.5 * s) + "px 'JetBrains Mono', monospace"; const tw = x.measureText(lab).width, w = tw + 3.6 * s, h = 3 * s, c = 0.8 * s, x0 = cx - w / 2, y0 = cy - h / 2;
-      const g = x.createLinearGradient(x0, y0, x0 + w, y0 + h); g.addColorStop(0, c1); g.addColorStop(1, c2); x.fillStyle = g; x.beginPath(); x.moveTo(x0 + c, y0); x.lineTo(x0 + w, y0); x.lineTo(x0 + w, y0 + h - c); x.lineTo(x0 + w - c, y0 + h); x.lineTo(x0, y0 + h); x.lineTo(x0, y0 + c); x.closePath(); x.fill();
-      x.fillStyle = ink; x.fillRect(x0 + 1.1 * s, cy - 0.6 * s, 0.32 * s, 1.2 * s); x.textAlign = 'left'; x.textBaseline = 'middle'; x.fillText(lab, x0 + 2 * s, cy + 0.08 * s); x.restore(); };
+    // owner (18 Nov night): clean labels, the same as the shop's tags: a soft-tinted rounded label (c1 = border, c2 = fill)
+    const tag = (lab: string, cx: number, cy: number, c1: string, c2: string, ink: string, a: number, s: number) => { x.save(); x.globalAlpha = Math.max(0, Math.min(1, a)); x.font = '600 ' + Math.round(1.6 * s) + 'px Inter, system-ui, sans-serif'; const tw = x.measureText(lab).width, w = tw + 2.4 * s, h = 3 * s, r = 0.7 * s, x0 = cx - w / 2, y0 = cy - h / 2;
+      x.beginPath(); x.roundRect(x0, y0, w, h, r); x.fillStyle = c2; x.fill(); x.lineWidth = Math.max(1, 0.12 * s); x.strokeStyle = c1; x.stroke();
+      x.fillStyle = ink; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(lab, cx, cy + 0.08 * s); x.restore(); };
 
     const scenes: ((l: number, k: number) => void)[] = [
       // 0 · open: the logo lands in a ring of light, the line tracks in
@@ -76,7 +77,7 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
         const n = Math.round(25 + 0 * l); text(T('from'), tx, H * 0.5, '500 ' + Math.round(1.8 * s) + 'px Inter, sans-serif', '#9DA1A6', 'left', eo((l - 0.45) * 3));
         text('AED ' + Math.round(n * eo((l - 0.45) * 2.2)), tx, H * 0.5 + 6 * s, font(800, Math.round(6 * s)), Y, 'left', eo((l - 0.45) * 3)); },
       // 2 · four grades drop in one after another, each with its own pill
-      (l) => { fill('#F7F5F0', '#E9E6DF'); const s = u(); const G4: [string, string, string, string, string][] = [['sp', 'ORIGINAL', '#F7C032', '#FFE38E', '#26282B'], ['gx', 'OLED SOFT', '#17A897', '#48CDBB', '#fff'], ['zy', 'INCELL', '#4F5B6B', '#7B8798', '#fff'], ['tmp', 'AAA', '#2563D9', '#5B93F0', '#fff']];
+      (l) => { fill('#F7F5F0', '#E9E6DF'); const s = u(); const G4: [string, string, string, string, string][] = [['sp', 'Original', '#F5D98C', '#FFF4D1', '#8A5A00'], ['gx', 'OLED Soft', '#B9E4F0', '#E5F6FB', '#0E6E87'], ['zy', 'Incell', '#D9CFF6', '#F1EDFC', '#5B3FB0'], ['tmp', 'AAA', '#C6DAFC', '#EAF2FF', '#1849A9']];
         text(T('One screen. Every grade.'), W / 2, H * 0.17, font(800, Math.round(4.6 * s)), G, 'center', eo(l * 3));
         const n = narrow() ? 2 : 4; G4.slice(0, n).forEach(([k, lab, c1, c2, ink], i) => { const st = 0.12 + i * 0.13, a = back((l - st) * 3), cx = W * ((i + 0.5) / n), cy = H * 0.44 - (1 - a) * H * 0.5;
           if (a <= 0) return; pic(k, cx, cy, H * 0.44, 0, Math.min(1, a)); tag(lab, cx, H * 0.71, c1, c2, ink, a, s); });
@@ -103,7 +104,7 @@ export default function ShopReel({ onCat, onDeals, onShop }: { onCat: (c: string
         x.globalAlpha = 0.08; x.font = font(900, Math.round(H * 0.5)); x.fillStyle = '#fff'; x.textAlign = 'center'; x.fillText(T('WORLDWIDE'), W / 2 + (0.5 - l) * W * 0.3, H * 0.74); x.globalAlpha = 1;
         const k = back(l * 2.2); pic('pal', (narrow() ? W * 0.7 : W * 0.7) + (1 - k) * W * 0.5, narrow() ? H * 0.66 : H * 0.58, H * (narrow() ? 0.36 : 0.6), (1 - k) * 0.3); x.restore(); flash(l);
         const tx = narrow() ? W * 0.06 : W * 0.08; text(T('Worldwide.'), tx, H * 0.34, font(800, Math.round(6.6 * s)), '#fff', 'left', eo((l - 0.08) * 3)); text(T('Every week.'), tx, H * 0.34 + 7 * s, font(800, Math.round(6.6 * s)), '#2DD4BF', 'left', eo((l - 0.18) * 3));
-        ['MIDDLE EAST', 'AFRICA', 'EUROPE', 'ASIA'].forEach((r, n) => { const a = back((l - 0.4 - n * 0.08) * 4); if (a <= 0) return; tag(T(r), tx + (n % 2) * 16 * s + 7 * s, H * 0.62 + Math.floor(n / 2) * 4.2 * s, '#2E3034', '#55595F', '#F7C032', a, s); }); },
+        ['MIDDLE EAST', 'AFRICA', 'EUROPE', 'ASIA'].forEach((r, n) => { const a = back((l - 0.4 - n * 0.08) * 4); if (a <= 0) return; tag(T(r), tx + (n % 2) * 16 * s + 7 * s, H * 0.62 + Math.floor(n / 2) * 4.2 * s, '#3A3D42', '#26282B', '#F7C032', a, s); }); },
     ];
     const draw = (tt: number) => { const t = ((tt % TOTAL) + TOTAL) % TOTAL; let i = 0; while (i < DUR.length - 1 && t >= START[i] + DUR[i]) i++; const l = (t - START[i]) / DUR[i];
       x.setTransform(dpr, 0, 0, dpr, 0, 0); x.clearRect(0, 0, W, H);

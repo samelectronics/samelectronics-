@@ -5,7 +5,7 @@ import { isEmbed } from '@/lib/embed';
 // silent in the Control Room and when the visitor asked the system for reduced motion.
 import { prefs } from './prefs';
 
-export type Snd = 'warn' | 'oops' | 'tada' | 'click' | 'add' | 'next' | 'back' | 'skip' | 'toggle' | 'open' | 'close' | 'error' | 'success' | 'send' | 'notify' | 'bell' | 'tab' | 'link' | 'menu' | 'cart';
+export type Snd = 'msg' | 'warn' | 'oops' | 'tada' | 'click' | 'add' | 'next' | 'back' | 'skip' | 'toggle' | 'open' | 'close' | 'error' | 'success' | 'send' | 'notify' | 'bell' | 'tab' | 'link' | 'menu' | 'cart';
 // owner (16 Nov): every sound is one family. One instrument for all of them: a soft wooden mallet (a warm sine with a
 // quick bright overtone and a tiny felt attack), like a small marimba. Each action is a short phrase on it; the click is
 // one clear note (loud enough to feel), the others are 2–3 notes. Same body, same decay, similar loudness.
@@ -36,6 +36,8 @@ const SHAPES: Record<Snd, Note[]> = {
   // owner (18 Nov): "a warning sound for copyright or any serious alert, like the clicks but longer and warning-like;
   // for wifi issues or errors a softer error sound": warn is a two-tone alarm on the same mallet (high-low, twice, the
   // last one held); oops is a soft falling pair
+  // owner (18 Nov night): any message received: ONE soft tone that rings on and fades slowly (with a faint overtone)
+  msg: [[880, 0, 1.8, 0.62], [1760, 0, 0.9, 0.1]],
   warn: [[784, 0, 0.26, 0.9], [587, 0.17, 0.26, 0.9], [784, 0.34, 0.26, 0.9], [587, 0.51, 0.6, 0.9], [392, 0.51, 0.6, 0.45]],
   oops: [[587, 0, 0.24, 0.55], [494, 0.13, 0.26, 0.5], [392, 0.27, 0.5, 0.5]],
   tada: [[523, 0, 0.12, 0.6], [659, 0.08, 0.12, 0.65], [784, 0.16, 0.12, 0.7], [1047, 0.26, 1.1, 0.85], [1319, 0.26, 1.1, 0.6], [1568, 0.26, 1.15, 0.55], [2093, 0.3, 0.9, 0.32], [1047, 0.62, 0.9, 0.45], [1568, 0.66, 1.0, 0.4], [2637, 0.72, 0.6, 0.2], [3136, 0.8, 0.5, 0.15], [2093, 0.9, 0.7, 0.2]],

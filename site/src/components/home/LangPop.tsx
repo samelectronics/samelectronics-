@@ -4,6 +4,7 @@
 // letter flashes yellow with "Mission accomplished!" for 1.2s, and it closes. No Samsoom. The choice is remembered
 // by setLang (localStorage).
 import React, { useEffect, useRef, useState } from 'react';
+import LiveSam from '@/components/samsoom/LiveSam';
 // Hero 3 (owner): the battery charges with a percentage counting up, the end is a drawn tick, the card fits its text
 // (nothing centred awkwardly) and has real color and detail: graphite case, segmented green charge, yellow accents.
 
@@ -68,30 +69,19 @@ export default function LangPop() {
 
   if (phase === 'off') return null;
   const T = TXT[to] || TXT.en, done = phase === 'done' || phase === 'out';
+  // owner (18 Nov night): the language switch is a Samsoom card like the other notices: Samsoom (tired, low battery)
+  // charges up with the battery on his badge, then jumps and celebrates "Mission accomplished!"
   return (
-    <div className={'lp' + (phase === 'out' ? ' lp-out' : '')} data-no-i18n="" role="dialog" aria-modal="true" aria-live="polite" aria-label={done ? T.done : T.load}>
-      <div className={'lp-card lp2' + (done ? ' lp-done' : '')} dir={to === 'ar' || to === 'fa' || to === 'ur' ? 'rtl' : 'ltr'} lang={to}>
-        <span className="lp2-ic" aria-hidden="true">
-          <span className="lp2-bat" dir="ltr">
-            <span className="lp2-cell">
-              <i className="lp2-fill" style={{ ['--p' as string]: pct / 100 } as React.CSSProperties} />
-              <svg className="lp2-bolt" viewBox="0 0 24 24" width="16" height="16"><path d="M13 2 4 14h7l-1 8 9-12h-7z" /></svg>
-            </span>
-            <span className="lp2-nub" />
-          </span>
-          <svg className="lp2-ok" viewBox="0 0 48 48" width="48" height="48">
-            <circle cx="24" cy="24" r="24" className="lp2-okc" />
-            <path d="M14 24.5l7 7 13-14" className="lp2-okt" pathLength={1} />
-          </svg>
+    <div className={'lp lp3-veil' + (phase === 'out' ? ' lp-out' : '')} data-no-i18n="" role="dialog" aria-modal="true" aria-live="polite" aria-label={done ? T.done : T.load}>
+      <div className={'sn2 lp3' + (done ? ' done' : '')} dir={to === 'ar' || to === 'fa' || to === 'ur' ? 'rtl' : 'ltr'} lang={to}>
+        <span className="sn2-sam" aria-hidden="true">
+          <span className="lp3-jump" key={done ? 'd' : 'l'}><LiveSam size={92} pose={done ? 'celebrate' : 'low'} /></span>
+          <i className="sn2-badge lp3-bat">{done ? <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg> : <span className="cell" dir="ltr"><i style={{ transform: `scaleX(${pct / 100})` }} /></span>}</i>
         </span>
-        <span className="lp-txt lp2-txt">
-          <span className="lp-eb">{T.eb}</span>
-          <b>{done ? T.done : T.load}</b>
-          <span className="lp2-meta" style={{ ['--p' as string]: pct / 100 } as React.CSSProperties}>
-            <span className="lp2-bar"><i style={{ transform: `scaleX(${pct / 100})` }} /></span>
-            <em dir="ltr">{pct}%</em>
-          </span>
-        </span>
+        <small className="lp3-eb">{T.eb}</small>
+        <b className="sn2-h">{done ? T.done : T.load}</b>
+        {done && T.sub ? <p className="sn2-p">{T.sub}</p> : null}
+        {!done ? <span className="lp3-meta"><span className="lp3-bar"><i style={{ transform: `scaleX(${pct / 100})` }} /></span><em dir="ltr">{pct}%</em></span> : null}
       </div>
     </div>
   );

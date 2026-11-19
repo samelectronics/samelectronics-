@@ -1,0 +1,27 @@
+/* owner (18 Nov night): clean quality + manufacturer labels (see Tags.tsx) */
+.tq, .tm { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; box-sizing: border-box; border-radius: 6px; font: 600 11.5px/1 Inter, system-ui, sans-serif; letter-spacing: .005em; white-space: nowrap; vertical-align: middle; border: 1px solid transparent; }
+.tq.sm, .tm.sm { height: 19px; padding: 0 6px; font-size: 10.5px; border-radius: 5px; }
+.tq.lg, .tm.lg { height: 26px; padding: 0 10px; font-size: 13px; border-radius: 7px; }
+.tq { color: var(--qt); background: var(--qb); border-color: var(--ql); }
+.q-OR { --qt: #8A5A00; --qb: #FFF4D1; --ql: #F5D98C; }
+.q-CO { --qt: #26282B; --qb: #EEF0F2; --ql: #D7DADE; }
+.q-ST { --qt: #475467; --qb: #F2F4F7; --ql: #DDE1E7; }
+.q-AQ { --qt: #1849A9; --qb: #EAF2FF; --ql: #C6DAFC; }
+.q-AA { --qt: #3E4784; --qb: #EEF0FB; --ql: #D1D5F2; }
+.q-OB { --qt: #05605A; --qb: #E3F7F4; --ql: #B2E5DE; }
+.q-OL { --qt: #0E6E87; --qb: #E5F6FB; --ql: #B9E4F0; }
+.q-OS { --qt: #2F7A4F; --qb: #E8F6EE; --ql: #BFE5CE; }
+.q-IN { --qt: #5B3FB0; --qb: #F1EDFC; --ql: #D9CFF6; }
+.q-OT { --qt: #5A5E64; --qb: #F5F6F7; --ql: #E3E5E8; }
+.tm { color: #5A5E64; background: transparent; border-color: #DDE0E4; font-weight: 500; }
+/* on graphite surfaces */
+html[data-theme="dark"] .tm, .shop-cine .tm, .ia3[data-tone="d"] .tm, .shop-dock .tm { color: #C9CCD0; border-color: rgba(255,255,255,.18); }
+html[data-theme="dark"] .tq { background: color-mix(in srgb, var(--qt) 22%, #232427); color: color-mix(in srgb, var(--qb) 85%, #fff); border-color: color-mix(in srgb, var(--qt) 45%, transparent); }
+/* the older label classes used in a few places (hero iPad, find my part) wear the same look */
+.pc-gr, .hi-gr { all: unset; display: inline-flex !important; align-items: center; height: 19px !important; padding: 0 6px !important; border-radius: 5px !important; font: 600 10.5px/1 Inter, sans-serif !important; letter-spacing: 0 !important; border: 1px solid var(--ql) !important; color: var(--qt) !important; background: var(--qb) !important; clip-path: none !important; box-shadow: none !important; text-shadow: none !important; }
+.pc-gr::before, .pc-gr::after, .hi-gr::before, .hi-gr::after { display: none !important; }
+.pc-gr.g-OR, .hi-gr.g-OR { --qt: #8A5A00; --qb: #FFF4D1; --ql: #F5D98C; } .pc-gr.g-CO, .hi-gr.g-CO { --qt: #26282B; --qb: #EEF0F2; --ql: #D7DADE; }
+.pc-gr.g-ST, .hi-gr.g-ST { --qt: #475467; --qb: #F2F4F7; --ql: #DDE1E7; } .pc-gr.g-AQ, .hi-gr.g-AQ { --qt: #1849A9; --qb: #EAF2FF; --ql: #C6DAFC; }
+.pc-gr.g-AA, .hi-gr.g-AA { --qt: #3E4784; --qb: #EEF0FB; --ql: #D1D5F2; } .pc-gr.g-OB, .hi-gr.g-OB { --qt: #05605A; --qb: #E3F7F4; --ql: #B2E5DE; }
+.pc-gr.g-OL, .hi-gr.g-OL { --qt: #0E6E87; --qb: #E5F6FB; --ql: #B9E4F0; } .pc-gr.g-OS, .hi-gr.g-OS { --qt: #2F7A4F; --qb: #E8F6EE; --ql: #BFE5CE; }
+.pc-gr.g-IN, .hi-gr.g-IN { --qt: #5B3FB0; --qb: #F1EDFC; --ql: #D9CFF6; } .pc-gr.g-OT, .hi-gr.g-OT { --qt: #5A5E64; --qb: #F5F6F7; --ql: #E3E5E8; }

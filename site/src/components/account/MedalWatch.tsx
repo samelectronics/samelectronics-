@@ -29,7 +29,7 @@ export default function MedalWatch() {
   // owner (18 Nov, round 2): notices are the Samsoom card (no tiny kicker labels): Samsoom celebrating in his circle,
   // the medal beside its name, one button
   return (
-    <div className="sn2-dock" key={m.id}>
+    <div className="sn2-dock low" key={m.id}>
       <div className="sn2 sn2-ok md2" role="status" aria-live="polite">
         <span className="sn2-sam" aria-hidden="true"><LiveSam size={92} pose="celebrate" /></span>
         <span className="md2-row"><Medal tier={m.tier} size={44} group={m.id === 'teardown' ? 'teardown' : m.group} /><span><b className="sn2-h">{T('New medal')}: {T(m.t)}</b><p className="sn2-p">{T(m.tier === 'gold' ? 'Gold' : m.tier === 'silver' ? 'Silver' : 'Bronze')}</p></span></span>

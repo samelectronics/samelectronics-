@@ -23,6 +23,10 @@ const SIDE: Side[][] = [
 type Slide = { k: string; t: string; a: string; d: string; cta: string; go: () => void; img: string; bg: string; ink: string; film?: boolean };
 
 export default function Banners({ onDeals, onCat, ctx, onGo }: { onDeals: () => void; onCat: (c: string) => void; ctx?: Ctx | null; onGo?: () => void }) {
+  // owner (18 Nov night): "where did the big video ad go?" With a tab or filter on, the box alternates: that topic's
+  // own ad, then the playing commercial, then back (so the video is never lost)
+  const [ctxOn, setCtxOn] = useState(true);
+  useEffect(() => { setCtxOn(true); if (!ctx) return; const id = window.setInterval(() => setCtxOn((v) => !v), 9000); return () => window.clearInterval(id); }, [ctx?.kind, ctx && 'id' in ctx ? (ctx as { id?: string }).id : '']); // eslint-disable-line react-hooks/exhaustive-deps
   // the slides are edited in the Control Room (Site & Samsoom → Shop banners); these are the defaults
   const DEF: Slide[] = [
     // owner (16 Nov): the teardown film's energy in the shop: the commercial plays on a phone in the first banner
@@ -40,7 +44,7 @@ export default function Banners({ onDeals, onCat, ctx, onGo }: { onDeals: () => 
   return (
     <section className="ad" aria-label={T('Offers')} data-tour-step="5" data-tour-title="Offers and adverts" data-tour-text="The big box plays our latest offers. Pick a tab, a part or a brand and it shows that topic's own deals.">
       {/* owner (16 Nov): the main advert is a real commercial that plays (ShopReel), not a phone and not a static slide */}
-      <div className="ad-main ad-reel">{ctx ? <ContextAd ctx={ctx} onGo={onGo || (() => document.querySelector('.shop-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))} /> : <ShopReel onCat={onCat} onDeals={onDeals} onShop={() => document.querySelector('.shop-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />}</div>
+      <div className="ad-main ad-reel">{ctx && ctxOn ? <ContextAd ctx={ctx} onGo={onGo || (() => document.querySelector('.shop-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))} /> : <ShopReel onCat={onCat} onDeals={onDeals} onShop={() => document.querySelector('.shop-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />}</div>
       {/* owner: the ads always change and come in moving, never a squeezed line of cartons: two slots, each turning
           through its own set, one clean picture per ad, a few seconds apart so the page always has something new */}
       <div className="ad-side">

@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react';
 import { isEmbed } from '@/lib/embed';
 import { prefs } from '@/lib/prefs';
 import SysNote from './SysNote';
+import LiveSam from '@/components/samsoom/LiveSam';
 import { logWarning } from '@/lib/warnings';
 
 const tr = (s: string) => (typeof window !== 'undefined' && (window as unknown as { seI18n?: { t: (x: string) => string } }).seI18n?.t(s)) || s;
@@ -32,7 +33,12 @@ function errBeep() {
     window.setTimeout(() => c.close(), 600); } catch { /* */ } }
 
 export default function Guard() {
-  const [vpn, setVpn] = useState(false), [shot, setShot] = useState(false);
+  const [vpn, setVpn] = useState(false), [shot, setShot] = useState(false), [terms, setTerms] = useState(false), [agree, setAgree] = useState(false);
+  // owner (18 Nov night): screenshots can be allowed once the visitor agrees to the terms; from then on the page carries a
+  // faint watermark (© Sam Electronics, all rights reserved, the date and the agreement number) on every screenshot
+  const [wm, setWm] = useState<{ ref: string; at: number } | null>(null);
+  useEffect(() => { try { const v = JSON.parse(sessionStorage.getItem('se-shot-ok') || 'null'); if (v && v.ref) setWm(v); } catch { /* */ } }, []);
+  const allow = () => { const ref = 'SC-' + Date.now().toString(36).toUpperCase().slice(-6); const v = { ref, at: Date.now() }; try { sessionStorage.setItem('se-shot-ok', JSON.stringify(v)); } catch { /* */ } setWm(v); setTerms(false); setAgree(false); logWarning('screenshot', 'screenshot terms accepted · agreement ' + ref); import('./Toaster').then((m) => m.toast(tr('Screenshots allowed. Each one carries our watermark.'))).catch(() => {}); };
   useEffect(() => {
     if (isEmbed()) return;
     // 1. VPN check, once per visit, never in the Control Room
@@ -52,6 +58,8 @@ export default function Guard() {
     }
     // 2. screenshot keys
     const seen = () => {
+      let ok = false; try { ok = !!sessionStorage.getItem('se-shot-ok'); } catch { /* */ }
+      if (ok) { logWarning('screenshot', 'screenshot taken under the screenshot terms'); return; }
       setShot(true);
       logWarning('screenshot', 'keys pressed on ' + (navigator.platform || 'computer'));
     };
@@ -65,7 +73,28 @@ export default function Guard() {
       {vpn ? <SysNote tone="warn" snd="none" role="alert" sam={{ mood: 'stop' }} kicker={tr('SAMSOOM · HOLD ON')} title={tr('Hey! Is that a VPN?')} text={tr('Prices and delivery depend on where you really are. Please switch the VPN off.')} ms={20000} onClose={() => setVpn(false)}
         acts={[{ label: tr('OK, I will switch it off'), primary: true }, { label: tr('I am travelling, carry on') }, { label: tr('Why am I seeing this?'), href: '/notices#vpn' }]} /> : null}
       {shot ? <SysNote tone="stop" role="alert" sam={{ mood: 'nono' }} kicker={tr('COPYRIGHT NOTICE')} title={tr('This content is protected.')} text={tr('Keeping it for yourself is fine; sharing or publishing it needs our permission.')} ms={15000} onClose={() => setShot(false)}
-        acts={[{ label: tr('I understand'), primary: true }, { label: tr('Read the full notice'), href: '/notices#copyright' }]} /> : null}
+        acts={[{ label: tr('I understand'), primary: true }, { label: tr('Allow screenshots'), on: () => setTerms(true) }, { label: tr('Read the full notice'), href: '/notices#copyright' }]} /> : null}
+      {terms ? (
+        <div className="sn2-veil" onClick={(e) => { if (e.target === e.currentTarget) setTerms(false); }}>
+          <div className="sn2 sn2-warn shot-terms" role="dialog" aria-modal="true" aria-label={tr('Screenshot terms')}>
+            <span className="sn2-sam" aria-hidden="true"><LiveSam size={92} pose="think" /></span>
+            <b className="sn2-h">{tr('Screenshot terms')}</b>
+            <ul className="st-list">
+              <li>{tr('Screenshots are for your own use only, for example to remember a part or to send it to your technician.')}</li>
+              <li>{tr('Publishing, reselling or editing them, or using our photos and prices elsewhere, needs our written permission.')}</li>
+              <li>{tr('Every screenshot carries our watermark with the date and your agreement number.')}</li>
+            </ul>
+            <label className="st-agree"><input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} /><span>{tr('I agree to the screenshot terms')}</span></label>
+            <span className="sn2-acts"><button type="button" className="sn2-b y" disabled={!agree} onClick={allow}>{tr('Allow screenshots')}</button><button type="button" className="sn2-b" onClick={() => setTerms(false)}>{tr('Cancel')}</button></span>
+          </div>
+        </div>
+      ) : null}
+      {wm ? (
+        <div className="shot-wm" aria-hidden="true" data-no-i18n="">
+          <span className="tile" style={{ backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='420' height='220'><text x='10' y='120' transform='rotate(-24 210 110)' font-family='Inter,Arial' font-size='15' font-weight='600' fill='%23808080'>© Sam Electronics · ${wm.ref}</text></svg>`).replace(/%2523/g, '%23')}")` }} />
+          <span className="side">© Sam Electronics · {tr('All rights reserved')} · {tr('Captured on')} {new Date().toLocaleDateString()} · {tr('Agreement')} {wm.ref}</span>
+        </div>
+      ) : null}
     </>
   );
 }

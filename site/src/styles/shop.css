@@ -1277,3 +1277,132 @@ html[data-theme="dark"] .rv-row { background: #2B2D31; } html[data-theme="dark"]
 .shs-msg p.sys b { font-weight: 700; }
 .bn-ch-acts { display: inline-flex; gap: 8px; }
 .rv-it .tg { transform: none !important; }
+.shop-beam { display: none !important; }
+/* owner (18 Nov night): the header lights MOVE (their drift is back, wider and quicker) and pulse brighter, and the
+   mouse pulls a soft yellow glow across the grey, exactly like the home hero */
+.shop-cine .cine-bokeh i { animation: cineDrift calc(9s + var(--k, 1) * 1.6s) ease-in-out calc(var(--k, 1) * -2.2s) infinite alternate, shdPulse calc(4s + var(--k, 1) * .7s) ease-in-out calc(var(--k, 1) * -1.3s) infinite !important; opacity: .9; }
+.shop-cine .cine-bokeh i:nth-child(1) { --k: 1; } .shop-cine .cine-bokeh i:nth-child(2) { --k: 2; } .shop-cine .cine-bokeh i:nth-child(3) { --k: 3; } .shop-cine .cine-bokeh i:nth-child(4) { --k: 4; }
+.shop-cine .cine-bokeh i:nth-child(5) { --k: 5; } .shop-cine .cine-bokeh i:nth-child(6) { --k: 6; } .shop-cine .cine-bokeh i:nth-child(7) { --k: 7; } .shop-cine .cine-bokeh i:nth-child(8) { --k: 8; }
+.shop-cine .cine-bokeh i { background: radial-gradient(closest-side, rgba(247,192,50,.5), rgba(247,192,50,.2) 45%, rgba(247,192,50,0)) !important; }
+@keyframes shdPulse { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+.shd-glow { position: absolute; left: var(--gx, 70%); top: var(--gy, 30%); width: 560px; height: 560px; margin: -280px 0 0 -280px; border-radius: 50%; pointer-events: none; background: radial-gradient(closest-side, rgba(247,192,50,.26), rgba(247,192,50,.08) 50%, rgba(247,192,50,0)); opacity: 0; transition: opacity .5s, left .25s ease-out, top .25s ease-out; }
+.shop-cine.glow-on .shd-glow { opacity: 1; }
+@media (hover: none) { .shd-glow { opacity: .7; animation: cineDrift 12s ease-in-out infinite alternate; } }
+@media (prefers-reduced-motion: reduce) { .shop-cine .cine-bokeh i { animation: none !important; } .shd-glow { transition: none; } }
+/* owner (18 Nov night): "the entry animations are weak". On arrival everything comes in on a cascade: crumb and kicker
+   rise, the headline lands with a punch, the counters pop, the search sweeps open, then the tabs, the category tiles
+   and the ads pop in one after another */
+@keyframes sxIn { from { opacity: 0; transform: translateY(22px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+@keyframes sxPunch { 0% { opacity: 0; transform: translateY(30px) scale(.9); filter: blur(10px); } 60% { opacity: 1; transform: translateY(-4px) scale(1.03); filter: none; } 100% { opacity: 1; transform: none; } }
+@keyframes sxPop { 0% { opacity: 0; transform: scale(.7); } 70% { opacity: 1; transform: scale(1.08); } 100% { opacity: 1; transform: none; } }
+@keyframes shopSweepIn { from { opacity: 0; clip-path: inset(0 100% 0 0 round 18px); } to { opacity: 1; clip-path: inset(0 0 0 0 round 18px); } }
+@keyframes sxTile { 0% { opacity: 0; transform: translateY(26px) scale(.94); } 70% { opacity: 1; transform: translateY(-3px) scale(1.01); } 100% { opacity: 1; transform: none; } }
+.shop-hd .sp-crumb { animation: sxIn .55s .05s cubic-bezier(.2,.8,.2,1) both; }
+.shop-hd .sp-eb { animation: sxIn .55s .15s cubic-bezier(.2,.8,.2,1) both; }
+.shop-hd-l > :not(.sp-eb) { animation: sxPunch .8s .25s cubic-bezier(.2,.8,.2,1) both; }
+.shop-stats > span { animation: sxPop .6s cubic-bezier(.3,1.4,.5,1) both; }
+.shop-stats > span:nth-child(1) { animation-delay: .45s; } .shop-stats > span:nth-child(2) { animation-delay: .55s; } .shop-stats > span:nth-child(3) { animation-delay: .65s; }
+.shop-hd .shop-scan { animation: shopSweepIn .8s .55s cubic-bezier(.7,0,.2,1) backwards; }
+.shop-hd .shop-devs { animation: sxIn .55s .8s cubic-bezier(.2,.8,.2,1) both; }
+.deals-tabs .dt { animation: sxTile .6s cubic-bezier(.2,.8,.2,1) both; }
+.deals-tabs .dt:nth-child(1) { animation-delay: .7s; } .deals-tabs .dt:nth-child(2) { animation-delay: .78s; } .deals-tabs .dt:nth-child(3) { animation-delay: .86s; } .deals-tabs .dt:nth-child(4) { animation-delay: .94s; }
+.shop-cats > * { animation: sxTile .6s cubic-bezier(.2,.8,.2,1) both; }
+.shop-cats > *:nth-child(1) { animation-delay: .9s; } .shop-cats > *:nth-child(2) { animation-delay: .96s; } .shop-cats > *:nth-child(3) { animation-delay: 1.02s; } .shop-cats > *:nth-child(4) { animation-delay: 1.08s; }
+.shop-cats > *:nth-child(5) { animation-delay: 1.14s; } .shop-cats > *:nth-child(6) { animation-delay: 1.2s; } .shop-cats > *:nth-child(7) { animation-delay: 1.26s; } .shop-cats > *:nth-child(8) { animation-delay: 1.32s; }
+.ad > .ad-main { animation: sxTile .7s 1.1s cubic-bezier(.2,.8,.2,1) both; } .ad > .ad-side { animation: sxTile .7s 1.25s cubic-bezier(.2,.8,.2,1) both; }
+@media (prefers-reduced-motion: reduce) { .shop-hd .sp-crumb, .shop-hd .sp-eb, .shop-hd-l > *, .shop-stats > span, .shop-hd .shop-scan, .shop-hd .shop-devs, .deals-tabs .dt, .shop-cats > *, .ad > * { animation: none !important; } }
+/* ── owner (18 Nov night): in-list ads v4 ──
+   no card-level motion (it made the cards flicker in and out while scrolling); the entrance plays INSIDE the card each
+   time an ad changes; white, yellow and graphite cards; text side flips; brand colour only on the brand's name */
+.ia3.live[data-in], .ia3[data-in] { animation: none !important; translate: none !important; }
+.ia3-boom, .ia3-k .rec { display: none !important; }
+.ia3-scene { animation: none !important; overflow: hidden; }
+.ia3.seen[data-in="0"] .ia3-scene { animation: ia4Slam .65s cubic-bezier(.2,1.3,.35,1) both !important; }
+.ia3.seen[data-in="1"] .ia3-scene { animation: ia4Whip .6s cubic-bezier(.15,1.2,.3,1) both !important; }
+.ia3.seen[data-in="2"] .ia3-scene { animation: ia4Split .7s cubic-bezier(.7,0,.2,1) both !important; }
+.ia3[data-flip="1"].seen[data-in="1"] .ia3-scene { animation-name: ia4WhipR !important; }
+@keyframes ia4Slam { 0% { opacity: 0; transform: scale(1.14); filter: blur(8px) brightness(1.5); } 60% { opacity: 1; transform: scale(.985); filter: none; } 100% { opacity: 1; transform: none; } }
+@keyframes ia4Whip { 0% { opacity: 0; transform: translateX(-12%) skewX(6deg); filter: blur(8px); } 65% { opacity: 1; transform: translateX(1%) skewX(-1deg); filter: none; } 100% { opacity: 1; transform: none; } }
+@keyframes ia4WhipR { 0% { opacity: 0; transform: translateX(12%) skewX(-6deg); filter: blur(8px); } 65% { opacity: 1; transform: translateX(-1%) skewX(1deg); filter: none; } 100% { opacity: 1; transform: none; } }
+@keyframes ia4Split { 0% { clip-path: inset(0 50% 0 50%); filter: brightness(1.8); } 100% { clip-path: inset(0 0 0 0); filter: none; } }
+/* flip: the picture on the left, the words on the right */
+.ia3[data-flip="1"] .ia3-scene { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); }
+.ia3[data-flip="1"] .ia3-txt { order: 2; } .ia3[data-flip="1"] .ia3-vis { order: 1; }
+.ia3[data-flip="1"] .ia3-dots { left: auto; right: 30px; }
+.ia3[data-flip="1"] .ia3-cta { right: auto; left: 22px; }
+.ia3[data-flip="1"] .ia3-bg .glow { right: auto; left: 8%; }
+/* white card */
+.ia3[data-tone="w"] { color: #26282B; background: radial-gradient(80% 120% at 70% 40%, #FFFFFF 0%, #F6F6F4 60%, #ECECEA 100%) !important; box-shadow: 0 0 0 1px rgba(38,40,43,.07), 0 26px 50px -34px rgba(0,0,0,.4) !important; }
+.ia3[data-tone="w"] .ia3-d { color: #5A5E64; }
+.ia3[data-tone="w"] .ia3-word b { -webkit-text-stroke-color: rgba(38,40,43,.08); }
+.ia3[data-tone="w"] .ia3-bg .band { background: linear-gradient(90deg, transparent, rgba(247,192,50,.10) 50%, transparent); }
+.ia3[data-tone="w"] .ia3-chips i { color: #26282B; background: #F0F1F3; box-shadow: inset 0 0 0 1px rgba(38,40,43,.08); }
+.ia3[data-tone="w"] .ia3-cta { background: #26282B; color: #fff; }
+.ia3[data-tone="w"] .ia3-dots i { background: rgba(38,40,43,.18); }
+/* yellow card */
+.ia3[data-tone="y"] { color: #26282B; background: radial-gradient(80% 120% at 70% 40%, #FFE08A 0%, #F7C032 55%, #E9AE1E 100%) !important; }
+.ia3[data-tone="y"] .ia3-d { color: #3A3D42; }
+.ia3[data-tone="y"] .ia3-k { background: #26282B; color: #F7C032; }
+.ia3[data-tone="y"] .ia3-t span:last-child { color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.12); }
+.ia3[data-tone="y"] .ia3-word b { -webkit-text-stroke-color: rgba(38,40,43,.12); }
+.ia3[data-tone="y"] .ia3-bg .glow { background: radial-gradient(closest-side, rgba(255,255,255,.45), transparent 70%); }
+.ia3[data-tone="y"] .ia3-chips i { color: #F7C032; background: #26282B; }
+.ia3[data-tone="y"] .ia3-cta { background: #26282B; color: #fff; }
+.ia3[data-tone="y"] .ia3-dots i { background: rgba(38,40,43,.25); } .ia3[data-tone="y"] .ia3-dots i.on { background: #26282B; }
+/* brand ads: the brand colour only on the brand's own name; a clean logo badge beside the kicker */
+.ia3-t span.bn { color: var(--bc) !important; }
+.ia3[data-tone="d"] .ia3-t span.bn { filter: brightness(1.25) saturate(1.1); }
+.ia3[data-brand] .ia3-t span:last-child:not(.bn) { color: inherit; }
+.ia3-badge { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; margin-inline-end: 4px; border-radius: 6px; background: #fff; box-shadow: 0 0 0 1px rgba(38,40,43,.08); }
+.ia3-badge svg, .ia3-badge img { display: block; }
+.ia3-brand2 { position: relative; width: 100%; height: 100%; display: grid; place-items: center; }
+.ia3-brand2 .wm { position: absolute; inset: 0; display: grid; place-items: center; opacity: .1; transform: scale(2.2); }
+.ia3[data-tone="d"] .ia3-brand2 .wm { opacity: .16; filter: brightness(2.5); }
+.ia3-brand2 img { position: relative; height: 210px; max-width: 100%; object-fit: contain; filter: drop-shadow(0 24px 26px rgba(0,0,0,.35)); animation: ia4Float 5s ease-in-out infinite; }
+@keyframes ia4Float { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-8px) rotate(1deg); } }
+/* repair: before → after */
+.ia3-fix2 { position: relative; width: 220px; height: 200px; }
+.ia3-fix2 img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 20px 22px rgba(0,0,0,.35)); }
+.ia3-fix2 .now { clip-path: inset(0 0 100% 0); animation: ia4Fix 4.4s .6s cubic-bezier(.6,0,.3,1) infinite; }
+.ia3-fix2 .scan { position: absolute; left: -6%; right: -6%; top: 0; height: 3px; border-radius: 3px; background: #F7C032; box-shadow: 0 0 14px 3px rgba(247,192,50,.8); animation: ia4Scan 4.4s .6s cubic-bezier(.6,0,.3,1) infinite; }
+.ia3-fix2 em { position: absolute; top: 6px; font: 700 10px 'JetBrains Mono', monospace; letter-spacing: .12em; font-style: normal; padding: 4px 8px; border-radius: 6px; }
+.ia3-fix2 .b { left: -8px; background: #E5484D; color: #fff; animation: ia4LabB 4.4s .6s infinite; } .ia3-fix2 .a { right: -8px; background: #2BB673; color: #fff; animation: ia4LabA 4.4s .6s infinite; }
+@keyframes ia4Fix { 0%, 15% { clip-path: inset(0 0 100% 0); } 55%, 85% { clip-path: inset(0 0 0 0); } 100% { clip-path: inset(0 0 100% 0); } }
+@keyframes ia4Scan { 0%, 15% { top: 0; opacity: 0; } 18% { opacity: 1; } 55% { top: 100%; opacity: 1; } 58%, 100% { top: 100%; opacity: 0; } }
+@keyframes ia4LabB { 0%, 40% { opacity: 1; } 50%, 90% { opacity: 0; } 100% { opacity: 1; } }
+@keyframes ia4LabA { 0%, 45% { opacity: 0; } 55%, 88% { opacity: 1; } 100% { opacity: 0; } }
+/* shipping: the pallet and four clean region pills, no drawn routes */
+.ia3-ship2 { position: relative; width: 100%; height: 100%; display: grid; place-items: center; }
+.ia3-ship2 .pal { height: 170px; object-fit: contain; filter: drop-shadow(0 22px 22px rgba(0,0,0,.4)); animation: ia4Float 6s ease-in-out infinite; }
+.ia3-ship2 .regs { position: absolute; inset: 0; pointer-events: none; }
+.ia3-ship2 .regs i { position: absolute; font: 700 10.5px 'JetBrains Mono', monospace; letter-spacing: .1em; font-style: normal; padding: 6px 10px; border-radius: 999px; background: #26282B; color: #F7C032; box-shadow: 0 8px 18px -8px rgba(0,0,0,.5), inset 0 0 0 1px rgba(247,192,50,.35); opacity: 0; animation: ia4Pill .5s cubic-bezier(.3,1.5,.5,1) both; animation-delay: calc(.5s + var(--k) * .15s); }
+.ia3-ship2 .regs i:nth-child(1) { left: 4%; top: 12%; } .ia3-ship2 .regs i:nth-child(2) { left: 0; bottom: 18%; } .ia3-ship2 .regs i:nth-child(3) { right: 4%; top: 6%; } .ia3-ship2 .regs i:nth-child(4) { right: 0; bottom: 24%; }
+@keyframes ia4Pill { from { opacity: 0; transform: scale(.5) translateY(8px); } to { opacity: 1; transform: none; } }
+.ia3-dots i { animation: none !important; }
+@media (max-width: 760px) { .ia3[data-flip="1"] .ia3-txt { order: 1; } .ia3[data-flip="1"] .ia3-vis { order: 2; } .ia3[data-flip="1"] .ia3-scene { grid-template-columns: 1fr; } .ia3-brand2 img { height: 150px; } .ia3-fix2 { width: 170px; height: 150px; } }
+@media (prefers-reduced-motion: reduce) { .ia3-scene, .ia3-brand2 img, .ia3-ship2 .pal, .ia3-fix2 *, .ia3-ship2 .regs i { animation: none !important; opacity: 1; clip-path: none !important; } }
+/* ── owner (18 Nov night): the site bar MORPHS into the shop bar (no second bar sliding over it) ── */
+html[data-shop-dock] body header { transform: none !important; }
+header nav[data-tour="nav"], header .se-status, header .se-contact-dd { transition: opacity .32s ease, transform .38s cubic-bezier(.2,.8,.2,1); }
+html[data-shop-dock] header nav[data-tour="nav"], html[data-shop-dock] header .se-status, html[data-shop-dock] header .se-contact-dd { opacity: 0 !important; transform: translateY(-16px) !important; pointer-events: none !important; }
+html .shop-dock.shop-dock { position: fixed !important; top: 0 !important; left: var(--dock-l, 300px) !important; right: var(--dock-r, 300px) !important; height: 72px !important; z-index: 61 !important; padding: 0 !important; display: flex !important; align-items: center !important; background: none !important; box-shadow: none !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; border: 0 !important; opacity: 0; transform: translateY(16px); pointer-events: none; transition: opacity .32s ease .06s, transform .42s cubic-bezier(.2,.8,.2,1) .06s !important; }
+html .shop-dock.shop-dock.on { opacity: 1; transform: none; pointer-events: auto; }
+html .shop-dock .shop-dock-in { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; display: flex !important; align-items: center !important; gap: 10px !important; }
+html .shop-dock .shop-dock-logo, html .shop-dock .shop-dock-ic { display: none !important; }
+html .shop-dock .dk-led { flex: 1 1 auto !important; max-width: none !important; min-width: 0; }
+html .shop-dock .dk-tools { display: flex; gap: 8px; flex: none; }
+/* the light frame hugs the search exactly (it used to spill past both ends) */
+html .shop-dock .dk-led .ss, html .shop-dock .dk-led .ss-bar { width: 100% !important; margin: 0 !important; }
+@media (max-width: 900px) { html .shop-dock .dk-b .t { display: none; } html .shop-dock .dk-b { width: 44px; padding: 0 !important; justify-content: center; } }
+@media (max-width: 700px) { html .shop-dock.shop-dock { height: 64px !important; } html[data-shop-dock] header .se-nav-name { opacity: 0; width: 0; overflow: hidden; } html .shop-dock .dk-tools .dk-b:not(:first-child) { display: none; } }
+/* docked search: the suggestions open as a wide floating panel (not squeezed to the bar), and no stray white edge */
+html .shop-dock .ss.open .ss-bar { border-radius: 14px !important; }
+html .shop-dock .ss.open .ss-drop { top: calc(100% + 10px) !important; left: 0 !important; right: auto !important; width: max(100%, min(880px, calc(100vw - var(--dock-l, 300px) - 24px))) !important; border-radius: 18px !important; clip-path: none !important; box-shadow: 0 0 0 1px rgba(38,40,43,.06), 0 40px 80px -24px rgba(0,0,0,.55) !important; }
+html[dir="rtl"] .shop-dock .ss.open .ss-drop { left: auto !important; right: 0 !important; }
+html .shop-dock .ss, html .shop-dock .ss form { background: transparent !important; box-shadow: none !important; outline: 0 !important; border: 0 !important; }
+html .shop-dock .ss .ss-bar, html .shop-dock .ss .ss-bar:focus-within { box-shadow: none !important; outline: 0 !important; border: 0 !important; border-radius: 14px !important; }
+html .shop-dock .dk-led { border-radius: 14px !important; }
+/* the shop's lights use their own drift (three other "cineDrift" animations exist; one only moves 40px) */
+@keyframes shdDrift { 0% { transform: translate(0, 0) scale(1); } 33% { transform: translate(8vw, -7vh) scale(1.25); } 66% { transform: translate(-6vw, 6vh) scale(.85); } 100% { transform: translate(4vw, 3vh) scale(1.1); } }
+.shop-cine .cine-bokeh i { animation-name: shdDrift, shdPulse !important; }
+@media (hover: none) { .shd-glow { animation-name: shdDrift !important; } }

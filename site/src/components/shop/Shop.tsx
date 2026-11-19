@@ -77,6 +77,20 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
   // owner: once the big search scrolls away, a slim one follows you smoothly under the bar (search, results, Customize)
   useEffect(() => { const el = scanRef.current; if (!el || typeof IntersectionObserver === 'undefined') return; const io = new IntersectionObserver(([e]) => setDock(!e.isIntersecting && e.boundingClientRect.top < 0), { rootMargin: '-72px 0px 0px 0px' }); io.observe(el); return () => io.disconnect(); });
   useEffect(() => { document.documentElement.toggleAttribute('data-shop-dock', dock); return () => document.documentElement.removeAttribute('data-shop-dock'); }, [dock]);
+  // owner (18 Nov night): the site bar itself turns into the shop bar. The shop tools sit exactly between the site
+  // logo and the site's own buttons (account, notifications, cart, menu), which never hide.
+  useEffect(() => {
+    const fit = () => {
+      const h = document.querySelector('header'); if (!h) return;
+      const logo = h.querySelector('.se-nav-row > a'), right = h.querySelector('.se-nav-right');
+      if (!logo || !right) return;
+      const keep = Array.from(right.children).filter((c) => !c.matches('.se-status, .se-contact-dd') && (c as HTMLElement).offsetWidth > 0);
+      const L = Math.round(logo.getBoundingClientRect().right + 18), R = keep.length ? Math.min(...keep.map((c) => c.getBoundingClientRect().left)) : window.innerWidth - 20;
+      const root = document.documentElement; root.style.setProperty('--dock-l', L + 'px'); root.style.setProperty('--dock-r', Math.max(12, Math.round(window.innerWidth - R + 14)) + 'px');
+    };
+    fit(); const t = window.setTimeout(fit, 400); window.addEventListener('resize', fit);
+    return () => { window.clearTimeout(t); window.removeEventListener('resize', fit); };
+  }, [dock]);
   const [ready, setReady] = useState(false), [f, setF] = useState<Filters>(EMPTY), [pid, setPid] = useState<string | null>(null), [scope, setScope] = useState<Scope>(mode === 'deals' ? 'deals' : 'all');
   const [view, setView] = useState<View>({ cols: 4, list: false, trade: true, per: 24 }), [page, setPage] = useState(1), [cz, setCz] = useState(false), [cmpOpen, setCmpOpen] = useState(false), [diffOnly, setDiffOnly] = useState(false), [side, setSide] = useState(false);
   const st = useStore(), [me] = useMe(), trade = !!me?.tradeApproved, [cv, setCv] = useState(0);
@@ -95,6 +109,19 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
 
   const base = useMemo(() => { if (!ready) return []; const all = products(); return scope === 'deals' ? all.filter((p) => p.deal > 0) : scope === 'new' ? all.filter((p) => p.isNew) : scope === 'limited' ? all.filter((p) => p.stock_qty > 0 && p.stock_qty < 6) : all; }, [ready, scope, cv]);
   const res = useMemo(() => (ready ? apply(f, base) : []), [f, base, ready]);
+  // owner (18 Nov night): a search, a filter, a tab or a category takes you straight to the results (smoothly, with the
+  // sticky bar's height left free), so nobody waits on the header wondering if anything happened
+  const armed = useRef(false);
+  useEffect(() => { if (!ready) return; const t = window.setTimeout(() => { armed.current = true; }, 800); return () => window.clearTimeout(t); }, [ready]);
+  useEffect(() => {
+    if (!armed.current) return; // never on page load or when a shared link opens with filters already set
+    const t = window.setTimeout(() => {
+      const el = document.querySelector('.shop-body'); if (!el) return;
+      const top = el.getBoundingClientRect().top + window.scrollY - 92;
+      if (Math.abs(window.scrollY - top) > 40) window.scrollTo({ top, behavior: 'smooth' });
+    }, 120);
+    return () => window.clearTimeout(t);
+  }, [f, scope]);
   const fc = useMemo(() => (ready ? facets(f) : null), [f, ready, cv]);
   const D = data();
   const dockIc = useRef<HTMLSpanElement>(null);
@@ -124,8 +151,8 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
   return (
     <div className={'shop' + (mode === 'deals' ? ' is-deals' : '')}>
       {/* header: the hero's language — graphite, live circuits, the search, Samsoom ready to help */}
-      <section className="shop-hd shop-cine" data-tone="dark">
-        <div className="cine-bg" aria-hidden="true"><i className="cine-wall" /><i className="cine-beam" /><span className="cine-bokeh">{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</span><i className="cine-floor" /><i className="cine-grain" /><HeroBack word={mode === 'deals' ? 'DEALS' : 'PARTS'} /></div>
+      <section className="shop-hd shop-cine" data-tone="dark" onPointerMove={(e) => { const r = e.currentTarget.getBoundingClientRect(); e.currentTarget.style.setProperty('--gx', (e.clientX - r.left) + 'px'); e.currentTarget.style.setProperty('--gy', (e.clientY - r.top) + 'px'); e.currentTarget.classList.add('glow-on'); }} onPointerLeave={(e) => e.currentTarget.classList.remove('glow-on')}>
+        <div className="cine-bg" aria-hidden="true"><i className="cine-wall" /><i className="shd-glow" /><i className="cine-beam" /><span className="cine-bokeh">{[0, 1, 2, 3, 4, 5, 6, 7].map((k) => <i key={k} />)}</span><i className="cine-floor" /><i className="cine-grain" /><HeroBack word={mode === 'deals' ? 'DEALS' : 'PARTS'} /></div>
         <span className="shd-mq" aria-hidden="true" data-no-i18n="">{[0, 1].map((r) => <span key={r} className={'shd-row r' + r}>{[0, 1].map((x) => <span key={x}>{(r ? [...MQ].reverse() : MQ).map((w) => <b key={w}>{T(w)}<i /></b>)}</span>)}</span>)}</span>
         <div className="sp-wrap">
           <nav className="sp-crumb"><a href="/">{T('Home')}</a><i /><span>{mode === 'deals' ? T('Deals & arrivals') : T('Shop')}</span></nav>
