@@ -10,6 +10,9 @@ import ChatChoice from './ChatChoice';
 import OffscreenPause from './OffscreenPause';
 import Toaster from './Toaster';
 import MedalWatch from '@/components/account/MedalWatch';
+import MouseGlow from './MouseGlow';
+import LinkPreview from './LinkPreview';
+import HeaderFit from './HeaderFit';
 import WeChatSheet from './WeChatSheet';
 import React, { useEffect, useState } from 'react';
 import { prefs, setPrefs, type Currency, type Pack, type Prefs } from '@/lib/prefs';
@@ -106,6 +109,9 @@ export default function SiteControls() {
       <OffscreenPause />
       <Toaster />
       <MedalWatch />
+      <MouseGlow />
+      <LinkPreview />
+      <HeaderFit />
       {banner && !panel ? (
         <div className="sc2-banner" role="dialog" aria-label={T('Your privacy, your choice')}>
           <span className="sc2-cookie" aria-hidden="true"><CookieBite /></span>

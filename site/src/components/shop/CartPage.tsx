@@ -11,6 +11,7 @@ import { store, useStore } from '@/lib/store';
 import { backend, useMe, type Company, type Order } from '@/lib/backend';
 import { T, useRise } from '@/components/site/ui';
 import LiveSam from '@/components/samsoom/LiveSam';
+import { messageId, withSys, type Channel } from '@/lib/ids';
 type Coupon = { code: string; kind: 'pct' | 'aed'; value: number; min?: number; until?: number; trade?: boolean; active?: boolean; ids?: string[]; cats?: string[] };
 
 type Via = 'wa' | 'wc' | 'mail' | 'web';
@@ -27,7 +28,7 @@ export default function CartPage() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', address: '', country: 'United Arab Emirates', note: '', company: '' });
   const [busy, setBusy] = useState(false), [err, setErr] = useState(''), [done, setDone] = useState<Order | null>(null), [code, setCode] = useState(''), [codeMsg, setCodeMsg] = useState('');
   // owner (19 Nov): send it any way (WhatsApp, WeChat, e-mail, the website), always after a preview laid out like an invoice
-  const [via, setVia] = useState<Via>('wa'), [pv, setPv] = useState(false), [sentVia, setSentVia] = useState<Via>('wa');
+  const [via, setVia] = useState<Via>('wa'), [pv, setPv] = useState(false), [sentVia, setSentVia] = useState<Via>('wa'), [qid, setQid] = useState(''), [lastMsg, setLastMsg] = useState(''), [showMsg, setShowMsg] = useState(false);
   useEffect(() => { const iv = window.setInterval(() => { if (data()) { window.clearInterval(iv); setReady(true); } }, 60); return () => window.clearInterval(iv); }, []);
   useEffect(() => { if (me) { setForm((f) => ({ ...f, name: f.name || me.name, email: f.email || me.email, phone: f.phone || me.phone || '' })); backend.companies().then(setCos); } }, [me]);
   useRise(ready);
@@ -50,28 +51,37 @@ export default function CartPage() {
   const ship = del === 'uae' ? (sub >= FREE ? 0 : SHIP.uae) : 0, vat = Math.round((sub - disc + ship) * VAT * 100) / 100, total = sub - disc + ship + vat;
   const saved = st.saved.map(byId).filter(Boolean) as Product[], favs = st.favs.map(byId).filter(Boolean) as Product[];
   const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => setForm({ ...form, [k]: e.target.value });
-  const check = (e: React.FormEvent) => { e.preventDefault(); setErr(''); if (!lines.length) return; if (del !== 'pickup' && !form.address.trim()) return setErr(T('Please add the delivery address.')); setPv(true); };
+  const check = (e: React.FormEvent) => { e.preventDefault(); setErr(''); if (!lines.length) return; if (del !== 'pickup' && !form.address.trim()) return setErr(T('Please add the delivery address.')); setQid(messageId()); setShowMsg(false); setPv(true); };
   const place = async () => {
     if (!lines.length) return;
     setBusy(true);
     // WhatsApp opens right away (a tab opened before the wait is not blocked) and gets the list after
     const tab = via === 'wa' ? window.open('', '_blank') : null;
-    const r = await backend.placeOrder({ email: form.email, name: form.name, phone: form.phone, lines: lines.map(({ l, p }) => ({ id: p.id, title: p.title, grade: p.gradeName, qty: l.qty, unit: unit(p), ...(fixed(p) ? {} : { confirm: true }) })), sub: sub - disc, vat, ship, total, delivery: del, address: form.address, country: form.country, note: '[Sent by ' + ({ wa: 'WhatsApp', wc: 'WeChat', mail: 'e-mail', web: 'website' } as const)[via] + '] ' + (toConfirm ? '[Prices to confirm: ' + toConfirm + '] ' : '') + (cp ? '[Coupon ' + cp.code + ' −' + disc.toFixed(2) + '] ' : '') + form.note, pay: toConfirm ? 'whatsapp' : pay, company: form.company || undefined, ...(toConfirm ? { pending: true } : {}) });
+    const r = await backend.placeOrder({ email: form.email, name: form.name, phone: form.phone, lines: lines.map(({ l, p }) => ({ id: p.id, title: p.title, grade: p.gradeName, qty: l.qty, unit: unit(p), ...(fixed(p) ? {} : { confirm: true }) })), sub: sub - disc, vat, ship, total, delivery: del, address: form.address, country: form.country, note: '[' + qid + '] [Sent by ' + ({ wa: 'WhatsApp', wc: 'WeChat', mail: 'e-mail', web: 'website' } as const)[via] + '] ' + (toConfirm ? '[Prices to confirm: ' + toConfirm + '] ' : '') + (cp ? '[Coupon ' + cp.code + ' −' + disc.toFixed(2) + '] ' : '') + form.note, pay: toConfirm ? 'whatsapp' : pay, company: form.company || undefined, ...(toConfirm ? { pending: true } : {}) });
     setBusy(false);
     if (!r.ok) { tab?.close(); setPv(false); return setErr(T(r.error)); }
-    const msg = listMsg(r.data);
+    const msg = listMsg(r.data.no);
     if (via === 'wa') { const link = waLink(msg); if (tab) tab.location.href = link; else window.open(link, '_blank', 'noopener'); }
     if (via === 'wc') window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wc', text: msg } }));
     if (via === 'mail') location.href = 'mailto:' + (data()?.contact.email || 'samelectronics.uae@gmail.com') + '?subject=' + encodeURIComponent(T('Order') + ' ' + r.data.no) + '&body=' + encodeURIComponent(msg.replace(/\*/g, '').replace(/_/g, ''));
-    setSentVia(via); setPv(false); setDone(r.data); store.clear(); notify({ kind: 'order', t: 'Order received', d: 'We will confirm stock and message you shortly.', href: '/account#orders' }); window.scrollTo({ top: 0, behavior: 'smooth' });
+    setLastMsg(msg); setSentVia(via); setPv(false); setDone(r.data); store.clear(); notify({ kind: 'order', t: 'Order received', d: 'We will confirm stock and message you shortly.', href: '/account#orders' }); window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   // R9: the full list for WhatsApp: name, model, part, grade/quality, color, quantity, price if known; then name + reference
-  const listMsg = (o: Order) => {
-    const rows = lines.map(({ l, p }, i) => [`*${i + 1}. ${p.title}*`, `   ${T('Model')}: ${p.modelName || '—'} · ${T('Part')}: ${p.part_name}`, `   ${T('Grade')}: ${p.gradeName} · ${T('Quality')}: ${p.qualityName}${p.colour ? ' · ' + T('Color') + ': ' + p.colour : ''}`, `   ${T('Quantity')}: ${l.qty}${p.stock_qty <= 0 ? ' · ' + T('out of stock: please check') : ''} · ${fixed(p) ? T('Price') + ': ' + aed(unit(p), false) + ' ' + T('each') : T('Price') + ': ' + T('please confirm') + (hint(p) ? ' (' + hint(p) + ')' : '')}`].join('\n'));
-    return `*${T('PARTS LIST')}* · ${o.no}\n━━━━━━━━━━━━\n${rows.join('\n\n')}\n\n${sub ? T('Known total') + ': ' + aed(total, false) + ' ' + T('incl. VAT') + ' + ' : ''}${toConfirm} ${toConfirm === 1 ? T('item to confirm') : T('items to confirm')}\n${T('Delivery')}: ${T(({ pickup: 'Pick up in Deira', uae: 'Delivery in the UAE', world: 'Worldwide' } as const)[del])}\n\n*${T('From')}:* ${form.name}\n_${new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Dubai' })} · ${location.host}/cart_`;
+  // R10 (owner: "serious system messages"): one fixed layout for every channel: title + order number, the parts in
+  // full, totals and delivery, who sent it, then the formal SYSTEM DETAILS block (permanent customer ref, this inquiry's
+  // own ID, Dubai date and time to the second, the customer's time zone, device, language, channel, page)
+  const CH: Record<Via, Channel> = { wa: 'WhatsApp', wc: 'WeChat', mail: 'E-mail', web: 'Website' };
+  const listMsg = (no: string, ch: Via = via, id: string = qid) => {
+    const rows = lines.map(({ l, p }, i) => [`*${i + 1}. ${p.title}*`, `   Model: ${p.modelName || '—'} · Part: ${p.part_name}`, `   Grade: ${p.gradeName} · Maker: ${p.makerName}${p.colour ? ' · Colour: ' + p.colour : ''}`, `   Qty: ${l.qty}${p.stock_qty <= 0 ? ' · out of stock, please check' : ''} · ${fixed(p) ? 'Price: ' + aed(unit(p), false) + ' each' : 'Price: to confirm' + (hint(p) ? ' (' + hint(p) + ')' : '')}`, `   Ref: ${p.id}`].join('\n'));
+    const body = `*SAM ELECTRONICS · ORDER REQUEST*\n*Order no:* ${no}\n━━━━━━━━━━━━━━━━\n${rows.join('\n\n')}\n━━━━━━━━━━━━━━━━\n*Subtotal:* ${aed(sub, false)}${disc > 0 ? '\n*Coupon:* ' + cp!.code + ' −' + aed(disc, false) : ''}\n*VAT 5%:* ${aed(vat, false)}\n*Total:* ${aed(total, false)}${toConfirm ? ' + ' + toConfirm + ' item(s) to confirm' : ''}\n*Delivery:* ${({ pickup: 'Pick up in Deira', uae: 'Delivery in the UAE', world: 'Worldwide (quote)' } as const)[del]}${del !== 'pickup' && form.address ? '\n*Address:* ' + form.address + (form.country ? ', ' + form.country : '') : ''}\n\n*Customer:* ${form.name || '—'}\n*Phone:* ${form.phone || '—'}${form.email ? '\n*E-mail:* ' + form.email : ''}${form.company ? '\n*Company:* ' + form.company : ''}${form.note ? '\n*Note:* ' + form.note : ''}`;
+    return withSys(body, CH[ch], id);
   };
   const waMsg = (o: Order) => waCard('Order ' + o.no, [['Parts', '\n' + o.lines.map((x) => `• ${x.qty} × ${x.title} · ${x.grade}`).join('\n')], ['Total', aed(o.total, false) + ' incl. VAT'], ['Delivery', o.delivery], ['Please', 'confirm stock and price']], { name: form.name });
 
+  const chIcon = (k: Via) => (k === 'wa' || k === 'wc' ? <i className={'ct-ic ' + k} /> : k === 'mail' ? <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" /></svg> : <img src="/assets/se-logo-metal-128.webp" alt="" />);
+  const chBar = (cur: Via, pick: (k: Via) => void) => <div className="ck-sw" role="radiogroup" aria-label={T('Send by')}>{VIA.map(([k, n]) => <button key={k} type="button" role="radio" aria-checked={cur === k} className={'ck-sw-b v-' + k + (cur === k ? ' on' : '')} onClick={() => pick(k)}><span className="ic">{chIcon(k)}</span>{k === 'wa' || k === 'wc' ? n : T(n)}</button>)}</div>;
+  const resend = (k: Via) => { const m = lastMsg.replace(/\*Channel:\* .*/, '*Channel:* ' + CH[k] + ' (re-sent)'); if (k === 'wa') window.open(waLink(m), '_blank', 'noopener'); else if (k === 'wc') window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wc', text: m } })); else if (k === 'mail') location.href = 'mailto:' + (data()?.contact.email || 'samelectronics.uae@gmail.com') + '?subject=' + encodeURIComponent('Order ' + (done?.no || '')) + '&body=' + encodeURIComponent(m.replace(/\*/g, '')); else window.dispatchEvent(new CustomEvent('se:livechat', { detail: { text: m } })); setSentVia(k); };
+  const fmtMsg = (x: string) => x.split('\n').map((ln, i) => ln.trim() ? <span key={i} className="ck-ml">{ln.split(/(\*[^*]+\*)/g).map((p2, j) => p2.length > 2 && p2.startsWith('*') && p2.endsWith('*') ? <b key={j}>{p2.slice(1, -1)}</b> : p2)}</span> : <span key={i} className="ck-mg" />);
   const steps = (n: number) => <ol className="ck-steps">{['Cart', 'Your details', 'Preview & send'].map((x, k) => <li key={x} className={k < n ? 'ok' : k === n ? 'on' : ''}><i>{k < n ? '✓' : k + 1}</i>{T(x)}</li>)}</ol>;
   const viaName = (v: Via) => (v === 'wa' ? 'WhatsApp' : v === 'wc' ? 'WeChat' : T(v === 'mail' ? 'E-mail' : 'The website'));
   if (done) return (
@@ -82,6 +92,7 @@ export default function CartPage() {
         <span className="ck-k">{T('ORDER RECEIVED')} · <span dir="ltr">{done.no}</span></span>
         <h1>{T('Thank you,') + ' ' + (done.name.split(' ')[0] || '') + '!'}</h1>
         <p>{sentVia === 'web' ? T('Your order is with our team. We confirm stock, delivery and the final price here and in My Bench.') : T('Your order is with our team, and we sent the list') + ' ' + T('by') + ' ' + viaName(sentVia) + '. ' + T('We confirm stock, delivery and the final price, usually within minutes during opening hours.')}</p>
+        {lastMsg ? <div className="ck-again"><small>{sentVia === 'web' ? T('Want a copy on another app?') : T('Did it not open? Send it another way:')}</small>{chBar(sentVia, resend)}</div> : null}
         <div className="sp-acts"><a className="sp-btn" href="/shop">{T('Keep shopping')}</a>{me ? <a className="sp-btn ghost" href="/account#orders">{T('My orders')}</a> : null}</div>
         <ol className="cart-steps">{['Order received', 'Stock & price confirmed', 'Paid & packed', done.delivery === 'pickup' ? 'Ready to collect in Deira' : 'Shipped to you'].map((s2, k) => <li key={s2} className={k === 0 ? 'on' : ''}><i>{k + 1}</i>{T(s2)}</li>)}</ol>
       </div>
@@ -149,7 +160,9 @@ export default function CartPage() {
               <a className="cart-paylink" href="/payments" target="_blank" rel="noopener">{T('Every way to pay')} →</a>
               {err ? <div className="sp-note" style={{ background: 'rgba(229,72,77,.1)', color: '#9B1C20' }}>{err}</div> : null}
               <h3 className="sp-h3">{T('How should we receive it?')}</h3>
-              <div className="ck-via" role="radiogroup">{VIA.map(([k, n, d]) => <button key={k} type="button" role="radio" aria-checked={via === k} className={'ck-v v-' + k + (via === k ? ' on' : '')} onClick={() => setVia(k)}><span className="ic">{k === 'wa' || k === 'wc' ? <i className={'ct-ic ' + k} /> : k === 'mail' ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><path d="M3 6h18v12H3zM3 7l9 6 9-6" /></svg> : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2"><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18" /></svg>}</span><b>{k === 'wa' || k === 'wc' ? n : T(n)}</b><small>{T(d)}</small></button>)}</div>
+              {/* R10 (owner: "not like a table"): a share-sheet row of app icons; the line below says what happens */}
+              <div className="ck-via2" role="radiogroup" aria-label={T('How should we receive it?')}>{VIA.map(([k, n]) => <button key={k} type="button" role="radio" aria-checked={via === k} className={'ck-a v-' + k + (via === k ? ' on' : '')} onClick={() => setVia(k)}><span className="ic">{chIcon(k)}<i className="tick" aria-hidden="true">✓</i></span><b>{k === 'wa' || k === 'wc' ? n : T(n)}</b></button>)}</div>
+              <p className="ck-via2-d" key={via}>{T(VIA.find((x) => x[0] === via)![2])}</p>
               {toConfirm ? <div className="sp-note">{toConfirm === 1 ? T('1 item has no fixed price.') : toConfirm + ' ' + T('items have no fixed price.')} {T('We confirm prices and stock with you first, then you pay.')}</div> : null}
               <button type="submit" className="sp-btn cart-place" disabled={busy}>{T('Review my order')} →</button>
               <small className="sp-muted">{T('By placing the order you agree to our')} <a href="/legal#terms">{T('terms')}</a>, <a href="/legal#returns">{T('returns')}</a> {T('and')} <a href="/legal#privacy">{T('privacy policy')}</a>.</small>
@@ -194,12 +207,14 @@ export default function CartPage() {
         <div className="ck-veil" onClick={(e) => { if (e.target === e.currentTarget) setPv(false); }}>
           {/* the preview, laid out like the invoice the team will issue (owner, 19 Nov: "the preview before anything is sent") */}
           <div className="ck-inv" role="dialog" aria-modal="true" aria-label={T('Preview your order')}>
+            <div className="ck-inv-sw"><small>{T('Send by')}</small>{chBar(via, setVia)}</div>
             <div className="ck-inv-h"><img src="/assets/se-logo-metal-128.webp" alt="" /><span><b>SAM ELECTRONICS</b><small>{T('Al Murar, Deira, Dubai, UAE')}</small></span><span className="ck-inv-no"><small>{T('ORDER REQUEST')}</small><b>{new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</b></span></div>
             <div className="ck-inv-to"><span><small>{T('For')}</small><b>{form.name || '—'}</b><em dir="ltr">{form.phone}{form.email ? ' · ' + form.email : ''}</em></span><span><small>{T('Delivery')}</small><b>{T(({ pickup: 'Pick up in Deira', uae: 'Delivery in the UAE', world: 'Worldwide' } as const)[del])}</b>{del !== 'pickup' ? <em>{form.address}</em> : null}</span><span><small>{T('Sent by')}</small><b>{viaName(via)}</b></span></div>
             <table className="ck-inv-t"><thead><tr><th>#</th><th>{T('Part')}</th><th>{T('Qty')}</th><th>{T('Unit')}</th><th>{T('Total')}</th></tr></thead>
               <tbody>{lines.map(({ l, p }, n) => <tr key={p.id}><td>{n + 1}</td><td><b>{ptitle(p)}</b><small>{p.gradeName} · {p.makerName}{p.colour ? ' · ' + p.colour : ''}</small></td><td>{l.qty}</td><td>{fixed(p) ? aed(unit(p), false) : T('To confirm')}</td><td>{fixed(p) ? aed(unit(p) * l.qty, false) : '—'}</td></tr>)}</tbody></table>
             <div className="ck-inv-sum"><span>{T('Subtotal')}<b>{aed(sub, false)}</b></span>{disc > 0 ? <span>{T('Coupon')} {cp!.code}<b>−{aed(disc, false)}</b></span> : null}<span>{T('Delivery')}<b>{del === 'world' ? T('Quoted') : ship ? aed(ship, false) : T('Free')}</b></span><span>{T('VAT 5%')}<b>{aed(vat, false)}</b></span><span className="tot">{T('Total')}<b>{aed(total, false)}</b></span>{toConfirm ? <em>+ {toConfirm} {toConfirm === 1 ? T('item to confirm') : T('items to confirm')}</em> : null}</div>
             {form.note ? <p className="ck-inv-note"><small>{T('Note')}</small>{form.note}</p> : null}
+            <div className={'ck-msg' + (showMsg ? ' open' : '')}><button type="button" className="ck-msg-t" onClick={() => setShowMsg((x) => !x)}>{T('The message our team receives')}<span aria-hidden="true">{showMsg ? '−' : '+'}</span></button>{showMsg ? <div className="ck-msg-b" dir="ltr">{fmtMsg(listMsg(T('given when sent')))}</div> : null}</div>
             <p className="ck-inv-f">{T('Nothing is charged now. Our team confirms stock and the final price with you first.')}</p>
             <div className="ck-inv-acts"><button type="button" className="sp-btn ghost" onClick={() => setPv(false)}>← {T('Edit')}</button><button type="button" className={'sp-btn ck-send v-' + via} disabled={busy} onClick={place}>{busy ? T('Sending…') : T('Send by') + ' ' + viaName(via)}</button></div>
           </div>

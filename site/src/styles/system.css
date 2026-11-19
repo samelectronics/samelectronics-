@@ -1097,3 +1097,79 @@ html[data-theme="dark"] .tq-no { background: #3A3D42; color: #F2F3F5; }
 .mdt-chip { width: 46px !important; height: 46px !important; } .mdt-chip .md2, .mdt-chip svg { width: 46px !important; height: 46px !important; }
 .mdt-tx b { font-size: 15px !important; } .mdt-tx small { font-size: 9px !important; } .mdt-lv { margin-top: 2px !important; font-size: 11px !important; }
 .mdt-go { height: 30px !important; padding: 0 10px !important; font-size: 12px !important; }
+/* R10 · one cursor light on every section and the footer (see MouseGlow.tsx): behind the content, only while hovered */
+.se-mglow { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: -1; border-radius: inherit; }
+.se-mglow i { position: absolute; left: 0; top: 0; width: 620px; height: 620px; margin: -310px 0 0 -310px; border-radius: 50%; background: radial-gradient(closest-side, rgba(247,192,50,.16), rgba(247,192,50,0)); transform: translate3d(var(--mgx, -999px), var(--mgy, -999px), 0); opacity: 0; transition: opacity .7s ease, transform .16s ease-out; will-change: transform; }
+.se-mglow[data-y] i { background: radial-gradient(closest-side, rgba(255,255,255,.42), rgba(255,255,255,0)); }
+[data-tone="light"] > .se-mglow i { background: radial-gradient(closest-side, rgba(247,192,50,.2), rgba(247,192,50,0)); }
+.se-mg-on > .se-mglow i { opacity: 1; }
+/* the old per-section blobs sat parked at a default spot (the "weird yellow circle"): the shared light replaces them */
+[data-glow] { display: none !important; }
+@media (prefers-reduced-motion: reduce) { .se-mglow i { transition: opacity .3s; } }
+/* R10 · wholesale hero: the second button is an outline button (a <button> took the browser's grey fill), and the
+   TRADE ONLY stamp moves under the title whenever a language's words leave no room beside it (Russian collided) */
+.wf .wf-btn.line { background: transparent !important; cursor: pointer; transition: background .2s, box-shadow .2s; }
+.wf .wf-btn.line:hover { background: rgba(255,255,255,.08) !important; box-shadow: inset 0 0 0 2px #F7C032 !important; }
+.wf .wf-hrow { flex-wrap: wrap !important; row-gap: 10px; }
+.wf .wf-h { font-size: clamp(48px, 5.6vw, 84px); }
+.wf .wf-tl { min-width: 0; }
+.wf .wf-stamp { white-space: nowrap; max-width: 100%; }
+html body header .se-nav-right > .scp-71e4b6d9 { margin-inline-start: 7px; }
+/* R10 · hero shop button (owner: same icon as the bar, more fun, the side tags were boring): a light sweep crosses it every
+   few seconds, the bag hops on hover, a live dot breathes beside the stock count, and the brands are a stack of logo chips */
+a.scp-5861bbd1:has(.se-hb-info) { position: relative; overflow: hidden; isolation: isolate; }
+a.scp-5861bbd1:has(.se-hb-info)::after { content: ''; position: absolute; inset: -20% auto -20% -40%; width: 30%; background: linear-gradient(100deg, transparent, rgba(255,255,255,.55), transparent); transform: skewX(-18deg); animation: hbSweep 5.5s 1.5s ease-in-out infinite; pointer-events: none; z-index: 1; }
+@keyframes hbSweep { 0%, 70% { left: -40%; } 92%, 100% { left: 130%; } }
+a.scp-5861bbd1:has(.se-hb-info):hover svg:first-child { animation: hbHop .5s cubic-bezier(.3,1.6,.5,1); }
+@keyframes hbHop { 40% { transform: translateY(-4px) rotate(-8deg); } 70% { transform: translateY(1px) rotate(3deg); } }
+.se-hb-info > span.hb-live { background: #26282B !important; color: #E6E7E8 !important; box-shadow: none !important; }
+.se-hb-info > span.hb-live b { color: #F7C032 !important; }
+.hb-live i { width: 7px; height: 7px; border-radius: 50%; background: #2BB673; box-shadow: 0 0 0 0 rgba(43,182,115,.6); animation: hbLive 1.8s ease-out infinite; align-self: center; }
+@keyframes hbLive { 0% { box-shadow: 0 0 0 0 rgba(43,182,115,.55); } 100% { box-shadow: 0 0 0 7px rgba(43,182,115,0); } }
+.se-hb-info > span.hb-brands { display: inline-flex; align-items: center; gap: 0; padding: 2px 8px 2px 3px !important; background: rgba(255,255,255,.55) !important; }
+.hb-brands img { width: 22px; height: 22px; padding: 4px; box-sizing: border-box; border-radius: 50%; background: #fff; object-fit: contain; box-shadow: 0 0 0 2px #F7C032; margin-inline-end: -6px; transition: margin .25s; }
+.hb-brands em { margin-inline-start: 10px; font: 700 12px 'Space Grotesk', sans-serif; font-style: normal; color: #26282B; }
+a.scp-5861bbd1:hover .hb-brands img { margin-inline-end: 1px; }
+@media (prefers-reduced-motion: reduce) { a.scp-5861bbd1:has(.se-hb-info)::after, .hb-live i { animation: none; } }
+/* R10 · logo (owner): the site is already graphite, so the metal bezel ring goes; the white face with its yellow LED line
+   now fills the whole mark, i.e. the logo grows to the size it had including the bezel */
+.lm2-edge { display: none !important; }
+.lm2-face { inset: 3% !important; box-shadow: 0 0 0 max(1.4px, calc(var(--s) * .03)) #F7C032, 0 0 calc(var(--s) * .12) rgba(247,192,50,.5), inset 0 calc(var(--s) * .02) calc(var(--s) * .05) rgba(0,0,0,.16) !important; }
+/* R10 · language names (owner: some, like Chinese, look bolder): one visual weight and size for every script. CJK glyphs
+   are denser, so they use a lighter weight; Ge'ez, Devanagari and Malayalam read small, so they get a touch more size */
+:is(.se-qs-langs, .st-l2-scroll) button > b { font-weight: 600 !important; font-size: 15px !important; line-height: 1.25 !important; letter-spacing: 0 !important; }
+:is(.se-qs-langs, .st-l2-scroll) button:is([lang="zh"], [lang="ja"], [lang="ko"]) > b { font-weight: 500 !important; font-size: 14.5px !important; }
+:is(.se-qs-langs, .st-l2-scroll) button:is([lang="am"], [lang="hi"], [lang="ml"]) > b { font-weight: 500 !important; font-size: 15.5px !important; }
+:is(.se-qs-langs, .st-l2-scroll) button:is([lang="ar"], [lang="fa"], [lang="ur"]) > b { font-weight: 600 !important; font-size: 15.5px !important; }
+/* R10 · preview before leaving the site (LinkPreview.tsx): white pop-up, Samsoom, a live preview, Copy + Open */
+.lpv-veil { position: fixed; inset: 0; z-index: 9600; display: grid; place-items: center; padding: 16px; background: rgba(26,27,29,.45); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); animation: seFade .2s ease both; }
+.lpv-card { position: relative; width: min(460px, 100%); max-height: calc(100dvh - 32px); overflow: auto; padding: 20px; border-radius: 22px; background: #fff; color: #26282B; box-shadow: 0 30px 80px -20px rgba(0,0,0,.45), 0 0 0 1px rgba(38,40,43,.06); animation: seCardIn .32s cubic-bezier(.2,1.1,.4,1) both; }
+.lpv-x { position: absolute; top: 12px; inset-inline-end: 12px; width: 34px; height: 34px; border: 0; border-radius: 50%; background: #F2F3F4; color: #26282B; font-size: 14px; cursor: pointer; }
+.lpv-x:hover { background: #E6E7E8; }
+.lpv-top { display: flex; align-items: center; gap: 12px; padding-inline-end: 40px; }
+.lpv-sam { width: 52px; height: 52px; border-radius: 50%; background: #F7C032; display: grid; place-items: center; overflow: hidden; flex: none; }
+.lpv-tt { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.lpv-tt small { font: 600 10px 'JetBrains Mono', monospace; letter-spacing: .14em; color: #B07F00; }
+.lpv-tt b { font: 700 19px/1.2 'Space Grotesk', sans-serif; letter-spacing: -.01em; overflow-wrap: anywhere; }
+.lpv-sub { margin: 12px 0 14px; font: 400 14px/1.5 Inter, sans-serif; color: #5D6166; }
+.lpv-view { border-radius: 16px; overflow: hidden; background: #F4F5F6; box-shadow: inset 0 0 0 1px rgba(38,40,43,.06); }
+.lpv-view iframe { display: block; width: 100%; height: 240px; border: 0; }
+.lpv-big { display: block; padding: 22px 16px; text-align: center; font: 700 30px 'Space Grotesk', sans-serif; letter-spacing: -.01em; color: #26282B; }
+.lpv-big.sm { font-size: 20px; padding: 18px 16px 6px; overflow-wrap: anywhere; }
+.lpv-mail { display: flex; flex-direction: column; align-items: center; padding-bottom: 14px; } .lpv-mail small { font: 400 13px Inter, sans-serif; color: #5D6166; padding: 0 16px; text-align: center; }
+.lpv-link { display: flex; align-items: center; gap: 12px; padding: 16px; font: 500 14px Inter, sans-serif; color: #26282B; overflow-wrap: anywhere; }
+.lpv-net { width: 40px; height: 40px; flex: none; border-radius: 12px; display: grid; place-items: center; font: 700 18px 'Space Grotesk', sans-serif; font-style: normal; color: #fff; background: #26282B; }
+.lpv-net.n-instagram { background: radial-gradient(circle at 30% 110%, #FFD566, #F56040 40%, #C13584 70%, #5851DB); }
+.lpv-net.n-facebook { background: #1877F2; } .lpv-net.n-tiktok { background: #111214; box-shadow: inset 2px 0 0 #25F4EE, inset -2px 0 0 #FE2C55; } .lpv-net.n-youtube { background: #FF0033; }
+.lpv-acts { display: grid; grid-template-columns: 1fr 1.4fr; gap: 10px; margin-top: 16px; }
+.lpv-btn { height: 48px; border: 0; border-radius: 13px; background: #F2F3F4; color: #26282B; font: 600 15px Inter, sans-serif; cursor: pointer; transition: transform .15s, background .2s; }
+.lpv-btn:hover { background: #E6E7E8; } .lpv-btn:active { transform: scale(.98); }
+.lpv-btn.go { background: #F7C032; box-shadow: 0 10px 24px -12px rgba(247,192,50,.9); } .lpv-btn.go:hover { background: #FFD054; }
+.lpv-card.k-tel .lpv-btn.go, .lpv-card.k-map .lpv-btn.go { background: #26282B; color: #fff; box-shadow: none; } .lpv-card.k-tel .lpv-btn.go:hover, .lpv-card.k-map .lpv-btn.go:hover { background: #3D3E3F; }
+@media (max-width: 480px) { .lpv-acts { grid-template-columns: 1fr; } .lpv-view iframe { height: 200px; } }
+/* R10 · the bar fits every language (HeaderFit.tsx adds hf1…hf4 only while it would overflow) */
+html.hf1 header .se-status > button { font-size: 12px !important; padding: 0 10px !important; }
+html.hf1 header nav[data-tour="nav"] > a { font-size: 14px !important; }
+html.hf2 header nav[data-tour="nav"] { gap: 12px !important; } html.hf2 header .se-nav-right { gap: 8px !important; }
+html.hf3 header .se-status > button { font-size: 0 !important; width: 32px; padding: 0 !important; justify-content: center; }
+html.hf4 header .se-fmp-t { display: none !important; }

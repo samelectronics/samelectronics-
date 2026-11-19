@@ -43,10 +43,10 @@ export default function RepairLab({ v, full = false }: { v: Vals; full?: boolean
                 fontSize: 'clamp(34px,3.4vw,48px)',
                 lineHeight: '1.08',
                 letterSpacing: '-.03em',
-                color: '#26282B',
+                color: '#3D3E3F',
               }}
             >
-              <span>Fixed, tested,</span> <span style={{ color: '#F7C032' }}>guaranteed.</span>
+              <span>Fixed, tested,</span> <span>guaranteed.</span>
             </h2>
             {'\n      '}
           </div>
@@ -254,7 +254,7 @@ export default function RepairLab({ v, full = false }: { v: Vals; full?: boolean
             >
               {'\n          '}
               <span style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '11px', letterSpacing: '.12em', color: '#9DA1A6' }}>
+                <span className="rp-k" style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '11px', letterSpacing: '.12em', color: '#9DA1A6' }}>
                   ESTIMATE
                 </span>
                 <span
@@ -274,7 +274,7 @@ export default function RepairLab({ v, full = false }: { v: Vals; full?: boolean
               </span>
               {'\n          '}
               <span style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <span style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '11px', letterSpacing: '.12em', color: '#9DA1A6' }}>
+                <span className="rp-k" style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '11px', letterSpacing: '.12em', color: '#9DA1A6' }}>
                   BENCH TIME
                 </span>
                 <span

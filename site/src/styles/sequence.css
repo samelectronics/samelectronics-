@@ -256,3 +256,4 @@ section.st .st-bc .st-bc-in p, section.st .st-bc .st-today { color: #4A4D52 !imp
 section.st .st-stats b, section.st .st-stats b *, section.st .st-stats > div > span, section.st .st-stats small, section.st .st-note { color: #26282B !important; -webkit-text-fill-color: #26282B !important; }
 section.st .st-stats { border-top-color: #26282B !important; border-bottom-color: #26282B !important; }
 section.st .st-stats > div + div { border-color: rgba(38,40,43,.22) !important; }
+#repair .rp-k, #repair-lab .rp-k { color: #B9BCC0 !important; }

@@ -1588,7 +1588,7 @@ export default function Hero({ v }: { v: Vals }) {
                       )}
                     >
                       {'\n              '}
-                      {v.b?.iShop ? <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 7h14l-1.2 12.2a2 2 0 0 1-2 1.8H8.2a2 2 0 0 1-2-1.8z" /><path d="M9 10V6a3 3 0 0 1 6 0v4" /></svg> : null}
+                      {v.b?.iShop ? <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" /><path d="M3 6h18" /><path d="M16 10a4 4 0 0 1-8 0" /></svg> : null}
                       {v.b?.iWc ? <i className="se-ic-wechat" style={{ width: '19px', height: '19px' }} aria-hidden="true" /> : null}
                       {v.b?.iSearch ? (
                         <>
@@ -1634,7 +1634,7 @@ export default function Hero({ v }: { v: Vals }) {
                       {'\n            '}
                     </span>
                     {'\n            '}
-                    <span style={{ flex: '1', whiteSpace: 'nowrap' }}>{t(v.b?.label)}</span>{v.b?.shop ? <span className="se-hb-info"><span><b>{Number(v.totalRaw || 0).toLocaleString('en-US')}</b> {t('parts in stock')}</span><span><b>{v.brandCount}</b> {t('brands')}</span></span> : null}
+                    <span style={{ flex: '1', whiteSpace: 'nowrap' }}>{t(v.b?.label)}</span>{v.b?.shop ? <span className="se-hb-info"><span className="hb-live"><i aria-hidden="true" /><b>{Number(v.totalRaw || 0).toLocaleString('en-US')}</b> {t('parts in stock')}</span><span className="hb-brands" title={v.brandCount + ' ' + t('brands')}>{['apple', 'samsung', 'xiaomi', 'google'].map((b) => <img key={b} src={'/assets/brands/' + b + '.svg'} alt="" />)}<em>+{Math.max(0, Number(v.brandCount || 0) - 4)}</em></span></span> : null}
                     {'\n            '}
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
                       <path d="M5 12h14M13 6l6 6-6 6"></path>
@@ -1765,7 +1765,7 @@ export default function Hero({ v }: { v: Vals }) {
             {'\n        '}
             <div
               style={cssToObj(
-                `display:flex;width:max-content;height:100%;animation:seRail3 47.3s linear infinite;animation-play-state:${s(v.railPlay)}`,
+                `display:flex;width:max-content;height:100%;animation:seRail3 43s linear infinite;animation-play-state:${s(v.railPlay)}`,
               )}
             >
               {'\n          '}

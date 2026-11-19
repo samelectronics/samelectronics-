@@ -160,39 +160,34 @@ function render(v: Vals) {
               </li>
             ))}
           </ul>
-          <a className="vs-map" href={v.dir} target="_blank" rel="noopener noreferrer">
+          {/* owner (R10): a real Google map you can move and zoom (the drawn map stays underneath while it loads) */}
+          <div className="vs-map vs-map-live">
             <MapDubai />
-            <span className="vs-map-a">
-              Get directions
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4">
-                <path d="M7 17L17 7M9 7h8v8" />
-              </svg>
-            </span>
-          </a>
+            <iframe title="Sam Electronics · Al Murar, Deira" src={'https://www.google.com/maps?q=' + encodeURIComponent('78G4+3H2 Dubai') + '&z=17&output=embed'} loading="lazy" referrerPolicy="no-referrer-when-downgrade" />
+          </div>
           <p className="vs-addr">
             {v.address} · <span data-no-i18n="">{v.plus}</span>
           </p>
+          {/* owner (R10, the rule for every contact block): Directions and Contact us first (Contact us opens every way to
+              reach us), WhatsApp and WeChat on their own row below; each opens a preview before leaving the website */}
           <div className="vs-acts">
-            <a href={v.wa} target="_blank" rel="noopener noreferrer" className="vs-btn dark">
-              <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-                {WA}
-              </svg>
+            <a href={v.dir} target="_blank" rel="noopener noreferrer" className="vs-btn yel">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></svg>
+              Directions
+            </a>
+            <button type="button" className="vs-btn line dk" onClick={() => window.dispatchEvent(new CustomEvent('se:chatwith'))}>
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" /></svg>
+              Contact us
+            </button>
+            <button type="button" className="vs-btn wa" onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wa' } }))}>
+              <i className="ct-ic wa" aria-hidden="true" />
               WhatsApp
-            </a>
-            <a href={v.tel} className="vs-btn line dk">
-              <svg width="17" height="17" viewBox="0 0 24 24" aria-hidden="true">
-                {PHONE}
-              </svg>
-              <span data-no-i18n="">{v.phone}</span>
-            </a>
-            {/* owner (16 Nov): every contact block offers WhatsApp, WeChat, call and the website chat */}
-            <button type="button" className="vs-btn line dk" onClick={() => window.dispatchEvent(new CustomEvent('se:wechat'))}>
-              <i className="ct-ic wc" style={{ color: '#07C160', width: 17, height: 17 }} aria-hidden="true" />
+            </button>
+            <button type="button" className="vs-btn wc" onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wc' } }))}>
+              <i className="ct-ic wc" aria-hidden="true" />
               WeChat
             </button>
           </div>
-          {/* owner (19 Nov): "Chat with us" next to WhatsApp and WeChat repeated them; the other ways sit behind one quiet link */}
-          <button type="button" className="vs-more" onClick={() => window.dispatchEvent(new CustomEvent('se:chatwith'))}>More ways to reach us: e-mail, website chat, Samsoom</button>
         </div>
       </div>
     </section>

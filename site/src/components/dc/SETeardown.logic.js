@@ -306,16 +306,14 @@ class Component extends DCLogic {
       fmpLeave: () => this.setState({ mag: [0, 0], fmpH: false }),
       shop: { bd: s.shopH ? '#F7C032' : 'rgba(255,255,255,.32)', ty: s.shopH ? -2 : 0, sh: s.shopH ? '0 0 30px rgba(247,192,50,.35)' : '0 0 0 rgba(0,0,0,0)', ax: s.shopH ? 4 : 0 }, shopIn: () => this.setState({ shopH: true }), shopOut: () => this.setState({ shopH: false }), skp: { o: skpOn ? 1 : 0, pe: skpOn ? 'auto' : 'none' },
       skip: (ev) => { ev && ev.preventDefault && ev.preventDefault(); const sec = this.secRef.current; if (!sec) return;
-        /* owner (19 Nov): Skip means done, right now: no held final call that swallows the scroll, no leftover push.
-           The page glides to the start of the next section and stops there (wheel/trackpad momentum is ignored briefly). */
+        /* owner (R10): Skip skips the show and stops on the teardown's final call (never kicks down to the next section).
+           The film is set to its last frame, the page is placed on the final call, and the next scroll leaves as usual. */
         clearTimeout(this.autoT); clearTimeout(this._skipT); this.manual = false; if (this.opBusy()) this.opShow(); this.tossEnd(); this.passing = 0;
-        cancelAnimationFrame(this.twRaf); cancelAnimationFrame(this.sraf); this.anim = false; this.scrolling = false; window.__seJumpForced = 0;
-        const last = this.FS.length - 1; this.idx = last; this.td.faceBack = false; this.td.p = 1; this.td.snap = true; this.setState({ p: 1, gT: 1.1, pre: false });
-        this.mode = 'out'; this.side = 'below'; this.releasing = performance.now(); this.busyUntil = 0;
+        cancelAnimationFrame(this.twRaf); cancelAnimationFrame(this.sraf); this.anim = false; this.scrolling = false; window.__seJumpForced = 0; this.busyUntil = 0;
+        this.holdEnd(); this.side = 'below'; this.releasing = 0;
         try { window.dispatchEvent(new CustomEvent('se:td-done')); } catch (e) { /* */ }
-        const y = Math.round(window.scrollY + sec.getBoundingClientRect().bottom - 72);
-        window.__seCalmUntil = performance.now() + 1100; window.__seOwnScroll = true; window.scrollTo({ top: y, behavior: 'smooth' });
-        this._skipT = setTimeout(() => { window.__seOwnScroll = false; if (Math.abs(window.scrollY - y) > 4) window.scrollTo(0, y); }, 950); },
+        window.__seCalmUntil = performance.now() + 900; this.enterFilm(true); this.opShow(); this.td.tossAt = null; this.setState({ gT: 1.1, pre: false });
+        this._skipT = setTimeout(() => { window.__seOwnScroll = false; const y = this.yFor(this.FS.length - 1); if (Math.abs(window.scrollY - y) > 4) this.ownTo(y); }, 400); },
       mt: { ink: fin > 0.5 ? '#26282B' : '#FFFFFF', sub: fin > 0.5 ? '#26282B' : '#F7C032' }, mRail: fin < 0.5, mFin: fin >= 0.5,
       railFill: (allLit ? 1 : Math.max(0, act) / 7).toFixed(3),
       prev: () => this.goStep(Math.max(-1, act - 1)), next: () => this.goStep(Math.min(7, act + 1)), replay: () => { this.stopAuto(); this.at(0.02); setTimeout(() => this.play(), 200); },

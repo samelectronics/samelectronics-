@@ -127,3 +127,12 @@ html[dir='rtl'] .vs-close { float: left; }
 #visit .vs-acts { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 8px !important; }
 #visit .vs-acts > .vs-btn { justify-content: center; min-width: 0; white-space: nowrap; }
 .vs-more { display: block; margin-top: 12px; padding: 0; border: 0; background: none; color: #5D6166; font: 500 13px Inter, sans-serif; cursor: pointer; text-align: start; } .vs-more:hover { color: #26282B; }
+/* R10 · Visit: a live Google map + the contact rule (Directions, Contact us, then WhatsApp and WeChat) */
+#visit .vs-map-live { height: 210px; background: #26282B; }
+#visit .vs-map-live > svg { position: absolute; inset: 0; }
+#visit .vs-map-live iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+#visit .vs-btn.yel { background: #F7C032 !important; color: #26282B !important; border: 0 !important; }
+#visit .vs-btn.wa { background: #25D366 !important; color: #fff !important; border: 0 !important; box-shadow: none !important; }
+#visit .vs-btn.wc { background: #07C160 !important; color: #fff !important; border: 0 !important; box-shadow: none !important; }
+#visit .vs-btn.wa .ct-ic, #visit .vs-btn.wc .ct-ic { width: 18px; height: 18px; color: #fff; }
+#visit .vs-btn { gap: 8px; cursor: pointer; }

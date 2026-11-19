@@ -1608,3 +1608,35 @@ html[dir="rtl"] .ia3-logos { animation-direction: reverse; }
 /* docked bar on tablets: the logo's name hides like on a phone, so the search gets the room; the count goes */
 @media (max-width: 1100px) { html[data-shop-dock] body header .se-nav-name { opacity: 0 !important; width: 0 !important; overflow: hidden !important; margin: 0 !important; } html .shop-dock .ss-n, html .shop-dock .ss-kbd { display: none !important; } }
 @media (max-width: 1100px) { html[data-shop-dock] body header .se-status { display: none !important; } html[data-shop-dock] body header .se-nav-right .nb { margin-inline-start: auto !important; } }
+/* R10 · checkout channels: a share-sheet row of app icons (no table), a switch bar inside the preview and after sending */
+.ck-via2 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 6px; }
+.ck-a { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 10px 4px 8px; border: 0; border-radius: 16px; background: transparent; cursor: pointer; font: 600 13px Inter, sans-serif; color: #26282B; transition: background .2s; }
+.ck-a:hover { background: #F4F5F6; }
+.ck-a .ic { position: relative; width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center; color: #fff; box-shadow: 0 10px 20px -12px rgba(38,40,43,.6); transition: transform .25s cubic-bezier(.3,1.5,.5,1), box-shadow .25s; }
+.ck-a.v-wa .ic { background: #25D366; } .ck-a.v-wc .ic { background: #07C160; } .ck-a.v-mail .ic { background: #26282B; } .ck-a.v-web .ic { background: #fff; box-shadow: inset 0 0 0 1.5px rgba(38,40,43,.12), 0 10px 20px -12px rgba(38,40,43,.4); }
+.ck-a .ic .ct-ic { width: 26px; height: 26px; color: #fff; } .ck-a .ic img { width: 38px; height: 38px; border-radius: 50%; }
+.ck-a .tick { position: absolute; top: -6px; inset-inline-end: -6px; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: #F7C032; color: #26282B; font: 800 12px Inter, sans-serif; font-style: normal; box-shadow: 0 0 0 3px #fff; transform: scale(0); transition: transform .25s cubic-bezier(.3,1.6,.5,1); }
+.ck-a.on .ic { transform: translateY(-3px); box-shadow: 0 0 0 3px #fff, 0 0 0 5.5px #F7C032, 0 14px 24px -12px rgba(247,192,50,.9); }
+.ck-a.on .tick { transform: scale(1); }
+.ck-via2-d { margin: 6px 0 12px; padding: 10px 14px; border-radius: 12px; background: #FFF8E1; color: #5D4400; font: 500 13.5px Inter, sans-serif; text-align: center; animation: seCardIn .3s ease both; }
+.ck-sw { display: flex; gap: 6px; flex-wrap: wrap; }
+.ck-sw-b { display: inline-flex; align-items: center; gap: 7px; height: 36px; padding: 0 12px 0 5px; border: 0; border-radius: 999px; background: #F2F3F4; color: #26282B; font: 600 13px Inter, sans-serif; cursor: pointer; transition: background .2s, box-shadow .2s; }
+.ck-sw-b .ic { width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; color: #fff; }
+.ck-sw-b.v-wa .ic { background: #25D366; } .ck-sw-b.v-wc .ic { background: #07C160; } .ck-sw-b.v-mail .ic { background: #26282B; } .ck-sw-b.v-web .ic { background: #fff; }
+.ck-sw-b .ic .ct-ic { width: 15px; height: 15px; color: #fff; } .ck-sw-b .ic svg { width: 14px; height: 14px; } .ck-sw-b .ic img { width: 22px; height: 22px; border-radius: 50%; }
+.ck-sw-b:hover { background: #E6E7E8; } .ck-sw-b.on { background: #26282B; color: #fff; box-shadow: 0 0 0 2px #F7C032; }
+.ck-inv-sw { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 0 0 14px; margin-bottom: 14px; border-bottom: 1px dashed rgba(38,40,43,.15); }
+.ck-inv-sw > small { font: 600 10px 'JetBrains Mono', monospace; letter-spacing: .14em; color: #8A8E94; text-transform: uppercase; }
+.ck-msg { margin-top: 12px; border-radius: 14px; background: #F4F5F6; overflow: hidden; }
+.ck-msg-t { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border: 0; background: none; font: 600 13.5px Inter, sans-serif; color: #26282B; cursor: pointer; }
+.ck-msg-t span { width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: #fff; font-weight: 700; }
+.ck-msg-b { max-height: 280px; overflow: auto; padding: 0 14px 14px; font: 400 12.5px/1.55 'JetBrains Mono', monospace; color: #3D3E3F; }
+.ck-ml { display: block; white-space: pre-wrap; } .ck-ml b { color: #26282B; } .ck-mg { display: block; height: 8px; }
+.ck-again { display: flex; flex-direction: column; align-items: center; gap: 8px; margin: 6px 0 14px; }
+.ck-again > small { font: 500 13px Inter, sans-serif; color: #5D6166; }
+@media (max-width: 480px) { .ck-via2 { gap: 4px; } .ck-a .ic { width: 50px; height: 50px; border-radius: 16px; } .ck-a { font-size: 12px; } }
+.ck-inv-sw .ck-sw { flex: 1 1 auto; min-width: 0; }
+.ck-sw-b { white-space: nowrap; flex: none; }
+.ck-sw-b .ic .ct-ic { display: block; background-color: #fff; -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; -webkit-mask-position: center; mask-position: center; }
+.ck-sw-b .ic .ct-ic.wa { -webkit-mask-image: url(/icons/whatsapp.svg); mask-image: url(/icons/whatsapp.svg); }
+.ck-sw-b .ic .ct-ic.wc { -webkit-mask-image: url(/icons/wechat.svg); mask-image: url(/icons/wechat.svg); }

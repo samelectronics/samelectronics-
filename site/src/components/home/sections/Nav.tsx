@@ -136,16 +136,8 @@ export default function Nav({ v }: { v: Vals }) {
               {/* owner (16 Nov): two clear actions; "Contact us" opens every way to reach us */}
               <span className="se-status-acts two">
                 <a href={site.contact.mapsLink} target="_blank" rel="noopener noreferrer">{t('Get directions')}</a>
-                <details className="se-contact-dd">
-                  <summary>{t('Contact us')}</summary>
-                  <span className="se-cdd">
-                    <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wa' } }))}><i className="ct-ic wa" />WhatsApp</button>
-                    <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wc' } }))}><i className="ct-ic wc" />WeChat</button>
-                    <a href={'tel:' + site.contact.storeTel}><svg className="cdd-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg>{t('Call the shop')}</a>
-                    <a href={'mailto:' + site.contact.email}><svg className="cdd-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18v12H3zM3 7l9 6 9-6" /></svg>{t('E-mail')}</a>
-                    <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('se:chatwith'))}><svg className="cdd-ic" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.1" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v11H9l-5 4z" /></svg>{t('Chat on the website')}</button>
-                  </span>
-                </details>
+                {/* owner (R10): Contact us opens the contact options pop-up (every way to reach us), not a list that drops down */}
+                <button type="button" className="se-contact-open" onClick={(e) => { const d = (e.currentTarget.closest('details') as HTMLDetailsElement | null); if (d) d.open = false; window.dispatchEvent(new CustomEvent('se:chatwith')); }}>{t('Contact us')}</button>
               </span>
             </span>
           </span>
