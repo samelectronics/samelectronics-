@@ -76,6 +76,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
   const scanRef = useRef<HTMLDivElement>(null), [dock, setDock] = useState(false);
   // owner: once the big search scrolls away, a slim one follows you smoothly under the bar (search, results, Customize)
   useEffect(() => { const el = scanRef.current; if (!el || typeof IntersectionObserver === 'undefined') return; const io = new IntersectionObserver(([e]) => setDock(!e.isIntersecting && e.boundingClientRect.top < 0), { rootMargin: '-72px 0px 0px 0px' }); io.observe(el); return () => io.disconnect(); });
+  useEffect(() => { const o = () => setCmpOpen(true); window.addEventListener('se:open-compare', o); return () => window.removeEventListener('se:open-compare', o); }, []);
   useEffect(() => { document.documentElement.toggleAttribute('data-shop-dock', dock); return () => document.documentElement.removeAttribute('data-shop-dock'); }, [dock]);
   // owner (18 Nov night): the site bar itself turns into the shop bar. The shop tools sit exactly between the site
   // logo and the site's own buttons (account, notifications, cart, menu), which never hide.
@@ -169,7 +170,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
               <span><b>{D.brands.length}</b><small>{T('brands')}</small></span>
             </div>
           </div>
-          <div className="shop-scan" ref={scanRef}><i className="shop-beam" aria-hidden="true" /><ShopSearch q={f.q} onQ={(q) => set({ q })} onFmp={openFmp} onFilters={() => setSide(true)} nFilters={chips.length} /></div>
+          <div className="shop-scan" ref={scanRef}><i className="shop-beam" aria-hidden="true" /><ShopSearch q={f.q} onQ={(q) => set({ q })} onFmp={openFmp} onFilters={() => (window.innerWidth > 1100 ? setCz(true) : setSide(true))} nFilters={chips.length} /></div>
           {/* owner (latest): a smaller, professional search that follows smoothly (see .shop-dock) */}
           <div className="shop-devs" data-tour-step="2" data-tour-title="My devices" data-tour-text="Add the phones you fix most. I will mark every part that fits them.">
             {/* owner (19 Nov): one tidy panel: the label, your phones as small device tiles and Add, then the fit switch in its own zone */}
@@ -259,7 +260,14 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
             ) : null; })()}
             {res.length ? (
               <div className={'shop-grid' + (view.list ? ' list' : '')} style={{ ['--cols' as string]: view.cols }}>
-                {shown.map((p, k) => { const every = (view.list ? 1 : Math.max(1, +view.cols || 4)) * 3; const ad = (k + 1) % every === 0 && k + 1 < shown.length; /* owner (18 Nov): the ads keep coming as you scroll */ return <React.Fragment key={p.id}><ProductCard p={p} st={st} trade={trade} open={open} list={view.list} fits={myModels.get(p.model_id)} tour={k === 0} />{ad ? <InlineAd slot={(k + 1) / every} lastCat={f.cats[0]} /> : null}</React.Fragment>; })}
+                {shown.map((p, k) => {
+                  /* owner (18 Nov): the ads keep coming as you scroll. R10: the first one after two rows (so it is seen
+                     early), then one every three rows; a short list gets one at its end */
+                  const row = view.list ? 1 : Math.max(1, +view.cols || 4), first = row * 2, every = row * 3, n = k + 1;
+                  const mid = n === first ? 1 : n > first && (n - first) % every === 0 ? 1 + (n - first) / every : 0;
+                  const slot = mid && n < shown.length ? mid : n === shown.length && shown.length >= 3 && shown.length < first + every ? (mid || Math.floor(Math.max(0, n - first) / every) + 1) + (n >= first ? 1 : 0) : 0;
+                  return <React.Fragment key={p.id}><ProductCard p={p} st={st} trade={trade} open={open} list={view.list} fits={myModels.get(p.model_id)} tour={k === 0} />{slot ? <InlineAd slot={slot} lastCat={f.cats[0]} /> : null}</React.Fragment>;
+                })}
               </div>
             ) : (
               <div className="sp-empty shop-none">
@@ -281,7 +289,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
           <a className="shop-dock-logo" href="/" aria-label="Sam Electronics"><LogoMark size={40} animate={false} /><span><b>SAM ELECTRONICS</b><small>QUALITY · WARRANTY · PRICE</small></span></a>
           {/* owner (18 Nov): "a premium search that follows you, with an LED running round its outline, and only the shop's
               essential tools": search in a running-light frame, then Find My Part, Filters, Compare and the cart */}
-          <span className="dk-led"><ShopSearch compact count={res.length} q={f.q} onQ={(q) => { set({ q }); }} onFmp={openFmp} onFilters={() => setSide(true)} nFilters={chips.length} /></span>
+          <span className="dk-led"><ShopSearch compact count={res.length} q={f.q} onQ={(q) => { set({ q }); }} onFmp={openFmp} onFilters={() => (window.innerWidth > 1100 ? setCz(true) : setSide(true))} nFilters={chips.length} /></span>
           <span className="dk-tools">
             <button type="button" className="dk-b" disabled={cmp.length < 1} onClick={() => setCmpOpen(true)} aria-label={T('Compare')}><CompareIcon size={16} /><span className="t">{T('Compare')}</span>{cmp.length ? <em>{cmp.length}</em> : null}</button>
             <span className="shop-dock-ic" ref={dockIc}>

@@ -35,7 +35,7 @@ export const ADS_DEFAULT: Ad[] = [
   { id: 'b11', fx: 'brand', brand: 'nokia', k: 'NOKIA · G · C SERIES', t: 'Nokia parts that last.', d: 'Screens and batteries for Nokia G and C phones, with a written warranty.', chips: ['WARRANTY', 'IN STOCK'], cta: 'Shop Nokia', href: '/shop?q=Nokia', img: '/assets/pose/generic-zy-480.webp', tone: 'w' },
   { id: 'b12', fx: 'brand', brand: 'poco', k: 'POCO · X · F · M', t: 'POCO parts at trade prices.', d: 'Screens and batteries for POCO X, F and M, ready in Deira.', chips: ['TRADE PRICES', 'TESTED'], cta: 'Shop POCO', href: '/shop?q=POCO', img: '/assets/pose/xiaomi-sp-480.webp', tone: 'd' },
   // owner (19 Nov): more kinds of ads, grouped by theme (services · brands · qualities · membership)
-  { id: 's1', fx: 'fix', k: 'TRADE PRICES', t: 'Repair shops pay trade prices.', d: 'Apply once with your trade licence and every part shows your price.', chips: ['APPLY ONCE', 'EVERY GRADE'], cta: 'Get trade prices', href: '/wholesale', img: '/assets/pose/samsung-sp-480.webp', tone: 'd' },
+  { id: 's1', fx: 'stack', k: 'TRADE PRICES', t: 'Repair shops pay trade prices.', d: 'Apply once with your trade licence and every part shows your price.', chips: ['APPLY ONCE', 'EVERY GRADE'], cta: 'Get trade prices', href: '/wholesale', img: '/assets/pose/samsung-sp-480.webp', tone: 'd' },
   { id: 's2', fx: 'stack', k: 'PICK UP TODAY', t: 'Order now, collect in Deira.', d: 'Parts are ready at the counter in about 20 minutes during opening hours.', chips: ['SAME DAY', 'AL MURAR'], cta: 'Shop now', href: '/shop', img: '/assets/se-logo-320.webp', tone: 'w' },
   { id: 's3', fx: 'film', k: 'ASK SAMSOOM', t: 'Not sure which part fits?', d: 'Tell Samsoom the model. He finds the part, the grade and the price.', chips: ['ANY TIME', 'ANY LANGUAGE'], cta: 'Ask Samsoom', href: '/samsoom', img: '/assets/pose/film-24-480.webp', tone: 'y' },
   { id: 'm1', fx: 'card', k: 'SAM CIRCUIT', t: 'Points on every part you buy.', d: 'Your first purchase activates the card. Level up from Connected to Lightning.', chips: ['POINTS', 'LEVELS', 'PERKS'], cta: 'Get the card', href: '/membership', img: '/assets/se-logo-320.webp', tone: 'd' },
@@ -91,16 +91,20 @@ function Vis3({ a, live }: { a: Ad; live: boolean }) {
   if (a.fx === 'ship') return (
     <span className="ia3-ship2">
       <img className="pal" src="/assets/pallet/full-600.webp" alt="" />
-      <span className="regs">{['MIDDLE EAST', 'AFRICA', 'EUROPE', 'ASIA'].map((r, k) => <i key={r} style={{ ['--k' as string]: k } as React.CSSProperties}>{T(r)}</i>)}</span>
+      <span className="regs"><span className="ln" />{['MIDDLE EAST', 'AFRICA', 'EUROPE', 'ASIA'].map((r, k) => <i key={r} style={{ ['--k' as string]: k } as React.CSSProperties}><u />{T(r)}</i>)}</span>
     </span>
   );
   // the repair: the cracked phone, a light passes over it, and it comes out fixed
   if (a.fx === 'fix') return (
-    <span className="ia3-fix2"><img className="was" src="/assets/pose/rep-crack-480.webp" alt="" /><img className="now" src="/assets/pose/rep-fixed-480.webp" alt="" /><i className="scan" /><em className="b">{T('Before')}</em><em className="a">{T('After')}</em></span>
+    <span className="ia3-fix2"><img className="was" src="/assets/pose/rep-crack-480.webp" alt="" /><img className="now" src="/assets/pose/rep-fixed-480.webp" alt="" /><em className="b">{T('Before')}</em><em className="a">{T('After')}</em></span>
   );
   // brand ads: the part big, the brand's logo large and faint behind it
+  // owner (R10): "a better teardown ad": the phone opens layer by layer and every layer is named as it comes out
+  if (a.fx === 'film') return (
+    <span className="ia3-film"><span className="tfm"><Film live={live} /></span><span className="tly">{['SCREEN', 'FRAME', 'BATTERY', 'CAMERA', 'CHARGING PORT'].map((n, k) => <i key={n} style={{ ['--k' as string]: k } as React.CSSProperties}><u>{String(k + 1).padStart(2, '0')}</u>{T(n)}</i>)}</span></span>
+  );
   if (a.fx === 'brand') { const b = adBrand(a); return (
-    <span className="ia3-brand2"><img src={a.img} alt="" /></span>
+    <span className="ia3-brand2"><span className="plate"><SEBrandLogo brand={b} h={26} fit="150x30" color={brandInk(b)} /></span><img src={a.img} alt="" /></span>
   ); }
   return <Visual a={a} live={live} />;
 }
@@ -122,12 +126,14 @@ export default function InlineAd({ slot, lastCat }: { slot: number; lastCat?: st
     return rot.slice(0, 8);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slot, lastCat]);
-  const tone = (['d', 'w', 'y'] as const)[(slot - 1 + 3) % 3];
   const [i, setI] = useState(0), [live, setLive] = useState(false), [seen, setSeen] = useState(false), box = useRef<HTMLAnchorElement>(null);
   useEffect(() => { const el = box.current; if (!el) return; const io = new IntersectionObserver(([e]) => { setLive(e.isIntersecting); if (e.isIntersecting) setSeen(true); }, { threshold: 0.25 }); io.observe(el); return () => io.disconnect(); }, []);
   useEffect(() => { if (!live || list.length < 2) return; const t = window.setTimeout(() => setI((n) => (n + 1) % list.length), 4500); return () => window.clearTimeout(t); }, [i, live, list.length]);
   const a = list[i]; if (!a) return null;
-  const [ac, word] = ACC[a.fx || 'film'] || ACC.film, brandC = a.fx === 'brand' ? brandInk(adBrand(a)) : null;
+  // owner (R10): inside one holder the slides take turns graphite → white → yellow (never three graphite in a row);
+  // the slot offset keeps two holders on screen from wearing the same colour at the same moment
+  const tone = (['d', 'w', 'y'] as const)[(i + slot - 1) % 3];
+  const [ac, word0] = ACC[a.fx || 'film'] || ACC.film, word = a.id === 's1' ? 'TRADE' : a.id === 's3' ? 'SAMSOOM' : word0, brandC = a.fx === 'brand' ? brandInk(adBrand(a)) : null;
   return (
     <a ref={box} className={'ia3' + (live ? ' live' : '') + (seen ? ' seen' : '')} data-in={(slot + i) % 3} data-flip={(slot + i) % 2} data-tone={tone} data-brand={a.fx === 'brand' ? '1' : undefined} href={a.href} aria-label={T(a.t)} style={{ ['--ac' as string]: ac, ['--bc' as string]: brandC || ac } as React.CSSProperties}>
       <span className="ia3-bg" aria-hidden="true"><i className="glow" /><i className="band b1" /><i className="band b2" />{a.fx === 'brand' ? <span className="ia3-logos" key={adBrand(a)}>{[0, 1].map((k) => <span key={k}>{[0, 1, 2].map((j) => <SEBrandLogo key={j} brand={adBrand(a)} h={64} fit="300x70" color={brandInk(adBrand(a))} />)}</span>)}</span> : <span className="ia3-word" data-no-i18n="">{[0, 1].map((k) => <b key={k}>{word} · {word} · </b>)}</span>}</span>

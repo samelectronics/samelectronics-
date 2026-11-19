@@ -164,7 +164,7 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
             <div className="pv-tools">
               <button type="button" className={st.favs.includes(p.id) ? 'on' : ''} onClick={() => { const on = st.favs.includes(p.id); store.fav(p.id); toast(on ? T('Removed from your stars') : T('Starred'), on ? 'off' : 'ok'); }}><PvIc k="star" />{st.favs.includes(p.id) ? T('Starred') : T('Star')}</button>
               <button type="button" className={st.compare.includes(p.id) ? 'on' : ''} onClick={() => { const had = st.compare.includes(p.id); store.cmp(p.id); if (had) return; const n = Math.min(3, st.compare.length + 1); onClose(); if (n >= 2) window.setTimeout(() => window.dispatchEvent(new CustomEvent('se:cmp-open')), 120); }}><PvIc k="cmp" />{T('Compare')}</button>
-              <button type="button" onClick={() => { store.later(p.id); toast(T('Saved for later')); }}><PvIc k="save" />{T('Save')}</button>
+              <button type="button" className={st.saved.includes(p.id) ? 'on' : ''} aria-pressed={st.saved.includes(p.id)} onClick={() => { const on = store.save(p.id); toast(on ? T('Saved for later') : T('Removed from saved'), on ? 'ok' : 'off'); }}><PvIc k="save" />{st.saved.includes(p.id) ? T('Saved') : T('Save')}</button>
               <button type="button" className={st.alerts.includes(p.id) ? 'on' : ''} onClick={() => { const on = st.alerts.includes(p.id); store.alert(p.id); toast(on ? 'Alert removed' : 'We will tell you when it changes', on ? 'off' : 'ok'); }}><PvIc k="bell" />{st.alerts.includes(p.id) ? T('Alert on') : T('Alert')}</button>
               <button type="button" onClick={() => setShareOpen(true)}><PvIc k="share" />{T('Share')}</button>
               <ListMenu p={p} kits={st.kits} />

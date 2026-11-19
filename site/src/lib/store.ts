@@ -39,7 +39,10 @@ export const store = {
   clear() { set({ cart: [] }); },
   later(id: string) { set({ cart: get().cart.filter((x) => x.id !== id), saved: [id, ...get().saved.filter((x) => x !== id)] }); },
   fav(id: string) { set({ favs: toggle(get().favs, id) }); },
-  cmp(id: string) { const c = get().compare; set({ compare: c.includes(id) ? c.filter((x) => x !== id) : [...c, id].slice(-3) }); },
+  // R10 (owner): compare holds 3; a 4th is never dropped silently: Samsoom says so (se:cmp-full) and nothing changes
+  cmp(id: string) { const c = get().compare; if (!c.includes(id) && c.length >= 3) { if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('se:cmp-full', { detail: id })); return; } set({ compare: c.includes(id) ? c.filter((x) => x !== id) : [...c, id] }); },
+  /** R10: the product page's Save is a real toggle (it stays in the cart if it is there) */
+  save(id: string) { const sv = get().saved; set({ saved: sv.includes(id) ? sv.filter((x) => x !== id) : [id, ...sv] }); return !sv.includes(id); },
   alert(id: string) { const on = !get().alerts.includes(id); set({ alerts: toggle(get().alerts, id) }); if (on) notify({ kind: 'stock', t: 'Alert set', d: 'We will tell you here when the price drops or stock is back.', href: '/account#saved' }); },
   device(d: Device) { const l = get().devices; set({ devices: l.some((x) => x.model_id === d.model_id) ? l.filter((x) => x.model_id !== d.model_id) : [...l, d].slice(-8) }); },
   searched(q: string) { q = q.trim(); if (q.length < 2) return; set({ recent: [q, ...get().recent.filter((x) => x.toLowerCase() !== q.toLowerCase())].slice(0, 8) }); },
