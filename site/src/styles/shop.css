@@ -1782,3 +1782,4 @@ html body .shop-dock .ss .ss-drop .ss-tools > * { min-height: 0 !important; heig
   .dp-modal .dp-brands button { flex: none; }
 }
 @media (max-width: 760px) { html body .shop-devs .sd-dev, html body .shop-devs > .dp { width: 100% !important; max-width: none !important; } html body .shop-devs .sd-n { flex: 1; } }
+html[dir="rtl"] body .shop-dock .ss.open .ss-drop { left: 0 !important; right: 0 !important; width: auto !important; }

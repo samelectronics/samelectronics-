@@ -1250,3 +1250,7 @@ html body a.scp-5861bbd1 .hb-live { min-width: 0; overflow: hidden; text-overflo
   html body a.scp-5861bbd1 .hb-lb:not(.hb-shop) { font-size: 13.5px !important; }
   html body a.scp-5861bbd1 .hb-brands { display: none !important; }
 }
+/* R10 audit: the Find My Part button never squeezes its text (the header steps down via HeaderFit instead), and long
+   translated labels on the offer and wholesale buttons wrap inside the button rather than running out of it */
+html body header .scp-90837cfd { flex: none !important; white-space: nowrap; }
+html body a.wo-shop, html body a.wo-btn { white-space: normal !important; height: auto !important; min-height: 44px; line-height: 1.2 !important; text-align: center; padding-block: 8px !important; overflow-wrap: anywhere; }

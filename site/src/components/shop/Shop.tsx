@@ -88,11 +88,18 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
       // on a phone the logo's name hides in this mode, so measure from the round mark itself
       const small = window.innerWidth <= 1100, logo = (small && a.querySelector('.lm2')) || a;
       const keep = Array.from(right.children).filter((c) => !c.matches('.se-status, .se-contact-dd, .sc-host') && (c as HTMLElement).offsetWidth > 0);
-      const L = Math.round(logo.getBoundingClientRect().right + (small ? 10 : 18)), R = keep.length ? Math.min(...keep.map((c) => c.getBoundingClientRect().left)) : window.innerWidth - 20;
-      const root = document.documentElement; root.style.setProperty('--dock-l', L + 'px'); root.style.setProperty('--dock-r', Math.max(12, Math.round(window.innerWidth - R + 14)) + 'px');
+      const root = document.documentElement, W = window.innerWidth, gap = small ? 10 : 18, lr = logo.getBoundingClientRect();
+      // R10 audit: in Arabic, Persian and Urdu the logo is on the right and the icons on the left, so mirror the gap
+      if (root.dir === 'rtl') {
+        const left = keep.length ? Math.max(...keep.map((c) => c.getBoundingClientRect().right)) : 20;
+        root.style.setProperty('--dock-l', Math.max(12, Math.round(left + 14)) + 'px'); root.style.setProperty('--dock-r', Math.round(W - lr.left + gap) + 'px');
+      } else {
+        const L = Math.round(lr.right + gap), R = keep.length ? Math.min(...keep.map((c) => c.getBoundingClientRect().left)) : W - 20;
+        root.style.setProperty('--dock-l', L + 'px'); root.style.setProperty('--dock-r', Math.max(12, Math.round(W - R + 14)) + 'px');
+      }
     };
-    fit(); const t = window.setTimeout(fit, 400); window.addEventListener('resize', fit);
-    return () => { window.clearTimeout(t); window.removeEventListener('resize', fit); };
+    fit(); const t = window.setTimeout(fit, 400); window.addEventListener('resize', fit); window.addEventListener('se:lang', fit);
+    return () => { window.clearTimeout(t); window.removeEventListener('resize', fit); window.removeEventListener('se:lang', fit); };
   }, [dock]);
   const [ready, setReady] = useState(false), [f, setF] = useState<Filters>(EMPTY), [pid, setPid] = useState<string | null>(null), [scope, setScope] = useState<Scope>(mode === 'deals' ? 'deals' : 'all');
   const [view, setView] = useState<View>({ cols: 4, list: false, trade: true, per: 24 }), [page, setPage] = useState(1), [cz, setCz] = useState(false), [cmpOpen, setCmpOpen] = useState(false), [diffOnly, setDiffOnly] = useState(false), [side, setSide] = useState(false);
