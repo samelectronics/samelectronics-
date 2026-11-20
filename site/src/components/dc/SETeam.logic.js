@@ -15,7 +15,7 @@ export const ROLES = [
   { code: 'T04', role: 'Finance & Checkout', mono: 'FC', bio: 'Handles invoices, payments and trade accounts.', help: ['Invoices and receipts', 'Payment options', 'Trade account questions'] },
   { code: 'T05', role: 'Founder', mono: 'TA', founder: true, bio: '', help: ['Partnerships and distribution', 'Large trade agreements', 'Feedback on our service'] },
 ];
-const K = 3.4, C = .32, /* R10 (owner: "weightless, like wind, never freezing"): lighter, floatier swing */ /* owner (15 Nov): they keep swinging and settle slowly, like real lanyards */ G = 2600, KY = 900, CY = 26; // pendulum (1/s²), damping, gravity and lanyard stretch (px)
+const K = 3.4, C = .42, /* R10 (owner: "weightless, like wind, never freezing"): lighter, floatier swing */ /* owner (15 Nov): they keep swinging and settle slowly, like real lanyards */ G = 2600, KY = 900, CY = 26; // pendulum (1/s²), damping, gravity and lanyard stretch (px)
 // owner (16 Nov): every pass is a different order (number, customer, parts, destination), not the same short slip
 const ORDERS = [
   ['#1294', 'REPAIR SHOP', 'A54 OLED SCREEN', 'x3', 'DEIRA'], ['#1301', 'TRADER', 'IP13 BATTERY', 'x20', 'BAGHDAD'], ['#1307', 'WALK-IN', 'S23 BACK GLASS', 'x1', 'COUNTER'],
@@ -31,7 +31,7 @@ class Component extends DCLogic {
     this.b = ROLES.map((_, i) => ({ th: 0, w: 0, y: -720, vy: 0, dropAt: Infinity, ph: i * 1.7 + 0.4, om: 2.3 + i * 0.17, amp: 9 + (i % 3) * 2.5 }));
     this.mx = null; this.alive = true; this.t = 0; let last = performance.now();
     /* owner (16 Nov): the cards sometimes froze: a tall section never reached 20% visible, so it never woke up. Now any part on screen keeps it moving, and the drop starts once a quarter of the screen is the team. */
-    this.io = new IntersectionObserver(([e]) => { const was = this.vis; this.vis = e.isIntersecting; if (!was && this.vis && this.state.seen) this.b.forEach((b, i) => { b.w += (i % 2 ? -1 : 1) * (14 + i * 2); }); /* R10: every time they come back into view, a gust */ if (e.isIntersecting && !this.state.seen && e.intersectionRect.height > innerHeight * 0.08) this.start(); /* owner (17 Nov): they come in as soon as the team shows */ }, { threshold: Array.from({ length: 11 }, (_, i) => i / 10) });
+    this.io = new IntersectionObserver(([e]) => { const was = this.vis; this.vis = e.isIntersecting; if (!was && this.vis && this.state.seen) this.b.forEach((b, i) => { b.w += (i % 2 ? -1 : 1) * (8 + i); }); /* R10: every time they come back into view, a gust */ if (e.isIntersecting && !this.state.seen && e.intersectionRect.height > innerHeight * 0.08) this.start(); /* owner (17 Nov): they come in as soon as the team shows */ }, { threshold: Array.from({ length: 11 }, (_, i) => i / 10) });
     setTimeout(() => this.secRef.current && this.io.observe(this.secRef.current), 50);
     const loop = (now) => { if (!this.alive) return; const dt = Math.min(0.033, (now - last) / 1000); last = now; if (this.vis && !document.hidden) { this.t += dt; this.step(dt); this.paint(); } this.raf = requestAnimationFrame(loop); };
     this.raf = requestAnimationFrame(loop);
@@ -40,20 +40,20 @@ class Component extends DCLogic {
     window.seTeam = (t, flip) => { if (!this.state.seen) this.start(); this.b.forEach((b) => { b.y = 0; b.vy = 0; b.th = 0; b.w = 0; b.dropAt = -1; }); this.t0 = this.t - t; if (flip != null) this.setState({ flip }); this.paint(); };
   }
   componentWillUnmount() { this.offRp && this.offRp(); this.alive = false; cancelAnimationFrame(this.raf); this.io && this.io.disconnect(); window.removeEventListener('se:lang', this.onLang); window.removeEventListener('resize', this.onResize); }
-  start() { this.setState({ seen: true }); this.b.forEach((b, i) => { b.dropAt = this.t + 0.05 + i * 0.09; b.w += (i % 2 ? -1 : 1) * 22; }); this.t0 = this.t; /* R10: a gust sweeps through when they come into view */ }
+  start() { this.setState({ seen: true }); this.b.forEach((b, i) => { b.dropAt = this.t + 0.05 + i * 0.09; b.w += (i % 2 ? -1 : 1) * 12; }); this.t0 = this.t; /* R10: a gust sweeps through when they come into view */ }
   step(dt) {
     const t = this.t, R = this.secRef.current;
     this.b.forEach((b, i) => {
       if (t < b.dropAt) return;
       // lanyard: free fall while slack, a stiff damped spring once it is stretched
       const ay = G - (b.y > 0 ? KY * b.y + CY * b.vy : 0); b.vy += ay * dt; b.y += b.vy * dt;
-      if (!b.landed && b.y > 0) { b.landed = true; b.w += (i % 2 ? -1 : 1) * 26; } // lands with a swing
+      if (!b.landed && b.y > 0) { b.landed = true; b.w += (i % 2 ? -1 : 1) * 14; } // lands with a swing
       // pendulum: idle forcing (each its own rhythm) + the mouse nudging it away
       // idle: a soft breeze, each its own rhythm, plus rare random gusts
       // owner (16 Nov): ONE gentle wind for all of them: a slow breeze that travels across the rail (each badge a little
       // later than its neighbour), about 3 degrees, breathing stronger and softer over ~20 s; no random kicks
       const gust = 0.75 + 0.25 * Math.sin(t * 0.31) + 0.15 * Math.sin(t * 0.083 + 1.3);
-      let F = 30 * gust * (Math.sin(1.05 * t - i * 0.6) + 0.3 * Math.sin(1.7 * t + i * 1.3)); /* owner (17 Nov): always moving, like wind, a little livelier */ /* owner (16 Nov): they barely moved, as if screwed in: a real swing now */
+      let F = 13 * gust * (Math.sin(1.05 * t - i * 0.6) + 0.35 * Math.sin(2.7 * t + i * 1.3)); /* R11 (owner: 'they move a bit then freeze'): the wind pushed them past the soft limit, where they sat pinned for seconds; it was also near their own rhythm (resonance). Now a free swing of ~6–8°, never pinned */ /* owner (17 Nov): always moving, like wind, a little livelier */ /* owner (16 Nov): they barely moved, as if screwed in: a real swing now */
       // owner (15 Nov): the mouse BRUSHES them: a passing pointer gives a push in its direction (by its speed), then they
       // swing freely and settle by themselves. A resting pointer does nothing (they never get stuck pushed aside).
       if (this.mvx && this.mx != null && this.cx) { const dx = this.cx[i] - this.mx, ady = Math.abs(this.my - 300); if (Math.abs(dx) < 180 && ady < 380) b.w += this.mvx * (1 - Math.abs(dx) / 180) * 2.4; }
