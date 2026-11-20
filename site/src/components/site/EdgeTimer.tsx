@@ -6,20 +6,23 @@
 // measured, so a pill gets true half-circle ends (never an ellipse) at any size.
 import React, { useEffect, useRef, useState } from 'react';
 
-export default function EdgeTimer({ ms, onEnd, r = 20, tone }: { ms: number; onEnd?: () => void; r?: number; tone?: 'y' | 'r' | 'g' }) {
+export default function EdgeTimer({ ms, onEnd, r = 20 }: { ms: number; onEnd?: () => void; r?: number; tone?: 'y' | 'r' | 'g' }) {
   const ref = useRef<SVGSVGElement>(null), [box, setBox] = useState<{ w: number; h: number } | null>(null);
   useEffect(() => {
     const el = ref.current?.parentElement; if (!el) return;
     const f = () => setBox({ w: el.offsetWidth, h: el.offsetHeight }); f();
     const ro = new ResizeObserver(f); ro.observe(el); return () => ro.disconnect();
   }, []);
-  const w = box ? Math.max(0, box.w - 2) : 0, h = box ? Math.max(0, box.h - 2) : 0, rr = Math.min(r, h / 2, w / 2);
+  // owner (R11, 2nd look): "not red, not around the whole card": one yellow LED line along the bottom edge that curves up
+  // into the rounded corners, exactly on the card's shape, draining from left to right (right to left in RTL languages)
+  const w = box ? box.w : 0, h = box ? box.h : 0, rr = Math.max(2, Math.min(r, h / 2, w / 2)), y = h - 1.25, up = Math.min(rr, h / 2);
+  const d = box ? `M 1.25 ${(h - up).toFixed(1)} A ${rr} ${rr} 0 0 0 ${(rr).toFixed(1)} ${y.toFixed(1)} L ${(w - rr).toFixed(1)} ${y.toFixed(1)} A ${rr} ${rr} 0 0 0 ${(w - 1.25).toFixed(1)} ${(h - up).toFixed(1)}` : '';
   return (
-    <svg ref={ref} className={'se-et' + (tone ? ' ' + tone : '')} aria-hidden="true" width={box ? box.w : 0} height={box ? box.h : 0} style={{ ['--et-ms' as string]: ms + 'ms' }} onAnimationEnd={(e) => { if ((e.target as Element).classList.contains('run')) onEnd?.(); }}>
+    <svg ref={ref} className="se-et" aria-hidden="true" width={w} height={h} style={{ ['--et-ms' as string]: ms + 'ms' }} onAnimationEnd={(e) => { if ((e.target as Element).classList.contains('run')) onEnd?.(); }}>
       {box ? (
         <>
-          <rect className="trk" x={1} y={1} width={w} height={h} rx={rr} ry={rr} pathLength={100} />
-          <rect className="run" x={1} y={1} width={w} height={h} rx={rr} ry={rr} pathLength={100} />
+          <path className="trk" d={d} pathLength={100} />
+          <path className="run" d={d} pathLength={100} />
         </>
       ) : null}
     </svg>

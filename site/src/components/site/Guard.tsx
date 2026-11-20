@@ -83,6 +83,13 @@ export default function Guard() {
     const flashWm = (hold = false) => { const h = document.documentElement; h.classList.add('shot-on'); if (hold) { holdAt = performance.now(); h.classList.add('shot-hold'); window.clearTimeout(ht); ht = window.setTimeout(clearHold, 900); } window.clearTimeout(ft); ft = window.setTimeout(() => h.classList.remove('shot-on'), 5000); };
     const pre = (e: KeyboardEvent) => { if ((e.metaKey && e.shiftKey && (e.key === 'Meta' || e.key === 'Shift' || /^[345s]$/i.test(e.key))) || (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 's') || e.key === 'PrintScreen' || e.code === 'PrintScreen') flashWm(true); };
     ['pointermove', 'focus', 'keyup'].forEach((ev) => window.addEventListener(ev, clearHold, { passive: true }));
+    // owner (R11): "I took two screenshots and nothing showed". On Windows, Win+Shift+S opens the snipping tool, which takes
+    // the focus before the page ever sees the S. So: the shortcut's first keys (Win/⌘ + Shift), then the page losing focus
+    // within 1.5 s, IS a screenshot. A plain window switch (no shortcut keys first) never counts.
+    let combo = 0;
+    const arm = (e: KeyboardEvent) => { if ((e.metaKey || e.key === 'Meta' || e.key === 'OS') && (e.shiftKey || e.key === 'Shift')) combo = performance.now(); };
+    const lost = () => { if (combo && performance.now() - combo < 1500) { combo = 0; seen(); } };
+    window.addEventListener('keydown', arm, true); window.addEventListener('blur', lost);
     window.addEventListener('keydown', pre, true);
     const seen = () => {
       flashWm(true); import('@/lib/sound').then((m) => m.play('warn', true)).catch(() => {});
@@ -93,7 +100,7 @@ export default function Guard() {
     const down = (e: KeyboardEvent) => { if (e.key === 'Escape') { setShot(false); setVpn(false); return; } const k = e.key.toLowerCase(); if ((e.metaKey && e.shiftKey && ['3', '4', '5', 's'].includes(k)) || (e.ctrlKey && e.shiftKey && k === 's' && navigator.platform.startsWith('Win'))) seen(); };
     const up = (e: KeyboardEvent) => { if (e.key === 'PrintScreen' || e.code === 'PrintScreen') seen(); };
     window.addEventListener('keydown', down, true); window.addEventListener('keyup', up, true);
-    return () => { window.removeEventListener('keydown', pre, true); ['pointermove', 'focus', 'keyup'].forEach((ev) => window.removeEventListener(ev, clearHold)); window.clearTimeout(ft); window.clearTimeout(ht); window.removeEventListener('keydown', down, true); window.removeEventListener('keyup', up, true); window.clearInterval(vpnTimer); document.removeEventListener('visibilitychange', vis); window.removeEventListener('online', check); window.removeEventListener('focus', check); };
+    return () => { window.removeEventListener('keydown', pre, true); ['pointermove', 'focus', 'keyup'].forEach((ev) => window.removeEventListener(ev, clearHold)); window.removeEventListener('keydown', arm, true); window.removeEventListener('blur', lost); window.clearTimeout(ft); window.clearTimeout(ht); window.removeEventListener('keydown', down, true); window.removeEventListener('keyup', up, true); window.clearInterval(vpnTimer); document.removeEventListener('visibilitychange', vis); window.removeEventListener('online', check); window.removeEventListener('focus', check); };
   }, []);
   return (
     <>

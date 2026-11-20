@@ -1362,3 +1362,23 @@ html body footer:has(.ft-mark)::after { height: 60px !important; bottom: -20px !
 .cc-card.cc2 .cc-list .cc-row:is(.k-mail, .k-tel, .k-map) .cc-li { width: 34px; height: 34px; border-radius: 10px; }
 @media (max-width: 560px) { .cc-card.cc2 .cc-list .cc-row:is(.k-here, .k-wa, .k-wc, .k-mail, .k-tel, .k-map) { grid-column: span 1 !important; } .cc-card.cc2 .cc-list .cc-row.k-here { grid-column: 1 / -1 !important; min-height: 0; flex-direction: row; align-items: center; } }
 @media (max-width: 560px) { .cc-card.cc2 .cc-list .cc-row.k-map { grid-column: 1 / -1 !important; } }
+.se-et path { fill: none; stroke-width: 3px; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.se-et .trk { stroke: rgba(247,192,50,.18); }
+.se-et .run { stroke: #F7C032; stroke-dasharray: 100 100; animation: seEt var(--et-ms, 8s) linear forwards; filter: drop-shadow(0 0 3px rgba(247,192,50,.95)) drop-shadow(0 0 8px rgba(247,192,50,.45)); }
+html[dir="rtl"] .se-et { transform: scaleX(-1); }
+/* R11 (owner: "the moving things right of the shop button are weird"): one clean capsule, no flipping logos */
+html body a.scp-5861bbd1 .se-hb-info > span.hb-live { border-radius: 999px !important; padding-inline-end: 12px !important; }
+/* R11 (owner: "love the yellow glow behind the SAM ELECTRONICS title, make it fully across, not just the centre") */
+html body footer:has(.ft-mark)::before { left: 0 !important; right: 0 !important; width: auto !important; transform: none !important; bottom: -50px !important; height: 190px !important; background: radial-gradient(60% 100% at 50% 100%, rgba(247,192,50,.24), rgba(247,192,50,.08) 55%, transparent 80%), linear-gradient(0deg, rgba(247,192,50,.10), transparent 70%) !important; }
+/* ── R11 · cookie banner: a compact floating card (not a full-width strip), medallion on the top edge, LED line ── */
+@media (min-width: 761px) {
+  html body .sc2-banner { left: 24px !important; right: auto !important; bottom: 24px !important; margin: 0 !important; width: 430px; max-width: calc(100vw - 48px); flex-direction: column; align-items: stretch; gap: 14px !important; padding: 40px 22px 20px !important; border-radius: 24px !important; overflow: visible; }
+  html body .sc2-banner .sc2-cookie { position: absolute; top: -28px; left: 22px; }
+  html body .sc2-banner .sc2-bacts { margin: 0 !important; width: 100%; }
+  html body .sc2-banner .sc2-bacts .st-btn { flex: 1; height: 44px; }
+  html[dir="rtl"] body .sc2-banner { left: auto !important; right: 24px !important; } html[dir="rtl"] body .sc2-banner .sc2-cookie { left: auto; right: 22px; }
+}
+html body .sc2-banner::before { content: ''; position: absolute; left: 22%; right: 22%; top: 0; height: 2px; border-radius: 2px; background: linear-gradient(90deg, transparent, #F7C032, transparent); box-shadow: 0 0 12px rgba(247,192,50,.8); }
+html body .sc2-banner .sc2-btxt b { font: 700 18px/1.2 'Space Grotesk', sans-serif !important; }
+html body .sc2-banner { animation: sc2Rise .55s cubic-bezier(.2,1.2,.35,1) both; }
+@keyframes sc2Rise { from { opacity: 0; transform: translateY(24px) scale(.97); } }
