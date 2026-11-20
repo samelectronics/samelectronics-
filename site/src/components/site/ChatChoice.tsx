@@ -56,7 +56,7 @@ export default function ChatChoice() {
   if (!open) return null;
   return (
     <div className="wc-veil ct-veil cc-veil" onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}>
-      <div className={'cc-card' + (mode === 'person' ? ' wide' : ' cc2')} role="dialog" aria-modal="true" aria-label={T('Chat with us')}>
+      <div className={'cc-card' + (mode === 'person' ? ' wide' : ' cc3')} role="dialog" aria-modal="true" aria-label={T('Chat with us')}>
         <button type="button" className="wc-x" aria-label={T('Close')} onClick={() => setOpen(false)}>✕</button>
         {mode === 'person' ? (<>
           <button type="button" className="cc-back" onClick={() => setMode('')}>← {T('Back')}</button>
@@ -66,11 +66,11 @@ export default function ChatChoice() {
               other, not the squared table": the same card as the system notices, Samsoom on top, every way in a list */}
           {/* owner (19 Nov, round 2): "too long down; make it like the language chooser, horizontal": Samsoom on a graphite
               panel on the left, every way in a two-column grid on the right */}
-          <div className="cc-side" aria-hidden="false">
-            <span className="cc-bub">{T('How would you like to reach us?')}</span>
-            <span className="cc-av"><LiveSam size={130} pose="happy" /></span>
-            <p className="cc-p">{T('Pick any way. A person from the shop replies, Samsoom answers straight away.')}</p>
-          </div>
+          {/* R14 (owner: "like the way Samsoom appears when he asks: did you call them?"): the system-notice card. Samsoom
+              in his circle sitting on top, one title, one line, then every way to reach us */}
+          <span className="cc-sam" aria-hidden="true"><LiveSam fit size={112} pose="happy" /></span>
+          <b className="cc-h">{T('How would you like to reach us?')}</b>
+          <p className="cc-p2">{T('Pick any way. A person from the shop replies, Samsoom answers straight away.')}</p>
           <div className="cc-list">
             {ROWS.map((r, k) => {
               const inner = (<><span className={'cc-li ' + r.k}>{r.ic}</span><span className="cc-lt"><b>{r.k === 'wa' ? 'WhatsApp' : r.k === 'wc' ? 'WeChat' : T(r.b)}</b><small dir={r.ltr ? 'ltr' : undefined}>{r.ltr ? r.s : T(r.s)}</small></span><i className="cc-la" aria-hidden="true">›</i></>);

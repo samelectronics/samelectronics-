@@ -219,3 +219,22 @@ html[dir="rtl"] .st-vis { left: auto; right: 18px; }
 @media (max-width: 900px) { html body section.st .st-stats { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { .st-vis * { animation: none !important; } }
 html body #story .st-card.now .st-v { color: #26282B !important; -webkit-text-fill-color: #26282B !important; background: #F7C032 !important; }
+/* R12b (owner: "the timeline boxes are still awkward: make them like the Stock up strip; the maps are basic, a squared frame
+   instead of a smooth fade that turns into the map") */
+html body section.st .st-stats { gap: 0 !important; border-top: 2px solid #26282B !important; border-bottom: 2px solid #26282B !important; }
+html body section.st .st-stats > div { background: none !important; box-shadow: none !important; border-radius: 0 !important; padding: 22px 24px 20px 96px !important; min-height: 0 !important; }
+html[dir="rtl"] body section.st .st-stats > div { padding: 22px 96px 20px 24px !important; }
+html body section.st .st-stats > div + div { border-inline-start: 1px solid rgba(26,27,29,.35) !important; }
+html body section.st .st-stats > div::after { display: none !important; }
+html body section.st .st-stats b, html body section.st .st-stats b * { color: #26282B !important; -webkit-text-fill-color: #26282B !important; font-size: 44px !important; }
+html body section.st .st-stats small { color: #26282B !important; -webkit-text-fill-color: #26282B !important; opacity: .7 !important; }
+html body section.st .st-stats > div > span { color: #3A3D42 !important; -webkit-text-fill-color: #3A3D42 !important; }
+.st-vis { width: 60px !important; height: 60px !important; left: 22px !important; }
+html[dir="rtl"] .st-vis { left: auto !important; right: 22px !important; }
+.st-vis .tr { stroke: rgba(38,40,43,.15) !important; } .st-vis .hd { stroke: #26282B !important; } .st-vis .gl { stroke: rgba(38,40,43,.3) !important; }
+.st-vis .rg { stroke: #26282B !important; filter: none !important; } .st-vis .dt { fill: #26282B !important; } @keyframes stDot { 30%, 60% { opacity: 1; } }
+.st-vis .arc { stroke: rgba(38,40,43,.6) !important; } .st-vis .pn path { fill: #26282B !important; } .st-vis .pn.b path { fill: #fff !important; } .st-vis .pl { fill: #26282B !important; filter: none !important; }
+/* the branch maps melt into their cards: no hard frame, a soft fade from the map into the graphite */
+section.st .st-bc .st-map { height: 300px !important; -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 55%, rgba(0,0,0,.4) 82%, transparent 100%); mask-image: linear-gradient(180deg, #000 0%, #000 55%, rgba(0,0,0,.4) 82%, transparent 100%); margin-bottom: -60px; border-radius: inherit; }
+section.st .st-bc .st-gmap { filter: grayscale(.55) contrast(1.05) brightness(.92) !important; }
+section.st .st-bc .st-open { z-index: 3; }

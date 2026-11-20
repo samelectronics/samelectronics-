@@ -51,7 +51,8 @@ export function play(s: Snd, force = false) {
   const p = prefs().sound;
   if (!force && (!p.on || p.vol <= 0)) return;
   if (location.pathname.startsWith('/staff')) return;
-  if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches && !force) return;
+  // R14 (owner: "button and typing sounds?"): sound is not motion. Computers with 'reduce animations' switched on
+  // (common on Windows laptops) heard nothing at all; the visitor's own sound switch in Settings is the only gate now
   const now = performance.now(); if (now - last < 35) return; last = now; // never a burst of clicks
   try {
     ctx = ctx || new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();

@@ -4079,5 +4079,6 @@ const DICT: Record<string, string> = {
   'TESTED.': 'PROBADO.',
   'GRADED.': 'CLASIFICADO.',
   'HONEST.': 'HONESTO.',
+  'now': 'agora',
 };
 export default DICT;

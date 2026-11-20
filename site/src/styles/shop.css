@@ -1815,8 +1815,7 @@ html body .shop-dock .ss.open .ss-bar::before { opacity: 0 !important; }
    same spot so it simply stays, the search grows out from the left, the icons settle one after another. */
 html body .shop-dock { transform: none !important; transition: opacity .28s ease, visibility 0s linear .28s !important; visibility: hidden; }
 html body .shop-dock.on { visibility: visible; transition: opacity .22s ease, visibility 0s !important; }
-html[data-shop-dock] body header { transform: none !important; opacity: 0; pointer-events: none; transition: opacity .2s ease .08s !important; }
-html body header { transition: opacity .25s ease !important; }
+/* R12b: the dock lives INSIDE the real header (between the logo and the icons): the header itself never hides */
 html body .shop-dock .ss { clip-path: inset(0 62% 0 0 round 16px); transition: clip-path .5s cubic-bezier(.2,.9,.2,1) .04s; }
 html[dir="rtl"] body .shop-dock .ss { clip-path: inset(0 0 0 62% round 16px); }
 html body .shop-dock.on .ss { clip-path: inset(-6px -6px -6px -6px round 18px); }
@@ -1853,3 +1852,48 @@ body:has(.shop-grid) #faq .fq-head { margin-bottom: 26px; }
 .ia3-ship2 .pal { height: 270px !important; max-height: none !important; transform: scale(1.25); }
 .ia3-ship2 .regs { display: none !important; }
 .ia3-vis { overflow: visible; }
+/* R12b · morph order: the nav links leave first (fast), then the search grows in their place, so nothing overlaps */
+html[data-shop-dock] header nav[data-tour="nav"], html[data-shop-dock] header .se-status, html[data-shop-dock] header .se-contact-dd { transition: opacity .14s ease, filter .14s ease, transform .14s ease !important; }
+html body .shop-dock .ss { transition: clip-path .46s cubic-bezier(.2,.9,.2,1) .12s !important; }
+html body .shop-dock { transition: opacity .2s ease .1s, visibility 0s linear .3s !important; }
+html body .shop-dock.on { transition: opacity .2s ease .1s, visibility 0s !important; }
+html body .shop-dock .dk-tools > * { opacity: 0; translate: 0 -6px; transition: opacity .25s ease .3s, translate .35s cubic-bezier(.3,1.5,.5,1) .3s; }
+html body .shop-dock.on .dk-tools > * { opacity: 1; translate: 0 0; }
+/* R12b (owner: "the customization page is unprofessional; brands in their colours look cheap; no playful mouse glow on a
+   serious page"): a graphite branded header with the LED line, one graphite tone for every logo, no hover glow, and the
+   Reset button readable */
+.cz .cz-top { background: linear-gradient(180deg, #34363A, #26282B) !important; border-bottom: 0 !important; position: relative; }
+.cz .cz-top::after { content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: linear-gradient(90deg, transparent, #F7C032 20%, #FFE08A 50%, #F7C032 80%, transparent); box-shadow: 0 0 10px rgba(247,192,50,.6); }
+.cz .cz-top b, .cz .cz-tt b { color: #FFFFFF !important; -webkit-text-fill-color: #fff !important; } .cz .cz-top small { color: #C9CCD1 !important; }
+.cz .cz-top .wc-x, .cz .cz-top button[aria-label] { background: rgba(255,255,255,.08) !important; color: #fff !important; }
+.cz :is(img, svg)[class*="logo"], .cz [class*="brand"] :is(img, svg) { filter: grayscale(1) brightness(.35) contrast(1.2) !important; }
+.cz [class*="brand"] svg [fill]:not([fill="none"]) { fill: #26282B !important; }
+.cz * { --hover-glow: none; }
+.cz :is(button, a, [role="button"]):hover { filter: none !important; translate: none !important; }
+.cz :is(button, a, [role="button"]):not(.y):not([class*="go"]):not([class*="apply"]):hover { box-shadow: inset 0 0 0 1.5px #26282B !important; }
+.cz .se-press { animation: none !important; }
+.cz [class*="reset"], .cz button:disabled { color: #5D6166 !important; -webkit-text-fill-color: #5D6166 !important; background: #F1F2F4 !important; border-color: rgba(38,40,43,.12) !important; }
+.cz button:disabled { opacity: .6; }
+.cz .sp-btn.ghost { color: #26282B !important; -webkit-text-fill-color: #26282B !important; background: #FFFFFF !important; box-shadow: inset 0 0 0 1.5px rgba(38,40,43,.25) !important; }
+/* R12b · Add a device: a softer, rounder window; each model shows its own shaded phone back */
+.dp-bk { display: grid; place-items: center; width: 44px; height: 48px; flex: none; border-radius: 12px; background: radial-gradient(80% 80% at 50% 25%, #FFFFFF, #ECEEF0); box-shadow: inset 0 0 0 1px rgba(38,40,43,.06); }
+.dp-bk .dv-back { filter: drop-shadow(0 4px 5px rgba(38,40,43,.28)); transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
+.dp-it:hover .dp-bk .dv-back { transform: rotate(-8deg) translateY(-2px); }
+.dp-modal, .dp-panel { border-radius: 28px !important; }
+.dp-it { border-radius: 16px !important; }
+/* R12b · brand ads: their photos carry wide margins, so the part is zoomed to fill the column */
+.ia3-brand2 img { transform: scale(1.4); transform-origin: 50% 55%; }
+.ia3-part img { transform: scale(1.18); transform-origin: 50% 55%; }
+/* R14 · Customize: every logo in one graphite ink; the live count pill readable on the graphite header */
+.cz .cz-bl :is(svg, img) { filter: none !important; } .cz .cz-bl img { filter: grayscale(1) brightness(.3) !important; }
+.cz .cz-live { background: rgba(255,255,255,.08) !important; color: #C9CCD1 !important; -webkit-text-fill-color: #C9CCD1 !important; box-shadow: inset 0 0 0 1px rgba(255,255,255,.1) !important; }
+.cz .cz-live b { color: #FFFFFF !important; -webkit-text-fill-color: #fff !important; }
+/* R14 (owner: "the Add device search shows a rectangular frame; I want the LED flowing outline"): the same running LED
+   ring as the shop search, no flat yellow frame */
+.dp-modal .dp-search { position: relative; isolation: isolate; border-radius: 16px !important; border: 0 !important; background: #F4F5F6 !important; box-shadow: inset 0 0 0 1px rgba(38,40,43,.08) !important; outline: none !important; }
+.dp-modal .dp-search:focus-within { box-shadow: 0 0 0 4px rgba(247,192,50,.14), 0 0 26px -6px rgba(247,192,50,.6) !important; background: #FFFFFF !important; }
+.dp-modal .dp-search::before { content: ''; position: absolute; inset: -2px; z-index: -1; border-radius: inherit; padding: 2px; pointer-events: none; background: conic-gradient(from var(--ssa), rgba(247,192,50,.35) 0deg, #F7C032 40deg, #FFF4D1 58deg, #F7C032 76deg, rgba(247,192,50,.35) 120deg, rgba(247,192,50,.35) 200deg, #F7C032 240deg, #FFF4D1 254deg, #F7C032 268deg, rgba(247,192,50,.35) 310deg); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity .3s; animation: ssLed 2.2s linear infinite; }
+.dp-modal .dp-search:focus-within::before { opacity: 1; filter: drop-shadow(0 0 4px rgba(247,192,50,.8)); }
+.dp-modal .dp-search input, .dp-modal .dp-search input:focus { outline: none !important; box-shadow: none !important; background: transparent !important; border: 0 !important; }
+/* bigger, clearer phone backs in the list */
+.dp-bk { width: 52px !important; height: 58px !important; }

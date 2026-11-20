@@ -21,6 +21,34 @@ export function DevIcon({ kind = 'phone', size = 30 }: { kind?: string; size?: n
     <svg className="dv-ic" width={size} height={size} viewBox="0 0 32 32" aria-hidden="true"><rect x="8" y="2" width="16" height="28" rx="4" fill="#fff" stroke="#3D3E3F" strokeWidth="1.6" /><rect x="10.5" y="4.6" width="7.4" height="8.2" rx="2.2" fill="#3D3E3F" /><circle cx="12.6" cy="6.9" r="1.3" fill="none" stroke="#F7C032" strokeWidth="1" /><circle cx="12.6" cy="10.6" r="1.3" fill="none" stroke="#F7C032" strokeWidth="1" /><circle cx="15.9" cy="8.7" r=".8" fill="#C9CCD1" /><rect x="13.5" y="19" width="5" height="5" rx="1.4" fill="none" stroke="#C9CCD1" strokeWidth="1.1" /></svg>
   );
 }
+
+/** R12b (owner: "the phone backs in Add a device look cheap; make them like the teardown parts"): a small 3D-shaded back of
+ *  the phone: a brushed metal body with a glass sheen, and the brand's own camera layout with glass lenses and rings */
+const BODY: Record<string, [string, string, string]> = { apple: ['#E9E4DA', '#C8C1B4', '#9E978A'], samsung: ['#D9DEE6', '#B4BCC8', '#8C95A3'], google: ['#E7E3DC', '#C9C3B8', '#A39C8F'], xiaomi: ['#3A3D42', '#26282B', '#16171A'], redmi: ['#3A4A5E', '#2A3646', '#1B2430'], poco: ['#FFD54A', '#F2B81A', '#C98F0C'], huawei: ['#4E5A52', '#38423C', '#252C28'], honor: ['#5C6C8A', '#45526C', '#2F384B'], oppo: ['#D4E2DC', '#AFC4BB', '#87A096'], realme: ['#F2C14E', '#D9A12A', '#B07E14'], oneplus: ['#4A4F57', '#33373D', '#1F2226'], nokia: ['#3D5A80', '#2C4566', '#1C2F48'] };
+export function DevBack({ brand = '', size = 44 }: { brand?: string; size?: number }) {
+  const [a, b, c] = BODY[brand] || ['#D6D9DD', '#B3B8BE', '#8C9198'], id = 'db' + brand + size;
+  const lens = (x: number, y: number, r: number) => <g key={x + '-' + y}><circle cx={x} cy={y} r={r + 1.1} fill="#1E1F21" /><circle cx={x} cy={y} r={r + .5} fill={'url(#' + id + 'r)'} /><circle cx={x} cy={y} r={r} fill={'url(#' + id + 'l)'} /><circle cx={x - r * .35} cy={y - r * .35} r={r * .28} fill="rgba(255,255,255,.75)" /></g>;
+  const cam = brand === 'apple' ? <><rect x="9" y="5" width="15" height="15" rx="4.4" fill={b} stroke="rgba(0,0,0,.18)" strokeWidth=".6" />{lens(13.2, 9.2, 2.6)}{lens(13.2, 15.8, 2.6)}{lens(19.6, 12.5, 2.6)}</>
+    : brand === 'google' ? <><rect x="5" y="9" width="30" height="7.5" rx="3.7" fill="#2A2C2F" />{lens(13, 12.7, 2.4)}{lens(19.5, 12.7, 2.4)}</>
+    : brand === 'samsung' ? <>{lens(12, 8.5, 2.5)}{lens(12, 15, 2.5)}{lens(12, 21.5, 2.5)}</>
+    : brand === 'xiaomi' || brand === 'redmi' || brand === 'poco' ? <><rect x="9" y="5" width="16" height="16" rx="4" fill="#1E1F21" opacity=".85" />{lens(13.3, 9.3, 2.5)}{lens(20.6, 9.3, 2.5)}{lens(13.3, 16.6, 2.5)}{lens(20.6, 16.6, 2.5)}</>
+    : <><circle cx="16" cy="13" r="8" fill="#1E1F21" opacity=".85" />{lens(13, 10.5, 2.3)}{lens(19, 10.5, 2.3)}{lens(16, 16.4, 2.3)}</>;
+  return (
+    <svg className="dv-back" width={size * .72} height={size} viewBox="0 0 40 56" aria-hidden="true">
+      <defs>
+        <linearGradient id={id + 'b'} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor={a} /><stop offset=".55" stopColor={b} /><stop offset="1" stopColor={c} /></linearGradient>
+        <linearGradient id={id + 's'} x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="rgba(255,255,255,0)" /><stop offset=".45" stopColor="rgba(255,255,255,.38)" /><stop offset=".55" stopColor="rgba(255,255,255,0)" /></linearGradient>
+        <radialGradient id={id + 'l'} cx=".4" cy=".35" r=".7"><stop offset="0" stopColor="#4A5A7A" /><stop offset=".55" stopColor="#141820" /><stop offset="1" stopColor="#05060A" /></radialGradient>
+        <linearGradient id={id + 'r'} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F2F3F5" /><stop offset="1" stopColor="#6E7378" /></linearGradient>
+      </defs>
+      <rect x="2" y="2" width="36" height="52" rx="7.5" fill={c} />
+      <rect x="2.6" y="2.6" width="34.8" height="50.6" rx="7" fill={'url(#' + id + 'b)'} />
+      <rect x="2.6" y="2.6" width="34.8" height="50.6" rx="7" fill={'url(#' + id + 's)'} opacity=".8" />
+      {cam}
+      <rect x="2.6" y="2.6" width="34.8" height="50.6" rx="7" fill="none" stroke="rgba(255,255,255,.55)" strokeWidth=".6" />
+    </svg>
+  );
+}
 export const kindOf = (id: string) => (data()?.models.find((m) => m.id === id)?.device || 'phone') as Kind;
 
 export default function DevicePicker({ onPick, have }: { onPick: (m: { id: string; name: string }) => void; have: string[] }) {
@@ -51,7 +79,7 @@ export default function DevicePicker({ onPick, have }: { onPick: (m: { id: strin
           <span className="dp-list">
             {list.length ? list.map((m) => { const on = have.includes(m.id); return (
               <button key={m.id} type="button" className={'dp-it' + (on ? ' on' : '')} onClick={() => { onPick({ id: m.id, name: m.name }); setOpen(false); setQ(''); }}>
-                <DevIcon kind={m.device} size={30} /><b>{m.name}</b><small>{D.brands.find((b) => b.id === m.brand_id)?.name}{stocked.has(m.id) ? '' : ' · ' + T('ask us')}</small>{on ? <i>✓</i> : null}
+                {m.device === 'phone' || !m.device ? <span className="dp-bk"><DevBack brand={m.brand_id} size={40} /></span> : <DevIcon kind={m.device} size={30} />}<b>{m.name}</b><small>{D.brands.find((b) => b.id === m.brand_id)?.name}{stocked.has(m.id) ? '' : ' · ' + T('ask us')}</small>{on ? <i>✓</i> : null}
               </button>); }) : <span className="dp-none">{T('No model matches. Ask Samsoom and we will check.')}</span>}
           </span>
         </div>

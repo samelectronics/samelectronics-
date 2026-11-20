@@ -1505,7 +1505,6 @@ html[data-theme="dark"] body .ct-card .ct-r .ct-acts { box-shadow: 0 -14px 14px 
 /* R12 · press feedback for every button: a yellow LED ring leaves the edge and fades */
 .se-press { animation: sePress .6s cubic-bezier(.2,.8,.2,1); }
 @keyframes sePress { 0% { outline: 2px solid rgba(247,192,50,.9); outline-offset: 0; } 100% { outline: 2px solid rgba(247,192,50,0); outline-offset: 9px; } }
-input:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 3px rgba(247,192,50,.25), 0 0 18px -4px rgba(247,192,50,.55) !important; }
 @media (prefers-reduced-motion: reduce) { .se-press { animation: none; } }
 /* R12 · send sheet fixes: the channel bar fits its column, the pinned buttons sit on solid white, nothing covers it */
 html body .ct-card .ct-switch { display: flex !important; width: 100%; gap: 2px !important; padding: 3px !important; overflow: hidden; }
@@ -1588,3 +1587,53 @@ html body .cc-card.cc2 .cc-list .cc-row.k-sam { box-shadow: inset 0 1px 0 rgba(2
 .se-gut-dark .fl { stroke: #FFF6D8 !important; filter: drop-shadow(0 0 3px #F7C032) drop-shadow(0 0 7px rgba(247,192,50,.7)) !important; }
 .se-gut-light .fl { stroke: #FFE9A8 !important; filter: drop-shadow(0 0 3px rgba(247,192,50,.95)) drop-shadow(0 0 6px rgba(247,192,50,.6)) !important; }
 .se-gut-yel .fl { stroke: #FFFFFF !important; filter: drop-shadow(0 0 3px rgba(255,255,255,.95)) drop-shadow(0 0 7px rgba(255,255,255,.7)) !important; }
+/* R12b · no inner rectangles: an input inside a rounded bar never draws its own focus box (the bar carries the LED outline) */
+:is(.ss-bar, .dp-search, .hs-bar, .shop-scan, [class*="search"]) :is(input, textarea):is(:focus, :focus-visible) { outline: none !important; box-shadow: none !important; }
+:is(.ss-bar, .dp-search, [class*="search"]):focus-within { outline: none; }
+/* R12b (owner: "the footer SAM ELECTRONICS is ugly and cheap: make it bold techy like the teardown text, darker, faded,
+   tough"): heavy graphite steel letters, a thin lit top edge, and a fade into the floor */
+html body footer .ft-mark { font-weight: 800 !important; letter-spacing: -.035em !important;
+  background: linear-gradient(180deg, #5A5E64 0%, #3A3D42 38%, #26282B 70%, rgba(38,40,43,0) 100%) !important; -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important; -webkit-text-fill-color: transparent !important;
+  -webkit-text-stroke: 1px rgba(247,192,50,.18) !important; animation: none !important; filter: drop-shadow(0 -1px 0 rgba(255,255,255,.12)) drop-shadow(0 18px 30px rgba(0,0,0,.45)) !important; opacity: 1 !important; }
+/* R14 (owner: "right colour, not the material"): the hero's own layers, copied exactly: the 135° graphite sweep
+   (#3D3E3F → #26282B → #1A1B1D), the soft horizontal sheen and the fine scan lines every 4 px at 7 % */
+html body #reviews.rv { background: linear-gradient(90deg, transparent, rgba(255,255,255,.05), transparent), linear-gradient(135deg, #3D3E3F 0%, #26282B 48%, #1A1B1D 100%) !important; }
+html body #reviews.rv::after { background: repeating-linear-gradient(0deg, rgba(255,255,255,.07) 0 1px, transparent 1px 4px) !important; }
+html body section#reviews.rv::before { opacity: 1 !important; inset: 0 !important; background-image: none !important; background: radial-gradient(closest-side, rgba(247,192,50,.10), rgba(247,192,50,0)) 85% 15% / 620px 620px no-repeat !important; }
+html body section#reviews.rv::after { inset: 0 !important; left: 0 !important; top: 0 !important; width: auto !important; height: auto !important; transform: none !important; }
+/* R14 · "How would you like to reach us?" as the system-notice card: Samsoom on top in his circle, title, one line, a clean
+   two-column list of every way in (white rows, the icon in a soft tile, a chevron) */
+html body .cc-card.cc3 { position: relative; width: min(560px, calc(100vw - 28px)) !important; max-width: none !important; display: block !important; padding: 74px 22px 22px !important; border-radius: 26px !important; background: #FFFFFF !important; color: #26282B; text-align: center; overflow: visible !important; box-shadow: 0 0 0 1px rgba(38,40,43,.06), 0 30px 70px -24px rgba(0,0,0,.55) !important; animation: sn2Pop .45s cubic-bezier(.2,1.2,.3,1) both; }
+.cc3 .cc-sam { position: absolute; left: 50%; top: -58px; width: 116px; height: 116px; margin-left: -58px; display: grid; place-items: center; border-radius: 50%; background: radial-gradient(circle at 40% 30%, #FFD566, #F7C032 65%); box-shadow: 0 0 0 6px #FFFFFF, 0 14px 30px -10px rgba(120,86,10,.55); }
+.cc3 .cc-h { display: block; font: 700 21px/1.25 'Space Grotesk', Inter, sans-serif; letter-spacing: -.01em; }
+.cc3 .cc-p2 { margin: 8px auto 18px; max-width: 400px; font: 400 15px/1.5 Inter, sans-serif; color: #5A5E64; }
+html body .cc-card.cc3 .cc-list { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 8px !important; padding: 0 !important; margin: 0 !important; background: none !important; text-align: start; }
+html body .cc-card.cc3 .cc-list .cc-row { grid-column: auto !important; display: flex !important; flex-direction: row !important; align-items: center !important; gap: 11px !important; min-height: 0 !important; height: auto !important; padding: 10px 12px !important; border: 0 !important; border-radius: 14px !important; background: #F4F5F6 !important; box-shadow: none !important; color: #26282B !important; text-decoration: none; text-align: start !important; cursor: pointer; transition: transform .25s cubic-bezier(.3,1.6,.5,1), box-shadow .2s, background .2s !important; animation: none !important; }
+html body .cc-card.cc3 .cc-list .cc-row:hover { background: #FFFFFF !important; transform: translateY(-2px); box-shadow: inset 0 0 0 1.5px #F7C032, 0 14px 26px -16px rgba(247,192,50,.7) !important; }
+html body .cc-card.cc3 .cc-list .cc-row.k-sam { grid-column: 1 / -1 !important; background: linear-gradient(180deg, #FFD566, #F7C032) !important; }
+html body .cc-card.cc3 .cc-li { flex: none; width: 40px !important; height: 40px !important; display: grid !important; place-items: center; border-radius: 12px !important; background: #FFFFFF !important; color: #26282B; box-shadow: 0 1px 2px rgba(38,40,43,.12) !important; overflow: hidden; transform: none !important; }
+html body .cc-card.cc3 .cc-li .ct-ic { width: 24px; height: 24px; transform: none !important; }
+html body .cc-card.cc3 .cc-lt { flex: 1; min-width: 0; display: flex !important; flex-direction: column; gap: 2px; align-items: flex-start !important; }
+html body .cc-card.cc3 .cc-lt b { font: 600 14.5px/1.2 Inter, sans-serif !important; color: #26282B !important; }
+html body .cc-card.cc3 .cc-lt small { font: 400 12px/1.3 Inter, sans-serif !important; color: #6B6F75 !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+html body .cc-card.cc3 .cc-la { display: block !important; font-style: normal; font-size: 20px; color: #9A9EA4; }
+html[dir="rtl"] body .cc-card.cc3 .cc-la { transform: scaleX(-1); }
+html body .cc-card.cc3 .wc-x { z-index: 2; }
+html[data-theme="dark"] body .cc-card.cc3 { background: #2B2D31 !important; color: #F2F3F5; }
+html[data-theme="dark"] .cc3 .cc-sam { box-shadow: 0 0 0 6px #2B2D31, 0 14px 30px -10px rgba(0,0,0,.6); }
+html[data-theme="dark"] body .cc-card.cc3 .cc-list .cc-row:not(.k-sam) { background: #35373B !important; color: #F2F3F5 !important; }
+html[data-theme="dark"] body .cc-card.cc3 .cc-row:not(.k-sam) .cc-lt b { color: #F2F3F5 !important; }
+@media (max-width: 520px) { html body .cc-card.cc3 .cc-list { grid-template-columns: 1fr !important; } html body .cc-card.cc3 { padding-top: 66px !important; } }
+/* the social / place preview: no Samsoom, no kicker; the plain title like the WhatsApp sheet */
+.lpv-top2 b { font: 700 19px/1.2 'Space Grotesk', sans-serif; letter-spacing: -.01em; overflow-wrap: anywhere; }
+/* R14 · the language icon: two bubbles that trade places a little on hover */
+.se-lm-ic4 { overflow: visible; } .se-lm-ic4 g { transition: transform .35s cubic-bezier(.3,1.6,.5,1); transform-box: view-box; }
+.se-lm-btn:hover .se-lm-ic4 .fr { transform: translate(-1px, 1px) rotate(-6deg); } .se-lm-btn:hover .se-lm-ic4 .bk { transform: translate(1px, -1px) rotate(6deg); }
+html body .cc-card.cc3 .cc-li.wa, html body .cc-card.cc3 .cc-li.wc { background: #25D366 !important; color: #fff !important; }
+html body .cc-card.cc3 .cc-list .cc-row.k-here { background: #F4F5F6 !important; }
+html body .cc-card.cc3 .cc-list .cc-row.k-here :is(b, small) { color: inherit !important; -webkit-text-fill-color: currentColor !important; }
+html body .cc-card.cc3 .cc-list .cc-row.k-here .cc-lt b { color: #26282B !important; -webkit-text-fill-color: #26282B !important; }
+html body .cc-card.cc3 .cc-list .cc-row.k-here .cc-lt small { color: #6B6F75 !important; -webkit-text-fill-color: #6B6F75 !important; }
+html body .cc-card.cc3 .cc-li.here { color: #26282B !important; }
+.lpv-card:has(.lpv-switch) .lpv-switch { margin-inline-end: 44px; }
+.lpv-netimg { width: 40px; height: 40px; flex: none; border-radius: 12px; }

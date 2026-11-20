@@ -1,6 +1,5 @@
 'use client';
 import { GradeTag, MakerTag } from './Tags';
-import { brandInk } from '@/lib/brandInk';
 // P2 · "Customize everything": the shop's full control panel, built like the Find My Part panel (graphite glass, steps on
 // the left, live result count). Price range (min/max), brand, model, part, quality, manufacturer, grade, warranty,
 // device, color, rating, availability, sort, how results are shown, and saved setups. Every change counts the results
@@ -77,7 +76,7 @@ export default function Customize({ open, f, view, onClose, onApply }: { open: b
             <h3>{T('Brand')}</h3>
             <div className="cz-brands">{D.brands.map((b) => (
               <button key={b.id} type="button" className={'cz-brand' + (has('brands', b.id) ? ' on' : '')} aria-pressed={has('brands', b.id)} onClick={() => tog('brands', b.id)}>
-                <span className="cz-bl"><SEBrandLogo brand={b.id} h={18} fit="76x20" color={brandInk(b.id)} /></span><b>{b.name}</b>{count('brands', b.id)}
+                <span className="cz-bl"><SEBrandLogo brand={b.id} h={18} fit="76x20" color="#26282B" /></span><b>{b.name}</b>{count('brands', b.id)}
               </button>
             ))}</div>
           </section>

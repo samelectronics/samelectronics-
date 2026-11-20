@@ -1776,6 +1776,7 @@ export const R7: Record<string, string> = {
 
 /** Round 8: Sam Circuit's three cards, Samsoom's tour and chat menu. */
 export const R8: Record<string, string> = {
+  'now': 'الآن',
   'Any part. Any model.': 'أي قطعة. أي موديل.',
   'Every brand, on the shelf.': 'كل الماركات على الرف.',
   'Pick the grade. See the price.': 'اختر الجودة. شاهد السعر.',

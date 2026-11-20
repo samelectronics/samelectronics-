@@ -4398,5 +4398,6 @@ const DICT: Record<string, string> = {
   'GRADED.': 'گریڈ شدہ۔',
   'HONEST.': 'ایماندار۔',
   'WeChat': 'وی چیٹ',
+  'now': 'ابھی',
 };
 export default DICT;

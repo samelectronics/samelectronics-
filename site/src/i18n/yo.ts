@@ -4079,5 +4079,6 @@ const DICT: Record<string, string> = {
   'TESTED.': 'A DÁN AN WÒ.',
   'GRADED.': 'A TI FI ÌPELÉ SÍ.',
   'HONEST.': 'OLÓÒTỌ́.',
+  'now': 'nísinsìnyí',
 };
 export default DICT;

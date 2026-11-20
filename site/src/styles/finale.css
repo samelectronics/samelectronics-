@@ -510,3 +510,14 @@ html body #finale.fz5 { background:
 #finale.fz5 .fz4-stats small { color: #F7C032 !important; }
 @media (max-width: 800px) { #finale.fz5 .fz4-pro > span + span { border-inline-start: 0 !important; border-top: 1px solid rgba(255,255,255,.12) !important; } }
 @media (prefers-reduced-motion: reduce) { #finale.fz5 .fz5-logo img { filter: none !important; animation: none !important; } #finale.fz5 .fz6-spot { opacity: 1; } #finale.fz5 .fz5-ring circle { opacity: 1; animation: none !important; } }
+/* R12b (owner: "a fully lit ring round the logo, not broken lines"): the ring fills as ONE continuous LED band, step by
+   step, then stays fully lit and glowing */
+#finale.fz5 .fz5-ring circle { stroke-dasharray: 100 !important; stroke-dashoffset: 100; opacity: 1 !important; stroke-width: 3.2 !important; clip-path: none !important; filter: drop-shadow(0 0 4px #F7C032) drop-shadow(0 0 12px rgba(247,192,50,.6)) !important; }
+#finale.fz5.fz-on .fz5-ring circle { animation: fzRing .9s cubic-bezier(.6,0,.2,1) .8s both !important; }
+@keyframes fzRing { from { stroke-dashoffset: 100; } to { stroke-dashoffset: 0; } }
+/* realistic spotlights: soft volumetric beams (blurred, fading with distance) and a lit pool on the floor */
+#finale.fz5 .fz6-spot::before, #finale.fz5 .fz6-spot::after { width: 640px !important; background: linear-gradient(180deg, rgba(255,244,214,.34) 0%, rgba(255,236,190,.16) 35%, rgba(255,236,190,.05) 70%, transparent 92%) !important; clip-path: polygon(47% 0, 53% 0, 100% 100%, 0 100%) !important; filter: blur(18px) !important; }
+#finale.fz5 .fz6-floor { opacity: 1 !important; background: radial-gradient(40% 50% at 50% 50%, rgba(255,236,190,.16), transparent 70%) !important; }
+/* the promise icons: graphite on their yellow tiles */
+#finale.fz5 .fz6-ic, #finale.fz5 .fz6-ic svg { color: #26282B !important; stroke: #26282B !important; }
+#finale.fz5 .fz6-ic svg * { stroke: #26282B !important; }

@@ -117,7 +117,7 @@ function Reel({ net, k }: { net: (typeof NET)[number]; k: number }) {
 const Wall = React.memo(function Wall({ id, icon, c }: { id: string; icon: string; c: string }) {
   const N = { id, icon, c };
   return (
-    <div className="fw-wall" key={'w' + N.id} style={{ ['--c' as string]: N.c } as React.CSSProperties} aria-hidden="true">
+    <div className="fw-wall" style={{ ['--c' as string]: N.c } as React.CSSProperties} aria-hidden="true">
             {[0, 1, 2].map((col) => (
               <div key={col} className={'fw-col c' + col}>
                 <div className="fw-run">
@@ -190,11 +190,12 @@ export default function FeedWall() {
             <span className="fol">{T('Follow')}</span>
             <span className="grid">{WALL.slice(0, 9).map((w, k) => <i key={k}><img src={w} alt="" loading="lazy" /></i>)}</span>
           </div>
+          {/* R14 (owner: "the sliding posts bar below is ugly"): gone. Instead the newest post lands as a phone notification
+              beside the profile, one at a time */}
+          <span className="fw-toast" key={'t' + k} aria-hidden="true"><img src="/assets/se-logo-metal-128.webp" alt="" /><span><b>samelectronics.uae <img src={N.icon} alt="" /></b><small><em>{T(POSTS[k % POSTS.length].tag)}</em> {T(POSTS[k % POSTS.length].t)}</small></span><i>{T('now')}</i></span>
           <span className="fw-hearts" aria-hidden="true">{hearts.map((h) => <i key={h.id} className={'c' + h.c + (h.L ? ' L' : '')} style={{ ['--x' as string]: h.x + 'px', ['--d' as string]: h.d + 'px', ['--s' as string]: h.s, ['--r' as string]: h.r + 'deg' } as React.CSSProperties} />)}</span>
         </div>
       </div>
-      {/* owner (R12): "the rolling belt: make it special, social-media related, more creative": live notifications */}
-      <div className="fw-strip fw-notes" aria-hidden="true"><div className="fw-strip-in">{[...POSTS, ...POSTS].map((p, i) => <span key={i} className="nt"><img className="av" src="/assets/se-logo-metal-128.webp" alt="" /><b>samelectronics.uae</b><em style={{ background: p.bg }}>{T(p.tag)}</em><span>{T(p.t)}</span><small>♥ {p.likes.toLocaleString('en-US')} · {(i % 5) + 1}{T('m')}</small></span>)}</div></div>
     </section>
   );
 }

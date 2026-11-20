@@ -7,7 +7,6 @@ import React, { useEffect, useState } from 'react';
 import { play } from '@/lib/sound';
 import { T as t } from '@/components/site/ui';
 import { site } from '@/content/facts';
-import LiveSam from '@/components/samsoom/LiveSam';
 
 type Kind = 'map' | 'tel' | 'mail' | 'social' | 'web' | 'review';
 type P = { kind: Kind; href: string; label: string; net?: string };
@@ -68,14 +67,15 @@ export default function LinkPreview() {
       <div className={'lpv-card k-' + p.kind} role="dialog" aria-modal="true" aria-label={head}>
         <button type="button" className="lpv-x" aria-label={t('Close')} onClick={close}>✕</button>
         {group ? <span className="ct-switch lpv-switch" role="tablist">{group.map((x) => <button key={x.kind + (x.net || '')} type="button" role="tab" aria-selected={tabOn(x)} className={'ct-swb' + (tabOn(x) ? ' on' : '')} onClick={() => { if (!tabOn(x)) { setCopied(false); setP(x); play('tab'); } }}><i className={'lpv-ti ' + (x.kind === 'social' ? 'n-' + (x.net || '').toLowerCase() : 't-' + x.kind)} aria-hidden="true" />{tabName(x)}</button>)}</span> : null}
-        <div className="lpv-top"><span className="lpv-sam"><LiveSam fit mood={p.kind === 'web' ? 'think' : 'happy'} size={46} /></span><span className="lpv-tt"><small>{t('PREVIEW BEFORE YOU GO')}</small><b dir="auto">{head}</b></span></div>
+        {/* R14 (owner: "like the WhatsApp and WeChat sheets: why a PREVIEW title and Samsoom?"): the switch bar, then the plain title */}
+        <div className="lpv-top lpv-top2"><b dir="auto">{head}</b></div>
         <p className="lpv-sub" dir="auto">{sub}</p>
         <div className="lpv-view">
           {p.kind === 'map' ? <iframe title="Map" src={'https://www.google.com/maps?q=' + site.contact.mapsQuery + '&z=17&output=embed'} loading="lazy" referrerPolicy="no-referrer-when-downgrade" /> : null}
           {p.kind === 'review' ? <span className="lpv-rev"><b>4.9</b><span className="st" aria-hidden="true">★★★★★</span><small>{t('Google reviews')}</small></span> : null}
           {p.kind === 'tel' ? <span className="lpv-big" dir="ltr">{p.label.replace(/^\+971(\d)(\d{3})(\d{4})$/, '+971 $1 $2 $3')}</span> : null}
           {p.kind === 'mail' ? <span className="lpv-mail"><span className="lpv-big sm" dir="ltr">{p.label}</span>{subj ? <small dir="auto">{t('Subject')}: {subj}</small> : null}</span> : null}
-          {p.kind === 'social' || p.kind === 'web' ? <span className="lpv-link"><i className={'lpv-net n-' + (p.net || 'web').toLowerCase()} aria-hidden="true">{(p.net || p.label).slice(0, 1)}</i><span dir="ltr">{p.href.replace(/^https?:\/\//, '').slice(0, 60)}</span></span> : null}
+          {p.kind === 'social' || p.kind === 'web' ? <span className="lpv-link">{['Instagram', 'TikTok', 'Facebook'].includes(p.net || '') ? <img className="lpv-netimg" src={'/icons/' + (p.net || '').toLowerCase() + '.svg'} alt="" aria-hidden="true" /> : <i className={'lpv-net n-' + (p.net || 'web').toLowerCase()} aria-hidden="true">{(p.net || p.label).slice(0, 1)}</i>}<span dir="ltr">{p.href.replace(/^https?:\/\//, '').slice(0, 60)}</span></span> : null}
         </div>
         <div className="lpv-acts">
           <button type="button" className="lpv-btn" onClick={copy}>{copied ? t('Copied') + ' ✓' : p.kind === 'tel' ? t('Copy number') : p.kind === 'mail' ? t('Copy address') : t('Copy link')}</button>

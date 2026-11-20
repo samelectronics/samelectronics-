@@ -107,8 +107,10 @@ class Component extends DCLogic {
   }
   release(dir) {
     const sec = this.secRef.current; if (!sec) return; this.mode = 'out'; this.releasing = performance.now();
-    const r = sec.getBoundingClientRect(), y = dir < 0 ? window.scrollY + r.top - Math.round(window.innerHeight * 0.55) : window.scrollY + r.bottom - 72;
-    this.side = dir > 0 ? 'below' : 'above'; jumpTo(Math.max(0, y), 1000);
+    // owner (R12b): "when it finishes it still pushes me down a lot": going down it only glides until the next section rises
+    // into the lower half of the screen (not all the way to its top), slower and softer
+    const r = sec.getBoundingClientRect(), y = dir < 0 ? window.scrollY + r.top - Math.round(window.innerHeight * 0.55) : window.scrollY + r.bottom - Math.round(window.innerHeight * 0.55);
+    this.side = dir > 0 ? 'below' : 'above'; jumpTo(Math.max(0, y), 1100);
   }
   step(dir) {
     const F = this.FS, last = F.length - 1, cur = this.idx || 0, nx = cur + dir; if (nx < 0 || nx > last) return false;

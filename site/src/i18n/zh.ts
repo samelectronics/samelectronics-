@@ -4081,5 +4081,6 @@ const DICT: Record<string, string> = {
   'GRADED.': '已分级。',
   'HONEST.': '诚信。',
   'WeChat': '微信',
+  'now': '刚刚',
 };
 export default DICT;

@@ -99,8 +99,11 @@ class Component extends DCLogic {
     // owner (R12): "the products here show the same black screens; it should be LIVE from the shop": the real shop photo of
     // that model's part (the same picture the shop card shows); the standard pose is only a fallback
     const norm = (x) => String(x || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
-    const liveImg = (model, parts) => { if (!D || !D.products) return ''; const m = norm(model), t = String(parts || '').toLowerCase(), k = Object.keys(PRE_IMG).find((x) => t.includes(x)) || '';
-      const hit = D.products.find((q) => q.img && norm(q.title).includes(m) && (!k || norm(q.title + ' ' + (q.category || '')).includes(k))) || D.products.find((q) => q.img && norm(q.title).includes(m)); return hit ? hit.img : ''; };
+    const liveImg = (model, parts) => { const S = window.SE_SHOTS; if (!D || !D.products || !S) return ''; const m = norm(model), t = String(parts || '').toLowerCase(), k = Object.keys(PRE_IMG).find((x) => t.includes(x)) || '';
+      const CAT = { screen: 'SCR', batter: 'BAT', back: 'BCV', camera: 'CAM', flex: 'FLX', frame: 'FRM' }, MD = new Map((D.models || []).map((x) => [x.id, x]));
+      const mt = (q) => { const md = MD.get(q.model_id); return md && norm(md.name).includes(m); };
+      const hit = D.products.find((q) => mt(q) && (!k || q.category === CAT[k])) || D.products.find((q) => mt(q)) || (k ? D.products.find((q) => q.category === CAT[k]) : null);
+      if (!hit) return ''; const md = MD.get(hit.model_id); return S.url(S.forCat(hit.category, md ? md.brand_id : 'other', hit.manufacturer), 240); };
     const preImg = (parts) => { const t = String(parts || '').toLowerCase(), k = Object.keys(PRE_IMG).find((x) => t.includes(x)); return window.SE_SHOTS && k ? window.SE_SHOTS.url(PRE_IMG[k], 240) : ''; };
     const waN = (D && D.contact && D.contact.wa) || '971503420015';
     const pre = D ? D.preorders.map((p, i) => ({ ...p, k: i, img: liveImg(p.model, p.parts) || preImg(p.parts), reserve: () => window.open('https://wa.me/' + waN + '?text=' + encodeURIComponent('*PRE-ORDER*\n\nI would like to reserve parts for the ' + p.model + ' (' + p.parts + ').\nName: \nQuantity: \n\nSent from the Sam Electronics website'), '_blank', 'noopener') })) : [];
