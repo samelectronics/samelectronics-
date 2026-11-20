@@ -4015,5 +4015,6 @@ const DICT: Record<string, string> = {
   'SHOP NOW': 'JETZT KAUFEN',
   'EVERY GRADE · HONEST LABELS': 'JEDE QUALITÄT · EHRLICHE ETIKETTEN',
   'Steel · locked': 'Stahl · gesperrt',
+  'Send on the website': 'Über die Website senden',
 };
 export default DICT;

@@ -4016,5 +4016,6 @@ const DICT: Record<string, string> = {
   'SHOP NOW': '立即选购',
   'EVERY GRADE · HONEST LABELS': '各级品质 · 诚实标签',
   'Steel · locked': '钢 · 未解锁',
+  'Send on the website': '通过网站发送',
 };
 export default DICT;

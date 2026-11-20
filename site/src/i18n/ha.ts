@@ -4015,5 +4015,6 @@ const DICT: Record<string, string> = {
   'SHOP NOW': 'SAYA YANZU',
   'EVERY GRADE · HONEST LABELS': 'KOWANE MATAKI · LAKABI NA GASKIYA',
   'Steel · locked': 'Karfe · a kulle',
+  'Send on the website': 'Aika ta shafin yanar gizo',
 };
 export default DICT;

@@ -1776,6 +1776,17 @@ export const R7: Record<string, string> = {
 
 /** Round 8: Sam Circuit's three cards, Samsoom's tour and chat menu. */
 export const R8: Record<string, string> = {
+  'Send on the website': 'أرسل عبر الموقع',
+  'Trader · Kampala': 'تاجر · كمبالا',
+  'Repair shop · Lagos': 'ورشة صيانة · لاغوس',
+  'Shop · Amman': 'متجر · عمّان',
+  'Repair shop · Muscat': 'ورشة صيانة · مسقط',
+  'Shop · Beirut': 'متجر · بيروت',
+  'Distributor · Accra': 'موزّع · أكرا',
+  'Trader · Nairobi': 'تاجر · نيروبي',
+  'Exporter · Baghdad': 'مُصدِّر · بغداد',
+  'Exporter': 'مُصدِّر',
+  'Trader': 'تاجر',
   'Bronze token': 'رمز برونزي',
   'Steel token': 'رمز فولاذي',
   'Gold token': 'رمز ذهبي',

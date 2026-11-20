@@ -4335,5 +4335,16 @@ const DICT: Record<string, string> = {
   'SHOP NOW': 'ACHETER',
   'EVERY GRADE · HONEST LABELS': 'CHAQUE QUALITÉ · ÉTIQUETTES HONNÊTES',
   'Steel · locked': 'Acier · verrouillé',
+  'Send on the website': 'Envoyer via le site',
+  'Trader · Kampala': 'Négociant · Kampala',
+  'Repair shop · Lagos': 'Atelier de réparation · Lagos',
+  'Shop · Amman': 'Boutique · Amman',
+  'Repair shop · Muscat': 'Atelier de réparation · Mascate',
+  'Shop · Beirut': 'Boutique · Beyrouth',
+  'Distributor · Accra': 'Distributeur · Accra',
+  'Trader · Nairobi': 'Négociant · Nairobi',
+  'Exporter · Baghdad': 'Exportateur · Bagdad',
+  'Volume': 'Volume',
+  'Notifications': 'Notifications',
 };
 export default DICT;

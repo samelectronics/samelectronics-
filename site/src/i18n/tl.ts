@@ -3982,5 +3982,15 @@ const DICT: Record<string, string> = {
   'SHOP NOW': 'BUMILI NA',
   'EVERY GRADE · HONEST LABELS': 'BAWAT GRADE · TAPAT NA LABEL',
   'Steel · locked': 'Steel · naka-lock',
+  'Send on the website': 'Ipadala sa website',
+  'Volume': 'Lakas ng tunog',
+  'Sound pack': 'Pakete ng tunog',
+  'Home': 'Home',
+  'Exporter': 'Exporter',
+  'Trader': 'Negosyante',
+  'Retailer': 'Retailer',
+  'Quick view': 'Mabilisang tingin',
+  'Top rated': 'Pinakamataas ang rating',
+  'Availability': 'Availability',
 };
 export default DICT;

@@ -4015,5 +4015,6 @@ const DICT: Record<string, string> = {
   'SHOP NOW': 'EROSI',
   'EVERY GRADE · HONEST LABELS': 'KALITATE GUZTIAK · ETIKETA ZINTZOAK',
   'Steel · locked': 'Altzairua · blokeatuta',
+  'Send on the website': 'Bidali webgunetik',
 };
 export default DICT;

@@ -4325,5 +4325,14 @@ const DICT: Record<string, string> = {
   'SHOP NOW': 'ابھی خریدیں',
   'EVERY GRADE · HONEST LABELS': 'ہر گریڈ · سچے لیبل',
   'Steel · locked': 'اسٹیل · مقفل',
+  'Send on the website': 'ویب سائٹ سے بھیجیں',
+  'Trader · Kampala': 'تاجر · کمپالا',
+  'Repair shop · Lagos': 'مرمت کی دکان · لاگوس',
+  'Shop · Amman': 'دکان · عمان',
+  'Repair shop · Muscat': 'مرمت کی دکان · مسقط',
+  'Shop · Beirut': 'دکان · بیروت',
+  'Distributor · Accra': 'ڈسٹری بیوٹر · اکرا',
+  'Trader · Nairobi': 'تاجر · نیروبی',
+  'Exporter · Baghdad': 'برآمد کنندہ · بغداد',
 };
 export default DICT;

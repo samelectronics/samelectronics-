@@ -4016,5 +4016,6 @@ const DICT: Record<string, string> = {
   'SHOP NOW': 'አሁን ይግዙ',
   'EVERY GRADE · HONEST LABELS': 'ሁሉም ደረጃ · ታማኝ መለያዎች',
   'Steel · locked': 'ብረት · ተቆልፏል',
+  'Send on the website': 'በድረ-ገጹ ላክ',
 };
 export default DICT;

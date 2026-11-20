@@ -4015,5 +4015,6 @@ const DICT: Record<string, string> = {
   'SHOP NOW': 'AMMA BITADHAA',
   'EVERY GRADE · HONEST LABELS': 'SADARKAA HUNDA · MALLATTOO DHUGAA',
   'Steel · locked': 'Sibiila · cufame',
+  'Send on the website': 'Marsariitiin ergi',
 };
 export default DICT;

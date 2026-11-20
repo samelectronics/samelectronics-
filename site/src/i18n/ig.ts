@@ -4014,5 +4014,6 @@ const DICT: Record<string, string> = {
   'SHOP NOW': 'ZỤTA UGBU A',
   'EVERY GRADE · HONEST LABELS': 'ỌKWA Ọ BỤLA · AKARA EZIOKWU',
   'Steel · locked': 'Ígwè · akpọchiri',
+  'Send on the website': 'Ziga site na weebụsaịtị',
 };
 export default DICT;
