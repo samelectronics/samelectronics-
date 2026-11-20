@@ -1313,3 +1313,6 @@ html body a.scp-5861bbd1 > span:first-child, html body a.scp-5861bbd1 > i:first-
    out of the frame, so only our LED ring remains, glowing */
 .lm2-face img { transform: scale(1.13); }
 .lm2-face { box-shadow: 0 0 0 max(1.5px, calc(var(--s) * .034)) #F7C032, 0 0 calc(var(--s) * .16) rgba(247,192,50,.65), 0 0 calc(var(--s) * .05) rgba(255,224,138,.9), inset 0 calc(var(--s) * .02) calc(var(--s) * .05) rgba(0,0,0,.16) !important; }
+/* R11 (owner: "the yellow LED line under the footer is a bit cheap"): no hard line; the light pools softly on the floor
+   under the big letters, like a lit stage */
+html body footer:has(.ft-mark)::after { height: 60px !important; bottom: -20px !important; width: min(70%, 1000px) !important; background: radial-gradient(50% 40% at 50% 50%, rgba(247,192,50,.22), rgba(247,192,50,.06) 55%, transparent 75%) !important; box-shadow: none !important; filter: blur(6px); animation: none !important; }
