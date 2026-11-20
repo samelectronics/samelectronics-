@@ -37,7 +37,7 @@
     // owner (28 Oct): no more 'video cut out and pasted in'. The ad IS the phone's screen: its colours run edge to edge under
     // the glass, the status bar (time, signal, battery) sits at the top beside the island like a real phone, and only the
     // ad's CONTENT is kept inside a safe area (a little smaller, below the status bar), never touching corners or edges.
-    const out = cv.getContext('2d'), x = out, W = cv.width, H = cv.height, u = W / 100, M = 9 * u, SAFE = { s: 0.88, top: 0.075 };
+    const out = cv.getContext('2d'), x = out, W = cv.width, H = cv.height, u = W / 100, M = 9 * u, REEL = (opts && opts.reel) || '', SAFE = REEL === 'ipad' ? { s: 1, top: 0 } : { s: 0.88, top: 0.075 };
     const FULL = [-W * 0.2, -H * 0.2, W * 1.4, H * 1.4]; // any full-screen fill bleeds past the safe area to the real edges
     let lang = null, imgs = [];
     const load = () => { lang = AR(); imgs = SCN.map((q) => { const im = new Image(); im.decoding = 'async'; im.src = window.SE_SHOTS ? window.SE_SHOTS.url(q.id, 960) : ''; return im; }); };
@@ -139,7 +139,7 @@
       x.fillStyle = Y; x.font = '500 ' + 3.4 * u + 'px ' + F.jb; x.fillText(T('QUALITY · WARRANTY · PRICE'), cx, cy + r + 20 * u); x.globalAlpha = 1;
       const pk = eo(K(lt, 1.4, 0.4)), pulse = 1 + 0.03 * Math.sin(Math.max(0, lt - 1.8) * 7) * cl(lt - 1.8); x.globalAlpha = pk; x.save(); x.translate(cx, H - 22 * u); x.scale(pulse, pulse); x.fillStyle = Y; rr(x, -30 * u, -5 * u, 60 * u, 10 * u, 5 * u); x.fill(); text(T('Find My Part') + (ar ? '  ←' : '  →'), 0, 1.5 * u, '600 ' + 4 * u + 'px ' + F.in, G, 'center'); x.restore(); x.globalAlpha = 1;
       const out = K(lt, CLOSE - 0.25, 0.25); if (out > 0) { x.globalAlpha = out; x.fillStyle = '#000'; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); x.globalAlpha = 1; } }
-    function status(dark) { // the status bar: the time, signal and battery, in the screen's ink (in the 'ears' beside the island, clear of the corners)
+    function status(dark) { if (REEL === 'ipad') return; // owner (R11): no time or battery on the iPad // the status bar: the time, signal and battery, in the screen's ink (in the 'ears' beside the island, clear of the corners)
       const M = 19 * u, Y0 = 1.8 * u; /* R10 C4: a real safe margin from the rounded corners */ const d = new Date(), hh = String(d.getHours()).padStart(2, '0'), mm = String(d.getMinutes()).padStart(2, '0'), c = dark ? '#FFFFFF' : G;
       x.globalAlpha = 0.9; x.fillStyle = c; x.textAlign = 'left'; x.textBaseline = 'middle'; x.font = '600 ' + 3.4 * u + 'px ' + F.in; x.fillText(hh + ':' + mm, M, 6.4 * u + Y0);
       for (let j = 0; j < 4; j++) x.fillRect(W - M - 11.5 * u + j * 1.3 * u, 6.6 * u + Y0 - (j + 1) * 0.55 * u, 0.85 * u, (j + 1) * 0.55 * u);
@@ -148,7 +148,37 @@
     // A fast kinetic commercial: one word per beat, hard cuts, every beat its own move (slam, zoom-out, spin, split),
     // products crashing in (spin-zoom, swing, punch, flip, drop) with giant vertical words and live counters, a strobe of
     // every part, the grades flashing, then IN STOCK IN DEIRA + a bouncing SHOP NOW, then the logo close.
-    const BEATS = [
+    // R11 · the iPad reel (owner: "brand level, logos spinning, one getting selected, the qualities doing a show"):
+    // the same engine and look as this commercial, with its own script and a brand wall
+    const BR = ['apple', 'samsung', 'xiaomi', 'huawei', 'google', 'oppo', 'honor', 'redmi', 'poco', 'oneplus', 'realme', 'vivo', 'infinix', 'tecno', 'nokia'];
+    const BI = REEL === 'ipad' ? BR.map((b) => { const im = new Image(); im.src = '/assets/brands/' + b + '.svg'; return im; }) : [];
+    const logoAt = (im, cx, cy, maxW, maxH) => { if (!ok(im)) return; const r = im.naturalWidth / im.naturalHeight || 3, w = Math.min(maxW, maxH * r), h = w / r; x.drawImage(im, cx - w / 2, cy - h / 2, w, h); };
+    function brands(l) { // a 3D carousel of brand plates spins and slows, one is pulled to the front and lit, then the wall lands
+      fill('dark'); streaks(l, 'dark', -0.4);
+      const sel = 0, spin = eo5(K(l, 0, 1.1)), ang = (1 - spin) * Math.PI * 4;
+      if (l < 1.25) { const n = 8, R = W * 0.3; const items = Array.from({ length: n }, (_, j) => { const a = ang + j * (Math.PI * 2 / n); return { j, a, z: Math.cos(a) }; }).sort((p2, q2) => p2.z - q2.z);
+        items.forEach(({ j, a, z }) => { const sc2 = 0.5 + 0.5 * (z + 1) / 2, cx = W / 2 + Math.sin(a) * R, cy = H * 0.47 + Math.cos(a) * H * 0.07, pw = 26 * u * sc2, ph = 12 * u * sc2; x.save(); x.globalAlpha = 0.35 + 0.65 * (z + 1) / 2; x.fillStyle = '#FFFFFF'; x.shadowColor = 'rgba(0,0,0,.5)'; x.shadowBlur = 3 * u; rr(x, cx - pw / 2, cy - ph / 2, pw, ph, 2.4 * u * sc2); x.fill(); x.shadowBlur = 0; logoAt(BI[j], cx, cy, pw * 0.72, ph * 0.5); x.restore(); });
+        big(T('THE BRANDS WE STOCK'), 4.2 * u, Y, W / 2, H * 0.2); }
+      else { const ll = l - 1.25, k = back(K(ll, 0, 0.3)), pw = 58 * u, ph = 24 * u; // the chosen one, then the wall
+        if (ll < 0.8) { x.save(); x.translate(W / 2, H * 0.47); x.scale(lerp(0.4, 1, k), lerp(0.4, 1, k)); x.fillStyle = '#FFFFFF'; x.shadowColor = 'rgba(247,192,50,.95)'; x.shadowBlur = 8 * u; rr(x, -pw / 2, -ph / 2, pw, ph, 4 * u); x.fill(); x.shadowBlur = 0; x.lineWidth = 1 * u; x.strokeStyle = Y; x.stroke(); logoAt(BI[(Math.floor(l * 0) + sel) % BI.length], 0, -1.5 * u, pw * 0.7, ph * 0.46); x.font = '700 ' + 2.8 * u + 'px ' + F.jb; x.textAlign = 'center'; x.fillStyle = '#2BB673'; x.fillText('● ' + T('IN STOCK'), 0, ph / 2 - 3 * u); x.restore(); flash(ll, Y); }
+        else { const lw = ll - 0.8, cols = 3, gw = 27 * u, gh = 11 * u, gap = 3 * u, rows = 5, x0 = W / 2 - (cols * gw + (cols - 1) * gap) / 2, y0 = H * 0.24;
+          const nk = eo5(K(lw, 0, 0.3)); x.save(); x.translate(W / 2, H * 0.12); x.scale(lerp(1.6, 1, nk), lerp(1.6, 1, nk)); x.globalAlpha = cl(nk * 3); big('15', 15 * u, Y, -12 * u, 0); x.font = '700 ' + 3.4 * u + 'px ' + F.jb; x.textAlign = 'left'; x.fillStyle = '#FFFFFF'; x.fillText(T('BRANDS'), -1 * u, -2 * u); x.fillText(T('IN STOCK'), -1 * u, 3 * u); x.restore();
+          BR.forEach((_, j) => { const c = j % cols, r2 = Math.floor(j / cols), kk = back(K(lw, 0.08 + j * 0.035, 0.28)); if (kk <= 0) return; const cx = x0 + c * (gw + gap) + gw / 2, cy = y0 + r2 * (gh + gap) + gh / 2; x.save(); x.translate(cx, cy); x.scale(kk, kk); x.fillStyle = '#FFFFFF'; rr(x, -gw / 2, -gh / 2, gw, gh, 2 * u); x.fill(); const hot = Math.floor(lw / 0.12) % BR.length === j && lw > 0.7; if (hot) { x.lineWidth = 0.8 * u; x.strokeStyle = Y; x.shadowColor = 'rgba(247,192,50,.9)'; x.shadowBlur = 4 * u; x.stroke(); x.shadowBlur = 0; } logoAt(BI[j], 0, 0, gw * 0.72, gh * 0.5); x.restore(); });
+          flash(lw, '#FFFFFF'); } }
+    }
+    const BEATS = REEL === 'ipad' ? [
+      { d: 0.5, f: (l) => slam('SAM', l, 'dark', 'zoom') },
+      { d: 0.55, f: (l) => slam('ELECTRONICS', l, 'yel', 'side') },
+      { d: 0.5, f: (l) => slam('EVERY', l, 'light', 'spin') },
+      { d: 0.65, f: (l) => slam('PART.', l, 'dark', 'split') },
+      { d: 1.0, f: (l) => prod(0, l, 'yel', 'punch', 'SCREENS', '1,902', 'ORIGINAL · OLED · INCELL · AAA') },
+      { d: 1.0, f: (l) => prod(1, l, 'dark', 'swing', 'BATTERIES', '1,455', 'GENUINE CELLS · CAPACITY TESTED') },
+      { d: 1.0, f: (l) => prod(3, l, 'light', 'spin', 'CAMERAS', '494', 'FRONT · REAR · LENSES') },
+      { d: 2.6, f: (l) => brands(l) },
+      { d: 0.72, f: (l) => strobe(l) },
+      { d: 1.1, f: (l) => grades(l) },
+      { d: 1.7, f: (l) => finale(l) },
+    ] : [
       { d: 0.55, f: (l) => slam('TAKE', l, 'dark', 'zoom') },
       { d: 0.5, f: (l) => slam('ANY', l, 'yel', 'side') },
       { d: 0.5, f: (l) => slam('PHONE', l, 'light', 'spin') },

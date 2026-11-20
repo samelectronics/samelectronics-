@@ -394,3 +394,9 @@ html[dir="rtl"] .h4-layers { right: auto; left: 5%; }
 .hia4 :is(.h4-tag, .h4-spin) > .tq { display: inline-flex !important; width: auto !important; height: 26px !important; inset: auto !important; position: relative !important; }
 .h4-ring3 { perspective: 150cqw !important; }
 .h4-ring3 .rot > span { transform: rotateY(calc(var(--k) * 30deg)) translateZ(40cqw) !important; width: 24cqw; height: 12cqw; }
+/* R11 · the iPad plays the teardown film engine, edge to edge */
+.hia5 { background: #1E1F21; }
+.hia5 canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+/* R11 · the iPad plays the teardown film engine, edge to edge */
+.hia5 { background: #1E1F21; }
+.hia5 canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
