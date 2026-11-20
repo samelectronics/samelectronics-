@@ -19,6 +19,7 @@ const POSTS = [
   { tag: 'BENCH TEST', t: 'Pixel 8 Pro cameras, tested', m: 'Before they ship', img: '/assets/pose/solo-cam-480.webp', bg: '#FFFFFF', likes: 187 },
 ];
 const STEP = 3200;
+const WALL = ['samsung-sp', 'solo-bat', 'solo-bcv', 'solo-cam', 'apple-sp', 'solo-scr', 'xiaomi-sp', 'solo-flx', 'google-sp', 'solo-board', 'huawei-sp', 'rep-fixed'].map((n) => '/assets/pose/' + n + '-480.webp');
 
 function Qr({ text }: { text: string }) {
   const svg = useMemo(() => { const q = qrcode(0, 'M'); q.addData(text); q.make(); return q.createSvgTag({ cellSize: 4, margin: 0, scalable: true }); }, [text]);
@@ -126,7 +127,7 @@ export default function FeedWall() {
     const t = window.setInterval(() => { if (document.hidden) return; const id = ++n + Date.now(); setHearts((h) => [...h.slice(-14), { id, L: n % 2 === 0, x: Math.random() * 40 - 20, d: Math.random() * 80 - 40, s: 0.7 + Math.random() * 0.7, r: Math.random() * 40 - 20, c: Math.random() < 0.72 ? 0 : Math.random() < 0.5 ? 1 : 2 }]); window.setTimeout(() => setHearts((h) => h.filter((x) => x.id !== id)), 3200); }, 420);
     return () => window.clearInterval(t);
   }, [live]);
-  const N = NET[net], reel = k % 4 === 2 || k % 4 === 3;
+  const N = NET[net];
   const strip = [T('NEXT LANDING') + ' · ' + T('Thursday') + ' 14:00', ...POSTS.map((p) => T(p.tag) + ' · ' + T(p.t))];
   return (
     <section id="social" ref={ref} className={'fw' + (live ? ' on' : '')} data-tone="yellow" data-screen-label="The Feed">
@@ -154,9 +155,23 @@ export default function FeedWall() {
               accounts (tap one to bring it to the centre) */}
           {/* owner (R10): "the phones behind the main one are horrible": instead, the latest posts float around the phone
               as cards (they change with the account), and likes and comments pop out of it */}
-          <div className="fw-posts" key={'p' + N.id} aria-hidden="true">{POSTS.slice(0, 3).map((p, j) => { const q = POSTS[(j + net) % POSTS.length]; return (
-            <span key={j} className={'fw-pc c' + j} style={{ ['--j' as string]: j } as React.CSSProperties}><img src={q.img} alt="" loading="lazy" /><span><em>{T(q.tag)}</em><b>{T(q.t)}</b><small>♥ {q.likes + j * 17}</small></span></span>); })}</div>
-          <div className="fw-one fw-swap" key={N.id + (reel ? '-r' : '')}>{reel ? <Reel net={N} k={k} /> : <Profile net={N} k={k} />}</div>
+          {/* owner (R11): "the phone is cheap and fake, the section looks empty": a live wall of our posts instead. Three
+              columns drift past at different speeds on a slight tilt, like a feed being scrolled; every tile is a real
+              post card (our avatar, the chosen network, the product shot, the tag, the caption, the likes) */}
+          <div className="fw-wall" key={'w' + N.id} style={{ ['--c' as string]: N.c } as React.CSSProperties} aria-hidden="true">
+            {[0, 1, 2].map((col) => (
+              <div key={col} className={'fw-col c' + col}>
+                <div className="fw-run">
+                  {[0, 1].map((rep) => WALL.slice(col * 4, col * 4 + 4).concat(WALL.slice(((col + 1) % 3) * 4, ((col + 1) % 3) * 4 + 2)).map((w, k) => { const p = POSTS[(k + col) % POSTS.length]; return (
+                    <span key={rep + '-' + k} className={'fw-tile t' + ((k + col) % 3)}>
+                      <span className="hd"><img className="av" src="/assets/se-logo-metal-128.webp" alt="" /><b>samelectronics.uae</b><img className="nt" src={N.icon} alt="" /></span>
+                      <span className="ph"><img src={w} alt="" loading="lazy" />{(k + col) % 4 === 1 ? <i className="pl" /> : null}<em>{T(p.tag)}</em></span>
+                      <span className="ft"><small>♥ {(p.likes + k * 23 + col * 41).toLocaleString('en-US')}</small><b>{T(p.t)}</b></span>
+                    </span>); }))}
+                </div>
+              </div>
+            ))}
+          </div>
           <span className="fw-hearts" aria-hidden="true">{hearts.map((h) => <i key={h.id} className={'c' + h.c + (h.L ? ' L' : '')} style={{ ['--x' as string]: h.x + 'px', ['--d' as string]: h.d + 'px', ['--s' as string]: h.s, ['--r' as string]: h.r + 'deg' } as React.CSSProperties} />)}</span>
         </div>
       </div>
