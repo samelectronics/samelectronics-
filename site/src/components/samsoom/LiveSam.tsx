@@ -11,7 +11,7 @@ import { siteRaw } from '@/lib/catalog';
 const PLAYFUL = ['wave', 'happy', 'think', 'wink', 'kiss', 'celebrate', 'blush', 'dabke'];
 
 // `pose` (R9 tour): a scripted pose such as 'pt-smile' held for as long as it is set (no random emotes); `pointA` aims the arm.
-export default function LiveSam({ size = 64, mood = 'idle', play, rest: rest0, className, pose, pointA, circle }: { circle?: boolean; size?: number; mood?: string; play?: string; rest?: number; className?: string; pose?: string; pointA?: number }) {
+export default function LiveSam({ size = 64, mood = 'idle', play, rest: rest0, className, pose, pointA, circle, fit }: { circle?: boolean; fit?: boolean; size?: number; mood?: string; play?: string; rest?: number; className?: string; pose?: string; pointA?: number }) {
   // the emotes and their pace are set in the Control Room (Site & Samsoom)
   const cfg = siteRaw<{ emotes?: string[]; rest?: number }>('samsoom', {}), rest = rest0 || cfg.rest || 2600;
   const [m, setM] = useState(play || mood), [look, setLook] = useState({ x: 0, y: 0 }), box = useRef<HTMLSpanElement>(null);
@@ -39,8 +39,10 @@ export default function LiveSam({ size = 64, mood = 'idle', play, rest: rest0, c
     return () => window.removeEventListener('pointermove', mv);
   }, []);
   return (
-    <span ref={box} className={(className || '') + (circle ? ' sam-ring' : '')} style={circle ? { ['--sr' as string]: size + 'px' } : { display: 'inline-grid', placeItems: 'center' }}>
-      <SESamsoom mood={pose || m} size={circle ? Math.round(size * 0.62) : size} lookX={pose ? 0 : look.x} lookY={pose ? 0 : look.y} pointA={pointA} />
+    // R11 (owner: "zoomed in, then suddenly zoomed out, not centred"): `fit` sizes him for a round frame from the very
+    // first paint: his drawing is 1.25× taller than wide, so he is drawn at 62% and centred in a size × size box
+    <span ref={box} className={(className || '') + (circle ? ' sam-ring' : '') + (fit ? ' sam-fit' : '')} style={circle ? { ['--sr' as string]: size + 'px' } : fit ? { display: 'inline-grid', placeItems: 'center', width: size + 'px', height: size + 'px' } : { display: 'inline-grid', placeItems: 'center' }}>
+      <SESamsoom mood={pose || m} size={circle || fit ? Math.round(size * 0.62) : size} lookX={pose ? 0 : look.x} lookY={pose ? 0 : look.y} pointA={pointA} />
     </span>
   );
 }

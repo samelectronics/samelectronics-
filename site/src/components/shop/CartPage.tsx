@@ -88,7 +88,7 @@ export default function CartPage() {
     <section className="ck"><div className="sp-wrap ck-done">
       {/* owner (19 Nov): a clean confirmation, not a page header */}
       <div className="ck-ok">
-        <span className="ck-ok-sam"><LiveSam size={120} mood="idle" play="celebrate" /></span>
+        <span className="ck-ok-sam"><LiveSam fit size={120} mood="idle" play="celebrate" /></span>
         <span className="ck-k">{T('ORDER RECEIVED')} · <span dir="ltr">{done.no}</span></span>
         <h1>{T('Thank you,') + ' ' + (done.name.split(' ')[0] || '') + '!'}</h1>
         <p>{sentVia === 'web' ? T('Your order is with our team. We confirm stock, delivery and the final price here and in My Bench.') : T('Your order is with our team, and we sent the list') + ' ' + T('by') + ' ' + viaName(sentVia) + '. ' + T('We confirm stock, delivery and the final price, usually within minutes during opening hours.')}</p>
@@ -129,7 +129,7 @@ export default function CartPage() {
               <span className="sp-sample">{T('All prices are samples until the owner’s prices are in.')}</span>
             </div>
           ) : (
-            <div className="sp-card sp-empty ck-empty" data-rise><span className="ck-empty-sam"><LiveSam size={150} mood="idle" play="wave" /></span><b className="sp-h3">{T('Nothing here yet')}</b><span>{T('Find your part in seconds and it will wait here.')}</span><span className="sp-acts" style={{ justifyContent: 'center' }}><a className="sp-btn" href="/shop">{T('Go to the shop')}</a><button type="button" className="sp-btn ghost" onClick={() => window.dispatchEvent(new CustomEvent('se:fmp', { detail: {} }))}>Find My Part</button></span></div>
+            <div className="sp-card sp-empty ck-empty" data-rise><span className="ck-empty-sam"><LiveSam fit size={150} mood="idle" play="wave" /></span><b className="sp-h3">{T('Nothing here yet')}</b><span>{T('Find your part in seconds and it will wait here.')}</span><span className="sp-acts" style={{ justifyContent: 'center' }}><a className="sp-btn" href="/shop">{T('Go to the shop')}</a><button type="button" className="sp-btn ghost" onClick={() => window.dispatchEvent(new CustomEvent('se:fmp', { detail: {} }))}>Find My Part</button></span></div>
           )}
 
           {lines.length ? (

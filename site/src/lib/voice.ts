@@ -16,6 +16,8 @@ if (typeof window !== 'undefined') {
   const g = () => { gest = true; try { const C = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext; ctx = ctx || new C(); if (ctx.state !== 'running') ctx.resume(); const b = ctx.createBuffer(1, 1, 22050), src = ctx.createBufferSource(); src.buffer = b; src.connect(ctx.destination); src.start(0); } catch { /* */ } }; ['pointerdown', 'keydown', 'touchstart'].forEach((e) => window.addEventListener(e, g, { once: true, capture: true, passive: true }));
   try { muted = localStorage.getItem('se-sam-mute') === '1'; } catch { /* */ }
 }
+// R11: browsers put an idle AudioContext to sleep; waking it costs a beat, so wake it as soon as the tab is back in view
+if (typeof window !== 'undefined') document.addEventListener('visibilitychange', () => { if (!document.hidden && ctx && ctx.state === 'suspended') ctx.resume().catch(() => { /* */ }); });
 export const isMuted = () => muted;
 export function setMuted(v: boolean) { muted = v; try { localStorage.setItem('se-sam-mute', v ? '1' : '0'); } catch { /* */ } window.dispatchEvent(new CustomEvent('se:sam-mute')); }
 const can = () => { if (typeof window === 'undefined' || !gest || muted) return false; if (location.pathname.startsWith('/staff')) return false; const p = prefs().sound; return p.on && p.vol > 0 && p.talk !== false; };
@@ -181,9 +183,13 @@ export function babble(text: string, opts: { onEnd?: () => void } = {}) {
   const opens = syl.map((x) => at[x.k]);
   let line: GainNode | null = null, aStart = -1;
   const words = Array.from(t.matchAll(/[\p{L}\p{N}]+/gu)).map((m) => m[0]);
-  const schedule = () => { if (!can() || !syl.length) return; try { const c = ac(), now = c.currentTime + 0.02; aStart = now; line = c.createGain(); line.gain.value = 1;
+  const called = performance.now();
+  // R11 (owner: "sometimes the voice is a bit late"): when the audio device wakes up late, the voice catches up with the
+  // typing (it starts where the text already is and skips the syllables already typed) instead of trailing behind it
+  const schedule = () => { if (!can() || !syl.length) return; try { const c = ac(), lag = Math.max(0, (performance.now() - called) / 1000 - 0.03), now = c.currentTime + 0.02 - lag; aStart = now; line = c.createGain(); line.gain.value = 1;
     const hp = c.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 220; line.connect(hp); hp.connect(out());
     syl.forEach((x, j) => {
+      if (now + at[x.k] < c.currentTime + 0.01) return; // already typed while the audio was waking up
       const h = hash(words[x.w] || 'a') + j * 7, nextT = j + 1 < syl.length ? at[syl[j + 1].k] : total;
       const st = now + at[x.k], dur = Math.max(0.055, Math.min(0.13, (nextT - at[x.k]) * 0.85));
       const STEP = [0, 3, 5, 7, 5, 2, 8, 4], pos = syl.length > 1 ? j / (syl.length - 1) : 0;

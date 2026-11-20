@@ -3,6 +3,7 @@
 // Samsoom chat, the teardown watched to the end), and shows a short, quiet toast when one is earned:
 // the medal swings in, its name, and a link to see them all in My Bench.
 import React, { useEffect, useState } from 'react';
+import EdgeTimer from '@/components/site/EdgeTimer';
 import { usePathname } from 'next/navigation';
 import Medal from './Medal';
 import { MEDALS, unlock, visitMedal, level, XP, LEVELS } from '@/lib/achievements';
@@ -42,7 +43,7 @@ export default function MedalWatch() {
         </span>
         <a className="mdt-go" href="/account#medals" onClick={() => setShow(null)}>{T('See all')}</a>
         <button type="button" className="mdt-x" aria-label={T('Close')} onClick={() => setShow(null)}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
-        <span className="mdt-t" style={{ animationDuration: MS + 'ms' }} aria-hidden="true" onAnimationEnd={() => setShow(null)} />
+        <EdgeTimer ms={MS} r={20} onEnd={() => setShow(null)} />
       </div>
     </div>
   );

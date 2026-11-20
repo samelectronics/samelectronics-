@@ -5,6 +5,7 @@
 // timer so it can be read; the × closes it at once.
 import React, { useEffect, useState } from 'react';
 import { play } from '@/lib/sound';
+import EdgeTimer from './EdgeTimer';
 
 export const toast = (text: string, kind: 'ok' | 'off' = 'ok') => { if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('se:toast', { detail: { text, kind } })); };
 
@@ -30,7 +31,7 @@ export default function Toaster() {
           <i aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round">{x.kind === 'off' ? <path d="M6 6l12 12M18 6 6 18" /> : <path d="m5 12.5 4.5 4.5L19 7.5" />}</svg></i>
           <span dir="auto">{t(x.text)}</span>
           <button type="button" className="se-toast-x" aria-label={t('Close')} onClick={() => close(x.id)}>✕</button>
-          <b className="se-toast-t" aria-hidden="true" onAnimationEnd={() => close(x.id)} />
+          <EdgeTimer ms={3400} r={999} tone={x.kind === 'off' ? 'r' : 'g'} onEnd={() => close(x.id)} />
         </div>
       ))}
     </div>

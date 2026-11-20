@@ -12,6 +12,7 @@
 //  · He is always alive (LiveSam): blinking, emoting every few seconds, eyes following the pointer.
 // Styles in src/styles/dc-base.css (.st-*).
 import React, { useCallback, useEffect, useReducer, useState } from 'react';
+import EdgeTimer from '@/components/site/EdgeTimer';
 import LiveSam from '../samsoom/LiveSam';
 import { LANGS, RANK, type Lang, langLabel } from '@/i18n/lang';
 import Typed from '@/components/samsoom/Typed';
@@ -178,13 +179,13 @@ export default function SamsoomTour() {
 
   if (phase === 'off') return offer ? (
     // owner (18 Nov night): a small, quick message (not a big Samsoom), with a countdown that closes it by itself
-    <div className="tq-offer" role="status" aria-live="polite" onAnimationEnd={(e) => { if ((e.target as HTMLElement).classList.contains('tq-t')) setOffer(false); }}>
-      <span className="tq-sam" aria-hidden="true"><LiveSam size={40} mood="idle" play="wave" /></span>
+    <div className="tq-offer" role="status" aria-live="polite">
+      <span className="tq-sam" aria-hidden="true"><LiveSam fit size={40} mood="idle" play="wave" /></span>
       <b>{T('Want a quick tour of this page?')}</b>
       {/* owner (R10): a yes tick and a no cross instead of two wide text buttons */}
       <button type="button" className="tq-go tq-ic" data-sound="next" aria-label={T('Yes, show me')} title={T('Yes, show me')} onClick={() => { setOffer(false); walk(); }}><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m5 12.5 4.5 4.5L19 7.5" /></svg></button>
       <button type="button" className="tq-no tq-ic" data-sound="skip" aria-label={T('No thanks')} title={T('No thanks')} onClick={() => setOffer(false)}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round"><path d="M6 6l12 12M18 6 6 18" /></svg></button>
-      <i className="tq-t" aria-hidden="true" />
+      <EdgeTimer ms={20000} r={999} onEnd={() => setOffer(false)} />
     </div>
   ) : null;
   if (phase === 'lang') {
@@ -281,7 +282,7 @@ export default function SamsoomTour() {
       {hole ? <span className="st-hole" style={hole} /> : <span className="st-dim" />}
       <div className="st-bub" style={{ left: bx, top: by, width: bw }}>
         <span className="st-tools"><button type="button" className="st-mute" data-no-sound="" aria-pressed={mute} title={mute ? T('Unmute Samsoom') : T('Mute Samsoom')} aria-label={mute ? T('Unmute Samsoom') : T('Mute Samsoom')} onClick={() => { setMuted(!mute); if (!mute) hush(); }}>{mute ? <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 9h4l5-4v14l-5-4H4zM17 9l5 6M22 9l-5 6" /></svg> : <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 9h4l5-4v14l-5-4H4zM17 8a5 5 0 0 1 0 8M19.5 5.5a9 9 0 0 1 0 13" /></svg>}</button><button type="button" className="st-x" data-sound="skip" onClick={() => bye()}>{T('Skip')} <svg viewBox="0 0 12 12" width="10" height="10" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" /></svg></button></span>
-        <span className={'st-bsam' + (jump ? ' st-jump' : '')} data-sam-talk="" style={flip ? { transform: 'scaleX(-1)' } : undefined}><LiveSam size={58} pose={s.mood} pointA={Math.round(ang)} /></span>
+        <span className={'st-bsam' + (jump ? ' st-jump' : '')} data-sam-talk="" style={flip ? { transform: 'scaleX(-1)' } : undefined}><LiveSam fit size={58} pose={s.mood} pointA={Math.round(ang)} /></span>
         
         <span className="st-btx" key={i}>
           <small>{i + 1} / {steps.length}</small>

@@ -538,3 +538,5 @@ a{color:inherit;text-decoration:none}a:hover{color:inherit}
 @keyframes smHoldWh{0%,100%{transform:rotate(-95deg) scale(.74)}}
 @keyframes smRummage { from { transform: rotate(var(--a)) scaleY(.82); } to { transform: rotate(calc(var(--a) + 12deg)) translateY(2px) scaleY(.74); } }
 [style*="smRummage"] { z-index: -1 !important; }
+/* R11 (speed): off-screen sections also pause their ::before / ::after layers (most glows, sweeps and shines live there) */
+[data-home-root] section:not([data-in]) *::before,[data-home-root] section:not([data-in]) *::after,[data-home-root] section:not([data-in])::before,[data-home-root] section:not([data-in])::after,[data-home-root] footer:not([data-in]) *::before,[data-home-root] footer:not([data-in]) *::after{animation-play-state:paused !important}

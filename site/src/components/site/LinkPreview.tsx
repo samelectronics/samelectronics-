@@ -58,7 +58,7 @@ export default function LinkPreview() {
     <div className="lpv-veil" onClick={(e) => { if (e.target === e.currentTarget) close(); }}>
       <div className={'lpv-card k-' + p.kind} role="dialog" aria-modal="true" aria-label={head}>
         <button type="button" className="lpv-x" aria-label={t('Close')} onClick={close}>✕</button>
-        <div className="lpv-top"><span className="lpv-sam"><LiveSam mood={p.kind === 'web' ? 'think' : 'happy'} size={46} /></span><span className="lpv-tt"><small>{t('PREVIEW BEFORE YOU GO')}</small><b dir="auto">{head}</b></span></div>
+        <div className="lpv-top"><span className="lpv-sam"><LiveSam fit mood={p.kind === 'web' ? 'think' : 'happy'} size={46} /></span><span className="lpv-tt"><small>{t('PREVIEW BEFORE YOU GO')}</small><b dir="auto">{head}</b></span></div>
         <p className="lpv-sub" dir="auto">{sub}</p>
         <div className="lpv-view">
           {p.kind === 'map' ? <iframe title="Map" src={'https://www.google.com/maps?q=' + site.contact.mapsQuery + '&z=17&output=embed'} loading="lazy" referrerPolicy="no-referrer-when-downgrade" /> : null}

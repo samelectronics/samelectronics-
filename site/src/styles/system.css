@@ -1221,7 +1221,9 @@ html.shot-hold .shot-holdc { display: flex; }
 /* R10 (owner: "the light above his head always goes outside his circle frame"): in every round Samsoom frame he is
    scaled to fit, antenna light included, and the circle clips anything that would still poke out */
 :is(.au-sam, .ck-empty-sam, .ck-ok-sam, .cr-lsam, .dp-sam, .gd-sam, .lpv-sam, .pv-ask-sam, .shop-sam, .sn2-sam, .st-bsam, .st-sam, .tq-sam) { overflow: hidden !important; }
-:is(.au-sam, .ck-empty-sam, .ck-ok-sam, .cr-lsam, .dp-sam, .gd-sam, .lpv-sam, .pv-ask-sam, .shop-sam, .sn2-sam, .st-bsam, .st-sam, .tq-sam) > * { transform: scale(.8) translateY(9%); transform-origin: 50% 50%; }
+/* R11: no more after-the-fact shrinking; LiveSam's `fit` draws him at the right size from the first paint */
+.sam-fit { position: relative; max-width: 100%; max-height: 100%; }
+.sam-fit > * { transform: translateY(2%); }
 /* R10 · language switch: Samsoom fixing himself, with dust puffing up behind him while a hand is behind his back */
 .fx-sam { position: relative; display: inline-grid; place-items: center; }
 .fx-dust { position: absolute; bottom: 8%; width: 60%; height: 50%; pointer-events: none; z-index: 0; }
@@ -1254,3 +1256,40 @@ html body a.scp-5861bbd1 .hb-live { min-width: 0; overflow: hidden; text-overflo
    translated labels on the offer and wholesale buttons wrap inside the button rather than running out of it */
 html body header .scp-90837cfd { flex: none !important; white-space: nowrap; }
 html body a.wo-shop, html body a.wo-btn { white-space: normal !important; height: auto !important; min-height: 44px; line-height: 1.2 !important; text-align: center; padding-block: 8px !important; overflow-wrap: anywhere; }
+/* ── R11 · EdgeTimer: the time left runs along the card's own rounded edge as a glowing LED line ── */
+.se-et { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; z-index: 3; }
+.se-et rect { fill: none; stroke-width: 2.5px; vector-effect: non-scaling-stroke; }
+.se-et .trk { stroke: rgba(247,192,50,.16); }
+.se-et .run { stroke: #F7C032; stroke-linecap: round; stroke-dasharray: 100 100; stroke-dashoffset: 0; filter: drop-shadow(0 0 3px rgba(247,192,50,.95)) drop-shadow(0 0 8px rgba(247,192,50,.5)); animation: seEt var(--et-ms, 8s) linear forwards; }
+.se-et.r .run { stroke: #E5484D; filter: drop-shadow(0 0 3px rgba(229,72,77,.9)) drop-shadow(0 0 8px rgba(229,72,77,.45)); } .se-et.r .trk { stroke: rgba(229,72,77,.15); }
+.se-et.g .run { stroke: #2BB673; filter: drop-shadow(0 0 3px rgba(43,182,115,.9)) drop-shadow(0 0 8px rgba(43,182,115,.45)); } .se-et.g .trk { stroke: rgba(43,182,115,.15); }
+@keyframes seEt { to { stroke-dashoffset: -100; } }
+:is(.sn2, .se-toast, .mdt, .tq-offer):is(:hover, .hold, :focus-within) .se-et .run { animation-play-state: paused; }
+/* the old straight bars are retired */
+.sn2-t, .se-toast-t, .mdt-t, .tq-t { display: none !important; }
+@media (prefers-reduced-motion: reduce) { .se-et .run { filter: none; } }
+/* R11 · cookie icon: graphite disc, yellow LED ring, the cookie inside */
+.sc2-cookie { width: 52px !important; height: 52px !important; background: radial-gradient(circle at 50% 35%, #3D3E3F, #26282B 70%) !important; box-shadow: 0 0 0 2px #F7C032, 0 0 14px rgba(247,192,50,.45), inset 0 2px 6px rgba(255,255,255,.08) !important; }
+.sc2-cookie .sc2-ck { width: 32px; height: 32px; animation: ckTilt 3.2s ease-in-out infinite !important; transform-origin: 50% 60%; }
+@keyframes ckTilt { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg); } }
+/* ── R11 · every button has the hero shop button's life: a springy lift, the icon hops, a soft press ── */
+:is(a, button):is([class*="-btn"], [class*=" btn"], .sp-btn, .sn2-b, .lpv-btn, .st-btn, .wf-btn, .vs-btn, .wo-btn, .wo-shop, .ck-a, .ck-sw-b, .dt, .scp-5861bbd1, .scp-90837cfd, .se-cta, .h4-btn):not(:disabled):not([aria-disabled="true"]) {
+  transition: translate .35s cubic-bezier(.3,1.7,.5,1), box-shadow .25s ease, filter .2s ease, background-color .2s ease, color .2s ease;
+}
+@media (hover: hover) {
+  :is(a, button):is([class*="-btn"], [class*=" btn"], .sp-btn, .sn2-b, .lpv-btn, .st-btn, .wf-btn, .vs-btn, .wo-btn, .wo-shop, .ck-a, .ck-sw-b, .dt, .scp-5861bbd1, .scp-90837cfd, .se-cta):not(:disabled):not([aria-disabled="true"]):hover { translate: 0 -2px; filter: brightness(1.04); }
+  :is(a, button):is([class*="-btn"], [class*=" btn"], .sp-btn, .sn2-b, .lpv-btn, .st-btn, .wf-btn, .vs-btn, .wo-btn, .wo-shop, .ck-a, .ck-sw-b, .scp-90837cfd, .se-cta):not(:disabled):hover > svg:first-child { animation: hbHop .5s cubic-bezier(.3,1.6,.5,1); }
+}
+:is(a, button):is([class*="-btn"], [class*=" btn"], .sp-btn, .sn2-b, .lpv-btn, .st-btn, .wf-btn, .vs-btn, .wo-btn, .wo-shop, .ck-a, .ck-sw-b, .dt, .scp-5861bbd1, .scp-90837cfd, .se-cta):not(:disabled):active { translate: 0 1px; transition-duration: .08s; }
+@media (prefers-reduced-motion: reduce) { :is(a, button):hover { translate: none !important; } }
+/* R11 · hero shop button: one graphite capsule (live dot, the count in yellow, then a white coin that flips through the
+   brands we stock); the label and icon stay graphite on the yellow */
+html body a.scp-5861bbd1 .se-hb-info { gap: 0 !important; }
+html body a.scp-5861bbd1 .se-hb-info > span.hb-live { border-radius: 999px 0 0 999px !important; padding-inline-end: 8px !important; }
+html[dir="rtl"] body a.scp-5861bbd1 .se-hb-info > span.hb-live { border-radius: 0 999px 999px 0 !important; }
+html body a.scp-5861bbd1 .hb-coin { position: relative; flex: none; width: 30px; height: 26px; padding: 0 !important; display: inline-block; border-radius: 0 999px 999px 0; background: #26282B; perspective: 120px; }
+html[dir="rtl"] body a.scp-5861bbd1 .hb-coin { border-radius: 999px 0 0 999px; }
+html body a.scp-5861bbd1 .hb-coin img { position: absolute; top: 2px; left: 2px; width: 22px; height: 22px; box-sizing: border-box; padding: 4px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 1.5px #F7C032; object-fit: contain; opacity: 0; animation: hbCoin 9s calc(var(--k) * 1.5s) linear infinite; backface-visibility: hidden; }
+@keyframes hbCoin { 0% { opacity: 0; transform: rotateY(90deg); } 3%, 14% { opacity: 1; transform: rotateY(0); } 17%, 100% { opacity: 0; transform: rotateY(-90deg); } }
+html body a.scp-5861bbd1 > span:first-child, html body a.scp-5861bbd1 > i:first-child { color: #26282B; }
+@media (prefers-reduced-motion: reduce) { html body a.scp-5861bbd1 .hb-coin img { animation: none; } html body a.scp-5861bbd1 .hb-coin img:first-child { opacity: 1; } }

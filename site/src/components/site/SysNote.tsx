@@ -4,6 +4,7 @@
 // state: a white card under the header (where the medal notice appears), a small tile on the left (an icon, or Samsoom
 // with a badge), a kicker, a title, one short line, the actions, × and a thin bar that runs down until it closes itself.
 import React, { useEffect, useState } from 'react';
+import EdgeTimer from './EdgeTimer';
 import LiveSam from '@/components/samsoom/LiveSam';
 
 export type Tone = 'info' | 'ok' | 'warn' | 'stop';
@@ -24,7 +25,6 @@ export default function SysNote({ tone, kicker, title, text, acts = [], onClose,
   // owner (18 Nov): serious alerts sound like a warning, connection problems like a soft error
   useEffect(() => { const k = snd || (tone === 'stop' ? 'warn' : icon === 'wifi-off' || icon === 'wifi-slow' ? 'oops' : tone === 'ok' ? 'success' : 'msg'); if (k !== 'none') import('@/lib/sound').then((m) => m.play(k)).catch(() => {}); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const close = () => { setOut(true); window.setTimeout(onClose, 220); };
-  useEffect(() => { if (!ms) return; const t = window.setTimeout(close, ms); return () => window.clearTimeout(t); }, [ms]);
   useEffect(() => { const k = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); }; window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k); }, []);
   // owner (18 Nov, round 2): "look how simple and nice the Samsoom tutorial is". Every system notice is now that card:
   // Samsoom in his yellow circle sitting on top, one clear title, one line, the buttons. No kicker label, no tiny logo,
@@ -34,7 +34,7 @@ export default function SysNote({ tone, kicker, title, text, acts = [], onClose,
   const pose = sam?.mood || (icon === 'wifi-off' ? 'sad' : icon === 'wifi-slow' ? 'think' : tone === 'ok' ? 'happy' : 'idle');
   const card = (
     <div className={'sn2 sn2-' + tone + (out ? ' out' : '')} role={role} aria-live={role === 'alert' ? 'assertive' : 'polite'} aria-label={kicker}>
-      <span className="sn2-sam" aria-hidden="true"><LiveSam size={92} pose={pose} />{icon ? <i className={'sn2-badge ' + icon}>{WIFI(icon)}</i> : null}</span>
+      <span className="sn2-sam" aria-hidden="true"><LiveSam fit size={92} pose={pose} />{icon ? <i className={'sn2-badge ' + icon}>{WIFI(icon)}</i> : null}</span>
       <b className="sn2-h">{title}</b>
       {/* owner (19 Nov): a "read more" act is an inline text link after the line, like "Cookies" in the cookie note */}
       {text ? <p className="sn2-p">{text}{acts.filter((a) => a.link).map((a) => <React.Fragment key={a.label}> <a className="sn2-ln" href={a.href} onClick={() => a.on?.()}>{a.label}</a></React.Fragment>)}</p> : null}
@@ -44,7 +44,7 @@ export default function SysNote({ tone, kicker, title, text, acts = [], onClose,
         </span>
       ) : null}
       <button type="button" className="sn2-x" aria-label="Close" onClick={close}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
-      {ms ? <em className="sn2-t" style={{ animationDuration: ms + 'ms' }} aria-hidden="true" /> : null}
+      {ms ? <EdgeTimer ms={ms} r={26} tone={tone === 'stop' ? 'r' : undefined} onEnd={close} /> : null}
     </div>
   );
   return serious ? <div className={'sn2-veil' + (out ? ' out' : '')} onClick={(e) => { if (e.target === e.currentTarget) close(); }}>{card}</div> : <div className="sn2-dock">{card}</div>;

@@ -40,12 +40,18 @@ export function CatIcon({ k }: { k: Cat['k'] }) {
 }
 /** a real-looking cookie with a bite out of it and crumbs that fall once */
 // R10 (owner, 3 Nov): one calm mark, not two characters: a yellow line cookie with a bite, in a graphite circle
+// R11 (owner: "the cookie icon looks orange and doesn't match"): our own colours: a yellow cookie with a bite, graphite
+// chips laid out like solder points, a soft top light, sitting in a graphite disc with the logo's yellow LED ring
 function CookieBite() {
   return (
-    <svg className="sc2-ck" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#F7C032" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M12 3a9 9 0 1 0 9 9 2.6 2.6 0 0 1-3-2.6 2.6 2.6 0 0 1-3-2.9A2.6 2.6 0 0 1 12 3z" />
-      <circle cx="8.5" cy="10.5" r=".9" fill="#F7C032" /><circle cx="13" cy="15.5" r=".9" fill="#F7C032" /><circle cx="8.8" cy="15.6" r=".7" fill="#F7C032" />
-      <circle className="crumb" cx="19.5" cy="5" r=".8" fill="#F7C032" stroke="none" />
+    <svg className="sc2-ck" viewBox="0 0 48 48" width="34" height="34" aria-hidden="true">
+      <defs>
+        <radialGradient id="ckBody" cx="38%" cy="30%" r="75%"><stop offset="0" stopColor="#FFE08A" /><stop offset=".55" stopColor="#F7C032" /><stop offset="1" stopColor="#E9B12A" /></radialGradient>
+      </defs>
+      <path d="M24 5a19 19 0 1 0 19 19 5.4 5.4 0 0 1-6.2-5.4 5.4 5.4 0 0 1-6.3-6A5.4 5.4 0 0 1 24 5z" fill="url(#ckBody)" />
+      <path d="M24 5a19 19 0 1 0 19 19" fill="none" stroke="rgba(255,255,255,.55)" strokeWidth="1" strokeDasharray="3 60" strokeLinecap="round" />
+      {([[17, 20, 2.3], [26, 31, 2.1], [17, 31, 1.7], [31, 24, 1.5], [23, 15, 1.4]] as const).map(([x, y, r], k) => <g key={k}><circle cx={x} cy={y} r={r} fill="#3D3E3F" /><circle cx={x - r * 0.3} cy={y - r * 0.3} r={r * 0.35} fill="rgba(255,255,255,.35)" /></g>)}
+      <circle className="crumb" cx="40" cy="9" r="1.6" fill="#F7C032" />
     </svg>
   );
 }

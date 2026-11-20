@@ -2,6 +2,8 @@
 // P1 · Wrap any page in this: the shared frame (nav, footer, cart, Samsoom…) plus the language system, the offline notice
 // and Samsoom's tour/help (which also walks through the page's own [data-tour-step] elements).
 import dynamic from 'next/dynamic';
+import { useEffect, useState } from 'react';
+import { isEmbed } from '@/lib/embed';
 import LangPop from '@/components/home/LangPop';
 import NetNotice from '@/components/home/NetNotice';
 import SamsoomTour from '@/components/home/SamsoomTour';
@@ -23,18 +25,26 @@ if (typeof window !== 'undefined') {
 const SiteFrame = dynamic(() => import('./SiteFrame'), { ssr: false, loading: () => <div className="sp-boot" aria-hidden="true" /> });
 
 export default function SitePage({ children }: { children: React.ReactNode }) {
+  // R11 (speed): inside the home page's iPad the shop is only a picture in motion, so none of the site's overlays,
+  // tours, sounds or watchers start there (they used to load a second time, inside the iframe, and slow the home page)
+  const [emb, setEmb] = useState<boolean | null>(null);
+  useEffect(() => { setEmb(isEmbed()); if (isEmbed()) document.documentElement.classList.add('se-embed'); }, []);
   return (
     <div id="dc-root">
       <SiteFrame __page={children} />
-      <SiteSettings />
-      <LangPop />
-      <NetNotice />
-      <SamsoomTour />
-      <FitText />
-      <PageLife />
-      <OffscreenPause />
-      <LangLoading />
-      <SiteControls />
+      {emb === false ? (
+        <>
+          <SiteSettings />
+          <LangPop />
+          <NetNotice />
+          <SamsoomTour />
+          <FitText />
+          <PageLife />
+          <OffscreenPause />
+          <LangLoading />
+          <SiteControls />
+        </>
+      ) : null}
     </div>
   );
 }

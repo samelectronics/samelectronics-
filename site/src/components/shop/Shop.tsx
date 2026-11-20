@@ -18,6 +18,7 @@ import ProductView from './ProductView';
 import Customize, { type View } from './Customize';
 import Banners from './Banners';
 import InlineAd from './InlineAd';
+import { isEmbed } from '@/lib/embed';
 import CompareView from './CompareView';
 import LogoMark from '@/components/site/LogoMark';
 import { GradeTag, MakerTag } from './Tags';
@@ -141,7 +142,8 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
   }, []);
   if (!ready || !D || !fc) return <div className="shop-wait"><span /><span /><span /></div>;
 
-  const shown = res.slice(0, page * view.per), myModels = new Map(st.devices.map((d) => [d.model_id, d.nick || d.name]));
+  // R11 (speed): the iPad on the home page only ever shows the first rows, so it renders a dozen parts, not the full page
+  const emb = isEmbed(), shown = res.slice(0, emb ? 12 : page * view.per), myModels = new Map(st.devices.map((d) => [d.model_id, d.nick || d.name]));
   const set = (patch: Partial<Filters>) => setF((o) => ({ ...o, ...patch }));
   const tog = (k: (typeof LIST_KEYS)[number], v: string) => setF((o) => ({ ...o, [k]: o[k].includes(v) ? o[k].filter((x) => x !== v) : [...o[k], v] }));
   const name = (k: (typeof LIST_KEYS)[number], v: string) => k === 'brands' ? D.brands.find((b) => b.id === v)?.name : k === 'models' ? D.models.find((m) => m.id === v)?.name : k === 'cats' ? T(D.categories.find((c) => c.id === v)?.name || v) : k === 'grades' ? D.gradeNames[v] : k === 'makers' ? D.manufacturers.find((m) => m.id === v)?.name : k === 'qualities' ? D.qualities.find((q) => q.id === v)?.name : k === 'parts' ? D.categories.find((c) => c.part === v)?.one || v : k === 'colours' ? D.colours.find((c) => c.id === v)?.name : T(v);
@@ -273,7 +275,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
                   const row = view.list ? 1 : Math.max(1, +view.cols || 4), first = row * 2, every = row * 3, n = k + 1;
                   const mid = n === first ? 1 : n > first && (n - first) % every === 0 ? 1 + (n - first) / every : 0;
                   const slot = mid && n < shown.length ? mid : n === shown.length && shown.length >= 3 && shown.length < first + every ? (mid || Math.floor(Math.max(0, n - first) / every) + 1) + (n >= first ? 1 : 0) : 0;
-                  return <React.Fragment key={p.id}><ProductCard p={p} st={st} trade={trade} open={open} list={view.list} fits={myModels.get(p.model_id)} tour={k === 0} />{slot ? <InlineAd slot={slot} lastCat={f.cats[0]} /> : null}</React.Fragment>;
+                  return <React.Fragment key={p.id}><ProductCard p={p} st={st} trade={trade} open={open} list={view.list} fits={myModels.get(p.model_id)} tour={k === 0} />{slot && !emb ? <InlineAd slot={slot} lastCat={f.cats[0]} /> : null}</React.Fragment>;
                 })}
               </div>
             ) : (

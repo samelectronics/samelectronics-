@@ -75,12 +75,17 @@ export default function Guard() {
     // owner (R10): the watermark must ALWAYS be on the capture. It is always in the page (allowed or not) and switches on
     // synchronously in the very first key handler (a class on <html>, no React render in between); a "hang tight" card
     // covers the page for a moment while it settles, and the warning sound always plays.
-    let ft = 0;
-    const flashWm = () => { const h = document.documentElement; h.classList.add('shot-on', 'shot-hold'); window.clearTimeout(ft); window.setTimeout(() => h.classList.remove('shot-hold'), 1100); ft = window.setTimeout(() => h.classList.remove('shot-on'), 5000); };
-    const pre = (e: KeyboardEvent) => { if ((e.metaKey && e.shiftKey) || (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 's') || e.key === 'PrintScreen' || e.code === 'PrintScreen' || e.key === 'Meta' && e.shiftKey) flashWm(); };
-    window.addEventListener('keydown', pre, true); window.addEventListener('blur', flashWm);
+    // owner (R11): "the hang-tight card should only be a back-up, now it appears all the time and the laptop freezes on it".
+    // The watermark (always in the page) switches on instantly and alone; the covering card only appears when the
+    // visitor has NOT agreed to the screenshot terms (it protects the page), and it always clears itself.
+    let ft = 0, ht = 0, holdAt = 0;
+    const clearHold = (e?: Event) => { if (e && performance.now() - holdAt < 450) return; document.documentElement.classList.remove('shot-hold'); window.clearTimeout(ht); };
+    const flashWm = (hold = false) => { const h = document.documentElement; h.classList.add('shot-on'); if (hold) { holdAt = performance.now(); h.classList.add('shot-hold'); window.clearTimeout(ht); ht = window.setTimeout(clearHold, 900); } window.clearTimeout(ft); ft = window.setTimeout(() => h.classList.remove('shot-on'), 5000); };
+    const pre = (e: KeyboardEvent) => { if ((e.metaKey && e.shiftKey && (e.key === 'Meta' || e.key === 'Shift' || /^[345s]$/i.test(e.key))) || (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 's') || e.key === 'PrintScreen' || e.code === 'PrintScreen') flashWm(false); };
+    ['pointermove', 'focus', 'keyup'].forEach((ev) => window.addEventListener(ev, clearHold, { passive: true }));
+    window.addEventListener('keydown', pre, true);
     const seen = () => {
-      flashWm(); import('@/lib/sound').then((m) => m.play('warn', true)).catch(() => {});
+      flashWm(!okNow()); import('@/lib/sound').then((m) => m.play('warn', true)).catch(() => {});
       if (okNow()) { logWarning('screenshot', 'screenshot taken under the screenshot terms'); return; }
       setShot(true);
       logWarning('screenshot', 'keys pressed on ' + (navigator.platform || 'computer'));
@@ -88,18 +93,18 @@ export default function Guard() {
     const down = (e: KeyboardEvent) => { if (e.key === 'Escape') { setShot(false); setVpn(false); return; } const k = e.key.toLowerCase(); if ((e.metaKey && e.shiftKey && ['3', '4', '5', 's'].includes(k)) || (e.ctrlKey && e.shiftKey && k === 's' && navigator.platform.startsWith('Win'))) seen(); };
     const up = (e: KeyboardEvent) => { if (e.key === 'PrintScreen' || e.code === 'PrintScreen') seen(); };
     window.addEventListener('keydown', down, true); window.addEventListener('keyup', up, true);
-    return () => { window.removeEventListener('keydown', pre, true); window.removeEventListener('blur', flashWm); window.clearTimeout(ft); window.removeEventListener('keydown', down, true); window.removeEventListener('keyup', up, true); window.clearInterval(vpnTimer); document.removeEventListener('visibilitychange', vis); window.removeEventListener('online', check); window.removeEventListener('focus', check); };
+    return () => { window.removeEventListener('keydown', pre, true); ['pointermove', 'focus', 'keyup'].forEach((ev) => window.removeEventListener(ev, clearHold)); window.clearTimeout(ft); window.clearTimeout(ht); window.removeEventListener('keydown', down, true); window.removeEventListener('keyup', up, true); window.clearInterval(vpnTimer); document.removeEventListener('visibilitychange', vis); window.removeEventListener('online', check); window.removeEventListener('focus', check); };
   }, []);
   return (
     <>
       {vpn ? <SysNote tone="warn" snd="none" role="alert" sam={{ mood: 'stop' }} kicker={tr('SAMSOOM · HOLD ON')} title={tr('Hey! Is that a VPN?')} text={tr('Prices and delivery depend on where you really are. Please switch the VPN off.')} ms={20000} onClose={() => setVpn(false)}
         acts={[{ label: tr('OK, I will switch it off'), primary: true }, { label: tr('I am travelling, carry on'), on: () => { try { sessionStorage.setItem('se-vpn-ok', '1'); } catch { /* */ } } }, { label: tr('Why am I seeing this?'), href: '/notices#vpn', link: true }]} /> : null}
-      {shot ? <SysNote tone="stop" role="alert" sam={{ mood: 'nono' }} kicker={tr('COPYRIGHT NOTICE')} title={tr('This content is protected.')} text={tr('Keeping it for yourself is fine; sharing or publishing it needs our permission.')} ms={15000} onClose={() => setShot(false)}
+      {shot ? <SysNote tone="stop" role="alert" sam={{ mood: 'nono' }} kicker={tr('COPYRIGHT NOTICE')} title={tr('This content is protected.')} text={tr('Keeping it for yourself is fine; sharing or publishing it needs our permission.')} ms={30000} onClose={() => setShot(false)}
         acts={[{ label: tr('I understand'), primary: true }, { label: tr('Allow screenshots'), on: () => setTerms(true) }, { label: tr('Read the full notice'), href: '/notices#copyright', link: true }]} /> : null}
       {terms ? (
         <div className="sn2-veil" onClick={(e) => { if (e.target === e.currentTarget) setTerms(false); }}>
           <div className="sn2 sn2-warn shot-terms" role="dialog" aria-modal="true" aria-label={tr('Screenshot terms')}>
-            <span className="sn2-sam" aria-hidden="true"><LiveSam size={92} pose="think" /></span>
+            <span className="sn2-sam" aria-hidden="true"><LiveSam fit size={92} pose="think" /></span>
             <b className="sn2-h">{tr('Screenshot terms')}</b>
             {/* owner (19 Nov): a short overview; the full terms are one small yellow link away */}
             <p className="sn2-p st-sum">{tr('Screenshots are for your own use, and every one carries our watermark. Sharing or publishing them needs our permission.')} <a className="sn2-ln y" href="/notices#copyright" target="_blank" rel="noopener">{tr('Read the full terms')}</a></p>

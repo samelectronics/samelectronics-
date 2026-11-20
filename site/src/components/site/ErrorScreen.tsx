@@ -32,7 +32,7 @@ export default function ErrorScreen({ error, retry, bare }: { error: unknown; re
       <div className={'ers-card' + (bare ? '' : ' sam')}>
         {/* owner (19 Nov, round 2): Samsoom on top, the same card as every other pop-up */}
         {bare ? <span className="ers-ic" aria-hidden="true"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M12 3 2.5 20h19z" /><path d="M12 10v4.5M12 17.5v.01" /></svg></span>
-          : <span className="sn2-sam ers-sam" aria-hidden="true"><LiveSam size={92} pose="sad" /><i className="sn2-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M12 3 2.5 20h19z" /><path d="M12 10v4.5M12 17.5v.01" /></svg></i></span>}
+          : <span className="sn2-sam ers-sam" aria-hidden="true"><LiveSam fit size={92} pose="sad" /><i className="sn2-badge"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M12 3 2.5 20h19z" /><path d="M12 10v4.5M12 17.5v.01" /></svg></i></span>}
         <span className="ers-k">{T('SOMETHING WENT WRONG')} · <span dir="ltr">{ref}</span></span>
         <h1 className="ers-h">{T('This page hit a problem.')}</h1>
         <p className="ers-why"><b>{T('What happened')}:</b> {T(why)}</p>
