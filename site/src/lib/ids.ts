@@ -37,7 +37,7 @@ function device(): string {
 }
 function when(d: Date, tz: string) {
   const f = new Intl.DateTimeFormat('en-GB', { timeZone: tz, weekday: 'short', day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-  return f.format(d).replace(',', '').replace(/ (\d{2}:\d{2}:\d{2})$/, ' · $1');
+  return f.format(d).replace(/,/g, '').replace(/ (\d{2}:\d{2}:\d{2})$/, ' · $1');
 }
 /** The formal details block. `inquiry` is this message's own ID (a new one per inquiry); the customer ref never changes. */
 export function sysBlock(channel: Channel, inquiry: string = messageId(), extra: [string, string][] = []): string {
