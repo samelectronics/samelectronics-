@@ -1776,6 +1776,21 @@ export const R7: Record<string, string> = {
 
 /** Round 8: Sam Circuit's three cards, Samsoom's tour and chat menu. */
 export const R8: Record<string, string> = {
+  'One second…': 'لحظة…',
+  'Our watermark is still loading. Try your screenshot again.': 'علامتنا المائية ما زالت تُحمَّل. التقط لقطة الشاشة مرة أخرى.',
+  'Trying to get around this protection, for example by photographing or filming the screen with another phone, camera or device, or by using tools that hide or remove our watermark, is not allowed and can be punished under UAE law.': 'محاولة تجاوز هذه الحماية، مثل تصوير الشاشة أو تسجيلها بهاتف أو كاميرا أو جهاز آخر، أو استخدام أدوات تُخفي علامتنا المائية أو تزيلها، غير مسموح بها ويعاقب عليها قانون دولة الإمارات.',
+  'Copying our design, colours, layout, structure, look, characters (including Samsoom), texts or ideas, or using them wrongly or falsely (for example to look like Sam Electronics or to suggest you work with us), is not allowed and can be punished under UAE law.': 'نسخ تصميمنا أو ألواننا أو تخطيطنا أو هيكلنا أو مظهرنا أو شخصياتنا (ومنها سمسوم) أو نصوصنا أو أفكارنا، أو استخدامها بشكل خاطئ أو مضلِّل (مثل الظهور بمظهر سام للإلكترونيات أو الإيحاء بالتعاون معنا)، غير مسموح به ويعاقب عليه قانون دولة الإمارات.',
+  'Every screenshot carries our watermark with the date, time and a reference, so its origin can always be traced.': 'كل لقطة شاشة تحمل علامتنا المائية مع التاريخ والوقت ورقم مرجعي، لذا يمكن دائمًا تتبّع مصدرها.',
+  'THE SHOP': 'المتجر',
+  'THE SHOP.': 'المتجر.',
+  'SEARCH.': 'ابحث.',
+  'PICK A GRADE.': 'اختر الجودة.',
+  'ADD TO CART.': 'أضف إلى السلة.',
+  'ORDER IN SECONDS.': 'اطلب في ثوانٍ.',
+  'COMPATIBLE': 'متوافق',
+  'STANDARD': 'قياسي',
+  'New order · Sam Electronics': 'طلب جديد · سام للإلكترونيات',
+  'Send on': 'أرسل عبر',
   'Send on the website': 'أرسل عبر الموقع',
   'Trader · Kampala': 'تاجر · كمبالا',
   'Repair shop · Lagos': 'ورشة صيانة · لاغوس',

@@ -105,8 +105,10 @@ export default function AskPage() {
   const file = useRef<HTMLInputElement>(null), rec = useRef<{ stop: () => void } | null>(null);
   const pickImg = async (f?: File | null) => { if (!f || !/^image\//.test(f.type)) return; try { setImg({ big: await shrink(f, 1400), small: await shrink(f, 220, 0.7) }); } catch { /* unreadable */ } };
   const box = useRef<HTMLDivElement>(null), inp = useRef<HTMLTextAreaElement>(null);
+  useEffect(() => { askRef.current = (t: string) => { void ask(t); }; });
   useEffect(() => {
     setCfgS(readCfg()); const l = read(); setChats(l); const c = new URLSearchParams(location.search).get('c'); if (c && l.some((x) => x.id === c)) setId(c);
+    { const q0 = new URLSearchParams(location.search).get('q'); if (q0) { history.replaceState(null, '', location.pathname); window.setTimeout(() => { askRef.current?.(q0); }, 600); } }
     { const tq = new URLSearchParams(location.search).get('tool'); if (tq === 'photo') setTmenu(true); else if (tq && ['fit', 'track', 'stock', 'price', 'book', 'trade'].includes(tq)) setTool(tq as ToolKey); }
     const w = window as unknown as { SpeechRecognition?: unknown; webkitSpeechRecognition?: unknown }; setCanTalk(!!(w.SpeechRecognition || w.webkitSpeechRecognition));
     document.documentElement.classList.add('ak-page'); return () => document.documentElement.classList.remove('ak-page');
@@ -119,6 +121,7 @@ export default function AskPage() {
     if (found.length && /\d|screen|battery|lcd|flex|camera|cover|frame|شاش|بطار/i.test(text)) return { t: T('Here is what I found in stock') + ':', parts: found.map((p) => p.id), emote: 'found', act: 'fmp' };
     void data; return unknown(text, { history: (read().find((c) => c.id === id)?.msgs || []).filter((m) => m.me).map((m) => m.t), tr: (s: string) => T(s) });
   };
+  const askRef = useRef<((t: string) => void) | null>(null);
   const ask = async (text: string) => {
     text = text.trim(); const pic = img; if (!text && !pic) return; if (!text) text = T('Here is a photo of my phone. What does it need?'); setQ(''); setImg(null);
     let cid = id;

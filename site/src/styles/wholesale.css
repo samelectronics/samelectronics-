@@ -400,11 +400,11 @@ html[dir='rtl'] .wf-real > svg:last-child { transform: scaleX(-1); }
 .wf-li-acts .wf-add { justify-content: center; }
 .wf-sends { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .wf-send2 { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 42px; padding: 0 12px; border: 0; border-radius: 10px; color: #fff; font: 600 13.5px Inter, sans-serif; cursor: pointer; transition: transform .2s, filter .2s; }
-.wf-send2.wa { background: #25D366; } .wf-send2.wc { background: #07C160; }
+.wf-send2.wa { background: #25D366; } .wf-send2.wc { background: #25D366; }
 .wf-send2:hover { transform: translateY(-1px); filter: brightness(1.05); }
 .wf-send2 .ct-ic { width: 18px; height: 18px; color: #fff; }
 .duo-ic { display: inline-flex; align-items: center; gap: 4px; margin-inline-end: 10px; }
-.duo-ic .ct-ic.wa { color: #25D366; width: 18px; height: 18px; } .duo-ic .ct-ic.wc { color: #07C160; width: 18px; height: 18px; }
+.duo-ic .ct-ic.wa { color: #25D366; width: 18px; height: 18px; } .duo-ic .ct-ic.wc { color: #25D366; width: 18px; height: 18px; }
 .wf-btn.duo { display: inline-flex; align-items: center; }
 .mt-go2.duo { display: inline-flex; align-items: center; }
 .wf-send2.more { background: rgba(255,255,255,.08); color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.22); }

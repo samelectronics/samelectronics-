@@ -23,7 +23,7 @@ html.ak-page .se-launch, html.ak-page [aria-label="Ask Samsoom"] { display: none
 .ak-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .ak-duo button { display: flex; align-items: center; justify-content: center; gap: 7px; height: 40px; border: 0; border-radius: 10px; color: #fff; font: 600 13px Inter, sans-serif; cursor: pointer; transition: transform .2s, filter .2s; }
 .ak-duo button:hover { transform: translateY(-1px); filter: brightness(1.06); }
-.ak-wa { background: #25D366; } .ak-wc { background: #07C160; }
+.ak-wa { background: #25D366; } .ak-wc { background: #25D366; }
 .ak-foot { font: 400 11.5px/1.5 Inter, sans-serif; color: #8C9096; }
 
 /* conversation */
@@ -37,7 +37,7 @@ html.ak-page .se-launch, html.ak-page [aria-label="Ask Samsoom"] { display: none
 .ak-title { flex: none; font: 500 13px Inter, sans-serif; color: #8C9096; max-width: 34%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ak-acts { display: flex; align-items: center; gap: 8px; flex: none; }
 .ak-ic { display: grid; place-items: center; width: 38px; height: 38px; border: 0; border-radius: 10px; cursor: pointer; color: #fff; transition: transform .2s; }
-.ak-ic:hover { transform: translateY(-1px); } .ak-ic.wa { background: #25D366; } .ak-ic.wc { background: #07C160; } .ak-ic .ct-ic { width: 19px; height: 19px; }
+.ak-ic:hover { transform: translateY(-1px); } .ak-ic.wa { background: #25D366; } .ak-ic.wc { background: #25D366; } .ak-ic .ct-ic { width: 19px; height: 19px; }
 .ak-human { display: inline-flex; align-items: center; gap: 7px; height: 38px; padding: 0 14px; border: 0; border-radius: 10px; background: #26282B; color: #fff; font: 600 13px Inter, sans-serif; cursor: pointer; transition: background .2s, color .2s; white-space: nowrap; }
 .ak-human:hover { background: #F7C032; color: #26282B; }
 

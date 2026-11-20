@@ -6,6 +6,7 @@ import React from 'react';
 import { type Vals, cssToObj, cx, s, t } from '@/dc/runtime';
 import SEBrandLogo from '../../dc/SEBrandLogo';
 import HeroSearch from '../HeroSearch';
+import ShopTicker from '../ShopTicker';
 import HeroIpadAd from '../HeroIpadAd';
 import SEPart from '../../dc/SEPart';
 
@@ -1630,7 +1631,7 @@ export default function Hero({ v }: { v: Vals }) {
                       {'\n            '}
                     </span>
                     {'\n            '}
-                    <span className={'hb-lb' + (v.b?.shop ? ' hb-shop' : '')} style={{ flex: '1', whiteSpace: 'nowrap' }}>{t(v.b?.label)}</span>{v.b?.shop ? <span className="se-hb-info"><span className="hb-live"><i aria-hidden="true" /><b>{Number(v.totalRaw || 0).toLocaleString('en-US')}</b> {t('parts in stock')}</span></span> : null}
+                    <span className={'hb-lb' + (v.b?.shop ? ' hb-shop' : '')} style={{ flex: '1', whiteSpace: 'nowrap' }}>{t(v.b?.label)}</span>{v.b?.shop ? <ShopTicker total={Number(v.totalRaw || 0)} /> : null}
                     {'\n            '}
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3">
                       <path d="M5 12h14M13 6l6 6-6 6"></path>

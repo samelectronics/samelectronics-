@@ -36,9 +36,9 @@ function render(v: Vals) {
                 style={{
                   position: 'absolute',
                   left: '99px',
-                  top: '11px',
+                  top: '15px',
                   width: '2px',
-                  height: '21px',
+                  height: '17px',
                   borderRadius: '1px',
                   background: 'linear-gradient(90deg,#5E6064,#C9CCD0,#5E6064)',
                 }}
@@ -46,11 +46,11 @@ function render(v: Vals) {
               {'\n        '}
               {/* owner (18 Nov): "his light circle on top, the way it was, just better-looking": a glowing glass orb with a bright
                    core, a soft inner gradient, a crisp highlight, a thin metal collar on the antenna and a warm halo that breathes */}
-              <span aria-hidden="true" style={cssToObj(`position:absolute;left:82px;top:-16px;width:36px;height:36px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,214,102,.55),rgba(247,192,50,.2) 55%,rgba(247,192,50,0));animation:${s(v.antAnim)}`)} />
-              <span aria-hidden="true" style={{ position: 'absolute', left: '92.5px', top: '-5px', width: '15px', height: '15px', borderRadius: '50%', background: 'radial-gradient(circle at 34% 30%,#FFFFFF 0%,#FFF4D1 18%,#FFD566 42%,#F7C032 68%,#C98F12 100%)', boxShadow: '0 0 12px 3px rgba(247,192,50,.75), inset 0 -2px 3px rgba(150,95,0,.45), inset 0 1px 1px rgba(255,255,255,.8)', zIndex: 2 }}>
+              <span aria-hidden="true" style={cssToObj(`position:absolute;left:82px;top:-12px;width:36px;height:36px;border-radius:50%;background:radial-gradient(closest-side,rgba(255,214,102,.55),rgba(247,192,50,.2) 55%,rgba(247,192,50,0));animation:${s(v.antAnim)}`)} />
+              <span aria-hidden="true" style={{ position: 'absolute', left: '92.5px', top: '-1px', width: '15px', height: '15px', borderRadius: '50%', background: 'radial-gradient(circle at 34% 30%,#FFFFFF 0%,#FFF4D1 18%,#FFD566 42%,#F7C032 68%,#C98F12 100%)', boxShadow: '0 0 12px 3px rgba(247,192,50,.75), inset 0 -2px 3px rgba(150,95,0,.45), inset 0 1px 1px rgba(255,255,255,.8)', zIndex: 2 }}>
                 <span style={{ position: 'absolute', left: '3px', top: '2.5px', width: '5px', height: '3px', borderRadius: '50%', background: 'rgba(255,255,255,.9)', transform: 'rotate(-30deg)' }} />
               </span>
-              <span aria-hidden="true" style={{ position: 'absolute', left: '96.5px', top: '9px', width: '7px', height: '3px', borderRadius: '1.5px', background: 'linear-gradient(90deg,#6E7278,#E3E5E8 50%,#55585D)', zIndex: 1 }} />
+              <span aria-hidden="true" style={{ position: 'absolute', left: '96.5px', top: '13px', width: '7px', height: '3px', borderRadius: '1.5px', background: 'linear-gradient(90deg,#6E7278,#E3E5E8 50%,#55585D)', zIndex: 1 }} />
               {'\n        '}
               <div
                 style={cssToObj(

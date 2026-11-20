@@ -131,6 +131,8 @@ function babbleSynth(text: string, opts: { onEnd?: () => void } = {}) {
 // Muted, sound off, no gesture yet, or no speech engine: the text types on its own clock and the mouth still moves.
 type Spoken = { text: string; idx: number; word: number; t0: number; cps: number; pending: boolean; active: boolean; done: boolean };
 export const spoken: Spoken = { text: '', idx: 0, word: 0, t0: 0, cps: 15, pending: false, active: false, done: false };
+// R12 (speed): heavy one-off work (the 3D teardown build) waits while Samsoom is talking, so he never freezes mid-sentence
+if (typeof window !== 'undefined') (window as unknown as { __seSpoken?: Spoken }).__seSpoken = spoken;
 /** How many characters of `text` Samsoom has said so far, or null when he is not speaking it (then type on your own clock). */
 export function spokenProgress(text: string): number | null {
   if (!text || !(spoken.pending || spoken.active || spoken.done)) return null;

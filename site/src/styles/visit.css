@@ -133,6 +133,6 @@ html[dir='rtl'] .vs-close { float: left; }
 #visit .vs-map-live iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
 #visit .vs-btn.yel { background: #F7C032 !important; color: #26282B !important; border: 0 !important; }
 #visit .vs-btn.wa { background: #25D366 !important; color: #fff !important; border: 0 !important; box-shadow: none !important; }
-#visit .vs-btn.wc { background: #07C160 !important; color: #fff !important; border: 0 !important; box-shadow: none !important; }
+#visit .vs-btn.wc { background: #25D366 !important; color: #fff !important; border: 0 !important; box-shadow: none !important; }
 #visit .vs-btn.wa .ct-ic, #visit .vs-btn.wc .ct-ic { width: 18px; height: 18px; color: #fff; }
 #visit .vs-btn { gap: 8px; cursor: pointer; }

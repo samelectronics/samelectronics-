@@ -128,7 +128,9 @@ function render(v: Vals) {
                     <div className={'st-photo r' + h.i}>
                       <div className="st-ph">
                         <span className="st-ph-base" />
-                        <span className={'st-ph-img p' + h.i} />
+                        {/* owner (R12): "the maps look dry and boring": each era is a real brand-styled street map (Deira for the
+                            four Dubai eras, each framed on its own spot; Madrid for the coming branch), softly faded at the bottom */}
+                        <span className={'st-ph-map m' + h.i}>{h.soon ? <MapMadrid /> : <MapDubai />}</span>
                         <span className="st-ph-warm" />
                         <span className="st-ph-gloss" />
                       </div>

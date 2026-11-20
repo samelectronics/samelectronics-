@@ -559,7 +559,7 @@ html[dir="rtl"] .ms2-track b { left: auto; right: calc(var(--p) * 100%); margin-
 .sp-btn.wa, .pt-ask.wa, .cr-btn.wa, .sp-sec.d .sp-btn.wa, [data-tone='dark'] .sp-btn.wa { background: #25D366 !important; color: #fff !important; box-shadow: 0 12px 26px -14px rgba(37,211,102,.75) !important; }
 .sp-btn.wa svg, .pt-ask.wa svg, .cr-btn.wa svg, .sp-sec.d .sp-btn.wa svg, [data-tone='dark'] .sp-btn.wa svg { color: #fff !important; }
 .sp-btn.wa:hover, .pt-ask.wa:hover { box-shadow: 0 0 0 3px rgba(37,211,102,.25), 0 14px 28px -14px rgba(37,211,102,.8) !important; }
-.sp-btn.wc { background: #07C160 !important; color: #fff !important; box-shadow: 0 12px 26px -14px rgba(7,193,96,.7) !important; }
+.sp-btn.wc { background: #25D366 !important; color: #fff !important; box-shadow: 0 12px 26px -14px rgba(37,211,102,.7) !important; }
 .sp-btn.wc .ct-ic { color: #fff; width: 18px; height: 18px; }
 /* product page: a living shot (slow float, light sweep), contact buttons in their colours, graphite "more parts" */
 .sx-pimg { position: relative; overflow: hidden; }

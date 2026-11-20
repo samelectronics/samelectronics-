@@ -50,7 +50,7 @@ class Component extends DCLogic {
     const step = c.getBoundingClientRect().width + 16, n = this._n || 0, setW = n * step;
     if (!this._loop || setW <= 0) { if (B.style.transform) B.style.transform = ''; this.bx = 0; return; }
     if (this.glide) { const k = Math.min(1, (now - this.glide.t0) / 450), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; this.bx = this.glide.from + this.glide.by * e; if (k >= 1) this.glide = null; }
-    else if (!this.hold && !this.drag) this.bx += 24 * dt;
+    else if (!this.hold && !this.drag) this.bx += 62 * dt; // owner (R12): "barely moving"
     this.bx = ((this.bx % setW) + setW) % setW;
     const rtl = document.documentElement.dir === 'rtl', tx = (rtl ? 1 : -1) * this.bx;
     B.style.transform = 'translate3d(' + tx.toFixed(2) + 'px,0,0)';

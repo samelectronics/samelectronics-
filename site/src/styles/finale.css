@@ -282,7 +282,7 @@ section.fz2.fz3s .fz2-stage.fz3 { background: none !important; box-shadow: none 
 .fz4-btn.y:hover { box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 18px 32px -14px rgba(247,192,50,.95); }
 .fz4-btn.duo { background: #26282B; color: #fff; box-shadow: 0 14px 28px -16px rgba(38,40,43,.7); }
 .fz4-btn .duo-ic { display: inline-flex; } .fz4-btn .duo-ic .ct-ic { width: 20px; height: 20px; } .fz4-btn .duo-ic .ct-ic + .ct-ic { margin-inline-start: -5px; box-shadow: 0 0 0 2px #26282B; border-radius: 6px; }
-.fz4-btn .ct-ic.wa { background-color: #25D366; border-radius: 6px; } .fz4-btn .ct-ic.wc { background-color: #07C160; border-radius: 6px; }
+.fz4-btn .ct-ic.wa { background-color: #25D366; border-radius: 6px; } .fz4-btn .ct-ic.wc { background-color: #25D366; border-radius: 6px; }
 .fz4-btn.ghost { background: transparent; }
 .fz4-pro { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
 .fz4-pro > span { display: flex; flex-direction: column; gap: 4px; padding: 16px 16px 18px; border-radius: 16px; background: #fff; box-shadow: inset 0 0 0 1px #ECEDEF, 0 18px 30px -26px rgba(38,40,43,.45); opacity: 0; transform: translateY(14px); transition: opacity .6s, transform .6s cubic-bezier(.2,.8,.2,1); transition-delay: calc(900ms + var(--i) * 140ms); }

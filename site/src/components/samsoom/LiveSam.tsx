@@ -42,7 +42,7 @@ export default function LiveSam({ size = 64, mood = 'idle', play, rest: rest0, c
     // R11 (owner: "zoomed in, then suddenly zoomed out, not centred"): `fit` sizes him for a round frame from the very
     // first paint: his drawing is 1.25× taller than wide, so he is drawn at 62% and centred in a size × size box
     <span ref={box} className={(className || '') + (circle ? ' sam-ring' : '') + (fit ? ' sam-fit' : '')} style={circle ? { ['--sr' as string]: size + 'px' } : fit ? { display: 'inline-grid', placeItems: 'center', width: size + 'px', height: size + 'px' } : { display: 'inline-grid', placeItems: 'center' }}>
-      <SESamsoom mood={pose || m} size={circle || fit ? Math.round(size * 0.62) : size} lookX={pose ? 0 : look.x} lookY={pose ? 0 : look.y} pointA={pointA} />
+      <SESamsoom mood={pose || m} size={circle || fit ? Math.round(size * 0.72) : size} lookX={pose ? 0 : look.x} lookY={pose ? 0 : look.y} pointA={pointA} />
     </span>
   );
 }

@@ -235,7 +235,7 @@ html body .pv-buy .pv-qty { height: 50px !important; }
 html body .pv-buy .pv-add { height: 50px !important; width: 100% !important; justify-content: center !important; font-size: 15.5px !important; border-radius: 14px !important; }
 .pv-order { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
 .pv-order .sp-btn { display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 9px !important; height: 46px !important; width: 100% !important; border: 0 !important; border-radius: 14px !important; color: #fff !important; font: 600 14.5px Inter, sans-serif !important; cursor: pointer; transition: transform .2s, filter .2s !important; }
-.pv-order .sp-btn.wa { background: #25D366 !important; } .pv-order .sp-btn.wc { background: #07C160 !important; }
+.pv-order .sp-btn.wa { background: #25D366 !important; } .pv-order .sp-btn.wc { background: #25D366 !important; }
 .pv-order .sp-btn:hover { transform: translateY(-1px); filter: brightness(1.05); }
 .pv-order .sp-btn .ct-ic { width: 18px; height: 18px; color: #fff; }
 .pv-order .sp-btn::before { display: none !important; }
@@ -253,7 +253,7 @@ html body .pv-tools > button.on, html body .pv-tools > span > button.on { box-sh
 .pv-share-card code { font: 500 11px 'JetBrains Mono', monospace; color: #6B6F75; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .pv-share-g { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px; }
 .pv-share-g > * { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 42px; border: 0; border-radius: 10px; background: #F2F3F4; color: #26282B; font: 600 13px Inter, sans-serif; text-decoration: none; cursor: pointer; }
-.pv-share-g > .wa { background: #25D366; color: #fff; } .pv-share-g > .wc { background: #07C160; color: #fff; }
+.pv-share-g > .wa { background: #25D366; color: #fff; } .pv-share-g > .wc { background: #25D366; color: #fff; }
 .pv-share-g .ct-ic { width: 17px; height: 17px; color: #fff; }
 /* the tick toasts */
 .se-toasts { position: fixed; z-index: 2147483000; left: 50%; top: 86px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; }

@@ -205,14 +205,14 @@ html body [data-hero-screen] { box-shadow: inset 0 0 0 2px #040405, inset 0 0 0 
 .wc-card { position: relative; width: min(360px, calc(100vw - 32px)); box-sizing: border-box; padding: 28px 24px 22px; border-radius: 20px; background: #FFFFFF; color: #26282B; text-align: center; box-shadow: 0 30px 70px -20px rgba(0,0,0,.5); animation: wcIn .35s cubic-bezier(.16,1,.3,1) both; }
 @keyframes wcIn { from { opacity: 0; transform: translateY(16px) scale(.97) } }
 .wc-x { position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; border: 0; border-radius: 10px; background: #F1F2F4; color: #26282B; cursor: pointer; }
-.wc-ic { display: grid; place-items: center; width: 60px; height: 60px; margin: 0 auto 12px; border-radius: 16px; background: #07C160; box-shadow: 0 10px 20px -8px rgba(7,193,96,.6); }
+.wc-ic { display: grid; place-items: center; width: 60px; height: 60px; margin: 0 auto 12px; border-radius: 16px; background: #25D366; box-shadow: 0 10px 20px -8px rgba(37,211,102,.6); }
 .wc-ic i, .se-ic-wechat { display: block; width: 34px; height: 34px; background: #fff; -webkit-mask: url(/icons/wechat.svg) center / contain no-repeat; mask: url(/icons/wechat.svg) center / contain no-repeat; }
 .wc-h { display: block; font: 700 22px 'Space Grotesk', sans-serif; }
 .wc-p { margin: 8px 0 14px; font: 400 14px/1.5 Inter, sans-serif; color: #5C6066; }
 .wc-num { display: block; padding: 12px; border-radius: 12px; background: #F4F5F6; font: 600 20px 'JetBrains Mono', monospace; letter-spacing: .02em; }
 .wc-acts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
 .wc-btn { display: grid; place-items: center; height: 46px; border: 0; border-radius: 12px; background: #26282B; color: #fff; font: 600 15px Inter, sans-serif; text-decoration: none; cursor: pointer; }
-.wc-btn.go { background: #07C160; }
+.wc-btn.go { background: #25D366; }
 .se-hb-sub { margin-inline-start: 10px; padding: 3px 8px; border-radius: 999px; background: rgba(26,27,29,.12); font: 600 11px 'JetBrains Mono', monospace; vertical-align: 2px; }
 /* the shop button shows the shelf: four real parts peek out of it, so it reads as a store */
 .se-hb-thumbs { display: flex; align-items: center; height: 100%; margin-inline-end: 6px; }
@@ -443,7 +443,7 @@ html[data-sam-speaking] .sam-zap-run, [data-tour='samsoom']:hover .sam-zap-run, 
 .ft-contacts > a, .ft-contacts > button { display: inline-flex; align-items: center; gap: 10px; padding: 0; border: 0; background: none; color: #C9CBCE; font: 500 13.5px Inter, sans-serif; text-decoration: none; cursor: pointer; text-align: start; transition: color .2s; }
 .ft-contacts > a:hover, .ft-contacts > button:hover { color: #F7C032; }
 .ft-ci { display: grid; place-items: center; flex: none; width: 26px; height: 26px; border-radius: 8px; background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); color: #F7C032; }
-.ft-ci.wa { background: #25D366; color: #fff; box-shadow: none; } .ft-ci.wc { background: #07C160; color: #fff; box-shadow: none; }
+.ft-ci.wa { background: #25D366; color: #fff; box-shadow: none; } .ft-ci.wc { background: #25D366; color: #fff; box-shadow: none; }
 .ft-ci .ct-ic { width: 14px; height: 14px; }
 /* owner (16 Nov): the footer's bottom row is tidy: legal links with small dot separators, the language and a quiet Staff key */
 .ft-legal { gap: 6px 0 !important; } .ft-legal > a { font-size: 13px; } .ft-legal > a + a::before { content: '·'; margin: 0 10px; color: rgba(255,255,255,.25); }
@@ -532,15 +532,15 @@ html[data-sam-speaking] .sam-zap-run, [data-tour='samsoom']:hover .sam-zap-run, 
 .ft-soc-x:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 1px rgba(255,255,255,.25); }
 .ft-soc-x .ct-ic { width: 18px; height: 18px; }
 .ft-soc-x.mail svg { color: #fff; }
-.ft-soc-x.wa { color: #25D366; } .ft-soc-x.wc { color: #07C160; }
+.ft-soc-x.wa { color: #25D366; } .ft-soc-x.wc { color: #25D366; }
 /* universal rule (owner 16 Nov): wherever WhatsApp is offered, WeChat sits beside it, same look, same words */
-.fz2-btn.wcb .ct-ic, .sp-btn.wc .ct-ic { color: #07C160; }
+.fz2-btn.wcb .ct-ic, .sp-btn.wc .ct-ic { color: #25D366; }
 .fz2-btn.wcb { border: 0; cursor: pointer; font: inherit; }
 .fp-btn.wcb, .wf-send.wcb { border: 0; cursor: pointer; font: inherit; margin-inline-start: 8px; }
 .st-opt.st-opt-wc { border: 0; width: 100%; cursor: pointer; font: inherit; text-align: start; }
-.st-brand.wc, .st-menu .st-opt > .st-brand.wc { background: #07C160 !important; } .st-brand.wc::after { -webkit-mask-image: url(/icons/wechat.svg); mask-image: url(/icons/wechat.svg); }
+.st-brand.wc, .st-menu .st-opt > .st-brand.wc { background: #25D366 !important; } .st-brand.wc::after { -webkit-mask-image: url(/icons/wechat.svg); mask-image: url(/icons/wechat.svg); }
 .pt-ask.wc { border: 0; cursor: pointer; font: inherit; display: inline-flex; align-items: center; gap: 6px; margin-inline-start: 6px; }
-.pt-ask.wc .ct-ic { color: #07C160; }
+.pt-ask.wc .ct-ic { color: #25D366; }
 .nv-wc { border: 0; background: none; color: inherit; font: inherit; cursor: pointer; padding: 0; }
 /* owner (16 Nov): every day in the hours pop-up is readable on the white panel (today stands out in yellow) */
 html:not([data-theme="dark"]) .se-status-pop > span:nth-last-of-type(2) > span { color: #3A3D42 !important; }
@@ -564,14 +564,14 @@ html:not([data-theme="dark"]) .se-qs-langs { scrollbar-color: #F7C032 #F2F3F4; }
 .ft-msg { display: flex; flex-wrap: wrap; gap: 8px; }
 .ft-msg-b { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border: 0; border-radius: 10px; background: rgba(255,255,255,.06); box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); color: #fff; font: 600 13px Inter, sans-serif; cursor: pointer; text-decoration: none; transition: box-shadow .2s, transform .2s; }
 .ft-msg-b:hover { transform: translateY(-1px); box-shadow: inset 0 0 0 1px rgba(255,255,255,.28); }
-.ft-msg-b.wa .ct-ic { color: #25D366; } .ft-msg-b.wc .ct-ic { color: #07C160; } .ft-msg-b .ct-ic { width: 17px; height: 17px; }
+.ft-msg-b.wa .ct-ic { color: #25D366; } .ft-msg-b.wc .ct-ic { color: #25D366; } .ft-msg-b .ct-ic { width: 17px; height: 17px; }
 .se-status-acts.two { display: grid !important; grid-template-columns: 1fr 1fr; gap: 8px; }
 .se-contact-dd { position: relative; } .se-status-pop .se-contact-dd summary { list-style: none; display: flex; align-items: center; justify-content: center; height: 34px; border-radius: 9px; background: #26282B; color: #fff; font: 600 13px Inter, sans-serif; cursor: pointer; } .se-contact-dd summary::-webkit-details-marker { display: none; }
 .se-contact-dd[open] summary { background: #F7C032; color: #26282B; }
 .se-cdd { display: grid; gap: 2px; margin-top: 6px; padding: 6px; border-radius: 12px; background: #FFFFFF; box-shadow: 0 0 0 1px #ECEDEF, 0 14px 30px -14px rgba(0,0,0,.3); }
 .se-status-pop .se-status-acts .se-cdd > * { display: flex !important; align-items: center; gap: 10px; height: 36px !important; padding: 0 10px !important; border: 0 !important; border-radius: 8px !important; background: transparent !important; color: #26282B !important; font: 500 13.5px Inter, sans-serif !important; text-decoration: none; cursor: pointer; text-align: start; }
 .se-status-pop .se-status-acts .se-cdd > *:hover { background: #F4F5F6 !important; }
-.se-cdd .ct-ic { width: 17px; height: 17px; } .se-cdd .ct-ic.wa { color: #25D366; } .se-cdd .ct-ic.wc { color: #07C160; }
+.se-cdd .ct-ic { width: 17px; height: 17px; } .se-cdd .ct-ic.wa { color: #25D366; } .se-cdd .ct-ic.wc { color: #25D366; }
 .cdd-ic { width: 17px; font-style: normal; text-align: center; color: #6E7378; }
 
 .se-status-pop .se-status-acts .se-cdd > * { justify-content: flex-start !important; }
@@ -605,7 +605,7 @@ html[data-theme="dark"] .cc-card .cc-p { color: #C9CBCE !important; }
 .cc-w:hover { transform: translateY(-2px); box-shadow: inset 0 0 0 2px #F7C032, 0 12px 24px -14px rgba(0,0,0,.3); }
 .cc-w b { font: 600 14px Inter, sans-serif; }
 .cc-wi { display: grid; place-items: center; width: 42px; height: 42px; border-radius: 12px; background: #26282B; color: #F7C032; }
-.cc-w.wa .cc-wi { background: #25D366; color: #fff; } .cc-w.wc .cc-wi { background: #07C160; color: #fff; }
+.cc-w.wa .cc-wi { background: #25D366; color: #fff; } .cc-w.wc .cc-wi { background: #25D366; color: #fff; }
 .cc-w .ct-ic { width: 22px; height: 22px; }
 html[data-theme="dark"] .cc-w { background: rgba(255,255,255,.06); color: #fff; box-shadow: inset 0 0 0 1px rgba(255,255,255,.1); }
 @media (max-width: 420px) { .cc-ways { grid-template-columns: repeat(2, 1fr); } }
@@ -1015,13 +1015,13 @@ html[data-theme="dark"] .shot-terms .st-list li { color: #C9CCD0; } html[data-th
 .cc-row:hover, .cc-row:focus-visible { background: #fff; box-shadow: inset 0 0 0 2px #F7C032; transform: translateX(3px); outline: none; }
 @keyframes ccRow { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 .cc-li { flex: none; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; background: #26282B; color: #F7C032; overflow: hidden; }
-.cc-li.sam { background: #F7C032; } .cc-li.wa { background: #25D366; color: #fff; } .cc-li.wc { background: #07C160; color: #fff; }
+.cc-li.sam { background: #F7C032; } .cc-li.wa { background: #25D366; color: #fff; } .cc-li.wc { background: #25D366; color: #fff; }
 .cc-li .ct-ic { width: 21px; height: 21px; }
 .cc-lt { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; } .cc-lt b { font: 700 15px 'Space Grotesk', sans-serif; } .cc-lt small { font: 400 12.5px Inter, sans-serif; color: #6B6F75; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 html[dir="rtl"] .cc-lt small[dir="ltr"] { text-align: end; }
 .cc-la { font-style: normal; font: 600 20px Inter, sans-serif; color: #A9ADB3; } html[dir="rtl"] .cc-la { transform: scaleX(-1); }
 .ct-one { display: inline-flex; align-items: center; gap: 7px; height: 32px; padding: 0 13px; margin-bottom: 12px; border-radius: 10px; background: #25D366; color: #fff; font: 600 13.5px Inter, sans-serif; }
-.ct-one.wc { background: #07C160; } .ct-one .ct-ic { width: 17px; height: 17px; }
+.ct-one.wc { background: #25D366; } .ct-one .ct-ic { width: 17px; height: 17px; }
 
 /* owner (19 Nov): the footer name in the bold techy style used across the site now: heavy, tight, brushed-steel letters
    with a yellow LED line under them; graphite stage (no black), the metal logo */
@@ -1223,7 +1223,7 @@ html.shot-hold .shot-holdc { display: flex; }
 :is(.au-sam, .ck-empty-sam, .ck-ok-sam, .cr-lsam, .dp-sam, .gd-sam, .lpv-sam, .pv-ask-sam, .shop-sam, .sn2-sam, .st-bsam, .st-sam, .tq-sam) { overflow: hidden !important; }
 /* R11: no more after-the-fact shrinking; LiveSam's `fit` draws him at the right size from the first paint */
 .sam-fit { position: relative; max-width: 100%; max-height: 100%; }
-.sam-fit > * { transform: translateY(2%); }
+.sam-fit > * { transform: translateY(5%); }
 /* R10 · language switch: Samsoom fixing himself, with dust puffing up behind him while a hand is behind his back */
 .fx-sam { position: relative; display: inline-grid; place-items: center; }
 .fx-dust { position: absolute; bottom: 8%; width: 60%; height: 50%; pointer-events: none; z-index: 0; }
@@ -1323,7 +1323,7 @@ html body footer:has(.ft-mark)::after { height: 60px !important; bottom: -20px !
 .ct-swb.on { background: #fff; color: #26282B; box-shadow: 0 2px 10px -3px rgba(0,0,0,.25); }
 .ct-swb .ct-ic { width: 16px; height: 16px; flex: none; display: block; background-color: currentColor; -webkit-mask: center / contain no-repeat; mask: center / contain no-repeat; border-radius: 0 !important; }
 .ct-swb .ct-ic.wa { -webkit-mask-image: url(/icons/whatsapp.svg); mask-image: url(/icons/whatsapp.svg); background-color: #25D366; }
-.ct-swb .ct-ic.wc { -webkit-mask-image: url(/icons/wechat.svg); mask-image: url(/icons/wechat.svg); background-color: #07C160; }
+.ct-swb .ct-ic.wc { -webkit-mask-image: url(/icons/wechat.svg); mask-image: url(/icons/wechat.svg); background-color: #25D366; }
 .ct-swb .ct-ic.mail, .wc-btn .ct-ic.mail { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2.5'/%3E%3Cpath d='m4 7 8 6 8-6'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linejoin='round'%3E%3Crect x='3' y='5' width='18' height='14' rx='2.5'/%3E%3Cpath d='m4 7 8 6 8-6'/%3E%3C/svg%3E"); }
 .ct-swb .ct-ic.web, .wc-btn .ct-ic.web { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linejoin='round'%3E%3Cpath d='M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z'/%3E%3C/svg%3E"); }
 .wc-btn .ct-ic.mail, .wc-btn .ct-ic.web { display: inline-block; width: 18px; height: 18px; background-color: currentColor; -webkit-mask-size: contain; mask-size: contain; -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat; }
@@ -1346,7 +1346,7 @@ html body footer:has(.ft-mark)::after { height: 60px !important; bottom: -20px !
 .cc-list .cc-row:is(.k-tel, .k-map) { grid-column: span 3; min-height: 0; flex-direction: row; align-items: center; justify-content: flex-start; padding: 10px 14px !important; }
 .cc-list .cc-row .cc-li { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: #fff; box-shadow: 0 4px 10px -6px rgba(0,0,0,.4); flex: none; }
 .cc-list .cc-row.k-sam .cc-li { background: rgba(255,255,255,.55); } .cc-list .cc-row.k-here .cc-li { background: rgba(255,255,255,.1); color: #F7C032; }
-.cc-list .cc-row .cc-li.wa { background: #25D366; } .cc-list .cc-row .cc-li.wc { background: #07C160; } .cc-list .cc-row .cc-li.mail { background: #26282B; color: #F7C032; }
+.cc-list .cc-row .cc-li.wa { background: #25D366; } .cc-list .cc-row .cc-li.wc { background: #25D366; } .cc-list .cc-row .cc-li.mail { background: #26282B; color: #F7C032; }
 .cc-list .cc-row .cc-li .ct-ic { filter: brightness(0) invert(1); }
 .cc-list .cc-row .cc-lt { display: flex; flex-direction: column; gap: 3px; }
 .cc-list .cc-row .cc-lt b { font: 700 15px/1.15 'Space Grotesk', sans-serif; }
@@ -1370,14 +1370,7 @@ html[dir="rtl"] .se-et { transform: scaleX(-1); }
 html body a.scp-5861bbd1 .se-hb-info > span.hb-live { border-radius: 999px !important; padding-inline-end: 12px !important; }
 /* R11 (owner: "love the yellow glow behind the SAM ELECTRONICS title, make it fully across, not just the centre") */
 html body footer:has(.ft-mark)::before { left: 0 !important; right: 0 !important; width: auto !important; transform: none !important; bottom: -50px !important; height: 190px !important; background: radial-gradient(60% 100% at 50% 100%, rgba(247,192,50,.24), rgba(247,192,50,.08) 55%, transparent 80%), linear-gradient(0deg, rgba(247,192,50,.10), transparent 70%) !important; }
-/* ── R11 · cookie banner: a compact floating card (not a full-width strip), medallion on the top edge, LED line ── */
-@media (min-width: 761px) {
-  html body .sc2-banner { left: 24px !important; right: auto !important; bottom: 24px !important; margin: 0 !important; width: 430px; max-width: calc(100vw - 48px); flex-direction: column; align-items: stretch; gap: 14px !important; padding: 40px 22px 20px !important; border-radius: 24px !important; overflow: visible; }
-  html body .sc2-banner .sc2-cookie { position: absolute; top: -28px; left: 22px; }
-  html body .sc2-banner .sc2-bacts { margin: 0 !important; width: 100%; }
-  html body .sc2-banner .sc2-bacts .st-btn { flex: 1; height: 44px; }
-  html[dir="rtl"] body .sc2-banner { left: auto !important; right: 24px !important; } html[dir="rtl"] body .sc2-banner .sc2-cookie { left: auto; right: 22px; }
-}
+/* R12 (owner): the cookie banner is back to its full-width bottom strip, so visitors decide before they browse */
 html body .sc2-banner::before { content: ''; position: absolute; left: 22%; right: 22%; top: 0; height: 2px; border-radius: 2px; background: linear-gradient(90deg, transparent, #F7C032, transparent); box-shadow: 0 0 12px rgba(247,192,50,.8); }
 html body .sc2-banner .sc2-btxt b { font: 700 18px/1.2 'Space Grotesk', sans-serif !important; }
 html body .sc2-banner { animation: sc2Rise .55s cubic-bezier(.2,1.2,.35,1) both; }
@@ -1411,3 +1404,86 @@ html body .sc2-banner { animation: sc2Rise .55s cubic-bezier(.2,1.2,.35,1) both;
 .mdt3:hover .se-et .run { animation-play-state: paused; }
 @media (max-width: 560px) { .mdt3-lv { display: none; } .mdt3-dock { top: 70px !important; } }
 html:has(.tq-offer) .mdt3-dock { top: 140px !important; }
+
+/* R12 · the back-up card follows the default LIGHT system (dark only when the site is in dark mode) */
+.shot-holdc { background: rgba(247,247,248,.55) !important; }
+.shot-holdc .shc { background: linear-gradient(180deg, #FFFFFF, #F4F5F6) !important; color: #26282B !important; box-shadow: 0 0 0 1px rgba(38,40,43,.08), 0 0 0 4px rgba(247,192,50,.18), 0 30px 70px -24px rgba(38,40,43,.35) !important; }
+.shot-holdc .k { color: #B98A0E !important; }
+.shot-holdc .shc small:not(.k) { color: #5C6066 !important; }
+html[data-theme="dark"] .shot-holdc { background: rgba(30,31,34,.42) !important; }
+html[data-theme="dark"] .shot-holdc .shc { background: linear-gradient(180deg, rgba(52,54,58,.96), rgba(34,35,38,.96)) !important; color: #fff !important; }
+html[data-theme="dark"] .shot-holdc .shc small:not(.k) { color: #C9CCD1 !important; }
+/* R12 · pop-up timer: one flat LED line on the bottom edge; both ends melt into the card, it drains toward one side */
+.se-et2 { position: absolute; left: var(--et-in, 16px); right: var(--et-in, 16px); bottom: 0; height: 6px; pointer-events: none; z-index: 3; overflow: visible;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent); mask-image: linear-gradient(90deg, transparent, #000 14%, #000 86%, transparent); }
+.se-et2::before { content: ''; position: absolute; left: 0; right: 0; bottom: 1px; height: 2px; border-radius: 2px; background: rgba(247,192,50,.16); }
+.se-et2 i { position: absolute; left: 0; right: 0; bottom: 1px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, #F7C032 0%, #FFE08A 92%, rgba(255,224,138,0) 100%);
+  box-shadow: 0 0 6px rgba(247,192,50,.9), 0 0 14px rgba(247,192,50,.45); transform-origin: left center; animation: seEt2 var(--et-ms, 8s) linear forwards; }
+@keyframes seEt2 { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+html[dir="rtl"] .se-et2 i { transform-origin: right center; background: linear-gradient(270deg, #F7C032 0%, #FFE08A 92%, rgba(255,224,138,0) 100%); }
+:is(.sn2, .se-toast, .mdt, .mdt3, .tq-offer):is(:hover, .hold, :focus-within) .se-et2 i { animation-play-state: paused; }
+/* R12 · one type scale for every pop-up (VPN, screenshot, copyright, language, error, tokens) */
+.sn2 .sn2-h, .mdc .sn2-h { font: 700 19px/1.25 'Space Grotesk', Inter, sans-serif !important; }
+.sn2 .sn2-p, .sn2 .st-sum { font: 400 14px/1.5 Inter, sans-serif !important; }
+@media (max-width: 520px) { .sn2 .sn2-h, .mdc .sn2-h { font-size: 17.5px !important; } .sn2 .sn2-p { font-size: 13.5px !important; } }
+/* R12 (owner: "the shop button's hover in the home hero is so nice, I want it on ALL buttons"): every button and
+   button-like link gets the same spring lift + soft yellow glow + press. A drop-shadow is used for the glow so each
+   button keeps its own borders and shadows. Tabs, sliders and anything marked .no-fx are left alone. */
+:where(button, [role="button"], a[class*="btn"], a[class*="cta"], a[class*="-b "], a.sp-btn, a.wf-btn, a.dt):not(:disabled):not([aria-disabled="true"]):not([role="tab"]):not(.no-fx) {
+  transition: translate .35s cubic-bezier(.3,1.7,.5,1), filter .25s ease, background-color .2s ease, color .2s ease, border-color .2s ease;
+}
+@media (hover: hover) {
+  :where(button, [role="button"], a[class*="btn"], a[class*="cta"], a.sp-btn, a.wf-btn, a.dt):not(:disabled):not([aria-disabled="true"]):not([role="tab"]):not(.no-fx):hover {
+    translate: 0 -2px; filter: brightness(1.04) drop-shadow(0 6px 14px rgba(247,192,50,.32));
+  }
+  :where(button, [role="button"], a[class*="btn"], a[class*="cta"]):not(:disabled):not(.no-fx):hover > svg:first-child { animation: hbHop .5s cubic-bezier(.3,1.6,.5,1); }
+}
+:where(button, [role="button"], a[class*="btn"], a[class*="cta"]):not(:disabled):not(.no-fx):active { translate: 0 1px; transition-duration: .08s; }
+@media (prefers-reduced-motion: reduce) { :where(button, [role="button"]):hover { translate: none !important; } }
+/* R12 · shop button ticker: a glass capsule rolling through live facts (stock → brand logos → models + grades) */
+html body a.scp-5861bbd1 .hb-tk { position: relative; display: inline-grid !important; height: 30px; min-width: 196px; padding: 0 !important; border-radius: 999px; overflow: hidden;
+  background: linear-gradient(180deg, rgba(58,60,64,.96), rgba(38,40,43,.98)) !important; box-shadow: inset 0 1px 0 rgba(255,255,255,.12), inset 0 0 0 1px rgba(247,192,50,.28), 0 6px 16px -8px rgba(38,40,43,.6); }
+html body a.scp-5861bbd1 .hb-tk::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.14) 48%, transparent 62%); background-size: 260% 100%; animation: tkSheen 3.2s ease-in-out infinite; }
+@keyframes tkSheen { 0%, 55% { background-position: 130% 0; } 100% { background-position: -40% 0; } }
+.hb-tk .tk-s { grid-area: 1 / 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 0 12px; font: 500 12px/1 Inter, sans-serif; color: #E6E7E8; white-space: nowrap; opacity: 0; transform: translateY(110%); transition: transform .55s cubic-bezier(.3,1.4,.5,1), opacity .35s ease; }
+.hb-tk .tk-s.on { opacity: 1; transform: none; }
+.hb-tk .tk-s:not(.on) { transform: translateY(-110%); }
+.hb-tk .tk-s b { font: 700 13px/1 'Space Grotesk', sans-serif; color: #F7C032; }
+.hb-tk .tk-dot { width: 7px; height: 7px; border-radius: 50%; background: #2BD47D; box-shadow: 0 0 0 3px rgba(43,212,125,.18), 0 0 8px #2BD47D; animation: tkPulse 1.6s ease-in-out infinite; }
+@keyframes tkPulse { 50% { box-shadow: 0 0 0 5px rgba(43,212,125,.06), 0 0 12px #2BD47D; } }
+.hb-tk .tk-logos { display: inline-flex; gap: 6px; margin-inline-start: 2px; }
+.hb-tk .tk-logos img { height: 12px; width: auto; max-width: 34px; filter: brightness(0) invert(1); opacity: .9; animation: tkLogo .5s cubic-bezier(.3,1.5,.5,1) both; }
+@keyframes tkLogo { from { opacity: 0; transform: translateX(10px) scale(.8); } }
+.hb-tk .tk-gr { display: inline-flex; gap: 3px; } .hb-tk .tk-gr em { font: 700 8.5px/1 'JetBrains Mono', monospace; font-style: normal; letter-spacing: .06em; padding: 3px 4px; border-radius: 4px; color: #26282B; background: #F7C032; }
+.hb-tk .tk-gr em:nth-child(2) { background: #fff; } .hb-tk .tk-gr em:nth-child(3) { background: #CFE8FF; }
+@media (prefers-reduced-motion: reduce) { .hb-tk::after, .hb-tk .tk-dot { animation: none !important; } }
+/* R12 rule (owner): the small line above a title is a clean TITLE only: no live dots, counters or status circles */
+.bt-eb > i, .dl-eb > i, .dl-eb .dl-live { display: none !important; }
+/* R12 · bench test: all text on the yellow is graphite, never jet black */
+#quality .bt-eb, #quality .bt-eb > *, #quality .bt-h, #quality .bt-h *, #quality .bt-left > p { color: #26282B !important; }
+/* R12 · repair estimate box: its labels are light on the graphite box (were graphite on graphite) */
+html body .rp-k.rp-kd { color: rgba(255,255,255,.62) !important; }
+/* R12 · wholesale "TRADE ONLY" stamp: in every language it sits as a small stamp ABOVE the title (never pushed into it) */
+html body .wf .wf-hrow { flex-direction: column !important; align-items: flex-start !important; flex-wrap: nowrap !important; }
+html body .wf .wf-stamp { order: -1; align-self: flex-start; margin: 0 0 16px !important; font-size: 15px !important; padding: 7px 12px 6px !important; border-width: 3px !important; max-width: 100%; }
+/* R12 (owner: "I asked for the reviews background to be the home hero's grey material"): the hero's exact graphite with its
+   fine brushed scan lines, a soft top light and a vignette */
+html body #reviews.rv { background: radial-gradient(60% 50% at 50% 0%, rgba(255,255,255,.07), transparent 70%), radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(20,21,23,.55)), #2A2C2F !important; position: relative; isolation: isolate; }
+html body #reviews.rv::after { content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none; background: repeating-linear-gradient(0deg, rgba(255,255,255,.05) 0 1px, transparent 1px 4px); }
+/* R12 · footer: an even, gentle glow along the whole line (no hot spot), and clean brushed-steel letters */
+html body footer:has(.ft-mark)::before { background: linear-gradient(0deg, rgba(247,192,50,.13), rgba(247,192,50,.05) 45%, transparent 85%) !important; height: 150px !important; bottom: -40px !important; }
+html body footer .ft-mark { background: linear-gradient(100deg, transparent 0 42%, rgba(255,255,255,.55) 49%, transparent 56% 100%) 0 0 / 260% 100% no-repeat, linear-gradient(180deg, #F4F5F7 0%, #C9CCD1 38%, #8E9298 62%, #D5D8DC 100%) !important; -webkit-background-clip: text !important; background-clip: text !important; color: transparent !important; animation: ftLight2 7s ease-in-out infinite !important; filter: drop-shadow(0 1px 0 rgba(255,255,255,.08)) drop-shadow(0 10px 24px rgba(0,0,0,.35)); }
+@keyframes ftLight2 { 0%, 40% { background-position: 130% 0, 0 0; } 80%, 100% { background-position: -30% 0, 0 0; } }
+/* R12 (owner: "the default colour system is LIGHT"): the earned-token pill is white like every other pop-up; dark mode only in dark */
+html:not([data-theme="dark"]) .mdt3 { background: rgba(255,255,255,.97) !important; color: #26282B !important; box-shadow: 0 0 0 1px rgba(38,40,43,.08), 0 14px 34px -14px rgba(38,40,43,.35) !important; }
+html:not([data-theme="dark"]) .mdt3-tx small { color: #B98A0E !important; } html:not([data-theme="dark"]) .mdt3-tx small em { color: #1E9E5A !important; }
+html:not([data-theme="dark"]) .mdt3-tx b, html:not([data-theme="dark"]) .mdt3-lv b { color: #26282B !important; }
+html:not([data-theme="dark"]) .mdt3-lv { border-inline-start-color: rgba(38,40,43,.1) !important; } html:not([data-theme="dark"]) .mdt3-lv small { color: #7A7E84 !important; }
+html:not([data-theme="dark"]) .mdt3-lv .bar { background: rgba(38,40,43,.1) !important; }
+/* R12 · highlighted legal points on the notices page */
+.sp-p.nt-hl { position: relative; padding: 14px 16px 14px 18px; border-radius: 14px; background: rgba(247,192,50,.14); box-shadow: inset 3px 0 0 #F7C032; color: #26282B; font-weight: 500; }
+html[dir="rtl"] .sp-p.nt-hl { box-shadow: inset -3px 0 0 #F7C032; padding: 14px 18px 14px 16px; }
+/* R12 · a global yellow-section rule paints text with -webkit-text-fill-color graphite; these labels sit on graphite */
+html body .st-card .st-v, html body #story .st-v { -webkit-text-fill-color: #F7C032 !important; color: #F7C032 !important; }
+html body .st-card.now .st-v { -webkit-text-fill-color: #26282B !important; color: #26282B !important; }
+html body span.rp-k.rp-kd, html body section span.rp-k.rp-kd { -webkit-text-fill-color: rgba(255,255,255,.62) !important; color: rgba(255,255,255,.62) !important; }

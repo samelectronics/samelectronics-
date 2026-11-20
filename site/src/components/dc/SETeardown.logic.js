@@ -184,10 +184,17 @@ class Component extends DCLogic {
     if (!this.isMob()) { this.td.p = this.S[0]; this.setState({ p: this.S[0] }); }
     // owner (16 Nov, speed): the 3D is built in the first quiet moment after the page has loaded (or on the first
     // scroll, whichever comes first), not in the middle of the first paint, so the first screen is never held up
-    const go = () => { if (this._built || !this.alive0) return; this._built = true; window.removeEventListener('scroll', go); this.setup(); };
-    this.alive0 = true; window.addEventListener('scroll', go, { passive: true });
-    const idle = (fn) => (window.requestIdleCallback ? window.requestIdleCallback(fn, { timeout: 2500 }) : setTimeout(fn, 1200));
-    if (document.readyState === 'complete') idle(go); else window.addEventListener('load', () => idle(go), { once: true });
+    let go = () => { if (this._built || !this.alive0) return; this._built = true; this.setup(); };
+    // owner (R12): "when I enter, Samsoom freezes for ~5 s while his voice keeps playing". The ~3 s 3D build ran in the
+    // first idle moment, i.e. during his welcome. It now waits until he is quiet (no welcome or tour on screen, not
+    // talking) and the page has been calm for a moment, OR the visitor scrolls the teardown close to the screen.
+    this.alive0 = true;
+    const near = () => { const el = this.secRef.current; if (!el) return false; const r = el.getBoundingClientRect(); return r.top < innerHeight * 1.6 && r.bottom > -innerHeight; };
+    const quiet = () => { const W = window; const sp = W.__seSpoken; return W.__seTourIdle !== false && !(sp && (sp.active || sp.pending)) && !document.querySelector('.st-veil, .st-card, .tq-card, .lp, .se-bootv'); };
+    let calm = 0; const onScroll = () => { if (near()) go(); };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    const poll = setInterval(() => { if (this._built || !this.alive0) { clearInterval(poll); return; } if (quiet()) calm += 400; else calm = 0; if (calm >= 2000) { clearInterval(poll); const idle = window.requestIdleCallback || ((f) => setTimeout(f, 50)); idle(go, { timeout: 1500 }); } }, 400);
+    const _go = go; go = () => { clearInterval(poll); window.removeEventListener('scroll', onScroll); _go(); };
     this.measureCol();
   }
   measureCol() { const f = this.finRef.current; if (f && f.offsetHeight) { const sc = Math.min(1, ((this.props.fh || this.state.vh) - 152) / f.offsetHeight); if (Math.abs(sc - this.state.fs) > 0.01) this.setState({ fs: sc }); } }

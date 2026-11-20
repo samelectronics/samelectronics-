@@ -234,7 +234,7 @@ export default function Footer({ v }: { v: Vals }) {
           {'\n      '}
           <span style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             <span>
-              {'© 2026 '}
+              {'© 2003–' + new Date().getFullYear() + ' '}
               {String(v.$facts?.legalName ?? '')}
               {''}
             </span>

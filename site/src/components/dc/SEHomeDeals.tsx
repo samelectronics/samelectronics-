@@ -42,11 +42,6 @@ function render(v: Vals) {
             {/* owner (27 Oct): the live count sits in the eyebrow line above the title, not as a loose chip by the button */}
             {/* R9 (owner): the live count reads first, in the same line as the section name (no chip, no glowing tick) */}
             <span className="dl-eb">
-              <span className="dl-live" aria-live="polite">
-                <i />
-                <b key={v.live}>{v.live}</b> LIVE DEALS
-              </span>
-              <span className="dl-sep" aria-hidden="true">·</span>
               DEALS & ARRIVALS
             </span>
             <h2 className="dl-h">

@@ -31,6 +31,8 @@ function errBeep() {
     [0, 0.16].forEach((d, i) => { const o = c.createOscillator(), g = c.createGain(), f = c.createBiquadFilter(); o.type = 'square'; o.frequency.value = i ? 392 : 523; f.type = 'lowpass'; f.frequency.value = 1800; g.gain.setValueAtTime(0.0001, t + d); g.gain.exponentialRampToValueAtTime(0.05 * Math.max(0.3, p.vol), t + d + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + d + 0.14); o.connect(f); f.connect(g); g.connect(c.destination); o.start(t + d); o.stop(t + d + 0.16); });
     window.setTimeout(() => c.close(), 600); } catch { /* */ } }
 
+const TERMS_V = 1;
+const readOk = (): { ref: string; at: number } | null => { try { const v = JSON.parse(localStorage.getItem('se-shot-ok') || 'null'); return v && v.ref && v.tv === TERMS_V ? v : null; } catch { return null; } };
 export default function Guard() {
   const [vpn, setVpn] = useState(false), [shot, setShot] = useState(false), [terms, setTerms] = useState(false), [agree, setAgree] = useState(false);
   // owner (18 Nov night): screenshots can be allowed once the visitor agrees to the terms; from then on the page carries a
@@ -38,10 +40,12 @@ export default function Guard() {
   const [wm, setWm] = useState<{ ref: string; at: number } | null>(null), [refId, setRefId] = useState('');
   const [now, setNow] = useState('');
   useEffect(() => { import('@/lib/ids').then((m) => setRefId(m.customerId())).catch(() => {}); const tick = () => setNow(new Date().toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })); tick(); const iv = window.setInterval(tick, 30000); return () => window.clearInterval(iv); }, []);
-  useEffect(() => { try { const v = JSON.parse(sessionStorage.getItem('se-shot-ok') || 'null'); if (v && v.ref) setWm(v); } catch { /* */ } }, []);
+  useEffect(() => { const v = readOk(); if (v) setWm(v); }, []);
   // owner (R10): the agreement lasts 10 minutes; after that the next screenshot asks for it again (one tap)
-  const okNow = () => { try { const v = JSON.parse(sessionStorage.getItem('se-shot-ok') || 'null'); return !!(v && v.at && Date.now() - v.at < 10 * 60e3); } catch { return false; } };
-  const allow = () => { const ref = 'SC-' + Date.now().toString(36).toUpperCase().slice(-6); const v = { ref, at: Date.now() }; try { sessionStorage.setItem('se-shot-ok', JSON.stringify(v)); } catch { /* */ } setWm(v); setTerms(false); setAgree(false); logWarning('screenshot', 'screenshot terms accepted · agreement ' + ref); import('./Toaster').then((m) => m.toast(tr('Screenshots allowed. Each one carries our watermark.'))).catch(() => {}); };
+  // owner (R12): "once they agreed they should never get that notice again, unless we changed our terms". The agreement is
+  // kept on the device and tied to the terms version (TERMS_V); bump TERMS_V when the screenshot terms change.
+  const okNow = () => !!readOk();
+  const allow = () => { const ref = 'SC-' + Date.now().toString(36).toUpperCase().slice(-6); const v = { ref, at: Date.now() }; try { localStorage.setItem('se-shot-ok', JSON.stringify({ ...v, tv: TERMS_V })); } catch { /* */ } setWm(v); setTerms(false); setAgree(false); logWarning('screenshot', 'screenshot terms accepted · agreement ' + ref); import('./Toaster').then((m) => m.toast(tr('Screenshots allowed. Each one carries our watermark.'))).catch(() => {}); };
   useEffect(() => {
     if (isEmbed()) return;
     // 1. VPN check (owner, 19 Nov: "not detected, not instantly and not even after a long wait"). It runs ~1s after load,
@@ -80,7 +84,8 @@ export default function Guard() {
     // visitor has NOT agreed to the screenshot terms (it protects the page), and it always clears itself.
     let ft = 0, ht = 0, holdAt = 0;
     const clearHold = (e?: Event) => { if (e && performance.now() - holdAt < 450) return; document.documentElement.classList.remove('shot-hold'); window.clearTimeout(ht); };
-    const flashWm = (hold = false) => { const h = document.documentElement; h.classList.add('shot-on'); if (hold) { holdAt = performance.now(); h.classList.add('shot-hold'); window.clearTimeout(ht); ht = window.setTimeout(clearHold, 900); } window.clearTimeout(ft); ft = window.setTimeout(() => h.classList.remove('shot-on'), 5000); };
+    const wmReady = () => { const f = document.querySelector('.shot-wm .foot'); return !!(f && f.textContent && /\d/.test(f.textContent)); };
+    const flashWm = (hold = false) => { const h = document.documentElement; h.classList.add('shot-on'); if (hold && !wmReady()) { holdAt = performance.now(); h.classList.add('shot-hold'); window.clearTimeout(ht); ht = window.setTimeout(clearHold, 900); } window.clearTimeout(ft); ft = window.setTimeout(() => h.classList.remove('shot-on'), 5000); };
     const pre = (e: KeyboardEvent) => { if ((e.metaKey && e.shiftKey && (e.key === 'Meta' || e.key === 'Shift' || /^[345s]$/i.test(e.key))) || (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 's') || e.key === 'PrintScreen' || e.code === 'PrintScreen') flashWm(true); };
     ['pointermove', 'focus', 'keyup'].forEach((ev) => window.addEventListener(ev, clearHold, { passive: true }));
     // owner (R11): "I took two screenshots and nothing showed". On Windows, Win+Shift+S opens the snipping tool, which takes
@@ -123,9 +128,9 @@ export default function Guard() {
       {/* always in the page; shown only while a screenshot is being taken (html.shot-on) */}
       <div className="shot-wm" aria-hidden="true" data-no-i18n="">
         <span className="tile" style={{ backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='360' height='200'><text x='20' y='110' transform='rotate(-24 180 100)' font-family='Inter,Arial' font-size='16' font-weight='700' fill='%23808080'>© Sam Electronics</text></svg>`).replace(/%2523/g, '%23')}")` }} />
-        <span className="foot"><img src="/assets/se-logo-metal-128.webp" alt="" /><b>© Sam Electronics</b><span>{tr('All rights reserved')} · {tr('Captured on')} {now}</span><em>{wm ? tr('Agreement') + ' ' + wm.ref : tr('Not agreed')}</em><em>Ref {refId}</em></span>
+        <span className="foot"><img src="/assets/se-logo-metal-128.webp" alt="" /><b>© 2003–{new Date().getFullYear()} Sam Electronics</b><span>{tr('All rights reserved')} · {tr('Captured on')} {now}</span><em>{wm ? tr('Agreement') + ' ' + wm.ref : tr('Not agreed')}</em><em>Ref {refId}</em></span>
       </div>
-      <div className="shot-holdc" aria-hidden="true"><span className="shc"><span className="lg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" pathLength="100" /></svg><img src="/assets/se-logo-metal-128.webp" alt="" /></span><small className="k">{tr('COPYRIGHT NOTICE')}</small><b>{tr('Hang tight…')}</b><small>{tr('This page is protected by Sam Electronics.')}</small><i className="bar" /></span></div>
+      <div className="shot-holdc" aria-hidden="true"><span className="shc"><span className="lg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" pathLength="100" /></svg><img src="/assets/se-logo-metal-128.webp" alt="" /></span><small className="k">{tr('COPYRIGHT NOTICE')}</small><b>{tr('One second…')}</b><small>{tr('Our watermark is still loading. Try your screenshot again.')}</small><i className="bar" /></span></div>
     </>
   );
 }

@@ -254,7 +254,7 @@ export default function RepairLab({ v, full = false }: { v: Vals; full?: boolean
             >
               {'\n          '}
               <span style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <span className="rp-k" style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '11px', letterSpacing: '.12em', color: '#9DA1A6' }}>
+                <span className="rp-k rp-kd" style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '11px', letterSpacing: '.12em', color: '#9DA1A6' }}>
                   ESTIMATE
                 </span>
                 <span
@@ -274,7 +274,7 @@ export default function RepairLab({ v, full = false }: { v: Vals; full?: boolean
               </span>
               {'\n          '}
               <span style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                <span className="rp-k" style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '11px', letterSpacing: '.12em', color: '#9DA1A6' }}>
+                <span className="rp-k rp-kd" style={{ fontFamily: "'JetBrains Mono',monospace", fontSize: '11px', letterSpacing: '.12em', color: '#9DA1A6' }}>
                   BENCH TIME
                 </span>
                 <span

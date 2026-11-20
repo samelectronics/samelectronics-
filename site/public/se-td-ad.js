@@ -166,18 +166,20 @@
           BR.forEach((_, j) => { const c = j % cols, r2 = Math.floor(j / cols), kk = back(K(lw, 0.08 + j * 0.035, 0.28)); if (kk <= 0) return; const cx = x0 + c * (gw + gap) + gw / 2, cy = y0 + r2 * (gh + gap) + gh / 2; x.save(); x.translate(cx, cy); x.scale(kk, kk); x.fillStyle = '#FFFFFF'; rr(x, -gw / 2, -gh / 2, gw, gh, 2 * u); x.fill(); const hot = Math.floor(lw / 0.12) % BR.length === j && lw > 0.7; if (hot) { x.lineWidth = 0.8 * u; x.strokeStyle = Y; x.shadowColor = 'rgba(247,192,50,.9)'; x.shadowBlur = 4 * u; x.stroke(); x.shadowBlur = 0; } logoAt(BI[j], 0, 0, gw * 0.72, gh * 0.5); x.restore(); });
           flash(lw, '#FFFFFF'); } }
     }
+    // owner (R12): the iPad reel was "a bit too quick" and "like the teardown ad": it is slower and tells the SHOP story:
+    // the brand slams, then search → pick a grade → add to cart → order on WhatsApp/WeChat, the brands, every grade, close
+    const GSTEP = REEL === 'ipad' ? 0.3 : 0.22;
     const BEATS = REEL === 'ipad' ? [
-      { d: 0.5, f: (l) => slam('SAM', l, 'dark', 'zoom') },
-      { d: 0.55, f: (l) => slam('ELECTRONICS', l, 'yel', 'side') },
-      { d: 0.5, f: (l) => slam('EVERY', l, 'light', 'spin') },
-      { d: 0.65, f: (l) => slam('PART.', l, 'dark', 'split') },
-      { d: 1.0, f: (l) => prod(0, l, 'yel', 'punch', 'SCREENS', '1,902', 'ORIGINAL · OLED · INCELL · AAA') },
-      { d: 1.0, f: (l) => prod(1, l, 'dark', 'swing', 'BATTERIES', '1,455', 'GENUINE CELLS · CAPACITY TESTED') },
-      { d: 1.0, f: (l) => prod(3, l, 'light', 'spin', 'CAMERAS', '494', 'FRONT · REAR · LENSES') },
-      { d: 2.6, f: (l) => brands(l) },
-      { d: 0.72, f: (l) => strobe(l) },
-      { d: 1.1, f: (l) => grades(l) },
-      { d: 1.7, f: (l) => finale(l) },
+      { d: 0.7, f: (l) => slam('SAM', l, 'dark', 'zoom') },
+      { d: 0.75, f: (l) => slam('ELECTRONICS', l, 'yel', 'side') },
+      { d: 0.7, f: (l) => slam('THE SHOP.', l, 'light', 'spin') },
+      { d: 2.6, f: (l) => shop(0, l) },
+      { d: 2.4, f: (l) => shop(1, l) },
+      { d: 2.0, f: (l) => shop(2, l) },
+      { d: 2.2, f: (l) => shop(3, l) },
+      { d: 3.0, f: (l) => brands(l) },
+      { d: 9 * 0.3, f: (l) => grades(l) },
+      { d: 2.2, f: (l) => finale(l) },
     ] : [
       { d: 0.55, f: (l) => slam('TAKE', l, 'dark', 'zoom') },
       { d: 0.5, f: (l) => slam('ANY', l, 'yel', 'side') },
@@ -189,7 +191,7 @@
       { d: 1.0, f: (l) => prod(2, l, 'yel', 'flip', 'BACK COVERS', '1,436', 'EVERY COLOUR · WITH OR WITHOUT CHASSIS') },
       { d: 1.0, f: (l) => prod(5, l, 'dark', 'drop', 'FLEX & SMALL', '331', 'FLEX · SIM TRAYS · BUTTONS · SPEAKERS') },
       { d: 0.72, f: (l) => strobe(l) },
-      { d: 1.1, f: (l) => grades(l) },
+      { d: 9 * 0.22, f: (l) => grades(l) },
       { d: 1.7, f: (l) => finale(l) },
     ];
     const BT = BEATS.reduce((a2, b2) => a2 + b2.d, 0);
@@ -268,10 +270,55 @@
       x.save(); x.translate(W / 2, H * 0.48); x.rotate(((n * 53) % 9 - 4) * 0.06); if (ok(im)) x.drawImage(im, -S / 2, -S / 2, S, S); x.restore();
       big(T(['SCREENS', 'BATTERIES', 'CAMERAS', 'COVERS', 'FLEX', 'BOARDS'][n % 6]), 9 * u, inkOf(th), W / 2, H * 0.16); flash((l % 0.09) * 0.8, th === 'dark' ? Y : '#FFFFFF');
     }
-    function grades(l) { // the grades flash one by one, each its own colour
-      const G4 = ['ORIGINAL', 'OLED', 'INCELL', 'AAA'], n = Math.min(3, Math.floor(l / 0.24)), th = ['dark', 'yel', 'light', 'dark'][n], ll = l - n * 0.24; fill(th); streaks(ll, th, 0.5);
-      const k = back(K(ll, 0, 0.18)), sz = Math.min(26 * u, (W * 1.5) / G4[n].length); x.save(); x.translate(W / 2, H * 0.46); x.scale(lerp(1.8, 1, k), lerp(1.8, 1, k)); big(T(G4[n]), sz, n === 3 ? Y : inkOf(th), 0, 0); x.restore();
-      x.font = '600 ' + 3.4 * u + 'px ' + F.jb; x.textAlign = 'center'; x.fillStyle = th === 'dark' ? '#D5D7DA' : G; x.fillText(T('EVERY GRADE · HONEST LABELS'), W / 2, H * 0.62); flash(ll);
+    // owner (R12): "we have more qualities now, the ad must list ALL of them, same style": every grade in the shop flashes
+    function grades(l) {
+      const G9 = ['ORIGINAL', 'OLED SOFT', 'OLED BIG', 'OLED SMALL', 'INCELL', 'AAA', 'AA', 'COMPATIBLE', 'STANDARD'], st = GSTEP, n = Math.min(G9.length - 1, Math.floor(l / st)), th = ['dark', 'yel', 'light'][n % 3], ll = l - n * st; fill(th); streaks(ll, th, 0.5);
+      const k = back(K(ll, 0, 0.16)), sz = Math.min(24 * u, (W * 1.45) / G9[n].length); x.save(); x.translate(W / 2, H * 0.46); x.scale(lerp(1.8, 1, k), lerp(1.8, 1, k)); big(T(G9[n]), sz, n % 3 === 0 ? Y : inkOf(th), 0, 0); x.restore();
+      x.font = '700 ' + 3 * u + 'px ' + F.jb; x.textAlign = 'center'; x.fillStyle = th === 'dark' ? '#9DA1A6' : 'rgba(38,40,43,.6)'; x.fillText(String(n + 1).padStart(2, '0') + ' / ' + G9.length, W / 2, H * 0.33);
+      x.font = '600 ' + 3.4 * u + 'px ' + F.jb; x.fillStyle = th === 'dark' ? '#D5D7DA' : G; x.fillText(T('EVERY GRADE · HONEST LABELS'), W / 2, H * 0.62); flash(ll);
+    }
+    // owner (R12): "focus more on the SHOP: show the customer the shopping experience, same energy and design"
+    const chip = (t2, cx, cy, h, bg, fg) => { x.font = '700 ' + h * 0.42 + 'px ' + F.jb; const w = x.measureText(t2).width + h * 0.9; x.fillStyle = bg; rr(x, cx - w / 2, cy - h / 2, w, h, h / 2); x.fill(); x.fillStyle = fg; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(t2, cx, cy + h * 0.04); x.textBaseline = 'alphabetic'; return w; };
+    const kicker = (t2, th) => { x.font = '700 ' + 3 * u + 'px ' + F.jb; x.textAlign = 'center'; x.fillStyle = th === 'dark' ? Y : G; x.fillText(t2, W / 2, H * 0.1); };
+    function shop(step, l) {
+      const ar = AR();
+      if (step === 0) { // SEARCH: the bar types, the results drop in
+        fill('light'); streaks(l, 'light', -0.4); kicker(T('THE SHOP') + ' · 01', 'light');
+        const k = back(K(l, 0, 0.25)); x.save(); x.translate(W / 2, H * 0.2); x.scale(lerp(1.7, 1, k), lerp(1.7, 1, k)); big(T('SEARCH.'), 15 * u, G, 0, 0); x.restore();
+        const bw = W * 0.84, bh = 11 * u, bx = (W - bw) / 2, by = H * 0.32; x.save(); x.shadowColor = 'rgba(247,192,50,.8)'; x.shadowBlur = 5 * u; x.fillStyle = '#FFFFFF'; rr(x, bx, by, bw, bh, 3 * u); x.fill(); x.restore(); x.strokeStyle = Y; x.lineWidth = 0.6 * u; rr(x, bx, by, bw, bh, 3 * u); x.stroke();
+        const q = 'iPhone 15 Pro screen', nq = Math.floor(cl((l - 0.15) / 0.75) * q.length); x.font = '500 ' + 4.2 * u + 'px ' + F.in; x.fillStyle = G; x.textAlign = ar ? 'right' : 'left'; x.textBaseline = 'middle'; const tx = ar ? bx + bw - 5 * u : bx + 5 * u; x.fillText(q.slice(0, nq), tx, by + bh / 2);
+        if ((l * 3) % 1 < 0.6) { const cw = x.measureText(q.slice(0, nq)).width; x.fillStyle = Y; x.fillRect(ar ? tx - cw - 0.8 * u : tx + cw + 0.4 * u, by + bh * 0.25, 0.5 * u, bh * 0.5); } x.textBaseline = 'alphabetic';
+        [['ORIGINAL', 'AED 385', Y], ['OLED SOFT', 'AED 290', '#FFFFFF'], ['INCELL', 'AED 205', '#CFE8FF']].forEach(([g2, pr, c], j) => { const kk = back(K(l, 0.95 + j * 0.12, 0.3)); if (kk <= 0) return; const ry = by + bh + 3 * u + j * 12 * u; x.save(); x.globalAlpha = cl(kk); x.translate(0, (1 - kk) * 6 * u); x.fillStyle = '#FFFFFF'; x.shadowColor = 'rgba(38,40,43,.18)'; x.shadowBlur = 3 * u; rr(x, bx, ry, bw, 10 * u, 2.5 * u); x.fill(); x.shadowBlur = 0;
+          const im = imgs[0]; if (im && im.complete && im.naturalWidth) x.drawImage(im, ar ? bx + bw - 10 * u : bx + 1.5 * u, ry + 1 * u, 8 * u, 8 * u);
+          x.font = '700 ' + 3.6 * u + 'px ' + F.sg; x.fillStyle = G; x.textAlign = ar ? 'right' : 'left'; x.fillText('iPhone 15 Pro', ar ? bx + bw - 12 * u : bx + 12 * u, ry + 4.6 * u); chip(T(g2), ar ? bx + 20 * u : bx + bw - 34 * u, ry + 5 * u, 4.6 * u, c === '#FFFFFF' ? '#26282B' : c, c === '#FFFFFF' ? '#FFFFFF' : G);
+          x.font = '800 ' + 3.6 * u + 'px ' + F.sg; x.fillStyle = G; x.textAlign = ar ? 'left' : 'right'; x.fillText(pr, ar ? bx + 3 * u : bx + bw - 3 * u, ry + 6.2 * u); x.restore(); });
+        flash(l); return;
+      }
+      if (step === 1) { // PICK A GRADE: the selector slides across, the price follows
+        fill('dark'); streaks(l, 'dark', 0.4); kicker(T('THE SHOP') + ' · 02', 'dark');
+        const k = back(K(l, 0, 0.25)); x.save(); x.translate(W / 2, H * 0.2); x.scale(lerp(1.7, 1, k), lerp(1.7, 1, k)); big(T('PICK A GRADE.'), 11 * u, '#FFFFFF', 0, 0); x.restore();
+        const im = imgs[0], ik = back(K(l, 0.1, 0.4)); if (im && im.complete && im.naturalWidth) { const S2 = W * 0.6 * ik; x.save(); x.shadowColor = 'rgba(247,192,50,.35)'; x.shadowBlur = 10 * u; x.drawImage(im, W / 2 - S2 / 2, H * 0.47 - S2 / 2, S2, S2); x.restore(); }
+        const GS = [['ORIGINAL', '385'], ['OLED SOFT', '290'], ['INCELL', '205']], pick = Math.min(2, Math.floor(cl((l - 0.5) / 1.3) * 3)), cy = H * 0.74, gw = W * 0.27, x0 = W / 2 - gw * 1.5;
+        GS.forEach(([g2], j) => { const cx = x0 + gw * (j + 0.5); const on = j === pick; x.fillStyle = on ? Y : 'rgba(255,255,255,.08)'; rr(x, cx - gw / 2 + 1 * u, cy - 4 * u, gw - 2 * u, 8 * u, 4 * u); x.fill(); x.font = '700 ' + 3 * u + 'px ' + F.jb; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = on ? G : '#D5D7DA'; x.fillText(T(g2), cx, cy + 0.2 * u); x.textBaseline = 'alphabetic'; });
+        const pk = back(K(l, 0.5 + pick * 0.43, 0.25)); x.save(); x.translate(W / 2, H * 0.88); x.scale(lerp(1.4, 1, pk), lerp(1.4, 1, pk)); big('AED ' + GS[pick][1], 9 * u, Y, 0, 0); x.restore(); flash(l, Y); return;
+      }
+      if (step === 2) { // ADD TO CART: the button is pressed, the part flies to the cart, the badge bumps
+        fill('yel'); streaks(l, 'yel', -0.4); kicker(T('THE SHOP') + ' · 03', 'yel');
+        const k = back(K(l, 0, 0.25)); x.save(); x.translate(W / 2, H * 0.2); x.scale(lerp(1.7, 1, k), lerp(1.7, 1, k)); big(T('ADD TO CART.'), 11 * u, G, 0, 0); x.restore();
+        const cw = W * 0.62, ch = H * 0.42, cx = W / 2 - cw / 2, cy = H * 0.3; x.save(); x.fillStyle = '#FFFFFF'; x.shadowColor = 'rgba(38,40,43,.3)'; x.shadowBlur = 6 * u; rr(x, cx, cy, cw, ch, 4 * u); x.fill(); x.restore();
+        const im = imgs[1] || imgs[0], fly = eo(K(l, 0.75, 0.45)); if (im && im.complete && im.naturalWidth) { const S2 = cw * 0.62 * (1 - fly * 0.85); const tx2 = lerp(W / 2, ar ? W * 0.12 : W * 0.88, fly), ty2 = lerp(cy + ch * 0.38, H * 0.08 + 6 * u, fly); x.save(); x.globalAlpha = 1 - fly * 0.3; x.drawImage(im, tx2 - S2 / 2, ty2 - S2 / 2, S2, S2); x.restore(); }
+        const pr = K(l, 0.55, 0.12) - K(l, 0.67, 0.12); x.save(); x.translate(W / 2, cy + ch * 0.86); x.scale(1 - pr * 0.08, 1 - pr * 0.08); x.fillStyle = G; rr(x, -cw * 0.4, -4.5 * u, cw * 0.8, 9 * u, 4.5 * u); x.fill(); x.font = '700 ' + 3.6 * u + 'px ' + F.in; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = Y; x.fillText(T('Add to cart') + '  +', 0, 0.2 * u); x.textBaseline = 'alphabetic'; x.restore();
+        const bx2 = ar ? W * 0.12 : W * 0.88, by2 = H * 0.08 + 6 * u, bump = back(K(l, 1.18, 0.3)); x.fillStyle = G; x.beginPath(); x.arc(bx2, by2, 6 * u, 0, Math.PI * 2); x.fill(); x.strokeStyle = Y; x.lineWidth = 0.5 * u; x.beginPath(); x.moveTo(bx2 - 2.6 * u, by2 - 1.6 * u); x.lineTo(bx2 + 2.6 * u, by2 - 1.6 * u); x.lineTo(bx2 + 2 * u, by2 + 2.2 * u); x.lineTo(bx2 - 2 * u, by2 + 2.2 * u); x.closePath(); x.stroke();
+        x.save(); x.translate(bx2 + 4.4 * u, by2 - 4.4 * u); x.scale(1 + 0.4 * Math.sin(bump * Math.PI), 1 + 0.4 * Math.sin(bump * Math.PI)); x.fillStyle = '#E5484D'; x.beginPath(); x.arc(0, 0, 2.8 * u, 0, Math.PI * 2); x.fill(); x.font = '800 ' + 3 * u + 'px ' + F.in; x.fillStyle = '#FFFFFF'; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(l > 1.2 ? '1' : '0', 0, 0.2 * u); x.textBaseline = 'alphabetic'; x.restore();
+        flash(l); return;
+      }
+      // ORDER: one tap, the order goes out on WhatsApp or WeChat, with the full list
+      fill('dark'); streaks(l, 'dark', 0.4); kicker(T('THE SHOP') + ' · 04', 'dark');
+      const k = back(K(l, 0, 0.25)); x.save(); x.translate(W / 2, H * 0.2); x.scale(lerp(1.7, 1, k), lerp(1.7, 1, k)); big(T('ORDER IN SECONDS.'), 9.5 * u, '#FFFFFF', 0, 0); x.restore();
+      const bk = back(K(l, 0.2, 0.35)), bw = W * 0.74, bxx = ar ? W * 0.13 : W - W * 0.13 - bw, byy = H * 0.31; x.save(); x.globalAlpha = cl(bk); x.translate(0, (1 - bk) * 8 * u); x.fillStyle = '#DCF8C6'; rr(x, bxx, byy, bw, 26 * u, 4 * u); x.fill(); x.font = '600 ' + 3.2 * u + 'px ' + F.in; x.fillStyle = G; x.textAlign = ar ? 'right' : 'left';
+      [T('New order · Sam Electronics'), '1 × iPhone 15 Pro Screen · ORIGINAL', '1 × iPhone 13 Battery', T('Total') + ': AED 455'].forEach((ln, j) => { x.font = (j === 0 || j === 3 ? '700 ' : '500 ') + 3.2 * u + 'px ' + F.in; x.fillText(ln, ar ? bxx + bw - 4 * u : bxx + 4 * u, byy + 6 * u + j * 5.4 * u); }); x.restore();
+      [['WhatsApp', '#25D366'], ['WeChat', '#25D366']].forEach(([n2, c], j) => { const kk = back(K(l, 0.6 + j * 0.15, 0.3)); x.save(); x.translate(W / 2, H * (0.7 + j * 0.12)); x.scale(kk, kk); x.fillStyle = c; rr(x, -W * 0.36, -5 * u, W * 0.72, 10 * u, 5 * u); x.fill(); x.font = '700 ' + 4 * u + 'px ' + F.in; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillStyle = '#FFFFFF'; x.fillText(T('Send on') + ' ' + n2 + (ar ? '  ←' : '  →'), 0, 0.3 * u); x.textBaseline = 'alphabetic'; x.restore(); });
+      flash(l, Y);
     }
     function finale(l) { // IN STOCK / IN DEIRA. then a bouncing SHOP NOW pill
       fill('dark'); streaks(l, 'dark', -0.5);

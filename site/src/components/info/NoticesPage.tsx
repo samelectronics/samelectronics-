@@ -15,6 +15,9 @@ const NOTES: [string, string, string[]][] = [
   ['copyright', 'Copyright notice', [
     'Everything on this website and in its systems (photos, designs, texts, prices and data) belongs to Sam Electronics and is protected by the copyright laws of the United Arab Emirates, including Federal Decree-Law No. 38 of 2021. A screenshot for your own reference is fine; copying, sharing or publishing it without our written permission is not.',
     'Browsers can only see the screenshot keys on computers (Print Screen, ⌘⇧3/4/5, Win+Shift+S). When we see one, this notice appears once and the team is told which page it was.',
+    '!Trying to get around this protection, for example by photographing or filming the screen with another phone, camera or device, or by using tools that hide or remove our watermark, is not allowed and can be punished under UAE law.',
+    '!Copying our design, colours, layout, structure, look, characters (including Samsoom), texts or ideas, or using them wrongly or falsely (for example to look like Sam Electronics or to suggest you work with us), is not allowed and can be punished under UAE law.',
+    'Every screenshot carries our watermark with the date, time and a reference, so its origin can always be traced.',
     'If you took it for another reason, you can safely ignore the notice. For permission, write to us from the Contact page.',
   ]],
 ];
@@ -31,7 +34,7 @@ export default function NoticesPage() {
         {NOTES.map(([id, h, ps]) => (
           <article key={id} id={id} className="nt-c" data-rise>
             <h2 className="sp-h3">{T(h)}</h2>
-            {ps.map((p) => <p key={p} className="sp-p">{T(p)}</p>)}
+            {ps.map((p) => p.startsWith('!') ? <p key={p} className="sp-p nt-hl">{T(p.slice(1))}</p> : <p key={p} className="sp-p">{T(p)}</p>)}
           </article>
         ))}
         <article className="nt-c" data-rise>
