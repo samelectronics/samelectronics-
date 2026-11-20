@@ -7,6 +7,7 @@
 // Styles in src/styles/circuit.css (the .cx block). The section is yellow (white → grey → YELLOW rotation).
 'use client';
 import React, { useMemo, useRef, useState } from 'react';
+import CardDetail from '@/components/account/CardDetail';
 
 const T = (s: string) => (typeof window !== 'undefined' && (window as unknown as { seI18n?: { t: (x: string) => string } }).seI18n ? (window as unknown as { seI18n: { t: (x: string) => string } }).seI18n.t(s) : s);
 type Kind = 'circuit' | 'grid' | 'circle';
@@ -139,6 +140,7 @@ export default function SECircuit() {
             <span className="cx-med" aria-hidden="true"><svg className="arc" viewBox="0 0 100 100"><path d="M14 50a36 36 0 0 1 72 0" /></svg><span className="disc"><span className="coin"><img src="/assets/se-logo-metal-320.webp" alt="" /></span></span></span>
             <span className="cx-line" aria-hidden="true" />
             <span className="cx-sheen" aria-hidden="true" />
+            <CardDetail kind={k} />
             <div className="cx-card-in">
               <span className="top">
                 <span className="brand"><span><b data-no-i18n="">{CC.name}</b><small>{T(CC.kind)}</small></span></span>

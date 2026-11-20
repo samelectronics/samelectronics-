@@ -2,6 +2,7 @@
 // P3 · The Sam Circuit / Grid / Circle card as it appears in My Bench and on the membership page: the same card as the
 // home page's card builder (styles in circuit.css), filled with the member's own name, number and level.
 import React, { useRef } from 'react';
+import CardDetail from './CardDetail';
 
 export type CardKind = 'circuit' | 'grid' | 'circle';
 export const CARD_NAME: Record<CardKind, [string, string]> = { circuit: ['SAM CIRCUIT', 'Member card'], grid: ['SAM GRID', 'Supplier card'], circle: ['SAM CIRCLE', 'Loyalty card'] };
@@ -20,6 +21,7 @@ export default function MemberCard({ kind, name, no, level = 0, shop, tilt = tru
           <circle cx="332" cy="60" r="3.4" /><circle cx="334" cy="150" r="3.4" /><circle cx="214" cy="136" r="3.4" /><circle cx="372" cy="28" r="3" />
         </svg>
         <img className="cx-logo" src="/assets/se-logo-320.webp" alt="" aria-hidden="true" />
+        <CardDetail kind={kind} />
         <div className="cx-card-in">
           <span className="top">
             <span className="brand"><b data-no-i18n="">{nm}</b><small>{kd}</small></span>
