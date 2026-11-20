@@ -251,3 +251,21 @@ html[dir="rtl"] .fw-prof { right: auto; left: 6%; transform: translateY(-50%) ro
 .fw-notes .nt span { font: 500 12.5px Inter, sans-serif; color: #26282B; }
 .fw-notes .nt small { font: 500 11px Inter, sans-serif; color: #7A7E84; }
 .fw-notes .fw-strip-in { gap: 14px !important; animation-duration: 55s !important; }
+/* R12b (owner: "the phone still looks fake: no texture, no 3D shape, no shadows, no real steel edges"): a real device:
+   a brushed-steel band with lit and shaded edges, a graphite bezel, side buttons, glass glare, a 3D turn and layered shadows */
+.fw-prof { padding: 44px 16px 16px !important; border: 9px solid transparent !important; border-radius: 46px !important; overflow: visible !important;
+  background: linear-gradient(#FFFFFF, #FFFFFF) padding-box,
+              repeating-linear-gradient(90deg, rgba(255,255,255,.08) 0 1px, rgba(0,0,0,.05) 1px 2px) border-box,
+              linear-gradient(135deg, #F2F3F5 0%, #9EA3A9 18%, #E4E6E9 32%, #7D8288 52%, #D9DCE0 70%, #8F949A 86%, #ECEEF0 100%) border-box !important;
+  box-shadow: inset 0 0 0 3px #1E1F21, inset 0 0 0 4px rgba(255,255,255,.08),            /* the bezel */
+              0 0 0 1px rgba(38,40,43,.45), 0 1px 0 1px rgba(255,255,255,.55),         /* the outer steel edge */
+              -18px 34px 40px -18px rgba(38,40,43,.55), -40px 70px 90px -40px rgba(38,40,43,.45), 0 4px 10px rgba(38,40,43,.25) !important;
+  transform: translateY(-50%) perspective(1400px) rotateY(-16deg) rotateX(4deg) rotateZ(-3deg) !important; transform-style: preserve-3d; }
+html[dir="rtl"] .fw-prof { transform: translateY(-50%) perspective(1400px) rotateY(16deg) rotateX(4deg) rotateZ(3deg) !important; }
+@keyframes fwProfIn { from { opacity: 0; translate: 0 30px; } }
+.fw-prof .isl { top: 12px !important; width: 78px !important; height: 22px !important; margin-left: -39px !important; background: #1E1F21 !important; box-shadow: inset 0 0 0 1px rgba(255,255,255,.06); }
+.fw-prof .isl::after { content: ''; position: absolute; right: 10px; top: 7px; width: 8px; height: 8px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #4A5A7A, #12151B 70%); }
+.fw-prof .gls { position: absolute; inset: 0; border-radius: 37px; pointer-events: none; z-index: 5; background: linear-gradient(115deg, rgba(255,255,255,.55) 0%, rgba(255,255,255,.12) 22%, rgba(255,255,255,0) 38%, rgba(255,255,255,0) 70%, rgba(255,255,255,.08) 100%); mix-blend-mode: soft-light; }
+.fw-prof .btn { position: absolute; width: 4px; border-radius: 2px; background: linear-gradient(90deg, #6E7378, #D5D8DC 45%, #7A7F85); box-shadow: 0 1px 2px rgba(0,0,0,.3); }
+.fw-prof .btn.b1 { left: -13px; top: 96px; height: 30px; } .fw-prof .btn.b2 { left: -13px; top: 136px; height: 52px; } .fw-prof .btn.b3 { right: -13px; top: 124px; height: 70px; }
+.fw-prof .grid { border-radius: 0 0 30px 30px; overflow: hidden; }

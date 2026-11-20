@@ -179,15 +179,18 @@
       { d: 2.0, f: (l) => finale(l) },
     ];
     const BEATS = REEL === 'rig' ? RIG : REEL === 'ipad' ? [
-      { d: 0.7, f: (l) => slam('SAM', l, 'dark', 'zoom') },
-      { d: 0.75, f: (l) => slam('ELECTRONICS', l, 'yel', 'side') },
-      { d: 0.7, f: (l) => slam('THE SHOP.', l, 'light', 'spin') },
-      { d: 2.6, f: (l) => shop(0, l) },
-      { d: 2.4, f: (l) => shop(1, l) },
-      { d: 2.0, f: (l) => shop(2, l) },
-      { d: 2.2, f: (l) => shop(3, l) },
-      { d: 3.0, f: (l) => brands(l) },
-      { d: 9 * 0.3, f: (l) => grades(l) },
+      // always opens on the same entrance, then bold word → the real shop, four times, then the close
+      { d: 0.8, f: (l) => slam('SAM', l, 'dark', 'zoom') },
+      { d: 0.85, f: (l) => slam('ELECTRONICS', l, 'yel', 'side') },
+      { d: 0.75, f: (l) => slam('SEARCH.', l, 'light', 'spin') },
+      { d: 5.5, c: 1, f: (l) => clip(0, 0, l, 'Any part. Any model.') },
+      { d: 0.75, f: (l) => slam('15 BRANDS.', l, 'dark', 'split') },
+      { d: 2.4, f: (l) => brands(l) },
+      { d: 5.5, c: 1, f: (l) => clip(5.5, 1, l, 'Every brand, on the shelf.') },
+      { d: 0.75, f: (l) => slam('EVERY GRADE.', l, 'yel', 'zoom') },
+      { d: 5.5, c: 1, f: (l) => clip(11.0, 1, l, 'Pick the grade. See the price.') },
+      { d: 0.8, f: (l) => slam('ORDER IN SECONDS.', l, 'dark', 'side') },
+      { d: 5.5, c: 1, f: (l) => clip(16.533, 3, l, 'Cart. WhatsApp. Done.') },
       { d: 2.2, f: (l) => finale(l) },
     ] : [
       { d: 0.55, f: (l) => slam('TAKE', l, 'dark', 'zoom') },
@@ -289,6 +292,22 @@
     // owner (R12): "focus more on the SHOP: show the customer the shopping experience, same energy and design"
     const chip = (t2, cx, cy, h, bg, fg) => { x.font = '700 ' + h * 0.42 + 'px ' + F.jb; const w = x.measureText(t2).width + h * 0.9; x.fillStyle = bg; rr(x, cx - w / 2, cy - h / 2, w, h, h / 2); x.fill(); x.fillStyle = fg; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(t2, cx, cy + h * 0.04); x.textBaseline = 'alphabetic'; return w; };
     const kicker = (t2, th) => { x.font = '700 ' + 3 * u + 'px ' + F.jb; x.textAlign = 'center'; x.fillStyle = th === 'dark' ? Y : G; x.fillText(t2, W / 2, H * 0.1); };
+    // owner (R12b): "use a REAL recorded shop: the bold writing, then the shop itself, then another message, then the shop".
+    // The real shop was recorded at tablet size (public/assets/ad/shop-film.mp4: search, brands, grades, order); a clip beat
+    // plays its part of that film full-screen with a slow push-in, a vignette and a short caption.
+    const VID = opts && opts.video;
+    function clip(from, step, l, cap) {
+      const v = VID, ready = v && v.readyState >= 2;
+      if (!ready) { shop(step, l); return; }
+      const want = from + Math.min(l, 5.45); if (v.paused) { try { v.play(); } catch (e) { /* autoplay */ } } if (Math.abs(v.currentTime - want) > 0.35) { try { v.currentTime = want; } catch (e) { /* */ } }
+      const [fx, fy, fw, fh] = FULL, vw = v.videoWidth || 552, vh = v.videoHeight || 756, push = 1.02 + 0.07 * eio(K(l, 0, 5.5)), sc = Math.max(fw / vw, fh / vh) * push, dw = vw * sc, dh = vh * sc;
+      const k = eo5(K(l, 0, 0.35)); x.save(); x.globalAlpha = cl(k * 1.4); x.drawImage(v, fx + (fw - dw) / 2, fy + (fh - dh) / 2 - (1 - k) * 4 * u, dw, dh); x.restore();
+      const g = x.createLinearGradient(0, fy + fh * 0.62, 0, fy + fh); g.addColorStop(0, 'rgba(30,31,33,0)'); g.addColorStop(1, 'rgba(30,31,33,.82)'); x.fillStyle = g; x.fillRect(fx, fy + fh * 0.6, fw, fh * 0.4);
+      const vg = x.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.35, W / 2, H / 2, Math.max(W, H) * 0.75); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(20,21,23,.35)'); x.fillStyle = vg; x.fillRect(fx, fy, fw, fh);
+      const ck = back(K(l, 0.35, 0.4)), ar = AR(); if (ck > 0) { x.save(); x.globalAlpha = cl(ck); x.translate(0, (1 - ck) * 5 * u); x.font = '700 ' + 2.6 * u + 'px ' + F.jb; x.textAlign = ar ? 'right' : 'left'; x.fillStyle = Y; x.fillText(T('THE SHOP') + ' · 0' + (step + 1), ar ? W - 7 * u : 7 * u, H * 0.84);
+        let cs = 6.4 * u; x.font = '800 ' + cs + 'px ' + F.sg; const cw = x.measureText(T(cap)).width; if (cw > W - 14 * u) { cs *= (W - 14 * u) / cw; x.font = '800 ' + cs + 'px ' + F.sg; } x.fillStyle = '#FFFFFF'; x.fillText(T(cap), ar ? W - 7 * u : 7 * u, H * 0.9); x.restore(); }
+      const fl = 1 - K(l, 0, 0.18); if (fl > 0) { x.globalAlpha = fl * 0.55; x.fillStyle = '#FFFFFF'; x.fillRect(fx, fy, fw, fh); x.globalAlpha = 1; }
+    }
     function shop(step, l) {
       const ar = AR();
       if (step === 0) { // SEARCH: the bar types, the results drop in
@@ -341,7 +360,7 @@
       t = ((t % (BT + CLOSE)) + (BT + CLOSE)) % (BT + CLOSE); x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, W, H);
       const inset = () => x.setTransform(SAFE.s, 0, 0, SAFE.s, (W - W * SAFE.s) / 2, H * SAFE.top); inset();
       let dark = true;
-      if (t < BT) { let acc2 = 0, bi = 0; while (bi < BEATS.length - 1 && t >= acc2 + BEATS[bi].d) { acc2 += BEATS[bi].d; bi++; } BEATS[bi].f(t - acc2); const th = [0, 3, 5, 8, 11].includes(bi) ? 'dark' : 'x'; dark = th === 'dark' || (bi === 9 && Math.floor((t - acc2) / 0.09) % 3 === 1); }
+      if (t < BT) { let acc2 = 0, bi = 0; while (bi < BEATS.length - 1 && t >= acc2 + BEATS[bi].d) { acc2 += BEATS[bi].d; bi++; } if (VID && !BEATS[bi].c && !VID.paused) VID.pause(); BEATS[bi].f(t - acc2); const th = [0, 3, 5, 8, 11].includes(bi) ? 'dark' : 'x'; dark = th === 'dark' || (bi === 9 && Math.floor((t - acc2) / 0.09) % 3 === 1); }
       else close(t - BT);
       x.setTransform(1, 0, 0, 1, 0, 0);
       // owner (16 Nov): crystal clear and shiny: a punchier colour pass, then a soft glass reflection drifting across

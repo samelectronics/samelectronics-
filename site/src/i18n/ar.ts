@@ -1776,6 +1776,15 @@ export const R7: Record<string, string> = {
 
 /** Round 8: Sam Circuit's three cards, Samsoom's tour and chat menu. */
 export const R8: Record<string, string> = {
+  'Any part. Any model.': 'أي قطعة. أي موديل.',
+  'Every brand, on the shelf.': 'كل الماركات على الرف.',
+  'Pick the grade. See the price.': 'اختر الجودة. شاهد السعر.',
+  'Cart. WhatsApp. Done.': 'السلة. واتساب. تم.',
+  '15 BRANDS.': '15 ماركة.',
+  'TESTED.': 'مُختبر.',
+  'GRADED.': 'مُصنّف.',
+  'HONEST.': 'صادق.',
+  'WeChat': 'وي تشات',
   'THIS WEEK ONLY': 'هذا الأسبوع فقط',
   'Up to 25% off screens.': 'خصم حتى 25% على الشاشات.',
   'Live deals on screens, batteries and back glass, while the stock lasts.': 'عروض مباشرة على الشاشات والبطاريات والزجاج الخلفي حتى نفاد الكمية.',

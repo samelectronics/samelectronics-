@@ -4071,5 +4071,13 @@ const DICT: Record<string, string> = {
   'following': 'unafuata',
   'Phone parts in every grade · Deira, Dubai · since 2003': 'Vipuri vya simu vya kila daraja · Deira, Dubai · tangu 2003',
   'm': 'dk',
+  'Any part. Any model.': 'Kipuri chochote. Modeli yoyote.',
+  'Every brand, on the shelf.': 'Kila chapa, rafuni.',
+  'Pick the grade. See the price.': 'Chagua daraja. Ona bei.',
+  'Cart. WhatsApp. Done.': 'Kikapu. WhatsApp. Imekamilika.',
+  '15 BRANDS.': 'CHAPA 15.',
+  'TESTED.': 'IMEJARIBIWA.',
+  'GRADED.': 'IMEPANGWA DARAJA.',
+  'HONEST.': 'MWAMINIFU.',
 };
 export default DICT;

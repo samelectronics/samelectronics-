@@ -4071,5 +4071,13 @@ const DICT: Record<string, string> = {
   'following': 'seguint',
   'Phone parts in every grade · Deira, Dubai · since 2003': 'Recanvis de mòbil en totes les qualitats · Deira, Dubai · des del 2003',
   'm': 'min',
+  'Any part. Any model.': 'Qualsevol peça. Qualsevol model.',
+  'Every brand, on the shelf.': 'Totes les marques, al prestatge.',
+  'Pick the grade. See the price.': 'Tria la qualitat. Mira el preu.',
+  'Cart. WhatsApp. Done.': 'Cistella. WhatsApp. Fet.',
+  '15 BRANDS.': '15 MARQUES.',
+  'TESTED.': 'PROVAT.',
+  'GRADED.': 'CLASSIFICAT.',
+  'HONEST.': 'HONEST.',
 };
 export default DICT;

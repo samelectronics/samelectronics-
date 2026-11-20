@@ -4071,5 +4071,13 @@ const DICT: Record<string, string> = {
   'following': 'ana bi',
   'Phone parts in every grade · Deira, Dubai · since 2003': 'Kayan waya a kowane mataki · Deira, Dubai · tun 2003',
   'm': 'mn',
+  'Any part. Any model.': 'Kowane kayan gyara. Kowane samfuri.',
+  'Every brand, on the shelf.': 'Kowace alama, a kan shiryayye.',
+  'Pick the grade. See the price.': 'Zaɓi mataki. Ga farashi.',
+  'Cart. WhatsApp. Done.': 'Kwando. WhatsApp. An gama.',
+  '15 BRANDS.': 'ALAMOMI 15.',
+  'TESTED.': 'AN GWADA.',
+  'GRADED.': 'AN TANTANCE MATAKI.',
+  'HONEST.': 'MAI GASKIYA.',
 };
 export default DICT;

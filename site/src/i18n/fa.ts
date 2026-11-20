@@ -4389,5 +4389,14 @@ const DICT: Record<string, string> = {
   'following': 'دنبال‌شونده',
   'Phone parts in every grade · Deira, Dubai · since 2003': 'قطعات گوشی در همهٔ کیفیت‌ها · دیره، دبی · از ۲۰۰۳',
   'm': 'دقیقه',
+  'Any part. Any model.': 'هر قطعه. هر مدل.',
+  'Every brand, on the shelf.': 'همهٔ برندها، روی قفسه.',
+  'Pick the grade. See the price.': 'کیفیت را انتخاب کن. قیمت را ببین.',
+  'Cart. WhatsApp. Done.': 'سبد. واتساپ. تمام.',
+  '15 BRANDS.': '۱۵ برند.',
+  'TESTED.': 'تست‌شده.',
+  'GRADED.': 'درجه‌بندی‌شده.',
+  'HONEST.': 'صادقانه.',
+  'WeChat': 'وی‌چت',
 };
 export default DICT;

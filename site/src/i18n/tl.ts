@@ -4047,5 +4047,13 @@ const DICT: Record<string, string> = {
   'following': 'sinusundan',
   'Phone parts in every grade · Deira, Dubai · since 2003': 'Piyesa ng telepono sa bawat grado · Deira, Dubai · mula 2003',
   'm': 'min',
+  'Any part. Any model.': 'Anumang piyesa. Anumang modelo.',
+  'Every brand, on the shelf.': 'Bawat brand, nasa estante.',
+  'Pick the grade. See the price.': 'Pumili ng grado. Tingnan ang presyo.',
+  'Cart. WhatsApp. Done.': 'Cart. WhatsApp. Tapos.',
+  '15 BRANDS.': '15 BRAND.',
+  'TESTED.': 'SINUBOK.',
+  'GRADED.': 'MAY GRADO.',
+  'HONEST.': 'TAPAT.',
 };
 export default DICT;

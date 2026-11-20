@@ -1554,3 +1554,37 @@ html body .cc-card.cc2 .cc-list .cc-row:is(.k-here, .k-wa, .k-wc, .k-mail, .k-te
 html body .cc-card.cc2 .cc-list .cc-row:is(.k-mail, .k-tel) .cc-li { width: 40px; height: 40px; }
 html body .cc-card.cc2 .cc-list .cc-row.k-map { grid-column: 1 / -1 !important; }
 @media (max-width: 560px) { html body .cc-card.cc2 .cc-list .cc-row:is(.k-here, .k-wa, .k-wc, .k-mail, .k-tel) { grid-column: auto !important; } }
+/* R12b (owner: "the grey icon on the shop button doesn't match and pulls attention away; do it on the button directly"):
+   no capsule: the live facts roll inside the yellow button itself, in graphite, with a thin divider before them */
+html body a.scp-5861bbd1 .hb-tk { background: none !important; box-shadow: none !important; border-radius: 0; height: 30px; min-width: 210px; padding-inline-start: 14px !important; border-inline-start: 1.5px solid rgba(38,40,43,.18) !important; }
+html body a.scp-5861bbd1 .hb-tk::after { display: none !important; }
+.hb-tk .tk-s { color: rgba(38,40,43,.78) !important; justify-content: flex-start !important; padding: 0 !important; }
+.hb-tk .tk-s b { color: #26282B !important; }
+.hb-tk .tk-dot { background: #1E9E5A !important; box-shadow: 0 0 0 3px rgba(30,158,90,.18) !important; }
+.hb-tk .tk-logos img { filter: brightness(0) !important; opacity: .72 !important; }
+.hb-tk .tk-gr em { background: transparent !important; color: #26282B !important; box-shadow: inset 0 0 0 1.2px rgba(38,40,43,.55); }
+/* R12b · side circuits: the pulse is LIGHT on every section colour: a short white-hot core inside a soft travelling glow */
+.se-gut .gl { fill: none; stroke-linecap: round; stroke-width: 9; stroke-dasharray: 80 920; animation: sePulse 3.4s linear infinite; opacity: .28; }
+.se-gut .fl { stroke-dasharray: 34 966 !important; stroke-width: 2.4 !important; filter: none !important; }
+.se-gut-dark .fl { stroke: #FFF3CF !important; } .se-gut-dark .gl { stroke: #F7C032; opacity: .32; }
+.se-gut-light .fl { stroke: #FFE08A !important; } .se-gut-light .gl { stroke: #F7C032; opacity: .3; }
+.se-gut-yel .fl { stroke: #FFFFFF !important; } .se-gut-yel .gl { stroke: #FFFFFF; opacity: .55; }
+@media (prefers-reduced-motion: reduce) { .se-gut .gl { animation: none; opacity: 0; } }
+.se-lm-ic3 { overflow: visible; } .se-lm-ic3 text { transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
+:hover > .se-lm-ic3 text:nth-of-type(2) { transform: translate(.6px, -.8px); } :hover > .se-lm-ic3 text:nth-of-type(3) { transform: translate(.6px, .6px); }
+html body a.scp-5861bbd1 .hb-tk > span.tk-s, html body a.scp-5861bbd1 .se-hb-info.hb-tk > span { background: none !important; box-shadow: none !important; border-radius: 0 !important; padding: 0 !important; height: 30px; }
+/* R12b (owner: "the chooser still looks cheap; the bubbles don't follow the rules of the chosen language") */
+html[dir="rtl"] body .cc-card .wc-x, html[dir="rtl"] body .ct-card .wc-x, html[dir="rtl"] body .lpv-card .lpv-x { right: auto !important; left: 14px !important; }
+html[dir="rtl"] body .cc-card .cc-bub, html[dir="rtl"] body .cc-side { text-align: right; }
+html body .cc-card.cc2 .cc-list .cc-row:is(.k-here, .k-wa, .k-wc, .k-mail, .k-tel) { background: linear-gradient(180deg, #FFFFFF, #F3F4F5) !important; box-shadow: inset 0 0 0 1px rgba(38,40,43,.07), 0 1px 0 rgba(255,255,255,.9) inset, 0 10px 22px -16px rgba(38,40,43,.45) !important; transition: transform .3s cubic-bezier(.3,1.6,.5,1), box-shadow .25s ease !important; }
+html body .cc-card.cc2 .cc-list .cc-row:is(.k-here, .k-wa, .k-wc, .k-mail, .k-tel):hover { transform: translateY(-3px); box-shadow: inset 0 0 0 1.5px #F7C032, 0 18px 30px -16px rgba(247,192,50,.55) !important; }
+html body .cc-card.cc2 .cc-list .cc-row.k-here { background: linear-gradient(180deg, #34363A, #26282B) !important; box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 12px 24px -14px rgba(38,40,43,.7) !important; }
+html body .cc-card.cc2 .cc-list .cc-row:is(.k-here, .k-wa, .k-wc, .k-mail, .k-tel) :is(.cc-li, .ct-ic, i) { transform: scale(1.12); }
+html body .cc-card.cc2 .cc-list .cc-row.k-sam { box-shadow: inset 0 1px 0 rgba(255,255,255,.6), 0 14px 28px -16px rgba(247,192,50,.8) !important; }
+/* R12b (2nd look): the separate glow copy read as a pale pill; the light is ONE moving core with a soft real glow (a small
+   drop-shadow on the moving dash only; the section circuits only animate while on screen) */
+.se-gut .gl { display: none !important; }
+.se-gut .fl { stroke-dasharray: 46 954 !important; stroke-width: 2.6 !important; }
+.se-gut-dark .fl { stroke: #FFF6D8 !important; filter: drop-shadow(0 0 3px #F7C032) drop-shadow(0 0 7px rgba(247,192,50,.7)) !important; }
+.se-gut-light .fl { stroke: #FFE9A8 !important; filter: drop-shadow(0 0 3px rgba(247,192,50,.95)) drop-shadow(0 0 6px rgba(247,192,50,.6)) !important; }
+.se-gut-yel .fl { stroke: #FFFFFF !important; filter: drop-shadow(0 0 3px rgba(255,255,255,.95)) drop-shadow(0 0 7px rgba(255,255,255,.7)) !important; }

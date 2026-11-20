@@ -183,7 +183,7 @@ export default function FeedWall() {
           <Wall id={N.id} icon={N.icon} c={N.c} />
           {/* owner (R12): "keep the wall and add one phone showing our profile": the chosen network's profile, live */}
           <div className="fw-prof" key={'p' + N.id} aria-hidden="true" style={{ ['--c' as string]: N.c } as React.CSSProperties}>
-            <span className="isl" />
+            <span className="isl" /><span className="gls" /><span className="btn b1" /><span className="btn b2" /><span className="btn b3" />
             <span className="top"><img className="av" src="/assets/se-logo-metal-128.webp" alt="" /><span className="nums"><span><b>{POSTS.length * 31}</b><small>{T('posts')}</small></span><span><b>{N.n}</b><small>{T('followers')}</small></span><span><b>{88}</b><small>{T('following')}</small></span></span></span>
             <span className="nm"><b>Sam Electronics</b><img src={N.icon} alt="" /></span>
             <span className="bio">{T('Phone parts in every grade · Deira, Dubai · since 2003')}</span>

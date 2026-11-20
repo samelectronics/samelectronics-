@@ -4389,5 +4389,13 @@ const DICT: Record<string, string> = {
   'following': 'подписки',
   'Phone parts in every grade · Deira, Dubai · since 2003': 'Запчасти для телефонов любого качества · Дейра, Дубай · с 2003',
   'm': 'мин',
+  'Any part. Any model.': 'Любая деталь. Любая модель.',
+  'Every brand, on the shelf.': 'Все бренды на полке.',
+  'Pick the grade. See the price.': 'Выберите качество. Увидьте цену.',
+  'Cart. WhatsApp. Done.': 'Корзина. WhatsApp. Готово.',
+  '15 BRANDS.': '15 БРЕНДОВ.',
+  'TESTED.': 'ПРОВЕРЕНО.',
+  'GRADED.': 'С ГРЕЙДОМ.',
+  'HONEST.': 'ЧЕСТНО.',
 };
 export default DICT;

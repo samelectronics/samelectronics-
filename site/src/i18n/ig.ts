@@ -4070,5 +4070,13 @@ const DICT: Record<string, string> = {
   'following': 'na-eso',
   'Phone parts in every grade · Deira, Dubai · since 2003': 'Akụkụ ekwentị n’ọkwa ọ bụla · Deira, Dubai · kemgbe 2003',
   'm': 'nk',
+  'Any part. Any model.': 'Akụkụ ọ bụla. Ụdị ọ bụla.',
+  'Every brand, on the shelf.': 'Akara ọ bụla, n’elu shelf.',
+  'Pick the grade. See the price.': 'Họrọ ọkwa. Hụ ọnụahịa.',
+  'Cart. WhatsApp. Done.': 'Ụgbọala. WhatsApp. Emechara.',
+  '15 BRANDS.': 'AKARA 15.',
+  'TESTED.': 'NWALERE.',
+  'GRADED.': 'KEWARA ỌKWA.',
+  'HONEST.': 'EZIOKWU.',
 };
 export default DICT;

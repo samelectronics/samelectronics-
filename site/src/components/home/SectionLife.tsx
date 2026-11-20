@@ -75,8 +75,10 @@ function gutter(sec: HTMLElement, gw: number, side: 1 | -1, t: string, s0: numbe
   svg.setAttribute('width', String(W)); svg.setAttribute('height', String(Math.round(H))); svg.setAttribute('viewBox', `0 0 ${W} ${Math.round(H)}`);
   svg.style.cssText = `position:absolute;top:0;${side > 0 ? 'left' : 'right'}:0;width:${W}px;height:${Math.round(H)}px;pointer-events:none;z-index:0;overflow:visible`;
   paths.forEach(({ d, len }, i) => { const p = document.createElementNS(NS, 'path'); p.setAttribute('d', d); p.setAttribute('class', 'tr'); svg.appendChild(p);
-    const fl = document.createElementNS(NS, 'path'); fl.setAttribute('d', d); fl.setAttribute('class', 'fl'); fl.setAttribute('pathLength', '1000');
-    fl.style.animationDuration = Math.max(2.4, Math.min(9, len / 260)).toFixed(1) + 's'; fl.style.animationDelay = (-(i * 1.3)).toFixed(1) + 's'; svg.appendChild(fl); });
+    // R12b (owner: "the light moving in them isn't light at all"): every pulse is real light: a soft wide glow travelling
+    // with a bright warm-white core (two copies of the path, no blur filter, so it stays cheap)
+    const dur = Math.max(2.4, Math.min(9, len / 260)).toFixed(1) + 's', del = (-(i * 1.3)).toFixed(1) + 's';
+    (['fl'] as const).forEach((k) => { const fl = document.createElementNS(NS, 'path'); fl.setAttribute('d', d); fl.setAttribute('class', k); fl.setAttribute('pathLength', '1000'); fl.style.animationDuration = dur; fl.style.animationDelay = del; svg.appendChild(fl); }); });
   pads.forEach(([x, y, r]) => { const c = document.createElementNS(NS, 'circle'); c.setAttribute('cx', x.toFixed(1)); c.setAttribute('cy', y.toFixed(1)); c.setAttribute('r', String(r)); c.setAttribute('class', 'nd'); svg.appendChild(c); });
   joints.forEach(([x, y]) => { const c = document.createElementNS(NS, 'circle'); c.setAttribute('cx', x.toFixed(1)); c.setAttribute('cy', y.toFixed(1)); c.setAttribute('r', '3'); c.setAttribute('class', 'jn'); svg.appendChild(c); });
   if (getComputedStyle(box).position === 'static') box.style.position = 'relative';

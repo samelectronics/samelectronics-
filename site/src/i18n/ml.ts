@@ -4072,5 +4072,14 @@ const DICT: Record<string, string> = {
   'following': 'പിന്തുടരുന്നു',
   'Phone parts in every grade · Deira, Dubai · since 2003': 'എല്ലാ ഗ്രേഡിലും ഫോൺ പാർട്സ് · ദേര, ദുബായ് · 2003 മുതൽ',
   'm': 'മി',
+  'Any part. Any model.': 'ഏത് പാർട്ടും. ഏത് മോഡലും.',
+  'Every brand, on the shelf.': 'എല്ലാ ബ്രാൻഡും ഷെൽഫിൽ.',
+  'Pick the grade. See the price.': 'ഗ്രേഡ് തിരഞ്ഞെടുക്കൂ. വില കാണൂ.',
+  'Cart. WhatsApp. Done.': 'കാർട്ട്. വാട്ട്സ്ആപ്പ്. കഴിഞ്ഞു.',
+  '15 BRANDS.': '15 ബ്രാൻഡുകൾ.',
+  'TESTED.': 'ടെസ്റ്റഡ്.',
+  'GRADED.': 'ഗ്രേഡഡ്.',
+  'HONEST.': 'സത്യസന്ധം.',
+  'WeChat': 'വീചാറ്റ്',
 };
 export default DICT;

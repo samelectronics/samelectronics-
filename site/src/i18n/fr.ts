@@ -4401,5 +4401,13 @@ const DICT: Record<string, string> = {
   'following': 'abonnements',
   'Phone parts in every grade · Deira, Dubai · since 2003': 'Pièces de téléphone dans chaque qualité · Deira, Dubaï · depuis 2003',
   'm': 'min',
+  'Any part. Any model.': 'Chaque pièce. Chaque modèle.',
+  'Every brand, on the shelf.': 'Chaque marque, en rayon.',
+  'Pick the grade. See the price.': 'Choisissez la qualité. Voyez le prix.',
+  'Cart. WhatsApp. Done.': 'Panier. WhatsApp. C’est fait.',
+  '15 BRANDS.': '15 MARQUES.',
+  'TESTED.': 'TESTÉ.',
+  'GRADED.': 'CLASSÉ.',
+  'HONEST.': 'HONNÊTE.',
 };
 export default DICT;

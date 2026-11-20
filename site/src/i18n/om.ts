@@ -4071,5 +4071,13 @@ const DICT: Record<string, string> = {
   'following': 'hordofaa',
   'Phone parts in every grade · Deira, Dubai · since 2003': 'Meeshaalee bilbilaa sadarkaa hundaa · Deira, Dubai · 2003 irraa',
   'm': 'daq',
+  'Any part. Any model.': 'Kutaa kamiyyuu. Moodeela kamiyyuu.',
+  'Every brand, on the shelf.': 'Maqaa daldalaa hunda, qodaa irratti.',
+  'Pick the grade. See the price.': 'Sadarkaa filadhu. Gatii ilaali.',
+  'Cart. WhatsApp. Done.': 'Gaarii. WhatsApp. Xumurame.',
+  '15 BRANDS.': 'MAQAA DALDALAA 15.',
+  'TESTED.': 'QORAMEE.',
+  'GRADED.': 'SADARKAA QABU.',
+  'HONEST.': 'AMANAMAA.',
 };
 export default DICT;

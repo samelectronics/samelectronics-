@@ -4072,5 +4072,14 @@ const DICT: Record<string, string> = {
   'following': '关注',
   'Phone parts in every grade · Deira, Dubai · since 2003': '各品级手机配件 · 迪拜德拉 · 始于 2003',
   'm': '分钟',
+  'Any part. Any model.': '任何配件，任何机型。',
+  'Every brand, on the shelf.': '各大品牌，现货在架。',
+  'Pick the grade. See the price.': '选品级，看价格。',
+  'Cart. WhatsApp. Done.': '购物车。WhatsApp。搞定。',
+  '15 BRANDS.': '15 个品牌。',
+  'TESTED.': '已测试。',
+  'GRADED.': '已分级。',
+  'HONEST.': '诚信。',
+  'WeChat': '微信',
 };
 export default DICT;
