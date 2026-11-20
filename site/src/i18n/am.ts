@@ -3983,5 +3983,12 @@ const DICT: Record<string, string> = {
   'Copy address': 'አድራሻ ቅዳ',
   'Al Murar, Deira · since 2003': 'አል ሙራር፣ ዴይራ · ከ2003 ጀምሮ',
   'This page is protected by Sam Electronics.': 'ይህ ገጽ በ Sam Electronics የተጠበቀ ነው።',
+  'DEIRA · DUBAI · SINCE 2003': 'ዴይራ · ዱባይ · ከ2003 ጀምሮ',
+  'EVERY PART · EVERY GRADE': 'ሁሉም ክፍል · ሁሉም ደረጃ',
+  'INSIDE EVERY PHONE': 'በእያንዳንዱ ስልክ ውስጥ',
+  'BOARD & FLEX': 'ቦርድ እና ፍሌክስ',
+  'PARTS IN STOCK · RIGHT NOW': 'በክምችት ያሉ ክፍሎች · አሁን',
+  'TESTED ON THE BENCH · SHIPPED WORLDWIDE': 'በወርክሾፕ የተሞከረ · በዓለም ዙሪያ የሚላክ',
+  'SAM ELECTRONICS · DEIRA · DUBAI': 'ሳም ኤሌክትሮኒክስ · ዴይራ · ዱባይ',
 };
 export default DICT;

@@ -1776,6 +1776,13 @@ export const R7: Record<string, string> = {
 
 /** Round 8: Sam Circuit's three cards, Samsoom's tour and chat menu. */
 export const R8: Record<string, string> = {
+  'DEIRA · DUBAI · SINCE 2003': 'ديرة · دبي · منذ 2003',
+  'EVERY PART · EVERY GRADE': 'كل قطعة · كل درجة',
+  'INSIDE EVERY PHONE': 'داخل كل هاتف',
+  'BOARD & FLEX': 'اللوحة والفليكس',
+  'PARTS IN STOCK · RIGHT NOW': 'قطعة متوفرة · الآن',
+  'TESTED ON THE BENCH · SHIPPED WORLDWIDE': 'مُختبر على الطاولة · يُشحن لكل العالم',
+  'SAM ELECTRONICS · DEIRA · DUBAI': 'سام للإلكترونيات · ديرة · دبي',
   'This page is protected by Sam Electronics.': 'هذه الصفحة محمية من Sam Electronics.',
   'Only parts that fit my devices': 'القطع المناسبة لأجهزتي فقط',
   'Only parts that fit my device': 'القطع المناسبة لجهازي فقط',

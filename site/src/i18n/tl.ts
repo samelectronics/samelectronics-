@@ -3949,5 +3949,12 @@ const DICT: Record<string, string> = {
   'Copy address': 'Kopyahin ang address',
   'Al Murar, Deira · since 2003': 'Al Murar, Deira · mula 2003',
   'This page is protected by Sam Electronics.': 'Protektado ng Sam Electronics ang page na ito.',
+  'DEIRA · DUBAI · SINCE 2003': 'DEIRA · DUBAI · MULA 2003',
+  'EVERY PART · EVERY GRADE': 'BAWAT PIYESA · BAWAT GRADE',
+  'INSIDE EVERY PHONE': 'SA LOOB NG BAWAT TELEPONO',
+  'BOARD & FLEX': 'BOARD AT FLEX',
+  'PARTS IN STOCK · RIGHT NOW': 'PIYESANG MAY STOCK · NGAYON',
+  'TESTED ON THE BENCH · SHIPPED WORLDWIDE': 'SINUBOK SA BENCH · IPINAPADALA SA BUONG MUNDO',
+  'SAM ELECTRONICS · DEIRA · DUBAI': 'SAM ELECTRONICS · DEIRA · DUBAI',
 };
 export default DICT;

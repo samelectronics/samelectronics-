@@ -3983,5 +3983,12 @@ const DICT: Record<string, string> = {
   'Copy address': '复制地址',
   'Al Murar, Deira · since 2003': 'Al Murar, Deira · 始于 2003 年',
   'This page is protected by Sam Electronics.': '本页面受 Sam Electronics 保护。',
+  'DEIRA · DUBAI · SINCE 2003': '迪拜 · 德拉 · 始于 2003',
+  'EVERY PART · EVERY GRADE': '每个配件 · 每种品质',
+  'INSIDE EVERY PHONE': '每部手机的内部',
+  'BOARD & FLEX': '主板与排线',
+  'PARTS IN STOCK · RIGHT NOW': '现货配件 · 此刻',
+  'TESTED ON THE BENCH · SHIPPED WORLDWIDE': '工作台测试 · 发往全球',
+  'SAM ELECTRONICS · DEIRA · DUBAI': 'SAM ELECTRONICS · 德拉 · 迪拜',
 };
 export default DICT;

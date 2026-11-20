@@ -3983,5 +3983,12 @@ const DICT: Record<string, string> = {
   'Copy address': 'വിലാസം പകർത്തൂ',
   'Al Murar, Deira · since 2003': 'അൽ മുറാർ, ദേര · 2003 മുതൽ',
   'This page is protected by Sam Electronics.': 'ഈ പേജ് Sam Electronics സംരക്ഷിച്ചിരിക്കുന്നു.',
+  'DEIRA · DUBAI · SINCE 2003': 'ദേര · ദുബായ് · 2003 മുതൽ',
+  'EVERY PART · EVERY GRADE': 'എല്ലാ പാർട്ടും · എല്ലാ ഗ്രേഡും',
+  'INSIDE EVERY PHONE': 'എല്ലാ ഫോണിനുള്ളിലും',
+  'BOARD & FLEX': 'ബോർഡ് & ഫ്ലെക്സ്',
+  'PARTS IN STOCK · RIGHT NOW': 'സ്റ്റോക്കിലുള്ള പാർട്ടുകൾ · ഇപ്പോൾ',
+  'TESTED ON THE BENCH · SHIPPED WORLDWIDE': 'ബെഞ്ചിൽ പരിശോധിച്ചു · ലോകമെമ്പാടും അയയ്ക്കുന്നു',
+  'SAM ELECTRONICS · DEIRA · DUBAI': 'സാം ഇലക്ട്രോണിക്സ് · ദേര · ദുബായ്',
 };
 export default DICT;
