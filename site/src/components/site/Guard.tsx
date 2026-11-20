@@ -81,11 +81,11 @@ export default function Guard() {
     let ft = 0, ht = 0, holdAt = 0;
     const clearHold = (e?: Event) => { if (e && performance.now() - holdAt < 450) return; document.documentElement.classList.remove('shot-hold'); window.clearTimeout(ht); };
     const flashWm = (hold = false) => { const h = document.documentElement; h.classList.add('shot-on'); if (hold) { holdAt = performance.now(); h.classList.add('shot-hold'); window.clearTimeout(ht); ht = window.setTimeout(clearHold, 900); } window.clearTimeout(ft); ft = window.setTimeout(() => h.classList.remove('shot-on'), 5000); };
-    const pre = (e: KeyboardEvent) => { if ((e.metaKey && e.shiftKey && (e.key === 'Meta' || e.key === 'Shift' || /^[345s]$/i.test(e.key))) || (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 's') || e.key === 'PrintScreen' || e.code === 'PrintScreen') flashWm(false); };
+    const pre = (e: KeyboardEvent) => { if ((e.metaKey && e.shiftKey && (e.key === 'Meta' || e.key === 'Shift' || /^[345s]$/i.test(e.key))) || (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 's') || e.key === 'PrintScreen' || e.code === 'PrintScreen') flashWm(true); };
     ['pointermove', 'focus', 'keyup'].forEach((ev) => window.addEventListener(ev, clearHold, { passive: true }));
     window.addEventListener('keydown', pre, true);
     const seen = () => {
-      flashWm(!okNow()); import('@/lib/sound').then((m) => m.play('warn', true)).catch(() => {});
+      flashWm(true); import('@/lib/sound').then((m) => m.play('warn', true)).catch(() => {});
       if (okNow()) { logWarning('screenshot', 'screenshot taken under the screenshot terms'); return; }
       setShot(true);
       logWarning('screenshot', 'keys pressed on ' + (navigator.platform || 'computer'));
@@ -118,7 +118,7 @@ export default function Guard() {
         <span className="tile" style={{ backgroundImage: `url("data:image/svg+xml,${encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' width='360' height='200'><text x='20' y='110' transform='rotate(-24 180 100)' font-family='Inter,Arial' font-size='16' font-weight='700' fill='%23808080'>© Sam Electronics</text></svg>`).replace(/%2523/g, '%23')}")` }} />
         <span className="foot"><img src="/assets/se-logo-metal-128.webp" alt="" /><b>© Sam Electronics</b><span>{tr('All rights reserved')} · {tr('Captured on')} {now}</span><em>{wm ? tr('Agreement') + ' ' + wm.ref : tr('Not agreed')}</em><em>Ref {refId}</em></span>
       </div>
-      <div className="shot-holdc" aria-hidden="true"><span className="ring" /><b>{tr('Hang tight…')}</b><small>{tr('This page is protected by Sam Electronics.')}</small></div>
+      <div className="shot-holdc" aria-hidden="true"><span className="shc"><span className="lg"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" pathLength="100" /></svg><img src="/assets/se-logo-metal-128.webp" alt="" /></span><small className="k">{tr('COPYRIGHT NOTICE')}</small><b>{tr('Hang tight…')}</b><small>{tr('This page is protected by Sam Electronics.')}</small><i className="bar" /></span></div>
     </>
   );
 }
