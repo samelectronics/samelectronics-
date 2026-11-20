@@ -1783,3 +1783,14 @@ html body .shop-dock .ss .ss-drop .ss-tools > * { min-height: 0 !important; heig
 }
 @media (max-width: 760px) { html body .shop-devs .sd-dev, html body .shop-devs > .dp { width: 100% !important; max-width: none !important; } html body .shop-devs .sd-n { flex: 1; } }
 html[dir="rtl"] body .shop-dock .ss.open .ss-drop { left: 0 !important; right: 0 !important; width: auto !important; }
+/* R11 · filters wear the shop's own tags and the brands' real logos */
+.cz-brand .cz-bl { background: #fff; border-radius: 8px; padding: 3px 6px; }
+.cz-grade .tq { pointer-events: none; }
+.cz-grade.on { box-shadow: inset 0 0 0 2px #F7C032 !important; }
+.cz-opt .tmk { pointer-events: none; }
+/* R11 (owner: "the search's glowing frame and its dropdown look like cut pieces put together"): when the docked search
+   opens, bar and dropdown become ONE piece: the bar's lower corners square off, the panel hangs from it with no gap, and a
+   single yellow LED outline runs around both */
+html body .shop-dock .ss.open .ss-bar { border-radius: 16px 16px 0 0 !important; box-shadow: 0 0 0 2px #F7C032, 0 0 18px rgba(247,192,50,.45) !important; clip-path: inset(-30px -30px 0 -30px); }
+html body .shop-dock .ss.open .ss-drop { top: 100% !important; margin-top: 0 !important; border-radius: 0 0 18px 18px !important; box-shadow: 0 0 0 2px #F7C032, 0 0 18px rgba(247,192,50,.45), 0 40px 80px -24px rgba(0,0,0,.55) !important; clip-path: inset(0 -30px -120px -30px) !important; border-top: 1px solid #EEF0F2 !important; }
+html body .shop-dock .ss.open .ss-bar::before { opacity: 0 !important; }

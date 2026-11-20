@@ -1,4 +1,6 @@
 'use client';
+import { GradeTag, MakerTag } from './Tags';
+import { brandInk } from '@/lib/brandInk';
 // P2 · "Customize everything": the shop's full control panel, built like the Find My Part panel (graphite glass, steps on
 // the left, live result count). Price range (min/max), brand, model, part, quality, manufacturer, grade, warranty,
 // device, color, rating, availability, sort, how results are shown, and saved setups. Every change counts the results
@@ -75,7 +77,7 @@ export default function Customize({ open, f, view, onClose, onApply }: { open: b
             <h3>{T('Brand')}</h3>
             <div className="cz-brands">{D.brands.map((b) => (
               <button key={b.id} type="button" className={'cz-brand' + (has('brands', b.id) ? ' on' : '')} aria-pressed={has('brands', b.id)} onClick={() => tog('brands', b.id)}>
-                <span className="cz-bl"><SEBrandLogo brand={b.id} h={18} fit="76x20" color="currentColor" /></span><b>{b.name}</b>{count('brands', b.id)}
+                <span className="cz-bl"><SEBrandLogo brand={b.id} h={18} fit="76x20" color={brandInk(b.id)} /></span><b>{b.name}</b>{count('brands', b.id)}
               </button>
             ))}</div>
           </section>
@@ -95,12 +97,12 @@ export default function Customize({ open, f, view, onClose, onApply }: { open: b
           </section>
           <section id="cz-maker" className="cz-sec">
             <h3>{T('Manufacturer')} <a className="cz-link" href="/brands#makers">{T('What do these mean?')}</a></h3>
-            <div className="cz-opts">{D.manufacturers.filter((q) => fc.makers[q.id] || has('makers', q.id)).map((q) => <Opt key={q.id} k="makers" v={q.id} label={q.name} cnt={count('makers', q.id)} />)}</div>
+            <div className="cz-opts">{D.manufacturers.filter((q) => fc.makers[q.id] || has('makers', q.id)).map((q) => <Opt key={q.id} k="makers" v={q.id} label={<MakerTag m={q.id} name={q.name} size="sm" />} cnt={count('makers', q.id)} />)}</div>
           </section>
           <section id="cz-grade" className="cz-sec">
             <h3>{T('Grade')}</h3>
             <div className="cz-grades">{Object.entries(D.gradeNames).map(([g, nm]) => (
-              <button key={g} type="button" className={'cz-grade g-' + g + (has('grades', g) ? ' on' : '')} aria-pressed={has('grades', g)} onClick={() => tog('grades', g)}><b>{nm}</b><small>{D.makerNames[g]}</small>{count('grades', g)}</button>
+              <button key={g} type="button" className={'cz-grade g-' + g + (has('grades', g) ? ' on' : '')} aria-pressed={has('grades', g)} onClick={() => tog('grades', g)}><GradeTag g={g} name={nm} /><small>{D.makerNames[g]}</small>{count('grades', g)}</button>
             ))}</div>
           </section>
           <section id="cz-warranty" className="cz-sec">
