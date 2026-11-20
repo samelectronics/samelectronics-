@@ -14,7 +14,7 @@ import { brandInk } from '@/lib/brandInk';
 import { GradeTag } from './Tags';
 import Medal from '@/components/account/Medal';
 
-export type AdFx = 'film' | 'grades' | 'fix' | 'ship' | 'years' | 'brand' | 'card' | 'chips' | 'stack';
+export type AdFx = 'film' | 'grades' | 'fix' | 'ship' | 'years' | 'brand' | 'card' | 'chips' | 'stack' | 'deal' | 'part' | 'place';
 export type Ad = { id: string; k: string; t: string; d: string; cta: string; href: string; img: string; tone: 'y' | 'd' | 'w'; cat?: string; fx?: AdFx; chips?: string[]; brand?: string };
 export const ADS_DEFAULT: Ad[] = [
   { id: 'a1', fx: 'film', k: 'INSIDE YOUR PHONE', t: 'Every part inside your phone.', d: 'Screens, batteries, cameras and flex cables, tested on our bench.', chips: ['TESTED', 'WARRANTY', 'IN STOCK'], cta: 'Shop all parts', href: '/shop', img: '/assets/pose/film-24-480.webp', tone: 'd' },
@@ -40,6 +40,14 @@ export const ADS_DEFAULT: Ad[] = [
   { id: 's3', fx: 'film', k: 'ASK SAMSOOM', t: 'Not sure which part fits?', d: 'Tell Samsoom the model. He finds the part, the grade and the price.', chips: ['ANY TIME', 'ANY LANGUAGE'], cta: 'Ask Samsoom', href: '/samsoom', img: '/assets/pose/film-24-480.webp', tone: 'y' },
   { id: 'm1', fx: 'card', k: 'SAM CIRCUIT', t: 'Points on every part you buy.', d: 'Your first purchase activates the card. Level up from Connected to Lightning.', chips: ['POINTS', 'LEVELS', 'PERKS'], cta: 'Get the card', href: '/membership', img: '/assets/se-logo-320.webp', tone: 'd' },
   { id: 'm2', fx: 'chips', k: 'MEDALS & LEVELS', t: 'Explore the site, earn chips.', d: 'Every medal adds points. Points unlock levels, and every level brings a reward.', chips: ['CHIPS', 'POINTS', 'REWARDS'], cta: 'See my bench', href: '/account#medals', img: '/assets/se-logo-320.webp', tone: 'w' },
+  // owner (R12): "play ALL kinds of ads, even discounts, all locations, not just a few": deals, arrivals, warranty, places
+  { id: 'd1', fx: 'deal', k: 'THIS WEEK ONLY', t: 'Up to 25% off screens.', d: 'Live deals on screens, batteries and back glass, while the stock lasts.', chips: ['LIVE DEALS', 'WHILE STOCK LASTS'], cta: 'See every deal', href: '/deals', img: '/assets/pose/solo-scr-960.webp', tone: 'y' },
+  { id: 'd2', fx: 'deal', k: 'BACK GLASS WEEK', t: '−18% on every back glass.', d: 'Every colour, with or without the camera ring, tested before it ships.', chips: ['EVERY COLOUR', '−18%'], cta: 'Shop back glass', href: '/shop?q=back', img: '/assets/pose/solo-bcv-960.webp', tone: 'd' },
+  { id: 'n1', fx: 'part', k: 'JUST LANDED', t: 'New batteries, fresh on the shelf.', d: 'Genuine cells, capacity tested, with a written warranty.', chips: ['NEW ARRIVAL', 'CAPACITY TESTED'], cta: 'Shop batteries', href: '/shop?q=battery', img: '/assets/pose/solo-bat-960.webp', tone: 'w' },
+  { id: 'n2', fx: 'part', k: 'CAMERAS · FRONT & REAR', t: 'Sharp again in ten minutes.', d: 'Front and rear cameras for every popular model, bench-tested.', chips: ['FRONT', 'REAR', 'LENSES'], cta: 'Shop cameras', href: '/shop?q=camera', img: '/assets/pose/solo-cam-960.webp', tone: 'd' },
+  { id: 'w1', fx: 'part', k: 'WRITTEN WARRANTY', t: 'Every grade. Its own warranty.', d: 'The warranty is printed on your invoice, so you always know what you bought.', chips: ['ON THE INVOICE', 'EVERY GRADE'], cta: 'Read the warranty', href: '/legal', img: '/assets/pose/solo-flx-960.webp', tone: 'w' },
+  { id: 'l1', fx: 'place', k: 'AL MURAR · DEIRA · DUBAI', t: 'Come by the counter.', d: 'Open every day in Al Murar. Pick up your order in about 20 minutes.', chips: ['PICK UP', 'OPEN DAILY'], cta: 'Get directions', href: '/contact', img: '/assets/pose/bench-phone-960.webp', tone: 'd' },
+  { id: 'l2', fx: 'place', k: 'MADRID · PLAZA MAYOR', t: 'Next stop: Madrid.', d: 'Our first branch outside Dubai is coming to the heart of Madrid.', chips: ['COMING SOON', 'SPAIN'], cta: 'Our story', href: '/story', img: '/assets/pose/solo-board-960.webp', tone: 'y' },
   { id: 'a5', fx: 'years', k: 'OUR EXPERIENCE', t: 'Since 2003. Same family, same street.', d: 'Twenty years of parts, repairs and honest prices in Deira.', chips: ['QUALITY', 'WARRANTY', 'PRICE'], cta: 'Our story', href: '/story', img: '/assets/se-logo-320.webp', tone: 'w' },
 ];
 export const shopAds = (): Ad[] => { const s = siteRaw<Ad[] | null>('shop-ads', null); return s && s.length ? s : ADS_DEFAULT; };
@@ -81,7 +89,7 @@ function Years() {
  *  cross at a steady beat (never random); a compact button. Hovering never stops them. */
 // owner (18 Nov, round 2): our own ads wear ONLY our branding (graphite, yellow, white); only brand ads may use the brand's colour
 const adBrand = (a: Ad) => a.brand || (a.id === 'b1' ? 'samsung' : a.id === 'b2' ? 'apple' : 'xiaomi');
-const ACC: Record<string, [string, string]> = { film: ['#F7C032', 'PARTS'], grades: ['#F7C032', 'GRADES'], fix: ['#F7C032', 'REPAIR'], ship: ['#F7C032', 'WORLDWIDE'], years: ['#F7C032', 'SINCE 2003'], brand: ['#F7C032', 'BRANDS'], card: ['#F7C032', 'SAM CIRCUIT'], chips: ['#F7C032', 'MEDALS'], stack: ['#F7C032', 'PICK UP'] };
+const ACC: Record<string, [string, string]> = { deal: ['#F7C032', 'DEALS'], part: ['#F7C032', 'NEW IN'], place: ['#F7C032', 'DEIRA'], film: ['#F7C032', 'PARTS'], grades: ['#F7C032', 'GRADES'], fix: ['#F7C032', 'REPAIR'], ship: ['#F7C032', 'WORLDWIDE'], years: ['#F7C032', 'SINCE 2003'], brand: ['#F7C032', 'BRANDS'], card: ['#F7C032', 'SAM CIRCUIT'], chips: ['#F7C032', 'MEDALS'], stack: ['#F7C032', 'PICK UP'] };
 function Vis3({ a, live }: { a: Ad; live: boolean }) {
   if (a.fx === 'grades') return <span className="ia3-grades">{([['apple-sp', 'OR', 'Original'], ['apple-gx', 'OL', 'OLED Soft'], ['apple-zy', 'IN', 'Incell'], ['apple-temp', 'AQ', 'AAA']] as const).map(([g, k, n], i) => <span key={g} style={{ ['--i' as string]: i } as React.CSSProperties}><img src={'/assets/pose/' + g + '-480.webp'} alt="" /><GradeTag g={k} name={n} size="sm" /></span>)}</span>;
   if (a.fx === 'card') return <span className="ia3-card"><span className="cd"><b>SAM CIRCUIT</b><i className="chip" /><span className="med"><img src="/assets/se-logo-metal-128.webp" alt="" /></span><small>CONNECTED → LIGHTNING</small></span></span>;
@@ -91,20 +99,22 @@ function Vis3({ a, live }: { a: Ad; live: boolean }) {
   if (a.fx === 'ship') return (
     <span className="ia3-ship2">
       <img className="pal" src="/assets/pallet/full-600.webp" alt="" />
-      <span className="regs"><span className="ln" />{['MIDDLE EAST', 'AFRICA', 'EUROPE', 'ASIA'].map((r, k) => <i key={r} style={{ ['--k' as string]: k } as React.CSSProperties}><u />{T(r)}</i>)}</span>
+      <span className="regs">{['MIDDLE EAST', 'AFRICA', 'EUROPE', 'ASIA'].map((r, k) => <i key={r} style={{ ['--k' as string]: k } as React.CSSProperties}>{T(r)}</i>)}</span>
     </span>
   );
   // the repair: the cracked phone, a light passes over it, and it comes out fixed
   if (a.fx === 'fix') return (
-    <span className="ia3-fix2"><img className="was" src="/assets/pose/rep-crack-480.webp" alt="" /><img className="now" src="/assets/pose/rep-fixed-480.webp" alt="" /><em className="b">{T('Before')}</em><em className="a">{T('After')}</em></span>
+    <span className="ia3-fix2"><img className="was" src="/assets/pose/rep-crack-480.webp" alt="" /><img className="now" src="/assets/pose/rep-fixed-480.webp" alt="" /></span>
   );
   // brand ads: the part big, the brand's logo large and faint behind it
   // owner (R10): "a better teardown ad": the phone opens layer by layer and every layer is named as it comes out
   if (a.fx === 'film') return (
     <span className="ia3-film"><span className="tfm"><Film live={live} /></span><span className="tly">{['SCREEN', 'FRAME', 'BATTERY', 'CAMERA', 'CHARGING PORT'].map((n, k) => <i key={n} style={{ ['--k' as string]: k } as React.CSSProperties}><u>{String(k + 1).padStart(2, '0')}</u>{T(n)}</i>)}</span></span>
   );
+  if (a.fx === 'deal') { const pc = (a.t.match(/[−-]?\d+%/) || ['−25%'])[0].replace('-', '−'); return <span className="ia3-part ia3-deal"><img src={a.img} alt="" /><b className="off" data-no-i18n="">{pc.startsWith('−') ? pc : '−' + pc}</b></span>; }
+  if (a.fx === 'part' || a.fx === 'place') return <span className="ia3-part"><img src={a.img} alt="" /></span>;
   if (a.fx === 'brand') { const b = adBrand(a); return (
-    <span className="ia3-brand2"><span className="plate"><SEBrandLogo brand={b} h={26} fit="150x30" color={brandInk(b)} /></span><img src={a.img} alt="" /></span>
+    <span className="ia3-brand2"><img src={a.img} alt="" /></span>
   ); }
   return <Visual a={a} live={live} />;
 }
@@ -117,9 +127,11 @@ export default function InlineAd({ slot, lastCat }: { slot: number; lastCat?: st
     (a) => a.fx === 'brand',
     (a) => a.fx === 'grades' || a.id === 'a1' || a.id === 'b1',
     (a) => a.id === 'm1' || a.id === 'm2' || a.id === 'a5',
+    (a) => a.fx === 'deal' || a.fx === 'part',
+    (a) => a.fx === 'place' || a.id === 'a4' || a.id === 's2',
   ];
   const list = useMemo(() => {
-    const all = shopAds(), th = THEMES[(slot - 1 + 4) % THEMES.length];
+    const all = shopAds(), th = THEMES[(slot - 1 + 5) % THEMES.length];
     let pick = all.filter(th); if (pick.length < 2) pick = all;
     const n = pick.length, off = Math.floor((slot - 1) / THEMES.length) * 2, rot = pick.map((_, k) => pick[(k + off) % n]);
     if (lastCat && allowed('booster')) { const m = rot.findIndex((a) => a.cat === lastCat); if (m > 0) rot.unshift(...rot.splice(m, 1)); }
@@ -136,10 +148,10 @@ export default function InlineAd({ slot, lastCat }: { slot: number; lastCat?: st
   const [ac, word0] = ACC[a.fx || 'film'] || ACC.film, word = a.id === 's1' ? 'TRADE' : a.id === 's3' ? 'SAMSOOM' : word0, brandC = a.fx === 'brand' ? brandInk(adBrand(a)) : null;
   return (
     <a ref={box} className={'ia3' + (live ? ' live' : '') + (seen ? ' seen' : '')} data-in={(slot + i) % 3} data-flip={(slot + i) % 2} data-tone={tone} data-brand={a.fx === 'brand' ? '1' : undefined} href={a.href} aria-label={T(a.t)} style={{ ['--ac' as string]: ac, ['--bc' as string]: brandC || ac } as React.CSSProperties}>
-      <span className="ia3-bg" aria-hidden="true"><i className="glow" /><i className="band b1" /><i className="band b2" />{a.fx === 'brand' ? <span className="ia3-logos" key={adBrand(a)}>{[0, 1].map((k) => <span key={k}>{[0, 1, 2].map((j) => <SEBrandLogo key={j} brand={adBrand(a)} h={64} fit="300x70" color={brandInk(adBrand(a))} />)}</span>)}</span> : <span className="ia3-word" data-no-i18n="">{[0, 1].map((k) => <b key={k}>{word} · {word} · </b>)}</span>}</span>
+      <span className="ia3-bg" aria-hidden="true"><i className="glow" />{a.fx === 'brand' ? <span className="ia3-logos" key={adBrand(a)}>{[0, 1].map((k) => <span key={k}>{[0, 1, 2].map((j) => <SEBrandLogo key={j} brand={adBrand(a)} h={64} fit="300x70" color={brandInk(adBrand(a))} />)}</span>)}</span> : <span className="ia3-word" data-no-i18n="">{[0, 1].map((k) => <b key={k}>{word} · {word} · </b>)}</span>}</span>
       <span className="ia3-scene" key={a.id + '-' + i}>
         <span className="ia3-txt">
-          <span className="ia3-k">{a.fx === 'brand' ? <span className="ia3-badge"><SEBrandLogo brand={adBrand(a)} h={16} fit="90x18" color={brandInk(adBrand(a))} /></span> : null}{T(a.k)}<em>{T('Ad')}</em></span>
+          <span className="ia3-k">{T(a.k)}<em>{T('Ad')}</em></span>
           <b className="ia3-t" data-no-i18n="">{T(a.t).split(' ').map((w, k) => { const nm = a.fx === 'brand' && new RegExp('^(' + [adBrand(a), 'iphone', 'galaxy', 'pixel', 'redmi', 'poco', 'nord', 'oneplus', 'realme'].join('|') + ')', 'i').test(w); return <span key={k} className={nm ? 'bn' : undefined} style={{ ['--w' as string]: k } as React.CSSProperties}>{w} </span>; })}</b>
           <small className="ia3-d">{T(a.d)}</small>
           {a.chips?.length ? <span className="ia3-chips">{a.chips.map((c, k) => <i key={c} style={{ ['--c' as string]: k } as React.CSSProperties}>{T(c)}</i>)}</span> : null}

@@ -90,3 +90,48 @@ export function playStep(i: number, total: number) {
   play('click');
   SHAPES.click = [[988, 0, 0.32, 0.75]];
 }
+
+/** owner (R12): "a satisfying typing sound, not annoying, our own": a soft mechanical key, a tiny felt-damped click with a
+ *  low wooden body, the pitch moves a hair on every key so it never sounds like a machine gun; space and enter are deeper.
+ *  Plays only when Sounds and "Typing sound" are on (Settings). It cannot silence the phone's own keyboard clicks: those
+ *  belong to the device (on a phone they are switched off in the phone's settings). */
+let kctx: AudioContext | null = null, klast = 0, knoise: AudioBuffer | null = null;
+export function keyTick(kind: 'key' | 'space' | 'enter' | 'del' = 'key') {
+  if (typeof window === 'undefined' || isEmbed()) return;
+  const p = prefs().sound; if (!p.on || p.vol <= 0 || p.keys === false) return;
+  if (location.pathname.startsWith('/staff')) return;
+  const now = performance.now(); if (now - klast < 28) return; klast = now;
+  try {
+    kctx = kctx || new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+    const c = kctx; if (c.state === 'suspended') c.resume();
+    if (!knoise) { knoise = c.createBuffer(1, Math.ceil(c.sampleRate * 0.03), c.sampleRate); const d = knoise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 4); }
+    const t = c.currentTime + 0.002, vol = Math.min(1, p.vol) * (kind === 'key' ? 0.16 : 0.2), j = 1 + (Math.random() - 0.5) * 0.08;
+    const base = (kind === 'space' ? 150 : kind === 'enter' ? 120 : kind === 'del' ? 210 : 260) * j;
+    const n = c.createBufferSource(), bp = c.createBiquadFilter(), ng = c.createGain(); n.buffer = knoise; bp.type = 'bandpass'; bp.frequency.value = (kind === 'key' ? 3200 : 2200) * j; bp.Q.value = 0.9;
+    ng.gain.setValueAtTime(vol, t); ng.gain.exponentialRampToValueAtTime(0.0001, t + 0.025); n.connect(bp); bp.connect(ng); ng.connect(c.destination); n.start(t);
+    const o = c.createOscillator(), og = c.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(base, t); o.frequency.exponentialRampToValueAtTime(base * 0.7, t + 0.05);
+    og.gain.setValueAtTime(0.0001, t); og.gain.exponentialRampToValueAtTime(vol * 0.9, t + 0.003); og.gain.exponentialRampToValueAtTime(0.0001, t + (kind === 'key' ? 0.05 : 0.09)); o.connect(og); og.connect(c.destination); o.start(t); o.stop(t + 0.12);
+  } catch { /* audio not available */ }
+}
+// the key sound listens once for the whole site: only real typing in a text field (not shortcuts, not arrows)
+if (typeof window !== 'undefined' && !(window as unknown as { __seKeys?: boolean }).__seKeys) {
+  (window as unknown as { __seKeys?: boolean }).__seKeys = true;
+  window.addEventListener('keydown', (e) => {
+    if (e.repeat || e.metaKey || e.ctrlKey || e.altKey) return;
+    const el = e.target as HTMLElement | null; if (!el) return;
+    const field = el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && /^(text|search|email|tel|url|password|number|)$/.test((el as HTMLInputElement).type)) || el.isContentEditable;
+    if (!field) return;
+    if (e.key === ' ') keyTick('space'); else if (e.key === 'Enter') keyTick('enter'); else if (e.key === 'Backspace' || e.key === 'Delete') keyTick('del'); else if (e.key.length === 1) keyTick('key');
+  }, true);
+}
+// owner (R12): "creativity behind every button pressed, search bar pressed": every press sends a yellow LED ring out from
+// the button's edge (an outline, so it never fights the button's own shadows or pseudo-elements); fields glow when focused
+if (typeof window !== 'undefined' && !(window as unknown as { __sePress?: boolean }).__sePress) {
+  (window as unknown as { __sePress?: boolean }).__sePress = true;
+  window.addEventListener('pointerdown', (e) => {
+    const el = (e.target as HTMLElement | null)?.closest?.('button, a[class*="btn"], a[class*="cta"], [role="button"], .ss-bar, .pc-add') as HTMLElement | null;
+    if (!el || el.closest('.no-fx, [role="tab"], [role="switch"]')) return;
+    el.classList.remove('se-press'); void el.offsetWidth; el.classList.add('se-press');
+    window.setTimeout(() => el.classList.remove('se-press'), 620);
+  }, { passive: true, capture: true });
+}

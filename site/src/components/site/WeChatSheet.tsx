@@ -64,7 +64,7 @@ export default function WeChatSheet() {
   const mailUrl = 'mailto:' + site.contact.email + '?subject=' + encodeURIComponent('Sam Electronics · ' + (mid || 'Inquiry')) + '&body=' + encodeURIComponent(full.replace(/\*/g, ''));
   const sendWeb = () => { backend.me().then((u) => backend.send({ name: u?.name || 'Website visitor', email: u?.email || undefined, topic: 'Website · ' + location.pathname, text: full })).catch(() => { /* offline */ }).finally(() => { setSent(true); play('success'); }); };
   const copyMsg = async () => { try { await navigator.clipboard.writeText(full); } catch { /* */ } setMcopied(true); };
-  const fmt = (x: string) => x.split('\n').map((ln, i) => ln.trim() ? <span key={i} className="ct-pl">{ln.split(/(\*[^*]+\*)/g).map((p2, j) => p2.length > 2 && p2.startsWith('*') && p2.endsWith('*') ? <b key={j}>{p2.slice(1, -1)}</b> : p2)}</span> : <span key={i} className="ct-pg" />);
+  const fmt = (x: string) => x.split('\n').map((ln, i) => ln.trim() ? <span key={i} className="ct-pl">{ln.split(/(\*[^*]+\*)/g).map((p2, j) => p2.length > 2 && p2.startsWith('*') && p2.endsWith('*') ? <b key={j}>{p2.slice(1, -1)}</b> : p2.length > 2 && /^_[^_]+_$/.test(p2.trim()) ? <i key={j}>{p2.trim().slice(1, -1)}</i> : p2)}</span> : <span key={i} className="ct-pg" />);
   const copy = async () => { try { await navigator.clipboard.writeText(C.number); } catch { /* */ } setCopied(true); play('success'); };
   return (
     <div className="wc-veil ct-veil" onClick={(e) => { if (e.target === e.currentTarget) setOpen(false); }}>
@@ -85,7 +85,9 @@ export default function WeChatSheet() {
         </div>
         </div><div className="ct-r">
         <div className="ct-compose">
-          {sys ? <div className="ct-prev" aria-label={t('Your message')}><small>{t('YOUR MESSAGE')}</small><div className="ct-pv">{fmt(msg)}</div></div> : null}
+          {/* owner (R12): an order is part of the SYSTEM message (locked, the team receives the complete order); the customer
+              only writes their own note below */}
+          {sys ? <div className="ct-prev ct-sysord" aria-label={t('Order details')}><small><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>{t('Order details · added by the system')}</small><div className="ct-pv">{fmt(msg)}</div></div> : null}
           <textarea className="ct-note" rows={3} value={note} onChange={(e) => setNote(e.target.value)} placeholder={t(sys ? 'Add a personal note (optional)' : 'Write your message')} />
           {lock ? <div className="ct-lock" aria-label={t('The message our team receives')}><small><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>{t('Added automatically · cannot be edited')}</small><div className="ct-pv">{fmt(lock)}</div></div> : null}
         </div>

@@ -1487,3 +1487,30 @@ html[dir="rtl"] .sp-p.nt-hl { box-shadow: inset -3px 0 0 #F7C032; padding: 14px 
 html body .st-card .st-v, html body #story .st-v { -webkit-text-fill-color: #F7C032 !important; color: #F7C032 !important; }
 html body .st-card.now .st-v { -webkit-text-fill-color: #26282B !important; color: #26282B !important; }
 html body span.rp-k.rp-kd, html body section span.rp-k.rp-kd { -webkit-text-fill-color: rgba(255,255,255,.62) !important; color: rgba(255,255,255,.62) !important; }
+/* R12 (owner: "the send sheet takes more than the whole screen and buttons can't be pressed; keep it a Mac-sized window like
+   the language chooser"): a compact window; the channel bar stays on top, the middle scrolls, the send buttons are pinned */
+html body .wc-card.ct-card { width: min(780px, calc(100vw - 32px)) !important; max-height: min(640px, calc(100dvh - 48px)) !important; display: flex !important; flex-direction: column; overflow: hidden !important; padding: 22px 24px 18px !important; }
+html body .ct-card .ct-cols { flex: 1; min-height: 0; overflow: auto; overscroll-behavior: contain; padding-inline-end: 4px; scrollbar-width: thin; }
+html body .ct-card .ct-r .ct-acts { position: sticky; bottom: 0; background: inherit; padding-top: 10px; margin-top: 10px; box-shadow: 0 -14px 14px -8px #fff; z-index: 2; }
+html body .ct-card .ct-qrw svg, html body .ct-card .ct-qrw canvas, html body .ct-card .ct-qrw img { width: 96px !important; height: 96px !important; }
+html body .ct-card .wc-p { font-size: 13.5px !important; margin: 2px 0 8px !important; }
+html body .ct-card .ct-r .ct-prev { max-height: 210px; }
+html body .ct-card .ct-note { min-height: 64px; }
+/* the system parts (order + details) are yellowish, the site's colour, not green */
+html body .ct-card .ct-prev.ct-sysord, html body .ct-card .ct-lock { background: #FFF8E2 !important; box-shadow: inset 0 0 0 1px rgba(247,192,50,.45) !important; user-select: none; }
+html body .ct-card .ct-prev.ct-sysord small, html body .ct-card .ct-lock small { display: flex; align-items: center; gap: 5px; color: #A57A08 !important; text-transform: uppercase; }
+@media (max-width: 760px) { html body .wc-card.ct-card { max-height: calc(100dvh - 24px) !important; padding: 18px 16px 14px !important; } html body .ct-card .ct-qrw { display: none !important; } }
+html[data-theme="dark"] body .ct-card .ct-prev.ct-sysord, html[data-theme="dark"] body .ct-card .ct-lock { background: rgba(247,192,50,.08) !important; }
+html[data-theme="dark"] body .ct-card .ct-r .ct-acts { box-shadow: 0 -14px 14px -8px #2B2D31; }
+/* R12 · press feedback for every button: a yellow LED ring leaves the edge and fades */
+.se-press { animation: sePress .6s cubic-bezier(.2,.8,.2,1); }
+@keyframes sePress { 0% { outline: 2px solid rgba(247,192,50,.9); outline-offset: 0; } 100% { outline: 2px solid rgba(247,192,50,0); outline-offset: 9px; } }
+input:focus-visible, textarea:focus-visible { box-shadow: 0 0 0 3px rgba(247,192,50,.25), 0 0 18px -4px rgba(247,192,50,.55) !important; }
+@media (prefers-reduced-motion: reduce) { .se-press { animation: none; } }
+/* R12 · send sheet fixes: the channel bar fits its column, the pinned buttons sit on solid white, nothing covers it */
+html body .ct-card .ct-switch { display: flex !important; width: 100%; gap: 2px !important; padding: 3px !important; overflow: hidden; }
+html body .ct-card .ct-swb { flex: 1 1 0; min-width: 0; justify-content: center; padding: 8px 6px !important; font-size: 12.5px !important; white-space: nowrap; }
+html body .ct-card .ct-r .ct-acts { background: #fff !important; }
+html[data-theme="dark"] body .ct-card .ct-r .ct-acts { background: #2B2D31 !important; }
+html body .ct-card .ct-pv i { font-style: normal; color: #7A7E84; font-size: 12px; }
+html[data-contact-open] .mdt3-dock, html[data-contact-open] .tq-offer, html[data-contact-open] .sc2-banner { display: none !important; }

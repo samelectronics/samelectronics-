@@ -113,6 +113,10 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
   }, [mode]);
   useEffect(() => { if (ready) toUrl(f, pid, scope); }, [f, pid, scope, ready]);
   useEffect(() => { setPage(1); }, [f, scope]);
+  // owner (R12): "the ads still don't show when I scroll": the list stopped at 24 parts until "Show more" was pressed, so
+  // only two ads ever appeared. The next page now loads by itself as the end comes near, and the ads keep coming.
+  const moreRef = useRef<HTMLDivElement>(null);
+  useEffect(() => { const el = moreRef.current; if (!el) return; const io = new IntersectionObserver(([e]) => { if (e.isIntersecting) setPage((n) => n + 1); }, { rootMargin: '900px 0px' }); io.observe(el); return () => io.disconnect(); });
   useEffect(() => { try { localStorage.setItem('se-shop-view', JSON.stringify(view)); } catch { /* */ } }, [view]);
   const open = useCallback((p: Product) => setPid(p.id), []);
   const close = useCallback(() => setPid(null), []);
@@ -286,7 +290,7 @@ export default function Shop({ mode = 'shop' }: { mode?: 'shop' | 'deals' }) {
                 <span className="sp-acts" style={{ justifyContent: 'center' }}><button type="button" className="sp-btn sm" onClick={() => setF({ ...EMPTY })}>{T('Clear filters')}</button><button type="button" className="sp-btn sm ghost" onClick={() => window.dispatchEvent(new CustomEvent('se:chat', { detail: { q: f.q || 'Do you have this part?' } }))}>{T('Ask Samsoom')}</button></span>
               </div>
             )}
-            {shown.length < res.length ? <div className="shop-more"><span>{T('Showing')} {shown.length} {T('of')} {fmt(res.length)}</span><i><em style={{ width: (shown.length / res.length) * 100 + '%' }} /></i><button type="button" className="sp-btn dark" onClick={() => setPage(page + 1)}>{T('Show more')}</button></div> : null}
+            {shown.length < res.length ? <div className="shop-more" ref={moreRef}><span>{T('Showing')} {shown.length} {T('of')} {fmt(res.length)}</span><i><em style={{ width: (shown.length / res.length) * 100 + '%' }} /></i><button type="button" className="sp-btn dark" onClick={() => setPage(page + 1)}>{T('Show more')}</button></div> : null}
           </div>
         </div>
       </div>

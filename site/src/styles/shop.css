@@ -1794,3 +1794,62 @@ html[dir="rtl"] body .shop-dock .ss.open .ss-drop { left: 0 !important; right: 0
 html body .shop-dock .ss.open .ss-bar { border-radius: 16px 16px 0 0 !important; box-shadow: 0 0 0 2px #F7C032, 0 0 18px rgba(247,192,50,.45) !important; clip-path: inset(-30px -30px 0 -30px); }
 html body .shop-dock .ss.open .ss-drop { top: 100% !important; margin-top: 0 !important; border-radius: 0 0 18px 18px !important; box-shadow: 0 0 0 2px #F7C032, 0 0 18px rgba(247,192,50,.45), 0 40px 80px -24px rgba(0,0,0,.55) !important; clip-path: inset(0 -30px -120px -30px) !important; border-top: 1px solid #EEF0F2 !important; }
 html body .shop-dock .ss.open .ss-bar::before { opacity: 0 !important; }
+/* ── R12 (owner): the ads go back to BIG bold moving words, the part as big as the text area, no ugly extras ── */
+.ia3 { min-height: 300px; }
+.ia3-scene { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto !important; align-items: center !important; }
+.ia3-vis { height: 270px !important; margin-bottom: 0 !important; }
+.ia3-vis img, .ia3-part img, .ia3-brand2 img { max-height: 270px !important; height: 270px; width: auto; max-width: 100% !important; object-fit: contain; }
+.ia3-stack img { max-height: 230px !important; }
+.ia3-word { bottom: auto !important; top: 50% !important; transform: translateY(-50%); animation-duration: 26s !important; }
+.ia3-word b { font-size: clamp(170px, 19vw, 260px) !important; -webkit-text-stroke-width: 2px !important; opacity: .9; }
+.ia3 .band, .ia3-bg .band { display: none !important; }
+.ia3-fix2 em, .ia3-ship2 .ln, .ia3-ship2 .regs u, .ia3-brand2 .plate, .ia3-badge { display: none !important; }
+.ia3-part { position: relative; width: 100%; height: 100%; display: grid; place-items: center; }
+.ia3-part img { filter: drop-shadow(0 28px 30px rgba(0,0,0,.4)); animation: ia4Float 5s ease-in-out infinite; }
+.ia3-deal .off { position: absolute; top: 8%; inset-inline-end: 6%; padding: 10px 16px; border-radius: 16px; transform: rotate(-8deg); font: 800 38px/1 'Space Grotesk', sans-serif; letter-spacing: -.02em; color: #26282B; background: #F7C032; box-shadow: 0 0 0 3px #26282B, 0 16px 30px -10px rgba(0,0,0,.45); animation: ia3Off .6s cubic-bezier(.2,1.6,.4,1) .35s both; }
+.ia3[data-tone="y"] .ia3-deal .off { background: #26282B; color: #F7C032; box-shadow: 0 0 0 3px #fff, 0 16px 30px -10px rgba(0,0,0,.45); }
+@keyframes ia3Off { from { transform: rotate(-30deg) scale(2.2); opacity: 0; } }
+@media (max-width: 760px) { .ia3-scene { grid-template-columns: 1fr !important; } .ia3-vis { height: 200px !important; } .ia3-vis img, .ia3-part img, .ia3-brand2 img { height: 200px; max-height: 200px !important; } .ia3-word b { font-size: 120px !important; } }
+/* R12 (owner: "header → search bar: a weird moment where everything on the bar crashes together"): the header slid up
+   while the dock slid down THROUGH it. Now nothing slides: the dock appears in place over the header, the logo is in the
+   same spot so it simply stays, the search grows out from the left, the icons settle one after another. */
+html body .shop-dock { transform: none !important; transition: opacity .28s ease, visibility 0s linear .28s !important; visibility: hidden; }
+html body .shop-dock.on { visibility: visible; transition: opacity .22s ease, visibility 0s !important; }
+html[data-shop-dock] body header { transform: none !important; opacity: 0; pointer-events: none; transition: opacity .2s ease .08s !important; }
+html body header { transition: opacity .25s ease !important; }
+html body .shop-dock .ss { clip-path: inset(0 62% 0 0 round 16px); transition: clip-path .5s cubic-bezier(.2,.9,.2,1) .04s; }
+html[dir="rtl"] body .shop-dock .ss { clip-path: inset(0 0 0 62% round 16px); }
+html body .shop-dock.on .ss { clip-path: inset(-6px -6px -6px -6px round 18px); }
+html body .shop-dock .shop-dock-ic > *, html body .shop-dock .shop-dock-n, html body .shop-dock .shop-dock-f { opacity: 0; translate: 0 -6px; transition: opacity .25s ease, translate .35s cubic-bezier(.3,1.5,.5,1); }
+html body .shop-dock.on .shop-dock-ic > *, html body .shop-dock.on .shop-dock-n, html body .shop-dock.on .shop-dock-f { opacity: 1; translate: 0 0; }
+html body .shop-dock.on .shop-dock-ic > :nth-child(1) { transition-delay: .16s; } html body .shop-dock.on .shop-dock-ic > :nth-child(2) { transition-delay: .2s; } html body .shop-dock.on .shop-dock-ic > :nth-child(3) { transition-delay: .24s; } html body .shop-dock.on .shop-dock-ic > :nth-child(4) { transition-delay: .28s; } html body .shop-dock.on .shop-dock-ic > :nth-child(5) { transition-delay: .32s; } html body .shop-dock.on .shop-dock-ic > :nth-child(n+6) { transition-delay: .36s; }
+@media (prefers-reduced-motion: reduce) { html body .shop-dock .ss { clip-path: none; transition: none; } }
+/* R12 (owner: "the shop → Good to know transition is weird: both white, a different width, a different mouse glow"):
+   on the shop, Good to know is its own chapter: the hero's graphite material with a soft curved top edge, the same width
+   as the shop, white question cards. The filter column fades out at its bottom instead of cutting an item in half. */
+main:has(.shop-grid) #faq.fq-sec, body:has(.shop-grid) #faq.fq-sec { position: relative; margin-top: 40px; padding: 96px 0 110px; border-radius: 48px 48px 0 0; background: radial-gradient(60% 60% at 50% 0%, rgba(247,192,50,.10), transparent 70%), repeating-linear-gradient(0deg, rgba(255,255,255,.045) 0 1px, transparent 1px 4px), #2A2C2F; box-shadow: 0 -30px 60px -40px rgba(38,40,43,.5); }
+body:has(.shop-grid) #faq .fq-wrap { max-width: 1312px; }
+body:has(.shop-grid) #faq .sp-h2, body:has(.shop-grid) #faq .fq-head h2 { color: #fff !important; -webkit-text-fill-color: #fff !important; }
+body:has(.shop-grid) #faq .sp-eb, body:has(.shop-grid) #faq .fq-head small { color: #F7C032 !important; }
+body:has(.shop-grid) #faq .fq-head { margin-bottom: 26px; }
+.shop-side { -webkit-mask-image: linear-gradient(180deg, #000 calc(100% - 46px), transparent); mask-image: linear-gradient(180deg, #000 calc(100% - 46px), transparent); }
+/* R12 · cart: the page sits in a graphite-rule section, which painted the headings and the delivery choices WHITE inside
+   the white cards (invisible). Text inside the light cards is graphite; plus a cleaner, richer layout. */
+.ck-body .sp-card:not(.d) :is(h2, h3, .sp-h3, b, strong, label, .cart-del b) { color: #26282B !important; -webkit-text-fill-color: #26282B !important; }
+.ck-body .sp-card:not(.d) :is(small, .sp-muted, .cart-del span, .pc-meta) { -webkit-text-fill-color: currentColor; }
+.ck-body .cart-h { display: flex; align-items: center; justify-content: space-between; padding-bottom: 14px; margin-bottom: 6px; border-bottom: 1px solid rgba(38,40,43,.07); }
+.ck-body .cart-h .sp-h3 { font: 700 22px/1.2 'Space Grotesk', sans-serif !important; }
+.ck-body .cart-ln { position: relative; padding: 16px 14px !important; margin: 0 -14px; border-radius: 18px; transition: background .25s ease; }
+.ck-body .cart-ln:hover { background: #FAFAF8; }
+.ck-body .cart-img { width: 104px !important; height: 104px !important; border-radius: 18px !important; background: radial-gradient(80% 80% at 50% 30%, #fff, #EEF0F2) !important; box-shadow: inset 0 0 0 1px rgba(38,40,43,.06); }
+.ck-body .cart-pr { min-width: 150px; text-align: end; }
+.ck-body .cart-pr.cart-tbc { font-size: 12.5px; line-height: 1.35; }
+.ck-body .cart-del > * { transition: transform .3s cubic-bezier(.3,1.6,.5,1), box-shadow .25s ease; }
+.ck-body .cart-del > *:hover { transform: translateY(-2px); }
+.ck-body .sp-card { border-radius: 26px !important; }
+.ck-body.sp-sec { padding-top: 56px !important; }
+/* R12 · the photos with wide empty margins (repair scene, pallet) are zoomed in so the part itself is big */
+.ia3-fix2 img { transform: scale(1.55); transform-origin: 50% 60%; }
+.ia3-ship2 .pal { height: 270px !important; max-height: none !important; transform: scale(1.25); }
+.ia3-ship2 .regs { display: none !important; }
+.ia3-vis { overflow: visible; }
