@@ -119,3 +119,4 @@ html[dir="rtl"] .mdt-t { transform-origin: right; }
 .bn-xp.t-silver { background: #E5E8EC; } .bn-xp.t-gold { background: #F7C032; }
 html[dir="rtl"] .bn-xp { right: auto; left: 8px; }
 @media (max-width: 600px) { .bn-badge .bn-md-prog { display: none; } }
+.bn-badge-ring { width: 84px !important; height: 84px !important; border-radius: 0 !important; background: none !important; } .bn-badge-ring::before { display: none !important; }

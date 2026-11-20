@@ -13,12 +13,12 @@ import MemberCard, { LEVELS } from './MemberCard';
 import NotesPanel from './NotesPanel';
 import SoundSettings from '@/components/site/SoundSettings';
 import { Repairs, WarrantyCheck, TradeTools } from './BenchTools';
-import Medal, { Rank } from './Medal';
+import Medal, { Rank, Badge } from './Medal';
 import { MEDALS, LESSONS, LEVELS as XLEVELS, XP, got, unlock, startLesson, level } from '@/lib/achievements';
 
 const NAV: [string, string, string][] = [
   ['overview', 'Overview', 'M3 12l9-8 9 8v8a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z'],
-  ['medals', 'Medals & training', 'M12 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12zM8.5 14l-1.5 8 5-3 5 3-1.5-8'],
+  ['medals', 'Tokens & training', 'M12 15a6 6 0 1 0 0-12 6 6 0 0 0 0 12zM8.5 14l-1.5 8 5-3 5 3-1.5-8'],
   ['orders', 'Orders', 'M4 7h16l-1.5 12a2 2 0 0 1-2 1.8H7.5a2 2 0 0 1-2-1.8zM8 7a4 4 0 0 1 8 0'],
   ['saved', 'Cart, saved & stars', 'M12 2l2.9 6.1 6.6.8-4.9 4.6 1.3 6.6L12 16.8 6.1 20.1l1.3-6.6L2.5 8.9l6.6-.8z'],
   ['points', 'Points & card', 'M3 6h18v12H3zM3 10h18'],
@@ -126,7 +126,7 @@ export default function Bench({ me, refresh }: { me: User; refresh: () => void }
 // Owner: achievements for exploring the site, medals in a cool but professional way, and Samsoom's training: he takes
 // you to the real page and walks you through it, and each lesson earns its medal.
 function useMedals() { const [g, setG] = useState<Record<string, number>>({}); useEffect(() => { setG(got()); const f = () => setG(got()); window.addEventListener('se:medal', f); return () => window.removeEventListener('se:medal', f); }, []); return g; }
-const TIER = (t: string) => (t === 'gold' ? 'Gold' : t === 'silver' ? 'Silver' : 'Bronze');
+const TIER = (t: string) => (t === 'platinum' ? 'Platinum' : t === 'gold' ? 'Gold' : t === 'silver' ? 'Steel' : 'Bronze');
 function MedalStrip({ go }: { go: () => void }) {
   const g = useMedals(), mine = MEDALS.filter((m) => g[m.id]).sort((a, b) => g[b.id] - g[a.id]);
   return (
@@ -151,16 +151,16 @@ function Medals() {
       <div className="bn-md-top">
         <span className="bn-md-ring" style={{ ['--p' as string]: pc } as React.CSSProperties}><span style={{ position: 'relative', textAlign: 'center' }}><b>{n}</b><small data-no-i18n="" dir="ltr">/ {MEDALS.length}</small></span></span>
         <div>
-          <h2>{T('Medals & training')}</h2>
-          <p>{T('Explore the site, try its tools and let Samsoom show you around. Every step earns a medal.')}</p>
-          <div className="bn-md-tiers">{(['gold', 'silver', 'bronze'] as const).map((t) => <span key={t}><Medal tier={t} size={26} /><b>{cnt(t)}</b>{T(TIER(t))}</span>)}</div>
+          <h2>{T('Tokens, badges & training')}</h2>
+          <p>{T('Explore the site, try its tools and let Samsoom show you around. Every step earns a token.')}</p>
+          <div className="bn-md-tiers">{(['platinum', 'gold', 'silver', 'bronze'] as const).map((t) => <span key={t}><Medal tier={t} size={26} /><b>{cnt(t)}</b>{T(TIER(t))}</span>)}</div>
           <div className={'bn-md-rank' + (master ? ' on' : '')}><Rank on={master} size={40} /><span><small>{T('FINAL PROMOTION')}</small><b>{T('Master Technician')}</b><em>{master ? T('Earned') : GROUPS.filter(([k]) => got(k) === doneIn(k).length).length + ' / ' + GROUPS.length + ' ' + T('tracks complete')}</em></span></div>
         </div>
       </div>
       {/* owner (19 Nov): medals add points, points climb levels, every level brings a reward */}
       {(() => { const L = level(g); return (
         <div className="bn-lv">
-          <div className="bn-lv-h"><span><small>{T('YOUR LEVEL')} · {L.i + 1}</small><b>{T(L.name)}</b></span><span className="xp"><b>{L.xp}</b> {T('points')}</span></div>
+          <div className="bn-lv-h"><span><small>{T('YOUR LEVEL')} · {L.i + 1}</small><b>{T(L.name)}</b></span><span className="xp"><b>{L.xp}</b> {T('points')} · <b>{L.tokens}</b> {T('tokens')}</span></div>
           <span className="bn-lv-bar"><i style={{ width: L.pct + '%' }} /></span>
           <small className="bn-lv-next">{L.next ? T('Next') + ': ' + T(L.next.n) + ' · ' + (L.next.at - L.xp) + ' ' + T('points to go') : T('Top level reached')}</small>
           <ol className="bn-lv-list">{XLEVELS.map((l, k) => <li key={l.n} className={(k <= L.i ? 'on' : '') + (k === L.i ? ' cur' : '')}><i>{k + 1}</i><span><b>{T(l.n)}</b><small>{T(l.reward)}</small></span><em dir="ltr">{l.at}</em></li>)}</ol>
@@ -171,7 +171,7 @@ function Medals() {
           {LESSONS.map((l) => { const ok = !!g['lesson-' + l.id]; return (
             <div key={l.id} className={'bn-tr-it' + (ok ? ' done' : '')}>
               <span className="bn-tr-sam"><LiveSam size={58} mood="idle" /></span>
-              <span><b>{T(l.t)}</b><p>{T(l.d)}</p><small>{l.min} · {ok ? <span className="bn-tr-ok">✓ {T('Medal earned')}</span> : T('Silver medal')}</small></span>
+              <span><b>{T(l.t)}</b><p>{T(l.d)}</p><small>{l.min} · {ok ? <span className="bn-tr-ok">✓ {T('Token earned')}</span> : T('Steel token')}</small></span>
               <button type="button" className={'sp-btn sm' + (ok ? ' dark' : '')} onClick={() => startLesson(l.id)}>{ok ? T('Show me again') : T('Show me live')} →</button>
             </div>
           ); })}
@@ -182,13 +182,13 @@ function Medals() {
           {/* owner (19 Nov): "a badge is a big thing you earn after unlocking certain tokens": each track is a badge built
               from its tokens; every token is worth points by how hard it is (easy +10 · medium +25 · hard +60) */}
           <div className={'bn-badge' + (got(k) === doneIn(k).length ? ' on' : '')} style={{ ['--p' as string]: Math.round((got(k) / Math.max(1, doneIn(k).length)) * 100) } as React.CSSProperties}>
-            <span className="bn-badge-ring"><Rank on={got(k) === doneIn(k).length} size={58} /></span>
+            <span className="bn-badge-ring"><Badge group={k} have={got(k)} of={doneIn(k).length} size={76} label={T(PROMO[k])} /></span>
             <span className="bn-badge-t"><small>{T('BADGE')} · {T(l)}</small><b>{T(PROMO[k])}</b><em dir="ltr">{got(k)} / {doneIn(k).length} {T('tokens')}</em></span>
             <span className="bn-md-prog"><i style={{ width: Math.round((got(k) / Math.max(1, doneIn(k).length)) * 100) + '%' }} /></span>
           </div>
           <div className="bn-md-case">{MEDALS.filter((m) => m.group === k).map((m) => { const on = !!g[m.id]; const inner = <><Medal tier={m.tier} on={on} size={64} group={m.id === 'teardown' ? 'teardown' : m.group} /><b>{T(m.t)}</b><small>{T(m.d)}</small><em>{on ? when(g[m.id]) : T(TIER(m.tier)) + ' · ' + T('locked')}</em><i className={'bn-xp t-' + m.tier}>+{XP[m.tier]}</i></>;
             return m.path && !on ? <a key={m.id} className="bn-md-it off" href={m.path}>{inner}</a> : <div key={m.id} className={'bn-md-it' + (on ? '' : ' off')}>{inner}</div>; })}
-            <div className={'bn-md-it promo' + (got(k) === doneIn(k).length ? '' : ' off')}><Rank on={got(k) === doneIn(k).length} size={64} /><b>{T(PROMO[k])}</b><small>{T('Promotion: earn every medal in this track.')}</small><em>{got(k) === doneIn(k).length ? T('Promoted') : (doneIn(k).length - got(k)) + ' ' + T('to go')}</em></div>
+            <div className={'bn-md-it promo' + (got(k) === doneIn(k).length ? '' : ' off')}><Rank on={got(k) === doneIn(k).length} size={64} /><b>{T(PROMO[k])}</b><small>{T('Badge: collect every token in this track.')}</small><em>{got(k) === doneIn(k).length ? T('Promoted') : (doneIn(k).length - got(k)) + ' ' + T('to go')}</em></div>
           </div>
         </div>
       ))}

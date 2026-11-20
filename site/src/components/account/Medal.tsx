@@ -1,8 +1,11 @@
 'use client';
-// Owner (19 Nov): "redesign all achievements into tokens or chips, tech-inspired and very premium; the more detail and
-// the better colour the better". Each medal is a processor chip: gold pins on all four sides, a green-black substrate,
-// a machined metal lid (bronze, steel or gold) with the track's emblem engraved, a laser-etched code, the level as
-// one, two or three notches, and a status LED. A locked one is a bare grey chip. Earned ones catch a slow light.
+// Owner (R11): "they look broken and messy, not something I'd want to collect. Tech-inspired chips or tokens; the better
+// it is, the better the colour and the details; premium and wow". Each achievement is a TOKEN: a round minted coin with a
+// notched rim like a casino chip, an engraved circuit ring, the track's emblem raised in the centre, and its metal tells
+// how hard it was to earn: bronze (easy), steel (medium), gold (hard), and platinum with our yellow LED ring (the rarest).
+// A locked token is a dark blank with the emblem as a faint etch. Earned tokens catch a slow light.
+// A BADGE (see Badge below) is the bigger thing: a hexagon frame with one socket per token of its track; it lights up when
+// every socket is filled.
 import React, { useId } from 'react';
 import type { Tier } from '@/lib/achievements';
 
@@ -14,58 +17,66 @@ const EMBLEM: Record<string, string> = {
   teardown: 'M6 5h12v4H6zM5 10.5h14v3.5H5zM6 15.5h12V19H6z',
   rank: 'M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6-4.5-4.2 6.1-.7z',
 };
-const LID: Record<string, [string, string, string, string]> = {
-  bronze: ['#F2B788', '#C07A45', '#8A4E22', '#5E3214'],
-  silver: ['#FFFFFF', '#D3D8DE', '#9AA1A9', '#5F666E'],
-  gold: ['#FFF1B8', '#F7C032', '#D39A12', '#8A5F05'],
-  off: ['#6A6E74', '#4E5257', '#3C3F44', '#2E3034'],
+// rim light → face → face shadow → deep edge
+const METAL: Record<string, [string, string, string, string]> = {
+  bronze: ['#FFD2AE', '#D08A55', '#9A5A2C', '#5E3214'],
+  silver: ['#FFFFFF', '#DCE1E6', '#A3AAB2', '#5F666E'],
+  gold: ['#FFF4C8', '#F7C032', '#D39A12', '#7A5204'],
+  platinum: ['#FFFFFF', '#EEF1F5', '#C4CAD2', '#7C838C'],
+  off: ['#5A5E64', '#3D4045', '#2E3034', '#202225'],
 };
-const LV: Record<string, number> = { bronze: 1, silver: 2, gold: 3, off: 0 };
-const CODE: Record<string, string> = { explore: 'EXP', shop: 'SHP', bench: 'BNC', train: 'TRN', teardown: 'TDN', rank: 'MST' };
 
 export default function Medal({ tier, on = true, size = 72, group = 'explore' }: { tier: Tier; on?: boolean; size?: number; glyph?: string; group?: string }) {
-  const id = useId().replace(/:/g, ''), k = on ? tier : 'off', [a, b, c, d] = LID[k], n = LV[tier];
-  const pins = Array.from({ length: 7 }, (_, i) => 13 + i * 6.3);
-  const pin = on ? 'url(#pn' + id + ')' : '#55585E';
+  const id = useId().replace(/:/g, ''), k = on ? tier : 'off', [a, b, c, d] = METAL[k] || METAL.gold, plat = on && tier === 'platinum';
+  const notches = Array.from({ length: 24 }, (_, i) => i * 15);
+  const ink = on ? (tier === 'gold' ? '#5A3C02' : tier === 'bronze' ? '#4A2610' : '#3A3F45') : 'rgba(255,255,255,.18)';
   return (
-    <span className={'md2 md2-' + k + (on ? ' on' : ' off')} style={{ width: size, height: size }} aria-hidden="true">
+    <span className={'md3 md3-' + k + (on ? ' on' : ' off')} style={{ width: size, height: size }} aria-hidden="true">
       <svg viewBox="0 0 64 64" width={size} height={size}>
         <defs>
-          <linearGradient id={'l' + id} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor={a} /><stop offset=".35" stopColor={b} /><stop offset=".7" stopColor={c} /><stop offset="1" stopColor={d} /></linearGradient>
-          <linearGradient id={'pn' + id} x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="#B88A2A" /><stop offset=".5" stopColor="#FFE7A0" /><stop offset="1" stopColor="#B88A2A" /></linearGradient>
-          <radialGradient id={'s' + id} cx=".3" cy=".2" r="1"><stop offset="0" stopColor={on ? '#2F3A33' : '#3A3C40'} /><stop offset="1" stopColor={on ? '#141A16' : '#26282B'} /></radialGradient>
-          <pattern id={'g' + id} width="2" height="2" patternUnits="userSpaceOnUse"><rect width="2" height="1" fill="rgba(255,255,255,.07)" /></pattern>
-          <clipPath id={'c' + id}><rect x="15" y="15" width="34" height="34" rx="3" /></clipPath>
+          <linearGradient id={'r' + id} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor={a} /><stop offset=".45" stopColor={b} /><stop offset=".75" stopColor={c} /><stop offset="1" stopColor={d} /></linearGradient>
+          <radialGradient id={'f' + id} cx=".35" cy=".3" r=".85"><stop offset="0" stopColor={a} /><stop offset=".55" stopColor={b} /><stop offset="1" stopColor={c} /></radialGradient>
+          <clipPath id={'c' + id}><circle cx="32" cy="32" r="30" /></clipPath>
         </defs>
-        {/* pins on four sides */}
-        <g fill={pin}>{pins.map((p) => <React.Fragment key={p}><rect x={p - 1.4} y="2.5" width="2.8" height="7" rx=".6" /><rect x={p - 1.4} y="54.5" width="2.8" height="7" rx=".6" /><rect x="2.5" y={p - 1.4} width="7" height="2.8" rx=".6" /><rect x="54.5" y={p - 1.4} width="7" height="2.8" rx=".6" /></React.Fragment>)}</g>
-        {/* substrate with traces */}
-        <rect x="8" y="8" width="48" height="48" rx="5" fill={'url(#s' + id + ')'} />
-        <rect x="8.5" y="8.5" width="47" height="47" rx="4.5" fill="none" stroke={on ? 'rgba(255,255,255,.12)' : 'rgba(255,255,255,.06)'} />
-        <g stroke={on ? 'rgba(247,192,50,.35)' : 'rgba(255,255,255,.08)'} strokeWidth=".6" fill="none"><path d="M11 20h3M11 32h3M11 44h3M50 20h3M50 32h3M50 44h3M20 11v3M32 11v3M44 11v3M20 50v3M32 50v3M44 50v3" /></g>
-        {/* the machined lid */}
-        <rect x="15" y="15" width="34" height="34" rx="3" fill={'url(#l' + id + ')'} />
-        <rect x="15" y="15" width="34" height="34" rx="3" fill={'url(#g' + id + ')'} />
-        <rect x="15.5" y="15.5" width="33" height="33" rx="2.6" fill="none" stroke="rgba(255,255,255,.45)" strokeWidth=".6" />
-        <rect x="15" y="15" width="34" height="34" rx="3" fill="none" stroke="rgba(0,0,0,.35)" strokeWidth=".5" />
-        {/* engraved emblem: a dark cut with a light lower edge */}
-        <g transform="translate(22.4 19.6) scale(.8)" fill="none" strokeLinejoin="round" strokeLinecap="round">
-          <path d={EMBLEM[group] || EMBLEM.explore} stroke="rgba(255,255,255,.55)" strokeWidth="2.2" transform="translate(.5 .7)" />
-          <path d={EMBLEM[group] || EMBLEM.explore} stroke={on ? 'rgba(40,26,4,.75)' : 'rgba(0,0,0,.45)'} strokeWidth="2" />
+        {plat ? <circle cx="32" cy="32" r="31.2" fill="none" stroke="#F7C032" strokeWidth="1.6" className="md3-led" /> : null}
+        {/* the rim with its notches (a minted chip edge) */}
+        <circle cx="32" cy="32" r="29.5" fill={'url(#r' + id + ')'} />
+        <g fill={on ? 'rgba(255,255,255,.55)' : 'rgba(255,255,255,.08)'}>{notches.map((r) => <rect key={r} x="30.6" y="2.8" width="2.8" height="5" rx="1" transform={`rotate(${r} 32 32)`} />)}</g>
+        <circle cx="32" cy="32" r="23.5" fill={'url(#f' + id + ')'} stroke={on ? 'rgba(0,0,0,.28)' : 'rgba(0,0,0,.4)'} strokeWidth=".8" />
+        <circle cx="32" cy="32" r="23" fill="none" stroke="rgba(255,255,255,.55)" strokeWidth=".5" strokeDasharray="1 1.4" />
+        {/* the engraved circuit ring */}
+        <g fill="none" stroke={ink} strokeOpacity={on ? 0.45 : 1} strokeWidth=".7" strokeLinecap="round">
+          <circle cx="32" cy="32" r="18.5" strokeDasharray="6 2 1 2" />
+          {[0, 60, 120, 180, 240, 300].map((r) => <g key={r} transform={`rotate(${r} 32 32)`}><path d="M32 13.5v3.4l2.2 2.2" /><circle cx="34.5" cy="19.4" r=".8" fill={ink} /></g>)}
         </g>
-        {/* laser-etched code and level notches */}
-        <text x="18" y="46.6" fontFamily="JetBrains Mono, monospace" fontSize="3.6" letterSpacing=".3" fill={on ? 'rgba(40,26,4,.65)' : 'rgba(0,0,0,.4)'}>SE-{CODE[group] || 'EXP'}</text>
-        <g fill={on ? 'rgba(40,26,4,.7)' : 'rgba(0,0,0,.35)'}>{Array.from({ length: n }).map((_, i) => <rect key={i} x={36 + i * 3.6} y="43.6" width="2.4" height="3.4" rx=".5" />)}</g>
-        {/* status LED */}
-        <circle cx="45.5" cy="18.5" r="1.6" fill={on ? '#5CFF8F' : '#4A4D52'} />
-        {on ? <circle cx="45.5" cy="18.5" r="3.2" fill="rgba(92,255,143,.25)" /> : null}
-        {on ? <g clipPath={'url(#c' + id + ')'}><rect className="md2-sheen" x="-40" y="-10" width="14" height="90" fill="rgba(255,255,255,.45)" transform="rotate(25)" /></g> : null}
+        {/* the raised emblem: highlight below, then the cut */}
+        <g transform="translate(22 22) scale(.8333)" fill="none" strokeLinejoin="round" strokeLinecap="round">
+          <path d={EMBLEM[group] || EMBLEM.explore} stroke={on ? 'rgba(255,255,255,.7)' : 'transparent'} strokeWidth="2.6" transform="translate(.4 .6)" />
+          <path d={EMBLEM[group] || EMBLEM.explore} stroke={ink} strokeWidth="2.2" />
+        </g>
+        {on ? <g clipPath={'url(#c' + id + ')'}><rect className="md3-sheen" x="-30" y="-10" width="12" height="90" fill="rgba(255,255,255,.55)" transform="rotate(25)" /></g> : null}
       </svg>
     </span>
   );
 }
 
-/** a promotion rank: earned by finishing every medal of a track (or of every track) */
+/** a promotion rank: earned by finishing every token of a track (or of every track) */
 export function Rank({ on, size = 56 }: { on: boolean; size?: number }) {
-  return <Medal tier="gold" on={on} size={size} group="rank" />;
+  return <Medal tier="platinum" on={on} size={size} group="rank" />;
+}
+
+/** a BADGE: a hexagon frame with a socket for each token of its track; lit when every socket is filled */
+export function Badge({ group, have, of, size = 120, label }: { group: string; have: number; of: number; size?: number; label?: string }) {
+  const full = have >= of && of > 0, n = Math.min(of, 8), pts = Array.from({ length: n }, (_, i) => { const a = (i / n) * Math.PI * 2 - Math.PI / 2; return [50 + Math.cos(a) * 31, 50 + Math.sin(a) * 31]; });
+  return (
+    <span className={'bd3' + (full ? ' full' : '')} style={{ width: size, height: size }} aria-label={label}>
+      <svg viewBox="0 0 100 100" width={size} height={size} aria-hidden="true">
+        <polygon points="50,3 91,26.5 91,73.5 50,97 9,73.5 9,26.5" fill={full ? '#26282B' : '#2E3034'} stroke={full ? '#F7C032' : 'rgba(255,255,255,.14)'} strokeWidth={full ? 2.4 : 1.2} className={full ? 'bd3-led' : undefined} />
+        <polygon points="50,10 85,30 85,70 50,90 15,70 15,30" fill="none" stroke="rgba(255,255,255,.07)" strokeWidth="1" />
+        {pts.map(([x, y], i) => <circle key={i} cx={x} cy={y} r="5.6" fill={i < have ? '#F7C032' : '#1E1F21'} stroke={i < have ? '#FFE08A' : 'rgba(255,255,255,.12)'} strokeWidth="1" />)}
+        <g transform="translate(38 38)" fill="none" stroke={full ? '#F7C032' : 'rgba(255,255,255,.35)'} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round"><path d={EMBLEM[group] || EMBLEM.explore} /></g>
+      </svg>
+      <small dir="ltr">{Math.min(have, of)} / {of}</small>
+    </span>
+  );
 }

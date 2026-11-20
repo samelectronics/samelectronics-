@@ -4,7 +4,7 @@ import { isEmbed } from '@/lib/embed';
 // of Samsoom that trains you: it takes you there for real and you earn achievements from those". Professional, not toys.
 // Medals are kept on this device (and travel with the account once the database stores them). Unlocking one fires
 // 'se:medal' so the toast and the Bench update at once.
-export type Tier = 'bronze' | 'silver' | 'gold';
+export type Tier = 'bronze' | 'silver' | 'gold' | 'platinum';
 export type Medal = { id: string; t: string; d: string; tier: Tier; group: 'explore' | 'train' | 'shop' | 'bench'; path?: string };
 export type Lesson = { id: string; t: string; d: string; path: string; min: string };
 
@@ -24,14 +24,14 @@ export const MEDALS: Medal[] = [
   // exploring
   { id: 'first-visit', t: 'Through the door', d: 'Opened your bench for the first time.', tier: 'bronze', group: 'explore', path: '/account' },
   ...PAGES.map(([p, n]) => ({ id: 'visit' + p.replace('/', '-'), t: n, d: 'Visited this page.', tier: 'bronze' as Tier, group: 'explore' as const, path: p })),
-  { id: 'explorer', t: 'Explorer', d: 'Visited every page of the site.', tier: 'gold', group: 'explore' },
+  { id: 'explorer', t: 'Explorer', d: 'Visited every page of the site.', tier: 'platinum', group: 'explore' },
   { id: 'polyglot', t: 'Polyglot', d: 'Changed the language.', tier: 'bronze', group: 'explore' },
   { id: 'teardown', t: 'Inside the phone', d: 'Watched the teardown on Home to the end.', tier: 'silver', group: 'explore', path: '/#teardown' },
   // shopping
   { id: 'fmp', t: 'Part hunter', d: 'Used Find My Part.', tier: 'bronze', group: 'shop' },
   { id: 'cart', t: 'First pick', d: 'Put a part in your cart.', tier: 'bronze', group: 'shop', path: '/shop' },
   { id: 'star', t: 'Collector', d: 'Starred a part.', tier: 'bronze', group: 'shop', path: '/shop' },
-  { id: 'order', t: 'First order', d: 'Placed your first order.', tier: 'silver', group: 'shop', path: '/shop' },
+  { id: 'order', t: 'First order', d: 'Placed your first order.', tier: 'gold', group: 'shop', path: '/shop' },
   { id: 'chat', t: 'Hello, Samsoom', d: 'Chatted with Samsoom.', tier: 'bronze', group: 'shop', path: '/samsoom' },
   { id: 'contact', t: 'On first-name terms', d: 'Messaged the team on WhatsApp or WeChat.', tier: 'bronze', group: 'shop', path: '/contact' },
   // the bench
@@ -41,7 +41,7 @@ export const MEDALS: Medal[] = [
   { id: 'device', t: 'My fleet', d: 'Saved a device you fix.', tier: 'bronze', group: 'bench', path: '/account#devices' },
   // Samsoom's training
   ...LESSONS.map((l) => ({ id: 'lesson-' + l.id, t: l.t, d: 'Finished Samsoom’s lesson.', tier: 'silver' as Tier, group: 'train' as const, path: l.path })),
-  { id: 'graduate', t: 'Samsoom graduate', d: 'Finished every lesson.', tier: 'gold', group: 'train' },
+  { id: 'graduate', t: 'Samsoom graduate', d: 'Finished every lesson.', tier: 'platinum', group: 'train' },
 ];
 
 const KEY = 'se-medals';
@@ -64,18 +64,20 @@ export const startLesson = (id: string) => { const l = LESSONS.find((x) => x.id 
 // owner (19 Nov): "rewards for collecting them and levels of users, so we can tell how loyal each customer is to the
 // website": every medal is worth points (bronze 10 · silver 25 · gold 60); points climb six levels, each with a reward.
 // The rewards are what the shop already offers members; anything with a price is confirmed by the team.
-export const XP: Record<Tier, number> = { bronze: 10, silver: 25, gold: 60 };
+export const XP: Record<Tier, number> = { bronze: 10, silver: 25, gold: 60, platinum: 120 };
+// owner (R11): "levels can have a nickname": tech nicknames, from switching on to the mainframe
 export const LEVELS: { n: string; at: number; reward: string }[] = [
-  { n: 'Visitor', at: 0, reward: 'Your bench and your medals' },
-  { n: 'Explorer', at: 40, reward: 'Saved searches and part alerts' },
-  { n: 'Regular', at: 120, reward: 'Early access to deals' },
-  { n: 'Insider', at: 260, reward: 'Priority stock alerts' },
-  { n: 'Loyal', at: 450, reward: 'A thank-you offer from the team' },
-  { n: 'Legend', at: 700, reward: 'An invitation to the Sam Circle card' },
+  { n: 'Power On', at: 0, reward: 'Your bench and your tokens' },
+  { n: 'Booting', at: 40, reward: 'Saved searches and part alerts' },
+  { n: 'Connected', at: 120, reward: 'Early access to deals' },
+  { n: 'Charged', at: 260, reward: 'Priority stock alerts' },
+  { n: 'Overclocked', at: 450, reward: 'A thank-you offer from the team' },
+  { n: 'Mainframe', at: 750, reward: 'An invitation to the Sam Circle card' },
 ];
 export function level(g: Record<string, number> = got()) {
   const xp = MEDALS.filter((m) => g[m.id]).reduce((t, m) => t + XP[m.tier], 0);
   let i = 0; LEVELS.forEach((l, k) => { if (xp >= l.at) i = k; });
   const cur = LEVELS[i], nx = LEVELS[i + 1] || null;
-  return { i, xp, name: cur.n, reward: cur.reward, next: nx, pct: nx ? Math.round(((xp - cur.at) / (nx.at - cur.at)) * 100) : 100 };
+  const tokens = MEDALS.filter((m) => g[m.id]).length;
+  return { i, xp, tokens, toNext: nx ? nx.at - xp : 0, name: cur.n, reward: cur.reward, next: nx, pct: nx ? Math.round(((xp - cur.at) / (nx.at - cur.at)) * 100) : 100 };
 }

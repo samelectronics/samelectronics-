@@ -11,7 +11,7 @@ const LEVELS_AT = (i: number) => LEVELS[i].at;
 import { T } from '@/components/site/ui';
 import { play } from '@/lib/sound';
 
-const MS = 4200; // owner (19 Nov): small and quick, it never interrupts
+const MS = 3600; // owner (19 Nov): small and quick, it never interrupts
 export default function MedalWatch() {
   const path = usePathname(), [show, setShow] = useState<string | null>(null);
   useEffect(() => { if (path && !path.startsWith('/staff')) { visitMedal(path); if (path === '/account') { /* the bench itself */ } } }, [path]);
@@ -32,19 +32,17 @@ export default function MedalWatch() {
   // owner (19 Nov): achievements drop in from the top with a timer: the chip flips in, its name and tier, the points it
   // adds, and the level bar filling towards the next reward
   const L = level(), up = L.i > 0 && L.xp - XP[m.tier] < LEVELS_AT(L.i);
+  // owner (R11): "something small, not huge, a quicker timer; it must never interrupt": one slim pill at the top, the token
+  // flips in, its name, the points, and the level line. The whole pill opens My Bench; it never blocks clicks elsewhere.
+  const TN: Record<string, string> = { bronze: 'Bronze token', silver: 'Steel token', gold: 'Gold token', platinum: 'Platinum token' };
   return (
-    <div className="mdt-dock" key={m.id}>
-      <div className={'mdt mdt-' + m.tier} role="status" aria-live="polite">
-        <span className="mdt-chip"><Medal tier={m.tier} size={58} group={m.id === 'teardown' ? 'teardown' : m.group} /></span>
-        <span className="mdt-tx">
-          <small>{T('Achievement unlocked')} · {T(m.tier === 'gold' ? 'Gold' : m.tier === 'silver' ? 'Silver' : 'Bronze')}</small>
-          <b>{T(m.t)}</b>
-          <span className="mdt-lv"><em>+{XP[m.tier]} {T('points')}</em><span className="bar"><i style={{ width: L.pct + '%' }} /></span><span className="nm">{up ? T('New level') + ': ' : ''}{T(L.name)}</span></span>
-        </span>
-        <a className="mdt-go" href="/account#medals" onClick={() => setShow(null)}>{T('See all')}</a>
-        <button type="button" className="mdt-x" aria-label={T('Close')} onClick={() => setShow(null)}><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round"><path d="M6 6l12 12M18 6L6 18" /></svg></button>
-        <EdgeTimer ms={MS} r={20} onEnd={() => setShow(null)} />
-      </div>
+    <div className="mdt-dock mdt3-dock" key={m.id}>
+      <a className={'mdt3 t-' + m.tier} role="status" aria-live="polite" href="/account#medals" onClick={() => setShow(null)}>
+        <span className="mdt3-tok"><Medal tier={m.tier} size={40} group={m.id === 'teardown' ? 'teardown' : m.group} /></span>
+        <span className="mdt3-tx"><small>{T(TN[m.tier])} · <em>+{XP[m.tier]} {T('points')}</em></small><b>{T(m.t)}</b></span>
+        <span className="mdt3-lv"><small>{up ? T('Level up') : 'Lv ' + (L.i + 1)}</small><b>{T(L.name)}</b><span className="bar"><i style={{ width: L.pct + '%' }} /></span></span>
+        <EdgeTimer ms={MS} r={999} onEnd={() => setShow(null)} />
+      </a>
     </div>
   );
 }
