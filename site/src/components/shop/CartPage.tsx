@@ -54,7 +54,8 @@ export default function CartPage() {
   const check = (e: React.FormEvent) => { e.preventDefault(); setErr(''); if (!lines.length) return; if (del !== 'pickup' && !form.address.trim()) return setErr(T('Please add the delivery address.')); setQid(messageId()); setShowMsg(false); setPv(true); };
   const place = async () => {
     if (!lines.length) return;
-    setBusy(true);
+    setBusy(true); import('@/lib/sound').then((m) => m.play('tada')).catch(() => {}); // owner (R12): an order placed is a "ta-da"
+
     // WhatsApp opens right away (a tab opened before the wait is not blocked) and gets the list after
     const tab = via === 'wa' ? window.open('', '_blank') : null;
     const r = await backend.placeOrder({ email: form.email, name: form.name, phone: form.phone, lines: lines.map(({ l, p }) => ({ id: p.id, title: p.title, grade: p.gradeName, qty: l.qty, unit: unit(p), ...(fixed(p) ? {} : { confirm: true }) })), sub: sub - disc, vat, ship, total, delivery: del, address: form.address, country: form.country, note: '[' + qid + '] [Sent by ' + ({ wa: 'WhatsApp', wc: 'WeChat', mail: 'e-mail', web: 'website' } as const)[via] + '] ' + (toConfirm ? '[Prices to confirm: ' + toConfirm + '] ' : '') + (cp ? '[Coupon ' + cp.code + ' −' + disc.toFixed(2) + '] ' : '') + form.note, pay: toConfirm ? 'whatsapp' : pay, company: form.company || undefined, ...(toConfirm ? { pending: true } : {}) });

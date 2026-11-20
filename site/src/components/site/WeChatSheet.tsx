@@ -16,6 +16,8 @@ import { site } from '@/content/facts';
 // owner (19 Nov): staff see how loyal a visitor is: their website level and points travel with every contact
 const lvl = () => { try { const w = window as unknown as { __seLvl?: () => { name: string; xp: number } }; const L = w.__seLvl?.(); return L ? '\n*Website level:* ' + L.name + ' (' + L.xp + ' points)' : ''; } catch { return ''; } };
 const logTap = (mode: Mode, text: string) => {
+  // owner (R12): every action has its sound: a message or order going out plays the "send" phrase
+  import('@/lib/sound').then((m) => m.play('send')).catch(() => {});
   import('@/lib/achievements').then((a) => a.unlock('contact')).catch(() => {});
   if (wasSent(text)) return;
   backend.me().then((u) => backend.send({ name: u?.name || 'Website visitor', email: u?.email || undefined, topic: CH[mode] + ' · ' + location.pathname,

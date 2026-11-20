@@ -191,7 +191,7 @@ export default function Footer({ v }: { v: Vals }) {
             {/* owner (16 Nov): every way to reach us, each with its icon: call, WhatsApp, WeChat, email, and the website chat */}
             <span className="ft-contacts">
               <a href={`tel:${s(v.$facts?.contact?.storeTel)}`}><i className="ft-ci call" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg></i><span data-no-i18n="">{String(v.$facts?.contact?.storePhone ?? '')}</span></a>
-              <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('se:chatwith'))}><i className="ft-ci chat" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16v11H9l-5 4z" /></svg></i><span>{t('Chat with us')}</span></button>
+              <button type="button" onClick={() => window.dispatchEvent(new CustomEvent('se:chatwith'))}><i className="ft-ci chat" aria-hidden="true"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="se-chat-ic"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" /><path d="M8.6 12h.01M12 12h.01M15.4 12h.01" strokeWidth="2.8" /></svg></i><span>{t('Chat with us')}</span></button>
             </span>
             {'\n      '}
           </div>

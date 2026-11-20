@@ -111,6 +111,29 @@ function Reel({ net, k }: { net: (typeof NET)[number]; k: number }) {
   );
 }
 
+
+// R12 (owner: "the feed sometimes freezes"): the wall of ~60 post cards is its own memoised piece, so the hearts that pop
+// every few hundred milliseconds no longer re-render every card
+const Wall = React.memo(function Wall({ id, icon, c }: { id: string; icon: string; c: string }) {
+  const N = { id, icon, c };
+  return (
+    <div className="fw-wall" key={'w' + N.id} style={{ ['--c' as string]: N.c } as React.CSSProperties} aria-hidden="true">
+            {[0, 1, 2].map((col) => (
+              <div key={col} className={'fw-col c' + col}>
+                <div className="fw-run">
+                  {[0, 1].map((rep) => WALL.slice(col * 4, col * 4 + 4).concat(WALL.slice(((col + 1) % 3) * 4, ((col + 1) % 3) * 4 + 2)).map((w, k) => { const p = POSTS[(k + col) % POSTS.length]; return (
+                    <span key={rep + '-' + k} className={'fw-tile t' + ((k + col) % 3)}>
+                      <span className="hd"><img className="av" src="/assets/se-logo-metal-128.webp" alt="" /><b>samelectronics.uae</b><img className="nt" src={N.icon} alt="" /></span>
+                      <span className="ph"><img src={w} alt="" loading="lazy" />{(k + col) % 4 === 1 ? <i className="pl" /> : null}<em>{T(p.tag)}</em></span>
+                      <span className="ft"><small>♥ {(p.likes + k * 23 + col * 41).toLocaleString('en-US')}</small><b>{T(p.t)}</b></span>
+                    </span>); }))}
+                </div>
+              </div>
+            ))}
+          </div>
+  );
+});
+
 export default function FeedWall() {
   const ref = useRef<HTMLElement>(null), [k, setK] = useState(0), [net, setNet] = useState(0), [live, setLive] = useState(false), [hold, setHold] = useState(false);
   useEffect(() => {
@@ -128,7 +151,6 @@ export default function FeedWall() {
     return () => window.clearInterval(t);
   }, [live]);
   const N = NET[net];
-  const strip = [T('NEXT LANDING') + ' · ' + T('Thursday') + ' 14:00', ...POSTS.map((p) => T(p.tag) + ' · ' + T(p.t))];
   return (
     <section id="social" ref={ref} className={'fw' + (live ? ' on' : '')} data-tone="yellow" data-screen-label="The Feed">
       <div className="fw-in">
@@ -158,24 +180,21 @@ export default function FeedWall() {
           {/* owner (R11): "the phone is cheap and fake, the section looks empty": a live wall of our posts instead. Three
               columns drift past at different speeds on a slight tilt, like a feed being scrolled; every tile is a real
               post card (our avatar, the chosen network, the product shot, the tag, the caption, the likes) */}
-          <div className="fw-wall" key={'w' + N.id} style={{ ['--c' as string]: N.c } as React.CSSProperties} aria-hidden="true">
-            {[0, 1, 2].map((col) => (
-              <div key={col} className={'fw-col c' + col}>
-                <div className="fw-run">
-                  {[0, 1].map((rep) => WALL.slice(col * 4, col * 4 + 4).concat(WALL.slice(((col + 1) % 3) * 4, ((col + 1) % 3) * 4 + 2)).map((w, k) => { const p = POSTS[(k + col) % POSTS.length]; return (
-                    <span key={rep + '-' + k} className={'fw-tile t' + ((k + col) % 3)}>
-                      <span className="hd"><img className="av" src="/assets/se-logo-metal-128.webp" alt="" /><b>samelectronics.uae</b><img className="nt" src={N.icon} alt="" /></span>
-                      <span className="ph"><img src={w} alt="" loading="lazy" />{(k + col) % 4 === 1 ? <i className="pl" /> : null}<em>{T(p.tag)}</em></span>
-                      <span className="ft"><small>♥ {(p.likes + k * 23 + col * 41).toLocaleString('en-US')}</small><b>{T(p.t)}</b></span>
-                    </span>); }))}
-                </div>
-              </div>
-            ))}
+          <Wall id={N.id} icon={N.icon} c={N.c} />
+          {/* owner (R12): "keep the wall and add one phone showing our profile": the chosen network's profile, live */}
+          <div className="fw-prof" key={'p' + N.id} aria-hidden="true" style={{ ['--c' as string]: N.c } as React.CSSProperties}>
+            <span className="isl" />
+            <span className="top"><img className="av" src="/assets/se-logo-metal-128.webp" alt="" /><span className="nums"><span><b>{POSTS.length * 31}</b><small>{T('posts')}</small></span><span><b>{N.n}</b><small>{T('followers')}</small></span><span><b>{88}</b><small>{T('following')}</small></span></span></span>
+            <span className="nm"><b>Sam Electronics</b><img src={N.icon} alt="" /></span>
+            <span className="bio">{T('Phone parts in every grade · Deira, Dubai · since 2003')}</span>
+            <span className="fol">{T('Follow')}</span>
+            <span className="grid">{WALL.slice(0, 9).map((w, k) => <i key={k}><img src={w} alt="" loading="lazy" /></i>)}</span>
           </div>
           <span className="fw-hearts" aria-hidden="true">{hearts.map((h) => <i key={h.id} className={'c' + h.c + (h.L ? ' L' : '')} style={{ ['--x' as string]: h.x + 'px', ['--d' as string]: h.d + 'px', ['--s' as string]: h.s, ['--r' as string]: h.r + 'deg' } as React.CSSProperties} />)}</span>
         </div>
       </div>
-      <div className="fw-strip" aria-hidden="true"><div className="fw-strip-in">{[...strip, ...strip].map((s, i) => <span key={i}><i />{s}</span>)}</div></div>
+      {/* owner (R12): "the rolling belt: make it special, social-media related, more creative": live notifications */}
+      <div className="fw-strip fw-notes" aria-hidden="true"><div className="fw-strip-in">{[...POSTS, ...POSTS].map((p, i) => <span key={i} className="nt"><img className="av" src="/assets/se-logo-metal-128.webp" alt="" /><b>samelectronics.uae</b><em style={{ background: p.bg }}>{T(p.tag)}</em><span>{T(p.t)}</span><small>♥ {p.likes.toLocaleString('en-US')} · {(i % 5) + 1}{T('m')}</small></span>)}</div></div>
     </section>
   );
 }

@@ -617,3 +617,13 @@ html body .cx-card .cr-holo { width: 8.5cqw; top: 31.5%; }
 html body .cx-card .cr-holo b { font-size: 2cqw; }
 html body .cx-card .cr-micro { font-size: 1.05cqw; }
 #circuit .cx-card .cr-meta { left: 8% !important; top: 49% !important; } html[dir="rtl"] #circuit .cx-card .cr-meta { left: auto !important; right: 8% !important; }
+/* R12 (owner: "the cards collide with text; the pattern behind the logo is too concentrated, like a grey circle; the logo
+   should look dug into the card, not 2D") */
+.cx-card { container-type: inline-size; }
+.cx-card .nm { font-size: min(22px, 5.4cqw) !important; letter-spacing: .05em; max-width: 100%; }
+.cx-guil path:not(.f):not(.n):not(.w) { opacity: .32; }
+.k-circle .cx-guil path:not(.f):not(.n):not(.w) { opacity: .22; }
+.cx-press .lo { transform: translate(-2px, -2px) !important; background: rgba(0,0,0,.55) !important; filter: blur(.4px); }
+.cx-press .hi { transform: translate(1.6px, 1.6px) !important; background: rgba(255,255,255,.85) !important; filter: blur(.3px); }
+.cx-press .face { filter: brightness(.9) contrast(1.05); box-shadow: inset 0 0 6px rgba(0,0,0,.35); }
+.k-grid .cx-press .hi { background: rgba(255,255,255,.34) !important; }

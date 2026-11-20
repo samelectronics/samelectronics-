@@ -202,3 +202,12 @@ html[dir='rtl'] .dl-new, html[dir='rtl'] .dl-flaps, html[dir='rtl'] .dl-ship-clo
 #deals .dl-eb, #deals .dl-k, #deals .dl-eb .dl-live, #deals .dl-eb .dl-live b { color: #F7C032 !important; }
 #deals .dl-live i, .lb-eb i { position: relative; background: #3ECF8E !important; box-shadow: none !important; animation: none !important; }
 #deals .dl-live i::after, .lb-eb i::after { content: ''; position: absolute; inset: 0; border-radius: 50%; background: #3ECF8E; animation: sePing 2.2s ease-out infinite; }
+/* R12 · incoming parts show the real shop photo, on the shop's own light card */
+.dl-pre-img { background: radial-gradient(80% 80% at 50% 30%, #FFFFFF, #ECEEF0) !important; width: 72px !important; height: 64px !important; }
+.dl-pre-img img { width: 100% !important; height: 100% !important; object-fit: cover !important; filter: none !important; }
+/* R12 (suggestion, owner said yes): each deal card catches a short shine as it slides in, so the belt feels live */
+.dl-card { position: relative; overflow: hidden; }
+.dl-card::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 3; background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,.22) 48%, rgba(255,224,138,.18) 52%, transparent 65%); background-size: 250% 100%; background-position: 130% 0; animation: dlShine 6s ease-in-out infinite; animation-delay: calc(var(--i, 0) * .45s); }
+.dl-card:nth-child(3n+1)::after { --i: 0; } .dl-card:nth-child(3n+2)::after { --i: 2; } .dl-card:nth-child(3n)::after { --i: 4; }
+@keyframes dlShine { 0%, 70% { background-position: 130% 0; } 85%, 100% { background-position: -30% 0; } }
+@media (prefers-reduced-motion: reduce) { .dl-card::after { animation: none; } }

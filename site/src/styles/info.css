@@ -547,3 +547,12 @@ html[dir=rtl] .ck-sw[aria-checked=true] i { transform: translateX(-22px); }
 .sb-cmp span { display: flex; flex-direction: column; gap: 2px; } .sb-cmp b { font: 600 14px Inter, sans-serif; } .sb-cmp small { font: 400 12.5px Inter, sans-serif; color: #A9ADB2; }
 .sb-cmp em { display: inline-flex; align-items: center; gap: 6px; flex: none; font: 600 13px Inter, sans-serif; font-style: normal; color: #F7C032; }
 .sb-cmp:hover { border-color: rgba(247,192,50,.45); }
+/* R12 · membership hero: the three cards fanned on the right, floating; the big outlined word moves out of their way */
+.sp-cine .cine-r { position: absolute; top: 50%; inset-inline-end: 4%; width: 440px; transform: translateY(-46%); z-index: 2; }
+.sp-cine .cine-r .ms-fan { height: 300px; }
+.sp-cine .cine-r .ms-f { animation: msFloat 7s ease-in-out infinite; } .sp-cine .cine-r .ms-f.f1 { animation-delay: -2.3s; } .sp-cine .cine-r .ms-f.f2 { animation-delay: -4.6s; }
+@keyframes msFloat { 50% { translate: 0 -10px; } }
+section.sp-hero.sp-cine:has(.cine-r) .cine-word { opacity: .25; }
+@media (max-width: 1100px) { .sp-cine .cine-r { display: none; } }
+.sp-cine .cine-r { transform: translateY(-64%) !important; }
+@media (max-width: 1400px) { .sp-cine .cine-r { width: 380px; inset-inline-end: 2%; } }

@@ -226,3 +226,28 @@ html[dir="rtl"] .fw-strip { direction: ltr; }
 @media (max-width: 900px) { .fw .fw-stage { min-height: 460px; } .fw-wall { grid-template-columns: repeat(2, 1fr); inset: -20px 0; } .fw-col.c2 { display: none; } }
 @media (prefers-reduced-motion: reduce) { .fw-run { animation: none; } }
 .fw-tile.t1 .ph { background: radial-gradient(70% 70% at 50% 35%, #FFFBEF, #FFE9A6) !important; }
+/* R12 · the profile phone in front of the wall */
+.fw-prof { position: absolute; z-index: 4; right: 6%; top: 50%; width: 236px; height: 470px; transform: translateY(-50%) rotate(-4deg); box-sizing: border-box; padding: 40px 14px 14px; border-radius: 38px; background: #fff; box-shadow: 0 0 0 7px #1F2023, 0 0 0 8.5px #4A4C51, 0 40px 70px -24px rgba(38,40,43,.6); display: flex; flex-direction: column; gap: 9px; overflow: hidden; animation: fwProfIn .7s cubic-bezier(.2,1.2,.4,1) both, fwProfBob 7s ease-in-out .7s infinite; }
+html[dir="rtl"] .fw-prof { right: auto; left: 6%; transform: translateY(-50%) rotate(4deg); }
+@keyframes fwProfIn { from { opacity: 0; transform: translateY(-40%) rotate(-10deg) scale(.9); } }
+@keyframes fwProfBob { 50% { translate: 0 -8px; } }
+.fw-prof .isl { position: absolute; top: 12px; left: 50%; width: 70px; height: 20px; margin-left: -35px; border-radius: 12px; background: #1F2023; }
+.fw-prof .top { display: flex; align-items: center; gap: 10px; }
+.fw-prof .av { width: 56px; height: 56px; border-radius: 50%; box-shadow: 0 0 0 2.5px #fff, 0 0 0 4.5px var(--c, #F7C032); flex: none; }
+.fw-prof .nums { flex: 1; display: flex; justify-content: space-between; text-align: center; }
+.fw-prof .nums b { display: block; font: 700 13px 'Space Grotesk', sans-serif; color: #26282B; } .fw-prof .nums small { font: 500 9.5px Inter, sans-serif; color: #7A7E84; }
+.fw-prof .nm { display: flex; align-items: center; gap: 6px; } .fw-prof .nm b { font: 700 13px Inter, sans-serif; color: #26282B; } .fw-prof .nm img { width: 14px; height: 14px; border-radius: 4px; }
+.fw-prof .bio { font: 400 11px/1.35 Inter, sans-serif; color: #5A5E64; }
+.fw-prof .fol { align-self: stretch; text-align: center; padding: 7px; border-radius: 9px; font: 700 12px Inter, sans-serif; color: #fff; background: var(--c, #26282B); }
+.fw-prof .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin: 2px -14px 0; }
+.fw-prof .grid i { aspect-ratio: 1; background: #F2F3F4; overflow: hidden; } .fw-prof .grid img { width: 100%; height: 100%; object-fit: cover; }
+@media (max-width: 1000px) { .fw-prof { width: 190px; height: 380px; right: 3%; } }
+@media (max-width: 700px) { .fw-prof { display: none; } }
+/* R12 · the belt is a live stream of notifications */
+.fw-notes .nt { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px 6px 6px; border-radius: 999px; background: rgba(255,255,255,.92); box-shadow: 0 6px 16px -10px rgba(38,40,43,.5); white-space: nowrap; }
+.fw-notes .nt .av { width: 26px; height: 26px; border-radius: 50%; box-shadow: 0 0 0 1.5px #F7C032; }
+.fw-notes .nt b { font: 700 12px Inter, sans-serif; color: #26282B; }
+.fw-notes .nt em { font: 700 9.5px/1 'JetBrains Mono', monospace; letter-spacing: .08em; font-style: normal; padding: 4px 7px; border-radius: 6px; color: #26282B; box-shadow: inset 0 0 0 1px rgba(38,40,43,.15); }
+.fw-notes .nt span { font: 500 12.5px Inter, sans-serif; color: #26282B; }
+.fw-notes .nt small { font: 500 11px Inter, sans-serif; color: #7A7E84; }
+.fw-notes .fw-strip-in { gap: 14px !important; animation-duration: 55s !important; }

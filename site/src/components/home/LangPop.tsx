@@ -60,7 +60,7 @@ function FixSam() {
   return (
     <span className="fx-sam">
       {f.dust ? <span className={'fx-dust ' + (f.reach === 'L' ? 'l' : 'r')} key={k} aria-hidden="true"><i /><i /><i /><i /></span> : null}
-      <SESamsoom mood={f.mood} reach={f.reach} tongue={f.tongue} lookX={f.lx} lookY={f.ly} size={57} />
+      <SESamsoom mood={f.mood} reach={f.reach} tongue={f.tongue} lookX={f.lx} lookY={f.ly} size={88} />
     </span>
   );
 }
@@ -86,7 +86,7 @@ export default function LangPop() {
       // the card stays until the tick has fully played.
       requestAnimationFrame(() => requestAnimationFrame(() => {
         if (window.seI18n) window.seI18n.now(l as never);
-        later(120, () => { const t0 = performance.now(); const step = (n: number) => { const k = Math.min(1, (n - t0) / 3000) /* R10: long enough to watch Samsoom fix himself */, e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; setPct(Math.min(99, Math.round(e * 100))); if (k < 1) raf.current = requestAnimationFrame(step); else { const t1 = performance.now(); const wait = () => { if ((window.seI18n && window.seI18n.lang() === l) || performance.now() - t1 > 8000) { setPct(100); later(150, () => setPhase('done')); later(1650, close); } else { setPct(99); later(120, wait); } }; wait(); } }; raf.current = requestAnimationFrame(step); });
+        later(120, () => { const t0 = performance.now(); const step = (n: number) => { const k = Math.min(1, (n - t0) / 3000) /* R10: long enough to watch Samsoom fix himself */, e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; setPct(Math.min(99, Math.round(e * 100))); if (k < 1) raf.current = requestAnimationFrame(step); else { const t1 = performance.now(); const wait = () => { if ((window.seI18n && window.seI18n.lang() === l) || performance.now() - t1 > 8000) { setPct(100); later(150, () => { setPhase('done'); import('@/lib/sound').then((m) => m.play('tada')).catch(() => {}); }); later(1650, close); } else { setPct(99); later(120, wait); } }; wait(); } }; raf.current = requestAnimationFrame(step); });
       }));
     };
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); };
@@ -103,7 +103,7 @@ export default function LangPop() {
     <div className={'lp lp3-veil' + (phase === 'out' ? ' lp-out' : '')} data-no-i18n="" role="dialog" aria-modal="true" aria-live="polite" aria-label={done ? T.done : T.load}>
       <div className={'sn2 lp3' + (done ? ' done' : '')} dir={to === 'ar' || to === 'fa' || to === 'ur' ? 'rtl' : 'ltr'} lang={to}>
         <span className="sn2-sam" aria-hidden="true">
-          <span className="lp3-jump" key={done ? 'd' : 'l'}>{done ? <LiveSam fit size={92} pose="celebrate" /> : <FixSam />}</span>
+          <span className="lp3-jump" key={done ? 'd' : 'l'}>{done ? <LiveSam fit size={112} pose="celebrate" /> : <FixSam />}</span>
           <i className="sn2-badge lp3-bat">{done ? <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5" /></svg> : <span className="cell" dir="ltr"><i style={{ transform: `scaleX(${pct / 100})` }} /></span>}</i>
         </span>
         <small className="lp3-eb">{T.eb}</small>

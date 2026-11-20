@@ -194,3 +194,28 @@ html body section.st .st-bc .st-today, html body section.st .st-bc .st-today * {
 .st-ph:has(.st-ph-map) .st-ph-gloss { z-index: 2; }
 html body #story .st-v { color: #F7C032 !important; background: #26282B !important; }
 html body #story .st-card.now .st-v { color: #26282B !important; background: #F7C032 !important; }
+/* R12 · the story stats as live instruments on graphite tiles */
+html body section.st .st-stats { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; border: 0 !important; }
+html body section.st .st-stats > div { position: relative; padding: 22px 22px 22px 112px !important; min-height: 116px; border: 0 !important; border-radius: 22px; background: linear-gradient(160deg, #34363A, #26282B) !important; box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 18px 34px -20px rgba(38,40,43,.6); overflow: hidden; }
+html[dir="rtl"] body section.st .st-stats > div { padding: 22px 112px 22px 22px !important; }
+html body section.st .st-stats > div::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(255,255,255,.035) 0 1px, transparent 1px 4px); pointer-events: none; }
+html body section.st .st-stats, html body section.st .st-stats * { -webkit-text-fill-color: initial !important; }
+html body section.st .st-stats b, html body section.st .st-stats b * { color: #fff !important; -webkit-text-fill-color: #fff !important; font-size: 40px !important; }
+html body section.st .st-stats small { color: #F7C032 !important; -webkit-text-fill-color: #F7C032 !important; opacity: 1 !important; }
+html body section.st .st-stats > div > span { color: #B8BCC1 !important; -webkit-text-fill-color: #B8BCC1 !important; opacity: 1 !important; }
+.st-vis { position: absolute; left: 18px; top: 50%; width: 78px; height: 78px; transform: translateY(-50%); display: grid; place-items: center; }
+html[dir="rtl"] .st-vis { left: auto; right: 18px; }
+.st-vis svg { width: 100%; height: 100%; overflow: visible; fill: none; stroke-linecap: round; }
+.st-vis .tr { stroke: rgba(255,255,255,.1); stroke-width: 5; } .st-vis .rg { stroke: #F7C032; stroke-width: 5; stroke-dasharray: 100; stroke-dashoffset: 100; transform: rotate(-90deg); transform-origin: 32px 32px; filter: drop-shadow(0 0 4px rgba(247,192,50,.8)); animation: stRing 2.4s cubic-bezier(.2,.8,.2,1) .3s forwards; }
+@keyframes stRing { to { stroke-dashoffset: 8; } }
+.st-vis .hd { stroke: #fff; stroke-width: 3; animation: stHand 8s linear infinite; transform-origin: 32px 32px; }
+@keyframes stHand { to { transform: rotate(360deg); } }
+.st-vis .arc { stroke: rgba(247,192,50,.85); stroke-width: 2; stroke-dasharray: 4 4; }
+.st-vis .pn path { fill: #F7C032; } .st-vis .pn circle { fill: #26282B; } .st-vis .pn.b path { fill: #fff; }
+.st-vis .pl { fill: #fff; filter: drop-shadow(0 0 4px #F7C032); }
+.st-vis .gl { stroke: rgba(255,255,255,.18); stroke-width: 1.4; }
+.st-vis .dt { fill: #F7C032; opacity: .15; animation: stDot 3.2s ease-in-out infinite; }
+@keyframes stDot { 30%, 60% { opacity: 1; filter: drop-shadow(0 0 3px #F7C032); } }
+@media (max-width: 900px) { html body section.st .st-stats { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .st-vis * { animation: none !important; } }
+html body #story .st-card.now .st-v { color: #26282B !important; -webkit-text-fill-color: #26282B !important; background: #F7C032 !important; }

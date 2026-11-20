@@ -176,7 +176,7 @@ function render(v: Vals) {
               Directions
             </a>
             <button type="button" className="vs-btn line dk" onClick={() => window.dispatchEvent(new CustomEvent('se:chatwith'))}>
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" /></svg>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="se-chat-ic"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" /><path d="M8.6 12h.01M12 12h.01M15.4 12h.01" strokeWidth="2.8" /></svg>
               Contact us
             </button>
             <button type="button" className="vs-btn wa" onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wa' } }))}>

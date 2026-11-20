@@ -96,9 +96,14 @@ class Component extends DCLogic {
       notify: () => window.dispatchEvent(new CustomEvent('se:flash', { detail: { t: 'We’ll message you when ' + sh.id + ' lands.' } })) } : null;
     // R9 (owner): each pre-order shows the real 3D part (the first part family it lists); Reserve sends the request on WhatsApp
     const PRE_IMG = { screen: 'solo-scr', batter: 'solo-bat', back: 'solo-bcv', camera: 'solo-cam', flex: 'solo-flx', frame: 'solo-frm' };
+    // owner (R12): "the products here show the same black screens; it should be LIVE from the shop": the real shop photo of
+    // that model's part (the same picture the shop card shows); the standard pose is only a fallback
+    const norm = (x) => String(x || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+    const liveImg = (model, parts) => { if (!D || !D.products) return ''; const m = norm(model), t = String(parts || '').toLowerCase(), k = Object.keys(PRE_IMG).find((x) => t.includes(x)) || '';
+      const hit = D.products.find((q) => q.img && norm(q.title).includes(m) && (!k || norm(q.title + ' ' + (q.category || '')).includes(k))) || D.products.find((q) => q.img && norm(q.title).includes(m)); return hit ? hit.img : ''; };
     const preImg = (parts) => { const t = String(parts || '').toLowerCase(), k = Object.keys(PRE_IMG).find((x) => t.includes(x)); return window.SE_SHOTS && k ? window.SE_SHOTS.url(PRE_IMG[k], 240) : ''; };
     const waN = (D && D.contact && D.contact.wa) || '971503420015';
-    const pre = D ? D.preorders.map((p, i) => ({ ...p, k: i, img: preImg(p.parts), reserve: () => window.open('https://wa.me/' + waN + '?text=' + encodeURIComponent('*PRE-ORDER*\n\nI would like to reserve parts for the ' + p.model + ' (' + p.parts + ').\nName: \nQuantity: \n\nSent from the Sam Electronics website'), '_blank', 'noopener') })) : [];
+    const pre = D ? D.preorders.map((p, i) => ({ ...p, k: i, img: liveImg(p.model, p.parts) || preImg(p.parts), reserve: () => window.open('https://wa.me/' + waN + '?text=' + encodeURIComponent('*PRE-ORDER*\n\nI would like to reserve parts for the ' + p.model + ' (' + p.parts + ').\nName: \nQuantity: \n\nSent from the Sam Electronics website'), '_blank', 'noopener') })) : [];
     return { secRef: this.secRef, trackRef: this.trackRef, beltRef: this.beltRef, seen: s.seen, spot, cards, belt, loop, tabs, ship, pre, waiting: s.waiting, live: pool.filter((d) => d.ends > s.now).length, map: s.map,
       prev: () => { this.glide = { t0: performance.now(), from: this.bx, by: -this.step() }; }, next: () => { this.glide = { t0: performance.now(), from: this.bx, by: this.step() }; },
       hold: () => { this.hold = true; }, free: () => { this.hold = false; },

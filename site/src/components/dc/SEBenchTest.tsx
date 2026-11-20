@@ -1,5 +1,6 @@
 // Bench Test (Issue 5): rebuilt 13 Oct 2026 as a pinned, scroll-scrubbed scene. Styles in src/styles/bench-test.css.
 'use client';
+import RigAd from './RigAd';
 import React from 'react';
 import { type Vals, createDC } from '@/dc/runtime';
 import Logic, { TAPS } from './SEBenchTest.logic.js';
@@ -148,6 +149,7 @@ function render(v: Vals) {
                   </div>
                   <div className="bt-phone" data-b="phone">
                     <div className="bt-screen">
+                      <RigAd />
                       <div className="bt-pix" data-b="pix" />
                       <div className="bt-scan" data-b="scan" />
                       <svg className="bt-trace" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">

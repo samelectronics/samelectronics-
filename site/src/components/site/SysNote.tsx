@@ -34,7 +34,7 @@ export default function SysNote({ tone, kicker, title, text, acts = [], onClose,
   const pose = sam?.mood || (icon === 'wifi-off' ? 'sad' : icon === 'wifi-slow' ? 'think' : tone === 'ok' ? 'happy' : 'idle');
   const card = (
     <div className={'sn2 sn2-' + tone + (out ? ' out' : '')} role={role} aria-live={role === 'alert' ? 'assertive' : 'polite'} aria-label={kicker}>
-      <span className="sn2-sam" aria-hidden="true"><LiveSam fit size={92} pose={pose} />{icon ? <i className={'sn2-badge ' + icon}>{WIFI(icon)}</i> : null}</span>
+      <span className="sn2-sam" aria-hidden="true"><LiveSam fit size={112} pose={pose} />{icon ? <i className={'sn2-badge ' + icon}>{WIFI(icon)}</i> : null}</span>
       <b className="sn2-h">{title}</b>
       {/* owner (19 Nov): a "read more" act is an inline text link after the line, like "Cookies" in the cookie note */}
       {text ? <p className="sn2-p">{text}{acts.filter((a) => a.link).map((a) => <React.Fragment key={a.label}> <a className="sn2-ln" href={a.href} onClick={() => a.on?.()}>{a.label}</a></React.Fragment>)}</p> : null}

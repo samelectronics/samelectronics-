@@ -205,7 +205,7 @@ function render(v: Vals) {
                   Directions
                 </a>
                 <button type="button" className="st-btn line" onClick={() => window.dispatchEvent(new CustomEvent('se:chatwith'))}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" /></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" className="se-chat-ic"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z" /><path d="M8.6 12h.01M12 12h.01M15.4 12h.01" strokeWidth="2.8" /></svg>
                   Contact us
                 </button>
                 <button type="button" className="st-btn wa" onClick={() => window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: 'wa' } }))}>
@@ -244,19 +244,23 @@ function render(v: Vals) {
           </article>
         </div>
         <div className="st-stats">
-          <div>
+          {/* owner (R12): "these look boring and dead": each number is a small live instrument */}
+          <div className="st-st1">
+            <i className="st-vis" aria-hidden="true"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" className="tr" /><circle cx="32" cy="32" r="26" className="rg" pathLength="100" /><path d="M32 16v16l10 7" className="hd" /></svg></i>
             <small>SINCE</small>
             <b data-n="2003" data-from="1980">
               {v.br ? '1980' : '2003'}
             </b>
             <span>Same management since day one</span>
           </div>
-          <div>
+          <div className="st-st2">
+            <i className="st-vis" aria-hidden="true"><svg viewBox="0 0 96 64"><path d="M14 44 C 34 4, 62 4, 82 40" className="arc" pathLength="100" /><g className="pn"><path d="M14 50c-5-6-8-10-8-14a8 8 0 0 1 16 0c0 4-3 8-8 14z" /><circle cx="14" cy="36" r="2.6" /></g><g className="pn b"><path d="M82 46c-5-6-8-10-8-14a8 8 0 0 1 16 0c0 4-3 8-8 14z" /><circle cx="82" cy="32" r="2.6" /></g><circle r="2.4" className="pl"><animateMotion dur="3.2s" repeatCount="indefinite" path="M14 44 C 34 4, 62 4, 82 40" /></circle></svg></i>
             <small>CITIES</small>
             <b data-n="2">{v.br ? '0' : '2'}</b>
             <span>Dubai today, Madrid next</span>
           </div>
-          <div>
+          <div className="st-st3">
+            <i className="st-vis" aria-hidden="true"><svg viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" className="gl" /><ellipse cx="32" cy="32" rx="12" ry="26" className="gl" /><path d="M6 32h52M10 19h44M10 45h44" className="gl" />{Array.from({ length: 14 }, (_, k) => <circle key={k} cx={14 + ((k * 37) % 36)} cy={14 + ((k * 23) % 36)} r="2" className="dt" style={{ animationDelay: k * 0.22 + 's' }} />)}</svg></i>
             <small>COUNTRIES SERVED*</small>
             <b>
               <span data-n={v.countries}>{v.br ? '0' : v.countries}</span>+

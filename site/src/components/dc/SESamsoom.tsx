@@ -583,7 +583,7 @@ function render(v: Vals) {
                         justifyContent: 'center',
                       }}
                     >
-                      {v.tongue ? <span className="sm-tongue" aria-hidden="true" /> : null}
+                      {v.tongue ? <span className="sm-tongue" aria-hidden="true" style={{ top: Math.max(5, (Number(v.mHh) || 10) - 4) + 'px' }} /> : null}
                       {'\n                '}
                       {v.mSmile ? (
                         <>

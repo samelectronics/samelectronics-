@@ -1514,3 +1514,43 @@ html body .ct-card .ct-r .ct-acts { background: #fff !important; }
 html[data-theme="dark"] body .ct-card .ct-r .ct-acts { background: #2B2D31 !important; }
 html body .ct-card .ct-pv i { font-style: normal; color: #7A7E84; font-size: 12px; }
 html[data-contact-open] .mdt3-dock, html[data-contact-open] .tq-offer, html[data-contact-open] .sc2-banner { display: none !important; }
+/* R12 · new language icon: the two tiles swap places a little on hover */
+.se-lm-ic2 { overflow: visible; } .se-lm-ic2 path, .se-lm-ic2 text { transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
+:hover > .se-lm-ic2 path:first-of-type, :hover > .se-lm-ic2 text:first-of-type { transform: translate(1px, -1.5px); }
+:hover > .se-lm-ic2 path:last-of-type, :hover > .se-lm-ic2 text:last-of-type { transform: translate(-1px, 1px); }
+/* R12 (owner: "the hero circuits used to have a realistic shiny light passing; now it's a weird highlighted shape, not
+   smooth, some don't even work"): the pulse group was drawn at 14% with 18px round dashes, so the glows were fat blobs and
+   the thin cores almost invisible. Now every pulse is a bright, thin, warm-white core with a short soft halo. */
+#top g[stroke-dasharray="46 954"] { opacity: 1 !important; stroke-dasharray: 34 966 !important; }
+#top g[stroke-dasharray="46 954"] > path { stroke: #FFE7A3 !important; stroke-width: 2.6px !important; stroke-linecap: round; }
+#top g[stroke-dasharray="46 954"] > path.se-glowcopy { stroke: #F7C032 !important; stroke-width: 8px !important; opacity: .22; stroke-dasharray: 52 948 !important; }
+/* R12 (owner: "How would you like to reach us? is crowded now"): Samsoom on top; one calm row of five equal "a person"
+   tiles (icon + one word, no subtitles, no arrows); Visit us as a single slim line at the bottom */
+html body .cc-card.cc2 .cc-list { grid-template-columns: repeat(5, minmax(0, 1fr)) !important; gap: 8px !important; padding: 56px 20px 20px !important; }
+html body .cc-card.cc2 .cc-row.k-sam { grid-column: 1 / -1 !important; }
+html body .cc-card.cc2 .cc-row:is(.k-here, .k-wa, .k-wc, .k-mail, .k-tel) { grid-column: auto !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; text-align: center; gap: 8px !important; min-height: 104px !important; padding: 14px 6px !important; background: #F7F7F5 !important; color: #26282B !important; }
+html body .cc-card.cc2 .cc-row:is(.k-here, .k-wa, .k-wc, .k-mail, .k-tel) small, html body .cc-card.cc2 .cc-row:not(.k-sam):not(.k-map) .cc-la { display: none !important; }
+html body .cc-card.cc2 .cc-row:is(.k-here, .k-wa, .k-wc, .k-mail, .k-tel) b { font-size: 13px !important; line-height: 1.2; white-space: normal; }
+html body .cc-card.cc2 .cc-row:is(.k-here, .k-wa, .k-wc, .k-mail, .k-tel):hover { background: #FFF6D8 !important; box-shadow: inset 0 0 0 1.5px #F7C032 !important; }
+html body .cc-card.cc2 .cc-row.k-here { background: #26282B !important; color: #fff !important; } html body .cc-card.cc2 .cc-row.k-here b { color: #fff !important; }
+html body .cc-card.cc2 .cc-row.k-map { grid-column: 1 / -1 !important; flex-direction: row !important; align-items: center !important; min-height: 0 !important; padding: 10px 14px !important; background: transparent !important; box-shadow: inset 0 0 0 1px rgba(38,40,43,.1) !important; }
+@media (max-width: 700px) { html body .cc-card.cc2 .cc-list { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; padding: 18px 14px 16px !important; } }
+/* R12 · link preview channel bar (same as the WhatsApp sheet) with each channel's own mark */
+.lpv-card .lpv-switch { margin: 0 0 14px; }
+.lpv-ti { width: 16px; height: 16px; border-radius: 5px; flex: none; display: inline-block; margin-inline-end: 6px; vertical-align: -3px; background: #26282B; -webkit-mask: none; }
+.lpv-ti.n-instagram { background: radial-gradient(circle at 30% 110%, #FFD776 0 25%, #F3743B 45%, #D82D7E 65%, #8C3CC9 90%); }
+.lpv-ti.n-tiktok { background: #26282B; box-shadow: inset -2px 0 0 #FE2C55, inset 2px 0 0 #25F4EE; }
+.lpv-ti.n-facebook { background: #1877F2; border-radius: 50%; }
+.lpv-ti.t-map { background: #F7C032; border-radius: 50% 50% 50% 0; transform: rotate(-45deg) scale(.85); }
+.lpv-ti.t-review { background: conic-gradient(#4285F4 0 25%, #34A853 0 50%, #FBBC05 0 75%, #EA4335 0); border-radius: 50%; }
+.lpv-ti.t-tel { background: #26282B; border-radius: 50%; box-shadow: inset 0 0 0 4px #F7C032; }
+.lpv-rev { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 18px; }
+.lpv-rev b { font: 800 44px/1 'Space Grotesk', sans-serif; color: #26282B; } .lpv-rev .st { color: #F7C032; font-size: 22px; letter-spacing: 2px; } .lpv-rev small { color: #7A7E84; font: 500 13px Inter, sans-serif; }
+/* R12 · the rig phone's screen plays its own reel under the test effects; the leftover test pattern no longer lingers */
+.bt-screen { overflow: hidden; }
+.bt-screen .rig-ad { position: absolute; inset: 0; z-index: 0; border-radius: inherit; overflow: hidden; }
+.bt-screen .rig-ad canvas { width: 100%; height: 100%; display: block; }
+html body .cc-card.cc2 .cc-list .cc-row:is(.k-here, .k-wa, .k-wc, .k-mail, .k-tel) { grid-column: auto !important; flex-direction: column !important; align-items: center !important; padding: 14px 6px !important; min-height: 104px !important; }
+html body .cc-card.cc2 .cc-list .cc-row:is(.k-mail, .k-tel) .cc-li { width: 40px; height: 40px; }
+html body .cc-card.cc2 .cc-list .cc-row.k-map { grid-column: 1 / -1 !important; }
+@media (max-width: 560px) { html body .cc-card.cc2 .cc-list .cc-row:is(.k-here, .k-wa, .k-wc, .k-mail, .k-tel) { grid-column: auto !important; } }

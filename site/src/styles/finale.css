@@ -461,3 +461,52 @@ html[dir="rtl"] #finale.fz5 .fz4-stats > span + span::before { left: auto; right
 #finale.fz5 .fz4-stats b *, #finale.fz5 .fz4-stats b { color: #F7C032 !important; }
 /* R11 (owner: "a bit more of a hint of graphite, not complete black; don't ruin anything"): the same studio, lifted */
 html body #finale.fz5 { background: radial-gradient(75% 60% at 50% 18%, #44474C 0%, #2E3034 48%, #232528 100%) !important; }
+/* ═══ R12 · the finale entrance as a show (owner: "the logo lights up with the help of the circuits coming on, the LED bar
+   lights up step by step, not directly, a whole show; cinematic spotlights; the realistic teardown studio background;
+   the promise and stat cards don't match, being in cards makes them look cheap") ═══
+   0.0s  pair 1 of circuits runs in · 0.6s pair 2 · 1.2s pair 3
+   1.8s  the ring fills like a segmented LED bar (1.4s)
+   3.2s  the logo powers up (dark → lit, a flash, the bloom)
+   3.5s  two spotlights swing in from above and settle, breathing softly */
+html body #finale.fz5 { background:
+    radial-gradient(46% 30% at 50% 74%, rgba(247,192,50,.10), transparent 70%),          /* the lit studio floor */
+    radial-gradient(70% 48% at 50% 36%, #3E4146 0%, #2B2D31 52%, #222427 100%) !important; }
+#finale.fz5::before { content: ''; position: absolute; left: 0; right: 0; top: 54%; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,.10), transparent); z-index: 0; }  /* the horizon of the studio sweep */
+#finale.fz5::after { content: ''; position: absolute; inset: 0; pointer-events: none; z-index: 0; background: radial-gradient(120% 90% at 50% 40%, transparent 55%, rgba(20,21,23,.55)); }      /* vignette */
+#finale.fz5 > * { position: relative; z-index: 1; }
+/* circuits, step by step */
+#finale.fz5.fz-on .fz5-tr .run { animation: fz5Run .8s calc(var(--k) * .6s) cubic-bezier(.6,0,.3,1) both, fz6Pulse 3.2s calc(2.2s + var(--k) * .5s) linear infinite !important; }
+/* the LED ring: 40 segments that light one after another */
+#finale.fz5 .fz5-ring circle { stroke-width: 3 !important; stroke-dasharray: 1.6 .9 !important; stroke-dashoffset: 0; opacity: .14; }
+#finale.fz5.fz-on .fz5-ring circle { animation: fzLed 1.4s steps(40, end) 1.8s both !important; }
+@keyframes fzLed { from { opacity: .14; clip-path: inset(0 0 100% 0); } 1% { opacity: 1; clip-path: polygon(50% 50%, 50% 0, 50% 0, 50% 0); } 25% { clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 0); } 50% { clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%); } 75% { clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 0 100%); } 100% { opacity: 1; clip-path: polygon(50% 50%, 50% 0, 100% 0, 100% 100%, 0 100%, 0 0, 50% 0); } }
+/* the logo powers up */
+#finale.fz5 .fz5-logo img { filter: brightness(.28) saturate(.2); transition: filter .5s ease; }
+#finale.fz5.fz-on .fz5-logo img { animation: fzPower .9s ease-out 3.2s both; }
+@keyframes fzPower { 0% { filter: brightness(.28) saturate(.2); } 20% { filter: brightness(1.6) saturate(1.2); } 35% { filter: brightness(.7); } 55% { filter: brightness(1.25); } 100% { filter: brightness(1) saturate(1); } }
+#finale.fz5 .fz4-flash { opacity: 0; } #finale.fz5.fz-on .fz4-flash { animation: fzFlash .7s ease-out 3.25s both !important; }
+@keyframes fzFlash { 0% { opacity: 0; } 25% { opacity: .65; } 100% { opacity: 0; } }
+/* cinematic spotlights: two beams swing in and settle */
+#finale.fz5 .fz6-spot { opacity: 0; background: none !important; }
+#finale.fz5 .fz6-spot::before, #finale.fz5 .fz6-spot::after { content: ''; position: absolute; top: 0; width: 520px; height: 1000px; background: linear-gradient(180deg, rgba(255,240,200,.30), rgba(255,236,180,.10) 55%, transparent 85%); clip-path: polygon(46% 0, 54% 0, 100% 100%, 0 100%); filter: blur(10px); transform-origin: 50% 0; mix-blend-mode: screen; }
+#finale.fz5 .fz6-spot::before { left: 8%; transform: rotate(32deg); } #finale.fz5 .fz6-spot::after { right: 8%; transform: rotate(-32deg); }
+#finale.fz5.fz-on .fz6-spot { animation: fzSpotOn .6s ease-out 3.5s both; }
+#finale.fz5.fz-on .fz6-spot::before { animation: fzSwingL 2.2s cubic-bezier(.3,1.2,.4,1) 3.5s both, fzBreathe 6s ease-in-out 5.7s infinite; }
+#finale.fz5.fz-on .fz6-spot::after { animation: fzSwingR 2.2s cubic-bezier(.3,1.2,.4,1) 3.5s both, fzBreathe 6s ease-in-out 6.2s infinite; }
+@keyframes fzSpotOn { to { opacity: 1; } }
+@keyframes fzSwingL { from { transform: rotate(48deg); opacity: 0; } to { transform: rotate(14deg); opacity: 1; } }
+@keyframes fzSwingR { from { transform: rotate(-48deg); opacity: 0; } to { transform: rotate(-14deg); opacity: 1; } }
+@keyframes fzBreathe { 50% { opacity: .75; } }
+/* the promises and stats: no boxes, open editorial typography on the studio */
+#finale.fz5 .fz4-pro > span { background: none !important; box-shadow: none !important; border-radius: 0 !important; padding: 6px 22px !important; }
+#finale.fz5 .fz4-pro > span::after, #finale.fz5 .fz4-pro > span::before { display: none !important; }
+#finale.fz5 .fz4-pro > span + span { border-inline-start: 1px solid rgba(255,255,255,.12) !important; }
+#finale.fz5 .fz4-pro > span:hover { transform: none; box-shadow: none !important; }
+#finale.fz5 .fz4-pro .fz6-ic { color: #F7C032; }
+#finale.fz5 .fz4-stats { background: none !important; box-shadow: none !important; border: 0 !important; border-top: 1px solid rgba(255,255,255,.1) !important; border-radius: 0 !important; padding-top: 30px !important; }
+#finale.fz5 .fz4-stats > span + span::before { background: rgba(255,255,255,.12) !important; box-shadow: none !important; }
+#finale.fz5 .fz4-stats b { font-size: clamp(36px, 4.4vw, 60px) !important; color: #fff !important; text-shadow: none !important; }
+#finale.fz5 .fz4-stats b em { color: #fff !important; } #finale.fz5 .fz4-stats b { background: linear-gradient(180deg, #fff 40%, #C9CCD1) ; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent !important; }
+#finale.fz5 .fz4-stats small { color: #F7C032 !important; }
+@media (max-width: 800px) { #finale.fz5 .fz4-pro > span + span { border-inline-start: 0 !important; border-top: 1px solid rgba(255,255,255,.12) !important; } }
+@media (prefers-reduced-motion: reduce) { #finale.fz5 .fz5-logo img { filter: none !important; animation: none !important; } #finale.fz5 .fz6-spot { opacity: 1; } #finale.fz5 .fz5-ring circle { opacity: 1; animation: none !important; } }

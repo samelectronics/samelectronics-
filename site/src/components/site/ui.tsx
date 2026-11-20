@@ -11,7 +11,7 @@ export const T = (s: string) => (typeof window !== 'undefined' && window.seI18n 
 // blurred yellow lights drifting slowly in the distance, a reflective floor, fine grain, and one huge outlined word that
 // belongs to that page only (a light sweeps across it). No circuits and no side pictures: the title area is only the title.
 const WORD: Record<string, [string, number]> = { shop: ['PARTS', 0], deals: ['DEALS', 0], repair: ['REPAIR', 1], wholesale: ['TRADE', 2], worldwide: ['WORLD', 3], story: ['2003', 1], membership: ['CIRCUIT', 3], brands: ['BRANDS', 2], contact: ['HELLO', 0], account: ['BENCH', 1], faq: ['ANSWERS', 2], legal: ['TERMS', 3], cookies: ['COOKIES', 0], payments: ['PAY', 1], cart: ['CART', 2], samsoom: ['SAMSOOM', 3] };
-export function PageHero({ eb, title, accent, sub, crumb, children }: { eb: string; title: string; accent?: string; sub?: string; crumb?: [string, string?][]; children?: React.ReactNode; right?: React.ReactNode; seed?: number }) {
+export function PageHero({ eb, title, accent, sub, crumb, children, right }: { eb: string; title: string; accent?: string; sub?: string; crumb?: [string, string?][]; children?: React.ReactNode; right?: React.ReactNode; seed?: number }) {
   const key = typeof location !== 'undefined' ? location.pathname.split('/')[1] || 'home' : 'home', [word, v] = WORD[key] || [(eb.split(/[·&]/)[0] || '').trim().split(' ')[0], 0];
   return (
     <section className="sp-hero sp-cine" data-tone="dark" data-v={v}>
@@ -36,6 +36,8 @@ export function PageHero({ eb, title, accent, sub, crumb, children }: { eb: stri
           {children}
           <HeroReadout />
         </div>
+        {/* R12 (owner: "the membership page's left side is basic"): the cards themselves float on the right of its hero */}
+        {right && key === 'membership' ? <div className="sp-hero-r cine-r" aria-hidden="true">{right}</div> : null}
       </div>
     </section>
   );

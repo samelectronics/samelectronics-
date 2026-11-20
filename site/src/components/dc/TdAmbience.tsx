@@ -11,8 +11,10 @@
 import { useEffect, useRef } from 'react';
 import { prefs } from '@/lib/prefs';
 
-const CHORDS = [[73.4, 146.8, 174.6, 220.0, 293.7], [58.3, 116.5, 146.8, 174.6, 233.1], [87.3, 174.6, 220.0, 261.6, 349.2], [65.4, 130.8, 164.8, 196.0, 261.6]];
-const ROOT = [73.4, 58.3, 87.3, 65.4];
+// owner (R12): "it sounds like a GTA mission, scary; make it cinematic and more natural": a warm, open product-reveal
+// score: Cmaj7 → Am9 → Fmaj7 → Gsus2, a soft pad (no buzzy saws) and a slow felt-piano arpeggio instead of the ticking bass
+const CHORDS = [[65.4, 130.8, 164.8, 196.0, 246.9], [55.0, 110.0, 130.8, 164.8, 246.9], [43.7, 87.3, 130.8, 174.6, 220.0], [49.0, 98.0, 146.8, 196.0, 220.0]];
+const ARP = [[261.6, 329.6, 392.0, 493.9], [220.0, 261.6, 329.6, 493.9], [174.6, 220.0, 261.6, 329.6], [196.0, 293.7, 392.0, 440.0]];
 
 export default function TdAmbience() {
   const ref = useRef<HTMLSpanElement>(null);
@@ -32,26 +34,26 @@ export default function TdAmbience() {
       wet = c.createConvolver(); wet.buffer = hall(c); const wg = c.createGain(); wg.gain.value = 0.55; wet.connect(wg); wg.connect(bus);
       const dry = c.createGain(); dry.gain.value = 0.6; dry.connect(bus);
       // strings: two detuned saws per note through a warm low-pass, slow vibrato, wide in the reverb
-      const sf = c.createBiquadFilter(); sf.type = 'lowpass'; sf.frequency.value = 1400; sf.Q.value = 0.4;
+      const sf = c.createBiquadFilter(); sf.type = 'lowpass'; sf.frequency.value = 950; sf.Q.value = 0.3;
       const sg = c.createGain(); sg.gain.value = 0.0001; sf.connect(sg); sg.connect(dry); sg.connect(wet);
-      const vib = c.createOscillator(), vg = c.createGain(); vib.frequency.value = 4.6; vg.gain.value = 4; vib.connect(vg); vib.start(); nodes.push(vib);
-      CHORDS[0].forEach((f, i) => [-9, 9].forEach((dt) => { const o = c!.createOscillator(), g = c!.createGain(); o.type = 'sawtooth'; o.frequency.value = f; o.detune.value = dt; vg.connect(o.detune);
+      const vib = c.createOscillator(), vg = c.createGain(); vib.frequency.value = 0.35; vg.gain.value = 6; vib.connect(vg); vib.start(); nodes.push(vib);
+      CHORDS[0].forEach((f, i) => [-9, 9].forEach((dt) => { const o = c!.createOscillator(), g = c!.createGain(); o.type = i === 0 ? 'sine' : 'triangle'; o.frequency.value = f; o.detune.value = dt * 0.6; vg.connect(o.detune);
         g.gain.value = i === 0 ? 0.05 : 0.035; o.connect(g); g.connect(sf); o.start(); voices.push(o); nodes.push(o); }));
       // pulse: short low notes, eighths at 96 bpm, accent on the beat
-      pulseF = c.createBiquadFilter(); pulseF.type = 'lowpass'; pulseF.frequency.value = 380; pulseF.Q.value = 3; const pg = c.createGain(); pg.gain.value = 0.9; pulseF.connect(pg); pg.connect(dry); pg.connect(wet);
+      pulseF = c.createBiquadFilter(); pulseF.type = 'lowpass'; pulseF.frequency.value = 2200; pulseF.Q.value = 0.5; const pg = c.createGain(); pg.gain.value = 0.55; pulseF.connect(pg); pg.connect(dry); pg.connect(wet);
       const t0 = c.currentTime + 0.1; chordAt = t0; ci = 0; nextNote = t0; step = 0;
       const swell = (at: number) => { sg.gain.cancelScheduledValues(at); sg.gain.setValueAtTime(Math.max(0.0001, sg.gain.value), at); sg.gain.linearRampToValueAtTime(0.5, at + 0.12); sg.gain.linearRampToValueAtTime(0.85, at + 3.2); sg.gain.linearRampToValueAtTime(0.55, at + 7.6); };
       swell(t0);
       const loop = () => {
         if (!c || !pulseF) return; const ahead = c.currentTime + 0.25;
         while (nextNote < ahead) {
-          const at = nextNote, acc = step % 2 === 0, f = ROOT[ci] * (step % 8 === 6 ? 2 : 1);
-          const o = c.createOscillator(), g = c.createGain(); o.type = 'sawtooth'; o.frequency.value = f; g.gain.setValueAtTime(0.0001, at); g.gain.exponentialRampToValueAtTime(acc ? 0.22 : 0.12, at + 0.008); g.gain.exponentialRampToValueAtTime(0.0001, at + 0.22);
-          o.connect(g); g.connect(pulseF); o.start(at); o.stop(at + 0.25);
-          nextNote += 60 / 96 / 2; step++;
+          const at = nextNote, acc = step % 4 === 0, f = ARP[ci][[0, 1, 2, 3, 2, 1][step % 6]] * (step % 12 >= 6 ? 2 : 1);
+          const o = c.createOscillator(), g = c.createGain(); o.type = 'sine'; o.frequency.value = f; g.gain.setValueAtTime(0.0001, at); g.gain.exponentialRampToValueAtTime(acc ? 0.16 : 0.1, at + 0.006); g.gain.exponentialRampToValueAtTime(0.0001, at + 1.4);
+          o.connect(g); g.connect(pulseF); o.start(at); o.stop(at + 1.5);
+          nextNote += 60 / 72 / 2; step++;
         }
         if (c.currentTime + 0.3 >= chordAt + 8) { chordAt += 8; ci = (ci + 1) % CHORDS.length; let k = 0; CHORDS[ci].forEach((f) => [0, 1].forEach(() => { voices[k++]?.frequency.setTargetAtTime(f, chordAt, 0.35); })); swell(chordAt); }
-        pulseF.frequency.setTargetAtTime(320 + prog * 1500, c.currentTime, 0.5);
+        pulseF.frequency.setTargetAtTime(1800 + prog * 1800, c.currentTime, 0.5);
       };
       loop(); sched = window.setInterval(loop, 90);
     };

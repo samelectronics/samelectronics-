@@ -37,7 +37,7 @@
     // owner (28 Oct): no more 'video cut out and pasted in'. The ad IS the phone's screen: its colours run edge to edge under
     // the glass, the status bar (time, signal, battery) sits at the top beside the island like a real phone, and only the
     // ad's CONTENT is kept inside a safe area (a little smaller, below the status bar), never touching corners or edges.
-    const out = cv.getContext('2d'), x = out, W = cv.width, H = cv.height, u = W / 100, M = 9 * u, REEL = (opts && opts.reel) || '', SAFE = REEL === 'ipad' ? { s: 1, top: 0 } : { s: 0.88, top: 0.075 };
+    const out = cv.getContext('2d'), x = out, W = cv.width, H = cv.height, u = W / 100, M = 9 * u, REEL = (opts && opts.reel) || '', SAFE = REEL === 'ipad' || REEL === 'rig' ? { s: 1, top: 0 } : { s: 0.88, top: 0.075 };
     const FULL = [-W * 0.2, -H * 0.2, W * 1.4, H * 1.4]; // any full-screen fill bleeds past the safe area to the real edges
     let lang = null, imgs = [];
     const load = () => { lang = AR(); imgs = SCN.map((q) => { const im = new Image(); im.decoding = 'async'; im.src = window.SE_SHOTS ? window.SE_SHOTS.url(q.id, 960) : ''; return im; }); };
@@ -139,7 +139,7 @@
       x.fillStyle = Y; x.font = '500 ' + 3.4 * u + 'px ' + F.jb; x.fillText(T('QUALITY · WARRANTY · PRICE'), cx, cy + r + 20 * u); x.globalAlpha = 1;
       const pk = eo(K(lt, 1.4, 0.4)), pulse = 1 + 0.03 * Math.sin(Math.max(0, lt - 1.8) * 7) * cl(lt - 1.8); x.globalAlpha = pk; x.save(); x.translate(cx, H - 22 * u); x.scale(pulse, pulse); x.fillStyle = Y; rr(x, -30 * u, -5 * u, 60 * u, 10 * u, 5 * u); x.fill(); text(T('Find My Part') + (ar ? '  ←' : '  →'), 0, 1.5 * u, '600 ' + 4 * u + 'px ' + F.in, G, 'center'); x.restore(); x.globalAlpha = 1;
       const out = K(lt, CLOSE - 0.25, 0.25); if (out > 0) { x.globalAlpha = out; x.fillStyle = '#000'; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); x.globalAlpha = 1; } }
-    function status(dark) { if (REEL === 'ipad') return; // owner (R11): no time or battery on the iPad // the status bar: the time, signal and battery, in the screen's ink (in the 'ears' beside the island, clear of the corners)
+    function status(dark) { if (REEL === 'ipad' || REEL === 'rig') return; // owner (R11): no time or battery on the iPad // the status bar: the time, signal and battery, in the screen's ink (in the 'ears' beside the island, clear of the corners)
       const M = 19 * u, Y0 = 1.8 * u; /* R10 C4: a real safe margin from the rounded corners */ const d = new Date(), hh = String(d.getHours()).padStart(2, '0'), mm = String(d.getMinutes()).padStart(2, '0'), c = dark ? '#FFFFFF' : G;
       x.globalAlpha = 0.9; x.fillStyle = c; x.textAlign = 'left'; x.textBaseline = 'middle'; x.font = '600 ' + 3.4 * u + 'px ' + F.in; x.fillText(hh + ':' + mm, M, 6.4 * u + Y0);
       for (let j = 0; j < 4; j++) x.fillRect(W - M - 11.5 * u + j * 1.3 * u, 6.6 * u + Y0 - (j + 1) * 0.55 * u, 0.85 * u, (j + 1) * 0.55 * u);
@@ -151,7 +151,7 @@
     // R11 · the iPad reel (owner: "brand level, logos spinning, one getting selected, the qualities doing a show"):
     // the same engine and look as this commercial, with its own script and a brand wall
     const BR = ['apple', 'samsung', 'xiaomi', 'huawei', 'google', 'oppo', 'honor', 'redmi', 'poco', 'oneplus', 'realme', 'vivo', 'infinix', 'tecno', 'nokia'];
-    const BI = REEL === 'ipad' ? BR.map((b) => { const im = new Image(); im.src = '/assets/brands/' + b + '.svg'; return im; }) : [];
+    const BI = REEL === 'ipad' || REEL === 'rig' ? BR.map((b) => { const im = new Image(); im.src = '/assets/brands/' + b + '.svg'; return im; }) : [];
     const logoAt = (im, cx, cy, maxW, maxH) => { if (!ok(im)) return; const r = im.naturalWidth / im.naturalHeight || 3, w = Math.min(maxW, maxH * r), h = w / r; x.drawImage(im, cx - w / 2, cy - h / 2, w, h); };
     function brands(l) { // a 3D carousel of brand plates spins and slows, one is pulled to the front and lit, then the wall lands
       fill('dark'); streaks(l, 'dark', -0.4);
@@ -168,8 +168,17 @@
     }
     // owner (R12): the iPad reel was "a bit too quick" and "like the teardown ad": it is slower and tells the SHOP story:
     // the brand slams, then search → pick a grade → add to cart → order on WhatsApp/WeChat, the brands, every grade, close
-    const GSTEP = REEL === 'ipad' ? 0.3 : 0.22;
-    const BEATS = REEL === 'ipad' ? [
+    const GSTEP = REEL === 'ipad' ? 0.3 : REEL === 'rig' ? 0.34 : 0.22;
+    // owner (R12): the rig's own reel: what the bench proves (tested, graded), every grade, the brands, the close
+    const RIG = [
+      { d: 0.7, f: (l) => slam('TESTED.', l, 'dark', 'zoom') },
+      { d: 0.7, f: (l) => slam('GRADED.', l, 'yel', 'side') },
+      { d: 0.7, f: (l) => slam('HONEST.', l, 'light', 'spin') },
+      { d: 9 * 0.34, f: (l) => grades(l) },
+      { d: 3.0, f: (l) => brands(l) },
+      { d: 2.0, f: (l) => finale(l) },
+    ];
+    const BEATS = REEL === 'rig' ? RIG : REEL === 'ipad' ? [
       { d: 0.7, f: (l) => slam('SAM', l, 'dark', 'zoom') },
       { d: 0.75, f: (l) => slam('ELECTRONICS', l, 'yel', 'side') },
       { d: 0.7, f: (l) => slam('THE SHOP.', l, 'light', 'spin') },
