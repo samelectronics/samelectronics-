@@ -1335,3 +1335,30 @@ html body footer:has(.ft-mark)::after { height: 60px !important; bottom: -20px !
 .wc-num.sm { font-size: 15px !important; word-break: break-all; }
 .ct-sent { display: flex; align-items: center; justify-content: center; height: 52px; border-radius: 14px; background: #E8F7EF; color: #1F8A4C; font: 600 15px Inter, sans-serif; }
 .ct-hint { color: #8A8E94; }
+/* ── R11 · "how would you like to reach us": tiles, not a table ── */
+.cc-card.cc2 .cc-list { display: grid !important; grid-template-columns: repeat(6, 1fr) !important; gap: 10px !important; }
+.cc-list .cc-row { grid-column: span 2; position: relative; display: flex !important; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 14px; min-height: 108px; padding: 14px !important; border: 0 !important; border-radius: 18px !important; background: #F4F5F6 !important; box-shadow: inset 0 0 0 1px rgba(38,40,43,.05); text-align: start; transition: translate .3s cubic-bezier(.3,1.6,.5,1), box-shadow .2s !important; }
+.cc-list .cc-row:hover { box-shadow: inset 0 0 0 2px #F7C032, 0 12px 26px -14px rgba(0,0,0,.4) !important; }
+.cc-list .cc-row:is(.k-sam, .k-here) { grid-column: span 3; min-height: 120px; }
+.cc-list .cc-row.k-sam { background: linear-gradient(140deg, #FFE08A, #F7C032) !important; }
+.cc-list .cc-row.k-here { background: linear-gradient(140deg, #3D3E3F, #26282B) !important; color: #fff; }
+.cc-list .cc-row.k-here .cc-lt b { color: #fff !important; } .cc-list .cc-row.k-here .cc-lt small { color: #C9CCD1 !important; }
+.cc-list .cc-row:is(.k-tel, .k-map) { grid-column: span 3; min-height: 0; flex-direction: row; align-items: center; justify-content: flex-start; padding: 10px 14px !important; }
+.cc-list .cc-row .cc-li { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: #fff; box-shadow: 0 4px 10px -6px rgba(0,0,0,.4); flex: none; }
+.cc-list .cc-row.k-sam .cc-li { background: rgba(255,255,255,.55); } .cc-list .cc-row.k-here .cc-li { background: rgba(255,255,255,.1); color: #F7C032; }
+.cc-list .cc-row .cc-li.wa { background: #25D366; } .cc-list .cc-row .cc-li.wc { background: #07C160; } .cc-list .cc-row .cc-li.mail { background: #26282B; color: #F7C032; }
+.cc-list .cc-row .cc-li .ct-ic { filter: brightness(0) invert(1); }
+.cc-list .cc-row .cc-lt { display: flex; flex-direction: column; gap: 3px; }
+.cc-list .cc-row .cc-lt b { font: 700 15px/1.15 'Space Grotesk', sans-serif; }
+.cc-list .cc-row .cc-lt small { font: 500 12px/1.3 Inter, sans-serif; color: #6A6D72; }
+.cc-list .cc-row > svg:last-child, .cc-list .cc-row .cc-go { position: absolute; top: 14px; inset-inline-end: 14px; opacity: .5; }
+@media (max-width: 560px) { .cc-card.cc2 .cc-list { grid-template-columns: repeat(2, 1fr) !important; } .cc-list .cc-row, .cc-list .cc-row:is(.k-sam, .k-here, .k-tel, .k-map) { grid-column: span 1; } .cc-list .cc-row.k-mail { grid-column: span 2; min-height: 0; flex-direction: row; align-items: center; } }
+
+.cc-card.cc2 .cc-list > * { min-width: 0; } .cc-card.cc2 .cc-list .cc-row .cc-lt small, .cc-card.cc2 .cc-list .cc-row .cc-lt b { overflow-wrap: anywhere; }
+.cc-card.cc2 .cc-list { overflow-x: hidden; }
+.cc-card.cc2 .cc-list .cc-row.k-sam { grid-column: 1 / -1 !important; min-height: 0; flex-direction: row; align-items: center; }
+.cc-card.cc2 .cc-list .cc-row:is(.k-here, .k-wa, .k-wc) { grid-column: span 2 !important; min-height: 116px; flex-direction: column; align-items: flex-start; }
+.cc-card.cc2 .cc-list .cc-row:is(.k-mail, .k-tel, .k-map) { grid-column: span 2 !important; min-height: 0; flex-direction: row; align-items: center; padding: 10px 12px !important; gap: 10px; }
+.cc-card.cc2 .cc-list .cc-row:is(.k-mail, .k-tel, .k-map) .cc-li { width: 34px; height: 34px; border-radius: 10px; }
+@media (max-width: 560px) { .cc-card.cc2 .cc-list .cc-row:is(.k-here, .k-wa, .k-wc, .k-mail, .k-tel, .k-map) { grid-column: span 1 !important; } .cc-card.cc2 .cc-list .cc-row.k-here { grid-column: 1 / -1 !important; min-height: 0; flex-direction: row; align-items: center; } }
+@media (max-width: 560px) { .cc-card.cc2 .cc-list .cc-row.k-map { grid-column: 1 / -1 !important; } }

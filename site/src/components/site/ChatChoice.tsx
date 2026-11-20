@@ -31,7 +31,7 @@ const ROWS: Row[] = [
   { k: 'here', b: 'A person, here', s: 'Live chat on the website', ic: IC('M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z') },
   { k: 'wa', b: 'WhatsApp', s: 'A person replies', ic: <i className="ct-ic wa" /> },
   { k: 'wc', b: 'WeChat', s: 'A person replies', ic: <i className="ct-ic wc" /> },
-  { k: 'mail', b: 'E-mail', s: site.contact.email, ltr: true, href: 'mailto:' + site.contact.email, ic: IC('M3 6h18v12H3zM3 7l9 6 9-6') },
+  { k: 'mail', b: 'E-mail', s: 'Usually the same day', ic: IC('M3 6h18v12H3zM3 7l9 6 9-6') },
   { k: 'tel', b: 'Call the shop', s: '+971 4 273 3031', ltr: true, href: 'tel:' + site.contact.storeTel, ic: IC('M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2') },
   { k: 'map', b: 'Visit us', s: 'Al Murar, Deira, Dubai', href: site.contact.mapsLink, ic: IC('M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11zM12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z') },
 ];
@@ -51,7 +51,7 @@ export default function ChatChoice() {
   const go = (k: string) => {
     if (k === 'sam') { setOpen(false); if (location.pathname.startsWith('/samsoom')) { document.querySelector<HTMLTextAreaElement>('.ak-in textarea')?.focus(); return; } window.dispatchEvent(new CustomEvent('se:chat', { detail: {} })); return; }
     if (k === 'here') { setMode('person'); return; }
-    if (k === 'wa' || k === 'wc') { setOpen(false); window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: k, text: pre.text || context() } })); }
+    if (k === 'wa' || k === 'wc' || k === 'mail') { setOpen(false); window.dispatchEvent(new CustomEvent('se:contact', { detail: { mode: k, text: pre.text || context() } })); }
   };
   if (!open) return null;
   return (
@@ -77,8 +77,8 @@ export default function ChatChoice() {
               const st = { ['--k' as string]: k } as React.CSSProperties;
               const href = r.k === 'mail' && pre.text ? r.href + '?subject=' + encodeURIComponent(pre.subject || T('Website enquiry')) + '&body=' + encodeURIComponent(pre.text.replace(/\*/g, '')) : r.href;
               return href
-                ? <a key={r.k} className="cc-row" style={st} href={href} target={r.k === 'map' ? '_blank' : undefined} rel="noopener noreferrer" onClick={() => setOpen(false)}>{inner}</a>
-                : <button key={r.k} type="button" className="cc-row" style={st} onClick={() => go(r.k)}>{inner}</button>;
+                ? <a key={r.k} className={'cc-row k-' + r.k} style={st} href={href} target={r.k === 'map' ? '_blank' : undefined} rel="noopener noreferrer" onClick={() => setOpen(false)}>{inner}</a>
+                : <button key={r.k} type="button" className={'cc-row k-' + r.k} style={st} onClick={() => go(r.k)}>{inner}</button>;
             })}
           </div>
         </>)}
