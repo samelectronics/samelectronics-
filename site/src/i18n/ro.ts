@@ -4079,5 +4079,11 @@ const DICT: Record<string, string> = {
   'GRADED.': 'CLASIFICAT.',
   'HONEST.': 'CINSTIT.',
   'now': 'acum',
+  'What does this mean?': 'Ce înseamnă asta?',
+  'The grade is the quality of the part. Original is the maker’s own part; OLED and Incell are strong replacements; AAA and below are budget options. Every grade has its own warranty.': 'Gradul arată calitatea piesei. Original este piesa producătorului; OLED și Incell sunt înlocuitori buni; AAA și mai jos sunt opțiuni ieftine. Fiecare grad are garanția sa.',
+  'The manufacturer is the factory that made the part. Some make the original parts for the brands, others make replacements. We list each one by name so you always know what you get.': 'Producătorul este fabrica ce a făcut piesa. Unii fac piese originale pentru mărci, alții înlocuitori. Îi numim pe fiecare, ca să știi mereu ce primești.',
+  'Quality groups the grades: Original, high-quality replacements and budget parts. Pick one to see only those.': 'Calitatea grupează gradele: original, înlocuitori de calitate și piese ieftine. Alege una ca să le vezi doar pe acelea.',
+  'Each grade carries its own warranty, written on your invoice. Keep the part in its original state to claim it.': 'Fiecare grad are garanția sa, scrisă pe factură. Păstrează piesa în starea originală ca s-o poți folosi.',
+  'The site adds these details for our team (your reference, the page, the time and your device), so we can answer fast. You cannot change them; your own words go in the box above.': 'Site-ul adaugă aceste detalii pentru echipa noastră (referința, pagina, ora și dispozitivul tău), ca să răspundem repede. Nu le poți schimba; cuvintele tale merg în caseta de mai sus.',
 };
 export default DICT;

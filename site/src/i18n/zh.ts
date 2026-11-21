@@ -4082,5 +4082,11 @@ const DICT: Record<string, string> = {
   'HONEST.': '诚信。',
   'WeChat': '微信',
   'now': '刚刚',
+  'What does this mean?': '这是什么意思？',
+  'The grade is the quality of the part. Original is the maker’s own part; OLED and Incell are strong replacements; AAA and below are budget options. Every grade has its own warranty.': '品级代表配件的质量。原装是品牌自己的配件；OLED 和 Incell 是优质替换件；AAA 及以下是经济选择。每个品级都有自己的保修。',
+  'The manufacturer is the factory that made the part. Some make the original parts for the brands, others make replacements. We list each one by name so you always know what you get.': '制造商是生产配件的工厂。有的为品牌生产原装件，有的生产替换件。我们写明每一家，让您清楚知道买到的是什么。',
+  'Quality groups the grades: Original, high-quality replacements and budget parts. Pick one to see only those.': '质量把品级分组：原装、优质替换件和经济配件。选一个只看这一类。',
+  'Each grade carries its own warranty, written on your invoice. Keep the part in its original state to claim it.': '每个品级都有自己的保修，写在发票上。保持配件原样即可申请。',
+  'The site adds these details for our team (your reference, the page, the time and your device), so we can answer fast. You cannot change them; your own words go in the box above.': '网站会为我们的团队附上这些信息（您的编号、页面、时间和设备），方便我们快速回复。这些不能修改；您自己的话写在上方的框里。',
 };
 export default DICT;

@@ -238,3 +238,6 @@ html[dir="rtl"] .st-vis { left: auto !important; right: 22px !important; }
 section.st .st-bc .st-map { height: 300px !important; -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 55%, rgba(0,0,0,.4) 82%, transparent 100%); mask-image: linear-gradient(180deg, #000 0%, #000 55%, rgba(0,0,0,.4) 82%, transparent 100%); margin-bottom: -60px; border-radius: inherit; }
 section.st .st-bc .st-gmap { filter: grayscale(.55) contrast(1.05) brightness(.92) !important; }
 section.st .st-bc .st-open { z-index: 3; }
+.st-pin-wrap { height: 250vh !important; } /* R15: shorter, free scrolling story */
+#story .st-vis, .st-stats .st-vis { display: none !important; } /* R15 (owner: "remove their ugly icons; clean like the wholesale numbers") */
+#story > .se-gut { z-index: 3 !important; pointer-events: none; } /* R15: the side circuits run past as you travel through the timeline (they were hidden under the pinned panel) */

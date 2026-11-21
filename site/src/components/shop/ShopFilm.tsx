@@ -1,6 +1,6 @@
 'use client';
 // Owner (16 Nov): "love the energy of the teardown video, I want it in the shop". The same film engine as the final
-// call (public/se-td-ad.js), playing on a phone screen inside the shop's main banner. It only draws while visible.
+// call (public/se-td-reel.js), playing on a phone screen inside the shop's main banner. It only draws while visible.
 import React, { useEffect, useRef } from 'react';
 
 type Ad = { draw: (t: number) => void; dur: number };

@@ -23,7 +23,7 @@ const SIDE: Side[][] = [
 type Slide = { k: string; t: string; a: string; d: string; cta: string; go: () => void; img: string; bg: string; ink: string; film?: boolean };
 
 export default function Banners({ onDeals, onCat, ctx, onGo }: { onDeals: () => void; onCat: (c: string) => void; ctx?: Ctx | null; onGo?: () => void }) {
-  // owner (18 Nov night): "where did the big video ad go?" With a tab or filter on, the box alternates: that topic's
+  // owner (18 Nov night): "where did the big video sxp go?" With a tab or filter on, the box alternates: that topic's
   // own ad, then the playing commercial, then back (so the video is never lost)
   const [ctxOn, setCtxOn] = useState(true);
   useEffect(() => { setCtxOn(true); if (!ctx) return; const id = window.setInterval(() => setCtxOn((v) => !v), 9000); return () => window.clearInterval(id); }, [ctx?.kind, ctx && 'id' in ctx ? (ctx as { id?: string }).id : '']); // eslint-disable-line react-hooks/exhaustive-deps
@@ -42,19 +42,19 @@ export default function Banners({ onDeals, onCat, ctx, onGo }: { onDeals: () => 
   useEffect(() => { if (pause) return; const t = window.setTimeout(() => setI((n) => (n + 1) % S.length), S[i] && S[i].film ? 15000 : 6000); return () => window.clearTimeout(t); }, [i, pause, S.length]);
   const s = S[i];
   return (
-    <section className="ad" aria-label={T('Offers')} data-tour-step="5" data-tour-title="Offers and adverts" data-tour-text="The big box plays our latest offers. Pick a tab, a part or a brand and it shows that topic's own deals.">
+    <section className="sxp" aria-label={T('Offers')} data-tour-step="5" data-tour-title="Offers and adverts" data-tour-text="The big box plays our latest offers. Pick a tab, a part or a brand and it shows that topic's own deals.">
       {/* owner (16 Nov): the main advert is a real commercial that plays (ShopReel), not a phone and not a static slide */}
-      <div className="ad-main ad-reel">{ctx && ctxOn ? <ContextAd ctx={ctx} onGo={onGo || (() => document.querySelector('.shop-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))} /> : <ShopReel onCat={onCat} onDeals={onDeals} onShop={() => document.querySelector('.shop-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />}</div>
+      <div className="sxp-main sxp-reel">{ctx && ctxOn ? <ContextAd ctx={ctx} onGo={onGo || (() => document.querySelector('.shop-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' }))} /> : <ShopReel onCat={onCat} onDeals={onDeals} onShop={() => document.querySelector('.shop-body')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} />}</div>
       {/* owner: the ads always change and come in moving, never a squeezed line of cartons: two slots, each turning
           through its own set, one clean picture per ad, a few seconds apart so the page always has something new */}
-      <div className="ad-side">
+      <div className="sxp-side">
         {[0, 1].map((slot) => { const set = SIDE[slot], a = set[(si + slot) % set.length]; return (
-          <a key={slot + '-' + ((si + slot) % set.length)} className={'ad-tile ' + a.c} href={a.href} /* owner (18 Nov): a hand or mouse on it never stops it */>
+          <a key={slot + '-' + ((si + slot) % set.length)} className={'sxp-tile ' + a.c} href={a.href} /* owner (18 Nov): a hand or mouse on it never stops it */>
             <span className="clip-big" aria-hidden="true">{T(a.k)}</span><span className="clip-sweep" aria-hidden="true" />
-            <span className="ad-k">{T(a.k)}</span><b>{T(a.t)}</b><small>{T(a.d)}</small>
-            <span className="ad-go">{T(a.cta)}<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>
+            <span className="sxp-k">{T(a.k)}</span><b>{T(a.t)}</b><small>{T(a.d)}</small>
+            <span className="sxp-go">{T(a.cta)}<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6"><path d="M5 12h14M13 6l6 6-6 6" /></svg></span>
             <img src={a.img} alt="" className={'clip-pic' + (a.wide ? ' wide' : '')} />
-            <span className="ad-pips" aria-hidden="true">{set.map((_, k) => <i key={k} className={k === (si + slot) % set.length ? 'on' : ''} />)}</span>
+            <span className="sxp-pips" aria-hidden="true">{set.map((_, k) => <i key={k} className={k === (si + slot) % set.length ? 'on' : ''} />)}</span>
           </a>); })}
       </div>
     </section>

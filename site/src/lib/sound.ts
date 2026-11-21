@@ -97,21 +97,36 @@ export function playStep(i: number, total: number) {
  *  Plays only when Sounds and "Typing sound" are on (Settings). It cannot silence the phone's own keyboard clicks: those
  *  belong to the device (on a phone they are switched off in the phone's settings). */
 let kctx: AudioContext | null = null, klast = 0, knoise: AudioBuffer | null = null;
-export function keyTick(kind: 'key' | 'space' | 'enter' | 'del' = 'key') {
+/** a short vibration on phones (keys, buttons, notifications); silent where the device has none */
+export function buzz(ms: number | number[]) { try { const p = prefs().sound; if (!p.on) return; if (typeof navigator !== 'undefined' && 'vibrate' in navigator && matchMedia('(pointer: coarse)').matches) navigator.vibrate(ms); } catch { /* */ } }
+/** R15 (owner: "the typing sounds aren't satisfying like the system clicks; a different sound for delete and space, each
+ *  letter a bit varying, a vibration"): a crisp, quiet key in the same family as the site's clicks. Every key has its own
+ *  small pitch (from the letter itself, so typing a word has a melody of tiny ticks), space is a soft low "tuk", delete a
+ *  quick falling double tick, enter a firm "tok" with a light confirm. On phones each key also gives a 4 ms tap. */
+export function keyTick(kind: 'key' | 'space' | 'enter' | 'del' = 'key', ch = '') {
   if (typeof window === 'undefined' || isEmbed()) return;
   const p = prefs().sound; if (!p.on || p.vol <= 0 || p.keys === false) return;
   if (location.pathname.startsWith('/staff')) return;
-  const now = performance.now(); if (now - klast < 28) return; klast = now;
+  const now = performance.now(); if (now - klast < 24) return; klast = now;
+  buzz(kind === 'key' ? 4 : 7);
   try {
     kctx = kctx || new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
     const c = kctx; if (c.state === 'suspended') c.resume();
-    if (!knoise) { knoise = c.createBuffer(1, Math.ceil(c.sampleRate * 0.03), c.sampleRate); const d = knoise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 4); }
-    const t = c.currentTime + 0.002, vol = Math.min(1, p.vol) * (kind === 'key' ? 0.16 : 0.2), j = 1 + (Math.random() - 0.5) * 0.08;
-    const base = (kind === 'space' ? 150 : kind === 'enter' ? 120 : kind === 'del' ? 210 : 260) * j;
-    const n = c.createBufferSource(), bp = c.createBiquadFilter(), ng = c.createGain(); n.buffer = knoise; bp.type = 'bandpass'; bp.frequency.value = (kind === 'key' ? 3200 : 2200) * j; bp.Q.value = 0.9;
-    ng.gain.setValueAtTime(vol, t); ng.gain.exponentialRampToValueAtTime(0.0001, t + 0.025); n.connect(bp); bp.connect(ng); ng.connect(c.destination); n.start(t);
-    const o = c.createOscillator(), og = c.createGain(); o.type = 'sine'; o.frequency.setValueAtTime(base, t); o.frequency.exponentialRampToValueAtTime(base * 0.7, t + 0.05);
-    og.gain.setValueAtTime(0.0001, t); og.gain.exponentialRampToValueAtTime(vol * 0.9, t + 0.003); og.gain.exponentialRampToValueAtTime(0.0001, t + (kind === 'key' ? 0.05 : 0.09)); o.connect(og); og.connect(c.destination); o.start(t); o.stop(t + 0.12);
+    if (!knoise) { knoise = c.createBuffer(1, Math.ceil(c.sampleRate * 0.04), c.sampleRate); const d = knoise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 6); }
+    const out = c.createGain(); out.gain.value = Math.min(1, p.vol) * 0.9; out.connect(c.destination);
+    const code = ch ? ch.toLowerCase().charCodeAt(0) : 0, var1 = 1 + (((code * 37) % 13) - 6) * 0.012 + (Math.random() - 0.5) * 0.02;
+    const tick = (t: number, hp: number, tone: number, len: number, amp: number) => {
+      const n = c.createBufferSource(), f = c.createBiquadFilter(), g = c.createGain(); n.buffer = knoise!; f.type = hp > 0 ? 'highpass' : 'lowpass'; f.frequency.value = Math.abs(hp); f.Q.value = 0.7;
+      g.gain.setValueAtTime(amp, t); g.gain.exponentialRampToValueAtTime(0.0001, t + len); n.connect(f); f.connect(g); g.connect(out); n.start(t); n.stop(t + len + 0.01);
+      const o = c.createOscillator(), og = c.createGain(); o.type = 'triangle'; o.frequency.setValueAtTime(tone, t); o.frequency.exponentialRampToValueAtTime(tone * 0.82, t + len);
+      og.gain.setValueAtTime(0.0001, t); og.gain.exponentialRampToValueAtTime(amp * 0.5, t + 0.002); og.gain.exponentialRampToValueAtTime(0.0001, t + len * 1.3); o.connect(og); og.connect(out); o.start(t); o.stop(t + len * 1.4 + 0.01);
+    };
+    const t = c.currentTime + 0.002;
+    if (kind === 'key') tick(t, 3800 * var1, 1750 * var1, 0.018, 0.1);
+    else if (kind === 'space') tick(t, -1400, 520 * var1, 0.04, 0.13);
+    else if (kind === 'del') { tick(t, 3000, 1500, 0.014, 0.09); tick(t + 0.045, 2600, 1180, 0.014, 0.07); }
+    else { tick(t, -1800, 420, 0.05, 0.15); const o = c.createOscillator(), og = c.createGain(); o.type = 'sine'; o.frequency.value = 1320; og.gain.setValueAtTime(0.0001, t + 0.06); og.gain.exponentialRampToValueAtTime(0.04, t + 0.07); og.gain.exponentialRampToValueAtTime(0.0001, t + 0.22); o.connect(og); og.connect(out); o.start(t + 0.06); o.stop(t + 0.24); }
+    window.setTimeout(() => { try { out.disconnect(); } catch { /* */ } }, 600);
   } catch { /* audio not available */ }
 }
 // the key sound listens once for the whole site: only real typing in a text field (not shortcuts, not arrows)
@@ -122,7 +137,8 @@ if (typeof window !== 'undefined' && !(window as unknown as { __seKeys?: boolean
     const el = e.target as HTMLElement | null; if (!el) return;
     const field = el.tagName === 'TEXTAREA' || (el.tagName === 'INPUT' && /^(text|search|email|tel|url|password|number|)$/.test((el as HTMLInputElement).type)) || el.isContentEditable;
     if (!field) return;
-    if (e.key === ' ') keyTick('space'); else if (e.key === 'Enter') keyTick('enter'); else if (e.key === 'Backspace' || e.key === 'Delete') keyTick('del'); else if (e.key.length === 1) keyTick('key');
+    const ss = el.closest('.ss') as HTMLElement | null; if (ss) { ss.classList.add('ss-type'); window.clearTimeout((ss as unknown as { _tt?: number })._tt); (ss as unknown as { _tt?: number })._tt = window.setTimeout(() => ss.classList.remove('ss-type'), 160); } /* R15: the search outline flares with every key */
+    if (e.key === ' ') keyTick('space'); else if (e.key === 'Enter') keyTick('enter'); else if (e.key === 'Backspace' || e.key === 'Delete') keyTick('del'); else if (e.key.length === 1) keyTick('key', e.key);
   }, true);
 }
 // owner (R12): "creativity behind every button pressed, search bar pressed": every press sends a yellow LED ring out from
@@ -132,7 +148,7 @@ if (typeof window !== 'undefined' && !(window as unknown as { __sePress?: boolea
   window.addEventListener('pointerdown', (e) => {
     const el = (e.target as HTMLElement | null)?.closest?.('button, a[class*="btn"], a[class*="cta"], [role="button"], .ss-bar, .pc-add') as HTMLElement | null;
     if (!el || el.closest('.no-fx, [role="tab"], [role="switch"]')) return;
-    el.classList.remove('se-press'); void el.offsetWidth; el.classList.add('se-press');
+    el.classList.remove('se-press'); void el.offsetWidth; el.classList.add('se-press'); buzz(8); /* R15: a light tap under the finger on phones */
     window.setTimeout(() => el.classList.remove('se-press'), 620);
   }, { passive: true, capture: true });
 }

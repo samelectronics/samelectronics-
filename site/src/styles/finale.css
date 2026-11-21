@@ -521,3 +521,10 @@ html body #finale.fz5 { background:
 /* the promise icons: graphite on their yellow tiles */
 #finale.fz5 .fz6-ic, #finale.fz5 .fz6-ic svg { color: #26282B !important; stroke: #26282B !important; }
 #finale.fz5 .fz6-ic svg * { stroke: #26282B !important; }
+/* R15 · where each trace touches the outer ring, a small contact point lights up and breathes */
+#finale.fz5 .fz5-tr circle.end { fill: #FFE6A0 !important; stroke: none !important; opacity: 0; filter: drop-shadow(0 0 3px #F7C032) drop-shadow(0 0 8px rgba(247,192,50,.7)); }
+#finale.fz5.fz-on .fz5-tr circle.end { animation: fzEnd 2.6s ease-in-out 1.7s infinite both; }
+@keyframes fzEnd { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+/* the QUALITY · WARRANTY · PRICE line: one unbroken rule on each side */
+#finale.fz5 .fz4-eb i { display: inline-block; width: 28px; height: 2px; border-radius: 1px; background: linear-gradient(90deg, rgba(247,192,50,0), #F7C032) !important; vertical-align: middle; }
+#finale.fz5 .fz4-eb i:last-child { background: linear-gradient(90deg, #F7C032, rgba(247,192,50,0)) !important; }

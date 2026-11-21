@@ -4082,5 +4082,11 @@ const DICT: Record<string, string> = {
   'HONEST.': 'സത്യസന്ധം.',
   'WeChat': 'വീചാറ്റ്',
   'now': 'ഇപ്പോൾ',
+  'What does this mean?': 'ഇതിന്റെ അർത്ഥം എന്താണ്?',
+  'The grade is the quality of the part. Original is the maker’s own part; OLED and Incell are strong replacements; AAA and below are budget options. Every grade has its own warranty.': 'ഗ്രേഡ് പാർട്ടിന്റെ ഗുണനിലവാരമാണ്. ഒറിജിനൽ നിർമ്മാതാവിന്റെ സ്വന്തം പാർട്ട്; OLED, Incell മികച്ച പകരക്കാർ; AAA-യും താഴെയും ബജറ്റ് ഓപ്ഷനുകൾ. ഓരോ ഗ്രേഡിനും സ്വന്തം വാറന്റി.',
+  'The manufacturer is the factory that made the part. Some make the original parts for the brands, others make replacements. We list each one by name so you always know what you get.': 'പാർട്ട് നിർമ്മിച്ച ഫാക്ടറിയാണ് നിർമ്മാതാവ്. ചിലർ ബ്രാൻഡുകൾക്ക് ഒറിജിനൽ പാർട്ടുകൾ നിർമ്മിക്കുന്നു, മറ്റുള്ളവർ പകരക്കാർ. നിങ്ങൾക്ക് എന്താണ് കിട്ടുന്നതെന്ന് എപ്പോഴും അറിയാൻ ഓരോന്നിന്റെയും പേര് ഞങ്ങൾ നൽകുന്നു.',
+  'Quality groups the grades: Original, high-quality replacements and budget parts. Pick one to see only those.': 'ഗുണനിലവാരം ഗ്രേഡുകളെ ഗ്രൂപ്പ് ചെയ്യുന്നു: ഒറിജിനൽ, ഉയർന്ന ഗുണമുള്ള പകരക്കാർ, ബജറ്റ് പാർട്ടുകൾ. അവ മാത്രം കാണാൻ ഒന്ന് തിരഞ്ഞെടുക്കൂ.',
+  'Each grade carries its own warranty, written on your invoice. Keep the part in its original state to claim it.': 'ഓരോ ഗ്രേഡിനും സ്വന്തം വാറന്റി ഉണ്ട്, നിങ്ങളുടെ ഇൻവോയ്സിൽ എഴുതിയിരിക്കും. ക്ലെയിം ചെയ്യാൻ പാർട്ട് യഥാർത്ഥ നിലയിൽ സൂക്ഷിക്കൂ.',
+  'The site adds these details for our team (your reference, the page, the time and your device), so we can answer fast. You cannot change them; your own words go in the box above.': 'ഞങ്ങൾക്ക് വേഗം മറുപടി നൽകാൻ സൈറ്റ് ഈ വിവരങ്ങൾ ചേർക്കുന്നു (നിങ്ങളുടെ റഫറൻസ്, പേജ്, സമയം, ഉപകരണം). ഇവ മാറ്റാൻ കഴിയില്ല; നിങ്ങളുടെ വാക്കുകൾ മുകളിലെ ബോക്സിൽ.',
 };
 export default DICT;

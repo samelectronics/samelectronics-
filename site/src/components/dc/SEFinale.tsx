@@ -9,7 +9,7 @@ import Logic from './SEFinale.logic.js';
 
 // R11 (owner): the traces run closer together into the ring
 // owner (15 Nov): never three lines starting/ending together: each trace starts at its own pad, at its own distance
-const LEFT = ['M96 158 H250 L282 136 H468 L522 170 H608', 'M18 214 H190 L214 200 H602', 'M164 266 H240 L272 290 H468 L522 230 H608'];
+const LEFT = ['M96 158 H250 L282 136 H468 L522 170 H578', 'M18 214 H190 L214 200 H586', 'M164 266 H240 L272 290 H468 L522 230 H578']; /* R15 (owner: "the circuits must not lead to the inner yellow frame but to the first outer ring, stop there and shine slightly") */
 const mirror = (d: string) => d.replace(/([MHL]) ?(\d+)/g, (m, c, x) => c + (1440 - Number(x)));
 const RIGHT = LEFT.map(mirror);
 const WORDS = ['QUALITY', 'WARRANTY', 'PRICE'];
@@ -36,7 +36,7 @@ function render(v: Vals) {
           both edges, the ring draws itself and flickers on, light blooms, the logo rises; then the words land, centred */}
       <div className="fz5-hero" aria-hidden="true">
         <svg className="fz5-tr" viewBox="0 0 1440 400" preserveAspectRatio="xMidYMid meet">
-          {[...LEFT, ...RIGHT].map((d, k) => { const [x, y] = start(d); return (<g key={k} style={{ ['--k' as string]: k % 3 } as React.CSSProperties}><path className="bg" d={d} transform="translate(0 30)" /><path className="run" d={d} pathLength={100} transform="translate(0 30)" /><circle cx={x} cy={y + 30} r="5" /></g>); })}
+          {[...LEFT, ...RIGHT].map((d, k) => { const [x, y] = start(d); return (<g key={k} style={{ ['--k' as string]: k % 3 } as React.CSSProperties}><path className="bg" d={d} transform="translate(0 30)" /><path className="run" d={d} pathLength={100} transform="translate(0 30)" /><circle cx={x} cy={y + 30} r="5" />{(() => { const m = d.match(/([\d.]+)$/); const ex = m ? Number(m[1]) : 0, ey = Number((d.match(/(\d+) H[\d.]+$/) || [])[1] || y); return <circle className="end" cx={ex} cy={ey + 30} r="3" />; })()}</g>); })}
         </svg>
         <span className="fz6-spot" /><span className="fz6-fog" /><span className="fz6-floor" /><span className="fz5-rays" /><span className="fz5-bloom" /><span className="fz4-flash" />
         <span className="fz5-logo">

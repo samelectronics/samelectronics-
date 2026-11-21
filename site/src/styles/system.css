@@ -1464,8 +1464,8 @@ html body a.scp-5861bbd1 .hb-tk::after { content: ''; position: absolute; inset:
 /* R12 · repair estimate box: its labels are light on the graphite box (were graphite on graphite) */
 html body .rp-k.rp-kd { color: rgba(255,255,255,.62) !important; }
 /* R12 · wholesale "TRADE ONLY" stamp: in every language it sits as a small stamp ABOVE the title (never pushed into it) */
-html body .wf .wf-hrow { flex-direction: column !important; align-items: flex-start !important; flex-wrap: nowrap !important; }
-html body .wf .wf-stamp { order: -1; align-self: flex-start; margin: 0 0 16px !important; font-size: 15px !important; padding: 7px 12px 6px !important; border-width: 3px !important; max-width: 100%; }
+html:not([lang="en"]) body .wf .wf-hrow { flex-direction: column !important; align-items: flex-start !important; flex-wrap: nowrap !important; } /* R15 (owner: "keep it like it was; only fix the other languages where it collided"): English keeps the original stamp beside the title */
+html:not([lang="en"]) body .wf .wf-stamp { order: -1; align-self: flex-start; margin: 0 0 16px !important; font-size: 15px !important; padding: 7px 12px 6px !important; border-width: 3px !important; max-width: 100%; }
 /* R12 (owner: "I asked for the reviews background to be the home hero's grey material"): the hero's exact graphite with its
    fine brushed scan lines, a soft top light and a vignette */
 html body #reviews.rv { background: radial-gradient(60% 50% at 50% 0%, rgba(255,255,255,.07), transparent 70%), radial-gradient(120% 90% at 50% 50%, transparent 55%, rgba(20,21,23,.55)), #2A2C2F !important; position: relative; isolation: isolate; }
@@ -1637,3 +1637,63 @@ html body .cc-card.cc3 .cc-list .cc-row.k-here .cc-lt small { color: #6B6F75 !im
 html body .cc-card.cc3 .cc-li.here { color: #26282B !important; }
 .lpv-card:has(.lpv-switch) .lpv-switch { margin-inline-end: 44px; }
 .lpv-netimg { width: 40px; height: 40px; flex: none; border-radius: 12px; }
+/* R15 (owner: "the bar with every way to reach us is so crowded, WhatsApp is crashing into WeChat"): each tab is the icon
+   with its name under it, so four (or three) always fit with room to breathe */
+html body :is(.ct-card .ct-switch, .lpv-switch) { display: grid !important; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 4px !important; padding: 4px !important; border-radius: 16px !important; background: #F2F3F4 !important; overflow: visible !important; }
+html body :is(.ct-card, .lpv-card) .ct-swb { flex-direction: column !important; gap: 4px !important; height: auto !important; min-height: 56px; padding: 8px 4px 7px !important; border-radius: 12px !important; font: 600 11.5px/1.1 Inter, sans-serif !important; color: #5A5D62 !important; white-space: nowrap; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+html body :is(.ct-card, .lpv-card) .ct-swb.on { background: #FFFFFF !important; color: #26282B !important; box-shadow: 0 1px 2px rgba(38,40,43,.1), 0 6px 14px -8px rgba(38,40,43,.35) !important; }
+html body :is(.ct-card, .lpv-card) .ct-swb > :is(i, img) { width: 20px !important; height: 20px !important; margin: 0 !important; flex: none; }
+html[data-theme="dark"] body :is(.ct-card .ct-switch, .lpv-switch) { background: #35373B !important; }
+html[data-theme="dark"] body :is(.ct-card, .lpv-card) .ct-swb.on { background: #2B2D31 !important; color: #F2F3F5 !important; }
+.lpv-ti2 { width: 20px; height: 20px; flex: none; display: grid; place-items: center; border-radius: 6px; object-fit: contain; }
+.lpv-ti2.tel { background: #26282B; color: #F7C032; border-radius: 50%; }
+.lpv-url { display: block; margin-top: 10px; padding: 9px 12px; border-radius: 12px; background: #F4F5F6; box-shadow: inset 0 0 0 1px rgba(38,40,43,.06); font: 500 12.5px 'JetBrains Mono', monospace; color: #45484D; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+html[data-theme="dark"] .lpv-url { background: #35373B; color: #C9CCD1; }
+/* R15 · the shop button ticker: fixed size, one smooth logo strip */
+html body a.scp-5861bbd1 .hb-tk { width: 230px !important; min-width: 230px !important; flex: none !important; }
+.hb-tk .tk-logos2 { position: relative; display: inline-block; width: 96px; height: 14px; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); mask-image: linear-gradient(90deg, transparent, #000 18%, #000 82%, transparent); }
+.hb-tk .tk-logos2 .run { position: absolute; left: 0; top: 1px; display: inline-flex; gap: 10px; align-items: center; width: max-content; animation: tkRun 26s linear infinite; }
+.hb-tk .tk-logos2 img { height: 12px; width: auto; max-width: 40px; filter: brightness(0); opacity: .72; }
+@keyframes tkRun { to { transform: translateX(-50%); } }
+html[dir="rtl"] .hb-tk .tk-logos2 .run { left: auto; right: 0; animation-name: tkRunR; } @keyframes tkRunR { to { transform: translateX(50%); } }
+/* R15 (owner: "a smooth time line UNDER the shape, not inside the white card taking space; it isn't even visible; the
+   circuit shine colour"): an LED line floating just below the card, drawing in from both ends to the centre, with a
+   soft yellow glow and a bright core, like the light running through the circuits */
+html body .se-et2 { left: 18% !important; right: 18% !important; bottom: -14px !important; height: 4px !important; -webkit-mask-image: none !important; mask-image: none !important; z-index: 5; }
+html body .se-et2::before { bottom: 0 !important; height: 3px !important; border-radius: 3px !important; background: rgba(247,192,50,.18) !important; box-shadow: none; }
+html body .se-et2 i { bottom: 0 !important; height: 3px !important; border-radius: 3px !important; transform-origin: center !important;
+  background: linear-gradient(90deg, rgba(247,192,50,.2), #F7C032 18%, #FFF4D1 50%, #F7C032 82%, rgba(247,192,50,.2)) !important;
+  box-shadow: 0 0 6px #F7C032, 0 0 16px rgba(247,192,50,.7), 0 0 28px rgba(247,192,50,.35) !important; }
+html[dir="rtl"] body .se-et2 i { background: linear-gradient(90deg, rgba(247,192,50,.2), #F7C032 18%, #FFF4D1 50%, #F7C032 82%, rgba(247,192,50,.2)) !important; }
+/* R15 (owner: "yellow circuits show the passing light as WHITE, it should be a yellowish glow; graphite circuits should
+   carry a WHITE glow, not grey"): the light always matches its line. Yellow lines (graphite sections): a warm yellow light.
+   Grey lines (white sections): a white light with a soft graphite halo so it reads on white. Graphite lines (yellow
+   sections): a white light */
+html body .se-gut-dark .fl { stroke: #FFD45A !important; filter: drop-shadow(0 0 3px #F7C032) drop-shadow(0 0 8px rgba(247,192,50,.8)) !important; }
+html body .se-gut-light .fl { stroke: #FFFFFF !important; filter: drop-shadow(0 0 1.5px rgba(38,40,43,.55)) drop-shadow(0 0 6px rgba(255,255,255,1)) drop-shadow(0 0 10px rgba(38,40,43,.25)) !important; }
+html body .se-gut-yel .fl { stroke: #FFFFFF !important; filter: drop-shadow(0 0 3px rgba(255,255,255,.95)) drop-shadow(0 0 8px rgba(255,255,255,.8)) !important; }
+/* R15 (owner: "I also asked for a glow running from the bottom left-most to the right-most to shine"): a light that runs
+   along the footer's bottom edge, from the far left to the far right, then again */
+html body footer:has(.ft-mark) { position: relative; overflow: hidden; isolation: isolate; }
+html body footer:has(.ft-mark)::after { content: '' !important; position: absolute !important; left: 0 !important; bottom: 0 !important; top: auto !important; width: 34% !important; height: 70px !important; transform: none !important; pointer-events: none; z-index: -1 !important;
+  background: radial-gradient(50% 100% at 50% 100%, rgba(255,226,140,.55), rgba(247,192,50,.22) 45%, rgba(247,192,50,0) 75%) !important; filter: blur(2px);
+  animation: ftRun 6.5s cubic-bezier(.45,.05,.55,.95) infinite !important; opacity: 1 !important; }
+@keyframes ftRun { 0% { translate: -110% 0; } 100% { translate: 300% 0; } }
+/* R15 (owner: "WHAT CUSTOMERS SAY still isn't the hero's material"): the hero's full stack, measured from the live hero:
+   135° graphite sweep + sheen (section), the 6 px carbon weave at 60 % (::before), the 4 px scan lines at 7 % (::after) */
+html body section#reviews.rv::before { content: '' !important; position: absolute !important; inset: 0 !important; z-index: -1 !important; pointer-events: none; opacity: .6 !important;
+  background: linear-gradient(45deg, rgba(255,255,255,.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.03) 75%) 0 0 / 6px 6px, linear-gradient(45deg, rgba(255,255,255,.03) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.03) 75%) 3px 3px / 6px 6px !important; }
+/* R15 · info bubbles: a small ⓘ beside a label, a white bubble (graphite in dark mode) with Samsoom and one short note */
+.se-it { position: relative; display: inline-flex; vertical-align: middle; margin-inline-start: 6px; z-index: 30; }
+.se-it-b { display: grid; place-items: center; width: 22px; height: 22px; padding: 0; border: 0; border-radius: 50%; background: rgba(38,40,43,.06); color: #6B6F75; cursor: pointer; transition: background .2s, color .2s, transform .25s cubic-bezier(.3,1.6,.5,1); }
+.se-it-b:hover, .se-it.open .se-it-b { background: #F7C032; color: #26282B; transform: scale(1.1); box-shadow: 0 0 0 4px rgba(247,192,50,.2); }
+.se-it-pop { position: absolute; left: 50%; top: calc(100% + 12px); width: min(300px, 80vw); translate: -50% 0; display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px 12px 12px; border-radius: 16px; background: #FFFFFF; color: #26282B; text-align: start; font: 400 13px/1.45 Inter, sans-serif; letter-spacing: 0; text-transform: none; white-space: normal;
+  box-shadow: 0 0 0 1px rgba(38,40,43,.06), 0 22px 44px -18px rgba(0,0,0,.45); animation: seItIn .28s cubic-bezier(.2,1.2,.3,1) both; }
+.se-it-pop::before { content: ''; position: absolute; left: 50%; top: -6px; width: 12px; height: 12px; margin-left: -6px; background: inherit; transform: rotate(45deg); border-radius: 2px; box-shadow: -1px -1px 0 rgba(38,40,43,.05); }
+.se-it.s-top .se-it-pop { top: auto; bottom: calc(100% + 12px); } .se-it.s-top .se-it-pop::before { top: auto; bottom: -6px; }
+.se-it-sam { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: radial-gradient(circle at 40% 30%, #FFD566, #F7C032 65%); overflow: hidden; }
+.se-it-tx a { color: #B07D00; font-weight: 600; text-decoration: none; white-space: nowrap; } .se-it-tx a:hover { color: #26282B; }
+@keyframes seItIn { from { opacity: 0; translate: -50% 6px; scale: .96; } }
+html[data-theme="dark"] .se-it-pop { background: #2B2D31; color: #F2F3F5; box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 22px 44px -18px rgba(0,0,0,.8); }
+html[data-theme="dark"] .se-it-b { background: rgba(255,255,255,.08); color: #C9CCD1; } html[data-theme="dark"] .se-it-tx a { color: #F7C032; }
+.ct-lock small .se-it, .pv-grades small .se-it { margin-inline-start: 4px; }

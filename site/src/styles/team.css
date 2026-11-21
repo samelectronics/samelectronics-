@@ -117,3 +117,14 @@
 }
 /* R10 (owner: "the lanyards are too low now, too long"): shorter, still a clear lane under the rail */
 @media (min-width: 1101px) { .tm-stage { height: 640px; } .tm-lan { height: 150px; } .tm-lan span { top: 24px; } }
+/* R15 (owner: "the hanger bar starts and ends differently, it looks like a toy; higher quality"): a polished steel tube
+   with a real chrome highlight, and two IDENTICAL wall mounts (a round flange with a screw) at both ends */
+.tm-rail { left: 6px !important; right: 6px !important; height: 12px !important; }
+.tm-rail i { border-radius: 6px !important; z-index: 1;
+  background: linear-gradient(180deg, #FDFDFD 0%, #E3E5E8 14%, #A9ADB2 38%, #7A7E84 58%, #9CA0A5 74%, #CED1D5 88%, #8A8E93 100%) !important;
+  box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 -1px 0 rgba(0,0,0,.18) inset, 0 8px 14px -4px rgba(38,40,43,.35), 0 2px 3px rgba(38,40,43,.25) !important; }
+.tm-rail i::after { content: ''; position: absolute; left: 14px; right: 14px; top: 2px; height: 2px; border-radius: 2px; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.95) 20%, rgba(255,255,255,.95) 80%, rgba(255,255,255,0)); }
+.tm-rail::before, .tm-rail::after { content: '' !important; z-index: 2; top: -7px !important; width: 26px !important; height: 26px !important; border-radius: 50% !important;
+  background: radial-gradient(circle at 50% 50%, #5E6268 0 2.2px, #C9CCD1 2.6px 3.4px, transparent 3.6px), radial-gradient(circle at 38% 32%, #FFFFFF, #D5D8DC 35%, #8E9298 75%, #6A6E73) !important;
+  box-shadow: 0 0 0 1px rgba(38,40,43,.25), 0 4px 8px rgba(38,40,43,.3) !important; }
+.tm-rail::before { left: -13px !important; right: auto !important; } .tm-rail::after { right: -13px !important; left: auto !important; }

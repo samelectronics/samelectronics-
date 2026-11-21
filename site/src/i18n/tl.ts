@@ -4056,5 +4056,11 @@ const DICT: Record<string, string> = {
   'GRADED.': 'MAY GRADO.',
   'HONEST.': 'TAPAT.',
   'now': 'ngayon',
+  'What does this mean?': 'Ano ang ibig sabihin nito?',
+  'The grade is the quality of the part. Original is the maker’s own part; OLED and Incell are strong replacements; AAA and below are budget options. Every grade has its own warranty.': 'Ang grado ay ang kalidad ng piyesa. Ang Original ay piyesa mismo ng gumawa; ang OLED at Incell ay matibay na kapalit; ang AAA pababa ay murang opsyon. Bawat grado ay may sariling warranty.',
+  'The manufacturer is the factory that made the part. Some make the original parts for the brands, others make replacements. We list each one by name so you always know what you get.': 'Ang manufacturer ay ang pabrikang gumawa ng piyesa. Ang ilan ay gumagawa ng orihinal na piyesa para sa mga brand, ang iba ay kapalit. Pinapangalanan namin ang bawat isa para lagi mong alam ang makukuha mo.',
+  'Quality groups the grades: Original, high-quality replacements and budget parts. Pick one to see only those.': 'Pinagsasama ng kalidad ang mga grado: orihinal, de-kalidad na kapalit at murang piyesa. Pumili ng isa para iyon lang ang makita.',
+  'Each grade carries its own warranty, written on your invoice. Keep the part in its original state to claim it.': 'Bawat grado ay may sariling warranty, nakasulat sa iyong invoice. Panatilihin ang piyesa sa orihinal na kondisyon para ma-claim ito.',
+  'The site adds these details for our team (your reference, the page, the time and your device), so we can answer fast. You cannot change them; your own words go in the box above.': 'Idinadagdag ng site ang mga detalyeng ito para sa aming team (ang iyong reference, ang page, ang oras at ang iyong device) para mabilis kaming makasagot. Hindi mo ito mababago; ang sarili mong salita ay sa kahon sa itaas.',
 };
 export default DICT;

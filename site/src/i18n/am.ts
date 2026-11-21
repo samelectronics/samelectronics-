@@ -4082,5 +4082,11 @@ const DICT: Record<string, string> = {
   'HONEST.': 'ታማኝ።',
   'WeChat': 'ዊቻት',
   'now': 'አሁን',
+  'What does this mean?': 'ይህ ምን ማለት ነው?',
+  'The grade is the quality of the part. Original is the maker’s own part; OLED and Incell are strong replacements; AAA and below are budget options. Every grade has its own warranty.': 'ደረጃው የክፍሉ ጥራት ነው። ኦሪጅናል የአምራቹ ክፍል ነው፤ OLED እና Incell ጠንካራ ተተኪዎች ናቸው፤ AAA እና ከዚያ በታች ርካሽ አማራጮች ናቸው። እያንዳንዱ ደረጃ የራሱ ዋስትና አለው።',
+  'The manufacturer is the factory that made the part. Some make the original parts for the brands, others make replacements. We list each one by name so you always know what you get.': 'አምራቹ ክፍሉን የሠራው ፋብሪካ ነው። አንዳንዶች ለብራንዶች ኦሪጅናል ክፍሎችን ይሠራሉ፣ ሌሎች ተተኪዎችን። ምን እንደሚያገኙ ሁልጊዜ እንዲያውቁ እያንዳንዱን በስም እንዘረዝራለን።',
+  'Quality groups the grades: Original, high-quality replacements and budget parts. Pick one to see only those.': 'ጥራት ደረጃዎቹን ይመድባል፦ ኦሪጅናል፣ ከፍተኛ ጥራት ያላቸው ተተኪዎች እና ርካሽ ክፍሎች። እነሱን ብቻ ለማየት አንዱን ይምረጡ።',
+  'Each grade carries its own warranty, written on your invoice. Keep the part in its original state to claim it.': 'እያንዳንዱ ደረጃ በደረሰኝዎ ላይ የተጻፈ የራሱ ዋስትና አለው። ለመጠየቅ ክፍሉን በመጀመሪያ ሁኔታው ያቆዩ።',
+  'The site adds these details for our team (your reference, the page, the time and your device), so we can answer fast. You cannot change them; your own words go in the box above.': 'ቡድናችን በፍጥነት እንዲመልስ ጣቢያው እነዚህን ዝርዝሮች ይጨምራል (ማጣቀሻዎ፣ ገጹ፣ ሰዓቱ እና መሣሪያዎ)። ሊቀይሯቸው አይችሉም፤ የራስዎ ቃላት ከላይ ባለው ሳጥን ውስጥ ይገባሉ።',
 };
 export default DICT;

@@ -4080,5 +4080,11 @@ const DICT: Record<string, string> = {
   'GRADED.': 'SADARKAA QABU.',
   'HONEST.': 'AMANAMAA.',
   'now': 'amma',
+  'What does this mean?': 'Kun maal jechuu dha?',
+  'The grade is the quality of the part. Original is the maker’s own part; OLED and Incell are strong replacements; AAA and below are budget options. Every grade has its own warranty.': 'Sadarkaan qulqullina kutaa ti. Original kutaa oomishaa ofii isaa ti; OLED fi Incell bakka buusa cimaa dha; AAA fi gadi filannoo rakasaa dha. Sadarkaan hundi wabii mataa isaa qaba.',
+  'The manufacturer is the factory that made the part. Some make the original parts for the brands, others make replacements. We list each one by name so you always know what you get.': 'Oomishaan warshaa kutaa hojjete dha. Tokko tokko kutaa original maqaa daldalaaf hojjetu, kaan bakka buusa. Waan argattan akka beektaniif tokkoon tokkoon maqaan barreessina.',
+  'Quality groups the grades: Original, high-quality replacements and budget parts. Pick one to see only those.': 'Qulqulliinni sadarkaalee garee godha: original, bakka buusa qulqullina olaanaa fi kutaa rakasaa. Isaan qofa arguuf tokko filadhu.',
+  'Each grade carries its own warranty, written on your invoice. Keep the part in its original state to claim it.': 'Sadarkaan hundi wabii mataa isaa qaba, nagahee keessan irratti barreeffame. Gaafachuuf kutaa haala isaa jalqabaa irratti eegaa.',
+  'The site adds these details for our team (your reference, the page, the time and your device), so we can answer fast. You cannot change them; your own words go in the box above.': 'Marsariitiin kun garee keenyaaf odeeffannoo kana dabala (lakkoofsa keessan, fuula, yeroo fi meeshaa keessan), akka dafnee deebisnuuf. Jijjiiruu hin dandeessan; jechi keessan saanduqa olii keessa galu.',
 };
 export default DICT;

@@ -4080,5 +4080,11 @@ const DICT: Record<string, string> = {
   'GRADED.': 'EINGESTUFT.',
   'HONEST.': 'EHRLICH.',
   'now': 'jetzt',
+  'What does this mean?': 'Was bedeutet das?',
+  'The grade is the quality of the part. Original is the maker’s own part; OLED and Incell are strong replacements; AAA and below are budget options. Every grade has its own warranty.': 'Die Qualitätsstufe zeigt die Qualität des Teils. Original ist das Teil des Herstellers; OLED und Incell sind starke Ersatzteile; AAA und darunter sind günstige Optionen. Jede Stufe hat ihre eigene Garantie.',
+  'The manufacturer is the factory that made the part. Some make the original parts for the brands, others make replacements. We list each one by name so you always know what you get.': 'Der Hersteller ist die Fabrik, die das Teil gebaut hat. Manche fertigen Originalteile für die Marken, andere Ersatzteile. Wir nennen jeden beim Namen, damit Sie immer wissen, was Sie bekommen.',
+  'Quality groups the grades: Original, high-quality replacements and budget parts. Pick one to see only those.': 'Die Qualität fasst die Stufen zusammen: Original, hochwertige Ersatzteile und günstige Teile. Wählen Sie eine, um nur diese zu sehen.',
+  'Each grade carries its own warranty, written on your invoice. Keep the part in its original state to claim it.': 'Jede Stufe hat ihre eigene Garantie, auf Ihrer Rechnung vermerkt. Lassen Sie das Teil im Originalzustand, um sie zu nutzen.',
+  'The site adds these details for our team (your reference, the page, the time and your device), so we can answer fast. You cannot change them; your own words go in the box above.': 'Die Website fügt diese Angaben für unser Team hinzu (Ihre Referenz, die Seite, die Uhrzeit und Ihr Gerät), damit wir schnell antworten. Sie können sie nicht ändern; Ihre eigenen Worte kommen ins Feld darüber.',
 };
 export default DICT;

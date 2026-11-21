@@ -28,9 +28,9 @@ const IC = (d: string) => <svg width="20" height="20" viewBox="0 0 24 24" fill="
 type Row = { k: string; b: string; s: string; ic: React.ReactNode; href?: string; ltr?: boolean };
 const ROWS: Row[] = [
   { k: 'sam', b: 'Samsoom', s: 'Instant answers, any time of day', ic: <LiveSam size={40} pose="idle" /> },
-  { k: 'here', b: 'A person, here', s: 'Live chat on the website', ic: IC('M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z') },
   { k: 'wa', b: 'WhatsApp', s: 'A person replies', ic: <i className="ct-ic wa" /> },
   { k: 'wc', b: 'WeChat', s: 'A person replies', ic: <i className="ct-ic wc" /> },
+  { k: 'here', b: 'A person, here', s: 'Live chat on the website', ic: IC('M21 12a8 8 0 0 1-11.6 7.1L4 20l1-4.6A8 8 0 1 1 21 12z') },
   { k: 'mail', b: 'E-mail', s: 'Usually the same day', ic: IC('M3 6h18v12H3zM3 7l9 6 9-6') },
   { k: 'tel', b: 'Call the shop', s: '+971 4 273 3031', ltr: true, href: 'tel:' + site.contact.storeTel, ic: IC('M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2') },
   { k: 'map', b: 'Visit us', s: 'Al Murar, Deira, Dubai', href: site.contact.mapsLink, ic: IC('M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11zM12 12.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z') },

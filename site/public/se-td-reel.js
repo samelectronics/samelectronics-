@@ -153,6 +153,26 @@
     const BR = ['apple', 'samsung', 'xiaomi', 'huawei', 'google', 'oppo', 'honor', 'redmi', 'poco', 'oneplus', 'realme', 'vivo', 'infinix', 'tecno', 'nokia'];
     const BI = REEL === 'ipad' || REEL === 'rig' ? BR.map((b) => { const im = new Image(); im.src = '/assets/brands/' + b + '.svg'; return im; }) : [];
     const logoAt = (im, cx, cy, maxW, maxH) => { if (!ok(im)) return; const r = im.naturalWidth / im.naturalHeight || 3, w = Math.min(maxW, maxH * r), h = w / r; x.drawImage(im, cx - w / 2, cy - h / 2, w, h); };
+    // R15 (owner: "the brands part is so cheap"): a calm studio shot. Graphite, the number counting up, every logo in clean
+    // white on a 3 × 5 grid that rises row by row, a soft light sweeping across, and each logo lighting up in turn
+    function brands2(l) {
+      const g0 = x.createLinearGradient(0, FULL[1], 0, FULL[1] + FULL[3]); g0.addColorStop(0, '#33353A'); g0.addColorStop(1, '#1E1F22'); x.fillStyle = g0; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]);
+      const push = 1 + 0.05 * eio(K(l, 0, 3.4)); x.save(); x.translate(W / 2, H / 2); x.scale(push, push); x.translate(-W / 2, -H / 2);
+      const nk = eo5(K(l, 0.05, 0.9)), n = Math.round(15 * nk); x.save(); x.globalAlpha = cl(nk * 2); x.textAlign = 'center';
+      x.font = '700 ' + 2.4 * u + 'px ' + F.jb; x.fillStyle = Y; x.fillText(T('THE BRANDS WE STOCK'), W / 2, H * 0.13);
+      x.font = '800 ' + 20 * u + 'px ' + F.sg; x.fillStyle = '#FFFFFF'; x.fillText(String(n), W / 2, H * 0.3); x.restore();
+      const cols = 3, rows = 5, gw = W * 0.26, gh = H * 0.085, gx = W / 2 - gw * 1.5, gy = H * 0.38;
+      x.save(); x.strokeStyle = 'rgba(255,255,255,.08)'; x.lineWidth = Math.max(1, 0.15 * u);
+      for (let c = 1; c < cols; c++) { const lx = gx + c * gw; x.beginPath(); x.moveTo(lx, gy + gh * 0.15); x.lineTo(lx, gy + rows * gh - gh * 0.15); x.stroke(); }
+      for (let r = 1; r < rows; r++) { const ly = gy + r * gh; x.beginPath(); x.moveTo(gx + gw * 0.1, ly); x.lineTo(gx + cols * gw - gw * 0.1, ly); x.stroke(); } x.restore();
+      const hot = Math.floor(K(l, 1.4, 1.8) * 15);
+      BR.forEach((_, j) => { const c = j % cols, r = Math.floor(j / cols), kk = eo5(K(l, 0.35 + r * 0.12 + c * 0.04, 0.5)); if (kk <= 0) return; const cx = gx + c * gw + gw / 2, cy = gy + r * gh + gh / 2 + (1 - kk) * 3 * u;
+        x.save(); x.globalAlpha = cl(kk) * (j === hot ? 1 : 0.62); x.filter = 'brightness(0) invert(1)'; if (j === hot) { x.shadowColor = 'rgba(247,192,50,.9)'; x.shadowBlur = 3 * u; } logoAt(BI[j], cx, cy, gw * 0.56, gh * 0.34); x.restore(); });
+      const sw = K(l, 1.0, 1.6); if (sw > 0 && sw < 1) { const sx = FULL[0] - W * 0.4 + sw * W * 1.8, lg = x.createLinearGradient(sx - W * 0.25, 0, sx + W * 0.25, 0); lg.addColorStop(0, 'rgba(255,255,255,0)'); lg.addColorStop(0.5, 'rgba(255,240,200,.12)'); lg.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = lg; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); }
+      x.restore();
+      const vg = x.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.3, W / 2, H / 2, Math.max(W, H) * 0.75); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(14,15,17,.45)'); x.fillStyle = vg; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]);
+      const fo = 1 - K(l, 3.1, 0.3); if (fo < 1) { x.globalAlpha = 1 - fo; x.fillStyle = '#1E1F22'; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); x.globalAlpha = 1; }
+    }
     function brands(l) { // a 3D carousel of brand plates spins and slows, one is pulled to the front and lit, then the wall lands
       fill('dark'); streaks(l, 'dark', -0.4);
       const sel = 0, spin = eo5(K(l, 0, 1.1)), ang = (1 - spin) * Math.PI * 4;
@@ -180,18 +200,19 @@
     ];
     const BEATS = REEL === 'rig' ? RIG : REEL === 'ipad' ? [
       // always opens on the same entrance, then bold word → the real shop, four times, then the close
-      { d: 0.8, f: (l) => slam('SAM', l, 'dark', 'zoom') },
-      { d: 0.85, f: (l) => slam('ELECTRONICS', l, 'yel', 'side') },
-      { d: 0.75, f: (l) => slam('SEARCH.', l, 'light', 'spin') },
+      // R15 (owner: "so sped up; the writing and the boom-pams too fast"): every word holds longer, the shop clips breathe
+      { d: 1.3, f: (l) => slam('SAM', l, 'dark', 'zoom') },
+      { d: 1.4, f: (l) => slam('ELECTRONICS', l, 'yel', 'side') },
+      { d: 1.15, f: (l) => slam('SEARCH.', l, 'light', 'spin') },
       { d: 5.5, c: 1, f: (l) => clip(0, 0, l, 'Any part. Any model.') },
-      { d: 0.75, f: (l) => slam('15 BRANDS.', l, 'dark', 'split') },
-      { d: 2.4, f: (l) => brands(l) },
+      { d: 1.15, f: (l) => slam('15 BRANDS.', l, 'dark', 'split') },
+      { d: 3.4, f: (l) => brands2(l) },
       { d: 5.5, c: 1, f: (l) => clip(5.5, 1, l, 'Every brand, on the shelf.') },
-      { d: 0.75, f: (l) => slam('EVERY GRADE.', l, 'yel', 'zoom') },
+      { d: 1.15, f: (l) => slam('EVERY GRADE.', l, 'yel', 'zoom') },
       { d: 5.5, c: 1, f: (l) => clip(11.0, 1, l, 'Pick the grade. See the price.') },
-      { d: 0.8, f: (l) => slam('ORDER IN SECONDS.', l, 'dark', 'side') },
-      { d: 5.5, c: 1, f: (l) => clip(16.533, 3, l, 'Cart. WhatsApp. Done.') },
-      { d: 2.2, f: (l) => finale(l) },
+      { d: 1.25, f: (l) => slam('ORDER IN SECONDS.', l, 'dark', 'side') },
+      { d: 5.5, c: 1, f: (l) => clip(16.5, 3, l, 'Cart. WhatsApp. Done.') },
+      { d: 3.0, f: (l) => finale(l) },
     ] : [
       { d: 0.55, f: (l) => slam('TAKE', l, 'dark', 'zoom') },
       { d: 0.5, f: (l) => slam('ANY', l, 'yel', 'side') },
@@ -209,15 +230,15 @@
     const BT = BEATS.reduce((a2, b2) => a2 + b2.d, 0);
     const fill = (th) => { const c = th === 'yel' ? Y : th === 'light' ? '#F4F2EE' : '#1E1F21'; x.fillStyle = c; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); };
     const inkOf = (th) => (th === 'dark' ? '#FFFFFF' : G), accOf = (th) => (th === 'dark' ? Y : th === 'yel' ? '#FFFFFF' : Y);
-    const flash = (l, c = '#FFFFFF') => { if (l < 0.07) { x.globalAlpha = (1 - l / 0.07) * 0.8; x.fillStyle = c; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); x.globalAlpha = 1; } };
-    const shake = (l, amt) => { const k = l < 0.22 ? (1 - l / 0.22) * amt * u : 0; return [(Math.random() * 2 - 1) * k, (Math.random() * 2 - 1) * k]; };
+    const flash = (l, c = '#FFFFFF') => { if (l < 0.07) { x.globalAlpha = (1 - l / 0.07) * (REEL === 'ipad' ? 0.25 : 0.8); x.fillStyle = c; x.fillRect(FULL[0], FULL[1], FULL[2], FULL[3]); x.globalAlpha = 1; } };
+    const shake = (l, amt) => { amt *= REEL === 'ipad' ? 0.3 : 1; const k = l < 0.22 ? (1 - l / 0.22) * amt * u : 0; return [(Math.random() * 2 - 1) * k, (Math.random() * 2 - 1) * k]; };
     // owner (15 Nov): the diagonal light reads as real light: soft feathered beams that blend (screen/multiply), not flat bars
     // owner (16 Nov): sharper, heavier, higher-quality light: each beam is a wide soft halo, a crisp bright core and a
     // thin white-hot line, travelling diagonally at slightly different speeds (like light through glass), blended into the
     // background (screen on dark/yellow, multiply on light) so it never looks like a flat bar
     // owner (16 Nov, 2nd): the beams must be glowing lines of light, not flat linear bands. Each beam is now a thin bright
     // line that fades out at both ends, with a real glow (blur) around it, drifting diagonally; same colours as before.
-    const streaks = (l, th, ang) => { x.save(); x.translate(W / 2, H / 2); x.rotate(ang); const lightBg = th === 'light'; x.globalCompositeOperation = lightBg ? 'multiply' : 'screen';
+    const streaks = (l, th, ang) => { x.save(); if (REEL === 'ipad') { x.globalAlpha = 0.32; x.filter = 'blur(' + (1.2 * u).toFixed(1) + 'px)'; } /* R15: softer, real light, not neon bars */ x.translate(W / 2, H / 2); x.rotate(ang); const lightBg = th === 'light'; x.globalCompositeOperation = lightBg ? 'multiply' : 'screen';
       const base = lightBg ? '232,200,120' : th === 'yel' ? '255,250,232' : '255,214,120', hot = lightBg ? '214,150,20' : '255,255,255';
       for (let k2 = 0; k2 < 3; k2++) { const sp = 1.05 + k2 * 0.12, off = (((l * sp + k2 * 0.27) % 1) - 0.5) * H * 2.4, len = W * (1.1 + (k2 % 2) * 0.5), x0 = -len / 2 + Math.sin(l * 2 + k2) * W * 0.15;
         const a = (lightBg ? 0.35 : th === 'yel' ? 0.6 : 0.7) * (k2 % 2 ? 0.75 : 1);
@@ -293,19 +314,22 @@
     const chip = (t2, cx, cy, h, bg, fg) => { x.font = '700 ' + h * 0.42 + 'px ' + F.jb; const w = x.measureText(t2).width + h * 0.9; x.fillStyle = bg; rr(x, cx - w / 2, cy - h / 2, w, h, h / 2); x.fill(); x.fillStyle = fg; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(t2, cx, cy + h * 0.04); x.textBaseline = 'alphabetic'; return w; };
     const kicker = (t2, th) => { x.font = '700 ' + 3 * u + 'px ' + F.jb; x.textAlign = 'center'; x.fillStyle = th === 'dark' ? Y : G; x.fillText(t2, W / 2, H * 0.1); };
     // owner (R12b): "use a REAL recorded shop: the bold writing, then the shop itself, then another message, then the shop".
-    // The real shop was recorded at tablet size (public/assets/ad/shop-film.mp4: search, brands, grades, order); a clip beat
+    // The real shop was recorded at tablet size (public/assets/film/shop-film.mp4: search, brands, grades, order); a clip beat
     // plays its part of that film full-screen with a slow push-in, a vignette and a short caption.
     const VID = opts && opts.video;
     function clip(from, step, l, cap) {
       const v = VID, ready = v && v.readyState >= 2;
       if (!ready) { shop(step, l); return; }
       const want = from + Math.min(l, 5.45); if (v.paused) { try { v.play(); } catch (e) { /* autoplay */ } } if (Math.abs(v.currentTime - want) > 0.35) { try { v.currentTime = want; } catch (e) { /* */ } }
-      const [fx, fy, fw, fh] = FULL, vw = v.videoWidth || 552, vh = v.videoHeight || 756, push = 1.02 + 0.07 * eio(K(l, 0, 5.5)), sc = Math.max(fw / vw, fh / vh) * push, dw = vw * sc, dh = vh * sc;
+      const [fx, fy, fw, fh] = FULL, vw = v.videoWidth || 900, vh = v.videoHeight || 1232, push = 1.0 + 0.03 * eio(K(l, 0, 5.5)), sc = (REEL === 'ipad' ? Math.max(W / vw, H / vh) : Math.max(fw / vw, fh / vh)) * push /* R15: the whole shop width, never cropped */, dw = vw * sc, dh = vh * sc;
       const k = eo5(K(l, 0, 0.35)); x.save(); x.globalAlpha = cl(k * 1.4); x.drawImage(v, fx + (fw - dw) / 2, fy + (fh - dh) / 2 - (1 - k) * 4 * u, dw, dh); x.restore();
-      const g = x.createLinearGradient(0, fy + fh * 0.62, 0, fy + fh); g.addColorStop(0, 'rgba(30,31,33,0)'); g.addColorStop(1, 'rgba(30,31,33,.82)'); x.fillStyle = g; x.fillRect(fx, fy + fh * 0.6, fw, fh * 0.4);
+      { const ar0 = AR(), g = x.createRadialGradient(ar0 ? fx + fw : fx, fy + fh, 0, ar0 ? fx + fw : fx, fy + fh, fw * 0.95); g.addColorStop(0, 'rgba(30,31,33,.9)'); g.addColorStop(0.55, 'rgba(30,31,33,.55)'); g.addColorStop(1, 'rgba(30,31,33,0)'); x.fillStyle = g; x.fillRect(fx, fy, fw, fh); } /* R15: a graphite shade from the bottom corner, on the side away from the phone */
       const vg = x.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.35, W / 2, H / 2, Math.max(W, H) * 0.75); vg.addColorStop(0, 'rgba(0,0,0,0)'); vg.addColorStop(1, 'rgba(20,21,23,.35)'); x.fillStyle = vg; x.fillRect(fx, fy, fw, fh);
-      const ck = back(K(l, 0.35, 0.4)), ar = AR(); if (ck > 0) { x.save(); x.globalAlpha = cl(ck); x.translate(0, (1 - ck) * 5 * u); x.font = '700 ' + 2.6 * u + 'px ' + F.jb; x.textAlign = ar ? 'right' : 'left'; x.fillStyle = Y; x.fillText(T('THE SHOP') + ' · 0' + (step + 1), ar ? W - 7 * u : 7 * u, H * 0.84);
-        let cs = 6.4 * u; x.font = '800 ' + cs + 'px ' + F.sg; const cw = x.measureText(T(cap)).width; if (cw > W - 14 * u) { cs *= (W - 14 * u) / cw; x.font = '800 ' + cs + 'px ' + F.sg; } x.fillStyle = '#FFFFFF'; x.fillText(T(cap), ar ? W - 7 * u : 7 * u, H * 0.9); x.restore(); }
+      const ck = back(K(l, 0.35, 0.4)), ar = AR(); if (ck > 0) { x.save(); x.globalAlpha = cl(ck); x.translate(0, (1 - ck) * 5 * u); x.font = '700 ' + 2.6 * u + 'px ' + F.jb; x.textAlign = ar ? 'right' : 'left'; x.fillStyle = Y; /* R15: the caption stays on the side away from the phone (max 58 % of the screen), wrapping onto two lines */
+        const maxW = REEL === 'ipad' ? W * 0.58 : W - 14 * u, cs = 6 * u, words = T(cap).split(' '), lines = []; x.font = '800 ' + cs + 'px ' + F.sg; let ln = '';
+        words.forEach((w2) => { const tst = ln ? ln + ' ' + w2 : w2; if (x.measureText(tst).width > maxW && ln) { lines.push(ln); ln = w2; } else ln = tst; }); if (ln) lines.push(ln);
+        const lh = cs * 1.08, by0 = H * 0.93 - (lines.length - 1) * lh; x.fillText(T('THE SHOP') + ' · 0' + (step + 1), ar ? W - 7 * u : 7 * u, by0 - cs * 1.05);
+        x.font = '800 ' + cs + 'px ' + F.sg; x.fillStyle = '#FFFFFF'; lines.forEach((t2, i2) => x.fillText(t2, ar ? W - 7 * u : 7 * u, by0 + i2 * lh)); x.restore(); }
       const fl = 1 - K(l, 0, 0.18); if (fl > 0) { x.globalAlpha = fl * 0.55; x.fillStyle = '#FFFFFF'; x.fillRect(fx, fy, fw, fh); x.globalAlpha = 1; }
     }
     function shop(step, l) {

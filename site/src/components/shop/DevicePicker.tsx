@@ -24,30 +24,11 @@ export function DevIcon({ kind = 'phone', size = 30 }: { kind?: string; size?: n
 
 /** R12b (owner: "the phone backs in Add a device look cheap; make them like the teardown parts"): a small 3D-shaded back of
  *  the phone: a brushed metal body with a glass sheen, and the brand's own camera layout with glass lenses and rings */
-const BODY: Record<string, [string, string, string]> = { apple: ['#E9E4DA', '#C8C1B4', '#9E978A'], samsung: ['#D9DEE6', '#B4BCC8', '#8C95A3'], google: ['#E7E3DC', '#C9C3B8', '#A39C8F'], xiaomi: ['#3A3D42', '#26282B', '#16171A'], redmi: ['#3A4A5E', '#2A3646', '#1B2430'], poco: ['#FFD54A', '#F2B81A', '#C98F0C'], huawei: ['#4E5A52', '#38423C', '#252C28'], honor: ['#5C6C8A', '#45526C', '#2F384B'], oppo: ['#D4E2DC', '#AFC4BB', '#87A096'], realme: ['#F2C14E', '#D9A12A', '#B07E14'], oneplus: ['#4A4F57', '#33373D', '#1F2226'], nokia: ['#3D5A80', '#2C4566', '#1C2F48'] };
+/** R15 (owner: "the phones are cartoons, I asked for realistic ones"): studio renders of a real phone back for each camera
+ *  layout (made with three.js: brushed metal band, glass back, lenses with rings and glints, a soft floor shadow) */
+const DEV_STYLE: Record<string, string> = { apple: 'apple', samsung: 'samsung', google: 'google', xiaomi: 'xiaomi', redmi: 'xiaomi', poco: 'xiaomi', huawei: 'huawei', honor: 'huawei' };
 export function DevBack({ brand = '', size = 44 }: { brand?: string; size?: number }) {
-  const [a, b, c] = BODY[brand] || ['#D6D9DD', '#B3B8BE', '#8C9198'], id = 'db' + brand + size;
-  const lens = (x: number, y: number, r: number) => <g key={x + '-' + y}><circle cx={x} cy={y} r={r + 1.1} fill="#1E1F21" /><circle cx={x} cy={y} r={r + .5} fill={'url(#' + id + 'r)'} /><circle cx={x} cy={y} r={r} fill={'url(#' + id + 'l)'} /><circle cx={x - r * .35} cy={y - r * .35} r={r * .28} fill="rgba(255,255,255,.75)" /></g>;
-  const cam = brand === 'apple' ? <><rect x="9" y="5" width="15" height="15" rx="4.4" fill={b} stroke="rgba(0,0,0,.18)" strokeWidth=".6" />{lens(13.2, 9.2, 2.6)}{lens(13.2, 15.8, 2.6)}{lens(19.6, 12.5, 2.6)}</>
-    : brand === 'google' ? <><rect x="5" y="9" width="30" height="7.5" rx="3.7" fill="#2A2C2F" />{lens(13, 12.7, 2.4)}{lens(19.5, 12.7, 2.4)}</>
-    : brand === 'samsung' ? <>{lens(12, 8.5, 2.5)}{lens(12, 15, 2.5)}{lens(12, 21.5, 2.5)}</>
-    : brand === 'xiaomi' || brand === 'redmi' || brand === 'poco' ? <><rect x="9" y="5" width="16" height="16" rx="4" fill="#1E1F21" opacity=".85" />{lens(13.3, 9.3, 2.5)}{lens(20.6, 9.3, 2.5)}{lens(13.3, 16.6, 2.5)}{lens(20.6, 16.6, 2.5)}</>
-    : <><circle cx="16" cy="13" r="8" fill="#1E1F21" opacity=".85" />{lens(13, 10.5, 2.3)}{lens(19, 10.5, 2.3)}{lens(16, 16.4, 2.3)}</>;
-  return (
-    <svg className="dv-back" width={size * .72} height={size} viewBox="0 0 40 56" aria-hidden="true">
-      <defs>
-        <linearGradient id={id + 'b'} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor={a} /><stop offset=".55" stopColor={b} /><stop offset="1" stopColor={c} /></linearGradient>
-        <linearGradient id={id + 's'} x1="0" y1="0" x2="1" y2="0"><stop offset="0" stopColor="rgba(255,255,255,0)" /><stop offset=".45" stopColor="rgba(255,255,255,.38)" /><stop offset=".55" stopColor="rgba(255,255,255,0)" /></linearGradient>
-        <radialGradient id={id + 'l'} cx=".4" cy=".35" r=".7"><stop offset="0" stopColor="#4A5A7A" /><stop offset=".55" stopColor="#141820" /><stop offset="1" stopColor="#05060A" /></radialGradient>
-        <linearGradient id={id + 'r'} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#F2F3F5" /><stop offset="1" stopColor="#6E7378" /></linearGradient>
-      </defs>
-      <rect x="2" y="2" width="36" height="52" rx="7.5" fill={c} />
-      <rect x="2.6" y="2.6" width="34.8" height="50.6" rx="7" fill={'url(#' + id + 'b)'} />
-      <rect x="2.6" y="2.6" width="34.8" height="50.6" rx="7" fill={'url(#' + id + 's)'} opacity=".8" />
-      {cam}
-      <rect x="2.6" y="2.6" width="34.8" height="50.6" rx="7" fill="none" stroke="rgba(255,255,255,.55)" strokeWidth=".6" />
-    </svg>
-  );
+  return <img className="dv-back dv-real" src={'/assets/devices/' + (DEV_STYLE[brand] || 'generic') + '.webp'} alt="" aria-hidden="true" width={Math.round(size * 0.47)} height={size} loading="lazy" decoding="async" />;
 }
 export const kindOf = (id: string) => (data()?.models.find((m) => m.id === id)?.device || 'phone') as Kind;
 

@@ -4080,5 +4080,11 @@ const DICT: Record<string, string> = {
   'GRADED.': 'IMEPANGWA DARAJA.',
   'HONEST.': 'MWAMINIFU.',
   'now': 'sasa',
+  'What does this mean?': 'Hii inamaanisha nini?',
+  'The grade is the quality of the part. Original is the maker’s own part; OLED and Incell are strong replacements; AAA and below are budget options. Every grade has its own warranty.': 'Daraja ni ubora wa kipuri. Original ni kipuri cha mtengenezaji; OLED na Incell ni mbadala imara; AAA na chini ni chaguo nafuu. Kila daraja lina dhamana yake.',
+  'The manufacturer is the factory that made the part. Some make the original parts for the brands, others make replacements. We list each one by name so you always know what you get.': 'Mtengenezaji ni kiwanda kilichotengeneza kipuri. Wengine hutengeneza vipuri halisi vya chapa, wengine mbadala. Tunataja kila mmoja kwa jina ili ujue kila wakati unachopata.',
+  'Quality groups the grades: Original, high-quality replacements and budget parts. Pick one to see only those.': 'Ubora hupanga madaraja: halisi, mbadala wa ubora wa juu na vipuri nafuu. Chagua moja uone hivyo tu.',
+  'Each grade carries its own warranty, written on your invoice. Keep the part in its original state to claim it.': 'Kila daraja lina dhamana yake, imeandikwa kwenye ankara yako. Weka kipuri katika hali yake ya awali ili kuidai.',
+  'The site adds these details for our team (your reference, the page, the time and your device), so we can answer fast. You cannot change them; your own words go in the box above.': 'Tovuti huongeza maelezo haya kwa timu yetu (kumbukumbu yako, ukurasa, saa na kifaa chako) ili tujibu haraka. Huwezi kuyabadilisha; maneno yako huandikwa kwenye kisanduku hapo juu.',
 };
 export default DICT;

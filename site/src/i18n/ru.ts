@@ -4398,5 +4398,11 @@ const DICT: Record<string, string> = {
   'GRADED.': 'С ГРЕЙДОМ.',
   'HONEST.': 'ЧЕСТНО.',
   'now': 'сейчас',
+  'What does this mean?': 'Что это значит?',
+  'The grade is the quality of the part. Original is the maker’s own part; OLED and Incell are strong replacements; AAA and below are budget options. Every grade has its own warranty.': 'Грейд — это качество детали. Original — деталь самого производителя; OLED и Incell — сильные замены; AAA и ниже — бюджетные варианты. У каждого грейда своя гарантия.',
+  'The manufacturer is the factory that made the part. Some make the original parts for the brands, others make replacements. We list each one by name so you always know what you get.': 'Производитель — это завод, сделавший деталь. Одни делают оригинальные детали для брендов, другие — замены. Мы называем каждого, чтобы вы всегда знали, что получаете.',
+  'Quality groups the grades: Original, high-quality replacements and budget parts. Pick one to see only those.': 'Качество объединяет грейды: оригинал, качественные замены и бюджетные детали. Выберите одно, чтобы видеть только их.',
+  'Each grade carries its own warranty, written on your invoice. Keep the part in its original state to claim it.': 'У каждого грейда своя гарантия, указанная в счёте. Сохраняйте деталь в исходном виде, чтобы ею воспользоваться.',
+  'The site adds these details for our team (your reference, the page, the time and your device), so we can answer fast. You cannot change them; your own words go in the box above.': 'Сайт добавляет эти данные для нашей команды (ваш номер, страницу, время и устройство), чтобы мы ответили быстро. Изменить их нельзя; ваши слова — в поле выше.',
 };
 export default DICT;

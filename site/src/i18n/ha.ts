@@ -4080,5 +4080,11 @@ const DICT: Record<string, string> = {
   'GRADED.': 'AN TANTANCE MATAKI.',
   'HONEST.': 'MAI GASKIYA.',
   'now': 'yanzu',
+  'What does this mean?': 'Me wannan yake nufi?',
+  'The grade is the quality of the part. Original is the maker’s own part; OLED and Incell are strong replacements; AAA and below are budget options. Every grade has its own warranty.': 'Mataki shine ingancin kayan. Original kayan masana’anta ne; OLED da Incell masu maye gurbi ne masu ƙarfi; AAA da ƙasa zaɓuɓɓuka masu araha ne. Kowane mataki yana da garantinsa.',
+  'The manufacturer is the factory that made the part. Some make the original parts for the brands, others make replacements. We list each one by name so you always know what you get.': 'Masana’anta ita ce masana’antar da ta yi kayan. Wasu suna yin kayan asali don alamomi, wasu kuma masu maye gurbi. Muna ambaton kowanne da sunansa don ka san abin da kake samu koyaushe.',
+  'Quality groups the grades: Original, high-quality replacements and budget parts. Pick one to see only those.': 'Inganci yana haɗa matakai: na asali, masu maye gurbi masu inganci da kayan araha. Zaɓi ɗaya don ganin waɗannan kawai.',
+  'Each grade carries its own warranty, written on your invoice. Keep the part in its original state to claim it.': 'Kowane mataki yana da garantinsa, a rubuce a takardar kuɗinka. Ka bar kayan a yadda yake don ka nema.',
+  'The site adds these details for our team (your reference, the page, the time and your device), so we can answer fast. You cannot change them; your own words go in the box above.': 'Shafin yana ƙara waɗannan bayanai don ƙungiyarmu (lambar ka, shafi, lokaci da na’urarka) don mu amsa da sauri. Ba za ka iya canza su ba; kalmominka suna cikin akwatin da ke sama.',
 };
 export default DICT;

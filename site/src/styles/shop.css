@@ -74,29 +74,29 @@
 @media (max-width: 560px) { .shop-cats { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 6px; } .shop-cat { flex: 0 0 120px; scroll-snap-align: start; } .shop-cat img { width: 72px; height: 72px; } }
 
 /* banners */
-.ad { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 16px; margin-bottom: 30px; }
-.ad-main { position: relative; display: flex; align-items: center; min-height: 300px; border-radius: 24px; overflow: hidden; padding: 34px clamp(24px, 4vw, 48px); transition: background .6s; box-shadow: 0 24px 50px -30px rgba(0,0,0,.5); }
-.ad-txt { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; max-width: 54%; animation: spRise .6s cubic-bezier(.2,.8,.2,1) both; }
-.ad-k { font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .16em; opacity: .75; }
-.ad-t { font: 700 clamp(30px, 3.4vw, 48px)/1.02 'Space Grotesk', sans-serif; letter-spacing: -.03em; }
-.ad-t em { font-style: normal; opacity: .8; }
-.ad-d { font: 400 15px/1.5 Inter, sans-serif; opacity: .8; }
-.ad-img { position: absolute; inset-inline-end: -10px; bottom: -20px; height: 115%; object-fit: contain; animation: adIn .8s cubic-bezier(.2,.8,.2,1) both; filter: drop-shadow(0 30px 40px rgba(0,0,0,.3)); }
+.sxp { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: 16px; margin-bottom: 30px; }
+.sxp-main { position: relative; display: flex; align-items: center; min-height: 300px; border-radius: 24px; overflow: hidden; padding: 34px clamp(24px, 4vw, 48px); transition: background .6s; box-shadow: 0 24px 50px -30px rgba(0,0,0,.5); }
+.sxp-txt { position: relative; z-index: 2; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; max-width: 54%; animation: spRise .6s cubic-bezier(.2,.8,.2,1) both; }
+.sxp-k { font: 600 11px 'JetBrains Mono', monospace; letter-spacing: .16em; opacity: .75; }
+.sxp-t { font: 700 clamp(30px, 3.4vw, 48px)/1.02 'Space Grotesk', sans-serif; letter-spacing: -.03em; }
+.sxp-t em { font-style: normal; opacity: .8; }
+.sxp-d { font: 400 15px/1.5 Inter, sans-serif; opacity: .8; }
+.sxp-img { position: absolute; inset-inline-end: -10px; bottom: -20px; height: 115%; object-fit: contain; animation: adIn .8s cubic-bezier(.2,.8,.2,1) both; filter: drop-shadow(0 30px 40px rgba(0,0,0,.3)); }
 @keyframes adIn { from { opacity: 0; transform: translateX(40px) rotate(4deg); } }
-.ad-dots { position: absolute; bottom: 18px; inset-inline-start: clamp(24px, 4vw, 48px); display: flex; gap: 6px; z-index: 3; }
-.ad-dots button { width: 34px; height: 4px; padding: 0; border: 0; border-radius: 4px; background: rgba(127,127,127,.3); overflow: hidden; cursor: pointer; }
-.ad-dots button i { display: block; height: 100%; width: 0; background: currentColor; }
-.ad-dots button.on i { animation: adBar 6s linear forwards; }
+.sxp-dots { position: absolute; bottom: 18px; inset-inline-start: clamp(24px, 4vw, 48px); display: flex; gap: 6px; z-index: 3; }
+.sxp-dots button { width: 34px; height: 4px; padding: 0; border: 0; border-radius: 4px; background: rgba(127,127,127,.3); overflow: hidden; cursor: pointer; }
+.sxp-dots button i { display: block; height: 100%; width: 0; background: currentColor; }
+.sxp-dots button.on i { animation: adBar 6s linear forwards; }
 @keyframes adBar { to { width: 100%; } }
-.ad-side { display: grid; gap: 16px; }
-.ad-tile { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 22px; border-radius: 22px; overflow: hidden; text-decoration: none; transition: transform .25s; min-height: 130px; }
-.ad-tile:hover { transform: translateY(-3px); }
-.ad-tile b { font: 700 20px/1.15 'Space Grotesk', sans-serif; max-width: 62%; } .ad-tile small { font: 400 13px Inter, sans-serif; opacity: .75; max-width: 62%; }
-.ad-tile img { position: absolute; inset-inline-end: -14px; bottom: -14px; width: 46%; object-fit: contain; transition: transform .35s; }
-.ad-tile:hover img { transform: scale(1.06) rotate(-3deg); }
-.ad-tile.y { background: var(--y); color: var(--g8); } .ad-tile.d { background: linear-gradient(150deg, #3D3E3F, #26282B); color: #fff; }
-@media (max-width: 900px) { .ad { grid-template-columns: 1fr; } .ad-side { grid-template-columns: 1fr 1fr; } .ad-txt { max-width: 64%; } }
-@media (max-width: 560px) { .ad-side { grid-template-columns: 1fr; } .ad-main { min-height: 340px; align-items: flex-start; } .ad-txt { max-width: 100%; } .ad-img { height: 55%; } }
+.sxp-side { display: grid; gap: 16px; }
+.sxp-tile { position: relative; display: flex; flex-direction: column; gap: 6px; padding: 22px; border-radius: 22px; overflow: hidden; text-decoration: none; transition: transform .25s; min-height: 130px; }
+.sxp-tile:hover { transform: translateY(-3px); }
+.sxp-tile b { font: 700 20px/1.15 'Space Grotesk', sans-serif; max-width: 62%; } .sxp-tile small { font: 400 13px Inter, sans-serif; opacity: .75; max-width: 62%; }
+.sxp-tile img { position: absolute; inset-inline-end: -14px; bottom: -14px; width: 46%; object-fit: contain; transition: transform .35s; }
+.sxp-tile:hover img { transform: scale(1.06) rotate(-3deg); }
+.sxp-tile.y { background: var(--y); color: var(--g8); } .sxp-tile.d { background: linear-gradient(150deg, #3D3E3F, #26282B); color: #fff; }
+@media (max-width: 900px) { .sxp { grid-template-columns: 1fr; } .sxp-side { grid-template-columns: 1fr 1fr; } .sxp-txt { max-width: 64%; } }
+@media (max-width: 560px) { .sxp-side { grid-template-columns: 1fr; } .sxp-main { min-height: 340px; align-items: flex-start; } .sxp-txt { max-width: 100%; } .sxp-img { height: 55%; } }
 
 /* body: filters + results */
 .shop-body { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 28px; align-items: start; }
@@ -530,24 +530,24 @@ html[dir='rtl'] .dp-panel { left: auto; right: 0; }
 .pv-tools > button.on { color: #fff !important; } .pv-tools > button.on svg { background: #F7C032; color: #26282B !important; box-shadow: 0 0 18px -2px rgba(247, 192, 50, .7); }
 /* Shop computer pass · ads that keep moving: the side tiles turn through their own sets, each change slides in with the
    picture rising from below; the main banner's picture glides in from the side with a soft light sweep */
-.ad-tile { animation: adTileIn .7s cubic-bezier(.16,1,.3,1) both; isolation: isolate; }
-.ad-tile.w { background: linear-gradient(150deg, #FFFFFF, #EEF0F2); color: var(--g8); box-shadow: inset 0 0 0 1px rgba(26,27,29,.08); }
-.ad-tile img { width: 40%; inset-inline-end: 8px; bottom: 10px; max-height: 78%; animation: adPicIn .9s .08s cubic-bezier(.16,1,.3,1) both; filter: drop-shadow(0 14px 18px rgba(0,0,0,.28)); }
-.ad-tile img.wide { width: 46%; inset-inline-end: -6px; bottom: 0; }
-.ad-tile b { max-width: 58%; } .ad-tile small { max-width: 56%; }
-.ad-go { display: inline-flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 8px; font: 600 13px Inter, sans-serif; }
-.ad-tile:hover .ad-go svg { transform: translateX(3px); } .ad-go svg { transition: transform .2s; }
-.ad-pips { position: absolute; top: 18px; inset-inline-end: 18px; display: flex; gap: 4px; }
-.ad-pips i { width: 6px; height: 6px; border-radius: 3px; background: currentColor; opacity: .25; transition: width .3s, opacity .3s; }
-.ad-pips i.on { width: 16px; opacity: .8; }
-.ad-tile::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(105deg, rgba(255,255,255,0) 35%, rgba(255,255,255,.28) 50%, rgba(255,255,255,0) 65%); transform: translateX(-120%); animation: adSweep 1.4s .25s ease-out both; pointer-events: none; }
+.sxp-tile { animation: adTileIn .7s cubic-bezier(.16,1,.3,1) both; isolation: isolate; }
+.sxp-tile.w { background: linear-gradient(150deg, #FFFFFF, #EEF0F2); color: var(--g8); box-shadow: inset 0 0 0 1px rgba(26,27,29,.08); }
+.sxp-tile img { width: 40%; inset-inline-end: 8px; bottom: 10px; max-height: 78%; animation: adPicIn .9s .08s cubic-bezier(.16,1,.3,1) both; filter: drop-shadow(0 14px 18px rgba(0,0,0,.28)); }
+.sxp-tile img.wide { width: 46%; inset-inline-end: -6px; bottom: 0; }
+.sxp-tile b { max-width: 58%; } .sxp-tile small { max-width: 56%; }
+.sxp-go { display: inline-flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 8px; font: 600 13px Inter, sans-serif; }
+.sxp-tile:hover .sxp-go svg { transform: translateX(3px); } .sxp-go svg { transition: transform .2s; }
+.sxp-pips { position: absolute; top: 18px; inset-inline-end: 18px; display: flex; gap: 4px; }
+.sxp-pips i { width: 6px; height: 6px; border-radius: 3px; background: currentColor; opacity: .25; transition: width .3s, opacity .3s; }
+.sxp-pips i.on { width: 16px; opacity: .8; }
+.sxp-tile::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(105deg, rgba(255,255,255,0) 35%, rgba(255,255,255,.28) 50%, rgba(255,255,255,0) 65%); transform: translateX(-120%); animation: adSweep 1.4s .25s ease-out both; pointer-events: none; }
 @keyframes adTileIn { from { opacity: 0; transform: translateY(14px) scale(.985); } to { opacity: 1; transform: none; } }
 @keyframes adPicIn { from { opacity: 0; transform: translateY(26px) rotate(-4deg) scale(.92); } to { opacity: 1; transform: none; } }
 @keyframes adSweep { to { transform: translateX(120%); } }
-.ad-main::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(105deg, rgba(255,255,255,0) 40%, rgba(255,255,255,.22) 50%, rgba(255,255,255,0) 60%); transform: translateX(-120%); }
-.ad-main:has(.ad-txt) .ad-img { animation: adGlide .95s cubic-bezier(.16,1,.3,1) both; }
+.sxp-main::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(105deg, rgba(255,255,255,0) 40%, rgba(255,255,255,.22) 50%, rgba(255,255,255,0) 60%); transform: translateX(-120%); }
+.sxp-main:has(.sxp-txt) .sxp-img { animation: adGlide .95s cubic-bezier(.16,1,.3,1) both; }
 @keyframes adGlide { from { opacity: 0; transform: translateX(60px) rotate(4deg) scale(.94); } to { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .ad-tile, .ad-tile img, .ad-tile::after, .ad-main .ad-img { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { .sxp-tile, .sxp-tile img, .sxp-tile::after, .sxp-main .sxp-img { animation: none !important; } }
 /* Shop computer pass · the search dock: a slim glass strip under the bar, sliding down once the big search is gone */
 .shop-dock { position: fixed; left: 0; right: 0; top: 72px; z-index: 60; padding: 8px 0; background: rgba(38,40,43,.86); -webkit-backdrop-filter: blur(14px) saturate(1.3); backdrop-filter: blur(14px) saturate(1.3); box-shadow: 0 1px 0 rgba(255,255,255,.06), 0 14px 30px -18px rgba(0,0,0,.6); transform: translateY(-110%); opacity: 0; pointer-events: none; transition: transform .38s cubic-bezier(.2,.8,.2,1), opacity .25s; }
 .shop-dock.on { transform: none; opacity: 1; pointer-events: auto; }
@@ -627,9 +627,9 @@ html[data-shop-dock] .st-offer2 { translate: 0 0 !important; }
 .sf-phone canvas { display: block; width: 100%; height: 100%; border-radius: 24px; background: #1E1F21; }
 .sf-island { position: absolute; left: 50%; top: 13px; width: 52px; height: 14px; margin-left: -26px; border-radius: 8px; background: #050506; }
 .sf-glass { position: absolute; inset: 7px; border-radius: 24px; background: linear-gradient(115deg, rgba(255,255,255,.12), rgba(255,255,255,0) 35%); pointer-events: none; }
-.ad-main:has(.sf-phone) .ad-txt { max-width: 58%; }
+.sxp-main:has(.sf-phone) .sxp-txt { max-width: 58%; }
 @media (max-width: 700px) { .sf-phone { width: 110px; inset-inline-end: 4%; border-radius: 22px; } .sf-phone canvas, .sf-glass { border-radius: 17px; } }
-.sf-phone { width: auto !important; height: calc(100% - 36px); top: 18px !important; transform: rotate(-5deg) !important; } .ad-main:has(.sf-phone) { min-height: 330px; }
+.sf-phone { width: auto !important; height: calc(100% - 36px); top: 18px !important; transform: rotate(-5deg) !important; } .sxp-main:has(.sf-phone) { min-height: 330px; }
 /* owner (16 Nov): the shop bar is the real header: same glass, same 75px height, same logo (44px, yellow ring and
    glow) and the same wordmark and slogan sizes; only the middle changes to the search */
 .shop-dock { padding: 0 !important; height: 75px; display: flex; align-items: center; background: linear-gradient(rgba(61,62,63,.9), rgba(48,50,53,.86)) !important; -webkit-backdrop-filter: blur(10px) saturate(1.2) !important; backdrop-filter: blur(10px) saturate(1.2) !important; }
@@ -663,7 +663,7 @@ html[data-shop-dock] .st-offer2 { translate: 0 0 !important; }
 .cz-foot { background: #F2F3F4 !important; border-top-color: rgba(38,40,43,.08) !important; }
 .cz-body { color: #26282B; }
 /* ===== ShopReel: the shop's commercial ===== */
-.ad-reel { padding: 0 !important; background: #2A2C2F !important; overflow: hidden; }
+.sxp-reel { padding: 0 !important; background: #2A2C2F !important; overflow: hidden; }
 .reel { position: relative; width: 100%; height: 100%; min-height: 340px; aspect-ratio: 16 / 7; }
 .reel canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .reel-cta { position: absolute; inset-inline-start: 4%; bottom: 9%; display: inline-flex; align-items: center; gap: 10px; height: 46px; padding: 0 20px; border: 0; border-radius: 13px; background: #F7C032; color: #26282B; font: 700 15px Inter, sans-serif; cursor: pointer; box-shadow: 0 14px 30px -12px rgba(247,192,50,.6); animation: reelCta .5s cubic-bezier(.2,.9,.3,1.3) both; }
@@ -678,7 +678,7 @@ html[dir="rtl"] .reel-bar i.on::after { transform-origin: right; }
 @keyframes reelBar { from { transform: scaleX(0); } }
 @media (max-width: 640px) { .reel { aspect-ratio: 4 / 4.2; min-height: 0; } .reel-cta { inset-inline: 4%; justify-content: center; bottom: 5%; } }
 /* ===== owner (16 Nov): every shop ad plays like a short clip ===== */
-.iad, .ad-tile { isolation: isolate; overflow: hidden; }
+.iad, .sxp-tile { isolation: isolate; overflow: hidden; }
 .clip-big { position: absolute; z-index: -1; inset-inline-start: -2%; bottom: -12%; font: 800 clamp(60px, 7vw, 110px)/1 'Space Grotesk', sans-serif; letter-spacing: -.04em; white-space: nowrap; opacity: .07; pointer-events: none; animation: clipBig 7s linear both; }
 @keyframes clipBig { from { transform: translateX(8%); } to { transform: translateX(-14%); } }
 .clip-sweep { position: absolute; inset: 0; z-index: 2; pointer-events: none; background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,.35) 50%, transparent 60%) no-repeat; background-size: 250% 100%; animation: clipSweep 1.4s .35s ease-out both; mix-blend-mode: soft-light; }
@@ -688,8 +688,8 @@ html[dir="rtl"] .reel-bar i.on::after { transform-origin: right; }
 @keyframes clipPush { from { scale: 1; } to { scale: 1.08; translate: -4% -2%; } }
 html[dir="rtl"] .clip-pic { animation-name: clipWhipR, clipPush !important; }
 @keyframes clipWhipR { from { opacity: 0; transform: translateX(-60%) rotate(-8deg) scale(.9); filter: blur(6px); } to { opacity: 1; transform: none; } }
-.iad-txt b, .iad-txt small, .ad-tile b, .ad-tile small { animation: clipRise .55s cubic-bezier(.2,.9,.3,1.1) both; }
-.iad-txt small, .ad-tile small { animation-delay: .12s; }
+.iad-txt b, .iad-txt small, .sxp-tile b, .sxp-tile small { animation: clipRise .55s cubic-bezier(.2,.9,.3,1.1) both; }
+.iad-txt small, .sxp-tile small { animation-delay: .12s; }
 @keyframes clipRise { from { opacity: 0; transform: translateY(14px); } }
 @media (prefers-reduced-motion: reduce) { .clip-big, .clip-sweep, .clip-pic, .iad-txt b, .iad-txt small { animation: none !important; } }
 .shop-dock { display: block !important; } .shop-dock > .sp-wrap { width: auto; }
@@ -834,8 +834,8 @@ html[dir="rtl"] .clip-pic { animation-name: clipWhipR, clipPush !important; }
   .iad2-fix { width: 200px; height: 200px; }
   .iad2-years b { font-size: 72px; }
 }
-.ad-tile img { width: 46%; max-height: 92%; inset-inline-end: 0; bottom: 0; }
-.ad-tile img.wide { width: 52%; }
+.sxp-tile img { width: 46%; max-height: 92%; inset-inline-end: 0; bottom: 0; }
+.sxp-tile img.wide { width: 52%; }
 .iad2-scene { padding-bottom: 40px; }
 .iad2-fix { transform: scale(1.35); transform-origin: 50% 60%; }
 .iad2-vis { margin-block: -22px -40px; }
@@ -1146,15 +1146,15 @@ html[dir='rtl'] .shd-row { animation-direction: reverse; } html[dir='rtl'] .shd-
 
 /* ── side ads (owner, 18 Nov): calmer and simpler than the big box, but with the teardown feel: graphite, a drifting
    outlined word, a chamfered tag, the picture; they change every 3 seconds and never stop under the mouse ── */
-.ad-tile { background: radial-gradient(90% 120% at 85% 60%, #3A3D42, #26282B 70%) !important; color: #fff !important; box-shadow: 0 0 0 1px rgba(255,255,255,.05), 0 22px 40px -30px rgba(0,0,0,.7) !important; animation: adTileIn .5s cubic-bezier(.2,1.2,.4,1) both; }
+.sxp-tile { background: radial-gradient(90% 120% at 85% 60%, #3A3D42, #26282B 70%) !important; color: #fff !important; box-shadow: 0 0 0 1px rgba(255,255,255,.05), 0 22px 40px -30px rgba(0,0,0,.7) !important; animation: adTileIn .5s cubic-bezier(.2,1.2,.4,1) both; }
 @keyframes adTileIn { from { opacity: 0; transform: translateY(10px) scale(.98); } }
-.ad-tile .clip-sweep { display: none !important; }
-.ad-tile .clip-big { color: transparent !important; -webkit-text-stroke: 1.2px rgba(247,192,50,.14) !important; opacity: 1 !important; animation: ia3Word 30s linear infinite !important; white-space: nowrap; }
-.ad-tile .ad-k { display: inline-flex !important; align-self: flex-start; padding: 4px 9px 4px 7px !important; font: 700 10px 'JetBrains Mono', monospace !important; letter-spacing: .14em !important; color: #26282B !important; background: #F7C032 !important; clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px); border-radius: 0 !important; }
-.ad-tile b { color: #fff !important; } .ad-tile small { color: #B9BCC1 !important; }
-.ad-tile .ad-go { color: #F7C032 !important; }
-.ad-tile .clip-pic { animation: ia3Whip .6s cubic-bezier(.2,1.2,.35,1) .1s both; }
-.ad-tile .ad-pips i.on { background: #F7C032 !important; }
+.sxp-tile .clip-sweep { display: none !important; }
+.sxp-tile .clip-big { color: transparent !important; -webkit-text-stroke: 1.2px rgba(247,192,50,.14) !important; opacity: 1 !important; animation: ia3Word 30s linear infinite !important; white-space: nowrap; }
+.sxp-tile .sxp-k { display: inline-flex !important; align-self: flex-start; padding: 4px 9px 4px 7px !important; font: 700 10px 'JetBrains Mono', monospace !important; letter-spacing: .14em !important; color: #26282B !important; background: #F7C032 !important; clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px); border-radius: 0 !important; }
+.sxp-tile b { color: #fff !important; } .sxp-tile small { color: #B9BCC1 !important; }
+.sxp-tile .sxp-go { color: #F7C032 !important; }
+.sxp-tile .clip-pic { animation: ia3Whip .6s cubic-bezier(.2,1.2,.35,1) .1s both; }
+.sxp-tile .sxp-pips i.on { background: #F7C032 !important; }
 .reel-cta { height: 40px !important; padding: 0 16px !important; font-size: 13.5px !important; border-radius: 999px !important; }
 .cad-p.p1 .cad-pl, .cad-p.p2 .cad-pl { display: none; }
 /* owner (18 Nov, round 2): the sticky search wears the HOME HERO search light: a crisp 2px yellow outline and a soft
@@ -1309,8 +1309,8 @@ html[data-theme="dark"] .rcv-row { background: #2B2D31; } html[data-theme="dark"
 .shop-cats > * { animation: sxTile .6s cubic-bezier(.2,.8,.2,1) both; }
 .shop-cats > *:nth-child(1) { animation-delay: .9s; } .shop-cats > *:nth-child(2) { animation-delay: .96s; } .shop-cats > *:nth-child(3) { animation-delay: 1.02s; } .shop-cats > *:nth-child(4) { animation-delay: 1.08s; }
 .shop-cats > *:nth-child(5) { animation-delay: 1.14s; } .shop-cats > *:nth-child(6) { animation-delay: 1.2s; } .shop-cats > *:nth-child(7) { animation-delay: 1.26s; } .shop-cats > *:nth-child(8) { animation-delay: 1.32s; }
-.ad > .ad-main { animation: sxTile .7s 1.1s cubic-bezier(.2,.8,.2,1) both; } .ad > .ad-side { animation: sxTile .7s 1.25s cubic-bezier(.2,.8,.2,1) both; }
-@media (prefers-reduced-motion: reduce) { .shop-hd .sp-crumb, .shop-hd .sp-eb, .shop-hd-l > *, .shop-stats > span, .shop-hd .shop-scan, .shop-hd .shop-devs, .deals-tabs .dt, .shop-cats > *, .ad > * { animation: none !important; } }
+.sxp > .sxp-main { animation: sxTile .7s 1.1s cubic-bezier(.2,.8,.2,1) both; } .sxp > .sxp-side { animation: sxTile .7s 1.25s cubic-bezier(.2,.8,.2,1) both; }
+@media (prefers-reduced-motion: reduce) { .shop-hd .sp-crumb, .shop-hd .sp-eb, .shop-hd-l > *, .shop-stats > span, .shop-hd .shop-scan, .shop-hd .shop-devs, .deals-tabs .dt, .shop-cats > *, .sxp > * { animation: none !important; } }
 /* ── owner (18 Nov night): in-list ads v4 ──
    no card-level motion (it made the cards flicker in and out while scrolling); the entrance plays INSIDE the card each
    time an ad changes; white, yellow and graphite cards; text side flips; brand colour only on the brand's name */
@@ -1897,3 +1897,42 @@ html body .shop-dock.on .dk-tools > * { opacity: 1; translate: 0 0; }
 .dp-modal .dp-search input, .dp-modal .dp-search input:focus { outline: none !important; box-shadow: none !important; background: transparent !important; border: 0 !important; }
 /* bigger, clearer phone backs in the list */
 .dp-bk { width: 52px !important; height: 58px !important; }
+/* R15 (owner: "Add a device is a poor look, squares upon squares; the phones are cartoons"): an open, airy list. No boxes
+   around the phones: each model is a real rendered phone standing on the page, its name and brand beside it, thin
+   dividers between rows; the brand filter is a light underline row, the kinds a single segmented control */
+.dp-modal .dp-list { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 0 22px !important; }
+.dp-modal .dp-it { display: flex !important; align-items: center !important; gap: 14px !important; min-height: 78px; padding: 8px 10px !important; border: 0 !important; border-bottom: 1px solid rgba(38,40,43,.07) !important; border-radius: 0 !important; background: none !important; box-shadow: none !important; text-align: start; transition: background .2s !important; }
+.dp-modal .dp-it:hover { background: linear-gradient(90deg, rgba(247,192,50,.10), rgba(247,192,50,0)) !important; }
+.dp-modal .dp-it.on { background: linear-gradient(90deg, rgba(247,192,50,.18), rgba(247,192,50,0)) !important; }
+.dp-modal .dp-bk { width: 34px !important; height: 66px !important; border-radius: 0 !important; background: none !important; box-shadow: none !important; display: grid; place-items: center; flex: none; }
+.dp-modal .dp-bk .dv-real { width: auto !important; height: 64px !important; filter: none !important; transform: rotate(-4deg); transition: transform .35s cubic-bezier(.3,1.6,.5,1); }
+.dp-modal .dp-it:hover .dv-real { transform: rotate(0deg) translateY(-3px) scale(1.06); }
+.dp-modal .dp-brands { display: flex !important; flex-wrap: wrap; gap: 4px 18px !important; padding: 2px 2px 8px !important; border-bottom: 1px solid rgba(38,40,43,.08); }
+.dp-modal .dp-brands button { padding: 6px 0 !important; border: 0 !important; border-radius: 0 !important; background: none !important; box-shadow: none !important; font: 600 13px Inter, sans-serif !important; color: #7A7E84 !important; position: relative; }
+.dp-modal .dp-brands button.on { color: #26282B !important; }
+.dp-modal .dp-brands button.on::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; border-radius: 2px; background: #F7C032; box-shadow: 0 0 8px rgba(247,192,50,.7); }
+.dp-modal .dp-brands button:hover { color: #26282B !important; }
+@media (max-width: 640px) { .dp-modal .dp-list { grid-template-columns: 1fr !important; } }
+html[data-theme="dark"] .dp-modal .dp-it { border-bottom-color: rgba(255,255,255,.07) !important; }
+html[data-theme="dark"] .dp-modal .dp-brands button.on { color: #fff !important; }
+/* R15 (owner: "the yellow outline of the search doesn't smoothly extend down in the same shape when it opens, and it
+   doesn't shine when clicked or typed in"): when the results open, the running LED ring continues down the sides and
+   round the bottom of the results, one continuous outline; every keystroke makes it flare for a moment */
+.ss.open .ss-bar::before { inset: -2px -2px 0 -2px !important; -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0) !important; -webkit-mask-composite: xor !important; mask-composite: exclude !important; padding: 2px 2px 0 2px !important; opacity: 1 !important; }
+.ss.open .ss-drop { box-shadow: 0 0 0 2px #F7C032, 0 0 16px 1px rgba(247,192,50,.55), 0 40px 70px -24px rgba(0,0,0,.55) !important; clip-path: inset(0 -30px -90px -30px) !important; animation: ssGrow .32s cubic-bezier(.2,.9,.3,1) both, ssDropGlow 2.4s ease-in-out .3s infinite !important; }
+@keyframes ssDropGlow { 50% { box-shadow: 0 0 0 2px #FFD45A, 0 0 24px 3px rgba(247,192,50,.7), 0 40px 70px -24px rgba(0,0,0,.55); } }
+.ss.open.ss-type .ss-drop { box-shadow: 0 0 0 2px #FFE08A, 0 0 28px 4px rgba(247,192,50,.85), 0 40px 70px -24px rgba(0,0,0,.55) !important; }
+@keyframes ssDropIn { from { clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 0 0); } }
+.ss.ss-type .ss-bar::before { filter: drop-shadow(0 0 4px #FFE08A) drop-shadow(0 0 12px rgba(247,192,50,1)) brightness(1.25) !important; transition: filter .05s; }
+.ss .ss-bar::before { transition: filter .35s ease; }
+/* R15 (owner: "entry into the shop shows no real strong animations"): a bolder opening. The tiles and banners rise
+   further out of a soft blur, the categories cascade in one by one, and the first rows of parts deal in like cards */
+@keyframes sxTile { 0% { opacity: 0; transform: translateY(60px) scale(.9) rotateX(14deg); filter: blur(8px); } 60% { opacity: 1; filter: blur(0); transform: translateY(-6px) scale(1.015) rotateX(0); } 100% { opacity: 1; transform: none; filter: none; } }
+.shop-cats { perspective: 1000px; } .shop-cats > * { animation-duration: .8s !important; }
+.shop-cats > :nth-child(1) { animation-delay: .35s !important; } .shop-cats > :nth-child(2) { animation-delay: .42s !important; } .shop-cats > :nth-child(3) { animation-delay: .49s !important; } .shop-cats > :nth-child(4) { animation-delay: .56s !important; }
+.shop-cats > :nth-child(5) { animation-delay: .63s !important; } .shop-cats > :nth-child(6) { animation-delay: .70s !important; } .shop-cats > :nth-child(7) { animation-delay: .77s !important; } .shop-cats > :nth-child(8) { animation-delay: .84s !important; }
+@keyframes pcDeal { 0% { opacity: 0; transform: translateY(70px) rotate(-3deg) scale(.92); filter: blur(6px); } 65% { opacity: 1; filter: none; transform: translateY(-5px) rotate(.4deg) scale(1.01); } 100% { opacity: 1; transform: none; } }
+.shop-grid > .pc:nth-child(-n+12) { animation: pcDeal .75s cubic-bezier(.2,.8,.2,1) backwards; }
+.shop-grid > .pc:nth-child(1) { animation-delay: .9s; } .shop-grid > .pc:nth-child(2) { animation-delay: .98s; } .shop-grid > .pc:nth-child(3) { animation-delay: 1.06s; } .shop-grid > .pc:nth-child(4) { animation-delay: 1.14s; }
+.shop-grid > .pc:nth-child(5) { animation-delay: 1.22s; } .shop-grid > .pc:nth-child(6) { animation-delay: 1.30s; } .shop-grid > .pc:nth-child(7) { animation-delay: 1.38s; } .shop-grid > .pc:nth-child(8) { animation-delay: 1.46s; }
+.shop-grid > .pc:nth-child(n+9):nth-child(-n+12) { animation-delay: 1.54s; }

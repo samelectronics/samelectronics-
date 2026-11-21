@@ -1,4 +1,5 @@
 'use client';
+import InfoTip from '@/components/site/InfoTip';
 import { toast } from '@/components/site/Toaster';
 // P2 · A product, opened inside the shop (owner: "the product page belongs in the shop"): a full sheet over the results,
 // with its own link (?p=ID) so it can be shared. Gallery with zoom, every grade of the same part, price ("· sample") and the
@@ -125,7 +126,7 @@ export default function ProductView({ id, me, onClose, onOpen }: { id: string | 
             </div>
 
             {sib.length > 1 ? (
-              <div className="pv-grades"><small>{T('Choose the grade')}</small>
+              <div className="pv-grades"><small>{T('Choose the grade')}<InfoTip k="grade" /></small>
                 <div>{sib.map((g) => <button key={g.id} type="button" className={'pv-g g-' + g.grade + (g.id === p.id ? ' on' : '')} onClick={() => onOpen(g)}><GradeTag g={g.grade} name={g.gradeName} size="sm" /><small>{g.makerName}</small><span>{aed(g.price, false)}</span></button>)}</div>
               </div>
             ) : null}

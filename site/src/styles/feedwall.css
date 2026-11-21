@@ -303,3 +303,21 @@ html[dir="rtl"] .fw-toast { margin-left: 30px; } html[dir="rtl"] .fw-toast small
 @keyframes fwToast { 0% { opacity: 0; transform: translateY(-24px) scale(.94); } 12%, 82% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-10px) scale(.97); } }
 @media (max-width: 700px) { .fw-toast { left: 4%; margin-left: 0; width: auto; right: 4%; top: 2%; } }
 @media (prefers-reduced-motion: reduce) { #social .fw-prof, .fw-toast { animation: none !important; } }
+/* R15 (owner: "the phone is unrealistic, not 3D, cartoonish; remove the box at its top left"): a real modern phone. A thin
+   graphite titanium band with a lit edge, a slim even bezel, the island, glass with a soft reflection, a gentle 3D turn,
+   and a long natural shadow on the wall behind */
+.fw-toast { display: none !important; }
+#social .fw-prof { width: 250px !important; height: 512px !important; margin-left: -125px !important; padding: 46px 14px 14px !important; border: 3px solid transparent !important; border-radius: 44px !important;
+  background: linear-gradient(#FFFFFF, #FFFFFF) padding-box, linear-gradient(145deg, #8C9096 0%, #3E4146 22%, #6E7278 45%, #2F3236 70%, #7B7F85 100%) border-box !important;
+  box-shadow: inset 0 0 0 6px #17181A, inset 0 0 0 7px rgba(255,255,255,.06),
+    0 0 0 1px rgba(20,21,23,.55), 0 1px 1px 1px rgba(255,255,255,.25),
+    -2px 3px 0 1px #2A2C30, -4px 6px 0 1px #1F2124,
+    -30px 50px 60px -24px rgba(38,40,43,.55), -70px 100px 120px -60px rgba(38,40,43,.45) !important;
+  transform: translateY(-50%) perspective(1600px) rotateY(-12deg) rotateX(4deg) rotateZ(-1.5deg) !important; }
+html[dir="rtl"] #social .fw-prof { transform: translateY(-50%) perspective(1600px) rotateY(12deg) rotateX(4deg) rotateZ(1.5deg) !important; }
+#social .fw-prof .isl { top: 16px !important; width: 82px !important; height: 24px !important; margin-left: -41px !important; background: #121315 !important; }
+#social .fw-prof .gls { inset: 6px !important; border-radius: 38px !important; z-index: 6; background: linear-gradient(118deg, rgba(255,255,255,.4) 0%, rgba(255,255,255,.08) 24%, rgba(255,255,255,0) 40%) !important; mix-blend-mode: normal !important; opacity: .55; }
+#social .fw-prof .btn { width: 3px !important; background: linear-gradient(90deg, #2A2C30, #6E7278 50%, #2A2C30) !important; }
+#social .fw-prof .btn.b1, #social .fw-prof .btn.b2 { left: -6px !important; } #social .fw-prof .btn.b3 { right: -6px !important; }
+#social .fw-prof::after { left: 10% !important; right: 0 !important; bottom: -38px !important; height: 28px !important; }
+#social .fw-prof .grid { margin: 2px -14px -14px !important; border-radius: 0 0 36px 36px !important; }

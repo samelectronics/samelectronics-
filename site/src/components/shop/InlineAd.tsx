@@ -70,7 +70,7 @@ function Visual({ a, live }: { a: Ad; live: boolean }) {
   switch (a.fx) {
     case 'film': return <Film live={live} />;
     case 'grades': return <span className="iad2-grades">{['apple-sp', 'apple-gx', 'apple-zy', 'apple-temp'].map((g, i) => <img key={g} src={'/assets/pose/' + g + '-480.webp'} alt="" style={{ ['--i' as string]: i } as React.CSSProperties} />)}</span>;
-    case 'fix': return <span className="iad2-fix"><img className="was" src="/assets/ads/rep-crack.webp" alt="" /><img className="now" src="/assets/ads/rep-fixed.webp" alt="" /><i className="scan" /></span>;
+    case 'fix': return <span className="iad2-fix"><img className="was" src="/assets/promo/rep-crack.webp" alt="" /><img className="now" src="/assets/promo/rep-fixed.webp" alt="" /><i className="scan" /></span>;
     case 'ship': return <span className="iad2-ship"><svg className="route" viewBox="0 0 300 80" preserveAspectRatio="none" aria-hidden="true"><path d="M8 66 C 80 6, 200 6, 292 52" pathLength={1} /></svg><img className="pal" src="/assets/pallet/full-600.webp" alt="" /></span>;
     case 'years': return <Years />;
     case 'brand': { const b = adBrand(a); return <span className="iad2-brand"><span className="lg"><SEBrandLogo brand={b} h={22} fit="120x26" color={brandInk(b)} /></span><img src={a.img} alt="" /></span>; }

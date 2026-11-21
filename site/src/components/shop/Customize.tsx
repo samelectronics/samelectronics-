@@ -1,4 +1,5 @@
 'use client';
+import InfoTip from '@/components/site/InfoTip';
 import { GradeTag, MakerTag } from './Tags';
 // P2 · "Customize everything": the shop's full control panel, built like the Find My Part panel (graphite glass, steps on
 // the left, live result count). Price range (min/max), brand, model, part, quality, manufacturer, grade, warranty,
@@ -91,21 +92,21 @@ export default function Customize({ open, f, view, onClose, onApply }: { open: b
             {parts.length ? <div className="cz-opts sub">{parts.map(([pid, nm]) => <Opt key={pid} k="parts" v={pid} label={T(nm)} cnt={count('parts', pid)} />)}</div> : null}
           </section>
           <section id="cz-quality" className="cz-sec">
-            <h3>{T('Quality')}</h3>
+            <h3>{T('Quality')}<InfoTip k="quality" /></h3>
             <div className="cz-opts">{D.qualities.filter((q) => fc.qualities[q.id] || has('qualities', q.id)).map((q) => <Opt key={q.id} k="qualities" v={q.id} label={T(q.name)} cnt={count('qualities', q.id)} />)}</div>
           </section>
           <section id="cz-maker" className="cz-sec">
-            <h3>{T('Manufacturer')} <a className="cz-link" href="/brands#makers">{T('What do these mean?')}</a></h3>
+            <h3>{T('Manufacturer')}<InfoTip k="maker" /></h3>
             <div className="cz-opts">{D.manufacturers.filter((q) => fc.makers[q.id] || has('makers', q.id)).map((q) => <Opt key={q.id} k="makers" v={q.id} label={<MakerTag m={q.id} name={q.name} size="sm" />} cnt={count('makers', q.id)} />)}</div>
           </section>
           <section id="cz-grade" className="cz-sec">
-            <h3>{T('Grade')}</h3>
+            <h3>{T('Grade')}<InfoTip k="grade" /></h3>
             <div className="cz-grades">{Object.entries(D.gradeNames).map(([g, nm]) => (
               <button key={g} type="button" className={'cz-grade g-' + g + (has('grades', g) ? ' on' : '')} aria-pressed={has('grades', g)} onClick={() => tog('grades', g)}><GradeTag g={g} name={nm} /><small>{D.makerNames[g]}</small>{count('grades', g)}</button>
             ))}</div>
           </section>
           <section id="cz-warranty" className="cz-sec">
-            <h3>{T('Warranty')}</h3>
+            <h3>{T('Warranty')}<InfoTip k="warranty" /></h3>
             <div className="cz-opts">{['6 months', '3 months', '1 month'].map((w) => <Opt key={w} k="warranty" v={w} label={T(w)} cnt={count('warranty', w)} />)}</div>
           </section>
           <section id="cz-device" className="cz-sec">

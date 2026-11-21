@@ -4080,5 +4080,11 @@ const DICT: Record<string, string> = {
   'GRADED.': 'A TI FI ÌPELÉ SÍ.',
   'HONEST.': 'OLÓÒTỌ́.',
   'now': 'nísinsìnyí',
+  'What does this mean?': 'Kí ni èyí túmọ̀ sí?',
+  'The grade is the quality of the part. Original is the maker’s own part; OLED and Incell are strong replacements; AAA and below are budget options. Every grade has its own warranty.': 'Ìpele ni dídára ẹ̀yà náà. Original ni ẹ̀yà olùṣe fúnra rẹ̀; OLED àti Incell jẹ́ àrọ́pò tó lágbára; AAA àti èyí tó kéré jẹ́ àṣàyàn olówó pọ́ọ́kú. Ìpele kọ̀ọ̀kan ní ìdánilójú tirẹ̀.',
+  'The manufacturer is the factory that made the part. Some make the original parts for the brands, others make replacements. We list each one by name so you always know what you get.': 'Olùṣe ni ilé-iṣẹ́ tó ṣe ẹ̀yà náà. Àwọn kan ń ṣe ẹ̀yà àtilẹ̀wá fún àwọn àmì, àwọn mìíràn àrọ́pò. A ń dárúkọ ọ̀kọ̀ọ̀kan kí o lè mọ ohun tí o ń gbà nígbà gbogbo.',
+  'Quality groups the grades: Original, high-quality replacements and budget parts. Pick one to see only those.': 'Dídára ń kó àwọn ìpele jọ: àtilẹ̀wá, àrọ́pò dídára gíga àti ẹ̀yà olówó pọ́ọ́kú. Yan ọ̀kan láti rí àwọn yẹn nìkan.',
+  'Each grade carries its own warranty, written on your invoice. Keep the part in its original state to claim it.': 'Ìpele kọ̀ọ̀kan ní ìdánilójú tirẹ̀, tí a kọ sórí ìwé owó rẹ. Pa ẹ̀yà náà mọ́ bí ó ṣe wà láti béèrè rẹ̀.',
+  'The site adds these details for our team (your reference, the page, the time and your device), so we can answer fast. You cannot change them; your own words go in the box above.': 'Ojú-òpó náà ń fi àwọn àlàyé yìí kún un fún ẹgbẹ́ wa (ìtọ́kasí rẹ, ojú-ewé, àkókò àti ẹ̀rọ rẹ) kí a lè fèsì kíákíá. O kò lè yí wọn padà; ọ̀rọ̀ tìrẹ ń lọ sínú àpótí lókè.',
 };
 export default DICT;

@@ -1,4 +1,5 @@
 'use client';
+import InfoTip from '@/components/site/InfoTip';
 // Owner (16 Nov): every WhatsApp or WeChat button on the site opens the same contact sheet, over a blurred page:
 // - WhatsApp: open it on this device, or scan the code with your phone, and the number with a one-tap copy
 // - WeChat: open WeChat, and the number to add with a one-tap copy (WeChat has no public chat link by number)
@@ -89,9 +90,11 @@ export default function WeChatSheet() {
         <div className="ct-compose">
           {/* owner (R12): an order is part of the SYSTEM message (locked, the team receives the complete order); the customer
               only writes their own note below */}
-          {sys ? <div className="ct-prev ct-sysord" aria-label={t('Order details')}><small><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>{t('Order details · added by the system')}</small><div className="ct-pv">{fmt(msg)}</div></div> : null}
+          {/* R15 (owner: "one automatic message wherever you are carries the details: not an automatic system block AND an order
+              block"): the customer writes on top; ONE locked block below holds everything the site adds (the order or
+              enquiry, then the system details) */}
           <textarea className="ct-note" rows={3} value={note} onChange={(e) => setNote(e.target.value)} placeholder={t(sys ? 'Add a personal note (optional)' : 'Write your message')} />
-          {lock ? <div className="ct-lock" aria-label={t('The message our team receives')}><small><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>{t('Added automatically · cannot be edited')}</small><div className="ct-pv">{fmt(lock)}</div></div> : null}
+          {sys || lock ? <div className="ct-lock" aria-label={t('The message our team receives')}><small><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4"><rect x="5" y="11" width="14" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" /></svg>{t('Added automatically · cannot be edited')}<InfoTip k="system" side="top" /></small><div className="ct-pv">{sys ? fmt(msg) : null}{sys && lock ? <span className="ct-pg" /> : null}{lock ? fmt(lock) : null}</div></div> : null}
         </div>
         <div className="ct-acts">
           {mode === 'mail' ? <><button type="button" className="wc-btn" onClick={copyMsg}>{mcopied ? t('Message copied') + ' ✓' : t('Copy message')}</button><a className="wc-btn go ml" href={mailUrl} data-direct="" onClick={() => { logTap('mail', full); }}><i className="ct-ic mail" />{t('Open my e-mail app')}</a></>

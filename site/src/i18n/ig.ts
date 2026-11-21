@@ -4079,5 +4079,11 @@ const DICT: Record<string, string> = {
   'GRADED.': 'KEWARA ỌKWA.',
   'HONEST.': 'EZIOKWU.',
   'now': 'ugbu a',
+  'What does this mean?': 'Gịnị ka nke a pụtara?',
+  'The grade is the quality of the part. Original is the maker’s own part; OLED and Incell are strong replacements; AAA and below are budget options. Every grade has its own warranty.': 'Ọkwa bụ ịdị mma akụkụ ahụ. Original bụ akụkụ onye mepụtara ya; OLED na Incell bụ nnọchi siri ike; AAA na ndị dị n’okpuru bụ nhọrọ dị ọnụ ala. Ọkwa ọ bụla nwere nkwa nke ya.',
+  'The manufacturer is the factory that made the part. Some make the original parts for the brands, others make replacements. We list each one by name so you always know what you get.': 'Onye mepụtara bụ ụlọ ọrụ mere akụkụ ahụ. Ụfọdụ na-eme akụkụ mbụ maka akara, ndị ọzọ nnọchi. Anyị na-akpọ nke ọ bụla aha ka ị mara ihe ị na-enweta mgbe niile.',
+  'Quality groups the grades: Original, high-quality replacements and budget parts. Pick one to see only those.': 'Ịdị mma na-achịkọta ọkwa: nke mbụ, nnọchi dị mma na akụkụ dị ọnụ ala. Họrọ otu ka ịhụ naanị ndị ahụ.',
+  'Each grade carries its own warranty, written on your invoice. Keep the part in its original state to claim it.': 'Ọkwa ọ bụla nwere nkwa nke ya, edere n’akwụkwọ ụgwọ gị. Debe akụkụ ahụ n’ọnọdụ mbụ ya ka ị nwee ike ịrịọ ya.',
+  'The site adds these details for our team (your reference, the page, the time and your device), so we can answer fast. You cannot change them; your own words go in the box above.': 'Saịtị a na-agbakwunye nkọwa ndị a maka otu anyị (ntụaka gị, ibe, oge na ngwaọrụ gị) ka anyị zaa ngwa ngwa. Ị gaghị agbanwe ha; okwu nke gị na-aga n’igbe dị n’elu.',
 };
 export default DICT;

@@ -640,3 +640,35 @@ html body .cx-card .cr-micro { font-size: 1.05cqw; }
 #circuit .cx-med::after { animation-delay: -2.4s; }
 @keyframes cxRings { 0% { transform: scale(.92); opacity: .9; } 100% { transform: scale(1.45); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { #circuit .cx-med::before, #circuit .cx-med::after { animation: none; opacity: .3; } }
+/* R15 (owner: "the card switcher is broken, poor and cheap: 3 colour squares colliding with text; the pattern circle
+   around the logo collides with the text and has nothing to do with the card's pattern; the two chips are badly spaced") */
+#circuit .cx-pick { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 10px !important; }
+#circuit .cx-pick > button { display: grid !important; grid-template-columns: 46px minmax(0, 1fr) !important; grid-template-rows: auto auto !important; column-gap: 12px !important; row-gap: 3px !important; align-items: center !important; align-content: center; min-height: 68px; padding: 12px 14px !important; border-radius: 14px !important; text-align: start;
+  background: rgba(255,255,255,.035) !important; border: 1px solid rgba(255,255,255,.09) !important; box-shadow: none !important; transition: border-color .2s, background .2s, transform .25s cubic-bezier(.3,1.6,.5,1) !important; }
+#circuit .cx-pick > button:hover { transform: translateY(-2px); border-color: rgba(255,255,255,.22) !important; }
+#circuit .cx-pick > button.on { background: rgba(247,192,50,.07) !important; border-color: #F7C032 !important; box-shadow: 0 0 0 3px rgba(247,192,50,.12), 0 14px 30px -18px rgba(247,192,50,.6) !important; }
+#circuit .cx-pick .sw { grid-row: 1 / 3 !important; grid-column: 1; position: relative; width: 46px !important; height: 30px !important; margin: 0 !important; border-radius: 5px !important; overflow: hidden; box-shadow: 0 0 0 1px rgba(255,255,255,.18), 0 6px 12px -6px rgba(0,0,0,.7) !important;
+  background: linear-gradient(135deg, #4A4D52, #1E1F21) !important; }
+#circuit .cx-pick .k-grid .sw { background: linear-gradient(135deg, #F7D57A, #D4A73A 55%, #B98C2E) !important; }
+#circuit .cx-pick .k-circle .sw { background: linear-gradient(135deg, #F4F5F7, #BFC3C8 55%, #8E9298) !important; }
+#circuit .cx-pick .sw::before { content: '' !important; position: absolute !important; left: 6px !important; top: 9px !important; width: 10px !important; height: 8px !important; border-radius: 2px !important; border: 0 !important; background: linear-gradient(135deg, #F6E3A8, #C9A043) !important; box-shadow: inset 0 0 0 .5px rgba(0,0,0,.3) !important; transform: none !important; }
+#circuit .cx-pick .sw::after { content: '' !important; position: absolute !important; left: 6px !important; right: 6px !important; bottom: 5px !important; top: auto !important; width: auto !important; height: 2px !important; border: 0 !important; border-radius: 1px !important; background: rgba(255,255,255,.35) !important; transform: none !important; }
+#circuit .cx-pick .k-grid .sw::after, #circuit .cx-pick .k-circle .sw::after { background: rgba(38,40,43,.35) !important; }
+#circuit .cx-pick .sw > * { display: none !important; }
+#circuit .cx-pick > button b { grid-column: 2; grid-row: 1; align-self: end !important; font: 700 12.5px/1.1 'JetBrains Mono', monospace !important; letter-spacing: .08em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#circuit .cx-pick > button small { grid-column: 2; grid-row: 2; align-self: start !important; font: 400 12px/1.3 Inter, sans-serif !important; color: #A9ADB2 !important; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+@media (max-width: 760px) { #circuit .cx-pick { grid-template-columns: 1fr !important; } }
+/* the medallion: smaller, sitting clear of the text, engraved with the same fine lines as the card, no expanding rings */
+#circuit .cx-med { width: 24% !important; right: 8% !important; top: 42% !important; transform: translate(0, -50%) !important; }
+#circuit .cx-med::before, #circuit .cx-med::after { content: none !important; animation: none !important; }
+#circuit .cx-med .disc { background: repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.08) 0 .6px, transparent .6px 3px) !important; box-shadow: inset 0 2px 4px rgba(0,0,0,.45), inset 0 -1px 0 rgba(255,255,255,.2), 0 0 0 1px rgba(200,204,210,.22), 0 0 22px -4px rgba(247,192,50,.35) !important; }
+/* chip and contactless: aligned on one line, a clear gap, the same height */
+#circuit .cx-chiprow { gap: 14px !important; align-items: center !important; }
+#circuit .cx-chiprow .chip { width: 42px !important; height: 32px !important; }
+#circuit .cx-chiprow .cx-nfc { width: 20px; height: 20px; opacity: .55; }
+/* R15 · the rosette behind the medallion is gone (it crossed the name and the number); the card keeps only its own
+   engraved wave field, so there is one pattern */
+#circuit .cx-guil path:not(.f) { display: none !important; }
+#circuit .cx-pick .sw { position: relative !important; inset: auto !important; left: auto !important; right: auto !important; top: auto !important; bottom: auto !important; margin: 0 !important; transform: none !important; align-self: center !important; }
+#circuit .cx-pick > button { justify-items: start !important; }
+#circuit .cx-pick > button b, #circuit .cx-pick > button small { text-align: start !important; justify-self: start !important; margin: 0 !important; padding: 0 !important; position: static !important; }

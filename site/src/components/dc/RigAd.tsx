@@ -1,6 +1,6 @@
 'use client';
 // R12 (owner: "the phone on the rig ends with a weird pattern; bring it to life with an ad like the teardown, dedicated
-// to the qualities and brands"): the rig's phone plays the ad engine (public/se-td-ad.js, reel 'rig') under the test effects.
+// to the qualities and brands"): the rig's phone plays the ad engine (public/se-td-reel.js, reel 'rig') under the test effects.
 import React, { useEffect, useRef } from 'react';
 
 type Ad = { draw: (t: number) => void; dur: number };

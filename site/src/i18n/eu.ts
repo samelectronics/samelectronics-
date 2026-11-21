@@ -4080,5 +4080,11 @@ const DICT: Record<string, string> = {
   'GRADED.': 'SAILKATUA.',
   'HONEST.': 'ZINTZOA.',
   'now': 'orain',
+  'What does this mean?': 'Zer esan nahi du?',
+  'The grade is the quality of the part. Original is the maker’s own part; OLED and Incell are strong replacements; AAA and below are budget options. Every grade has its own warranty.': 'Maila piezaren kalitatea da. Jatorrizkoa fabrikatzailearen pieza da; OLED eta Incell ordezko onak dira; AAA eta beherakoak aukera merkeak dira. Maila bakoitzak bere bermea du.',
+  'The manufacturer is the factory that made the part. Some make the original parts for the brands, others make replacements. We list each one by name so you always know what you get.': 'Fabrikatzailea pieza egin zuen lantegia da. Batzuek marken jatorrizko piezak egiten dituzte, beste batzuek ordezkoak. Denak izenez aipatzen ditugu, beti jakin dezazun zer jasotzen duzun.',
+  'Quality groups the grades: Original, high-quality replacements and budget parts. Pick one to see only those.': 'Kalitateak mailak biltzen ditu: jatorrizkoa, kalitate handiko ordezkoak eta pieza merkeak. Aukeratu bat horiek bakarrik ikusteko.',
+  'Each grade carries its own warranty, written on your invoice. Keep the part in its original state to claim it.': 'Maila bakoitzak bere bermea du, fakturan idatzita. Gorde pieza jatorrizko egoeran erreklamatzeko.',
+  'The site adds these details for our team (your reference, the page, the time and your device), so we can answer fast. You cannot change them; your own words go in the box above.': 'Webguneak xehetasun hauek gehitzen ditu gure taldearentzat (zure erreferentzia, orria, ordua eta gailua), azkar erantzuteko. Ezin dituzu aldatu; zure hitzak goiko koadroan doaz.',
 };
 export default DICT;

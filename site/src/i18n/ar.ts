@@ -1776,6 +1776,12 @@ export const R7: Record<string, string> = {
 
 /** Round 8: Sam Circuit's three cards, Samsoom's tour and chat menu. */
 export const R8: Record<string, string> = {
+  'What does this mean?': 'ماذا يعني هذا؟',
+  'The grade is the quality of the part. Original is the maker’s own part; OLED and Incell are strong replacements; AAA and below are budget options. Every grade has its own warranty.': 'الدرجة هي جودة القطعة. الأصلية هي قطعة الشركة المصنّعة؛ OLED وIncell بدائل قوية؛ AAA وما دونها خيارات اقتصادية. لكل درجة ضمانها الخاص.',
+  'The manufacturer is the factory that made the part. Some make the original parts for the brands, others make replacements. We list each one by name so you always know what you get.': 'الشركة المصنّعة هي المصنع الذي صنع القطعة. بعضها يصنع القطع الأصلية للماركات، وبعضها يصنع البدائل. نذكر كل واحدة باسمها لتعرف دائمًا ما تحصل عليه.',
+  'Quality groups the grades: Original, high-quality replacements and budget parts. Pick one to see only those.': 'الجودة تجمع الدرجات: أصلية، وبدائل عالية الجودة، وقطع اقتصادية. اختر واحدة لترى تلك فقط.',
+  'Each grade carries its own warranty, written on your invoice. Keep the part in its original state to claim it.': 'لكل درجة ضمانها الخاص، مكتوب على فاتورتك. حافظ على القطعة بحالتها الأصلية لتطالب به.',
+  'The site adds these details for our team (your reference, the page, the time and your device), so we can answer fast. You cannot change them; your own words go in the box above.': 'يضيف الموقع هذه التفاصيل لفريقنا (رقمك المرجعي، والصفحة، والوقت، وجهازك) لنرد بسرعة. لا يمكنك تغييرها؛ كلماتك تُكتب في المربع أعلاه.',
   'now': 'الآن',
   'Any part. Any model.': 'أي قطعة. أي موديل.',
   'Every brand, on the shelf.': 'كل الماركات على الرف.',

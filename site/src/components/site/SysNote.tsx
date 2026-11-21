@@ -23,7 +23,7 @@ const WIFI = (k: 'wifi' | 'wifi-off' | 'wifi-slow') => (
 export default function SysNote({ tone, kicker, title, text, acts = [], onClose, ms = 12000, icon, sam, role = 'status', snd }: SysNoteProps) {
   const [out, setOut] = useState(false);
   // owner (18 Nov): serious alerts sound like a warning, connection problems like a soft error
-  useEffect(() => { const k = snd || (tone === 'stop' ? 'warn' : icon === 'wifi-off' || icon === 'wifi-slow' ? 'oops' : tone === 'ok' ? 'success' : 'msg'); if (k !== 'none') import('@/lib/sound').then((m) => m.play(k)).catch(() => {}); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { const k = snd || (tone === 'stop' ? 'warn' : icon === 'wifi-off' || icon === 'wifi-slow' ? 'oops' : tone === 'ok' ? 'success' : 'msg'); if (k !== 'none') import('@/lib/sound').then((m) => { m.play(k); m.buzz([12, 40, 12]); }).catch(() => {}); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const close = () => { setOut(true); window.setTimeout(onClose, 220); };
   useEffect(() => { const k = (e: KeyboardEvent) => { if (e.key === 'Escape') close(); }; window.addEventListener('keydown', k); return () => window.removeEventListener('keydown', k); }, []);
   // owner (18 Nov, round 2): "look how simple and nice the Samsoom tutorial is". Every system notice is now that card:

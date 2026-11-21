@@ -53,7 +53,7 @@ export default function LinkPreview() {
   const PLACE: P[] = [{ kind: 'map', href: site.contact.mapsLink, label: 'Google Maps' }, { kind: 'review', href: revHref, label: 'Google' }, { kind: 'tel', href: 'tel:' + site.contact.storeTel, label: site.contact.storeTel }];
   const SOCIAL: P[] = [['Instagram', 'https://instagram.com/samelectronics.uae'], ['TikTok', 'https://www.tiktok.com/@samelectronics.uae'], ['Facebook', 'https://facebook.com/samelectronics.uae']].map(([n, h]) => ({ kind: 'social' as Kind, href: h, label: 'samelectronics.uae', net: n }));
   const group = p.kind === 'social' ? SOCIAL : ['map', 'review', 'tel'].includes(p.kind) ? PLACE : null;
-  const tabName = (x: P) => x.kind === 'social' ? x.net || '' : x.kind === 'map' ? t('Directions') : x.kind === 'review' ? t('Reviews') : t('Call');
+  const tabName = (x: P) => x.kind === 'social' ? x.net || '' : x.kind === 'map' ? 'Google Maps' : x.kind === 'review' ? t('Google reviews') : t('Call');
   const tabOn = (x: P) => x.kind === p.kind && (x.kind !== 'social' || x.net === p.net);
   const copyTxt = p.kind === 'tel' || p.kind === 'mail' ? p.label : p.href;
   const copy = async () => { try { await navigator.clipboard.writeText(copyTxt); } catch { /* */ } setCopied(true); play('success'); };
@@ -66,7 +66,7 @@ export default function LinkPreview() {
     <div className="lpv-veil" onClick={(e) => { if (e.target === e.currentTarget) close(); }}>
       <div className={'lpv-card k-' + p.kind} role="dialog" aria-modal="true" aria-label={head}>
         <button type="button" className="lpv-x" aria-label={t('Close')} onClick={close}>✕</button>
-        {group ? <span className="ct-switch lpv-switch" role="tablist">{group.map((x) => <button key={x.kind + (x.net || '')} type="button" role="tab" aria-selected={tabOn(x)} className={'ct-swb' + (tabOn(x) ? ' on' : '')} onClick={() => { if (!tabOn(x)) { setCopied(false); setP(x); play('tab'); } }}><i className={'lpv-ti ' + (x.kind === 'social' ? 'n-' + (x.net || '').toLowerCase() : 't-' + x.kind)} aria-hidden="true" />{tabName(x)}</button>)}</span> : null}
+        {group ? <span className="ct-switch lpv-switch" role="tablist">{group.map((x) => <button key={x.kind + (x.net || '')} type="button" role="tab" aria-selected={tabOn(x)} className={'ct-swb' + (tabOn(x) ? ' on' : '')} onClick={() => { if (!tabOn(x)) { setCopied(false); setP(x); play('tab'); } }}>{x.kind === 'tel' ? <i className="lpv-ti2 tel" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2" /></svg></i> : <img className="lpv-ti2" src={x.kind === 'social' ? '/icons/' + (x.net || '').toLowerCase() + '.svg' : x.kind === 'map' ? '/icons/google-maps.svg' : '/icons/google.svg'} alt="" aria-hidden="true" />}{tabName(x)}</button>)}</span> : null}
         {/* R14 (owner: "like the WhatsApp and WeChat sheets: why a PREVIEW title and Samsoom?"): the switch bar, then the plain title */}
         <div className="lpv-top lpv-top2"><b dir="auto">{head}</b></div>
         <p className="lpv-sub" dir="auto">{sub}</p>
@@ -77,6 +77,8 @@ export default function LinkPreview() {
           {p.kind === 'mail' ? <span className="lpv-mail"><span className="lpv-big sm" dir="ltr">{p.label}</span>{subj ? <small dir="auto">{t('Subject')}: {subj}</small> : null}</span> : null}
           {p.kind === 'social' || p.kind === 'web' ? <span className="lpv-link">{['Instagram', 'TikTok', 'Facebook'].includes(p.net || '') ? <img className="lpv-netimg" src={'/icons/' + (p.net || '').toLowerCase() + '.svg'} alt="" aria-hidden="true" /> : <i className={'lpv-net n-' + (p.net || 'web').toLowerCase()} aria-hidden="true">{(p.net || p.label).slice(0, 1)}</i>}<span dir="ltr">{p.href.replace(/^https?:\/\//, '').slice(0, 60)}</span></span> : null}
         </div>
+        {/* R15 (owner: "the link must always be there, with copy and open, like WhatsApp") */}
+        {p.kind !== 'social' && p.kind !== 'web' ? <span className="lpv-url" dir="ltr">{p.kind === 'tel' || p.kind === 'mail' ? p.href : p.href.replace(/^https?:\/\//, '').slice(0, 70)}</span> : null}
         <div className="lpv-acts">
           <button type="button" className="lpv-btn" onClick={copy}>{copied ? t('Copied') + ' ✓' : p.kind === 'tel' ? t('Copy number') : p.kind === 'mail' ? t('Copy address') : t('Copy link')}</button>
           <button type="button" className="lpv-btn go" onClick={open}>{go} <span aria-hidden="true">↗</span></button>

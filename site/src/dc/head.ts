@@ -9,7 +9,7 @@ export const DC_SCRIPTS: string[] = [
   "image-slot.js",
   "se-parts-lib.js",
   "se-globe-data.js",
-  "se-td-ad.js"
+  "se-td-reel.js"
 ];
 /** Font stylesheets. */
 // R6 Part A: one font stylesheet (there were four: three near-identical copies plus 13 brand-wordmark fonts that the

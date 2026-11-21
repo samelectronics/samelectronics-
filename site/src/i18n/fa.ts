@@ -4399,5 +4399,11 @@ const DICT: Record<string, string> = {
   'HONEST.': 'صادقانه.',
   'WeChat': 'وی‌چت',
   'now': 'اکنون',
+  'What does this mean?': 'این یعنی چه؟',
+  'The grade is the quality of the part. Original is the maker’s own part; OLED and Incell are strong replacements; AAA and below are budget options. Every grade has its own warranty.': 'درجه یعنی کیفیت قطعه. اصلی، قطعهٔ خود سازنده است؛ OLED و Incell جایگزین‌های قوی‌اند؛ AAA و پایین‌تر گزینه‌های اقتصادی‌اند. هر درجه گارانتی خودش را دارد.',
+  'The manufacturer is the factory that made the part. Some make the original parts for the brands, others make replacements. We list each one by name so you always know what you get.': 'سازنده کارخانه‌ای است که قطعه را ساخته. برخی قطعات اصلی برندها را می‌سازند و برخی جایگزین. هر کدام را با نام می‌نویسیم تا همیشه بدانید چه می‌گیرید.',
+  'Quality groups the grades: Original, high-quality replacements and budget parts. Pick one to see only those.': 'کیفیت درجه‌ها را گروه می‌کند: اصلی، جایگزین‌های باکیفیت و قطعات اقتصادی. یکی را انتخاب کنید تا فقط همان‌ها را ببینید.',
+  'Each grade carries its own warranty, written on your invoice. Keep the part in its original state to claim it.': 'هر درجه گارانتی خودش را دارد که روی فاکتور نوشته می‌شود. قطعه را در حالت اصلی نگه دارید تا بتوانید از آن استفاده کنید.',
+  'The site adds these details for our team (your reference, the page, the time and your device), so we can answer fast. You cannot change them; your own words go in the box above.': 'سایت این جزئیات را برای تیم ما اضافه می‌کند (شمارهٔ مرجع، صفحه، زمان و دستگاه شما) تا سریع پاسخ دهیم. نمی‌توانید آن‌ها را تغییر دهید؛ حرف‌های خودتان در کادر بالا نوشته می‌شود.',
 };
 export default DICT;

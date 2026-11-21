@@ -4399,5 +4399,11 @@ const DICT: Record<string, string> = {
   'HONEST.': 'ईमानदार।',
   'WeChat': 'वीचैट',
   'now': 'अभी',
+  'What does this mean?': 'इसका क्या मतलब है?',
+  'The grade is the quality of the part. Original is the maker’s own part; OLED and Incell are strong replacements; AAA and below are budget options. Every grade has its own warranty.': 'ग्रेड पार्ट की क्वालिटी है। ओरिजिनल निर्माता का अपना पार्ट है; OLED और Incell मज़बूत विकल्प हैं; AAA और नीचे सस्ते विकल्प हैं। हर ग्रेड की अपनी वारंटी है।',
+  'The manufacturer is the factory that made the part. Some make the original parts for the brands, others make replacements. We list each one by name so you always know what you get.': 'निर्माता वह फ़ैक्टरी है जिसने पार्ट बनाया। कुछ ब्रांडों के ओरिजिनल पार्ट बनाती हैं, कुछ विकल्प। हम हर एक का नाम लिखते हैं ताकि आपको हमेशा पता रहे कि आपको क्या मिल रहा है।',
+  'Quality groups the grades: Original, high-quality replacements and budget parts. Pick one to see only those.': 'क्वालिटी ग्रेड को समूह में रखती है: ओरिजिनल, उच्च गुणवत्ता वाले विकल्प और सस्ते पार्ट। एक चुनें ताकि सिर्फ़ वही दिखें।',
+  'Each grade carries its own warranty, written on your invoice. Keep the part in its original state to claim it.': 'हर ग्रेड की अपनी वारंटी है, जो आपके इनवॉइस पर लिखी होती है। क्लेम के लिए पार्ट को मूल हालत में रखें।',
+  'The site adds these details for our team (your reference, the page, the time and your device), so we can answer fast. You cannot change them; your own words go in the box above.': 'साइट ये जानकारी हमारी टीम के लिए जोड़ती है (आपका रेफ़रेंस, पेज, समय और डिवाइस) ताकि हम जल्दी जवाब दें। आप इन्हें बदल नहीं सकते; आपके अपने शब्द ऊपर वाले बॉक्स में जाते हैं।',
 };
 export default DICT;

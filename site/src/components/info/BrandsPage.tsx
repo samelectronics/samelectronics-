@@ -55,7 +55,7 @@ export default function BrandsPage() {
         <MakerBoard gradeNames={D.gradeNames} makers={D.manufacturers.map((m) => { const [t, d, w] = MAKER[m.id] || ['', '', '']; const ps = P.filter((p) => p.manufacturer === m.id); return { id: m.id, name: m.name, t, d, w, n: ps.length, grades: [...new Set(ps.map((p) => p.grade))] }; })} />
       </div></section>
 
-      <section className="sp-sec y"><div className="sp-wrap">
+      <section id="grades" className="sp-sec y"><div className="sp-wrap">
         <div className="sp-head" data-rise><div><span className="sp-eb">{T('GRADES')}</span><h2 className="sp-h2">{T('Four grades, one honest label.')}</h2></div></div>
         <GradeCompare gradeNames={D.gradeNames} />
       </div></section>
